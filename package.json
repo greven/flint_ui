@@ -1,0 +1,23 @@
+{
+  "name": "flint_ui",
+  "version": "0.1.0",
+  "description": "Flint UI: Headless and Accessible components for Phoenix LiveView",
+  "license": "MIT",
+  "type": "module",
+  "main": "./priv/static/flint.js",
+  "exports": {
+    "import": "./priv/static/flint.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/greven/flint_ui.git"
+  },
+  "author": "Nuno Freire <mail@nuno.site> (https://nuno.site)",
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "package.json",
+    "priv/static/*",
+    "assets/js/flint/*"
+  ]
+}
