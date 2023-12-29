@@ -1,9 +1,14 @@
-defmodule FlintUi do
+defmodule FlintUI do
   @moduledoc """
-  Documentation for `FlintUi`.
+  TODO: !!!!!!!!!
   """
 
-  def hello do
-    :world
+  defmacro __using__(_opts) do
+    quote do
+      import FlintUI.{
+        Accordion,
+        VisuallyHidden
+      }
+    end
   end
 end

@@ -1,4 +1,4 @@
-defmodule FlintUi.MixProject do
+defmodule FlintUI.MixProject do
   use Mix.Project
 
   def project do
@@ -22,18 +22,22 @@ defmodule FlintUi.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.7"},
-      {:phoenix_live_view, "~> 0.20"},
+      {:phoenix, "~> 1.7.10"},
+      {:phoenix_live_view, "~> 0.20.2"},
+      {:uniq, "~> 0.6.1"},
 
       # Dev dependencies
-      {:esbuild, "~> 0.8", only: :dev}
+      {:esbuild, "~> 0.8.1", only: :dev, runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2.2", only: :dev, runtime: Mix.env() == :dev}
     ]
   end
 
   defp aliases do
     [
-      setup: ["deps.get", "compile"],
-      "assets.build": ["esbuild default"]
+      setup: ["deps.get", "assets.setup", "assets.build"],
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["tailwind default", "esbuild default"],
+      "assets.watch": "esbuild default --watch"
     ]
   end
 end
