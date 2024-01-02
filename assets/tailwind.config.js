@@ -2,5 +2,5 @@
 // https://tailwindcss.com/docs/configuration
 
 module.exports = {
-  content: ["./js/**/*.js", "../lib/flint_ui.ex", "../lib/flint_ui/**/*.*ex"],
+  content: ["./assets/**/*.js", "./assets/**/*.ts", "../lib/flint_ui.ex", "../lib/flint_ui/**/*.*ex"],
 };

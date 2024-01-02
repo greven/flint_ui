@@ -84,11 +84,10 @@ defmodule FlintDevWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import FlintDevWeb.CoreComponents
+      import FlintUI
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
-
-      use FlintUI
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())

@@ -1,7 +1,7 @@
 defmodule FlintUI.VisuallyHidden do
   @moduledoc false
 
-  use FlintUI.Component
+  use Phoenix.Component
 
   attr(:class, :string, default: nil)
   attr(:rest, :global)

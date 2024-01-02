@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "npm run watch",
+    "build": "concurrently npm:build:*",
+    "watch": "concurrently npm:watch:*",
+    "build:scripts": "esbuild ./scripts --bundle --format=esm --target=es2017 --outfile=../priv/static/flint.js",
+    "watch:scripts": "npm run build:scripts -- --watch",
+    "build:styles": "tailwindcss -i ./styles/flint.css -o ../priv/static/flint.css",
+    "watch:styles": "npm run build:styles -- --watch",
+    "release": "concurrently 'npm run build:scripts -- --minify' 'npm run build:styles'",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf ../priv/static"
+  },
+  "dependencies": {
+    "@arrow-js/core": "^1.0.0-alpha.9"
+  },
+  "devDependencies": {
+    "@types/phoenix_live_view": "^0.18.4",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.19.11",
+    "prettier": "^3.1.1",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3"
+  }
+}

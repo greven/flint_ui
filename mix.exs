@@ -24,20 +24,16 @@ defmodule FlintUI.MixProject do
     [
       {:phoenix, "~> 1.7.10"},
       {:phoenix_live_view, "~> 0.20.2"},
-      {:uniq, "~> 0.6.1"},
-
-      # Dev dependencies
-      {:esbuild, "~> 0.8.1", only: :dev, runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2.2", only: :dev, runtime: Mix.env() == :dev}
+      {:uniq, "~> 0.6.1"}
     ]
   end
 
   defp aliases do
     [
       setup: ["deps.get", "assets.setup", "assets.build"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind default", "esbuild default"],
-      "assets.watch": "esbuild default --watch"
+      "assets.setup": ["cmd npm install --prefix assets"],
+      "assets.build": ["cmd npm run build --prefix assets"],
+      "assets.watch": ["cmd npm start --prefix assets"]
     ]
   end
 end
