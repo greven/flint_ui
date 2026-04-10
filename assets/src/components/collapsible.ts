@@ -38,8 +38,8 @@ export class Collapsible extends FlintHook {
 
       const height = content.scrollHeight;
       const width = content.scrollWidth;
-      content.style.setProperty("--fl-collapsible-content-height", `${height}px`);
-      content.style.setProperty("--fl-collapsible-content-width", `${width}px`);
+      content.style.setProperty("--fl-collapsible-height", `${height}px`);
+      content.style.setProperty("--fl-collapsible-width", `${width}px`);
 
       // Don't restore on initial mount so no animation plays
       if (!this.isMountAnimationPrevented) {
