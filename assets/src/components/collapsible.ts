@@ -14,10 +14,14 @@ export class Collapsible extends FlintHook {
 
   private isMountAnimationPrevented = false;
   private currentState: CollapsibleState = "closed";
+  private closeToken = 0;
 
   private setState(state: CollapsibleState) {
     const isOpen = state === "open";
     const { trigger, content } = this.parts;
+
+    // Invalidate any pending close-hide callbacks
+    this.closeToken++;
 
     this.currentState = state;
     this.js().setAttribute(this.el, "data-state", state);
@@ -50,8 +54,12 @@ export class Collapsible extends FlintHook {
       this.js().setAttribute(content, "data-state", state);
 
       if (!isOpen) {
+        const token = this.closeToken;
         this.awaitAnimations(content, () => {
-          this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
+          // Only hide if no newer state change has occurred since we started waiting
+          if (this.closeToken === token) {
+            this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
+          }
         });
       }
     }
