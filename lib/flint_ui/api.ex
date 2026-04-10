@@ -1,54 +1,102 @@
 defmodule FlintUI.API do
-  @moduledoc false
+  @moduledoc """
+  Provides macros and utility functions for and to build FlintUI components.
+  """
 
-  defmacro __using__(_) do
+  use Phoenix.Component
+
+  defmacro defcomponent(name) do
+    component_module = component_module(name)
+    expanded_module = Macro.expand(component_module, __CALLER__)
+
+    if not Module.has_attribute?(__CALLER__.module, :__flint_components__) do
+      Module.register_attribute(__CALLER__.module, :__flint_components__, accumulate: true)
+    end
+
+    Code.ensure_compiled!(expanded_module)
+
+    %{attrs: attrs, slots: slots} = expanded_module.__components__()[:render]
+
+    attr_ast = component_attrs(attrs)
+    slots_ast = component_slots(slots)
+    module_doc = fetch_moduledoc(expanded_module)
+
     quote do
-      import FlintUI.API.{
-        DOM
-      }
+      @__flint_components__ unquote(expanded_module)
+
+      @doc unquote(module_doc)
+      unquote_splicing(attr_ast)
+      unquote_splicing(slots_ast)
+      def unquote(name)(assigns), do: unquote(expanded_module).render(assigns)
     end
   end
+
+  # Converts a list of attribute definitions into quoted code
+  defp component_attrs(attrs) do
+    for %{name: name, type: type, required: required, opts: opts, doc: doc} <- attrs do
+      opts = if required, do: [{:required, true} | opts], else: opts
+      opts = if doc, do: [{:doc, doc} | opts], else: opts
+      opts = Macro.escape(opts)
+      quote do: attr(unquote(name), unquote(type), unquote(opts))
+    end
+  end
+
+  # Converts a list of slot definitions into quoted code
+  defp component_slots(slots) do
+    for %{name: name, required: required, attrs: slot_attrs, opts: opts, doc: doc} <- slots do
+      opts = if required, do: [{:required, true} | opts], else: opts
+      opts = if doc, do: [{:doc, doc} | opts], else: opts
+
+      inner =
+        for %{name: sname, type: stype, required: srequired, opts: sopts, doc: sdoc} <- slot_attrs do
+          sopts = if srequired, do: [{:required, true} | sopts], else: sopts
+          sopts = if sdoc, do: [{:doc, sdoc} | sopts], else: sopts
+          sopts = Macro.escape(sopts)
+          quote do: attr(unquote(sname), unquote(stype), unquote(sopts))
+        end
+
+      quote do
+        slot unquote(name), unquote(opts) do
+          (unquote_splicing(inner))
+        end
+      end
+    end
+  end
+
+  # Fetches the moduledoc string from a module
+  defp fetch_moduledoc(module) do
+    case Code.fetch_docs(module) do
+      {:docs_v1, _, _, _, %{"en" => doc}, _, _} -> doc
+      _ -> false
+    end
+  end
+
+  # Resolves the component name atom to its corresponding module name
+  defp component_module(name) when is_atom(name) do
+    module_name = Atom.to_string(name) |> String.downcase() |> Macro.camelize()
+    Module.concat(FlintUI, module_name)
+  end
+
+  ## Helpers
 
   @doc """
-  Tries to convert an user input value value to an integer value
-  and returns a default value if the conversion fails.
+  Generates a unique id for a DOM element with an optional prefix.
   """
-  def as_integer(value, default \\ nil)
-  def as_integer(value, _default) when is_integer(value), do: value
-  def as_integer(value, _default) when is_float(value), do: trunc(value)
-
-  def as_integer(value, default) when is_binary(value) do
-    try do
-      String.to_integer(value)
-    rescue
-      ArgumentError -> default
-    end
+  def use_id(prefix \\ "fl") do
+    "#{prefix}-"
+    |> Kernel.<>(random_encoded_bytes())
+    |> String.replace(["/", "+"], "-")
+    |> String.trim()
   end
 
-  def as_integer(_value, default), do: default
+  # Taken from Phoenix LiveView
+  defp random_encoded_bytes do
+    binary = <<
+      System.system_time(:nanosecond)::64,
+      :erlang.phash2({node(), self()})::16,
+      :erlang.unique_integer()::16
+    >>
 
-  @doc """
-  Tries to convert an user input value to a boolean value
-  and returns a default value if the conversion fails.
-  """
-  def as_boolean(value, default \\ false)
-  def as_boolean(value, _default) when is_boolean(value), do: value
-
-  def as_boolean("true", _default), do: true
-  def as_boolean("1", _default), do: true
-  def as_boolean("false", _default), do: false
-  def as_boolean("0", _default), do: false
-
-  def as_boolean(value, default) when is_binary(value) do
-    case Integer.parse(value) do
-      {int, _rest} -> as_boolean(int, default)
-      _ -> default
-    end
+    Base.url_encode64(binary)
   end
-
-  def as_boolean(value, _default) when is_number(value) do
-    if value > 0, do: true, else: false
-  end
-
-  def as_boolean(_value, default), do: default
 end

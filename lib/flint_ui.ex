@@ -1,25 +1,39 @@
 defmodule FlintUI do
   @moduledoc """
-  TODO: !!!!!!!!!
+  FlintUI is a collection of accessible, unstyled UI components for Phoenix LiveView.
+  It provides a set of building blocks that can be easily styled and customized to fit any
+  design system. Each component is designed with accessibility in mind, ensuring that
+  your applications are usable by everyone.
+
+  ## Usage
+
+  To use FlintUI, simply call `use FlintUI` in your module and then use the
+  provided components in your templates.
+
+  ## Available Components
+
+  - `button`
+  - `collapsible`
+
   """
 
   use Phoenix.Component
+  import FlintUI.API
 
-  import FlintUI.Collapsible
-
-  alias Phoenix.LiveView.JS
-
-  attr(:id, :string)
-  attr(:open, :boolean, default: false)
-  attr(:disabled, :boolean, default: false)
-  attr(:on_open, JS, default: %JS{})
-  attr(:on_close, JS, default: %JS{})
-
-  slot(:inner_block, required: true)
-
-  def fl_collapsible(assigns) do
-    ~H"""
-    <%= render_slot(@inner_block, use_collapsible(assigns)) %>
-    """
+  defmacro __using__(_opts) do
+    quote do
+      import FlintUI
+    end
   end
+
+  ## Components
+
+  defcomponent(:button)
+  defcomponent(:collapsible)
+
+  ## JS Helpers
+
+  defdelegate open_collapsible(js \\ %Phoenix.LiveView.JS{}, id), to: FlintUI.JS
+  defdelegate close_collapsible(js \\ %Phoenix.LiveView.JS{}, id), to: FlintUI.JS
+  defdelegate toggle_collapsible(js \\ %Phoenix.LiveView.JS{}, id), to: FlintUI.JS
 end

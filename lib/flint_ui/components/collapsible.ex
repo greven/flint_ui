@@ -1,52 +1,104 @@
 defmodule FlintUI.Collapsible do
-  @moduledoc false
+  @moduledoc """
+  An interactive component that can show or hide content sections when triggered.
 
-  use FlintUI.API
-  use Phoenix.Component
-  alias Phoenix.LiveView.JS
+  ## Examples
 
-  @toggle_event "fl:collapsible:toggle"
+      <FlintUI.collapsible id="example-collapsible" open>
+        <:trigger :let={attrs}>
+          <button {attrs} class="my-custom-class">Toggle</button>
+        </:trigger>
+        <:content :let={attrs}>
+          <div {attrs} class="my-content-class">
+            <p>Hidden content</p>
+          </div>
+        </:content>
+      </FlintUI.collapsible>
+  """
 
-  def use_collapsible(assigns) do
-    assigns
-    |> assign_new(:id, &use_id/0)
-    |> create_elements()
+  use FlintUI.Component
+
+  @impl true
+  def meta do
+    %FlintUI.Meta{
+      name: :collapsible,
+      type: :misc,
+      since: "0.1.0"
+    }
   end
 
-  defp create_elements(assigns) do
-    %{id: id, open: open, disabled: disabled} = assigns
-
-    root = %{
-      "id" => id,
-      "phx-hook" => "Collapsible",
-      "data-collapsible-root" => true,
-      "data-state" => if(open, do: "open", else: "closed"),
-      "data-disabled" => if(disabled, do: true, else: false)
-    }
-
-    trigger = %{
-      "id" => "#{id}-trigger",
-      "data-collapsible-trigger" => true,
-      "data-state" => if(open, do: "open", else: "closed"),
-      "data-disabled" => if(disabled, do: true, else: false),
-      "role" => "button",
-      "aria-expanded" => if(open, do: "true", else: "false"),
-      "aria-controls" => "#{id}-content",
-      "phx-click" => JS.dispatch(@toggle_event)
-    }
-
-    content =
-      %{
-        "id" => "#{id}-content",
-        "hidden" => !open,
-        "data-collapsible-content" => true,
-        "aria-hidden" => if(open, do: "false", else: "true")
-      }
-
+  @impl true
+  def attrs(assigns) do
     %{
-      root: root,
-      trigger: trigger,
-      content: content
+      root: %{
+        "id" => assigns.id,
+        "data-part" => "root",
+        "data-element" => "collapsible",
+        "data-disabled" => assigns.disabled,
+        "data-state" => if(assigns.open, do: "open", else: "closed"),
+        "phx-hook" => "Collapsible"
+      },
+      trigger: %{
+        "data-part" => "trigger",
+        "data-element" => "collapsible",
+        "data-disabled" => assigns.disabled,
+        "data-state" => if(assigns.open, do: "open", else: "closed"),
+        "aria-controls" => "#{assigns.id}-content",
+        "aria-expanded" => assigns.open,
+        "aria-disabled" => assigns.disabled
+      },
+      content: %{
+        "id" => "#{assigns.id}-content",
+        "hidden" =>
+          if(assigns.open,
+            do: nil,
+            else: if(assigns.hidden_until_found, do: "until-found", else: true)
+          ),
+        "data-part" => "content",
+        "data-element" => "collapsible",
+        "data-disabled" => assigns.disabled,
+        "data-state" => if(assigns.open, do: "open", else: "closed")
+      }
     }
+  end
+
+  @doc false
+
+  attr(:id, :string, required: true, doc: "Unique component DOM id.")
+
+  attr(:as, :string,
+    default: "div",
+    doc: "The HTML element to render the collapsible root as. Defaults to 'div'."
+  )
+
+  attr(:open, :boolean, default: false, doc: "Initial open state. Defaults to false.")
+
+  attr(:disabled, :boolean,
+    default: false,
+    doc: "Whether the trigger interactions are suppressed. Defaults to false."
+  )
+
+  attr(:hidden_until_found, :boolean,
+    default: false,
+    doc:
+      "Whether the content is hidden until it is found by the browser. When true, the content will be marked with `hidden=\"until-found\"`
+      when collapsed, allowing browsers to find and automatically expand the content when a search is performed. Defaults to false."
+  )
+
+  attr(:rest, :global, doc: "Additional HTML attributes.")
+
+  slot(:trigger, required: true, doc: "The trigger element for the collapsible.")
+  slot(:content, required: true, doc: "The content to show or hide.")
+
+  @impl true
+  def render(assigns) do
+    assigns = assign(assigns, :attrs, attrs(assigns))
+
+    ~H"""
+    <.dynamic_tag tag_name={@as} {@attrs[:root]} {@rest}>
+      {render_slot(@trigger, @attrs[:trigger])}
+      {render_slot(@content, @attrs[:content])}
+    </.dynamic_tag>
+    """
   end
 end

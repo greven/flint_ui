@@ -5,7 +5,7 @@ defmodule FlintUI.MixProject do
     [
       app: :flint_ui,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases()
@@ -22,9 +22,9 @@ defmodule FlintUI.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.7.10"},
-      {:phoenix_live_view, "~> 0.20.2"},
-      {:uniq, "~> 0.6.1"}
+      {:phoenix, "~> 1.8.5"},
+      {:phoenix_live_view, "~> 1.1.28"},
+      {:ex_doc, "~> 0.40", only: :dev}
     ]
   end
 
