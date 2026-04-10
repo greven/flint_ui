@@ -51,6 +51,12 @@ export class Collapsible extends FlintHook {
         content.style.animationName = origAnimation;
       }
 
+      if (isOpen) {
+        // Forced reflow
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        content.offsetHeight;
+      }
+
       this.js().setAttribute(content, "data-state", state);
 
       if (!isOpen) {
