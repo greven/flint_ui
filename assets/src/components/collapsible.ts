@@ -60,9 +60,9 @@ export class Collapsible extends FlintHook {
       this.js().setAttribute(content, "data-state", state);
 
       if (!isOpen) {
-        const token = this.animationGeneration;
+        const generation = this.animationGeneration;
         awaitAnimations(content, () => {
-          if (this.animationGeneration === token) {
+          if (this.animationGeneration === generation) {
             this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
           }
         });
