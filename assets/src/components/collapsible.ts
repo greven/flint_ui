@@ -1,6 +1,5 @@
 import { FlintHook } from "../lib/core";
-
-type CollapsibleState = "open" | "closed";
+import { awaitAnimations } from "../lib/util";
 
 enum Events {
   Open = "fl:collapsible:open",
@@ -9,19 +8,20 @@ enum Events {
   Change = "fl:collapsible:change",
 }
 
-export class Collapsible extends FlintHook {
-  hiddenUntilFound = false;
+type CollapsibleState = "open" | "closed";
 
-  private isMountAnimationPrevented = false;
+export class Collapsible extends FlintHook {
   private currentState: CollapsibleState = "closed";
-  private closeToken = 0;
+  private hiddenUntilFound = false;
+  private isMountAnimationPrevented = false;
+  private animationGeneration = 0;
 
   private setState(state: CollapsibleState) {
     const isOpen = state === "open";
     const { trigger, content } = this.parts;
 
     // Invalidate any pending close-hide callbacks
-    this.closeToken++;
+    this.animationGeneration++;
 
     this.currentState = state;
     this.js().setAttribute(this.el, "data-state", state);
@@ -60,10 +60,9 @@ export class Collapsible extends FlintHook {
       this.js().setAttribute(content, "data-state", state);
 
       if (!isOpen) {
-        const token = this.closeToken;
-        this.awaitAnimations(content, () => {
-          // Only hide if no newer state change has occurred since we started waiting
-          if (this.closeToken === token) {
+        const token = this.animationGeneration;
+        awaitAnimations(content, () => {
+          if (this.animationGeneration === token) {
             this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
           }
         });
@@ -75,18 +74,15 @@ export class Collapsible extends FlintHook {
     );
   }
 
-  private awaitAnimations(el: HTMLElement, callback: () => void): void {
-    requestAnimationFrame(() => {
-      const animations = el.getAnimations();
-      if (animations.length === 0) {
-        callback();
-        return;
-      }
-      Promise.all(animations.map((a) => a.finished))
-        .then(callback)
-        .catch(callback);
-    });
-  }
+  private handleOpen = () => this.setState("open");
+
+  private handleClose = () => this.setState("closed");
+
+  private handleToggle = () => {
+    if (this.el.dataset.disabled === "true") return;
+    const current = this.el.getAttribute("data-state") as CollapsibleState;
+    this.setState(current === "open" ? "closed" : "open");
+  };
 
   private handleTriggerClick = () => {
     if (this.el.dataset.disabled === "true") return;
@@ -101,17 +97,9 @@ export class Collapsible extends FlintHook {
     }
   };
 
-  private handleOpen = () => this.setState("open");
-
-  private handleClose = () => this.setState("closed");
-
-  private handleToggle = () => {
-    if (this.el.dataset.disabled === "true") return;
-    const current = this.el.getAttribute("data-state") as CollapsibleState;
-    this.setState(current === "open" ? "closed" : "open");
-  };
-
   private handleBeforeMatch = () => this.setState("open");
+
+  // Hooks
 
   mounted() {
     super.mounted();
