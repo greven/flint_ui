@@ -10,12 +10,13 @@ defmodule FlintUI.Button do
     %FlintUI.Meta{
       name: :button,
       type: :button,
-      since: "0.1.0"
+      since: "0.1.0",
+      status: :stable
     }
   end
 
   @impl true
-  def attrs(assigns) do
+  def build_attrs(assigns) do
     %{
       root: %{
         "data-part" => "root",
@@ -33,7 +34,7 @@ defmodule FlintUI.Button do
   attr(:type, :string,
     default: "button",
     values: ~w(button submit reset),
-    doc: "The button type, defaults to button"
+    doc: "The button type, defaults to button when `as` is 'button'. Ignored for other elements."
   )
 
   attr(:disabled, :boolean,
@@ -50,12 +51,8 @@ defmodule FlintUI.Button do
 
   @impl true
   def render(assigns) do
-    assigns =
-      assigns
-      |> assign(:attrs, attrs(assigns))
-
     ~H"""
-    <.dynamic_tag tag_name={@as} tabindex="0" {@attrs[:root]} {@rest}>
+    <.dynamic_tag tag_name={@as} tabindex="0" {attrs(:root)} {@rest}>
       {render_slot(@inner_block)}
     </.dynamic_tag>
     """

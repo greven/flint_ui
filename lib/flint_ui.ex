@@ -18,22 +18,44 @@ defmodule FlintUI do
   """
 
   use Phoenix.Component
+
+  @components [
+    {:button, []},
+    {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]}
+  ]
+
+  require FlintUI.API
   import FlintUI.API
 
-  defmacro __using__(_opts) do
+  defmacro __using__(opts) do
+    only = Keyword.get(opts, :only, :all)
+    except = Keyword.get(opts, :except, [])
+    prefix = Keyword.get(opts, :prefix)
+
+    components = Enum.filter(@components, fn {name, _aux} -> include?(name, only, except) end)
+
+    calls =
+      for {name, aux} <- components do
+        quote do
+          FlintUI.API.component(unquote(name), other: unquote(aux), prefix: unquote(prefix))
+        end
+      end
+
     quote do
-      import FlintUI
+      use Phoenix.Component
+      require FlintUI.API
+      unquote_splicing(calls)
     end
   end
 
-  ## Components
+  ## Componnts
 
-  defcomponent(:button)
-  defcomponent(:collapsible)
+  component(:button)
+  component(:collapsible, other: [:open_collapsible, :close_collapsible, :toggle_collapsible])
 
-  ## JS Helpers
+  ## Internal
 
-  defdelegate open_collapsible(js \\ %Phoenix.LiveView.JS{}, id), to: FlintUI.JS
-  defdelegate close_collapsible(js \\ %Phoenix.LiveView.JS{}, id), to: FlintUI.JS
-  defdelegate toggle_collapsible(js \\ %Phoenix.LiveView.JS{}, id), to: FlintUI.JS
+  defp include?(_name, :all, []), do: true
+  defp include?(name, :all, except), do: name not in except
+  defp include?(name, only, _except) when is_list(only), do: name in only
 end

@@ -63,15 +63,33 @@ export class Collapsible extends FlintHook {
         const generation = this.animationGeneration;
         awaitAnimations(content, () => {
           if (this.animationGeneration === generation) {
-            this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
+            this.js().setAttribute(
+              content,
+              "hidden",
+              this.hiddenUntilFound ? "until-found" : "",
+            );
           }
         });
       }
     }
 
+    // Emit change event for internal listeners
     this.el.dispatchEvent(
-      new CustomEvent(Events.Change, { bubbles: true, detail: { state, open: isOpen } }),
+      new CustomEvent(Events.Change, {
+        bubbles: true,
+        detail: { state: state },
+      }),
     );
+
+    // Push server events after state is updated
+    const payload = { id: this.el.id, open: isOpen };
+    const openEvent = this.el.dataset.openEvent;
+    const closeEvent = this.el.dataset.closeEvent;
+    const toggleEvent = this.el.dataset.toggleEvent;
+
+    if (isOpen && openEvent) this.pushEvent(openEvent, payload);
+    if (!isOpen && closeEvent) this.pushEvent(closeEvent, payload);
+    if (toggleEvent) this.pushEvent(toggleEvent, payload);
   }
 
   private handleOpen = () => this.setState("open");
@@ -106,7 +124,8 @@ export class Collapsible extends FlintHook {
     const { trigger, content } = this.parts;
 
     this.hiddenUntilFound = content?.getAttribute("hidden") === "until-found";
-    this.currentState = (this.el.getAttribute("data-state") as CollapsibleState) ?? "closed";
+    this.currentState =
+      (this.el.getAttribute("data-state") as CollapsibleState) ?? "closed";
 
     if (this.hiddenUntilFound) {
       content?.addEventListener("beforematch", this.handleBeforeMatch);

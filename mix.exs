@@ -24,7 +24,9 @@ defmodule FlintUI.MixProject do
     [
       {:phoenix, "~> 1.8.5"},
       {:phoenix_live_view, "~> 1.1.28"},
-      {:ex_doc, "~> 0.40", only: :dev}
+      {:phoenix_test, "~> 0.10"},
+      {:ex_doc, "~> 0.40", only: :dev},
+      {:tidewave, "~> 0.5", only: :dev}
     ]
   end
 
