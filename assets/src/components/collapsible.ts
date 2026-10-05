@@ -1,5 +1,7 @@
 import { FlintHook } from "../lib/core";
-import { awaitAnimations } from "../lib/util";
+import { animatePresence } from "../lib/presence";
+
+const CSS_VAR_PREFIX = "collapsible";
 
 enum Events {
   Open = "fl:collapsible:open",
@@ -21,7 +23,7 @@ export class Collapsible extends FlintHook {
     const { trigger, content } = this.parts;
 
     // Invalidate any pending close-hide callbacks
-    this.animationGeneration++;
+    const gen = ++this.animationGeneration;
 
     this.currentState = state;
     this.js().setAttribute(this.el, "data-state", state);
@@ -32,44 +34,40 @@ export class Collapsible extends FlintHook {
     }
 
     if (content) {
-      if (isOpen) this.js().removeAttribute(content, "hidden");
-
-      // Freeze transitions/animations to measure natural size
-      const origTransition = content.style.transitionDuration;
-      const origAnimation = content.style.animationName;
-      content.style.transitionDuration = "0s";
-      content.style.animationName = "none";
-
-      const height = content.scrollHeight;
-      const width = content.scrollWidth;
-      content.style.setProperty("--fl-collapsible-height", `${height}px`);
-      content.style.setProperty("--fl-collapsible-width", `${width}px`);
-
-      // Don't restore on initial mount so no animation plays
-      if (!this.isMountAnimationPrevented) {
-        content.style.transitionDuration = origTransition;
-        content.style.animationName = origAnimation;
-      }
-
+      // Show: remove hidden before measuring so scrollHeight is accurate
       if (isOpen) {
-        // Forced reflow
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        content.offsetHeight;
+        this.js().removeAttribute(content, "hidden");
       }
 
+      const { done } = animatePresence(content, {
+        present: isOpen,
+        liveSocket: this.liveSocket,
+        mountPrevented: this.isMountAnimationPrevented,
+        cssVarPrefix: CSS_VAR_PREFIX,
+      });
+
+      // Set data-state on content to trigger CSS transition
       this.js().setAttribute(content, "data-state", state);
 
+      // On close, wait for animation before applying hidden
       if (!isOpen) {
-        const generation = this.animationGeneration;
-        awaitAnimations(content, () => {
-          if (this.animationGeneration === generation) {
+        done
+          .then(() => {
+            if (this.animationGeneration !== gen) return;
             this.js().setAttribute(
               content,
               "hidden",
               this.hiddenUntilFound ? "until-found" : "",
             );
-          }
-        });
+          })
+          .catch(() => {
+            if (this.animationGeneration !== gen) return;
+            this.js().setAttribute(
+              content,
+              "hidden",
+              this.hiddenUntilFound ? "until-found" : "",
+            );
+          });
       }
     }
 
@@ -126,6 +124,18 @@ export class Collapsible extends FlintHook {
     this.hiddenUntilFound = content?.getAttribute("hidden") === "until-found";
     this.currentState =
       (this.el.getAttribute("data-state") as CollapsibleState) ?? "closed";
+
+    // Set initial CSS vars on mount
+    if (content) {
+      content.style.setProperty(
+        `--fl-${CSS_VAR_PREFIX}-height`,
+        `${content.offsetHeight}px`,
+      );
+      content.style.setProperty(
+        `--fl-${CSS_VAR_PREFIX}-width`,
+        `${content.offsetWidth}px`,
+      );
+    }
 
     if (this.hiddenUntilFound) {
       content?.addEventListener("beforematch", this.handleBeforeMatch);

@@ -80,6 +80,11 @@ defmodule FlintUI.Collapsible do
       ],
       trigger: [
         %Meta.PartAttr{
+          name: "disabled",
+          value: "true | false",
+          description: "Whether interactions are suppressed."
+        },
+        %Meta.PartAttr{
           name: "[data-element]",
           value: "collapsible",
           description: "Identifies the component type."
@@ -98,6 +103,11 @@ defmodule FlintUI.Collapsible do
           name: "[data-disabled]",
           value: "true | false",
           description: "Whether trigger interactions are suppressed."
+        },
+        %Meta.PartAttr{
+          name: "aria-role",
+          value: "button",
+          description: "The role of the trigger element."
         },
         %Meta.PartAttr{
           name: "aria-controls",
@@ -157,12 +167,12 @@ defmodule FlintUI.Collapsible do
       %Meta.CSSVar{
         name: "--fl-collapsible-height",
         description:
-          "Natural scroll height of the content in pixels. Dynamically set on the content element by the Collapsible Hook."
+          "Natural scroll height of the content in pixels. Set by the underlying Presence animation engine."
       },
       %Meta.CSSVar{
         name: "--fl-collapsible-width",
         description:
-          "Natural scroll width of the content in pixels. Dynamically set on the content element by the Collapsible Hook."
+          "Natural scroll width of the content in pixels. Set by the underlying Presence animation engine."
       }
     ]
   end
@@ -214,10 +224,12 @@ defmodule FlintUI.Collapsible do
         "data-toggle-event" => assigns.toggle_event
       },
       trigger: %{
+        "disabled" => assigns.disabled,
         "data-element" => "collapsible",
         "data-part" => "trigger",
         "data-disabled" => assigns.disabled,
         "data-state" => state,
+        "aria-role" => "button",
         "aria-controls" => "#{assigns.id}-content",
         "aria-expanded" => assigns.open,
         "aria-disabled" => assigns.disabled
