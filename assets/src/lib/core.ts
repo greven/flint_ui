@@ -4,7 +4,16 @@ export abstract class FlintHook extends ViewHook {
   parts = {} as Record<string, HTMLElement>;
 
   mounted() {
+    this.refreshParts();
+  }
+
+  /**
+   * Re-reads the `[data-part]` elements that belong to this hook's root.
+   * Call this from `updated/0` when the server may have replaced part elements.
+   */
+  refreshParts(): Record<string, HTMLElement> {
     this.parts = getParts(this.el);
+    return this.parts;
   }
 }
 

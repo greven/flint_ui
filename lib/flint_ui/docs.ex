@@ -6,6 +6,13 @@ defmodule FlintUI.Docs do
   import FlintUI.API, only: [component_module: 1]
 
   @doc """
+  Fetches the metadata (`FlintUI.Meta`) for a component.
+  """
+  def meta(component) when is_atom(component) do
+    component_module(component).meta()
+  end
+
+  @doc """
   Fetches the documentation for a component's attributes (`:attrs`).
   """
   def attrs(component) when is_atom(component) do

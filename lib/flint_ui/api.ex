@@ -25,10 +25,6 @@ defmodule FlintUI.API do
     component_module = component_module(name)
     expanded_module = Macro.expand(component_module, __CALLER__)
 
-    if not Module.has_attribute?(__CALLER__.module, :__flint_components__) do
-      Module.register_attribute(__CALLER__.module, :__flint_components__, accumulate: true)
-    end
-
     Code.ensure_compiled!(expanded_module)
     component_def = expanded_module.__components__()[:render]
 
@@ -47,7 +43,17 @@ defmodule FlintUI.API do
         @doc unquote(module_doc)
         unquote_splicing(attr_ast)
         unquote_splicing(slots_ast)
-        def unquote(public_name)(assigns), do: unquote(expanded_module).render(assigns)
+
+        def unquote(public_name)(assigns) do
+          assigns =
+            Map.put(
+              assigns,
+              :__flint_parts__,
+              unquote(expanded_module).build_attrs(assigns)
+            )
+
+          unquote(expanded_module).render(assigns)
+        end
       end
 
     # Generate a delegations
@@ -66,7 +72,6 @@ defmodule FlintUI.API do
       end
 
     quote do
-      @__flint_components__ unquote(expanded_module)
       unquote(main)
       unquote_splicing(delegations)
     end

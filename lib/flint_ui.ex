@@ -18,21 +18,22 @@ defmodule FlintUI do
   """
 
   use Phoenix.Component
+  require FlintUI.API
 
   @components [
     {:button, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]}
   ]
 
-  require FlintUI.API
-  import FlintUI.API
-
   defmacro __using__(opts) do
     only = Keyword.get(opts, :only, :all)
     except = Keyword.get(opts, :except, [])
     prefix = Keyword.get(opts, :prefix)
 
-    components = Enum.filter(@components, fn {name, _aux} -> include?(name, only, except) end)
+    components =
+      Enum.filter(@components, fn {name, _aux} ->
+        if is_list(only), do: name in only, else: name not in except
+      end)
 
     calls =
       for {name, aux} <- components do
@@ -48,14 +49,20 @@ defmodule FlintUI do
     end
   end
 
-  ## Componnts
+  @doc """
+  Returns the names of the components registered by the library.
+  """
+  def components, do: Enum.map(@components, fn {name, _aux} -> name end)
 
-  component(:button)
-  component(:collapsible, other: [:open_collapsible, :close_collapsible, :toggle_collapsible])
-
-  ## Internal
-
-  defp include?(_name, :all, []), do: true
-  defp include?(name, :all, except), do: name not in except
-  defp include?(name, only, _except) when is_list(only), do: name in only
+  # Define this library's own components through the same code path consumers use.
+  for {name, aux} <- @components do
+    Code.eval_quoted(
+      quote do
+        require FlintUI.API
+        FlintUI.API.component(unquote(name), other: unquote(aux))
+      end,
+      [],
+      __ENV__
+    )
+  end
 end

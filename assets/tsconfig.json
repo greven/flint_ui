@@ -20,5 +20,5 @@
     "outDir": "../priv/static/",
     "lib": ["ESNext", "DOM"]
   },
-  "include": ["**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

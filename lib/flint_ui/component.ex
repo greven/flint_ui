@@ -61,10 +61,15 @@ defmodule FlintUI.Component do
   It takes a part name and returns the corresponding attributes for that part. It expects
   the module to define a `build_attrs/1` function that generates the attributes map based
   on the component's assigns.
+
+  The generated component wrapper computes `build_attrs/1` once per render and stores it
+  under `:__flint_parts__`, so calling `attrs/1` for several parts does not rebuild the map.
   """
   defmacro attrs(part) do
     quote do
-      build_attrs(var!(assigns))[unquote(part)]
+      Map.get_lazy(var!(assigns), :__flint_parts__, fn ->
+        build_attrs(var!(assigns))
+      end)[unquote(part)]
     end
   end
 end

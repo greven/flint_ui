@@ -38,5 +38,5 @@ if (watch) {
   process.stdout.write("Watching for changes...\n");
 } else {
   esbuild.build(buildOptions);
-  execSync("tsc --emitDeclarationOnly", { stdio: "inherit" });
+  execSync("tsc -p tsconfig.build.json --emitDeclarationOnly", { stdio: "inherit" });
 }

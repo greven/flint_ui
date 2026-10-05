@@ -10,7 +10,7 @@ interface TransitionSet {
 }
 
 interface LiveSocketLike {
-  transitions: TransitionSet;
+  transitions?: TransitionSet;
 }
 
 interface PresenceOptions {
@@ -30,9 +30,10 @@ interface PresenceResult {
  * Implements the freeze → measure → set CSS vars → unfreeze → reflow pattern
  * required for smooth CSS-based show/hide transitions.
  *
- * Uses `this.liveSocket.transitions.addAsyncTransition()` to integrate with
- * Phoenix LiveView's animation lock, preventing server DOM patches from
- * interfering with running animations.
+ * When available, uses `liveSocket.transitions.addAsyncTransition()` to integrate
+ * with Phoenix LiveView's animation lock, preventing server DOM patches from
+ * interfering with running animations. This is a private LiveView API, so it is
+ * feature-detected and skipped when absent.
  *
  * Sets CSS custom properties on the element:
  * - `--fl-{prefix}-height`: natural scroll height in pixels
@@ -46,16 +47,8 @@ interface PresenceResult {
  * @param opts - Animation options.
  * @returns An object with a `done` Promise that resolves when the animation completes.
  */
-export function animatePresence(
-  el: HTMLElement,
-  opts: PresenceOptions,
-): PresenceResult {
-  const {
-    present,
-    liveSocket,
-    mountPrevented = false,
-    cssVarPrefix = "presence",
-  } = opts;
+export function animatePresence(el: HTMLElement, opts: PresenceOptions): PresenceResult {
+  const { present, liveSocket, mountPrevented = false, cssVarPrefix = "presence" } = opts;
 
   // Freeze animations to get an accurate measurement of natural size
   const origTransition = el.style.transitionDuration;
@@ -63,9 +56,11 @@ export function animatePresence(
   el.style.transitionDuration = "0s";
   el.style.animationName = "none";
 
-  // Measure size and set CSS custom properties
-  el.style.setProperty(`--fl-${cssVarPrefix}-height`, `${el.offsetHeight}px`);
-  el.style.setProperty(`--fl-${cssVarPrefix}-width`, `${el.offsetWidth}px`);
+  // Measure size and set CSS custom properties. `scrollHeight`/`scrollWidth`
+  // describe the natural content size even when the element is collapsed to
+  // `height: 0`, which is what the CSS interpolates from/to.
+  el.style.setProperty(`--fl-${cssVarPrefix}-height`, `${el.scrollHeight}px`);
+  el.style.setProperty(`--fl-${cssVarPrefix}-width`, `${el.scrollWidth}px`);
 
   // Restore animations (skip on initial mount to prevent a flash)
   if (!mountPrevented) {
@@ -83,7 +78,11 @@ export function animatePresence(
   // Wait for all running animations/transitions to finish, with a timeout fallback.
   // Integrate with Phoenix's TransitionSet so server DOM patches queue behind us.
   const done = awaitAnimationsPromise(el);
-  liveSocket.transitions.addAsyncTransition(done);
+
+  const transitions = liveSocket.transitions;
+  if (transitions && typeof transitions.addAsyncTransition === "function") {
+    transitions.addAsyncTransition(done);
+  }
 
   return { done };
 }

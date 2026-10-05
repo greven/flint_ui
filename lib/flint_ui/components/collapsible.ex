@@ -14,6 +14,14 @@ defmodule FlintUI.Collapsible do
         </div>
       </:content>
     </FlintUI.collapsible>
+
+  Both slots receive a map of attributes for their part, which must be spread onto
+  the element you render. The `:trigger` slot is expected to render a native
+  `<button>`; the component supplies `type="button"` and the ARIA wiring.
+
+  Toggling is client-side. Set `open_event`, `close_event` or `toggle_event` to push
+  the resulting state to the server, or use `open_collapsible/2`, `close_collapsible/2`
+  and `toggle_collapsible/2` to drive it from a `Phoenix.LiveView.JS` command.
   """
 
   use FlintUI.Component
@@ -24,7 +32,7 @@ defmodule FlintUI.Collapsible do
       name: :collapsible,
       type: :misc,
       since: "0.1.0",
-      status: :experimental
+      status: :draft
     }
   end
 
@@ -39,7 +47,7 @@ defmodule FlintUI.Collapsible do
         },
         %Meta.PartAttr{
           name: "phx-hook",
-          value: "Collapsible",
+          value: "FlintUI.Collapsible",
           description: "The JS hook that powers the component."
         },
         %Meta.PartAttr{
@@ -76,6 +84,12 @@ defmodule FlintUI.Collapsible do
           name: "[data-toggle-event]",
           value: "string",
           description: "Server event pushed on toggle."
+        },
+        %Meta.PartAttr{
+          name: "[data-hidden-until-found]",
+          value: "boolean",
+          description:
+            "Present when `hidden_until_found` is set. The JS hook uses it to apply `hidden=\"until-found\"` when closing."
         }
       ],
       trigger: [
@@ -105,9 +119,9 @@ defmodule FlintUI.Collapsible do
           description: "Whether trigger interactions are suppressed."
         },
         %Meta.PartAttr{
-          name: "aria-role",
+          name: "type",
           value: "button",
-          description: "The role of the trigger element."
+          description: "Prevents the trigger from submitting an enclosing form."
         },
         %Meta.PartAttr{
           name: "aria-controls",
@@ -184,25 +198,25 @@ defmodule FlintUI.Collapsible do
         name: "fl:collapsible:open",
         source: :client,
         doc:
-          "Event triggered when the collapsible is opened. The event payload includes the collapsible's id and state."
+          "Client command event that opens the collapsible. Dispatch it with `open_collapsible/2` or `Phoenix.LiveView.JS.dispatch/3`. Carries no payload."
       },
       %Meta.Event{
         name: "fl:collapsible:close",
         source: :client,
         doc:
-          "Event triggered when the collapsible is closed. The event payload includes the collapsible's id and state."
+          "Client command event that closes the collapsible. Dispatch it with `close_collapsible/2` or `Phoenix.LiveView.JS.dispatch/3`. Carries no payload."
       },
       %Meta.Event{
         name: "fl:collapsible:toggle",
         source: :client,
         doc:
-          "Event triggered when the collapsible is toggled. The event payload includes the collapsible's id and state."
+          "Client command event that toggles the collapsible. Dispatch it with `toggle_collapsible/2` or `Phoenix.LiveView.JS.dispatch/3`. Carries no payload."
       },
       %Meta.Event{
         name: "fl:collapsible:change",
         source: :client,
         doc:
-          "Event dispatched when the collapsible state changes. Bubbles up the DOM. The event payload includes the collapsible's current state."
+          "Dispatched on the root whenever the state changes. Bubbles up the DOM. The event `detail` is a map with a `state` key (`\"open\"` or `\"closed\"`)."
       }
     ]
   end
@@ -214,25 +228,26 @@ defmodule FlintUI.Collapsible do
     %{
       root: %{
         "id" => assigns.id,
-        "phx-hook" => "Collapsible",
+        "phx-hook" => "FlintUI.Collapsible",
         "data-element" => "collapsible",
         "data-part" => "root",
         "data-disabled" => assigns.disabled,
         "data-state" => state,
         "data-open-event" => assigns.open_event,
         "data-close-event" => assigns.close_event,
-        "data-toggle-event" => assigns.toggle_event
+        "data-toggle-event" => assigns.toggle_event,
+        "data-hidden-until-found" => assigns.hidden_until_found
       },
       trigger: %{
+        "type" => "button",
         "disabled" => assigns.disabled,
         "data-element" => "collapsible",
         "data-part" => "trigger",
         "data-disabled" => assigns.disabled,
         "data-state" => state,
-        "aria-role" => "button",
         "aria-controls" => "#{assigns.id}-content",
-        "aria-expanded" => assigns.open,
-        "aria-disabled" => assigns.disabled
+        "aria-expanded" => to_string(assigns.open),
+        "aria-disabled" => to_string(assigns.disabled)
       },
       content: %{
         "id" => "#{assigns.id}-content",
@@ -292,7 +307,11 @@ defmodule FlintUI.Collapsible do
 
   attr(:rest, :global, doc: "Additional HTML attributes.")
 
-  slot(:trigger, required: true, doc: "The trigger element for the collapsible.")
+  slot(:trigger,
+    required: true,
+    doc: "The trigger. Render a native `<button>` and spread the provided attributes onto it."
+  )
+
   slot(:content, required: true, doc: "The content to show or hide.")
 
   @impl true

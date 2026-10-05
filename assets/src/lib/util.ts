@@ -19,10 +19,7 @@ export function awaitAnimations(el: HTMLElement, callback: () => void): void {
  * @param el - The element to check for animations.
  * @param maxTimeout - Maximum time in ms to wait before forcing resolution. Default 5000.
  */
-export function awaitAnimationsPromise(
-  el: HTMLElement,
-  maxTimeout = 5000,
-): Promise<void> {
+export function awaitAnimationsPromise(el: HTMLElement, maxTimeout = 5000): Promise<void> {
   return new Promise<void>((resolve) => {
     requestAnimationFrame(() => {
       const animations = el.getAnimations();
