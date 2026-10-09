@@ -11,6 +11,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert html =~ ~p"/components/collapsible"
     assert html =~ ~p"/components/icon"
     assert html =~ ~p"/components/loading"
+    assert html =~ ~p"/components/toggle"
   end
 
   test "component page renders the preview and API reference", %{conn: conn} do
@@ -31,6 +32,24 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
 
     assert has_element?(view, "#preview [data-element='loading']")
+  end
+
+  test "toggle page renders a FlintUI toggle", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/toggle")
+
+    assert has_element?(view, "#preview [data-element='toggle'][aria-pressed='false']")
+
+    view |> element("button[phx-value-key='pressed']") |> render_click()
+
+    assert has_element?(view, "#preview [data-element='toggle'][aria-pressed='true']")
+  end
+
+  test "collapsible page documents keyboard interactions", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/collapsible")
+
+    assert has_element?(view, "#keyboard")
+    assert has_element?(view, "#keyboard code", "Enter")
+    assert has_element?(view, "#keyboard code", "Space")
   end
 
   test "toggling the disabled control updates the preview", %{conn: conn} do

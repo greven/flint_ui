@@ -143,6 +143,11 @@ defmodule FlintUI.CollapsibleTest do
 
       refute Enum.any?(parts.trigger, &(&1.name == "aria-role"))
     end
+
+    test "documents keyboard interactions" do
+      assert [%FlintUI.Meta.Keyboard{keys: "Enter"}, %FlintUI.Meta.Keyboard{keys: "Space"}] =
+               FlintUI.Collapsible.keyboard()
+    end
   end
 
   describe "JS helpers" do

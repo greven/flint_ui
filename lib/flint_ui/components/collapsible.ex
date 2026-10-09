@@ -22,6 +22,26 @@ defmodule FlintUI.Collapsible do
   Toggling is client-side. Set `open_event`, `close_event` or `toggle_event` to push
   the resulting state to the server, or use `open_collapsible/2`, `close_collapsible/2`
   and `toggle_collapsible/2` to drive it from a `Phoenix.LiveView.JS` command.
+
+  ## Accessibility
+
+  The trigger is a native `<button>`, exposed with an implicit `button` role. The
+  component sets `aria-expanded` on it to convey the open/closed state, and
+  `aria-controls` pointing at the content element.
+
+  While collapsed, the content carries the native `hidden` attribute, which removes
+  it from the accessibility tree and the tab order. With `hidden_until_found`, the
+  content is hidden with `hidden="until-found"` instead; the browser's find-in-page
+  can then reveal it and reopens the disclosure through a `beforematch` event.
+
+  Give the trigger a meaningful accessible name in both states. The open/closed
+  state is already announced through `aria-expanded`, so a label such as
+  "Show more" / "Show less" is fine.
+
+  ## Keyboard
+
+  - `Enter` - toggles the disclosure.
+  - `Space` - toggles the disclosure.
   """
 
   use FlintUI.Component
@@ -173,6 +193,14 @@ defmodule FlintUI.Collapsible do
         }
       ]
     }
+  end
+
+  @impl true
+  def keyboard do
+    [
+      %Meta.Keyboard{keys: "Enter", description: "Toggles the disclosure."},
+      %Meta.Keyboard{keys: "Space", description: "Toggles the disclosure."}
+    ]
   end
 
   @impl true

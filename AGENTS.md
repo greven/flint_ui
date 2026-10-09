@@ -50,6 +50,13 @@ does **not** own them. When FlintUI ships a form/field component it should accep
 already-translated error strings (or call `translate_error/1` only if the host defines
 it). Revisit in depth when inputs are implemented.
 
+### Use the built-in `JSON` module
+
+Elixir 1.18+ ships a `JSON` module that implements the interface `Phoenix.json_library/0`
+expects (`encode!/1`, `decode!/1`, `encode_to_iodata!/1`). Configure it with
+`config :phoenix, :json_library, JSON` (root `config/config.exs` and `docs/config/config.exs`)
+and **never add Jason** as a dependency.
+
 ## References
 
 Prefer these authoritative sources when implementing a component:

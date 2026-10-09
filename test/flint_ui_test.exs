@@ -6,6 +6,7 @@ defmodule FlintUITest do
     assert :collapsible in FlintUI.components()
     assert :icon in FlintUI.components()
     assert :loading in FlintUI.components()
+    assert :toggle in FlintUI.components()
   end
 
   test "every registered component exposes a complete, valid contract" do

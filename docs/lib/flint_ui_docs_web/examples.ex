@@ -24,14 +24,16 @@ defmodule FlintUIDocsWeb.Examples do
     Collapsible,
     Default,
     Icon,
-    Loading
+    Loading,
+    Toggle
   }
 
   @modules %{
     button: Button,
     collapsible: Collapsible,
     icon: Icon,
-    loading: Loading
+    loading: Loading,
+    toggle: Toggle
   }
 
   attr(:name, :atom, required: true)
