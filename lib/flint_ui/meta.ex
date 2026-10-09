@@ -49,9 +49,28 @@ defmodule FlintUI.Meta do
     defstruct [:name, :description]
   end
 
+  defmodule Keyboard do
+    @moduledoc """
+    Describes a keyboard interaction supported by a component.
+    """
+
+    @type t :: %__MODULE__{keys: String.t(), description: String.t()}
+
+    @enforce_keys [:keys, :description]
+    defstruct [:keys, :description]
+  end
+
   # Meta
 
-  @type type :: :data | :overlay | :input | :button | :feedback | :misc
+  # Canonical ordering for the component types.
+  @types [:layout, :element, :form, :navigation, :overlay, :data]
+
+  @type type :: :layout | :element | :form | :navigation | :overlay | :data
+
+  @doc """
+  Returns the component types in their canonical display order.
+  """
+  def types, do: @types
 
   @type t :: %__MODULE__{
           name: String.t(),

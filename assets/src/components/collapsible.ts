@@ -45,9 +45,10 @@ export class Collapsible extends FlintHook {
     if (prevTrigger && prevTrigger !== trigger) {
       prevTrigger.removeEventListener("click", this.handleTriggerClick);
     }
-    if (prevContent && prevContent !== content) {
-      prevContent.removeEventListener("beforematch", this.handleBeforeMatch);
-    }
+
+    // Remove unconditionally: `hidden_until_found` may have been toggled off
+    // server-side while the content element itself stayed the same.
+    prevContent?.removeEventListener("beforematch", this.handleBeforeMatch);
 
     // addEventListener de-duplicates identical (type, listener) pairs, so this
     // is safe to call on every update.
@@ -60,12 +61,18 @@ export class Collapsible extends FlintHook {
     this.boundContent = content ?? null;
   }
 
-  private setInitialCssVars(): void {
+  private updateCssVars(): void {
     const content = this.parts.content;
     if (!content) return;
 
-    content.style.setProperty(`--fl-${CSS_VAR_PREFIX}-height`, `${content.scrollHeight}px`);
-    content.style.setProperty(`--fl-${CSS_VAR_PREFIX}-width`, `${content.scrollWidth}px`);
+    content.style.setProperty(
+      `--fl-${CSS_VAR_PREFIX}-height`,
+      `${content.scrollHeight}px`,
+    );
+    content.style.setProperty(
+      `--fl-${CSS_VAR_PREFIX}-width`,
+      `${content.scrollWidth}px`,
+    );
   }
 
   private emitChange(state: CollapsibleState): void {
@@ -89,10 +96,6 @@ export class Collapsible extends FlintHook {
 
   /**
    * Applies `state`, running the enter/leave animation.
-   *
-   * `emit` controls whether the server events (`data-open-event`, …) are pushed.
-   * It is `false` when the state change originated from the server to avoid
-   * echoing events back to the LiveView that produced them.
    */
   private setState(state: CollapsibleState, emit = true): void {
     if (state === this.currentState) return;
@@ -126,7 +129,11 @@ export class Collapsible extends FlintHook {
       if (!isOpen) {
         const hide = () => {
           if (this.animationGeneration !== gen) return;
-          this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
+          this.js().setAttribute(
+            content,
+            "hidden",
+            this.hiddenUntilFound ? "until-found" : "",
+          );
         };
         done.then(hide).catch(hide);
       }
@@ -164,7 +171,7 @@ export class Collapsible extends FlintHook {
     this.currentState = this.readState();
 
     this.syncParts();
-    this.setInitialCssVars();
+    this.updateCssVars();
 
     // Prevent the enter animation on initial open mount
     this.isMountAnimationPrevented = this.currentState === "open";
@@ -180,12 +187,17 @@ export class Collapsible extends FlintHook {
   }
 
   updated() {
-    // The server may have replaced the trigger/content nodes and changed state.
+    // The server may have replaced the trigger/content nodes, and may have
+    // changed `hidden_until_found` or the state.
+    this.hiddenUntilFound = this.el.hasAttribute("data-hidden-until-found");
     this.syncParts();
 
     const state = this.readState();
     if (state !== this.currentState) {
       this.setState(state, false);
+    } else if (state === "open") {
+      // The server may have patched in taller/async content while open
+      this.updateCssVars();
     }
   }
 
@@ -194,6 +206,9 @@ export class Collapsible extends FlintHook {
     this.el.removeEventListener(Events.Close, this.handleClose);
     this.el.removeEventListener(Events.Toggle, this.handleToggle);
     this.boundTrigger?.removeEventListener("click", this.handleTriggerClick);
-    this.boundContent?.removeEventListener("beforematch", this.handleBeforeMatch);
+    this.boundContent?.removeEventListener(
+      "beforematch",
+      this.handleBeforeMatch,
+    );
   }
 }

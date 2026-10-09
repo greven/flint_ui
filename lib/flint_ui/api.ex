@@ -29,9 +29,35 @@ defmodule FlintUI.API do
     component_def = expanded_module.__components__()[:render]
 
     %{attrs: attrs, slots: slots} = component_def
+
     attr_ast = component_attrs(attrs)
     slots_ast = component_slots(slots)
     module_doc = fetch_moduledoc(expanded_module)
+    changed_var = Macro.var(:changed, __MODULE__)
+
+    inputs =
+      attrs
+      |> Enum.map(& &1.name)
+      |> Kernel.++([:rest])
+      |> Enum.reject(&(&1 == :flint_parts))
+      |> Enum.uniq()
+
+    inputs_ast = Macro.escape(inputs)
+
+    marked_ast =
+      Enum.reduce(slots, quote(do: Map.put(unquote(changed_var), :flint_parts, true)), fn
+        %{name: name}, acc ->
+          quote do: Map.put(unquote(acc), unquote(name), true)
+      end)
+
+    changed_ast =
+      quote do
+        if Enum.any?(unquote(inputs_ast), &Map.has_key?(unquote(changed_var), &1)) do
+          unquote(marked_ast)
+        else
+          unquote(changed_var)
+        end
+      end
 
     public_name =
       if prefix,
@@ -45,18 +71,24 @@ defmodule FlintUI.API do
         unquote_splicing(slots_ast)
 
         def unquote(public_name)(assigns) do
+          parts = unquote(expanded_module).build_attrs(assigns)
+
+          changed =
+            case assigns[:__changed__] do
+              unquote(changed_var) when is_map(unquote(changed_var)) -> unquote(changed_ast)
+              other -> other
+            end
+
           assigns =
-            Map.put(
-              assigns,
-              :__flint_parts__,
-              unquote(expanded_module).build_attrs(assigns)
-            )
+            assigns
+            |> Map.put(:flint_parts, parts)
+            |> Map.put(:__changed__, changed)
 
           unquote(expanded_module).render(assigns)
         end
       end
 
-    # Generate a delegations
+    # Generate delegations
     exports = expanded_module.__info__(:functions)
 
     delegations =

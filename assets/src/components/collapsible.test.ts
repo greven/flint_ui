@@ -151,6 +151,24 @@ describe("Collapsible hook", () => {
     expect(view.pushHookEvent).not.toHaveBeenCalled();
   });
 
+  it("re-measures the content while open when the server patches it", () => {
+    const { content, hook } = setup({ state: "open" });
+
+    Object.defineProperty(content, "scrollHeight", { configurable: true, value: 240 });
+    hook.updated();
+
+    expect(content.style.getPropertyValue("--fl-collapsible-height")).toBe("240px");
+  });
+
+  it("does not re-measure the content while closed", () => {
+    const { content, hook } = setup({ state: "closed" });
+
+    Object.defineProperty(content, "scrollHeight", { configurable: true, value: 240 });
+    hook.updated();
+
+    expect(content.style.getPropertyValue("--fl-collapsible-height")).not.toBe("240px");
+  });
+
   it("dispatches a change event on state changes", () => {
     const { el, trigger } = setup();
     const listener = vi.fn();
@@ -174,5 +192,28 @@ describe("Collapsible hook", () => {
     replacement.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     expect(el.getAttribute("data-state")).toBe("open");
+  });
+
+  it("activates the beforematch listener when hidden_until_found is enabled by the server", () => {
+    const { el, content, hook } = setup();
+
+    el.setAttribute("data-hidden-until-found", "");
+    hook.updated();
+    content.dispatchEvent(new Event("beforematch"));
+
+    expect(el.getAttribute("data-state")).toBe("open");
+  });
+
+  it("deactivates the beforematch listener when hidden_until_found is disabled by the server", () => {
+    const { el, content, hook } = setup({ hiddenUntilFound: true });
+
+    el.dispatchEvent(new CustomEvent("fl:collapsible:close", { bubbles: true }));
+    expect(el.getAttribute("data-state")).toBe("closed");
+
+    el.removeAttribute("data-hidden-until-found");
+    hook.updated();
+    content.dispatchEvent(new Event("beforematch"));
+
+    expect(el.getAttribute("data-state")).toBe("closed");
   });
 });

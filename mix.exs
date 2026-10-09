@@ -24,7 +24,7 @@ defmodule FlintUI.MixProject do
     [
       {:phoenix, "~> 1.8.5"},
       {:phoenix_live_view, "~> 1.1.28"},
-      {:phoenix_test, "~> 0.10"},
+      {:lazy_html, ">= 0.1.0", only: :test},
       {:ex_doc, "~> 0.40", only: :dev},
       {:tidewave, "~> 0.5", only: :dev}
     ]
@@ -35,7 +35,16 @@ defmodule FlintUI.MixProject do
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["cmd npm install --prefix assets"],
       "assets.build": ["cmd npm run build --prefix assets"],
-      "assets.watch": ["cmd npm start --prefix assets"]
+      "assets.watch": ["cmd npm start --prefix assets"],
+      "docs.setup": [
+        "deps.get",
+        "assets.setup",
+        "assets.build",
+        "cmd --cd docs mix deps.get",
+        "cmd --cd docs mix assets.setup",
+        "cmd --cd docs mix assets.build"
+      ],
+      "docs.serve": ["cmd --cd docs mix phx.server"]
     ]
   end
 end

@@ -36,7 +36,13 @@ if (watch) {
   let ctx = await esbuild.context({ ...buildOptions, sourcemap: "inline" });
   await ctx.watch();
   process.stdout.write("Watching for changes...\n");
+
+  // Exit when the parent (e.g. the Phoenix watcher) closes stdin
+  process.stdin.on("end", () => process.exit(0));
+  process.stdin.resume();
 } else {
   esbuild.build(buildOptions);
-  execSync("tsc -p tsconfig.build.json --emitDeclarationOnly", { stdio: "inherit" });
+  execSync("tsc -p tsconfig.build.json --emitDeclarationOnly", {
+    stdio: "inherit",
+  });
 }

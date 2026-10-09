@@ -30,7 +30,7 @@ defmodule FlintUI.Collapsible do
   def meta do
     %Meta{
       name: :collapsible,
-      type: :misc,
+      type: :element,
       since: "0.1.0",
       status: :draft
     }
@@ -266,6 +266,8 @@ defmodule FlintUI.Collapsible do
 
   @doc false
 
+  attr(:flint_parts, :map, default: nil)
+
   attr(:id, :string, required: true, doc: "Unique component DOM id.")
 
   attr(:as, :string,
@@ -283,8 +285,8 @@ defmodule FlintUI.Collapsible do
   attr(:hidden_until_found, :boolean,
     default: false,
     doc:
-      ~S(Whether the content is hidden until it is found by the browser. When true, the content will be marked with `hidden=\"until-found\"`
-    when collapsed, allowing browsers to find and automatically expand the content when a search is performed.)
+      "Whether the content is hidden until it is found by the browser. When true, the content is marked with `hidden=\"until-found\"`
+      when collapsed, allowing browsers to find and automatically expand it when a search is performed."
   )
 
   attr(:open_event, :string,
@@ -317,9 +319,9 @@ defmodule FlintUI.Collapsible do
   @impl true
   def render(assigns) do
     ~H"""
-    <.dynamic_tag tag_name={@as} {attrs(:root)} {@rest}>
-      {render_slot(@trigger, attrs(:trigger))}
-      {render_slot(@content, attrs(:content))}
+    <.dynamic_tag tag_name={@as} {@flint_parts[:root]} {@rest}>
+      {render_slot(@trigger, @flint_parts[:trigger])}
+      {render_slot(@content, @flint_parts[:content])}
     </.dynamic_tag>
     """
   end

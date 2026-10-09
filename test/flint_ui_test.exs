@@ -4,6 +4,8 @@ defmodule FlintUITest do
   test "components/0 lists the registered components" do
     assert :button in FlintUI.components()
     assert :collapsible in FlintUI.components()
+    assert :icon in FlintUI.components()
+    assert :loading in FlintUI.components()
   end
 
   test "every registered component exposes a complete, valid contract" do
@@ -15,6 +17,7 @@ defmodule FlintUITest do
       assert is_list(FlintUI.Docs.slots(name))
       assert is_map(FlintUI.Docs.parts_attrs(name))
       assert is_list(FlintUI.Docs.events(name))
+      assert is_list(FlintUI.Docs.keyboard(name))
       assert is_list(FlintUI.Docs.css_vars(name))
     end
   end

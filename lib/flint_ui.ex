@@ -14,6 +14,8 @@ defmodule FlintUI do
 
   - `button`
   - `collapsible`
+  - `icon`
+  - `loading`
 
   """
 
@@ -22,7 +24,9 @@ defmodule FlintUI do
 
   @components [
     {:button, []},
-    {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]}
+    {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
+    {:icon, []},
+    {:loading, []}
   ]
 
   defmacro __using__(opts) do

@@ -15,9 +15,14 @@ defmodule FlintUI.Component do
   @callback events :: list(FlintUI.Meta.Event.t())
 
   @doc """
-  Returns a map of the component's parts, where each key is a part name (atom) and the value is a map
-  of attributes to be spread onto that part's root element. The minimum required parts is the `:root`,
-  but additional parts can be defined as needed.
+  Returns a map of the component's parts, where each key is a part name (atom) and the value
+  is a map of attributes to be spread onto that part's root element. The minimum required
+  parts is the `:root`, but additional parts can be defined as needed.
+
+  The generated component wrapper calls this once per render and exposes the result to
+  the template as the `@flint_parts` assign, so a part's attributes are spread with
+  `{@flint_parts[:part_name]}`. Because Phoenix drops undeclared assigns before
+  rendering, components must also declare `attr :flint_parts, :map, default: nil`.
   """
   @callback build_attrs(assigns :: map()) :: map()
 
@@ -40,7 +45,13 @@ defmodule FlintUI.Component do
   """
   @callback css_vars :: [FlintUI.Meta.CSSVar.t()]
 
-  @optional_callbacks events: 0, parts_attrs: 0, css_vars: 0
+  @doc """
+  Returns a list of `FlintUI.Meta.Keyboard` structs describing the keyboard
+  interactions the component supports.
+  """
+  @callback keyboard :: [FlintUI.Meta.Keyboard.t()]
+
+  @optional_callbacks events: 0, parts_attrs: 0, css_vars: 0, keyboard: 0
 
   defmacro __using__(_opts) do
     quote do
@@ -48,28 +59,10 @@ defmodule FlintUI.Component do
       alias Phoenix.LiveView.JS
 
       import FlintUI.API
-      import FlintUI.Component
 
       alias FlintUI.Meta
 
       @behaviour FlintUI.Component
-    end
-  end
-
-  @doc """
-  The attrs macro is used to inject the part attributes into the component's template.
-  It takes a part name and returns the corresponding attributes for that part. It expects
-  the module to define a `build_attrs/1` function that generates the attributes map based
-  on the component's assigns.
-
-  The generated component wrapper computes `build_attrs/1` once per render and stores it
-  under `:__flint_parts__`, so calling `attrs/1` for several parts does not rebuild the map.
-  """
-  defmacro attrs(part) do
-    quote do
-      Map.get_lazy(var!(assigns), :__flint_parts__, fn ->
-        build_attrs(var!(assigns))
-      end)[unquote(part)]
     end
   end
 end
