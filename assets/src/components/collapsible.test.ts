@@ -101,6 +101,25 @@ describe("Collapsible hook", () => {
     expect(content.hasAttribute("hidden")).toBe(false);
   });
 
+  it("publishes the measured size and releases the keyframes when opening", () => {
+    const { trigger, content } = setup();
+    Object.defineProperty(content, "scrollHeight", { configurable: true, value: 120 });
+    Object.defineProperty(content, "scrollWidth", { configurable: true, value: 300 });
+
+    trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(content.style.getPropertyValue("--fl-collapsible-height")).toBe("120px");
+    expect(content.style.getPropertyValue("--fl-collapsible-width")).toBe("300px");
+    expect(content.style.animationName).toBe("");
+    expect(content.getAttribute("data-state")).toBe("open");
+  });
+
+  it("suppresses the enter animation on an initially-open mount", () => {
+    const { content } = setup({ state: "open" });
+
+    expect(content.style.animationName).toBe("none");
+  });
+
   it("re-applies hidden after the close animation settles", async () => {
     const { trigger, content } = setup({ state: "open" });
 

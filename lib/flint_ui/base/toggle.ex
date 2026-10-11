@@ -1,4 +1,4 @@
-defmodule FlintUI.Toggle do
+defmodule FlintUI.Base.Toggle do
   @moduledoc """
   Renders a two-state button that is either pressed or not pressed.
 

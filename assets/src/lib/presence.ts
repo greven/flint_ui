@@ -14,10 +14,14 @@ interface LiveSocketLike {
 }
 
 interface PresenceOptions {
-  present: boolean;
   liveSocket: LiveSocketLike;
-  mountPrevented?: boolean;
   cssVarPrefix?: string;
+  /**
+   * Called synchronously while animations are frozen, after the natural size has
+   * been measured and published as CSS variables. Flip `data-state` here so the
+   * enter/leave keyframes run from the freshly measured size.
+   */
+  applyState?: () => void;
 }
 
 interface PresenceResult {
@@ -25,58 +29,39 @@ interface PresenceResult {
 }
 
 /**
- * Orchestrates the enter/leave animation lifecycle for an element.
+ * Orchestrates a CSS keyframe enter/leave transition.
  *
- * Implements the freeze → measure → set CSS vars → unfreeze → reflow pattern
- * required for smooth CSS-based show/hide transitions.
+ * Follows the Radix/Ark model: freeze the element's animations, measure its
+ * natural size into `--fl-{prefix}-height` / `--fl-{prefix}-width`, let the
+ * caller apply `data-state`, then release the keyframes for that state and wait
+ * for them to finish.
  *
  * When available, uses `liveSocket.transitions.addAsyncTransition()` to integrate
  * with Phoenix LiveView's animation lock, preventing server DOM patches from
  * interfering with running animations. This is a private LiveView API, so it is
  * feature-detected and skipped when absent.
  *
- * Sets CSS custom properties on the element:
- * - `--fl-{prefix}-height`: natural scroll height in pixels
- * - `--fl-{prefix}-width`: natural scroll width in pixels
- *
- * The prefix defaults to `"presence"` and can be customized via `cssVarPrefix`.
- * For example, `cssVarPrefix: "collapsible"` produces `--fl-collapsible-height`
- * and `--fl-collapsible-width`.
- *
  * @param el - The element to animate.
  * @param opts - Animation options.
  * @returns An object with a `done` Promise that resolves when the animation completes.
  */
 export function animatePresence(el: HTMLElement, opts: PresenceOptions): PresenceResult {
-  const { present, liveSocket, mountPrevented = false, cssVarPrefix = "presence" } = opts;
+  const { liveSocket, cssVarPrefix = "presence", applyState } = opts;
 
-  // Freeze animations to get an accurate measurement of natural size
-  const origTransition = el.style.transitionDuration;
-  const origAnimation = el.style.animationName;
-  el.style.transitionDuration = "0s";
+  // Freeze animations so the measuring reflow cannot start the wrong keyframes,
+  // and so a re-measure of async/patched content reads the natural size.
   el.style.animationName = "none";
 
-  // Measure size and set CSS custom properties. `scrollHeight`/`scrollWidth`
-  // describe the natural content size even when the element is collapsed to
-  // `height: 0`, which is what the CSS interpolates from/to.
+  // `scrollHeight`/`scrollWidth` describe the natural content size even when the
+  // element is clipped to `height: 0`.
   el.style.setProperty(`--fl-${cssVarPrefix}-height`, `${el.scrollHeight}px`);
   el.style.setProperty(`--fl-${cssVarPrefix}-width`, `${el.scrollWidth}px`);
 
-  // Restore animations (skip on initial mount to prevent a flash)
-  if (!mountPrevented) {
-    el.style.transitionDuration = origTransition;
-    el.style.animationName = origAnimation;
-  }
+  // Apply the target state while frozen, then release the keyframes for it.
+  applyState?.();
+  el.style.animationName = "";
 
-  // Force synchronous reflow on show so the browser picks up the CSS var
-  // values before the data-state switch triggers the transition
-  if (present) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    el.offsetHeight;
-  }
-
-  // Wait for all running animations/transitions to finish, with a timeout fallback.
-  // Integrate with Phoenix's TransitionSet so server DOM patches queue behind us.
+  // Wait for all running animations to finish, with a timeout fallback.
   const done = awaitAnimationsPromise(el);
 
   const transitions = liveSocket.transitions;

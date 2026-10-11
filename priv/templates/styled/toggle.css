@@ -1,0 +1,78 @@
+@layer components {
+  /* Toggle */
+  [data-element="toggle"][data-variant] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--fl-radius-md);
+    font-family: var(--fl-font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    cursor: pointer;
+    background: transparent;
+    color: var(--fl-color-foreground);
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  [data-element="toggle"][data-variant]:focus-visible {
+    outline: 2px solid var(--fl-color-ring);
+    outline-offset: 2px;
+  }
+
+  [data-element="toggle"][data-variant]:hover {
+    background: var(--fl-color-accent);
+    color: var(--fl-color-accent-foreground);
+  }
+
+  [data-element="toggle"][data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  [data-element="toggle"][data-variant="solid"][data-state="on"] {
+    background: var(--fl-color-primary);
+    color: var(--fl-color-primary-foreground);
+  }
+
+  [data-element="toggle"][data-variant="solid"][data-state="on"]:hover {
+    background: color-mix(in oklab, var(--fl-color-primary) 90%, transparent);
+  }
+
+  [data-element="toggle"][data-variant="outline"] {
+    border-color: var(--fl-color-border);
+  }
+
+  [data-element="toggle"][data-variant="outline"][data-state="on"] {
+    background: var(--fl-color-accent);
+    color: var(--fl-color-accent-foreground);
+    border-color: var(--fl-color-border);
+  }
+
+  [data-element="toggle"][data-variant="ghost"][data-state="on"] {
+    background: var(--fl-color-accent);
+    color: var(--fl-color-accent-foreground);
+  }
+
+  [data-element="toggle"][data-size="sm"] {
+    height: 2rem;
+    padding-inline: 0.625rem;
+  }
+
+  [data-element="toggle"][data-size="md"] {
+    height: 2.25rem;
+    padding-inline: 0.75rem;
+  }
+
+  [data-element="toggle"][data-size="lg"] {
+    height: 2.5rem;
+    padding-inline: 1rem;
+    font-size: 1rem;
+  }
+}

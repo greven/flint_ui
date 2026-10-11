@@ -1,18 +1,18 @@
 defmodule FlintUIDocsWeb.Examples.Default do
   @moduledoc """
-  Fallback example for a library component that does not have an authored one yet.
+  Fallback page for a library component that does not have an authored one yet.
   """
 
-  use FlintUIDocsWeb.Examples.Example
+  use FlintUIDocsWeb.Examples.Example, component: :default
 
   @impl true
   def controls, do: []
 
   @impl true
-  def variants, do: []
+  def structure, do: nil
 
   @impl true
-  def structure, do: nil
+  def accessibility, do: nil
 
   @impl true
   def render_example(assigns) do

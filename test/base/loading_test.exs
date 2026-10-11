@@ -1,4 +1,4 @@
-defmodule FlintUI.LoadingTest do
+defmodule FlintUI.Base.LoadingTest do
   use ExUnit.Case, async: true
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
@@ -97,9 +97,9 @@ defmodule FlintUI.LoadingTest do
   end
 
   test "declares a documented contract" do
-    assert %FlintUI.Meta{name: :loading, type: :element} = FlintUI.Loading.meta()
+    assert %FlintUI.Meta{name: :loading, type: :element} = FlintUI.Base.Loading.meta()
 
-    parts = FlintUI.Loading.parts_attrs()
+    parts = FlintUI.Base.Loading.parts_attrs()
 
     assert %FlintUI.Meta.PartAttr{value: "loading"} =
              Enum.find(parts.root, &(&1.name == "[data-element]"))

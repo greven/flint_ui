@@ -1,4 +1,4 @@
-defmodule FlintUI.CollapsibleTest do
+defmodule FlintUI.Base.CollapsibleTest do
   use ExUnit.Case, async: true
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
@@ -131,9 +131,9 @@ defmodule FlintUI.CollapsibleTest do
 
   describe "metadata" do
     test "declares a stable, documented contract" do
-      assert %FlintUI.Meta{name: :collapsible, status: :draft} = FlintUI.Collapsible.meta()
+      assert %FlintUI.Meta{name: :collapsible, status: :draft} = FlintUI.Base.Collapsible.meta()
 
-      parts = FlintUI.Collapsible.parts_attrs()
+      parts = FlintUI.Base.Collapsible.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "FlintUI.Collapsible"} =
                Enum.find(parts.root, &(&1.name == "phx-hook"))
@@ -146,27 +146,27 @@ defmodule FlintUI.CollapsibleTest do
 
     test "documents keyboard interactions" do
       assert [%FlintUI.Meta.Keyboard{keys: "Enter"}, %FlintUI.Meta.Keyboard{keys: "Space"}] =
-               FlintUI.Collapsible.keyboard()
+               FlintUI.Base.Collapsible.keyboard()
     end
   end
 
   describe "JS helpers" do
     test "dispatch the matching client events to the component root" do
-      assert %Phoenix.LiveView.JS{ops: ops} = FlintUI.Collapsible.open_collapsible("test")
+      assert %Phoenix.LiveView.JS{ops: ops} = FlintUI.Base.Collapsible.open_collapsible("test")
       assert ops == [["dispatch", %{to: "#test", event: "fl:collapsible:open"}]]
 
       assert %Phoenix.LiveView.JS{
                ops: [["dispatch", %{to: "#test", event: "fl:collapsible:close"}]]
-             } = FlintUI.Collapsible.close_collapsible("test")
+             } = FlintUI.Base.Collapsible.close_collapsible("test")
 
       assert %Phoenix.LiveView.JS{
                ops: [["dispatch", %{to: "#test", event: "fl:collapsible:toggle"}]]
-             } = FlintUI.Collapsible.toggle_collapsible("test")
+             } = FlintUI.Base.Collapsible.toggle_collapsible("test")
     end
 
     test "composes onto an existing JS command" do
       js = Phoenix.LiveView.JS.set_attribute(%Phoenix.LiveView.JS{}, {"data-x", "1"})
-      %Phoenix.LiveView.JS{ops: ops} = FlintUI.Collapsible.open_collapsible(js, "test")
+      %Phoenix.LiveView.JS{ops: ops} = FlintUI.Base.Collapsible.open_collapsible(js, "test")
 
       assert length(ops) == 2
       assert List.last(ops) == ["dispatch", %{to: "#test", event: "fl:collapsible:open"}]

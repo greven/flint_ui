@@ -1,4 +1,4 @@
-defmodule FlintUI.ToggleTest do
+defmodule FlintUI.Base.ToggleTest do
   use ExUnit.Case, async: true
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
@@ -39,7 +39,7 @@ defmodule FlintUI.ToggleTest do
 
   defp ops(on_click) do
     %JS{ops: ops} =
-      FlintUI.Toggle.build_attrs(%{
+      FlintUI.Base.Toggle.build_attrs(%{
         type: "button",
         pressed: false,
         disabled: false,
@@ -104,9 +104,10 @@ defmodule FlintUI.ToggleTest do
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :toggle, type: :element, status: :draft} = FlintUI.Toggle.meta()
+      assert %FlintUI.Meta{name: :toggle, type: :element, status: :draft} =
+               FlintUI.Base.Toggle.meta()
 
-      parts = FlintUI.Toggle.parts_attrs()
+      parts = FlintUI.Base.Toggle.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "toggle"} =
                Enum.find(parts.root, &(&1.name == "[data-element]"))
@@ -119,7 +120,7 @@ defmodule FlintUI.ToggleTest do
 
     test "documents keyboard interactions" do
       assert [%FlintUI.Meta.Keyboard{keys: "Enter"}, %FlintUI.Meta.Keyboard{keys: "Space"}] =
-               FlintUI.Toggle.keyboard()
+               FlintUI.Base.Toggle.keyboard()
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule FlintUI.Loading do
+defmodule FlintUI.Base.Loading do
   @moduledoc """
   Renders an animated loading indicator.
 
@@ -15,7 +15,7 @@ defmodule FlintUI.Loading do
 
   The spinner is decorative by default and hidden from assistive technology.
   Inside a component that already conveys the busy state leave it decorative:
-  `FlintUI.Button` with `loading` sets `aria-busy`, so the indicator needs no
+  `FlintUI.Base.Button` with `loading` sets `aria-busy`, so the indicator needs no
   name of its own. For a standalone status, pass `label` to expose it as a
   labeled image:
 
@@ -27,7 +27,7 @@ defmodule FlintUI.Loading do
   another element does not know when to appear. Reveal it in one of two ways:
 
     * conditionally, e.g. `<.loading :if={@loading} />`; or
-    * with CSS driven by a parent data attribute. `FlintUI.Button` sets
+    * with CSS driven by a parent data attribute. `FlintUI.Base.Button` sets
       `[data-loading]` while loading, so the spinner can be exposed with a
       selector such as `[data-loading] [data-element="loading"]`, for example
       using Tailwind CSS: `class="hidden [[data-loading]_&]:inline-block"`.

@@ -1,4 +1,4 @@
-defmodule FlintUI.IconTest do
+defmodule FlintUI.Base.IconTest do
   use ExUnit.Case, async: true
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
@@ -87,9 +87,9 @@ defmodule FlintUI.IconTest do
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :icon, type: :element} = FlintUI.Icon.meta()
+      assert %FlintUI.Meta{name: :icon, type: :element} = FlintUI.Base.Icon.meta()
 
-      parts = FlintUI.Icon.parts_attrs()
+      parts = FlintUI.Base.Icon.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "icon"} =
                Enum.find(parts.root, &(&1.name == "[data-element]"))

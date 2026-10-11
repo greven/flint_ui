@@ -18,6 +18,8 @@ defmodule FlintUIDocsWeb.Router do
     pipe_through(:browser)
 
     live("/", OverviewLive, :index)
+    live("/getting-started", GettingStartedLive, :index)
+    live("/theming", ThemeLive, :index)
     live("/components/:name", ComponentLive, :show)
   end
 

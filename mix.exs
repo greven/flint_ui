@@ -7,6 +7,7 @@ defmodule FlintUI.MixProject do
       version: "0.1.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
+      compilers: Mix.compilers() ++ [:flint_theme],
       deps: deps(),
       aliases: aliases()
     ]
@@ -24,6 +25,7 @@ defmodule FlintUI.MixProject do
     [
       {:phoenix, "~> 1.8.5"},
       {:phoenix_live_view, "~> 1.1.28"},
+      {:igniter, "~> 0.6", optional: true},
       {:lazy_html, ">= 0.1.0", only: :test},
       {:ex_doc, "~> 0.40", only: :dev},
       {:tidewave, "~> 0.5", only: :dev}

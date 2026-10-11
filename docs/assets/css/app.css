@@ -2,6 +2,7 @@
    https://tailwindcss.com/docs/configuration */
 
 @import "tailwindcss" source(none);
+@import "../../../priv/static/flint.css";
 @source "../css";
 @source "../js";
 @source "../../lib/flint_ui_docs_web";
@@ -20,16 +21,4 @@
 
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session], [data-phx-teleported-src] { display: contents }
-
-/* Collapsible reference styles (used by the docs demo). The hook measures the
-   content and exposes its natural height as --fl-collapsible-height. */
-[data-element="collapsible"] [data-part="content"] {
-  overflow: hidden;
-  height: 0;
-  transition: height 250ms ease;
-}
-
-[data-element="collapsible"] [data-part="content"][data-state="open"] {
-  height: var(--fl-collapsible-height);
-}
 

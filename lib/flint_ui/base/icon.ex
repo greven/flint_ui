@@ -1,4 +1,4 @@
-defmodule FlintUI.Icon do
+defmodule FlintUI.Base.Icon do
   @moduledoc """
   Renders a decorative or labeled icon.
 

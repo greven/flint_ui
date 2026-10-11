@@ -15,10 +15,10 @@ type CollapsibleState = "open" | "closed";
 export class Collapsible extends FlintHook {
   private currentState: CollapsibleState = "closed";
   private hiddenUntilFound = false;
-  private isMountAnimationPrevented = false;
   private animationGeneration = 0;
   private boundTrigger: HTMLElement | null = null;
   private boundContent: HTMLElement | null = null;
+  private resizeObserver: ResizeObserver | null = null;
 
   // --- State helpers ---
 
@@ -59,6 +59,10 @@ export class Collapsible extends FlintHook {
       content?.addEventListener("beforematch", this.handleBeforeMatch);
     }
     this.boundContent = content ?? null;
+
+    if (prevContent !== content) {
+      this.observeContent();
+    }
   }
 
   private updateCssVars(): void {
@@ -73,6 +77,29 @@ export class Collapsible extends FlintHook {
       `--fl-${CSS_VAR_PREFIX}-width`,
       `${content.scrollWidth}px`,
     );
+  }
+
+  /**
+   * Keeps `--fl-collapsible-height` fresh while open, so CSS consumers that read
+   * the variable (and the next animation) see the current natural size even when
+   * async content is patched in. Updates are skipped while an animation runs to
+   * avoid feeding the animating size back into the keyframes.
+   */
+  private observeContent(): void {
+    if (typeof ResizeObserver === "undefined") return;
+
+    this.resizeObserver?.disconnect();
+    const content = this.parts.content;
+    if (!content) return;
+
+    this.resizeObserver = new ResizeObserver(() => {
+      const current = this.parts.content;
+      if (!current || this.currentState !== "open") return;
+      if (current.getAnimations().length > 0) return;
+      this.updateCssVars();
+    });
+
+    this.resizeObserver.observe(content);
   }
 
   private emitChange(state: CollapsibleState): void {
@@ -95,7 +122,7 @@ export class Collapsible extends FlintHook {
   }
 
   /**
-   * Applies `state`, running the enter/leave animation.
+   * Applies `state`, running the enter/leave keyframe animation.
    */
   private setState(state: CollapsibleState, emit = true): void {
     if (state === this.currentState) return;
@@ -105,26 +132,30 @@ export class Collapsible extends FlintHook {
     const gen = ++this.animationGeneration;
 
     this.currentState = state;
-    this.js().setAttribute(this.el, "data-state", state);
 
-    if (trigger) {
-      this.js().setAttribute(trigger, "data-state", state);
-      this.js().setAttribute(trigger, "aria-expanded", isOpen.toString());
-    }
+    const applyState = () => {
+      this.js().setAttribute(this.el, "data-state", state);
+
+      if (trigger) {
+        this.js().setAttribute(trigger, "data-state", state);
+        this.js().setAttribute(trigger, "aria-expanded", isOpen.toString());
+      }
+
+      if (content) {
+        this.js().setAttribute(content, "data-state", state);
+      }
+    };
 
     if (content) {
       // The server may have applied `hidden` for the target state already;
-      // remove it so the transition can run from the measured natural size.
+      // remove it so the content can be measured and the transition can run.
       this.js().removeAttribute(content, "hidden");
 
       const { done } = animatePresence(content, {
-        present: isOpen,
         liveSocket: this.liveSocket,
-        mountPrevented: this.isMountAnimationPrevented,
         cssVarPrefix: CSS_VAR_PREFIX,
+        applyState,
       });
-
-      this.js().setAttribute(content, "data-state", state);
 
       if (!isOpen) {
         const hide = () => {
@@ -137,6 +168,8 @@ export class Collapsible extends FlintHook {
         };
         done.then(hide).catch(hide);
       }
+    } else {
+      applyState();
     }
 
     this.emitChange(state);
@@ -173,12 +206,11 @@ export class Collapsible extends FlintHook {
     this.syncParts();
     this.updateCssVars();
 
-    // Prevent the enter animation on initial open mount
-    this.isMountAnimationPrevented = this.currentState === "open";
-    if (this.isMountAnimationPrevented) {
-      requestAnimationFrame(() => {
-        this.isMountAnimationPrevented = false;
-      });
+    // Suppress the enter animation on an initially-open mount: freeze the
+    // keyframes until the first user transition releases them.
+    if (this.currentState === "open") {
+      const content = this.parts.content;
+      if (content) content.style.animationName = "none";
     }
 
     this.el.addEventListener(Events.Open, this.handleOpen);
@@ -196,7 +228,7 @@ export class Collapsible extends FlintHook {
     if (state !== this.currentState) {
       this.setState(state, false);
     } else if (state === "open") {
-      // The server may have patched in taller/async content while open
+      // The server may have patched in taller/async content while open.
       this.updateCssVars();
     }
   }
@@ -210,5 +242,6 @@ export class Collapsible extends FlintHook {
       "beforematch",
       this.handleBeforeMatch,
     );
+    this.resizeObserver?.disconnect();
   }
 }

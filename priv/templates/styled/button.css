@@ -1,0 +1,114 @@
+@layer components {
+  /* Button */
+  [data-element="button"][data-variant] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--fl-radius-md);
+    font-family: var(--fl-font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  [data-element="button"][data-variant]:focus-visible {
+    outline: 2px solid var(--fl-color-ring);
+    outline-offset: 2px;
+  }
+
+  [data-element="button"][data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  [data-element="button"][data-variant="solid"] {
+    background: var(--fl-color-primary);
+    color: var(--fl-color-primary-foreground);
+  }
+
+  [data-element="button"][data-variant="solid"]:hover {
+    background: color-mix(in oklab, var(--fl-color-primary) 90%, transparent);
+  }
+
+  [data-element="button"][data-variant="solid"]:active {
+    background: color-mix(in oklab, var(--fl-color-primary) 80%, transparent);
+  }
+
+  [data-element="button"][data-variant="secondary"] {
+    background: var(--fl-color-secondary);
+    color: var(--fl-color-secondary-foreground);
+  }
+
+  [data-element="button"][data-variant="secondary"]:hover {
+    background: color-mix(in oklab, var(--fl-color-secondary) 80%, transparent);
+  }
+
+  [data-element="button"][data-variant="outline"] {
+    border-color: var(--fl-color-border);
+    background: var(--fl-color-background);
+    color: var(--fl-color-foreground);
+  }
+
+  [data-element="button"][data-variant="outline"]:hover {
+    background: var(--fl-color-accent);
+    color: var(--fl-color-accent-foreground);
+  }
+
+  [data-element="button"][data-variant="ghost"] {
+    background: transparent;
+    color: var(--fl-color-foreground);
+  }
+
+  [data-element="button"][data-variant="ghost"]:hover {
+    background: var(--fl-color-accent);
+    color: var(--fl-color-accent-foreground);
+  }
+
+  [data-element="button"][data-variant="destructive"] {
+    background: var(--fl-color-destructive);
+    color: var(--fl-color-destructive-foreground);
+  }
+
+  [data-element="button"][data-variant="destructive"]:hover {
+    background: color-mix(in oklab, var(--fl-color-destructive) 90%, transparent);
+  }
+
+  [data-element="button"][data-variant="link"] {
+    height: auto;
+    padding: 0;
+    background: transparent;
+    color: var(--fl-color-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  [data-element="button"][data-variant="link"]:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  [data-element="button"][data-size="sm"] {
+    height: 2rem;
+    padding-inline: 0.75rem;
+  }
+
+  [data-element="button"][data-size="md"] {
+    height: 2.25rem;
+    padding-inline: 1rem;
+  }
+
+  [data-element="button"][data-size="lg"] {
+    height: 2.5rem;
+    padding-inline: 1.5rem;
+    font-size: 1rem;
+  }
+}

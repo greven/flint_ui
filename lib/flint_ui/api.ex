@@ -8,13 +8,14 @@ defmodule FlintUI.API do
   @doc """
   Generates a new FlintUI component with the given name.
   The component's implementation is expected to be defined in a separate
-  module  under the `FlintUI` namespace (e.g., `FlintUI.Button` for `:button`).
+  module under the `FlintUI.Base` namespace (e.g., `FlintUI.Base.Button` for
+  `:button`).
 
   By default it will generate one component function with the same name as the component,
   but additional functions can be defined in the component module and will be imported as well.
 
-  The component module must implement the `FlintUI.Component` behaviour, which requires defining
-  the `meta/0` and `attrs/1` functions.
+  The component module must implement the `FlintUI.Component` behaviour, which requires
+  defining the `meta/0` and `attrs/1` functions.
   """
   defmacro component(name, opts \\ []) do
     other = Keyword.get(opts, :other, [])
@@ -112,7 +113,8 @@ defmodule FlintUI.API do
   # Resolves the component name atom to its corresponding module name
   def component_module(name) when is_atom(name) do
     module_name = Atom.to_string(name) |> String.downcase() |> Macro.camelize()
-    Module.concat(FlintUI, module_name)
+    # `"Base"` as a string: the stdlib `Base` module is used below.
+    Module.concat([FlintUI, "Base", module_name])
   end
 
   # Converts a list of attribute definitions into quoted code

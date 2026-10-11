@@ -46,6 +46,67 @@ defmodule FlintUI.Docs do
   end
 
   @doc """
+  Returns the body of a `##`-level section from a component's moduledoc.
+
+  The shared leading indentation is stripped so the result is ready to render
+  as Markdown. Returns `nil` when the section is absent, which lets callers
+  treat an undocumented section as optional.
+  """
+  def section(component, title) when is_atom(component) and is_binary(title) do
+    case Code.fetch_docs(component_module(component)) do
+      {:docs_v1, _, _, _, %{"en" => doc}, _, _} -> extract_section(doc, title)
+      _ -> nil
+    end
+  end
+
+  defp extract_section(doc, title) do
+    lines = String.split(doc, "\n")
+    heading = "## " <> title
+
+    case Enum.find_index(lines, &(String.trim(&1) == heading)) do
+      nil ->
+        nil
+
+      index ->
+        body =
+          lines
+          |> Enum.drop(index + 1)
+          |> Enum.take_while(&(not section_heading?(&1)))
+          |> dedent()
+          |> trim_blank_lines()
+
+        if body == "", do: nil, else: body
+    end
+  end
+
+  defp section_heading?(line) do
+    trimmed = String.trim_leading(line)
+    String.starts_with?(trimmed, "## ") and not String.starts_with?(trimmed, "### ")
+  end
+
+  defp dedent(lines) do
+    indent =
+      lines
+      |> Enum.reject(&(String.trim(&1) == ""))
+      |> Enum.map(&(String.length(&1) - String.length(String.trim_leading(&1))))
+      |> Enum.min(fn -> 0 end)
+
+    Enum.map(lines, fn
+      "" -> ""
+      line -> String.slice(line, indent..-1//1)
+    end)
+  end
+
+  defp trim_blank_lines(lines) do
+    lines
+    |> Enum.drop_while(&(String.trim(&1) == ""))
+    |> Enum.reverse()
+    |> Enum.drop_while(&(String.trim(&1) == ""))
+    |> Enum.reverse()
+    |> Enum.join("\n")
+  end
+
+  @doc """
   Fetches the documentation for a component's attributes (`:attrs`).
   """
   def attrs(component) when is_atom(component) do

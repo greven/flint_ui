@@ -22,4 +22,17 @@ defmodule FlintUITest do
       assert is_list(FlintUI.Docs.css_vars(name))
     end
   end
+
+  describe "Docs.section/2" do
+    test "extracts a moduledoc section, stripped of shared indentation" do
+      assert FlintUI.Docs.section(:button, "Accessibility") =~
+               "Always provide an accessible name."
+
+      refute FlintUI.Docs.section(:button, "Accessibility") =~ "  Always provide"
+    end
+
+    test "returns nil for a missing section" do
+      assert FlintUI.Docs.section(:button, "Nope") == nil
+    end
+  end
 end

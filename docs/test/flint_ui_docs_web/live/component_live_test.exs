@@ -14,18 +14,57 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert html =~ ~p"/components/toggle"
   end
 
-  test "component page renders the preview and API reference", %{conn: conn} do
+  test "component page defaults to the base tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#preview")
-    assert has_element?(view, "#api")
+    assert has_element?(view, "#tab-base[aria-selected='true']")
+    assert has_element?(view, "#tab-api[aria-selected='false']")
+    assert has_element?(view, "#panel-base")
     assert has_element?(view, "#preview [data-element='button']")
+    assert has_element?(view, "#usage")
+    refute has_element?(view, "#api")
+  end
+
+  test "the api tab is deep-linkable", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button?tab=api")
+
+    assert has_element?(view, "#tab-api[aria-selected='true']")
+    assert has_element?(view, "#api")
+    assert has_element?(view, "#attributes")
+    assert has_element?(view, "#styled-attributes")
+    assert has_element?(view, "#styled-slots")
+    assert has_element?(view, "#slots")
+    assert has_element?(view, "#events")
+    refute has_element?(view, "#preview")
+  end
+
+  test "the base tab documents usage, examples and styling", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#usage")
+    assert has_element?(view, "#structure")
+    assert has_element?(view, "#accessibility")
+    assert has_element?(view, "#keyboard")
+    assert has_element?(view, "#examples")
+    assert has_element?(view, "#styling")
+  end
+
+  test "the styled tab documents the generated component", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button?tab=styled")
+
+    assert has_element?(view, "#tab-styled[aria-selected='true']")
+    assert has_element?(view, "#panel-styled")
+    assert has_element?(view, "#styled")
+    assert has_element?(view, "#styled-preview [data-element='button'][data-variant='solid']")
+    assert has_element?(view, "#styled code", "mix flint.add button")
+    refute has_element?(view, "#preview")
   end
 
   test "icon page renders a FlintUI icon", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/icon")
 
     assert has_element?(view, "#preview [data-element='icon']")
+    assert has_element?(view, "#accessibility code", "lucide-circle-alert")
   end
 
   test "loading page renders a FlintUI loading indicator", %{conn: conn} do
@@ -57,6 +96,20 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#preview [data-disabled]")
 
     view |> element("button[phx-value-key='disabled']") |> render_click()
+
+    assert has_element?(view, "#preview [data-disabled]")
+  end
+
+  test "switching tabs keeps the playground state", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+    view |> element("button[phx-value-key='disabled']") |> render_click()
+    assert has_element?(view, "#preview [data-disabled]")
+
+    view |> element("#tab-api") |> render_click()
+
+    assert has_element?(view, "#api")
+
+    view |> element("#tab-base") |> render_click()
 
     assert has_element?(view, "#preview [data-disabled]")
   end

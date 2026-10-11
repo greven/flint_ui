@@ -1,4 +1,4 @@
-defmodule FlintUI.Collapsible do
+defmodule FlintUI.Base.Collapsible do
   @moduledoc """
   An interactive component that can show or hide content sections when triggered.
 

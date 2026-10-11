@@ -1,4 +1,4 @@
-defmodule FlintUI.ButtonTest do
+defmodule FlintUI.Base.ButtonTest do
   use ExUnit.Case, async: true
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
@@ -117,9 +117,9 @@ defmodule FlintUI.ButtonTest do
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :button, type: :element} = FlintUI.Button.meta()
+      assert %FlintUI.Meta{name: :button, type: :element} = FlintUI.Base.Button.meta()
 
-      parts = FlintUI.Button.parts_attrs()
+      parts = FlintUI.Base.Button.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "button"} =
                Enum.find(parts.root, &(&1.name == "[data-element]"))
@@ -129,7 +129,7 @@ defmodule FlintUI.ButtonTest do
 
     test "documents keyboard interactions" do
       assert [%FlintUI.Meta.Keyboard{keys: "Enter"}, %FlintUI.Meta.Keyboard{keys: "Space"}] =
-               FlintUI.Button.keyboard()
+               FlintUI.Base.Button.keyboard()
     end
   end
 end

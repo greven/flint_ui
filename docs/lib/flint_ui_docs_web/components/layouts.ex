@@ -61,6 +61,23 @@ defmodule FlintUIDocsWeb.Layouts do
             Components
           </p>
           <nav class="mt-2 flex flex-col gap-4">
+            <div class="flex flex-col gap-0.5">
+              <p class="px-2 pb-0.5 text-xs font-medium tracking-wider text-zinc-400 uppercase">
+                Guide
+              </p>
+              <.link
+                navigate={~p"/getting-started"}
+                class="rounded-md px-2 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              >
+                Getting started
+              </.link>
+              <.link
+                navigate={~p"/theming"}
+                class="rounded-md px-2 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              >
+                Theming
+              </.link>
+            </div>
             <div :for={{type, components} <- @component_groups} class="flex flex-col gap-0.5">
               <p class="px-2 pb-0.5 text-xs font-medium tracking-wider text-zinc-400 uppercase">
                 {type_label(type)}

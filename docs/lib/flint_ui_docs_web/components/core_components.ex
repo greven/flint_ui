@@ -19,7 +19,7 @@ defmodule FlintUIDocsWeb.CoreComponents do
       we build on. You will use it for layout, sizing, flexbox, grid, and
       spacing.
 
-    * [Lucide](https://lucide.dev) - see `FlintUI.Icon` for usage.
+    * [Lucide](https://lucide.dev) - see `FlintUI.Base.Icon` for usage.
 
     * [Phoenix.Component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) -
       the component system used by Phoenix. Some components, such as `<.link>`

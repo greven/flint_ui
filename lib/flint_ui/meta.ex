@@ -1,6 +1,11 @@
 defmodule FlintUI.Meta do
   @moduledoc """
   FlintUI component metadata.
+
+  `name` is the component's atom identifier (e.g. `:button`), matching the names
+  returned by `FlintUI.components/0` and accepted by `FlintUI.API.component_module/1`.
+  The nested `Event`, `PartAttr`, `CSSVar`, and `Keyboard` structs use strings,
+  since they name HTML attributes, events, and CSS properties.
   """
 
   defmodule Event do
@@ -73,7 +78,7 @@ defmodule FlintUI.Meta do
   def types, do: @types
 
   @type t :: %__MODULE__{
-          name: String.t(),
+          name: atom(),
           type: type(),
           since: String.t(),
           status: :stable | :draft | :deprecated

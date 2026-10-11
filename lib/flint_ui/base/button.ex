@@ -1,4 +1,4 @@
-defmodule FlintUI.Button do
+defmodule FlintUI.Base.Button do
   @moduledoc """
   Renders a button that performs an action, or a link styled as a button.
 

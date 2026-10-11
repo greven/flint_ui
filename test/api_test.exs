@@ -1,4 +1,4 @@
-defmodule FlintUI.WrapperProbe do
+defmodule FlintUI.Base.WrapperProbe do
   @moduledoc false
   use FlintUI.Component
 
