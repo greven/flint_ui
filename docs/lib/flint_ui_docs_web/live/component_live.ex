@@ -12,7 +12,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} active={@active}>
+    <Layouts.app flash={@flash} active={@active} section={:components}>
       <div class="max-w-4xl">
         <header class="border-b border-zinc-200 pb-6 dark:border-zinc-800">
           <h1 class="text-3xl font-semibold tracking-tight">{humanize(@active)}</h1>
@@ -168,7 +168,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 Styled
               </.link>
               tab ships an opinionated theme; see
-              <.link navigate={~p"/theming"} class="underline">Theming</.link>
+              <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
               for the tokens it reads. The full data-attribute contract is under the
               <span class="font-medium">API</span>
               tab.
@@ -284,9 +284,10 @@ defmodule FlintUIDocsWeb.ComponentLive do
             </DocBlocks.subsection>
 
             <p class="mt-6 text-sm text-zinc-500">
-              See <.link navigate={~p"/theming"} class="underline">Theming</.link>
+              See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
               for tokens and custom themes, or
-              <.link navigate={~p"/getting-started"} class="underline">Getting started</.link>
+              <.link navigate={~p"/getting-started/installation"} class="underline">e">
+                Installation</.link>
               to install the styled layer.
             </p>
           </DocBlocks.section>
@@ -305,7 +306,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   def handle_params(%{"name" => name} = params, _uri, socket) do
     case find_component(name) do
       nil ->
-        {:noreply, push_navigate(socket, to: ~p"/")}
+        {:noreply, push_navigate(socket, to: ~p"/components")}
 
       component ->
         socket =

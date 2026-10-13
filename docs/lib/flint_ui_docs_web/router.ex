@@ -17,16 +17,18 @@ defmodule FlintUIDocsWeb.Router do
   scope "/", FlintUIDocsWeb do
     pipe_through(:browser)
 
-    live("/", OverviewLive, :index)
-    live("/getting-started", GettingStartedLive, :index)
-    live("/theming", ThemeLive, :index)
+    live("/", HomeLive, :index)
+
+    get("/getting-started", RedirectController, :getting_started)
+    live("/getting-started/introduction", IntroductionLive, :index)
+    live("/getting-started/installation", GettingStartedLive, :index)
+
+    get("/guides", RedirectController, :guides)
+    live("/guides/theming", ThemeLive, :index)
+
+    live("/components", ComponentsLive, :index)
     live("/components/:name", ComponentLive, :show)
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", FlintUIDocsWeb do
-  #   pipe_through :api
-  # end
 
   # Enable Swoosh mailbox preview in development
   if Application.compile_env(:flint_ui_docs, :dev_routes) do

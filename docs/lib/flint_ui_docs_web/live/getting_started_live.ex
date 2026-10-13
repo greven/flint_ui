@@ -15,15 +15,15 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, page_title: "Getting started", commands: @commands)}
+    {:ok, assign(socket, page_title: "Installation", commands: @commands)}
   end
 
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} active={nil}>
+    <Layouts.app flash={@flash} section={:getting_started} page={:installation}>
       <div class="max-w-3xl">
-        <h1 class="text-3xl font-semibold tracking-tight">Getting started</h1>
+        <h1 class="text-3xl font-semibold tracking-tight">Installation</h1>
         <p class="mt-3 text-zinc-600 dark:text-zinc-400">
           FlintUI ships accessible, unstyled components, plus a styled layer you generate
           into your own app. Theming is plain CSS, so Tailwind is optional.
@@ -89,8 +89,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
         </DocBlocks.section>
 
         <p class="mt-8 text-sm text-zinc-500">
-          Next: browse the <.link navigate={~p"/"} class="underline">components</.link>
-          or read about <.link navigate={~p"/theming"} class="underline">theming</.link>.
+          Next: browse the <.link navigate="/components" class="underline">components</.link>
+          or read about <.link navigate="/guides/theming" class="underline">theming</.link>.
         </p>
       </div>
     </Layouts.app>

@@ -3,10 +3,10 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
   import Phoenix.LiveViewTest
 
-  test "overview lists the registered components", %{conn: conn} do
-    {:ok, _view, html} = live(conn, ~p"/")
+  test "components index lists the registered components", %{conn: conn} do
+    {:ok, _view, html} = live(conn, ~p"/components")
 
-    assert html =~ "FlintUI"
+    assert html =~ "Components"
     assert html =~ ~p"/components/button"
     assert html =~ ~p"/components/collapsible"
     assert html =~ ~p"/components/icon"
@@ -114,7 +114,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#preview [data-disabled]")
   end
 
-  test "unknown component redirects to the overview", %{conn: conn} do
-    assert {:error, {:live_redirect, %{to: "/"}}} = live(conn, ~p"/components/nope")
+  test "unknown component redirects to the components index", %{conn: conn} do
+    assert {:error, {:live_redirect, %{to: "/components"}}} = live(conn, ~p"/components/nope")
   end
 end

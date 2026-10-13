@@ -1,6 +1,10 @@
 defmodule FlintUIDocsWeb.Components do
   use Phoenix.Component
 
+  @moduledoc """
+  Generated components for the FlintUI docs site.
+  """
+
   @doc """
   Renders a styled button.
 

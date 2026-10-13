@@ -13,7 +13,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} active={nil}>
+    <Layouts.app flash={@flash} section={:guides} page={:theming}>
       <div class="max-w-3xl">
         <h1 class="text-3xl font-semibold tracking-tight">Theming</h1>
         <p class="mt-3 text-zinc-600 dark:text-zinc-400">

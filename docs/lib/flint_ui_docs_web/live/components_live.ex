@@ -1,4 +1,4 @@
-defmodule FlintUIDocsWeb.OverviewLive do
+defmodule FlintUIDocsWeb.ComponentsLive do
   @moduledoc false
 
   use FlintUIDocsWeb, :live_view
@@ -6,9 +6,9 @@ defmodule FlintUIDocsWeb.OverviewLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} active={nil}>
+    <Layouts.app flash={@flash} section={:components}>
       <div class="max-w-3xl">
-        <h1 class="text-3xl font-semibold tracking-tight">FlintUI</h1>
+        <h1 class="text-3xl font-semibold tracking-tight">Components</h1>
         <p class="mt-3 text-zinc-600 dark:text-zinc-400">
           Accessible, unstyled UI components for Phoenix LiveView. Bring your own styles.
         </p>
@@ -46,6 +46,6 @@ defmodule FlintUIDocsWeb.OverviewLive do
         }
       end)
 
-    {:ok, assign(socket, components: components, page_title: "Overview")}
+    {:ok, assign(socket, components: components, page_title: "Components")}
   end
 end

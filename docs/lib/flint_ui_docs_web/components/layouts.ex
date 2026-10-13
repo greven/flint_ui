@@ -8,7 +8,7 @@ defmodule FlintUIDocsWeb.Layouts do
   embed_templates("layouts/*")
 
   @doc """
-  Renders the docs shell: header, component sidebar, and content area.
+  Renders the docs shell: header, section bar, sidebar, and content area.
 
   ## Examples
 
@@ -18,6 +18,8 @@ defmodule FlintUIDocsWeb.Layouts do
   """
   attr(:flash, :map, required: true, doc: "the map of flash messages")
   attr(:active, :atom, default: nil, doc: "the active component, highlighted in the sidebar")
+  attr(:section, :atom, default: nil, doc: "the active top-level documentation section")
+  attr(:page, :atom, default: nil, doc: "the active page id, highlighted in the sidebar")
 
   attr(:current_scope, :map,
     default: nil,
@@ -27,20 +29,47 @@ defmodule FlintUIDocsWeb.Layouts do
   slot(:inner_block, required: true)
 
   def app(assigns) do
-    assigns = assign(assigns, :component_groups, FlintUI.Docs.grouped_components())
+    assigns = assign(assigns, :sections, FlintUIDocsWeb.Nav.sections())
 
     ~H"""
     <div class="min-h-screen bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
-      <header class="sticky top-0 z-20 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
+      <.site_header sections={@sections} section={@section} />
+
+      <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6 lg:px-8">
+        <.sidebar
+          :if={@section}
+          active={@active}
+          page={@page}
+          section={FlintUIDocsWeb.Nav.get!(@section)}
+          class="sticky top-24"
+        />
+
+        <main class="min-w-0 flex-1 py-8">
+          {render_slot(@inner_block)}
+        </main>
+      </div>
+
+      <.flash_group flash={@flash} />
+    </div>
+    """
+  end
+
+  @doc """
+  Renders the sticky docs header: the brand bar and the section switcher.
+  """
+  attr(:sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`")
+  attr(:section, :atom, default: nil, doc: "the active section id")
+
+  def site_header(assigns) do
+    ~H"""
+    <div class="sticky top-0 z-20 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
+      <header>
         <div class="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <.link navigate={~p"/"} class="flex items-center gap-2">
             <span class="grid size-6 place-items-center rounded-md bg-zinc-900 text-xs font-bold text-white dark:bg-white dark:text-zinc-900">
               F
             </span>
             <span class="font-semibold tracking-tight">FlintUI</span>
-            <span class="hidden text-xs text-zinc-400 sm:inline">
-              unstyled components for LiveView
-            </span>
           </.link>
 
           <nav class="flex items-center gap-1">
@@ -55,64 +84,91 @@ defmodule FlintUIDocsWeb.Layouts do
         </div>
       </header>
 
-      <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6 lg:px-8">
-        <aside class="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block">
-          <p class="px-2 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
-            Components
-          </p>
-          <nav class="mt-2 flex flex-col gap-4">
-            <div class="flex flex-col gap-0.5">
-              <p class="px-2 pb-0.5 text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                Guide
-              </p>
-              <.link
-                navigate={~p"/getting-started"}
-                class="rounded-md px-2 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
-              >
-                Getting started
-              </.link>
-              <.link
-                navigate={~p"/theming"}
-                class="rounded-md px-2 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
-              >
-                Theming
-              </.link>
-            </div>
-            <div :for={{type, components} <- @component_groups} class="flex flex-col gap-0.5">
-              <p class="px-2 pb-0.5 text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                {type_label(type)}
-              </p>
-              <.link
-                :for={name <- components}
-                navigate={~p"/components/#{name}"}
-                class={[
-                  "rounded-md px-2 py-1.5 text-sm capitalize transition-colors",
-                  "hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                  @active == name && "bg-zinc-100 font-medium dark:bg-zinc-800",
-                  @active != name && "text-zinc-600 dark:text-zinc-400"
-                ]}
-              >
-                {name}
-              </.link>
-            </div>
-          </nav>
-        </aside>
-
-        <main class="min-w-0 flex-1 py-8">
-          {render_slot(@inner_block)}
-        </main>
-      </div>
-
-      <.flash_group flash={@flash} />
+      <.section_nav sections={@sections} section={@section} />
     </div>
     """
   end
 
-  defp type_label(type) do
-    type
-    |> Atom.to_string()
-    |> String.replace("_", " ")
-    |> String.capitalize()
+  @doc """
+  Renders the section switcher shown beneath the brand bar.
+  """
+  attr(:sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`")
+  attr(:section, :atom, default: nil, doc: "the active section id")
+
+  def section_nav(assigns) do
+    ~H"""
+    <div class="border-t border-zinc-200 dark:border-zinc-800">
+      <nav
+        aria-label="Documentation sections"
+        class="mx-auto flex max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8"
+      >
+        <.link
+          :for={section <- @sections}
+          navigate={FlintUIDocsWeb.Nav.first_page_path(section)}
+          id={section_dom_id(section.id)}
+          aria-current={if @section == section.id, do: "page", else: nil}
+          class={section_class(@section == section.id)}
+        >
+          {section.label}
+        </.link>
+      </nav>
+    </div>
+    """
+  end
+
+  defp section_dom_id(id) do
+    "section-" <> (id |> Atom.to_string() |> String.replace("_", "-"))
+  end
+
+  defp section_class(true) do
+    "-mb-px border-b-2 border-zinc-900 py-2.5 text-sm font-medium text-zinc-900 dark:border-white dark:text-white"
+  end
+
+  defp section_class(false) do
+    "-mb-px border-b-2 border-transparent py-2.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+  end
+
+  @doc false
+
+  attr(:class, :string, default: nil)
+  attr(:active, :atom, default: nil)
+  attr(:page, :atom, default: nil)
+  attr(:section, :map, required: true)
+
+  def sidebar(assigns) do
+    ~H"""
+    <aside class={[
+      @class,
+      "hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block"
+    ]}>
+      <div :for={group <- @section.groups} class="mb-6 last:mb-0">
+        <p class="px-3 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
+          {group.label}
+        </p>
+        <nav class="mt-2 flex flex-col border-l border-zinc-200 dark:border-zinc-800">
+          <.link
+            :for={item <- group.pages}
+            navigate={item.path}
+            aria-current={if page_active?(item, @active, @page), do: "page", else: nil}
+            class={page_class(page_active?(item, @active, @page))}
+          >
+            {item.label}
+          </.link>
+        </nav>
+      </div>
+    </aside>
+    """
+  end
+
+  defp page_active?(%{name: name}, active, _page) when not is_nil(name), do: active == name
+  defp page_active?(item, _active, page), do: page == item.id
+
+  defp page_class(true) do
+    "-ml-px border-l-2 border-zinc-900 py-1.5 pr-2 pl-3 text-sm font-medium capitalize text-zinc-900 dark:border-white dark:text-white"
+  end
+
+  defp page_class(false) do
+    "-ml-px border-l-2 border-transparent py-1.5 pr-2 pl-3 text-sm capitalize text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
   end
 
   @doc """
@@ -166,7 +222,7 @@ defmodule FlintUIDocsWeb.Layouts do
   """
   def theme_toggle(assigns) do
     ~H"""
-    <div class="flex items-center rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800">
+    <div class="flex items-center p-0.5">
       <button
         :for={
           {theme, icon} <- [
