@@ -223,15 +223,21 @@ defmodule FlintUIDocsWeb.PreviewComponent do
                 <span>{if Map.get(@props, control.key), do: "On", else: "Off"}</span>
               </button>
             <% :select -> %>
-              <select name={control.key} class={input_class()}>
-                <option
-                  :for={value <- select_options(control, @name)}
-                  value={value}
-                  selected={to_string(Map.get(@props, control.key)) == value}
-                >
-                  {value}
-                </option>
-              </select>
+              <div class="relative">
+                <select name={control.key} class={select_class()}>
+                  <option
+                    :for={value <- select_options(control, @name)}
+                    value={value}
+                    selected={to_string(Map.get(@props, control.key)) == value}
+                  >
+                    {value}
+                  </option>
+                </select>
+                <.icon
+                  name="lucide-chevron-down"
+                  class="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-zinc-400"
+                />
+              </div>
             <% :number -> %>
               <input
                 type="number"
@@ -302,6 +308,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       raise ArgumentError, "unknown preview control #{inspect(key)}"
   end
 
+  ## CSS classes
+
   defp segment(true) do
     "inline-flex items-center gap-1.5 rounded bg-white px-2.5 py-1 text-xs font-medium text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
   end
@@ -320,5 +328,9 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   defp input_class do
     "rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950"
+  end
+
+  defp select_class do
+    input_class() <> " w-full appearance-none pr-8"
   end
 end
