@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Collapsible do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop}
+  alias FlintUI.Styled.Entry
 
   def entry do
     %Entry{
@@ -12,14 +12,7 @@ defmodule FlintUI.Styled.Collapsible do
       css: "styled/collapsible.css",
       tokens: [:color, :radius],
       slots: [],
-      props: [
-        Prop.new(
-          name: :variant,
-          values: ["bordered", "minimal"],
-          default: "bordered",
-          doc: "The container treatment."
-        )
-      ]
+      props: []
     }
   end
 end

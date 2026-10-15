@@ -10,6 +10,8 @@ defmodule FlintUI.GeneratorTest do
 
       assert source =~ "def #{name}(assigns) do"
 
+      assert source =~ "data-#{name}"
+
       if FlintUI.Styled.Entry.prop(entry, :size) do
         assert source =~ "data-size={@size}"
       end

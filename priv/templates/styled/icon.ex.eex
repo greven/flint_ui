@@ -11,6 +11,7 @@ behavior comes from `FlintUI.icon`.
 def <%= @name %>(assigns) do
   ~H"""
   <FlintUI.icon
+    data-icon
     data-size={@size}
     class={@class}
     {@rest}

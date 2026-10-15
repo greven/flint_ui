@@ -215,6 +215,16 @@ defmodule FlintUI.Base.Collapsible do
         name: "--fl-collapsible-width",
         description:
           "Natural scroll width of the content in pixels. Set by the underlying Presence animation engine."
+      },
+      %Meta.CSSVar{
+        name: "--fl-collapsible-duration",
+        description:
+          "Duration of the styled reveal transition (the theme defaults it to `250ms`). Override it in CSS to customize the animation."
+      },
+      %Meta.CSSVar{
+        name: "--fl-collapsible-easing",
+        description:
+          "Timing function of the styled reveal transition (the theme defaults it to `ease`). Override it in CSS to customize the animation."
       }
     ]
   end

@@ -1,32 +1,24 @@
 @layer components {
-    /* Collapsible */
-    [data-element="collapsible"][data-variant] {
-        border-radius: var(--fl-radius-lg);
-        color: var(--fl-color-foreground);
-    }
-
-    [data-element="collapsible"][data-variant="bordered"] {
-        border: 1px solid var(--fl-color-border);
-        background: var(--fl-color-background);
-    }
-
-    [data-element="collapsible"][data-variant="minimal"] {
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-    }
-
-    [data-element="collapsible"][data-variant] [data-part="trigger"] {
+    /* Collapsible
+     *
+     * The styled layer only adds the reveal transition; there is no container
+     * chrome. A collapsible's look is composition: put a button (or a styled
+     * `<.button>`) in the trigger slot and wrap the content as you like.
+     *
+     * Every selector is gated on the `data-collapsible` presence hook the
+     * generated wrapper sets, so the headless base stays unstyled.
+     */
+    [data-element="collapsible"][data-collapsible] [data-part="trigger"] {
         cursor: pointer;
     }
 
-    [data-element="collapsible"][data-variant]
+    [data-element="collapsible"][data-collapsible]
         [data-part="trigger"]:focus-visible {
         outline: 2px solid var(--fl-color-ring);
         outline-offset: -2px;
     }
 
-    [data-element="collapsible"][data-variant]
+    [data-element="collapsible"][data-collapsible]
         [data-part="trigger"][data-disabled] {
         opacity: 0.5;
         cursor: not-allowed;
@@ -45,22 +37,27 @@
  * drives a transition. A server-rendered `open` element therefore appears open
  * immediately instead of animating on first paint, before the hook mounts.
  *
+ * Timing is customizable through the `--fl-collapsible-duration` and
+ * `--fl-collapsible-easing` custom properties.
+ *
  * Keep the content element free of padding/border: with `box-sizing: border-box`
  * a box cannot collapse below its padding, so the reveal would clamp and stutter.
  */
-[data-element="collapsible"] [data-part="content"] {
+[data-element="collapsible"][data-collapsible] [data-part="content"] {
     overflow: hidden;
     border-radius: inherit;
 }
 
-[data-element="collapsible"][data-animate]
+[data-element="collapsible"][data-collapsible][data-animate]
     [data-part="content"][data-state="open"] {
-    animation: fl-collapsible-expand 250ms ease;
+    animation: fl-collapsible-expand var(--fl-collapsible-duration, 250ms)
+        var(--fl-collapsible-easing, ease);
 }
 
-[data-element="collapsible"][data-animate]
+[data-element="collapsible"][data-collapsible][data-animate]
     [data-part="content"][data-state="closed"] {
-    animation: fl-collapsible-collapse 250ms ease;
+    animation: fl-collapsible-collapse var(--fl-collapsible-duration, 250ms)
+        var(--fl-collapsible-easing, ease);
 }
 
 @keyframes fl-collapsible-expand {

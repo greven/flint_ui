@@ -7,19 +7,12 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
   alias FlintUIDocsWeb.ComponentDocs.Snippet
   alias FlintUIDocsWeb.DocBlocks
 
-  @repo_list [
-    "@elixir-lang/elixir",
-    "@phoenixframework/phoenix",
-    "@phoenixframework/phoenix_live_view"
-  ]
-
   @impl true
   def controls do
     [
       %{key: :open, type: :boolean, default: false, label: "Open"},
       %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
-      %{key: :hidden_until_found, type: :boolean, default: false, label: "Hidden until found"},
-      %{key: :variant, type: :select, default: "bordered", label: "Variant"}
+      %{key: :hidden_until_found, type: :boolean, default: false, label: "Hidden until found"}
     ]
   end
 
@@ -102,15 +95,17 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
         """
       },
       %{
-        id: :variant,
-        title: "Variant",
+        id: :reveal,
+        title: "Reveal transition",
         layer: :styled,
         body: """
-        The generated component adds a `variant` attribute mapped onto the
-        `data-variant` hook the theme targets.
+        The generated component adds the themed reveal: the content clips itself
+        and animates open and closed using the `--fl-collapsible-height` the hook
+        measures. Customize the timing with the `--fl-collapsible-duration` and
+        `--fl-collapsible-easing` custom properties.
         """,
         code: """
-        <.collapsible variant="bordered" id="repos">
+        <.collapsible id="repos">
           <:trigger :let={attrs}>
             <button {attrs}>Toggle</button>
           </:trigger>
@@ -179,8 +174,9 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
     %{
       body: """
       The trigger and content expose `data-state`, so you can style the open and
-      closed states and animate the reveal. The theme ships a default reveal
-      using the `--fl-collapsible-height` the hook measures.
+      closed states. The styled layer ships a default reveal built on the
+      `--fl-collapsible-height` the hook measures; customize its timing with the
+      `--fl-collapsible-duration` and `--fl-collapsible-easing` custom properties.
       """,
       snippets: [
         %{
@@ -195,11 +191,20 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
           title: "Reveal",
           code: """
           [data-element="collapsible"] [data-part="content"][data-state="open"] {
-            animation: expand 250ms ease;
+            animation: expand var(--fl-collapsible-duration, 250ms) ease;
           }
 
           [data-element="collapsible"] [data-part="content"][data-state="closed"] {
-            animation: collapse 250ms ease;
+            animation: collapse var(--fl-collapsible-duration, 250ms) ease;
+          }
+          """
+        },
+        %{
+          title: "Customize the timing",
+          code: """
+          .my-collapsible {
+            --fl-collapsible-duration: 400ms;
+            --fl-collapsible-easing: cubic-bezier(0.4, 0, 0.2, 1);
           }
           """
         }
@@ -209,30 +214,28 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
 
   @impl true
   def render_playground(%{layer: :styled} = assigns) do
-    assigns = assign(assigns, :repos, @repo_list)
-
     ~H"""
     <Components.collapsible
       id={"#{@id}-styled"}
-      variant={@props.variant}
       open={@props.open}
       disabled={@props.disabled}
       hidden_until_found={@props.hidden_until_found}
-      class="w-full max-w-sm"
+      class="flex w-full max-w-sm flex-col gap-2 self-start"
     >
       <:trigger :let={attrs}>
-        <.trigger {attrs} label="Toggle repositories" />
+        <button
+          {attrs}
+          class={[
+            "inline-flex w-full items-center justify-between gap-2 rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors",
+            "hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+          ]}
+        >
+          Open <.icon name="lucide-chevron-down" class="size-4" />
+        </button>
       </:trigger>
       <:content :let={attrs}>
         <div {attrs}>
-          <ul class="flex flex-col gap-2 px-4 pt-1 pb-4">
-            <li
-              :for={repo <- @repos}
-              class="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs dark:bg-zinc-900"
-            >
-              {repo}
-            </li>
-          </ul>
+          <DocBlocks.content_placeholder class="h-48" />
         </div>
       </:content>
     </Components.collapsible>
@@ -272,7 +275,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
   def render_code(%{layer: :styled, props: props}) do
     attrs =
       [
-        Snippet.attr("variant", props.variant, "bordered"),
         ~s(id="repos"),
         Snippet.flag("open", props.open),
         Snippet.flag("disabled", props.disabled),
@@ -408,36 +410,23 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
     """
   end
 
-  def render_usage(%{block: :variant} = assigns) do
+  def render_usage(%{block: :reveal} = assigns) do
     ~H"""
-    <div class="flex w-full max-w-md flex-col gap-4">
-      <Components.collapsible
-        :for={variant <- ~w(bordered minimal)}
-        variant={variant}
-        id={"#{@id}-#{variant}"}
-      >
-        <:trigger :let={attrs}>
-          <button
-            {attrs}
-            class="group flex w-full items-center justify-between gap-4 px-4 py-3 text-left text-sm font-medium"
-          >
-            {variant}
-            <Components.icon
-              name="lucide-chevron-down"
-              size="sm"
-              class="transition-transform group-aria-expanded:rotate-180"
-            />
-          </button>
-        </:trigger>
-        <:content :let={attrs}>
-          <div {attrs}>
-            <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
-              A {variant} disclosure.
-            </p>
-          </div>
-        </:content>
-      </Components.collapsible>
-    </div>
+    <Components.collapsible
+      id={@id}
+      class="w-full max-w-sm rounded-lg border border-zinc-200 dark:border-zinc-800"
+    >
+      <:trigger :let={attrs}>
+        <.trigger {attrs} label="Toggle repositories" />
+      </:trigger>
+      <:content :let={attrs}>
+        <div {attrs}>
+          <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            The styled layer animates this content open and closed.
+          </p>
+        </div>
+      </:content>
+    </Components.collapsible>
     """
   end
 
@@ -460,7 +449,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
 
   def render_block(%{block: :find_in_page} = assigns) do
     ~H"""
-    <.collapsible
+    <Components.collapsible
       id={@id}
       hidden_until_found
       class="w-full max-w-md rounded-lg border border-zinc-200 dark:border-zinc-800"
@@ -476,13 +465,13 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
           </p>
         </div>
       </:content>
-    </.collapsible>
+    </Components.collapsible>
     """
   end
 
   def render_block(%{block: :disabled} = assigns) do
     ~H"""
-    <.collapsible
+    <Components.collapsible
       id={@id}
       disabled
       class="w-full max-w-md rounded-lg border border-zinc-200 dark:border-zinc-800"
@@ -497,7 +486,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
           </p>
         </div>
       </:content>
-    </.collapsible>
+    </Components.collapsible>
     """
   end
 
@@ -530,7 +519,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
 
   defp faq(assigns) do
     ~H"""
-    <.collapsible id={@id} open={@open}>
+    <Components.collapsible id={@id} open={@open}>
       <:trigger :let={attrs}>
         <button
           {attrs}
@@ -550,7 +539,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
           </DocBlocks.content_placeholder>
         </div>
       </:content>
-    </.collapsible>
+    </Components.collapsible>
     """
   end
 end

@@ -11,6 +11,7 @@ hooks the theme targets. Headless behavior comes from `FlintUI.loading`.
 def <%= @name %>(assigns) do
   ~H"""
   <FlintUI.loading
+    data-loading
     variant={@variant}
     data-size={@size}
     class={@class}

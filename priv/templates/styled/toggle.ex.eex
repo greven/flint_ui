@@ -11,6 +11,7 @@ hooks the theme targets. Headless behavior comes from `FlintUI.toggle`.
 def <%= @name %>(assigns) do
   ~H"""
   <FlintUI.toggle
+    data-toggle
     data-variant={@variant}
     data-size={@size}
     class={@class}

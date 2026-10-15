@@ -24,6 +24,6 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="toggle"][data-variant])
     assert css =~ ~s([data-element="loading"][data-size])
     assert css =~ ~s([data-element="icon"][data-size])
-    assert css =~ ~s([data-element="collapsible"][data-variant])
+    assert css =~ ~s([data-element="collapsible"][data-collapsible])
   end
 end
