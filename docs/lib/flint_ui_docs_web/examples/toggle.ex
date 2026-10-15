@@ -4,6 +4,7 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
   use FlintUIDocsWeb.Examples.Example, component: :toggle
 
   alias FlintUIDocsWeb.Components
+  alias FlintUIDocsWeb.Examples.Snippet
 
   @base "inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50"
 
@@ -64,16 +65,43 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
   @impl true
   def examples do
     [
-      %{id: :icon, title: "Icon and label", description: "Pair an icon with a text label."},
+      %{
+        id: :icon,
+        title: "Icon and label",
+        description: "Pair an icon with a text label.",
+        code: """
+        <.toggle class="#{class(:solid)}">
+          <.icon name="lucide-bold" class="size-4" /> Bold
+        </.toggle>
+        """
+      },
       %{
         id: :icon_only,
         title: "Icon only",
-        description: "An icon-only toggle needs an accessible name."
+        description: "An icon-only toggle needs an accessible name.",
+        code: """
+        <.toggle aria-label="Bold" class="#{class(:solid)}">
+          <.icon name="lucide-bold" class="size-4" />
+        </.toggle>
+        """
       },
       %{
         id: :group,
         title: "Toolbar group",
-        description: "Several toggles arranged as a formatting toolbar."
+        description: "Several toggles arranged as a formatting toolbar.",
+        code: """
+        <div class="inline-flex items-center gap-1 rounded-md border border-zinc-200 p-1">
+          <.toggle aria-label="Bold" pressed class="#{class(:solid)}">
+            <.icon name="lucide-bold" class="size-4" />
+          </.toggle>
+          <.toggle aria-label="Italic" class="#{class(:solid)}">
+            <.icon name="lucide-italic" class="size-4" />
+          </.toggle>
+          <.toggle aria-label="Underline" class="#{class(:solid)}">
+            <.icon name="lucide-underline" class="size-4" />
+          </.toggle>
+        </div>
+        """
       }
     ]
   end
@@ -116,6 +144,15 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
       <.icon name="lucide-bold" class="size-4" /> Bold
     </.toggle>
     """
+  end
+
+  @impl true
+  def render_code(%{props: props}) do
+    Snippet.tag(
+      ".toggle",
+      [Snippet.flag("pressed", props.pressed), Snippet.flag("disabled", props.disabled)],
+      ~s(<.icon name="lucide-bold" class="size-4" /> Bold)
+    )
   end
 
   @impl true
@@ -188,4 +225,6 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
       "dark:text-zinc-400 dark:hover:bg-zinc-800 dark:data-[state=on]:bg-white dark:data-[state=on]:text-zinc-900"
     ]
   end
+
+  defp class(variant), do: Enum.join(toggle_class(variant), " ")
 end

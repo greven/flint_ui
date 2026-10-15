@@ -83,27 +83,24 @@ defmodule FlintUI.Base.Loading do
 
   @doc false
 
-  attr(:flint_parts, :map, default: nil)
+  attr :flint_parts, :map, default: nil
 
-  attr(:variant, :string,
+  attr :variant, :string,
     values: @variants,
     default: "ring",
     doc: "The indicator shape. One of `#{Enum.join(@variants, "`, `")}`."
-  )
 
-  attr(:duration, :integer,
+  attr :duration, :integer,
     default: 600,
     doc: "Duration of one full animation cycle, in milliseconds."
-  )
 
-  attr(:class, :any, default: "size-4", doc: "Additional classes for sizing and color.")
+  attr :class, :any, default: "size-4", doc: "Additional classes for sizing and color."
 
-  attr(:label, :string,
+  attr :label, :string,
     default: nil,
     doc: "An accessible name. When set, the spinner is exposed as a labeled image."
-  )
 
-  attr(:rest, :global, doc: "Additional HTML attributes.")
+  attr :rest, :global, doc: "Additional HTML attributes."
 
   @impl true
   def render(assigns) do

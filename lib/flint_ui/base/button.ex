@@ -131,35 +131,31 @@ defmodule FlintUI.Base.Button do
 
   @doc false
 
-  attr(:flint_parts, :map, default: nil)
+  attr :flint_parts, :map, default: nil
 
-  attr(:type, :string,
+  attr :type, :string,
     default: "button",
     values: ~w(button submit reset),
     doc: "The button type, defaults to `button`. Rendered only for an action button."
-  )
 
-  attr(:disabled, :boolean,
+  attr :disabled, :boolean,
     default: false,
     doc: "Whether the button should ignore user interaction."
-  )
 
-  attr(:loading, :boolean,
+  attr :loading, :boolean,
     default: false,
     doc:
       "Whether the button is in a loading state. Sets `aria-busy` and `data-loading`, and suppresses interaction."
-  )
 
-  attr(:rest, :global,
+  attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download
                 hreflang referrerpolicy name value form formaction formenctype
                 formmethod formnovalidate formtarget popovertarget autofocus
                 command commandfor),
     doc:
       "Additional HTML attributes. Pass `href`, `navigate`, or `patch` to render a link instead of a button."
-  )
 
-  slot(:inner_block, required: true, doc: "The content of the button.")
+  slot :inner_block, required: true, doc: "The content of the button."
 
   @impl true
   def render(assigns) do

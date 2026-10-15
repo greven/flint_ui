@@ -4,6 +4,7 @@ defmodule FlintUIDocsWeb.Examples.Button do
   use FlintUIDocsWeb.Examples.Example, component: :button
 
   alias FlintUIDocsWeb.Components
+  alias FlintUIDocsWeb.Examples.Snippet
 
   @base "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 
@@ -16,12 +17,8 @@ defmodule FlintUIDocsWeb.Examples.Button do
   @impl true
   def controls do
     [
-      %{key: :type, type: :string, default: "button", label: "Type (button/submit/reset)"},
       %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
-      %{key: :loading, type: :boolean, default: false, label: "Loading"},
-      %{key: :href, type: :string, default: "", label: "Href"},
-      %{key: :navigate, type: :string, default: "", label: "Navigate"},
-      %{key: :patch, type: :string, default: "", label: "Patch"}
+      %{key: :loading, type: :boolean, default: false, label: "Loading"}
     ]
   end
 
@@ -95,16 +92,35 @@ defmodule FlintUIDocsWeb.Examples.Button do
   @impl true
   def examples do
     [
-      %{id: :icon, title: "With an icon", description: "Combine an icon with a text label."},
+      %{
+        id: :icon,
+        title: "With an icon",
+        description: "Combine an icon with a text label.",
+        code: """
+        <.button class="#{class(:solid)}">
+          <.icon name="lucide-plus" class="size-4" /> New project
+        </.button>
+        """
+      },
       %{
         id: :loading,
         title: "Loading with a spinner",
-        description: "Reveal a FlintUI loading indicator via the button's data-loading state."
+        description: "Reveal a FlintUI loading indicator via the button's data-loading state.",
+        code: """
+        <.button loading class="#{class(:solid)}">
+          <.loading class="hidden size-4 in-data-loading:inline-block" /> Save
+        </.button>
+        """
       },
       %{
         id: :link,
         title: "Link button",
-        description: "Render an anchor that looks and behaves like a button."
+        description: "Render an anchor that looks and behaves like a button.",
+        code: """
+        <.button href="https://hexdocs.pm/phoenix_live_view" target="_blank" rel="noopener" class="#{class(:outline)}">
+          View docs <.icon name="lucide-arrow-up-right" class="size-4" />
+        </.button>
+        """
       }
     ]
   end
@@ -152,17 +168,25 @@ defmodule FlintUIDocsWeb.Examples.Button do
   def render_example(assigns) do
     ~H"""
     <.button
-      type={type_or_default(@props.type)}
       disabled={@props.disabled}
       loading={@props.loading}
-      href={blank_to_nil(@props.href)}
-      navigate={blank_to_nil(@props.navigate)}
-      patch={blank_to_nil(@props.patch)}
       class={classes(:solid)}
     >
       <.loading class="hidden size-4 in-data-loading:inline-block" /> Button
     </.button>
     """
+  end
+
+  @impl true
+  def render_code(%{props: props}) do
+    Snippet.tag(
+      ".button",
+      [
+        Snippet.flag("disabled", props.disabled),
+        Snippet.flag("loading", props.loading)
+      ],
+      "Button"
+    )
   end
 
   @impl true
@@ -231,16 +255,11 @@ defmodule FlintUIDocsWeb.Examples.Button do
 
   defp classes(variant), do: [@base, variant_class(variant)]
 
+  defp class(variant), do: Enum.join(classes(variant), " ")
+
   defp variant_class(:solid), do: @solid
   defp variant_class(:outline), do: @outline
   defp variant_class(:ghost), do: @ghost
 
   defp docs_url, do: @url
-
-  defp blank_to_nil(nil), do: nil
-  defp blank_to_nil(""), do: nil
-  defp blank_to_nil(value), do: value
-
-  defp type_or_default(type) when type in ~w(button submit reset), do: type
-  defp type_or_default(_), do: "button"
 end

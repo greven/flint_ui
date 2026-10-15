@@ -6,6 +6,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   alias FlintUIDocsWeb.DocBlocks
   alias FlintUIDocsWeb.Examples
   alias FlintUIDocsWeb.Markdown
+  alias FlintUIDocsWeb.PreviewComponent
 
   @part_order [:root, :trigger, :content]
 
@@ -74,45 +75,14 @@ defmodule FlintUIDocsWeb.ComponentLive do
           aria-labelledby="tab-base"
           tabindex="0"
         >
-          <DocBlocks.section title="Preview" id="preview">
-            <div class="mt-4 grid place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-8 dark:border-zinc-700 dark:bg-zinc-900/40">
-              <Examples.render_example name={@active} props={@props} id="preview-example" />
-            </div>
-
-            <div
-              :if={@controls != []}
-              class="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800"
-            >
-              <form phx-change="set" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                <label :for={control <- @controls} class="flex flex-col gap-1">
-                  <span class="text-xs text-zinc-500">{control.label}</span>
-                  <%= if control.type == :boolean do %>
-                    <button
-                      type="button"
-                      phx-click="toggle"
-                      phx-value-key={control.key}
-                      class={[
-                        "flex items-center justify-between rounded-md border px-3 py-1.5 text-sm transition-colors",
-                        Map.get(@props, control.key) &&
-                          "border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-zinc-900",
-                        !Map.get(@props, control.key) &&
-                          "border-zinc-200 text-zinc-600 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                      ]}
-                    >
-                      <span>{if Map.get(@props, control.key), do: "On", else: "Off"}</span>
-                    </button>
-                  <% else %>
-                    <input
-                      type="text"
-                      name={control.key}
-                      value={Map.get(@props, control.key)}
-                      autocomplete="off"
-                      class="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950"
-                    />
-                  <% end %>
-                </label>
-              </form>
-            </div>
+          <DocBlocks.section id="preview">
+            <PreviewComponent.preview
+              id={"playground-#{@active}"}
+              kind={:example}
+              name={@active}
+              controls={@controls}
+              defaults={@defaults}
+            />
           </DocBlocks.section>
 
           <DocBlocks.section title="Usage" id="usage">
@@ -138,26 +108,10 @@ defmodule FlintUIDocsWeb.ComponentLive do
             </DocBlocks.subsection>
           </DocBlocks.section>
 
-          <DocBlocks.section :if={@examples != []} title="Examples" id="examples">
-            <DocBlocks.example
-              :for={example <- @examples}
-              title={example.title}
-              description={example[:description]}
-              code={example[:code]}
-            >
-              {Examples.render_block(%{
-                name: @active,
-                block: example.id,
-                props: @props,
-                id: "example-#{@active}-#{example.id}"
-              })}
-            </DocBlocks.example>
-          </DocBlocks.section>
-
           <DocBlocks.section :if={@styling} title="Styling the base" id="styling">
             <Markdown.markdown :if={@styling.body} content={@styling.body} />
             <DocBlocks.subsection :for={snippet <- @styling.snippets} title={snippet.title}>
-              <DocBlocks.code_block code={snippet.code} />
+              <DocBlocks.code_block code={snippet.code} lang={:css} />
             </DocBlocks.subsection>
             <p class="mt-6 text-sm text-zinc-500">
               The generated component on the
@@ -250,19 +204,37 @@ defmodule FlintUIDocsWeb.ComponentLive do
           <DocBlocks.section title="Generated component" id="styled">
             <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
               Beyond the headless component, FlintUI generates a styled wrapper into your
-              app, so you own and can edit it. Styling is framework-agnostic and lives in <code>flint.css</code>.
+              app, so you own and can edit it. Styling is framework-agnostic and lives in <code>flint.css</code>,
+              which styles this generated component (and anything else you aim at the same hooks) — the
+              headless base stays unstyled. See <.link
+                navigate={~p"/guides/theming"}
+                class="underline"
+              >Theming</.link>.
             </p>
 
-            <DocBlocks.code_block :if={@entry} code={@entry.install} />
+            <DocBlocks.code_block :if={@entry} code={@entry.install} lang={:shell} />
 
             <DocBlocks.subsection :if={@styled} title="Preview" id="styled-preview">
-              <p :if={@styled[:description]} class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {@styled[:description]}
-              </p>
-              <div class="mt-4 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/40">
-                {Examples.render_styled(%{name: @active, props: @props, id: "styled-preview"})}
-              </div>
-              <DocBlocks.code_block :if={@styled[:code]} code={@styled[:code]} />
+              <PreviewComponent.preview
+                id={"styled-preview-#{@active}"}
+                kind={:styled}
+                name={@active}
+                code={@styled[:code]}
+                description={@styled[:description]}
+              />
+            </DocBlocks.subsection>
+
+            <DocBlocks.subsection :if={@examples != []} title="Examples" id="examples">
+              <PreviewComponent.preview
+                :for={example <- @examples}
+                id={"example-#{@active}-#{example.id}"}
+                kind={:block}
+                name={@active}
+                block={example.id}
+                code={example[:code]}
+                title={example.title}
+                description={example[:description]}
+              />
             </DocBlocks.subsection>
 
             <DocBlocks.subsection
@@ -320,26 +292,6 @@ defmodule FlintUIDocsWeb.ComponentLive do
     end
   end
 
-  @impl true
-  def handle_event("toggle", %{"key" => key}, socket) do
-    key = find_control!(socket.assigns.active, key).key
-    props = Map.update!(socket.assigns.props, key, &(!&1))
-    {:noreply, assign(socket, :props, props)}
-  end
-
-  def handle_event("set", params, socket) do
-    props =
-      Enum.reduce(Examples.controls(socket.assigns.active), socket.assigns.props, fn control,
-                                                                                     acc ->
-        case Map.fetch(params, Atom.to_string(control.key)) do
-          {:ok, value} -> Map.put(acc, control.key, value)
-          :error -> acc
-        end
-      end)
-
-    {:noreply, assign(socket, :props, props)}
-  end
-
   defp assign_component(socket, name) do
     assign(socket,
       active: name,
@@ -360,17 +312,12 @@ defmodule FlintUIDocsWeb.ComponentLive do
       entry: FlintUI.Styled.get(name),
       accessibility: Examples.accessibility(name),
       controls: Examples.controls(name),
-      props: Examples.defaults(name)
+      defaults: Examples.defaults(name)
     )
   end
 
   defp find_component(name) do
     Enum.find(FlintUI.components(), &(Atom.to_string(&1) == name))
-  end
-
-  defp find_control!(component, key) do
-    Enum.find(Examples.controls(component), &(Atom.to_string(&1.key) == key)) ||
-      raise ArgumentError, "unknown control #{key} for #{component}"
   end
 
   defp normalize_tab("api"), do: "api"

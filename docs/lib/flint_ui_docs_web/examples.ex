@@ -49,6 +49,14 @@ defmodule FlintUIDocsWeb.Examples do
   end
 
   attr(:name, :atom, required: true)
+  attr(:props, :map, default: %{})
+  attr(:id, :string, required: true)
+
+  def render_code(assigns) do
+    module(assigns.name).render_code(assigns)
+  end
+
+  attr(:name, :atom, required: true)
   attr(:block, :atom, required: true)
   attr(:props, :map, required: true)
   attr(:id, :string, required: true)

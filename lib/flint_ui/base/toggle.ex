@@ -121,33 +121,29 @@ defmodule FlintUI.Base.Toggle do
 
   @doc false
 
-  attr(:flint_parts, :map, default: nil)
+  attr :flint_parts, :map, default: nil
 
-  attr(:pressed, :boolean,
+  attr :pressed, :boolean,
     default: false,
     doc: "Whether the button is currently pressed. The server-side source of truth."
-  )
 
-  attr(:on_click, :any,
+  attr :on_click, :any,
     default: nil,
     doc:
       "A `Phoenix.LiveView.JS` command or server event name to run when clicked. The client state updates regardless."
-  )
 
-  attr(:type, :string,
+  attr :type, :string,
     default: "button",
     values: ~w(button submit reset),
     doc: "The button type, defaults to `button`."
-  )
 
-  attr(:disabled, :boolean,
+  attr :disabled, :boolean,
     default: false,
     doc: "Whether the button should ignore user interaction."
-  )
 
-  attr(:rest, :global, doc: "Additional HTML attributes.")
+  attr :rest, :global, doc: "Additional HTML attributes."
 
-  slot(:inner_block, required: true, doc: "The content of the toggle button.")
+  slot :inner_block, required: true, doc: "The content of the toggle button."
 
   @impl true
   def render(assigns) do

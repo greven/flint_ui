@@ -294,55 +294,48 @@ defmodule FlintUI.Base.Collapsible do
 
   @doc false
 
-  attr(:flint_parts, :map, default: nil)
+  attr :flint_parts, :map, default: nil
 
-  attr(:id, :string, required: true, doc: "Unique component DOM id.")
+  attr :id, :string, required: true, doc: "Unique component DOM id."
 
-  attr(:as, :string,
+  attr :as, :string,
     default: "div",
     doc: "The HTML element to render the collapsible root as."
-  )
 
-  attr(:open, :boolean, default: false, doc: "Initial open state.")
+  attr :open, :boolean, default: false, doc: "Initial open state."
 
-  attr(:disabled, :boolean,
+  attr :disabled, :boolean,
     default: false,
     doc: "Whether the trigger interactions are suppressed."
-  )
 
-  attr(:hidden_until_found, :boolean,
+  attr :hidden_until_found, :boolean,
     default: false,
     doc:
       "Whether the content is hidden until it is found by the browser. When true, the content is marked with `hidden=\"until-found\"`
       when collapsed, allowing browsers to find and automatically expand it when a search is performed."
-  )
 
-  attr(:open_event, :string,
+  attr :open_event, :string,
     default: nil,
     doc: "The event pushed to the server when the collapsible is opened.
       The event will receive the collapsible's id and state as the payload."
-  )
 
-  attr(:close_event, :string,
+  attr :close_event, :string,
     default: nil,
     doc: "The event pushed to the server when the collapsible is closed.
       The event will receive the collapsible's id and state as the payload."
-  )
 
-  attr(:toggle_event, :string,
+  attr :toggle_event, :string,
     default: nil,
     doc: "The event pushed to the server when the collapsible is toggled.
       The event will receive the collapsible's id and state as the payload."
-  )
 
-  attr(:rest, :global, doc: "Additional HTML attributes.")
+  attr :rest, :global, doc: "Additional HTML attributes."
 
-  slot(:trigger,
+  slot :trigger,
     required: true,
     doc: "The trigger. Render a native `<button>` and spread the provided attributes onto it."
-  )
 
-  slot(:content, required: true, doc: "The content to show or hide.")
+  slot :content, required: true, doc: "The content to show or hide."
 
   @impl true
   def render(assigns) do

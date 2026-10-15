@@ -38,15 +38,15 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#preview")
   end
 
-  test "the base tab documents usage, examples and styling", %{conn: conn} do
+  test "the base tab documents usage and styling", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#usage")
     assert has_element?(view, "#structure")
     assert has_element?(view, "#accessibility")
     assert has_element?(view, "#keyboard")
-    assert has_element?(view, "#examples")
     assert has_element?(view, "#styling")
+    refute has_element?(view, "#examples")
   end
 
   test "the styled tab documents the generated component", %{conn: conn} do
@@ -56,6 +56,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#panel-styled")
     assert has_element?(view, "#styled")
     assert has_element?(view, "#styled-preview [data-element='button'][data-variant='solid']")
+    assert has_element?(view, "#examples")
     assert has_element?(view, "#styled code", "mix flint.add button")
     refute has_element?(view, "#preview")
   end
@@ -100,7 +101,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#preview [data-disabled]")
   end
 
-  test "switching tabs keeps the playground state", %{conn: conn} do
+  test "switching tabs resets the playground to its defaults", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
     view |> element("button[phx-value-key='disabled']") |> render_click()
     assert has_element?(view, "#preview [data-disabled]")
@@ -111,10 +112,84 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     view |> element("#tab-base") |> render_click()
 
-    assert has_element?(view, "#preview [data-disabled]")
+    refute has_element?(view, "#preview [data-disabled]")
+  end
+
+  test "the playground code tab reflects the current props", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    view |> element("button[phx-value-tab='code']") |> render_click()
+    assert has_element?(view, "#playground-button-code", "<.button")
+
+    refute has_element?(view, "#preview [data-element='button']")
+
+    view |> element("button[phx-value-tab='preview']") |> render_click()
+    view |> element("button[phx-value-key='disabled']") |> render_click()
+
+    view |> element("button[phx-value-tab='code']") |> render_click()
+    assert has_element?(view, "#playground-button-code", "disabled")
+  end
+
+  test "the playground code tab offers a copy button", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    view |> element("button[phx-value-tab='code']") |> render_click()
+
+    assert has_element?(view, "#playground-button-copy[phx-hook]")
+  end
+
+  test "select and number controls update the preview", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/loading")
+    assert has_element?(view, "#preview [data-element='loading']")
+
+    view
+    |> element("#playground-loading-controls")
+    |> render_change(%{"variant" => "dots-fade"})
+
+    assert has_element?(view, "#preview [data-element='loading'][data-variant='dots-fade']")
+  end
+
+  test "code blocks are syntax highlighted", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#structure pre.highlight code span")
+  end
+
+  test "example cards expose a code tab", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button?tab=styled")
+
+    assert has_element?(view, "#example-button-icon button[phx-value-tab='code']")
+
+    view |> element("#example-button-icon button[phx-value-tab='code']") |> render_click()
+
+    assert has_element?(view, "#example-button-icon-code span")
+  end
+
+  test "the component page shows a section breadcrumb", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "nav[aria-label='Breadcrumb'] span", "Components")
+  end
+
+  test "the components index has no breadcrumb", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components")
+
+    refute has_element?(view, "nav[aria-label='Breadcrumb']")
   end
 
   test "unknown component redirects to the components index", %{conn: conn} do
     assert {:error, {:live_redirect, %{to: "/components"}}} = live(conn, ~p"/components/nope")
+  end
+
+  test "every component renders its base and styled tabs", %{conn: conn} do
+    for name <- FlintUI.components() do
+      {:ok, base, _html} = live(conn, ~p"/components/#{name}")
+      assert has_element?(base, "#panel-base")
+      assert has_element?(base, "#preview [data-element]")
+
+      {:ok, styled, _html} = live(conn, ~p"/components/#{name}?tab=styled")
+      assert has_element?(styled, "#panel-styled")
+      assert has_element?(styled, "#styled-preview")
+    end
   end
 end

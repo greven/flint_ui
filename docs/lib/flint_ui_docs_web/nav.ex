@@ -76,6 +76,28 @@ defmodule FlintUIDocsWeb.Nav do
   """
   def first_page_path(%{groups: [%{pages: [%{path: path} | _]} | _]}), do: path
 
+  @doc """
+  Returns the breadcrumb trail for a page as `[%{label: label, path: path}]`.
+  """
+  def breadcrumbs(section_id, page_id \\ nil) do
+    section = get!(section_id)
+    [%{label: section.label, path: section_path(section)} | group_crumbs(section, page_id)]
+  end
+
+  defp section_path(section) do
+    "/" <> (section.id |> Atom.to_string() |> String.replace("_", "-"))
+  end
+
+  defp group_crumbs(%{id: :components}, _page_id), do: []
+
+  defp group_crumbs(section, page_id) do
+    Enum.find_value(section.groups, [], fn group ->
+      if Enum.any?(group.pages, &(&1.id == page_id)) do
+        [%{label: group.label, path: group.pages |> List.first() |> Map.fetch!(:path)}]
+      end
+    end)
+  end
+
   defp type_label(type) do
     type
     |> Atom.to_string()

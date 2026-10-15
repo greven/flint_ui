@@ -10,6 +10,9 @@ defmodule FlintUIDocsWeb.Markdown do
 
   use Phoenix.Component
 
+  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.Highlight
+
   import Phoenix.HTML, only: [html_escape: 1, raw: 1, safe_to_string: 1]
 
   attr(:content, :string, required: true)
@@ -21,8 +24,8 @@ defmodule FlintUIDocsWeb.Markdown do
     <div class="flex flex-col gap-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
       <%= for block <- @blocks do %>
         <%= case block do %>
-          <% {:code, code} -> %>
-            <pre class="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-xs leading-relaxed text-zinc-100"><code>{code}</code></pre>
+          <% {:code, code, lang} -> %>
+            <DocBlocks.code_block code={code} lang={lang} />
           <% {:p, text} -> %>
             <p>{text}</p>
         <% end %>
@@ -47,12 +50,13 @@ defmodule FlintUIDocsWeb.Markdown do
   defp collect([line | rest], acc) do
     cond do
       fenced?(line) ->
+        lang = Highlight.language(fence_info(line))
         {code, remaining} = take_fenced(rest, [])
-        collect(remaining, [{:code, code} | acc])
+        collect(remaining, [{:code, code, lang} | acc])
 
       indented?(line) ->
         {code_lines, remaining} = take_indented([line | rest], [])
-        collect(remaining, [{:code, dedent_code(code_lines)} | acc])
+        collect(remaining, [{:code, dedent_code(code_lines), :heex} | acc])
 
       blank?(line) ->
         collect(rest, acc)
@@ -101,6 +105,12 @@ defmodule FlintUIDocsWeb.Markdown do
   end
 
   defp fenced?(line), do: String.starts_with?(String.trim_leading(line), "```")
+
+  defp fence_info(line) do
+    line
+    |> String.trim_leading()
+    |> String.replace_prefix("```", "")
+  end
 
   defp blank?(line), do: String.trim(line) == ""
 

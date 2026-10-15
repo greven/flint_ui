@@ -30,14 +30,14 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
         </p>
 
         <DocBlocks.section title="1. Add the dependency" id="install">
-          <DocBlocks.code_block code={snippet(:dependency)} />
+          <DocBlocks.code_block code={snippet(:dependency)} lang={:elixir} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Then run <code class="font-mono">mix deps.get</code>.
           </p>
         </DocBlocks.section>
 
         <DocBlocks.section title="2. Set up the theme" id="setup">
-          <DocBlocks.code_block code="mix flint.setup" />
+          <DocBlocks.code_block code="mix flint.setup" lang={:shell} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             This creates <code class="font-mono">MyAppWeb.Components</code>, copies the
             theme stylesheet to <code class="font-mono">assets/css/flint.css</code>, imports
@@ -47,7 +47,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
             Using Tailwind? Pass <code class="font-mono">--tailwind</code> to also map the
             FlintUI tokens onto utilities (<code class="font-mono">bg-primary</code>, <code class="font-mono">border-border</code>, …).
           </p>
-          <DocBlocks.code_block code="mix flint.setup --tailwind" />
+          <DocBlocks.code_block code="mix flint.setup --tailwind" lang={:shell} />
         </DocBlocks.section>
 
         <DocBlocks.section title="3. Generate components" id="generate">
@@ -55,7 +55,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
             Generate the styled wrappers you need. They are written into your app, so you
             own and can edit them.
           </p>
-          <DocBlocks.code_block code={snippet(:add)} />
+          <DocBlocks.code_block code={snippet(:add)} lang={:shell} />
         </DocBlocks.section>
 
         <DocBlocks.section title="4. Use a component" id="usage">

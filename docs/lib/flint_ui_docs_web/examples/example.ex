@@ -30,6 +30,7 @@ defmodule FlintUIDocsWeb.Examples.Example do
   @callback accessibility() :: String.t() | nil
   @callback structure() :: String.t() | nil
   @callback render_example(assigns :: map()) :: Phoenix.LiveView.Rendered.t()
+  @callback render_code(assigns :: map()) :: String.t() | nil
   @callback render_block(assigns :: map()) :: Phoenix.LiveView.Rendered.t() | nil
   @callback styled() :: map() | nil
   @callback render_styled(assigns :: map()) :: Phoenix.LiveView.Rendered.t() | nil
@@ -59,6 +60,9 @@ defmodule FlintUIDocsWeb.Examples.Example do
       @doc "Renders one example or recipe preview. Override and match on `:block`."
       def render_block(_assigns), do: nil
 
+      @doc "Generates the HEEx source for the current playground props, or `nil` to hide the Code tab."
+      def render_code(_assigns), do: nil
+
       @doc "Styled-layer preview and snippet for the generated component."
       def styled, do: nil
 
@@ -78,6 +82,7 @@ defmodule FlintUIDocsWeb.Examples.Example do
                      examples: 0,
                      styling: 0,
                      render_block: 1,
+                     render_code: 1,
                      styled: 0,
                      render_styled: 1,
                      accessibility: 0,

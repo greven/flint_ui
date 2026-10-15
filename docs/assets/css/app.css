@@ -3,9 +3,17 @@
 
 @import "tailwindcss" source(none);
 @import "../../../priv/static/flint.css";
+@import "./highlight.css";
 @source "../css";
 @source "../js";
 @source "../../lib/flint_ui_docs_web";
+
+/* Keep code-block backgrounds on the site's zinc scale rather than Makeup's
+   One Dark surface. Unlayered, so it wins over both the generated stylesheet
+   above and Tailwind's layered utilities. */
+.highlight {
+  background-color: var(--color-zinc-900);
+}
 
 /* A Tailwind plugin that makes "lucide-#{ICON}" classes available.
    The lucide icons installation itself is managed by your mix.exs */

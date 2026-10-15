@@ -4,6 +4,7 @@ defmodule FlintUIDocsWeb.Examples.Collapsible do
   use FlintUIDocsWeb.Examples.Example, component: :collapsible
 
   alias FlintUIDocsWeb.Components
+  alias FlintUIDocsWeb.Examples.Snippet
 
   @repo_list [
     "@elixir-lang/elixir",
@@ -100,16 +101,50 @@ defmodule FlintUIDocsWeb.Examples.Collapsible do
   @impl true
   def examples do
     [
-      %{id: :faq, title: "FAQ", description: "A list of disclosures with rich trigger labels."},
+      %{
+        id: :faq,
+        title: "FAQ",
+        description: "A list of disclosures with rich trigger labels.",
+        code: """
+        <.collapsible id="faq-1" open>
+          <:trigger :let={attrs}>
+            <button {attrs}>What is FlintUI?</button>
+          </:trigger>
+          <:content :let={attrs}>
+            <p {attrs}>Accessible, unstyled components for Phoenix LiveView.</p>
+          </:content>
+        </.collapsible>
+        """
+      },
       %{
         id: :find_in_page,
         title: "Find in page",
-        description: "Collapsed content that browser find-in-page can reveal."
+        description: "Collapsed content that browser find-in-page can reveal.",
+        code: """
+        <.collapsible id="license" hidden_until_found>
+          <:trigger :let={attrs}>
+            <button {attrs}>Show the license</button>
+          </:trigger>
+          <:content :let={attrs}>
+            <p {attrs}>Released under the MIT License.</p>
+          </:content>
+        </.collapsible>
+        """
       },
       %{
         id: :disabled,
         title: "Disabled",
-        description: "A trigger that cannot be toggled."
+        description: "A trigger that cannot be toggled.",
+        code: """
+        <.collapsible id="details" disabled>
+          <:trigger :let={attrs}>
+            <button {attrs}>Toggle details</button>
+          </:trigger>
+          <:content :let={attrs}>
+            <p {attrs}>This content cannot be revealed.</p>
+          </:content>
+        </.collapsible>
+        """
       }
     ]
   end
@@ -186,6 +221,35 @@ defmodule FlintUIDocsWeb.Examples.Collapsible do
       </:content>
     </.collapsible>
     """
+  end
+
+  @impl true
+  def render_code(%{props: props}) do
+    attrs =
+      [
+        ~s(id="repos"),
+        Snippet.flag("open", props.open),
+        Snippet.flag("disabled", props.disabled),
+        Snippet.flag("hidden_until_found", props.hidden_until_found)
+      ]
+      |> Enum.reject(&is_nil/1)
+      |> Enum.map_join("\n", &("  " <> &1))
+
+    """
+    <.collapsible
+    #{attrs}
+    >
+      <:trigger :let={attrs}>
+        <button {attrs}>Toggle repositories</button>
+      </:trigger>
+      <:content :let={attrs}>
+        <ul {attrs}>
+          <li>...</li>
+        </ul>
+      </:content>
+    </.collapsible>
+    """
+    |> String.trim()
   end
 
   @impl true

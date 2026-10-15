@@ -4,14 +4,15 @@ defmodule FlintUIDocsWeb.Examples.Loading do
   use FlintUIDocsWeb.Examples.Example, component: :loading
 
   alias FlintUIDocsWeb.Components
+  alias FlintUIDocsWeb.Examples.Snippet
 
   @variants ~w(ring ring-bg dots-fade dots-bounce)
 
   @impl true
   def controls do
     [
-      %{key: :variant, type: :string, default: "ring", label: "Variant (ring, ring-bg, …)"},
-      %{key: :duration, type: :string, default: "600", label: "Duration (ms)"}
+      %{key: :variant, type: :select, values: @variants, default: "ring", label: "Variant"},
+      %{key: :duration, type: :number, default: 600, label: "Duration (ms)"}
     ]
   end
 
@@ -81,17 +82,35 @@ defmodule FlintUIDocsWeb.Examples.Loading do
       %{
         id: :variants,
         title: "All variants",
-        description: "The four built-in indicator shapes."
+        description: "The four built-in indicator shapes.",
+        code: """
+        <div class="flex items-center gap-6">
+          <.loading variant="ring" class="size-6" />
+          <.loading variant="ring-bg" class="size-6" />
+          <.loading variant="dots-fade" class="size-6" />
+          <.loading variant="dots-bounce" class="size-6" />
+        </div>
+        """
       },
       %{
         id: :sizes,
         title: "Sizes",
-        description: "Size comes from the `class` you pass."
+        description: "Size comes from the `class` you pass.",
+        code: """
+        <div class="flex items-center gap-6">
+          <.loading class="size-4" />
+          <.loading class="size-6" />
+          <.loading class="size-8" />
+        </div>
+        """
       },
       %{
         id: :labeled,
         title: "Standalone status",
-        description: "Pass `label` to expose the spinner as a labeled image."
+        description: "Pass `label` to expose the spinner as a labeled image.",
+        code: """
+        <.loading label="Loading" class="size-6" />
+        """
       }
     ]
   end
@@ -134,6 +153,17 @@ defmodule FlintUIDocsWeb.Examples.Loading do
       class={@props[:class] || "size-6 text-zinc-900 dark:text-zinc-100"}
     />
     """
+  end
+
+  @impl true
+  def render_code(%{props: props}) do
+    Snippet.component(
+      ".loading",
+      [
+        Snippet.attr("variant", variant(props), "ring"),
+        Snippet.attr("duration", duration(props), 600)
+      ]
+    )
   end
 
   @impl true

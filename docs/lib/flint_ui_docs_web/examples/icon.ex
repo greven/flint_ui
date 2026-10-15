@@ -4,6 +4,7 @@ defmodule FlintUIDocsWeb.Examples.Icon do
   use FlintUIDocsWeb.Examples.Example, component: :icon
 
   alias FlintUIDocsWeb.Components
+  alias FlintUIDocsWeb.Examples.Snippet
 
   @impl true
   def controls do
@@ -59,9 +60,40 @@ defmodule FlintUIDocsWeb.Examples.Icon do
   @impl true
   def examples do
     [
-      %{id: :sizes, title: "Sizes", description: "Icons scale with a `size-*` utility."},
-      %{id: :colors, title: "Colors", description: "Inherit a color from `class`."},
-      %{id: :in_button, title: "In a button", description: "Pair an icon with a label."}
+      %{
+        id: :sizes,
+        title: "Sizes",
+        description: "Icons scale with a `size-*` utility.",
+        code: """
+        <div class="flex items-end gap-6">
+          <.icon name="lucide-house" class="size-4" />
+          <.icon name="lucide-house" class="size-6" />
+          <.icon name="lucide-house" class="size-8" />
+        </div>
+        """
+      },
+      %{
+        id: :colors,
+        title: "Colors",
+        description: "Inherit a color from `class`.",
+        code: """
+        <div class="flex items-center gap-6">
+          <.icon name="lucide-circle-check" class="size-6 text-green-600" />
+          <.icon name="lucide-circle-alert" class="size-6 text-amber-500" />
+          <.icon name="lucide-circle-x" class="size-6 text-red-600" />
+        </div>
+        """
+      },
+      %{
+        id: :in_button,
+        title: "In a button",
+        description: "Pair an icon with a label.",
+        code: """
+        <.button class="inline-flex items-center gap-2 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white">
+          <.icon name="lucide-download" class="size-4" /> Download
+        </.button>
+        """
+      }
     ]
   end
 
@@ -103,6 +135,17 @@ defmodule FlintUIDocsWeb.Examples.Icon do
       class="size-6 text-zinc-900 dark:text-zinc-100"
     />
     """
+  end
+
+  @impl true
+  def render_code(%{props: props}) do
+    Snippet.component(
+      ".icon",
+      [
+        Snippet.attr("name", props.name),
+        Snippet.attr("label", blank_to_nil(props.label))
+      ]
+    )
   end
 
   @impl true

@@ -62,21 +62,19 @@ defmodule FlintUI.Base.Icon do
 
   @doc false
 
-  attr(:flint_parts, :map, default: nil)
+  attr :flint_parts, :map, default: nil
 
-  attr(:name, :string,
+  attr :name, :string,
     required: true,
     doc: "The icon CSS class (e.g. `\"lucide-house\"`), applied verbatim as a class."
-  )
 
-  attr(:class, :any, default: "size-4", doc: "Additional classes for sizing and color.")
+  attr :class, :any, default: "size-4", doc: "Additional classes for sizing and color."
 
-  attr(:label, :string,
+  attr :label, :string,
     default: nil,
     doc: "An accessible name. When set, the icon is exposed as a labeled image."
-  )
 
-  attr(:rest, :global, doc: "Additional HTML attributes.")
+  attr :rest, :global, doc: "Additional HTML attributes."
 
   @impl true
   def render(assigns) do

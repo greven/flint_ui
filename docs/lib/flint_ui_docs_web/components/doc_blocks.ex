@@ -5,22 +5,28 @@ defmodule FlintUIDocsWeb.DocBlocks do
 
   use Phoenix.Component
 
-  attr(:id, :string, default: nil)
-  attr(:title, :string, required: true)
-  slot(:inner_block, required: true)
+  alias FlintUIDocsWeb.Highlight
+
+  @doc false
+
+  attr :id, :string, default: nil
+  attr :title, :string, default: nil
+  slot :inner_block, required: true
 
   def section(assigns) do
     ~H"""
     <section id={@id} class="mt-10 scroll-mt-20">
-      <h2 class="text-lg font-semibold">{@title}</h2>
+      <h2 :if={@title} class="text-lg font-semibold">{@title}</h2>
       {render_slot(@inner_block)}
     </section>
     """
   end
 
-  attr(:id, :string, default: nil)
-  attr(:title, :string, required: true)
-  slot(:inner_block, required: true)
+  @doc false
+
+  attr :id, :string, default: nil
+  attr :title, :string, required: true
+  slot :inner_block, required: true
 
   def subsection(assigns) do
     ~H"""
@@ -31,33 +37,18 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:code, :string, required: true)
+  @doc false
+
+  attr :code, :string, required: true
+  attr :lang, :atom, default: :heex
 
   def code_block(assigns) do
     ~H"""
-    <pre class="mt-3 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-xs leading-relaxed text-zinc-100 dark:bg-zinc-900"><code>{@code}</code></pre>
+    <pre class="highlight mt-3 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-xs leading-relaxed text-zinc-100 dark:bg-zinc-900"><code>{Highlight.highlight(@code, @lang)}</code></pre>
     """
   end
 
-  attr(:title, :string, required: true)
-  attr(:description, :string, default: nil)
-  attr(:code, :string, default: nil)
-  slot(:inner_block, required: true)
-
-  def example(assigns) do
-    ~H"""
-    <div class="mt-6">
-      <h4 class="text-sm font-semibold">{@title}</h4>
-      <p :if={@description} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{@description}</p>
-      <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/40">
-        {render_slot(@inner_block)}
-      </div>
-      <.code_block :if={@code} code={@code} />
-    </div>
-    """
-  end
-
-  attr(:attrs, :list, required: true)
+  attr :attrs, :list, required: true
 
   def attr_table(assigns) do
     ~H"""
@@ -85,8 +76,10 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:props, :list, required: true)
-  attr(:hooks, :map, default: %{})
+  @doc false
+
+  attr :props, :list, required: true
+  attr :hooks, :map, default: %{}
 
   def prop_table(assigns) do
     ~H"""
@@ -115,7 +108,9 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:slots, :list, required: true)
+  @doc false
+
+  attr :slots, :list, required: true
 
   def slot_table(assigns) do
     ~H"""
@@ -140,7 +135,9 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:events, :list, required: true)
+  @doc false
+
+  attr :events, :list, required: true
 
   def events_table(assigns) do
     ~H"""
@@ -163,7 +160,9 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:parts, :list, required: true)
+  @doc false
+
+  attr :parts, :list, required: true
 
   def parts_tables(assigns) do
     ~H"""
@@ -189,7 +188,9 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:css_vars, :list, required: true)
+  @doc false
+
+  attr :css_vars, :list, required: true
 
   def css_vars_table(assigns) do
     ~H"""
@@ -210,7 +211,9 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
-  attr(:keyboard, :list, required: true)
+  @doc false
+
+  attr :keyboard, :list, required: true
 
   def keyboard_table(assigns) do
     ~H"""

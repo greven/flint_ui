@@ -16,20 +16,22 @@ defmodule FlintUIDocsWeb.Layouts do
         <h1>Content</h1>
       </Layouts.app>
   """
-  attr(:flash, :map, required: true, doc: "the map of flash messages")
-  attr(:active, :atom, default: nil, doc: "the active component, highlighted in the sidebar")
-  attr(:section, :atom, default: nil, doc: "the active top-level documentation section")
-  attr(:page, :atom, default: nil, doc: "the active page id, highlighted in the sidebar")
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr :active, :atom, default: nil, doc: "the active component, highlighted in the sidebar"
+  attr :section, :atom, default: nil, doc: "the active top-level documentation section"
+  attr :page, :atom, default: nil, doc: "the active page id, highlighted in the sidebar"
 
-  attr(:current_scope, :map,
+  attr :current_scope, :map,
     default: nil,
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
-  )
 
-  slot(:inner_block, required: true)
+  slot :inner_block, required: true
 
   def app(assigns) do
-    assigns = assign(assigns, :sections, FlintUIDocsWeb.Nav.sections())
+    assigns =
+      assigns
+      |> assign(:sections, FlintUIDocsWeb.Nav.sections())
+      |> assign(:breadcrumbs, breadcrumb_trail(assigns))
 
     ~H"""
     <div class="min-h-screen bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
@@ -45,6 +47,7 @@ defmodule FlintUIDocsWeb.Layouts do
         />
 
         <main class="min-w-0 flex-1 py-8">
+          <.breadcrumbs :if={@breadcrumbs != []} crumbs={@breadcrumbs} />
           {render_slot(@inner_block)}
         </main>
       </div>
@@ -54,11 +57,56 @@ defmodule FlintUIDocsWeb.Layouts do
     """
   end
 
+  defp breadcrumb_trail(%{section: nil}), do: []
+  defp breadcrumb_trail(%{section: :components, active: nil}), do: []
+
+  defp breadcrumb_trail(%{section: section, page: page}) do
+    FlintUIDocsWeb.Nav.breadcrumbs(section, page)
+  end
+
+  @doc """
+  Renders the section/group breadcrumb trail shown above a page title.
+
+  Ancestor crumbs are links; the final crumb is the current context and is
+  rendered in the accent colour.
+  """
+  attr :crumbs, :list, required: true, doc: "the trail from `FlintUIDocsWeb.Nav.breadcrumbs/2`"
+
+  def breadcrumbs(assigns) do
+    ~H"""
+    <nav aria-label="Breadcrumb" class="mb-4">
+      <ol class="flex flex-wrap items-center gap-1.5 text-sm">
+        <li :for={{crumb, index} <- Enum.with_index(@crumbs)} class="flex items-center gap-1.5">
+          <.icon
+            :if={index > 0}
+            name="lucide-chevron-right"
+            class="size-3.5 shrink-0 text-zinc-300 dark:text-zinc-600"
+          />
+          <.link
+            :if={index < length(@crumbs) - 1}
+            navigate={crumb.path}
+            class="text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          >
+            {crumb.label}
+          </.link>
+          <span
+            :if={index == length(@crumbs) - 1}
+            class="font-medium text-zinc-900 dark:text-white"
+          >
+            {crumb.label}
+          </span>
+        </li>
+      </ol>
+    </nav>
+    """
+  end
+
   @doc """
   Renders the sticky docs header: the brand bar and the section switcher.
   """
-  attr(:sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`")
-  attr(:section, :atom, default: nil, doc: "the active section id")
+
+  attr :sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`"
+  attr :section, :atom, default: nil, doc: "the active section id"
 
   def site_header(assigns) do
     ~H"""
@@ -92,8 +140,8 @@ defmodule FlintUIDocsWeb.Layouts do
   @doc """
   Renders the section switcher shown beneath the brand bar.
   """
-  attr(:sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`")
-  attr(:section, :atom, default: nil, doc: "the active section id")
+  attr :sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`"
+  attr :section, :atom, default: nil, doc: "the active section id"
 
   def section_nav(assigns) do
     ~H"""
@@ -130,10 +178,10 @@ defmodule FlintUIDocsWeb.Layouts do
 
   @doc false
 
-  attr(:class, :string, default: nil)
-  attr(:active, :atom, default: nil)
-  attr(:page, :atom, default: nil)
-  attr(:section, :map, required: true)
+  attr :class, :string, default: nil
+  attr :active, :atom, default: nil
+  attr :page, :atom, default: nil
+  attr :section, :map, required: true
 
   def sidebar(assigns) do
     ~H"""
@@ -178,8 +226,8 @@ defmodule FlintUIDocsWeb.Layouts do
 
       <.flash_group flash={@flash} />
   """
-  attr(:flash, :map, required: true, doc: "the map of flash messages")
-  attr(:id, :string, default: "flash-group", doc: "the optional id of flash container")
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
 
   def flash_group(assigns) do
     ~H"""

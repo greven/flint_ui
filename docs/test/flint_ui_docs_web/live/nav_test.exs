@@ -28,6 +28,24 @@ defmodule FlintUIDocsWeb.NavTest do
     assert groups == expected
   end
 
+  test "breadcrumbs/2 builds the section and group trail", %{} do
+    assert Nav.breadcrumbs(:getting_started, :installation) == [
+             %{label: "Get Started", path: "/getting-started"},
+             %{label: "Overview", path: "/getting-started/introduction"}
+           ]
+
+    assert Nav.breadcrumbs(:guides, :theming) == [
+             %{label: "Guides", path: "/guides"},
+             %{label: "Theming", path: "/guides/theming"}
+           ]
+  end
+
+  test "breadcrumbs/2 omits the group for components", %{} do
+    assert Nav.breadcrumbs(:components, :button) == [
+             %{label: "Components", path: "/components"}
+           ]
+  end
+
   defp type_label(type) do
     type |> Atom.to_string() |> String.replace("_", " ") |> String.capitalize()
   end
