@@ -1,16 +1,17 @@
-defmodule FlintUIDocsWeb.Examples.Icon do
+defmodule FlintUIDocsWeb.ComponentDocs.Icon do
   @moduledoc false
 
-  use FlintUIDocsWeb.Examples.Example, component: :icon
+  use FlintUIDocsWeb.ComponentDocs.Page, component: :icon
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.Examples.Snippet
+  alias FlintUIDocsWeb.ComponentDocs.Snippet
 
   @impl true
   def controls do
     [
       %{key: :name, type: :string, default: "lucide-house", label: "Icon (lucide-…)"},
-      %{key: :label, type: :string, default: "", label: "Label (accessible name)"}
+      %{key: :label, type: :string, default: "", label: "Label (accessible name)"},
+      %{key: :size, type: :select, default: "md", label: "Size"}
     ]
   end
 
@@ -30,8 +31,9 @@ defmodule FlintUIDocsWeb.Examples.Icon do
   def usage do
     [
       %{
-        id: :size,
+        id: :sizing,
         title: "Sizing and color",
+        layer: :base,
         body: """
         The `name` is applied verbatim as a CSS class. FlintUI ships no icon
         assets, so the host provides them — the docs use a Tailwind plugin that
@@ -45,6 +47,7 @@ defmodule FlintUIDocsWeb.Examples.Icon do
       %{
         id: :label,
         title: "Accessible name",
+        layer: :base,
         body: """
         Icons are decorative and hidden from assistive technology by default.
         When an icon conveys meaning on its own, pass `label` to expose it as a
@@ -52,6 +55,19 @@ defmodule FlintUIDocsWeb.Examples.Icon do
         """,
         code: """
         <.icon name="lucide-circle-alert" label="Error" />
+        """
+      },
+      %{
+        id: :size,
+        title: "Size",
+        layer: :styled,
+        body: """
+        The generated component adds a `size` attribute mapped onto the
+        `data-size` hook the theme targets.
+        """,
+        code: """
+        <.icon name="lucide-house" size="md" />
+        <.icon name="lucide-settings" size="lg" />
         """
       }
     ]
@@ -127,7 +143,13 @@ defmodule FlintUIDocsWeb.Examples.Icon do
   end
 
   @impl true
-  def render_example(assigns) do
+  def render_playground(%{layer: :styled} = assigns) do
+    ~H"""
+    <Components.icon name={@props.name} label={blank_to_nil(@props.label)} size={@props.size} />
+    """
+  end
+
+  def render_playground(assigns) do
     ~H"""
     <.icon
       name={@props.name}
@@ -138,6 +160,17 @@ defmodule FlintUIDocsWeb.Examples.Icon do
   end
 
   @impl true
+  def render_code(%{layer: :styled, props: props}) do
+    Snippet.component(
+      ".icon",
+      [
+        Snippet.attr("name", props.name),
+        Snippet.attr("size", props.size, "md"),
+        Snippet.attr("label", blank_to_nil(props.label))
+      ]
+    )
+  end
+
   def render_code(%{props: props}) do
     Snippet.component(
       ".icon",
@@ -146,6 +179,30 @@ defmodule FlintUIDocsWeb.Examples.Icon do
         Snippet.attr("label", blank_to_nil(props.label))
       ]
     )
+  end
+
+  @impl true
+  def render_usage(%{block: :sizing} = assigns) do
+    ~H"""
+    <div class="flex items-center gap-6 text-zinc-900 dark:text-zinc-100">
+      <.icon name="lucide-x" class="size-5" />
+      <.icon name="lucide-circle-alert" class="size-5 text-red-500" />
+    </div>
+    """
+  end
+
+  def render_usage(%{block: :label} = assigns) do
+    ~H"""
+    <.icon name="lucide-circle-alert" label="Error" class="size-5 text-red-500" />
+    """
+  end
+
+  def render_usage(%{block: :size} = assigns) do
+    ~H"""
+    <div class="flex items-center gap-6 text-zinc-900 dark:text-zinc-100">
+      <Components.icon :for={size <- ~w(sm md lg)} name="lucide-house" size={size} />
+    </div>
+    """
   end
 
   @impl true
@@ -174,29 +231,6 @@ defmodule FlintUIDocsWeb.Examples.Icon do
     <.button class="inline-flex items-center gap-2 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-zinc-900">
       <.icon name="lucide-download" class="size-4" /> Download
     </.button>
-    """
-  end
-
-  @impl true
-  def styled do
-    %{
-      description:
-        "The generated wrapper adds a `size` prop mapped onto the `data-size` hook; the icon asset itself still comes from your icon set.",
-      code: """
-      <.icon name="lucide-house" size="md" />
-      <.icon name="lucide-settings" size="lg" />
-      """
-    }
-  end
-
-  @impl true
-  def render_styled(assigns) do
-    ~H"""
-    <div class="flex items-center gap-6 text-zinc-900 dark:text-zinc-100">
-      <Components.icon name="lucide-house" size="sm" />
-      <Components.icon name="lucide-settings" size="md" />
-      <Components.icon name="lucide-bell" size="lg" />
-    </div>
     """
   end
 

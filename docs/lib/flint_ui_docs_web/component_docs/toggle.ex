@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.Examples.Toggle do
+defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   @moduledoc false
 
-  use FlintUIDocsWeb.Examples.Example, component: :toggle
+  use FlintUIDocsWeb.ComponentDocs.Page, component: :toggle
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.Examples.Snippet
+  alias FlintUIDocsWeb.ComponentDocs.Snippet
 
   @base "inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50"
 
@@ -12,7 +12,9 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
   def controls do
     [
       %{key: :pressed, type: :boolean, default: false, label: "Pressed"},
-      %{key: :disabled, type: :boolean, default: false, label: "Disabled"}
+      %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
+      %{key: :variant, type: :select, default: "solid", label: "Variant"},
+      %{key: :size, type: :select, default: "md", label: "Size"}
     ]
   end
 
@@ -38,6 +40,7 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
       %{
         id: :pressed,
         title: "Pressed state",
+        layer: :base,
         body: """
         The `pressed` attribute is the server-side source of truth. On click the
         button optimistically toggles its own `aria-pressed` and `data-state`, so
@@ -51,12 +54,41 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
       %{
         id: :on_click,
         title: "Reacting to clicks",
+        layer: :base,
         body: """
         Pass `on_click` a `Phoenix.LiveView.JS` command or a server event name to
         run when the button is clicked. The state flip still happens regardless.
         """,
         code: """
         <.toggle on_click={JS.push("toggle-bold")}>Bold</.toggle>
+        """
+      },
+      %{
+        id: :variant,
+        title: "Variant",
+        layer: :styled,
+        body: """
+        The generated component adds a `variant` attribute mapped onto the
+        `data-variant` hook the theme targets.
+        """,
+        code: """
+        <.toggle variant="solid" pressed>Bold</.toggle>
+        <.toggle variant="outline" pressed>Italic</.toggle>
+        <.toggle variant="ghost">Underline</.toggle>
+        """
+      },
+      %{
+        id: :size,
+        title: "Size",
+        layer: :styled,
+        body: """
+        The generated component adds a `size` attribute mapped onto the
+        `data-size` hook the theme targets.
+        """,
+        code: """
+        <.toggle size="sm" pressed>Small</.toggle>
+        <.toggle size="md" pressed>Medium</.toggle>
+        <.toggle size="lg" pressed>Large</.toggle>
         """
       }
     ]
@@ -111,8 +143,7 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
     %{
       body: """
       The toggle ships behavior, not appearance. Style it with `class` and target
-      its state through `data-state` (`"on"` / `"off"`). The generated component
-      on the **Styled** tab adds an opinionated theme.
+      its state through `data-state` (`"on"` / `"off"`).
       """,
       snippets: [
         %{
@@ -138,7 +169,20 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
   end
 
   @impl true
-  def render_example(assigns) do
+  def render_playground(%{layer: :styled} = assigns) do
+    ~H"""
+    <Components.toggle
+      variant={@props.variant}
+      size={@props.size}
+      pressed={@props.pressed}
+      disabled={@props.disabled}
+    >
+      <.icon name="lucide-bold" class="size-4" /> Bold
+    </Components.toggle>
+    """
+  end
+
+  def render_playground(assigns) do
     ~H"""
     <.toggle pressed={@props.pressed} disabled={@props.disabled} class={toggle_class(:solid)}>
       <.icon name="lucide-bold" class="size-4" /> Bold
@@ -147,12 +191,56 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
   end
 
   @impl true
+  def render_code(%{layer: :styled, props: props}) do
+    Snippet.tag(
+      ".toggle",
+      [
+        Snippet.attr("variant", props.variant, "solid"),
+        Snippet.attr("size", props.size, "md"),
+        Snippet.flag("pressed", props.pressed),
+        Snippet.flag("disabled", props.disabled)
+      ],
+      ~s(<.icon name="lucide-bold" class="size-4" /> Bold)
+    )
+  end
+
   def render_code(%{props: props}) do
     Snippet.tag(
       ".toggle",
       [Snippet.flag("pressed", props.pressed), Snippet.flag("disabled", props.disabled)],
       ~s(<.icon name="lucide-bold" class="size-4" /> Bold)
     )
+  end
+
+  @impl true
+  def render_usage(%{block: :pressed} = assigns) do
+    ~H"""
+    <.toggle pressed class={toggle_class(:solid)}>Bold</.toggle>
+    """
+  end
+
+  def render_usage(%{block: :on_click} = assigns) do
+    ~H"""
+    <.toggle class={toggle_class(:solid)}>Bold</.toggle>
+    """
+  end
+
+  def render_usage(%{block: :variant} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.toggle :for={variant <- ~w(solid outline ghost)} variant={variant} pressed>
+        {variant}
+      </Components.toggle>
+    </div>
+    """
+  end
+
+  def render_usage(%{block: :size} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.toggle :for={size <- ~w(sm md lg)} size={size} pressed>{size}</Components.toggle>
+    </div>
+    """
   end
 
   @impl true
@@ -184,36 +272,6 @@ defmodule FlintUIDocsWeb.Examples.Toggle do
       <.toggle aria-label="Underline" class={toggle_class(:solid)}>
         <.icon name="lucide-underline" class="size-4" />
       </.toggle>
-    </div>
-    """
-  end
-
-  @impl true
-  def styled do
-    %{
-      description:
-        "The generated wrapper adds `variant` and `size` props; the theme styles `data-state` for the on/off look.",
-      code: """
-      <.toggle variant="solid" pressed>Bold</.toggle>
-      <.toggle variant="outline" pressed>Italic</.toggle>
-      <.toggle variant="ghost">Underline</.toggle>
-      """
-    }
-  end
-
-  @impl true
-  def render_styled(assigns) do
-    ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.toggle variant="solid" size="md" pressed>Solid</Components.toggle>
-      <Components.toggle variant="outline" size="md" pressed>Outline</Components.toggle>
-      <Components.toggle variant="ghost" size="md" pressed>Ghost</Components.toggle>
-      <Components.toggle variant="solid" size="md" disabled>Disabled</Components.toggle>
-    </div>
-    <div class="mt-4 flex flex-wrap items-center gap-3">
-      <Components.toggle variant="solid" size="sm" pressed>Small</Components.toggle>
-      <Components.toggle variant="solid" size="md" pressed>Medium</Components.toggle>
-      <Components.toggle variant="solid" size="lg" pressed>Large</Components.toggle>
     </div>
     """
   end

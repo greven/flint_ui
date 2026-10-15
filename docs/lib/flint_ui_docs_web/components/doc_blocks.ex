@@ -78,6 +78,86 @@ defmodule FlintUIDocsWeb.DocBlocks do
 
   @doc false
 
+  attr :rows, :list, required: true
+
+  def attributes_table(assigns) do
+    ~H"""
+    <table class="mt-3 w-full text-left text-sm">
+      <thead class="text-xs tracking-wider text-zinc-400 uppercase">
+        <tr>
+          <th class="py-2 pr-4 font-medium">Attribute</th>
+          <th class="py-2 pr-4 font-medium">Type</th>
+          <th class="py-2 pr-4 font-medium">Default</th>
+          <th class="py-2 pr-4 font-medium">Data attribute</th>
+          <th class="py-2 font-medium">Description</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tr :for={row <- @rows}>
+          <td class="py-2 pr-4">
+            <code class="font-mono">{row.name}</code>
+            <span :if={row.required} class="ml-1 text-xs text-zinc-400">required</span>
+          </td>
+          <td class="py-2 pr-4 text-zinc-600 dark:text-zinc-400">{row_type(row)}</td>
+          <td class="py-2 pr-4"><code class="font-mono">{default_label(row.default)}</code></td>
+          <td class="py-2 pr-4"><code class="font-mono">{row.data || "\u2014"}</code></td>
+          <td class="py-2 text-zinc-600 dark:text-zinc-400">{row.doc}</td>
+        </tr>
+      </tbody>
+    </table>
+    """
+  end
+
+  attr :nodes, :list, required: true
+
+  def anatomy(assigns) do
+    ~H"""
+    <ul class="mt-4 space-y-3">
+      <.anatomy_node :for={node <- @nodes} node={node} />
+    </ul>
+    """
+  end
+
+  attr :node, :map, required: true
+
+  defp anatomy_node(assigns) do
+    ~H"""
+    <li class="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
+      <div class="flex flex-wrap items-center gap-2">
+        <code class="rounded bg-zinc-900 px-2 py-0.5 font-mono text-xs text-zinc-100">
+          {@node[:tag]}
+        </code>
+        <code :if={@node[:selector]} class="font-mono text-xs text-zinc-500">
+          {@node[:selector]}
+        </code>
+      </div>
+      <p :if={@node[:note]} class="mt-1 text-xs text-zinc-500">{@node[:note]}</p>
+      <div :if={@node[:hooks] && @node[:hooks] != []} class="mt-2 flex flex-wrap gap-1.5">
+        <span
+          :for={hook <- @node[:hooks]}
+          class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs dark:bg-zinc-800"
+        >
+          {hook}
+        </span>
+      </div>
+      <div :if={@node[:attributes] && @node[:attributes] != []} class="mt-2 flex flex-wrap gap-1.5">
+        <span
+          :for={attribute <- @node[:attributes]}
+          class="rounded border border-zinc-200 px-1.5 py-0.5 font-mono text-xs text-zinc-500 dark:border-zinc-800"
+        >
+          {attribute}
+        </span>
+      </div>
+      <ul
+        :if={@node[:children] && @node[:children] != []}
+        class="mt-3 space-y-3 border-l border-dashed border-zinc-200 pl-4 dark:border-zinc-800"
+      >
+        <.anatomy_node :for={child <- @node[:children]} node={child} />
+      </ul>
+    </li>
+    """
+  end
+
   attr :props, :list, required: true
   attr :hooks, :map, default: %{}
 
@@ -233,6 +313,12 @@ defmodule FlintUIDocsWeb.DocBlocks do
     </table>
     """
   end
+
+  defp row_type(%{values: values, type: type}) when is_list(values) and values != [] do
+    "#{type} \u2014 #{Enum.join(values, " | ")}"
+  end
+
+  defp row_type(%{type: type}), do: to_string(type)
 
   defp attr_type(attr) do
     type = to_string(attr[:type])

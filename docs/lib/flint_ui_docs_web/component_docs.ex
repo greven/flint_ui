@@ -1,29 +1,30 @@
-defmodule FlintUIDocsWeb.Examples do
+defmodule FlintUIDocsWeb.ComponentDocs do
   @moduledoc """
   Facade over the per-component docs page modules.
 
-  Each component has a module under `FlintUIDocsWeb.Examples`
-  (e.g. `FlintUIDocsWeb.Examples.Button`) that implements
-  `FlintUIDocsWeb.Examples.Example`.
+  Each component has a module under `FlintUIDocsWeb.ComponentDocs`
+  (e.g. `FlintUIDocsWeb.ComponentDocs.Button`) that implements
+  `FlintUIDocsWeb.ComponentDocs.Page`.
 
-  Register it in `@modules` below; anything not registered
-  falls back to `FlintUIDocsWeb.Examples.Default`.
+  Register it in `@modules` below; anything not registered falls back to
+  `FlintUIDocsWeb.ComponentDocs.Default`.
 
-  Components declare:
+  Components declare (`ComponentDocs.Page` for the full contract):
 
-    * `controls/0` - interactive properties shown in the controls panel
-    * `usage/0` - usage sections, one per attribute group
+    * `controls/0` - interactive properties shown in the Docs playground
+    * `usage/0` - usage sections, one per attribute, tagged `:base` or `:styled`
     * `examples/0` - example sections rendered in the Examples block
+    * `anatomy/0` - structured element tree for the Base tab
     * `styling/0` - plain-CSS styling snippets for the base
     * `accessibility/0` - accessibility prose
-    * `structure/0` - the anatomy snippet shown under Usage
-    * `render_example/1` - the live playground render
+    * `render_playground/1` - the live playground render for a layer
+    * `render_usage/1` - the render for a usage subsection preview
     * `render_block/1` - the render for an example or recipe preview
   """
 
   use Phoenix.Component
 
-  alias FlintUIDocsWeb.Examples.{
+  alias FlintUIDocsWeb.ComponentDocs.{
     Button,
     Collapsible,
     Default,
@@ -41,14 +42,16 @@ defmodule FlintUIDocsWeb.Examples do
   }
 
   attr(:name, :atom, required: true)
-  attr(:props, :map, required: true)
+  attr(:layer, :atom, default: :base)
+  attr(:props, :map, default: %{})
   attr(:id, :string, required: true)
 
-  def render_example(assigns) do
-    module(assigns.name).render_example(assigns)
+  def render_playground(assigns) do
+    module(assigns.name).render_playground(assigns)
   end
 
   attr(:name, :atom, required: true)
+  attr(:layer, :atom, default: :base)
   attr(:props, :map, default: %{})
   attr(:id, :string, required: true)
 
@@ -58,19 +61,20 @@ defmodule FlintUIDocsWeb.Examples do
 
   attr(:name, :atom, required: true)
   attr(:block, :atom, required: true)
-  attr(:props, :map, required: true)
+  attr(:props, :map, default: %{})
+  attr(:id, :string, required: true)
+
+  def render_usage(assigns) do
+    module(assigns.name).render_usage(assigns)
+  end
+
+  attr(:name, :atom, required: true)
+  attr(:block, :atom, required: true)
+  attr(:props, :map, default: %{})
   attr(:id, :string, required: true)
 
   def render_block(assigns) do
     module(assigns.name).render_block(assigns)
-  end
-
-  attr(:name, :atom, required: true)
-  attr(:props, :map, default: %{})
-  attr(:id, :string, required: true)
-
-  def render_styled(assigns) do
-    module(assigns.name).render_styled(assigns)
   end
 
   @doc """
@@ -81,9 +85,11 @@ defmodule FlintUIDocsWeb.Examples do
   def controls(name), do: module(name).controls()
   def defaults(name), do: module(name).defaults()
   def usage(name), do: module(name).usage()
+  def base_usage(name), do: Enum.filter(usage(name), &(&1.layer == :base))
+  def styled_usage(name), do: Enum.filter(usage(name), &(&1.layer == :styled))
   def examples(name), do: module(name).examples()
   def styling(name), do: module(name).styling()
-  def styled(name), do: module(name).styled()
+  def anatomy(name), do: module(name).anatomy()
   def accessibility(name), do: module(name).accessibility()
   def structure(name), do: module(name).structure()
 

@@ -22,6 +22,7 @@ defmodule FlintUIDocsWeb.Router do
     get("/getting-started", RedirectController, :getting_started)
     live("/getting-started/introduction", IntroductionLive, :index)
     live("/getting-started/installation", GettingStartedLive, :index)
+    live("/getting-started/styling", StylingLive, :index)
 
     get("/guides", RedirectController, :guides)
     live("/guides/theming", ThemeLive, :index)

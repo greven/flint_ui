@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.Examples.Button do
+defmodule FlintUIDocsWeb.ComponentDocs.Button do
   @moduledoc false
 
-  use FlintUIDocsWeb.Examples.Example, component: :button
+  use FlintUIDocsWeb.ComponentDocs.Page, component: :button
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.Examples.Snippet
+  alias FlintUIDocsWeb.ComponentDocs.Snippet
 
   @base "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 
@@ -12,33 +12,17 @@ defmodule FlintUIDocsWeb.Examples.Button do
   @outline "border border-zinc-300 text-zinc-900 hover:bg-zinc-100 focus-visible:outline-zinc-900 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:focus-visible:outline-white"
   @ghost "text-zinc-700 hover:bg-zinc-100 focus-visible:outline-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:focus-visible:outline-white"
 
-  @url "https://hexdocs.pm/phoenix_live_view"
+  @variants ~w(solid secondary outline ghost destructive link)
+  @sizes ~w(sm md lg)
 
   @impl true
   def controls do
     [
       %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
-      %{key: :loading, type: :boolean, default: false, label: "Loading"}
+      %{key: :loading, type: :boolean, default: false, label: "Loading"},
+      %{key: :variant, type: :select, default: "solid", label: "Variant"},
+      %{key: :size, type: :select, default: "md", label: "Size"}
     ]
-  end
-
-  @impl true
-  def structure do
-    """
-    <.button>Save changes</.button>
-
-    <.button type="submit" loading>
-      <.loading class="hidden size-4 in-data-loading:inline-block" />
-      Save changes
-    </.button>
-
-    <.button navigate={~p"/settings"}>Settings</.button>
-
-    <.button href="https://example.com" target="_blank" rel="noopener">
-      Visit
-    </.button>
-    """
-    |> String.trim()
   end
 
   @impl true
@@ -47,6 +31,7 @@ defmodule FlintUIDocsWeb.Examples.Button do
       %{
         id: :disabled,
         title: "Disabled",
+        layer: :base,
         body: """
         Set `disabled` to prevent interaction. A disabled action button is removed
         from the tab order and ignores pointer and keyboard input.
@@ -58,6 +43,7 @@ defmodule FlintUIDocsWeb.Examples.Button do
       %{
         id: :loading,
         title: "Loading",
+        layer: :base,
         body: """
         Set `loading` while an action is in progress. The button is disabled and
         marked with `aria-busy="true"` and `data-loading` instead of a visual
@@ -71,8 +57,9 @@ defmodule FlintUIDocsWeb.Examples.Button do
         """
       },
       %{
-        id: :link,
+        id: :links,
         title: "Links",
+        layer: :base,
         body: """
         Pass `href`, `navigate`, or `patch` to render an anchor instead of a
         button. A disabled link keeps its place in the tab order and is marked
@@ -84,6 +71,37 @@ defmodule FlintUIDocsWeb.Examples.Button do
         <.button href="https://example.com" target="_blank" rel="noopener" disabled>
           Visit
         </.button>
+        """
+      },
+      %{
+        id: :variant,
+        title: "Variant",
+        layer: :styled,
+        body: """
+        The generated component adds a `variant` attribute mapped onto the
+        `data-variant` hook the theme targets.
+        """,
+        code: """
+        <.button variant="solid">Save</.button>
+        <.button variant="secondary">Preview</.button>
+        <.button variant="outline">Cancel</.button>
+        <.button variant="ghost">Edit</.button>
+        <.button variant="destructive">Delete</.button>
+        <.button variant="link">Learn more</.button>
+        """
+      },
+      %{
+        id: :size,
+        title: "Size",
+        layer: :styled,
+        body: """
+        The generated component adds a `size` attribute mapped onto the
+        `data-size` hook the theme targets.
+        """,
+        code: """
+        <.button size="sm">Small</.button>
+        <.button size="md">Medium</.button>
+        <.button size="lg">Large</.button>
         """
       }
     ]
@@ -126,12 +144,41 @@ defmodule FlintUIDocsWeb.Examples.Button do
   end
 
   @impl true
+  def anatomy do
+    %{
+      body: """
+      A button renders a single `<button>` (or `<a>` when `href`, `navigate`, or
+      `patch` is set). Its content is the `:inner_block` slot — normally the label,
+      and the accessible name. Interaction state is exposed as `data-*` attributes
+      so you can style it without extra classes.
+
+      The generated component adds `:leading` and `:trailing` slots around the
+      label; those are listed in the Docs tab's API reference, not here.
+      """,
+      nodes: [
+        %{
+          tag: "button",
+          selector: ~s([data-element="button"]),
+          hooks: ["data-disabled", "data-loading"],
+          attributes: ["type", "aria-busy", "aria-disabled"],
+          children: [
+            %{
+              tag: ":inner_block",
+              note: "the button's content (label, icon, or both)",
+              children: []
+            }
+          ]
+        }
+      ]
+    }
+  end
+
+  @impl true
   def styling do
     %{
       body: """
       The button ships behavior, not appearance. Style it with `class` and target
-      the data attributes it exposes for state. The generated component on the
-      **Styled** tab adds an opinionated theme on top of this contract.
+      the data attributes it exposes for state.
       """,
       snippets: [
         %{
@@ -165,19 +212,41 @@ defmodule FlintUIDocsWeb.Examples.Button do
   end
 
   @impl true
-  def render_example(assigns) do
+  def render_playground(%{layer: :styled} = assigns) do
     ~H"""
-    <.button
+    <Components.button
+      variant={@props.variant}
+      size={@props.size}
       disabled={@props.disabled}
       loading={@props.loading}
-      class={classes(:solid)}
     >
+      <.loading class="hidden size-4 in-data-loading:inline-block" /> Button
+    </Components.button>
+    """
+  end
+
+  def render_playground(assigns) do
+    ~H"""
+    <.button disabled={@props.disabled} loading={@props.loading} class={classes(:solid)}>
       <.loading class="hidden size-4 in-data-loading:inline-block" /> Button
     </.button>
     """
   end
 
   @impl true
+  def render_code(%{layer: :styled, props: props}) do
+    Snippet.tag(
+      ".button",
+      [
+        Snippet.attr("variant", props.variant, "solid"),
+        Snippet.attr("size", props.size, "md"),
+        Snippet.flag("disabled", props.disabled),
+        Snippet.flag("loading", props.loading)
+      ],
+      "Button"
+    )
+  end
+
   def render_code(%{props: props}) do
     Snippet.tag(
       ".button",
@@ -187,6 +256,50 @@ defmodule FlintUIDocsWeb.Examples.Button do
       ],
       "Button"
     )
+  end
+
+  @impl true
+  def render_usage(%{block: :disabled} = assigns) do
+    ~H"""
+    <.button disabled class={classes(:solid)}>Delete</.button>
+    """
+  end
+
+  def render_usage(%{block: :loading} = assigns) do
+    ~H"""
+    <.button loading aria-label="Saving" class={classes(:solid)}>
+      <.loading class="hidden size-4 in-data-loading:inline-block" /> Save
+    </.button>
+    """
+  end
+
+  def render_usage(%{block: :links} = assigns) do
+    ~H"""
+    <.button
+      href="https://hexdocs.pm/phoenix_live_view"
+      target="_blank"
+      rel="noopener"
+      class={classes(:outline)}
+    >
+      View docs <.icon name="lucide-arrow-up-right" class="size-4" />
+    </.button>
+    """
+  end
+
+  def render_usage(%{block: :variant} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button :for={variant <- variants()} variant={variant}>{variant}</Components.button>
+    </div>
+    """
+  end
+
+  def render_usage(%{block: :size} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button :for={size <- sizes()} size={size}>{size}</Components.button>
+    </div>
+    """
   end
 
   @impl true
@@ -214,44 +327,8 @@ defmodule FlintUIDocsWeb.Examples.Button do
     """
   end
 
-  @impl true
-  def styled do
-    %{
-      description:
-        "The generated wrapper adds `variant` and `size` attributes and maps them onto the `data-variant` / `data-size` hooks the theme targets.",
-      code: """
-      <.button variant="solid">Save</.button>
-      <.button variant="secondary">Preview</.button>
-      <.button variant="outline">Cancel</.button>
-      <.button variant="ghost">Edit</.button>
-      <.button variant="destructive">Delete</.button>
-      <.button variant="link">Learn more</.button>
-      """
-    }
-  end
-
-  @impl true
-  def render_styled(assigns) do
-    ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" size="md">Solid</Components.button>
-      <Components.button variant="secondary" size="md">Secondary</Components.button>
-      <Components.button variant="outline" size="md">Outline</Components.button>
-      <Components.button variant="ghost" size="md">Ghost</Components.button>
-      <Components.button variant="destructive" size="md">Destructive</Components.button>
-      <Components.button variant="link" size="md">Link</Components.button>
-    </div>
-    <div class="mt-4 flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" size="sm">Small</Components.button>
-      <Components.button variant="solid" size="md">Medium</Components.button>
-      <Components.button variant="solid" size="lg">Large</Components.button>
-    </div>
-    <div class="mt-4 flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" size="md" disabled>Disabled</Components.button>
-      <Components.button variant="solid" size="md" loading>Loading</Components.button>
-    </div>
-    """
-  end
+  defp variants, do: @variants
+  defp sizes, do: @sizes
 
   defp classes(variant), do: [@base, variant_class(variant)]
 
@@ -261,5 +338,5 @@ defmodule FlintUIDocsWeb.Examples.Button do
   defp variant_class(:outline), do: @outline
   defp variant_class(:ghost), do: @ghost
 
-  defp docs_url, do: @url
+  defp docs_url, do: "https://hexdocs.pm/phoenix_live_view"
 end

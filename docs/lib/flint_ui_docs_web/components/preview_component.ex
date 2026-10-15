@@ -3,35 +3,42 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   Reusable component preview card.
 
   Renders a live component, an optional panel of controls that mutate its
-  props, and a syntax-highlighted Code tab showing the HEEx for the current
-  props. It is used for the main playground, every example in the Examples
-  section, and the styled-layer preview, so all three share one look and one
-  set of interactions.
+  props, and a syntax-highlighted Code tab. It is used for the Docs playground,
+  every usage subsection preview, every example in the Examples section, and the
+  Base playground, so all of them share one look and one set of interactions.
 
   Used as a function component:
 
       <PreviewComponent.preview
         id="playground-button"
+        kind={:playground}
+        layer={:styled}
         name={:button}
-        controls={Examples.controls(:button)}
-        defaults={Examples.defaults(:button)}
+        controls={ComponentDocs.controls(:button)}
+        defaults={ComponentDocs.defaults(:button)}
       />
 
-  `kind` selects what is drawn: `:example` (the interactive playground, whose
-  code comes from `Examples.render_code/1`), `:block` (an element of the
-  Examples section), or `:styled` (the generated styled component). Pass a
-  `code` string to show a fixed snippet instead of asking the example module.
+  `kind` selects what is drawn:
+
+    * `:playground` - the interactive playground; `layer` (`:base` or `:styled`)
+      picks the rendered component and the generated code
+    * `:usage` - one usage subsection preview; `block` is the usage entry id
+      and `code` is shown as a fixed snippet
+    * `:block` - an element of the Examples section
+
+  Pass a `code` string to show a fixed snippet instead of asking the page module.
   """
 
   use FlintUIDocsWeb, :live_component
 
-  alias FlintUIDocsWeb.Examples
+  alias FlintUIDocsWeb.ComponentDocs
   alias FlintUIDocsWeb.Highlight
 
   @tabs ~w(preview code)
 
   attr :id, :string, required: true
-  attr :kind, :atom, default: :example
+  attr :kind, :atom, default: :playground
+  attr :layer, :atom, default: :base
   attr :name, :atom, default: nil
   attr :block, :atom, default: nil
   attr :controls, :list, default: []
@@ -47,6 +54,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       module={__MODULE__}
       id={@id}
       kind={@kind}
+      layer={@layer}
       name={@name}
       block={@block}
       controls={@controls}
@@ -62,7 +70,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   @impl true
   def update(assigns, socket) do
     props =
-      if socket.assigns[:name] == assigns.name do
+      if socket.assigns[:name] == assigns.name and socket.assigns[:layer] == assigns.layer do
         socket.assigns[:props] || assigns.defaults
       else
         assigns.defaults
@@ -120,12 +128,27 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       <% else %>
         <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/40">
           <%= case @kind do %>
-            <% :example -> %>
-              <Examples.render_example name={@name} props={@props} id={"#{@id}-canvas"} />
+            <% :playground -> %>
+              <ComponentDocs.render_playground
+                name={@name}
+                layer={@layer}
+                props={@props}
+                id={"#{@id}-canvas"}
+              />
+            <% :usage -> %>
+              <ComponentDocs.render_usage
+                name={@name}
+                block={@block}
+                props={@props}
+                id={"#{@id}-canvas"}
+              />
             <% :block -> %>
-              <Examples.render_block name={@name} block={@block} props={@props} id={"#{@id}-canvas"} />
-            <% :styled -> %>
-              <Examples.render_styled name={@name} props={@props} id={"#{@id}-canvas"} />
+              <ComponentDocs.render_block
+                name={@name}
+                block={@block}
+                props={@props}
+                id={"#{@id}-canvas"}
+              />
           <% end %>
         </div>
 
@@ -133,6 +156,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
           :if={@controls != []}
           id={@id}
           name={@name}
+          layer={@layer}
           controls={@controls}
           props={@props}
           myself={@myself}
@@ -196,6 +220,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   attr :id, :string, required: true
   attr :name, :atom, default: nil
+  attr :layer, :atom, default: :base
   attr :controls, :list, required: true
   attr :props, :map, required: true
   attr :myself, :any, required: true
@@ -226,7 +251,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
               <div class="relative">
                 <select name={control.key} class={select_class()}>
                   <option
-                    :for={value <- select_options(control, @name)}
+                    :for={value <- select_options(control, @name, @layer)}
                     value={value}
                     selected={to_string(Map.get(@props, control.key)) == value}
                   >
@@ -262,23 +287,43 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   defp resolve_code(%{code: code}) when is_binary(code), do: code
 
-  defp resolve_code(%{kind: :example, name: name} = assigns) do
-    Examples.render_code(%{name: name, props: assigns.props, id: assigns.id})
+  defp resolve_code(%{kind: :playground, name: name} = assigns) do
+    ComponentDocs.render_code(%{
+      name: name,
+      layer: assigns.layer,
+      props: assigns.props,
+      id: assigns.id
+    })
   end
 
   defp resolve_code(_assigns), do: nil
 
-  defp select_options(control, name) do
+  defp select_options(control, name, layer) do
     values = control[:values]
 
     if is_list(values) and values != [] do
       Enum.map(values, &to_string/1)
     else
-      attr_values(control, name)
+      styled_values(control, name, layer) || base_attr_values(control, name)
     end
   end
 
-  defp attr_values(%{key: key}, name) when is_atom(name) do
+  defp styled_values(%{key: key}, name, :styled) when is_atom(name) do
+    case FlintUI.Styled.get(name) do
+      %{props: props} ->
+        case Enum.find(props, &(&1.name == key)) do
+          nil -> nil
+          prop -> Enum.map(prop.values, &to_string/1)
+        end
+
+      _ ->
+        nil
+    end
+  end
+
+  defp styled_values(_control, _name, _layer), do: nil
+
+  defp base_attr_values(%{key: key}, name) when is_atom(name) do
     name
     |> FlintUI.Docs.attrs()
     |> Enum.find(&(&1.name == key))
@@ -291,7 +336,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
     end
   end
 
-  defp attr_values(_control, _name), do: []
+  defp base_attr_values(_control, _name), do: []
 
   defp coerce(%{type: :number, default: default}, value) do
     case Integer.parse(to_string(value)) do

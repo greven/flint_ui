@@ -25,7 +25,7 @@ FlintUI component supersedes a bespoke pattern in the docs, replace the bespoke 
 the same change that adds the component. This exercises components in real use while they
 are being built.
 
-Exception: the modules under `docs/lib/flint_ui_docs_web/examples/` may keep raw HTML when
+Exception: the modules under `docs/lib/flint_ui_docs_web/component_docs/` may keep raw HTML when
 they are deliberately demonstrating the unstyled component API.
 
 ### Site structure and navigation
@@ -47,51 +47,68 @@ then passing `section` (and, for guides, `page`) to `Layouts.app`. A test assert
 every page path is unique and routable.
 
 Routes are section-prefixed — `/`, `/getting-started/introduction`,
-`/getting-started/installation`, `/guides/theming`, `/components` (index), and
-`/components/:name`. Section roots (`/getting-started`, `/guides`) redirect to
-their first page. Standalone lives live in `docs/lib/flint_ui_docs_web/live/`:
-`HomeLive` (landing), `IntroductionLive`, `GettingStartedLive` (Installation),
-`ThemeLive` (which lists tokens by reading `FlintUI.Generator.theme_source/0`),
-and `ComponentsLive` (the component index).
+`/getting-started/installation`, `/getting-started/styling`, `/guides/theming`,
+`/components` (index), and `/components/:name`. Section roots (`/getting-started`,
+`/guides`) redirect to their first page. Standalone lives live in
+`docs/lib/flint_ui_docs_web/live/`: `HomeLive` (landing), `IntroductionLive`,
+`GettingStartedLive` (Installation), `StylingLive` (which aggregates the base
+styling snippets from `FlintUIDocsWeb.ComponentDocs.styling/1`), `ThemeLive`
+(which lists tokens by reading `FlintUI.Generator.theme_source/0`), and
+`ComponentsLive` (the component index).
 
 ### Component docs pages
 
 Every component page (`/components/:name`, rendered by `FlintUIDocsWeb.ComponentLive`)
-is split into three URL-driven tabs — **Base** (default), **Styled** (`?tab=styled`),
-and **API** (`?tab=api`):
+has three URL-driven tabs — **Docs** (default), **Base** (`?tab=base`), and
+**Styles** (`?tab=styles`). The generated styled component is centre stage on
+Docs; Base documents the headless imported component; Styles gathers what you
+consume when styling this component. Legacy `?tab=styled` / `?tab=api` links
+resolve to Docs.
 
-- **Base** — the headless component: `Preview` (interactive playground), `Usage`
-  (one subsection per attribute group, plus `Anatomy`, `Accessibility`, and
-  `Keyboard`), and `Styling the base`. The base tab documents behavior and
-  accessibility only; it shows no styled recipes.
-- **Styled** — the generated styled component: install command, a live preview
-  rendered by `FlintUIDocsWeb.Components`, the per-component `Examples` recipes,
-  and the theme token namespaces it reads. The generated theme applies to this
-  layer only, never to the headless base modules.
-- **API** — the full reference: base `Attributes`, `Slots`, `Events`, `Data
-attributes`, `CSS variables`, then the styled additions `Styled attributes` and
-  `Styled slots` (from the registry) and the `data-*` hook each attribute maps to.
+- **Docs** — the generated component: `Usage` (the interactive styled playground
+  plus one subsection per attribute, each with its own preview), `Examples` (the
+  recipe cards), `API reference` (the full surface as it is usable on the
+  generated component — base attributes and styled props merged into one table,
+  base + styled slots, and events, with a link to the Base tab's `Data attributes`),
+  and `Changelog` (placeholder).
+- **Base** — the headless component: `Anatomy` (a structured tree of the rendered
+  markup: wrapper, inner parts, `data-*` hooks, and states), `Usage` (the
+  playground with no controls, plus the base-only usage subsections),
+  `Accessibility` (prose plus the `Keyboard` table), and `API reference` (base
+  `Attributes`, `Slots`, `Events`, and `Data attributes`).
+- **Styles** — the styling contract: `Theme` (the token namespaces the component
+  reads, with links to Theming and Styling) and `CSS variables` (any runtime
+  custom properties the component sets, e.g. `--fl-collapsible-height`).
 
-Page content is authored per component in `docs/lib/flint_ui_docs_web/examples/<name>.ex`
-(behaviour `FlintUIDocsWeb.Examples.Example`), not in the template. Each module
-declares `controls/0` (playground), `usage/0`, `examples/0`, `styling/0`,
-`structure/0`, `render_example/1`, `render_block/1`, `styled/0`, and
-`render_styled/1`. `accessibility/0` defaults to the `## Accessibility` section of
-the component's moduledoc (`FlintUI.Docs.section/2`); keyboard comes from the
-component's `keyboard/0`. The API tables are derived from the component metadata
-(`FlintUI.Docs.*`); the `Styled attributes` and `Styled slots` tables come from
-`FlintUI.Styled`.
+Page content is authored per component in
+`docs/lib/flint_ui_docs_web/component_docs/<name>.ex` (behaviour
+`FlintUIDocsWeb.ComponentDocs.Page`), not in the template. Each module declares
+`controls/0` (the Docs playground), `usage/0`, `examples/0`, `anatomy/0`,
+`styling/0`, `structure/0`, `render_playground/1`, `render_code/1`,
+`render_usage/1`, and `render_block/1`. `accessibility/0` defaults to the
+`## Accessibility` section of the component's moduledoc (`FlintUI.Docs.section/2`);
+keyboard comes from the component's `keyboard/0`.
 
-The API tab documents the theming contract; the Base `Styling the base` section
-holds plain-CSS snippets for the headless base. Prose in `usage/0`/`styling/0` and
-the accessibility section is rendered by `FlintUIDocsWeb.Markdown`, a small safe
-Markdown subset (paragraphs, inline code, fenced/indented code). Do not add a full
-Markdown dependency.
+`usage/0` is the single source of truth for the per-attribute subsections: each
+entry is tagged `layer: :base` or `layer: :styled`, and both tabs render the
+entries that apply to them from the same list (`ComponentDocs.usage/1` vs
+`ComponentDocs.base_usage/1`). `render_usage/1` matches on the entry `id`;
+`render_block/1` renders the Examples recipes. `anatomy/0` returns a
+`%{body, nodes}` tree rendered by `FlintUIDocsWeb.DocBlocks.anatomy/1`, with
+`structure/0` kept as a code-snippet fallback for components that have not been
+authored yet. The API tables are derived from the component metadata
+(`FlintUI.Docs.*`) plus the `FlintUI.Styled` entry props/slots.
+
+Prose in `usage/0`/`styling/0` and the accessibility section is rendered by
+`FlintUIDocsWeb.Markdown`, a small safe Markdown subset (paragraphs, inline code,
+fenced/indented code). Do not add a full Markdown dependency. `styling/0` is no
+longer shown on the component page: `FlintUIDocsWeb.StylingLive` aggregates the
+per-component plain-CSS snippets on the Get Started **Styling** page.
 
 The interactive preview card is `FlintUIDocsWeb.PreviewComponent`, a
 `LiveComponent` (in `docs/lib/flint_ui_docs_web/components/`) that owns the
-playground state, controls, and highlighted Code tab. It is reused for the main
-playground, each Examples recipe, and the styled preview; call it as
+playground state, controls, and highlighted Code tab. `kind` is `:playground`
+(interactive; `layer` selects base vs styled), `:usage`, or `:block`; call it as
 `<PreviewComponent.preview ...>`. Code snippets are highlighted server-side by
 `FlintUIDocsWeb.Highlight` (Makeup).
 
@@ -179,7 +196,7 @@ in the same change:
 
 1. `lib/flint_ui/styled/foo.ex` - a `FlintUI.Styled.Entry` (base, target,
    install, css part, tokens, `FlintUI.Styled.Prop` attributes, `FlintUI.Styled.Slot`
-   slots). This drives generation and the docs Styled/API tabs. The generator
+   slots). This drives generation and the docs Docs/API tables. The generator
    merges the slots with the base's own when it writes the wrapper.
 2. `priv/templates/styled/foo.ex.eex` - the thin wrapper (`<%= @attrs %>` attributes,
    `<%= @slots %>` slots, forwards `class`/`rest`, delegates to the base).
@@ -188,8 +205,10 @@ in the same change:
    the entry's `css`). `test/theme_contract_test.exs` fails if a registry value
    has no matching selector (add to its exceptions only if the value is handled
    structurally).
-4. `docs/lib/flint_ui_docs_web/examples/foo.ex` - `styled/0` + `render_styled/1`
-   (and `styling/0` with plain-CSS snippets for the base).
+4. `docs/lib/flint_ui_docs_web/component_docs/foo.ex` - a
+   `FlintUIDocsWeb.ComponentDocs.Page` with `controls/0`, `usage/0` (base/styled
+   entries), `examples/0`, `render_playground/1`, `render_usage/1`,
+   `render_block/1`, and `styling/0` with plain-CSS snippets for the base.
 
 ## References
 

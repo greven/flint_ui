@@ -1,21 +1,18 @@
-defmodule FlintUIDocsWeb.Examples.Default do
+defmodule FlintUIDocsWeb.ComponentDocs.Default do
   @moduledoc """
   Fallback page for a library component that does not have an authored one yet.
   """
 
-  use FlintUIDocsWeb.Examples.Example, component: :default
+  use FlintUIDocsWeb.ComponentDocs.Page, component: :default
 
   @impl true
   def controls, do: []
 
   @impl true
-  def structure, do: nil
-
-  @impl true
   def accessibility, do: nil
 
   @impl true
-  def render_example(assigns) do
+  def render_playground(assigns) do
     assigns = assign(assigns, :name_label, to_string(assigns.name))
 
     ~H"""

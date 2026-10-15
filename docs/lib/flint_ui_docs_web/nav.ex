@@ -35,7 +35,8 @@ defmodule FlintUIDocsWeb.Nav do
         label: "Overview",
         pages: [
           %{id: :introduction, label: "Introduction", path: "/getting-started/introduction"},
-          %{id: :installation, label: "Installation", path: "/getting-started/installation"}
+          %{id: :installation, label: "Installation", path: "/getting-started/installation"},
+          %{id: :styling, label: "Styling", path: "/getting-started/styling"}
         ]
       }
     ]
