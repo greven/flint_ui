@@ -7,27 +7,17 @@ defmodule FlintUIDocsWeb.ComponentsLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} section={:components}>
-      <div class="max-w-3xl">
+      <div class="max-w-5xl">
         <h1 class="text-3xl font-semibold tracking-tight">Components</h1>
         <p class="mt-3 text-zinc-600 dark:text-zinc-400">
           Accessible, unstyled UI components for Phoenix LiveView. Bring your own styles.
         </p>
 
-        <div class="mt-8 grid gap-4 sm:grid-cols-2">
-          <.link
-            :for={component <- @components}
-            navigate={~p"/components/#{component.name}"}
-            class="group rounded-lg border border-zinc-200 p-4 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-700 dark:hover:bg-zinc-900"
-          >
-            <div class="flex items-center justify-between">
-              <span class="font-medium capitalize">{component.name}</span>
-              <span class="text-xs text-zinc-400">{component.meta.status}</span>
-            </div>
-            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {component.description}
-            </p>
-          </.link>
-        </div>
+        <section :for={group <- @groups} id={"components-#{group.type}"} class="mt-10 first:mt-8">
+          <h2 class="text-xl font-semibold tracking-tight">{group.label}</h2>
+          <%!-- Preview grid placeholder; component thumbnails land here. --%>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" />
+        </section>
       </div>
     </Layouts.app>
     """
@@ -35,17 +25,12 @@ defmodule FlintUIDocsWeb.ComponentsLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    components =
-      FlintUI.components()
-      |> Enum.sort()
-      |> Enum.map(fn name ->
-        %{
-          name: name,
-          meta: FlintUI.Docs.meta(name),
-          description: FlintUI.Docs.description(name)
-        }
+    groups =
+      FlintUI.Docs.grouped_components()
+      |> Enum.map(fn {type, _components} ->
+        %{type: type, label: FlintUIDocsWeb.Nav.type_label(type)}
       end)
 
-    {:ok, assign(socket, components: components, page_title: "Components")}
+    {:ok, assign(socket, groups: groups, page_title: "Components")}
   end
 end

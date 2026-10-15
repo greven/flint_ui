@@ -155,7 +155,10 @@ defmodule FlintUIDocsWeb.Layouts do
           navigate={FlintUIDocsWeb.Nav.first_page_path(section)}
           id={section_dom_id(section.id)}
           aria-current={if @section == section.id, do: "page", else: nil}
-          class={section_class(@section == section.id)}
+          class={[
+            "-mb-px border-b-2 font-medium py-2.5 text-sm transition-colors",
+            section_class(@section == section.id)
+          ]}
         >
           {section.label}
         </.link>
@@ -169,11 +172,11 @@ defmodule FlintUIDocsWeb.Layouts do
   end
 
   defp section_class(true) do
-    "-mb-px border-b-2 border-zinc-900 py-2.5 text-sm font-medium text-zinc-900 dark:border-white dark:text-white"
+    "border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
   end
 
   defp section_class(false) do
-    "-mb-px border-b-2 border-transparent py-2.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
   end
 
   @doc false
@@ -190,22 +193,22 @@ defmodule FlintUIDocsWeb.Layouts do
       "hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block"
     ]}>
       <div :for={group <- @section.groups} class="mb-6 last:mb-0">
-        <p class="text-sm font-semibold tracking-wider text-zinc-800 dark:text-zinc-100 uppercase">
+        <p class="text-xs font-semibold tracking-wider text-zinc-800 dark:text-zinc-100 uppercase">
           {group.label}
         </p>
-        <nav class="mt-2 flex flex-col gap-0.5 border-l border-zinc-200 dark:border-zinc-800">
+        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-zinc-200 dark:border-zinc-800">
           <.link
             :for={item <- group.pages}
             navigate={item.path}
             aria-current={if page_active?(item, @active, @page), do: "page", else: nil}
             class={[
-              "group -ml-px py-1 pr-2 pl-2 border-l transition-colors hover:text-zinc-800 dark:hover:text-zinc-100",
+              "group -ml-px pr-2 pl-2 border-l transition-colors hover:text-zinc-800 dark:hover:text-zinc-100",
               sidebar_item_class(page_active?(item, @active, @page))
             ]}
           >
-            <span class="p-2 font-medium text-sm capitalize rounded-md group-hover:bg-zinc-400/5 dark:group-hover:bg-zinc-50/5">
+            <div class="px-2.5 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-zinc-400/5 dark:group-hover:bg-zinc-50/5">
               {item.label}
-            </span>
+            </div>
           </.link>
         </nav>
       </div>

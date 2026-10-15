@@ -73,8 +73,13 @@ defmodule FlintUIDocsWeb.Nav do
   end
 
   @doc """
-  Returns the path of a section's first page, used for the section bar links.
+  Returns the path a section's bar link points at.
+
+  Most sections link to their first page; the Components section links to its
+  landing page so the section switcher does not jump straight into a component.
   """
+  def first_page_path(%{id: :components} = section), do: section_path(section)
+
   def first_page_path(%{groups: [%{pages: [%{path: path} | _]} | _]}), do: path
 
   @doc """
@@ -99,7 +104,10 @@ defmodule FlintUIDocsWeb.Nav do
     end)
   end
 
-  defp type_label(type) do
+  @doc """
+  Returns the human-readable label for a `FlintUI.Meta` component type.
+  """
+  def type_label(type) do
     type
     |> Atom.to_string()
     |> String.replace("_", " ")

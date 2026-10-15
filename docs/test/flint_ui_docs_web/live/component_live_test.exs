@@ -3,15 +3,20 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
   import Phoenix.LiveViewTest
 
-  test "components index lists the registered components", %{conn: conn} do
-    {:ok, _view, html} = live(conn, ~p"/components")
+  test "components index renders a section per component type", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components")
 
-    assert html =~ "Components"
-    assert html =~ ~p"/components/button"
-    assert html =~ ~p"/components/collapsible"
-    assert html =~ ~p"/components/icon"
-    assert html =~ ~p"/components/loading"
-    assert html =~ ~p"/components/toggle"
+    assert has_element?(view, "h1", "Components")
+
+    for {type, _components} <- FlintUI.Docs.grouped_components() do
+      assert has_element?(view, "#components-#{type}", FlintUIDocsWeb.Nav.type_label(type))
+    end
+  end
+
+  test "the components section link points at the landing page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#section-components[href='/components']")
   end
 
   test "component page defaults to the docs tab", %{conn: conn} do
