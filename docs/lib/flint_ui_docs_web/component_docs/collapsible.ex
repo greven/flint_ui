@@ -5,6 +5,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
 
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.ComponentDocs.Snippet
+  alias FlintUIDocsWeb.DocBlocks
 
   @repo_list [
     "@elixir-lang/elixir",
@@ -239,29 +240,28 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
   end
 
   def render_playground(assigns) do
-    assigns = assign(assigns, :repos, @repo_list)
-
     ~H"""
     <.collapsible
       id={@id}
       open={@props.open}
       disabled={@props.disabled}
       hidden_until_found={@props.hidden_until_found}
-      class="w-full max-w-sm rounded-lg border border-zinc-200 dark:border-zinc-800"
+      class="flex w-full max-w-sm flex-col gap-2 self-start"
     >
       <:trigger :let={attrs}>
-        <.trigger {attrs} label="Toggle repositories" />
+        <button
+          {attrs}
+          class={[
+            "inline-flex w-full items-center justify-between gap-2 rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors",
+            "hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+          ]}
+        >
+          Open <.icon name="lucide-chevron-down" class="size-4" />
+        </button>
       </:trigger>
       <:content :let={attrs}>
         <div {attrs}>
-          <ul class="flex flex-col gap-2 px-4 pt-1 pb-4">
-            <li
-              :for={repo <- @repos}
-              class="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs dark:bg-zinc-900"
-            >
-              {repo}
-            </li>
-          </ul>
+          <DocBlocks.content_placeholder class="h-48" />
         </div>
       </:content>
     </.collapsible>
@@ -301,7 +301,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
   def render_code(%{props: props}) do
     attrs =
       [
-        ~s(id="repos"),
+        ~s(id="collapsible"),
         Snippet.flag("open", props.open),
         Snippet.flag("disabled", props.disabled),
         Snippet.flag("hidden_until_found", props.hidden_until_found)
@@ -314,12 +314,10 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
     #{attrs}
     >
       <:trigger :let={attrs}>
-        <button {attrs}>Toggle repositories</button>
+        <button {attrs}>Open</button>
       </:trigger>
       <:content :let={attrs}>
-        <ul {attrs}>
-          <li>...</li>
-        </ul>
+        <div {attrs}>Content</div>
       </:content>
     </.collapsible>
     """
@@ -547,9 +545,9 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
       </:trigger>
       <:content :let={attrs}>
         <div {attrs}>
-          <div class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
-            {render_slot(@inner_block)}
-          </div>
+          <DocBlocks.content_placeholder rounded={false} border={false} class="h-48">
+            Content
+          </DocBlocks.content_placeholder>
         </div>
       </:content>
     </.collapsible>

@@ -48,6 +48,35 @@ defmodule FlintUIDocsWeb.DocBlocks do
     """
   end
 
+  @doc """
+  A dashed, diagonally-hatched box that stands in for content in a preview.
+
+  Pass `class` for sizing (e.g. `class="h-48"`) and an optional `:inner_block`
+  for centered content. Set `border={false}` and/or `rounded={false}` when the
+  surrounding layout already provides a frame, so the placeholder does not
+  double it up.
+  """
+
+  attr :class, :any, default: nil
+  attr :border, :boolean, default: true
+  attr :rounded, :boolean, default: true
+  slot :inner_block
+
+  def content_placeholder(assigns) do
+    ~H"""
+    <div class={[
+      "grid place-items-center text-sm text-zinc-400",
+      @rounded && "rounded-md",
+      @border && "border border-dashed border-zinc-300 dark:border-zinc-700",
+      "bg-[repeating-linear-gradient(45deg,var(--color-zinc-200)_0,var(--color-zinc-200)_1px,transparent_1px,transparent_8px)]",
+      "dark:bg-[repeating-linear-gradient(45deg,var(--color-zinc-900)_0,var(--color-zinc-900)_1px,transparent_1px,transparent_8px)]",
+      @class
+    ]}>
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
   attr :attrs, :list, required: true
 
   def attr_table(assigns) do
