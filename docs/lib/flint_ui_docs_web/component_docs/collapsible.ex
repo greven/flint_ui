@@ -338,9 +338,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
         <.trigger {attrs} label="Toggle repositories" />
       </:trigger>
       <:content :let={attrs}>
-        <p {attrs} class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          Open on first render.
-        </p>
+        <div {attrs}>
+          <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            Open on first render.
+          </p>
+        </div>
       </:content>
     </.collapsible>
     """
@@ -357,9 +359,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
         <.trigger {attrs} label="Toggle repositories" />
       </:trigger>
       <:content :let={attrs}>
-        <p {attrs} class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          This content cannot be revealed.
-        </p>
+        <div {attrs}>
+          <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            This content cannot be revealed.
+          </p>
+        </div>
       </:content>
     </.collapsible>
     """
@@ -376,9 +380,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
         <.trigger {attrs} label="Show the license" text="License" />
       </:trigger>
       <:content :let={attrs}>
-        <p {attrs} class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          Search this page for “MIT” to reveal it.
-        </p>
+        <div {attrs}>
+          <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            Search this page for “MIT” to reveal it.
+          </p>
+        </div>
       </:content>
     </.collapsible>
     """
@@ -394,9 +400,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Collapsible do
         <.trigger {attrs} label="Toggle repositories" />
       </:trigger>
       <:content :let={attrs}>
-        <p {attrs} class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          Server events fire on open and close.
-        </p>
+        <div {attrs}>
+          <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            Server events fire on open and close.
+          </p>
+        </div>
       </:content>
     </.collapsible>
     """

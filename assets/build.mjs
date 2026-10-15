@@ -1,12 +1,20 @@
 import * as esbuild from "esbuild";
 import { execSync } from "node:child_process";
-import { rmSync } from "node:fs";
+import { existsSync, readdirSync, rmSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const watch = args.includes("--watch");
 const deploy = args.includes("--deploy");
 
-rmSync("../priv/static", { recursive: true, force: true });
+// Clear our own build outputs, but keep the theme stylesheet written by the
+// `:flint_theme` Mix compiler, which shares priv/static and must not be removed.
+if (existsSync("../priv/static")) {
+  for (const entry of readdirSync("../priv/static")) {
+    if (entry !== "flint.css") {
+      rmSync(`../priv/static/${entry}`, { recursive: true, force: true });
+    }
+  }
+}
 
 // Add loaders for images/fonts/etc, e.g. { '.svg': 'file' }
 const loader = {};

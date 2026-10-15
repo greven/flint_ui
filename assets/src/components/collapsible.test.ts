@@ -120,6 +120,22 @@ describe("Collapsible hook", () => {
     expect(content.style.animationName).toBe("none");
   });
 
+  it("does not arm the keyframes on mount", () => {
+    const closed = setup();
+    expect(closed.el.hasAttribute("data-animate")).toBe(false);
+
+    const open = setup({ state: "open" });
+    expect(open.el.hasAttribute("data-animate")).toBe(false);
+  });
+
+  it("arms the keyframes when it drives a transition", () => {
+    const { el, trigger } = setup();
+
+    trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(el.hasAttribute("data-animate")).toBe(true);
+  });
+
   it("re-applies hidden after the close animation settles", async () => {
     const { trigger, content } = setup({ state: "open" });
 

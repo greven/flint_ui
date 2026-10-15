@@ -69,14 +69,8 @@ export class Collapsible extends FlintHook {
     const content = this.parts.content;
     if (!content) return;
 
-    content.style.setProperty(
-      `--fl-${CSS_VAR_PREFIX}-height`,
-      `${content.scrollHeight}px`,
-    );
-    content.style.setProperty(
-      `--fl-${CSS_VAR_PREFIX}-width`,
-      `${content.scrollWidth}px`,
-    );
+    content.style.setProperty(`--fl-${CSS_VAR_PREFIX}-height`, `${content.scrollHeight}px`);
+    content.style.setProperty(`--fl-${CSS_VAR_PREFIX}-width`, `${content.scrollWidth}px`);
   }
 
   /**
@@ -133,6 +127,11 @@ export class Collapsible extends FlintHook {
 
     this.currentState = state;
 
+    // Arm the keyframes. They are gated on `data-animate` so the initial
+    // server-rendered state never animates before the hook mounts; from here on
+    // every driven transition runs the enter/leave animation.
+    this.js().setAttribute(this.el, "data-animate", "");
+
     const applyState = () => {
       this.js().setAttribute(this.el, "data-state", state);
 
@@ -160,11 +159,7 @@ export class Collapsible extends FlintHook {
       if (!isOpen) {
         const hide = () => {
           if (this.animationGeneration !== gen) return;
-          this.js().setAttribute(
-            content,
-            "hidden",
-            this.hiddenUntilFound ? "until-found" : "",
-          );
+          this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
         };
         done.then(hide).catch(hide);
       }
@@ -206,8 +201,10 @@ export class Collapsible extends FlintHook {
     this.syncParts();
     this.updateCssVars();
 
-    // Suppress the enter animation on an initially-open mount: freeze the
-    // keyframes until the first user transition releases them.
+    // An initially-open element renders open, without animation: the keyframes
+    // are gated on `data-animate`, which is only set when `setState` drives a
+    // transition. Freeze any keyframes left armed by a previous mount so a
+    // remount cannot replay the enter animation.
     if (this.currentState === "open") {
       const content = this.parts.content;
       if (content) content.style.animationName = "none";
@@ -238,10 +235,7 @@ export class Collapsible extends FlintHook {
     this.el.removeEventListener(Events.Close, this.handleClose);
     this.el.removeEventListener(Events.Toggle, this.handleToggle);
     this.boundTrigger?.removeEventListener("click", this.handleTriggerClick);
-    this.boundContent?.removeEventListener(
-      "beforematch",
-      this.handleBeforeMatch,
-    );
+    this.boundContent?.removeEventListener("beforematch", this.handleBeforeMatch);
     this.resizeObserver?.disconnect();
   }
 }

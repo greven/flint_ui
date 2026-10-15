@@ -190,17 +190,22 @@ defmodule FlintUIDocsWeb.Layouts do
       "hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block"
     ]}>
       <div :for={group <- @section.groups} class="mb-6 last:mb-0">
-        <p class="px-3 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
+        <p class="text-sm font-semibold tracking-wider text-zinc-800 dark:text-zinc-100 uppercase">
           {group.label}
         </p>
-        <nav class="mt-2 flex flex-col border-l border-zinc-200 dark:border-zinc-800">
+        <nav class="mt-2 flex flex-col gap-0.5 border-l border-zinc-200 dark:border-zinc-800">
           <.link
             :for={item <- group.pages}
             navigate={item.path}
             aria-current={if page_active?(item, @active, @page), do: "page", else: nil}
-            class={page_class(page_active?(item, @active, @page))}
+            class={[
+              "group -ml-px py-1 pr-2 pl-2 border-l transition-colors hover:text-zinc-800 dark:hover:text-zinc-100",
+              sidebar_item_class(page_active?(item, @active, @page))
+            ]}
           >
-            {item.label}
+            <span class="p-2 font-medium text-sm capitalize rounded-md group-hover:bg-zinc-400/5 dark:group-hover:bg-zinc-50/5">
+              {item.label}
+            </span>
           </.link>
         </nav>
       </div>
@@ -211,13 +216,10 @@ defmodule FlintUIDocsWeb.Layouts do
   defp page_active?(%{name: name}, active, _page) when not is_nil(name), do: active == name
   defp page_active?(item, _active, page), do: page == item.id
 
-  defp page_class(true) do
-    "-ml-px border-l-2 border-zinc-900 py-1.5 pr-2 pl-3 text-sm font-medium capitalize text-zinc-900 dark:border-white dark:text-white"
-  end
+  defp sidebar_item_class(true),
+    do: "border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
 
-  defp page_class(false) do
-    "-ml-px border-l-2 border-transparent py-1.5 pr-2 pl-3 text-sm capitalize text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
-  end
+  defp sidebar_item_class(false), do: "border-transparent text-zinc-500 dark:text-zinc-400"
 
   @doc """
   Shows the flash group with standard titles and content.

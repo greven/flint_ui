@@ -1,34 +1,36 @@
 @layer components {
-  /* Collapsible */
-  [data-element="collapsible"][data-variant] {
-    border-radius: var(--fl-radius-lg);
-    color: var(--fl-color-foreground);
-  }
+    /* Collapsible */
+    [data-element="collapsible"][data-variant] {
+        border-radius: var(--fl-radius-lg);
+        color: var(--fl-color-foreground);
+    }
 
-  [data-element="collapsible"][data-variant="bordered"] {
-    border: 1px solid var(--fl-color-border);
-    background: var(--fl-color-background);
-  }
+    [data-element="collapsible"][data-variant="bordered"] {
+        border: 1px solid var(--fl-color-border);
+        background: var(--fl-color-background);
+    }
 
-  [data-element="collapsible"][data-variant="minimal"] {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-  }
+    [data-element="collapsible"][data-variant="minimal"] {
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+    }
 
-  [data-element="collapsible"][data-variant] [data-part="trigger"] {
-    cursor: pointer;
-  }
+    [data-element="collapsible"][data-variant] [data-part="trigger"] {
+        cursor: pointer;
+    }
 
-  [data-element="collapsible"][data-variant] [data-part="trigger"]:focus-visible {
-    outline: 2px solid var(--fl-color-ring);
-    outline-offset: -2px;
-  }
+    [data-element="collapsible"][data-variant]
+        [data-part="trigger"]:focus-visible {
+        outline: 2px solid var(--fl-color-ring);
+        outline-offset: -2px;
+    }
 
-  [data-element="collapsible"][data-variant] [data-part="trigger"][data-disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+    [data-element="collapsible"][data-variant]
+        [data-part="trigger"][data-disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }
 
 /* Content reveal.
@@ -38,36 +40,45 @@
  * measures the content and publishes its natural size as `--fl-collapsible-height`
  * (and `--fl-collapsible-width`), which the keyframes interpolate. At rest the
  * height is `auto`, so async/patched content is never stuck at a stale size.
+ *
+ * The keyframes are gated on `[data-animate]`, which the hook only sets when it
+ * drives a transition. A server-rendered `open` element therefore appears open
+ * immediately instead of animating on first paint, before the hook mounts.
+ *
+ * Keep the content element free of padding/border: with `box-sizing: border-box`
+ * a box cannot collapse below its padding, so the reveal would clamp and stutter.
  */
 [data-element="collapsible"] [data-part="content"] {
-  overflow: hidden;
-  border-radius: inherit;
+    overflow: hidden;
+    border-radius: inherit;
 }
 
-[data-element="collapsible"] [data-part="content"][data-state="open"] {
-  animation: fl-collapsible-expand 250ms ease;
+[data-element="collapsible"][data-animate]
+    [data-part="content"][data-state="open"] {
+    animation: fl-collapsible-expand 250ms ease;
 }
 
-[data-element="collapsible"] [data-part="content"][data-state="closed"] {
-  animation: fl-collapsible-collapse 250ms ease;
+[data-element="collapsible"][data-animate]
+    [data-part="content"][data-state="closed"] {
+    animation: fl-collapsible-collapse 250ms ease;
 }
 
 @keyframes fl-collapsible-expand {
-  from {
-    height: 0;
-  }
+    from {
+        height: 0;
+    }
 
-  to {
-    height: var(--fl-collapsible-height, auto);
-  }
+    to {
+        height: var(--fl-collapsible-height, auto);
+    }
 }
 
 @keyframes fl-collapsible-collapse {
-  from {
-    height: var(--fl-collapsible-height, auto);
-  }
+    from {
+        height: var(--fl-collapsible-height, auto);
+    }
 
-  to {
-    height: 0;
-  }
+    to {
+        height: 0;
+    }
 }
