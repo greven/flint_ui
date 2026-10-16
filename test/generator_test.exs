@@ -46,12 +46,15 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ ~s{slot(:trailing, doc: "Optional content rendered after the label.")}
   end
 
-  test "assembles the theme from tokens then each component part" do
-    [first | _] = Generator.part_paths()
+  test "assembles the theme from tokens, base rules, then each component part" do
+    [first, second | _] = Generator.part_paths()
     assert first =~ "tokens.css"
+    assert second =~ "base.css"
 
     css = Generator.theme_source()
     assert css =~ "--fl-color-primary:"
+    assert css =~ "--fl-focus-ring-color:"
+    assert css =~ "outline: var(--fl-focus-ring-width) solid var(--fl-focus-ring-color);"
 
     for entry <- Styled.entries() do
       assert css =~ ~s([data-element="#{entry.name}"]),

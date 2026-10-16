@@ -28,11 +28,6 @@
       border-color 150ms ease;
   }
 
-  [data-element="toggle"][data-variant]:focus-visible {
-    outline: 2px solid var(--fl-color-ring);
-    outline-offset: 2px;
-  }
-
   [data-element="toggle"][data-variant]:hover {
     background: var(--_fl-toggle-surface);
     color: var(--fl-color-foreground);

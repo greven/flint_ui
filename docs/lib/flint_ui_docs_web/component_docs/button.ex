@@ -222,9 +222,12 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         %{
           title: "Focus",
           code: """
-          [data-element="button"]:focus-visible {
-            outline: 2px solid var(--fl-color-ring);
-            outline-offset: 2px;
+          /* The base layer gives every component a focus ring:
+           * outline: var(--fl-focus-ring-width) solid var(--fl-focus-ring-color);
+           * outline-offset: var(--fl-focus-ring-offset);
+           * Retint it per component by overriding the color token. */
+          [data-element="button"] {
+            --fl-focus-ring-color: var(--fl-color-primary);
           }
           """
         }

@@ -28,6 +28,7 @@ defmodule FlintUI.Generator do
   end
 
   @tokens_part "tokens.css"
+  @base_part "base.css"
   @aggregate "priv/static/flint.css"
 
   @doc "Absolute path to a theme part, relative to `priv/templates`."
@@ -38,11 +39,11 @@ defmodule FlintUI.Generator do
   @doc """
   Absolute paths to every theme part, in assembly order.
 
-  Tokens come first (they are unlayered), then each registered component's
-  stylesheet in registry order.
+  Tokens come first (they are unlayered), then the shared base rules, then each
+  registered component's stylesheet in registry order.
   """
   def part_paths do
-    [@tokens_part | Enum.map(Styled.entries(), & &1.css)]
+    [@tokens_part, @base_part | Enum.map(Styled.entries(), & &1.css)]
     |> Enum.map(&part_path/1)
   end
 

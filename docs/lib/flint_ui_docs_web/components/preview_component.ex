@@ -167,11 +167,11 @@ defmodule FlintUIDocsWeb.PreviewComponent do
             <span class="relative grid size-3.5 place-items-center">
               <.icon
                 name="lucide-copy"
-                class="col-start-1 row-start-1 size-3.5 transition-opacity duration-200 group-data-[copied]:opacity-0"
+                class="col-start-1 row-start-1 size-3.5 transition-opacity duration-200 group-data-copied:opacity-0"
               />
               <.icon
                 name="lucide-check"
-                class="col-start-1 row-start-1 size-3.5 text-green-400 opacity-0 transition-opacity duration-200 group-data-[copied]:opacity-100"
+                class="col-start-1 row-start-1 size-3.5 text-green-400 opacity-0 transition-opacity duration-200 group-data-copied:opacity-100"
               />
             </span>
             Copy

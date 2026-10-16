@@ -202,9 +202,10 @@ FlintUI does not require Tailwind.
   base's own slots (from `FlintUI.Docs.slots/1`) merged with the entry's extra
   slots. Never bake Tailwind classes into a wrapper.
 - **Themes are CSS**, assembled from parts under `priv/templates/`
-  (`tokens.css` + `styled/<name>.css`, colocated with the wrapper template).
-  `FlintUI.Generator.theme_source/0` concatenates them (tokens first, then
-  components in registry order), and the `:flint_theme` Mix compiler
+  (`tokens.css`, the shared `base.css` rules, then `styled/<name>.css`, colocated
+  with the wrapper template). `FlintUI.Generator.theme_source/0` concatenates
+  them (tokens first, then `base.css`, then components in registry order), and
+  the `:flint_theme` Mix compiler
   (`Mix.Tasks.Compile.FlintTheme`) writes the aggregate to `priv/static/flint.css`
   for the docs to import. `mix flint.setup`/`flint.theme` write that same aggregate
   to the host's `assets/css/flint.css`. Tokens are prefixed `--fl-*`, with automatic

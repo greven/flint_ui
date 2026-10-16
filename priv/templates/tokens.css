@@ -20,73 +20,108 @@
  */
 
 :root {
-  color-scheme: light dark;
+    color-scheme: light dark;
 
-  --fl-color-background: light-dark(oklch(1 0 0), oklch(0.145 0 0));
-  --fl-color-foreground: light-dark(oklch(0.145 0 0), oklch(0.985 0 0));
-  --fl-color-card: light-dark(oklch(1 0 0), oklch(0.205 0 0));
-  --fl-color-card-foreground: light-dark(oklch(0.145 0 0), oklch(0.985 0 0));
+    --fl-font-sans:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  --fl-color-primary: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
-  --fl-color-primary-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+    --fl-radius-sm: 0.25rem;
+    --fl-radius-md: 0.375rem;
+    --fl-radius-lg: 0.5rem;
+    --fl-radius-xl: 0.75rem;
 
-  --fl-color-secondary: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
-  --fl-color-secondary-foreground: light-dark(oklch(0.205 0 0), oklch(0.985 0 0));
+    --fl-color-background: light-dark(oklch(1 0 0), oklch(0.145 0 0));
+    --fl-color-foreground: light-dark(oklch(0.145 0 0), oklch(0.985 0 0));
+    --fl-color-card: light-dark(oklch(1 0 0), oklch(0.205 0 0));
+    --fl-color-card-foreground: light-dark(oklch(0.145 0 0), oklch(0.985 0 0));
 
-  --fl-color-neutral: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
-  --fl-color-neutral-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+    --fl-color-primary: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
+    --fl-color-primary-foreground: light-dark(
+        oklch(0.985 0 0),
+        oklch(0.205 0 0)
+    );
 
-  --fl-color-success: light-dark(oklch(0.723 0.192 149.58), oklch(0.792 0.209 151.71));
-  --fl-color-success-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+    --fl-color-secondary: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
+    --fl-color-secondary-foreground: light-dark(
+        oklch(0.205 0 0),
+        oklch(0.985 0 0)
+    );
 
-  --fl-color-info: light-dark(oklch(0.685 0.169 237.32), oklch(0.746 0.16 232.66));
-  --fl-color-info-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+    --fl-color-neutral: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
+    --fl-color-neutral-foreground: light-dark(
+        oklch(0.985 0 0),
+        oklch(0.205 0 0)
+    );
 
-  --fl-color-warning: light-dark(oklch(0.795 0.184 86.05), oklch(0.852 0.199 91.94));
-  --fl-color-warning-foreground: light-dark(oklch(0.286 0.066 53.813), oklch(0.286 0.066 53.813));
+    --fl-color-success: light-dark(
+        oklch(0.723 0.192 149.58),
+        oklch(0.792 0.209 151.71)
+    );
+    --fl-color-success-foreground: light-dark(
+        oklch(0.985 0 0),
+        oklch(0.205 0 0)
+    );
 
-  --fl-color-error: light-dark(oklch(0.577 0.245 27.325), oklch(0.704 0.191 22.216));
-  --fl-color-error-foreground: light-dark(oklch(0.985 0 0), oklch(0.985 0 0));
+    --fl-color-info: light-dark(
+        oklch(0.685 0.169 237.32),
+        oklch(0.746 0.16 232.66)
+    );
+    --fl-color-info-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
 
-  /* Deprecated: use --fl-color-error. */
-  --fl-color-destructive: var(--fl-color-error);
-  --fl-color-destructive-foreground: var(--fl-color-error-foreground);
+    --fl-color-warning: light-dark(
+        oklch(0.795 0.184 86.05),
+        oklch(0.852 0.199 91.94)
+    );
+    --fl-color-warning-foreground: light-dark(
+        oklch(0.286 0.066 53.813),
+        oklch(0.286 0.066 53.813)
+    );
 
-  --fl-color-muted: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
-  --fl-color-muted-foreground: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
+    --fl-color-error: light-dark(
+        oklch(0.577 0.245 27.325),
+        oklch(0.704 0.191 22.216)
+    );
+    --fl-color-error-foreground: light-dark(oklch(0.985 0 0), oklch(0.985 0 0));
 
-  --fl-color-accent: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
-  --fl-color-accent-foreground: light-dark(oklch(0.205 0 0), oklch(0.985 0 0));
+    /* Deprecated: use --fl-color-error. */
+    --fl-color-destructive: var(--fl-color-error);
+    --fl-color-destructive-foreground: var(--fl-color-error-foreground);
 
-  --fl-color-border: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 10%));
-  --fl-color-input: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 15%));
-  --fl-color-ring: light-dark(oklch(0.708 0 0), oklch(0.556 0 0));
+    --fl-color-muted: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
+    --fl-color-muted-foreground: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
 
-  --fl-radius-sm: 0.25rem;
-  --fl-radius-md: 0.375rem;
-  --fl-radius-lg: 0.5rem;
-  --fl-radius-xl: 0.75rem;
+    --fl-color-accent: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
+    --fl-color-accent-foreground: light-dark(
+        oklch(0.205 0 0),
+        oklch(0.985 0 0)
+    );
 
-  --fl-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --fl-color-border: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 10%));
+    --fl-color-input: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 15%));
+    --fl-color-ring: light-dark(oklch(0.708 0 0), oklch(0.556 0 0));
+
+    --fl-focus-ring-width: 2px;
+    --fl-focus-ring-offset: 2px;
+    --fl-focus-ring-color: var(--fl-color-ring);
 }
 
 /* Manual control: force a scheme for the whole document. */
 [data-theme="light"] {
-  color-scheme: light;
+    color-scheme: light;
 }
 
 [data-theme="dark"] {
-  color-scheme: dark;
+    color-scheme: dark;
 }
 
 /* Custom themes: override tokens under a `data-theme` value. */
 [data-theme="pastel"] {
-  color-scheme: light;
-  --fl-color-primary: oklch(0.66 0.14 290);
-  --fl-color-primary-foreground: oklch(0.98 0.012 290);
-  --fl-color-accent: oklch(0.94 0.03 290);
-  --fl-color-accent-foreground: oklch(0.38 0.06 290);
-  --fl-color-border: oklch(0.85 0.028 300);
-  --fl-color-ring: oklch(0.74 0.13 290);
-  --fl-radius-md: 0.625rem;
+    color-scheme: light;
+    --fl-color-primary: oklch(0.66 0.14 290);
+    --fl-color-primary-foreground: oklch(0.98 0.012 290);
+    --fl-color-accent: oklch(0.94 0.03 290);
+    --fl-color-accent-foreground: oklch(0.38 0.06 290);
+    --fl-color-border: oklch(0.85 0.028 300);
+    --fl-color-ring: oklch(0.74 0.13 290);
+    --fl-radius-md: 0.625rem;
 }
