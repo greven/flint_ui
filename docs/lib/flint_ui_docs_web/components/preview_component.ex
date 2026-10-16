@@ -330,7 +330,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
                 phx-value-key={control.key}
                 class={toggle_class(Map.get(@props, control.key))}
               >
-                <span>{if Map.get(@props, control.key), do: "On", else: "Off"}</span>
+                <span>{if Map.get(@props, control.key), do: "true", else: "false"}</span>
               </button>
             <% :select -> %>
               <div class="relative">

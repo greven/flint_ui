@@ -16,7 +16,8 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       %{key: :loading, type: :boolean, default: false, label: "Loading"},
       %{key: :variant, type: :select, default: "solid", label: "Variant"},
       %{key: :color, type: :select, default: "neutral", label: "Color"},
-      %{key: :size, type: :select, default: "md", label: "Size"}
+      %{key: :size, type: :select, default: "md", label: "Size"},
+      %{key: :depth, type: :boolean, default: true, label: "Depth"}
     ]
   end
 
@@ -90,23 +91,32 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         body: """
         The generated component adds a `color` attribute mapped onto the
         `data-color` hook the theme targets. `color` and `variant` compose
-        freely: the same palette drives every variant.
+        freely: every variant is available in every role. Each row below is a
+        color role, each column a variant.
         """,
         code: """
-        <div class="flex flex-col gap-3">
-          <div class="flex flex-wrap items-center gap-3">
-            <.button :for={color <- ~w(primary secondary success info warning error neutral)} color={color}>
-              {color}
-            </.button>
-          </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <.button
-              :for={color <- ~w(primary secondary success info warning error neutral)}
-              variant="outline"
-              color={color}
+        <div class="overflow-x-auto">
+          <div class="grid grid-cols-7 items-center gap-x-3 gap-y-6">
+            <div></div>
+            <span
+              :for={variant <- ~w(solid subtle outline dashed ghost link)}
+              class="text-center text-xs font-medium text-zinc-500"
             >
-              {color}
-            </.button>
+              {variant}
+            </span>
+            <div
+              :for={color <- ~w(primary secondary success info warning error neutral)}
+              class="contents"
+            >
+              <span class="text-xs font-medium text-zinc-500">{color}</span>
+              <.button
+                :for={variant <- ~w(solid subtle outline dashed ghost link)}
+                variant={variant}
+                color={color}
+              >
+                {String.capitalize(variant)}
+              </.button>
+            </div>
           </div>
         </div>
         """
@@ -124,6 +134,29 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
           <.button :for={size <- ~w(xs sm md lg xl)} size={size}>{size}</.button>
         </div>
         """
+      },
+      %{
+        id: :depth,
+        title: "Depth",
+        layer: :styled,
+        body: """
+        `depth` is a boolean that raises `solid` and `outline` buttons: `solid`
+        wears a top rim light that fades as it runs down the sides plus a smooth
+        outer shadow, `outline` a bottom inner line. The other variants are flat
+        by design. Set `depth={false}` to
+        flatten any of them, or turn off `--fl-button-depth` /
+        `--fl-button-shadow` in the theme to flatten every button at once.
+        Pressing a button sinks it: the depth collapses as it nudges down.
+        """,
+        code: """
+        <div class="flex flex-wrap items-center gap-3">
+          <.button variant="solid" color="primary">Raised</.button>
+          <.button variant="outline">Raised</.button>
+          <.button variant="solid" color="primary" depth={false}>Flat</.button>
+          <.button variant="outline" depth={false}>Flat</.button>
+          <.button variant="ghost" depth={false}>Ghost</.button>
+        </div>
+        """
       }
     ]
   end
@@ -138,6 +171,23 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         code: """
         <.button variant="solid">
           <.icon name="lucide-plus" class="size-4" /> New project
+        </.button>
+        """
+      },
+      %{
+        id: :destructive_confirm,
+        title: "Destructive with confirmation",
+        description:
+          "Delete actions are worth a second look. A data-confirm attribute makes the browser prompt before the button's phx-click event is sent, and phx-value-id passes the targeted record along to your handler.",
+        code: """
+        <.button
+          variant="solid"
+          color="error"
+          phx-click="delete_item"
+          phx-value-id="67"
+          data-confirm="Delete item?"
+        >
+          <.icon name="lucide-trash" class="size-4" /> Delete project
         </.button>
         """
       },
@@ -242,6 +292,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       variant={@props.variant}
       color={@props.color}
       size={@props.size}
+      depth={@props.depth}
       disabled={@props.disabled}
       loading={@props.loading}
     >
@@ -266,6 +317,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         Snippet.attr("variant", props.variant, "solid"),
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
+        Snippet.attr("depth", props.depth, true),
         Snippet.flag("disabled", props.disabled),
         Snippet.flag("loading", props.loading)
       ],
@@ -323,23 +375,28 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
 
   def render_usage(%{block: :color} = assigns) do
     ~H"""
-    <div class="flex flex-col gap-3">
-      <div class="flex flex-wrap items-center gap-3">
-        <Components.button
-          :for={color <- ~w(primary secondary success info warning error neutral)}
-          color={color}
+    <div class="overflow-x-auto">
+      <div class="grid grid-cols-7 items-center gap-x-3 gap-y-6">
+        <div></div>
+        <span
+          :for={variant <- ~w(solid subtle outline dashed ghost link)}
+          class="text-center text-xs font-medium text-zinc-500"
         >
-          {color}
-        </Components.button>
-      </div>
-      <div class="flex flex-wrap items-center gap-3">
-        <Components.button
+          {variant}
+        </span>
+        <div
           :for={color <- ~w(primary secondary success info warning error neutral)}
-          variant="outline"
-          color={color}
+          class="contents"
         >
-          {color}
-        </Components.button>
+          <span class="text-xs font-medium text-zinc-500">{color}</span>
+          <Components.button
+            :for={variant <- ~w(solid subtle outline dashed ghost link)}
+            variant={variant}
+            color={color}
+          >
+            {String.capitalize(variant)}
+          </Components.button>
+        </div>
       </div>
     </div>
     """
@@ -353,11 +410,36 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     """
   end
 
+  def render_usage(%{block: :depth} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button variant="solid" color="primary">Raised</Components.button>
+      <Components.button variant="outline">Raised</Components.button>
+      <Components.button variant="solid" color="primary" depth={false}>Flat</Components.button>
+      <Components.button variant="outline" depth={false}>Flat</Components.button>
+    </div>
+    """
+  end
+
   @impl true
   def render_block(%{block: :icon} = assigns) do
     ~H"""
     <Components.button variant="solid">
       <Components.icon name="lucide-plus" class="size-4" /> New project
+    </Components.button>
+    """
+  end
+
+  def render_block(%{block: :destructive_confirm} = assigns) do
+    ~H"""
+    <Components.button
+      variant="solid"
+      color="error"
+      phx-click="delete_item"
+      phx-value-id="67"
+      data-confirm="Delete item?"
+    >
+      <Components.icon name="lucide-trash" class="size-4" /> Delete project
     </Components.button>
     """
   end

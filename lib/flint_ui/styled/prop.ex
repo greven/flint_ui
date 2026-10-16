@@ -39,4 +39,15 @@ defmodule FlintUI.Styled.Prop do
   def attribute(%__MODULE__{name: name}) do
     "data-" <> (name |> to_string() |> String.replace("_", "-"))
   end
+
+  @doc """
+  Whether the prop is an on/off boolean (`values: [true, false]`).
+
+  Boolean props are declared as `:boolean` attributes and set their data hook to
+  the string `"true"`/`"false"` so both states have a selector.
+
+      iex> FlintUI.Styled.Prop.boolean?(%FlintUI.Styled.Prop{name: :depth, values: [true, false], default: true})
+      true
+  """
+  def boolean?(%__MODULE__{values: values}), do: values == [true, false]
 end

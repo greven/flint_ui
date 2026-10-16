@@ -268,17 +268,17 @@ defmodule FlintUIDocsWeb.Layouts do
   end
 
   @doc """
-  Provides a light/dark/system theme toggle.
+  Provides a light/dark/system scheme toggle.
 
-  The selected theme is applied by the inline script in root.html.heex, which
-  listens for the `phx:set-theme` event and reflects it onto `data-theme`.
+  The selected scheme is applied by the inline script in root.html.heex, which
+  listens for the `phx:set-scheme` event and reflects it onto `data-color-scheme`.
   """
   def theme_toggle(assigns) do
     ~H"""
     <div class="flex items-center p-0.5">
       <button
         :for={
-          {theme, icon} <- [
+          {scheme, icon} <- [
             {"system", "lucide-monitor"},
             {"light", "lucide-sun"},
             {"dark", "lucide-moon"}
@@ -286,11 +286,36 @@ defmodule FlintUIDocsWeb.Layouts do
         }
         type="button"
         class="rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
-        phx-click={JS.dispatch("phx:set-theme")}
-        data-phx-theme={theme}
-        aria-label={"Use #{theme} theme"}
+        phx-click={JS.dispatch("phx:set-scheme")}
+        data-phx-scheme={scheme}
+        aria-label={"Use #{scheme} scheme"}
       >
         <.icon name={icon} class="size-4" />
+      </button>
+    </div>
+    """
+  end
+
+  @doc """
+  Provides a theme preset picker.
+
+  Selecting a preset dispatches `phx:set-preset`, which the inline script in
+  root.html.heex reflects onto `data-theme`.
+  """
+  attr :themes, :list, required: true
+  attr :class, :any, default: nil
+
+  def theme_preset_picker(assigns) do
+    ~H"""
+    <div class={["flex flex-wrap gap-1.5", @class]}>
+      <button
+        :for={preset <- @themes}
+        type="button"
+        class="rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        phx-click={JS.dispatch("phx:set-preset")}
+        data-phx-preset={preset}
+      >
+        {preset}
       </button>
     </div>
     """

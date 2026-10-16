@@ -8,6 +8,9 @@ defmodule FlintUI.ThemeContractTest do
   # (e.g. the loading shape is inherent to the SVG markup).
   @selector_exceptions [{:loading, :variant}]
 
+  @color_roles ~w(primary secondary neutral success info warning error)
+  @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
+
   setup_all do
     %{css: FlintUI.Generator.theme_source()}
   end
@@ -31,6 +34,33 @@ defmodule FlintUI.ThemeContractTest do
 
       assert css =~ selector,
              "expected flint.css to style #{selector} (from #{entry.name}.#{prop.name})"
+    end
+  end
+
+  test "every theme preset points at an existing part that selects its name", %{css: css} do
+    for theme <- FlintUI.Theme.themes() do
+      path = FlintUI.Generator.part_path(theme.css)
+      assert File.exists?(path), "expected theme part #{theme.css} to exist"
+      assert File.read!(path) =~ ~s([data-theme="#{theme.name}"])
+      assert css =~ ~s([data-theme="#{theme.name}"])
+    end
+  end
+
+  test "every semantic role ships a complete 50..950 scale", %{css: css} do
+    for role <- @color_roles, shade <- @color_shades do
+      assert css =~ "--fl-color-#{role}-#{shade}:",
+             "expected --fl-color-#{role}-#{shade} in the theme"
+    end
+  end
+
+  test "every per-component radius token a stylesheet uses is defined", %{css: css} do
+    for entry <- Styled.entries() do
+      source = File.read!(FlintUI.Generator.part_path(entry.css))
+
+      if source =~ "--fl-#{entry.name}-radius" do
+        assert css =~ "--fl-#{entry.name}-radius:",
+               "expected --fl-#{entry.name}-radius to be defined for #{entry.name}"
+      end
     end
   end
 

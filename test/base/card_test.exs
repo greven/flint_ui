@@ -87,7 +87,7 @@ defmodule FlintUI.Base.CardTest do
   end
 
   test "declares its element type and documented parts" do
-    assert %FlintUI.Meta{name: :card, type: :layout, status: :draft} =
+    assert %FlintUI.Meta{name: :card, type: :element, status: :draft} =
              FlintUI.Base.Card.meta()
 
     parts = FlintUI.Base.Card.parts_attrs()

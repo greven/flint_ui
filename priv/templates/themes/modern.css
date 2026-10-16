@@ -1,0 +1,17 @@
+/* Modern theme preset.
+ *
+ * Select it with `data-theme="modern"` on <html>. Demonstrates a preset that
+ * retunes radius, type, and the primary color together while leaving the
+ * light/dark scheme to `data-color-scheme`.
+ */
+[data-theme="modern"] {
+    --fl-radius: 0.625rem;
+
+    --fl-font-sans:
+        "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        sans-serif;
+
+    --fl-color-primary: oklch(0.55 0.24 275);
+    --fl-color-primary-foreground: oklch(0.98 0.012 275);
+    --fl-color-ring: oklch(0.55 0.24 275);
+}

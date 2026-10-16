@@ -1,31 +1,45 @@
 @layer components {
-  /* Toggle */
+  /* Toggle
+   *
+   * The `--fl-toggle-*` custom properties are the public inputs: override them
+   * per instance (via `class` or `style`) to retint this toggle. Everything
+   * below the inputs derives from them. */
   [data-element="toggle"][data-variant] {
-    --_fl-toggle-color: var(--fl-color-neutral);
-    --_fl-toggle-color-foreground: var(--fl-color-neutral-foreground);
-    --_fl-toggle-text: var(--_fl-toggle-color);
-    --_fl-toggle-surface: color-mix(in oklab, var(--_fl-toggle-color) 10%, transparent);
-    --_fl-toggle-surface-hover: color-mix(in oklab, var(--_fl-toggle-color) 15%, transparent);
-    --_fl-toggle-border: color-mix(in oklab, var(--_fl-toggle-color) 50%, transparent);
-    --_fl-toggle-border-soft: color-mix(in oklab, var(--_fl-toggle-color) 25%, transparent);
+    --fl-toggle-color: var(--fl-color-inverted);
+    --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
+    --fl-toggle-text: var(--fl-toggle-color);
+    --fl-toggle-surface: color-mix(in oklab, var(--fl-toggle-color) 10%, transparent);
+    --fl-toggle-border: color-mix(in oklab, var(--fl-toggle-color) 50%, transparent);
+    --fl-toggle-border-soft: color-mix(in oklab, var(--fl-toggle-color) 25%, transparent);
+
+    /* Internals, derived from the inputs above. */
+    --_fl-toggle-color: var(--fl-toggle-color);
+    --_fl-toggle-color-foreground: var(--fl-toggle-color-foreground);
+    --_fl-toggle-text: var(--fl-toggle-text);
+    --_fl-toggle-surface: var(--fl-toggle-surface);
+    --_fl-toggle-border: var(--fl-toggle-border);
+    --_fl-toggle-border-soft: var(--fl-toggle-border-soft);
+
+    /* Tint the shared focus ring with the toggle color. */
+    --fl-focus-ring-color: var(--_fl-toggle-color);
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--fl-spacing-sm);
     border: 1px solid transparent;
-    border-radius: var(--fl-radius-md);
+    border-radius: var(--fl-toggle-radius);
     font-family: var(--fl-font-sans);
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.25rem;
+    font-size: var(--fl-control-font-size-md);
+    font-weight: var(--fl-font-weight-medium);
+    line-height: var(--fl-control-line-height-md);
     cursor: pointer;
     background: transparent;
     color: var(--fl-color-foreground);
     transition:
-      background-color 150ms ease,
-      color 150ms ease,
-      border-color 150ms ease;
+      background-color var(--fl-duration-fast) var(--fl-ease-out),
+      color var(--fl-duration-fast) var(--fl-ease-out),
+      border-color var(--fl-duration-fast) var(--fl-ease-out);
   }
 
   [data-element="toggle"][data-variant]:hover {
@@ -39,46 +53,55 @@
     pointer-events: none;
   }
 
-  /* Color mapping. Each color resolves the shared variant variables; `neutral`
-   * is special-cased onto the surface tokens (like Nuxt UI). */
+  /* Color mapping. Each color resolves the shared variant variables; the solid
+   * "on" state fills with `--fl-toggle-color` and its contrast-picked
+   * `-foreground`, while the text-carrying variants use the separate `-text`
+   * shade so a bright fill still reads as text. `neutral` is special-cased onto
+   * the surface tokens (like Nuxt UI), with its solid state using the inverted
+   * surface (plain black/white). */
   [data-element="toggle"][data-color="primary"] {
-    --_fl-toggle-color: var(--fl-color-primary);
-    --_fl-toggle-color-foreground: var(--fl-color-primary-foreground);
+    --fl-toggle-color: var(--fl-color-primary);
+    --fl-toggle-color-foreground: var(--fl-color-primary-foreground);
+    --fl-toggle-text: var(--fl-color-primary-text);
   }
 
   [data-element="toggle"][data-color="secondary"] {
-    --_fl-toggle-color: var(--fl-color-secondary);
-    --_fl-toggle-color-foreground: var(--fl-color-secondary-foreground);
+    --fl-toggle-color: var(--fl-color-secondary);
+    --fl-toggle-color-foreground: var(--fl-color-secondary-foreground);
+    --fl-toggle-text: var(--fl-color-secondary-text);
   }
 
   [data-element="toggle"][data-color="success"] {
-    --_fl-toggle-color: var(--fl-color-success);
-    --_fl-toggle-color-foreground: var(--fl-color-success-foreground);
+    --fl-toggle-color: var(--fl-color-success);
+    --fl-toggle-color-foreground: var(--fl-color-success-foreground);
+    --fl-toggle-text: var(--fl-color-success-text);
   }
 
   [data-element="toggle"][data-color="info"] {
-    --_fl-toggle-color: var(--fl-color-info);
-    --_fl-toggle-color-foreground: var(--fl-color-info-foreground);
+    --fl-toggle-color: var(--fl-color-info);
+    --fl-toggle-color-foreground: var(--fl-color-info-foreground);
+    --fl-toggle-text: var(--fl-color-info-text);
   }
 
   [data-element="toggle"][data-color="warning"] {
-    --_fl-toggle-color: var(--fl-color-warning);
-    --_fl-toggle-color-foreground: var(--fl-color-warning-foreground);
+    --fl-toggle-color: var(--fl-color-warning);
+    --fl-toggle-color-foreground: var(--fl-color-warning-foreground);
+    --fl-toggle-text: var(--fl-color-warning-text);
   }
 
   [data-element="toggle"][data-color="error"] {
-    --_fl-toggle-color: var(--fl-color-error);
-    --_fl-toggle-color-foreground: var(--fl-color-error-foreground);
+    --fl-toggle-color: var(--fl-color-error);
+    --fl-toggle-color-foreground: var(--fl-color-error-foreground);
+    --fl-toggle-text: var(--fl-color-error-text);
   }
 
   [data-element="toggle"][data-color="neutral"] {
-    --_fl-toggle-color: var(--fl-color-neutral);
-    --_fl-toggle-color-foreground: var(--fl-color-neutral-foreground);
-    --_fl-toggle-text: var(--fl-color-foreground);
-    --_fl-toggle-surface: var(--fl-color-secondary);
-    --_fl-toggle-surface-hover: var(--fl-color-accent);
-    --_fl-toggle-border: var(--fl-color-border);
-    --_fl-toggle-border-soft: var(--fl-color-border);
+    --fl-toggle-color: var(--fl-color-inverted);
+    --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
+    --fl-toggle-text: var(--fl-color-foreground);
+    --fl-toggle-surface: var(--fl-color-muted);
+    --fl-toggle-border: var(--fl-color-border);
+    --fl-toggle-border-soft: var(--fl-color-border);
   }
 
   [data-element="toggle"][data-variant="solid"][data-state="on"] {
@@ -127,34 +150,36 @@
     border-color: var(--_fl-toggle-border);
   }
 
+  /* Sizes share the control metrics for height and type; horizontal padding is
+   * tighter than a button's for a denser segmented-control look. */
   [data-element="toggle"][data-size="xs"] {
-    height: 1.5rem;
+    height: var(--fl-control-height-xs);
     padding-inline: 0.5rem;
-    font-size: 0.75rem;
-    line-height: 1rem;
+    font-size: var(--fl-control-font-size-xs);
+    line-height: var(--fl-control-line-height-xs);
   }
 
   [data-element="toggle"][data-size="sm"] {
-    height: 2rem;
+    height: var(--fl-control-height-sm);
     padding-inline: 0.625rem;
   }
 
   [data-element="toggle"][data-size="md"] {
-    height: 2.25rem;
+    height: var(--fl-control-height-md);
     padding-inline: 0.75rem;
   }
 
   [data-element="toggle"][data-size="lg"] {
-    height: 2.5rem;
+    height: var(--fl-control-height-lg);
     padding-inline: 1rem;
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: var(--fl-control-font-size-lg);
+    line-height: var(--fl-control-line-height-lg);
   }
 
   [data-element="toggle"][data-size="xl"] {
-    height: 3rem;
+    height: var(--fl-control-height-xl);
     padding-inline: 1.25rem;
-    font-size: 1.125rem;
-    line-height: 1.75rem;
+    font-size: var(--fl-control-font-size-xl);
+    line-height: var(--fl-control-line-height-xl);
   }
 }

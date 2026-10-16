@@ -15,15 +15,21 @@ defmodule FlintUI.Styled.Card do
       props: [
         Prop.new(
           name: :variant,
-          values: ["outline", "solid", "subtle"],
+          values: ["outline", "solid", "soft", "subtle"],
           default: "outline",
-          doc: "The surface treatment of the card."
+          doc: "The neutral surface treatment of the card."
         ),
         Prop.new(
           name: :size,
           values: ["sm", "md", "lg"],
           default: "md",
           doc: "The internal spacing of the card."
+        ),
+        Prop.new(
+          name: :divided,
+          values: [true, false],
+          default: false,
+          doc: "Draws a divider between the header, body and footer."
         )
       ]
     }

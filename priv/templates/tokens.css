@@ -4,9 +4,10 @@
  * the data attributes emitted by the headless components. Tailwind is optional.
  *
  *   * Tokens are prefixed `--fl-*` to avoid collisions with host variables.
- *   * Light/dark is automatic via `color-scheme` + `light-dark()`; force a theme
- *     by setting `data-theme` on <html>.
- *   * Add a theme by defining a `[data-theme="<name>"]` block.
+ *   * Light/dark is automatic via `color-scheme` + `light-dark()`; force a
+ *     scheme by setting `data-color-scheme` on <html>.
+ *   * Named theme presets live in `themes/*.css` and select with
+ *     `data-theme="<name>"` on <html>. Scheme and preset are independent.
  *
  * Tailwind users can expose these tokens as utilities by mapping them to
  * `@theme` in their own stylesheet (run `mix flint.setup --tailwind`):
@@ -24,81 +25,366 @@
 
     --fl-font-sans:
         -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --fl-font-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
 
-    --fl-radius-sm: 0.25rem;
-    --fl-radius-md: 0.375rem;
-    --fl-radius-lg: 0.5rem;
-    --fl-radius-xl: 0.75rem;
+    /* Type scale. */
+    --fl-font-size-xs: 0.75rem;
+    --fl-font-size-sm: 0.875rem;
+    --fl-font-size-md: 1rem;
+    --fl-font-size-lg: 1.125rem;
+    --fl-font-size-xl: 1.25rem;
 
-    --fl-color-background: light-dark(oklch(1 0 0), oklch(0.145 0 0));
-    --fl-color-foreground: light-dark(oklch(0.145 0 0), oklch(0.985 0 0));
-    --fl-color-card: light-dark(oklch(1 0 0), oklch(0.205 0 0));
-    --fl-color-card-foreground: light-dark(oklch(0.145 0 0), oklch(0.985 0 0));
+    --fl-line-height-xs: 1rem;
+    --fl-line-height-sm: 1.25rem;
+    --fl-line-height-md: 1.5rem;
+    --fl-line-height-lg: 1.75rem;
+    --fl-line-height-xl: 2rem;
 
-    --fl-color-primary: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
+    --fl-font-weight-normal: 400;
+    --fl-font-weight-medium: 500;
+    --fl-font-weight-semibold: 600;
+    --fl-font-weight-bold: 700;
+
+    /* Spacing scale. `--fl-spacing` is the base unit */
+    --fl-spacing: 0.25rem;
+    --fl-spacing-xs: calc(var(--fl-spacing) * 1);
+    --fl-spacing-sm: calc(var(--fl-spacing) * 2);
+    --fl-spacing-md: calc(var(--fl-spacing) * 3);
+    --fl-spacing-lg: calc(var(--fl-spacing) * 4);
+    --fl-spacing-xl: calc(var(--fl-spacing) * 6);
+    --fl-spacing-2xl: calc(var(--fl-spacing) * 8);
+    --fl-spacing-3xl: calc(var(--fl-spacing) * 12);
+
+    /* Elevation. */
+    --fl-shadow-2xs: 0 1px rgb(0 0 0 / 5%);
+    --fl-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 5%);
+    --fl-shadow-sm:
+        0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+    --fl-shadow-md:
+        0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
+    --fl-shadow-lg:
+        0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+    --fl-shadow-xl:
+        0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
+
+    /* Button effect defaults. */
+    --fl-button-depth: 1;
+    --fl-button-shadow: var(--fl-shadow-xs);
+    --fl-button-press: translateY(1px);
+
+    --fl-breakpoint-sm: 40rem;
+    --fl-breakpoint-md: 48rem;
+    --fl-breakpoint-lg: 64rem;
+    --fl-breakpoint-xl: 80rem;
+    --fl-breakpoint-2xl: 96rem;
+
+    --fl-container: 80rem;
+
+    /* Motion. */
+    --fl-duration-fast: 150ms;
+    --fl-duration-base: 200ms;
+    --fl-duration-slow: 300ms;
+    --fl-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --fl-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Shared control metrics, so button/input/select/toggle line up. */
+    --fl-control-height-xs: 1.5rem;
+    --fl-control-height-sm: 2rem;
+    --fl-control-height-md: 2.25rem;
+    --fl-control-height-lg: 2.5rem;
+    --fl-control-height-xl: 3rem;
+
+    --fl-control-padding-x-xs: 0.5rem;
+    --fl-control-padding-x-sm: 0.75rem;
+    --fl-control-padding-x-md: 1rem;
+    --fl-control-padding-x-lg: 1.5rem;
+    --fl-control-padding-x-xl: 2rem;
+
+    --fl-control-font-size-xs: 0.75rem;
+    --fl-control-font-size-sm: 0.875rem;
+    --fl-control-font-size-md: 0.875rem;
+    --fl-control-font-size-lg: 1rem;
+    --fl-control-font-size-xl: 1.125rem;
+
+    --fl-control-line-height-xs: 1rem;
+    --fl-control-line-height-sm: 1.25rem;
+    --fl-control-line-height-md: 1.25rem;
+    --fl-control-line-height-lg: 1.5rem;
+    --fl-control-line-height-xl: 1.75rem;
+
+    /* Unified radius scale. Change `--fl-radius` to retune every component at
+     * once; each component can opt out through its own `--fl-<name>-radius`. */
+    --fl-radius: 0.25rem;
+    --fl-radius-xs: calc(var(--fl-radius) * 0.5);
+    --fl-radius-sm: var(--fl-radius);
+    --fl-radius-md: calc(var(--fl-radius) * 1.5);
+    --fl-radius-lg: calc(var(--fl-radius) * 2);
+    --fl-radius-xl: calc(var(--fl-radius) * 3);
+    --fl-radius-2xl: calc(var(--fl-radius) * 4);
+    --fl-radius-full: 9999px;
+
+    --fl-button-radius: var(--fl-radius-md);
+    --fl-toggle-radius: var(--fl-radius-md);
+    --fl-card-radius: var(--fl-radius-xl);
+    --fl-input-radius: var(--fl-radius-md);
+
+    /* Semantic color scales. Each role owns a `50..950` ramp; components read
+     * the role alias (`--fl-color-primary`), which picks a shade per scheme.
+     * Remap a role by overriding its scale, or override the alias directly. */
+    --fl-color-primary-50: oklch(0.985 0 0);
+    --fl-color-primary-100: oklch(0.97 0 0);
+    --fl-color-primary-200: oklch(0.922 0 0);
+    --fl-color-primary-300: oklch(0.87 0 0);
+    --fl-color-primary-400: oklch(0.708 0 0);
+    --fl-color-primary-500: oklch(0.556 0 0);
+    --fl-color-primary-600: oklch(0.439 0 0);
+    --fl-color-primary-700: oklch(0.371 0 0);
+    --fl-color-primary-800: oklch(0.269 0 0);
+    --fl-color-primary-900: oklch(0.205 0 0);
+    --fl-color-primary-950: oklch(0.145 0 0);
+
+    --fl-color-secondary-50: oklch(0.985 0 0);
+    --fl-color-secondary-100: oklch(0.97 0 0);
+    --fl-color-secondary-200: oklch(0.922 0 0);
+    --fl-color-secondary-300: oklch(0.87 0 0);
+    --fl-color-secondary-400: oklch(0.708 0 0);
+    --fl-color-secondary-500: oklch(0.556 0 0);
+    --fl-color-secondary-600: oklch(0.439 0 0);
+    --fl-color-secondary-700: oklch(0.371 0 0);
+    --fl-color-secondary-800: oklch(0.269 0 0);
+    --fl-color-secondary-900: oklch(0.205 0 0);
+    --fl-color-secondary-950: oklch(0.145 0 0);
+
+    --fl-color-neutral-50: oklch(0.985 0 0);
+    --fl-color-neutral-100: oklch(0.97 0 0);
+    --fl-color-neutral-200: oklch(0.922 0 0);
+    --fl-color-neutral-300: oklch(0.87 0 0);
+    --fl-color-neutral-400: oklch(0.708 0 0);
+    --fl-color-neutral-500: oklch(0.556 0 0);
+    --fl-color-neutral-600: oklch(0.439 0 0);
+    --fl-color-neutral-700: oklch(0.371 0 0);
+    --fl-color-neutral-800: oklch(0.269 0 0);
+    --fl-color-neutral-900: oklch(0.205 0 0);
+    --fl-color-neutral-950: oklch(0.145 0 0);
+
+    --fl-color-success-50: oklch(0.982 0.018 155.826);
+    --fl-color-success-100: oklch(0.962 0.044 156.743);
+    --fl-color-success-200: oklch(0.925 0.084 155.995);
+    --fl-color-success-300: oklch(0.871 0.15 154.449);
+    --fl-color-success-400: oklch(0.792 0.209 151.711);
+    --fl-color-success-500: oklch(0.723 0.219 149.579);
+    --fl-color-success-600: oklch(0.627 0.194 149.214);
+    --fl-color-success-700: oklch(0.527 0.154 150.069);
+    --fl-color-success-800: oklch(0.448 0.119 151.328);
+    --fl-color-success-900: oklch(0.393 0.095 152.535);
+    --fl-color-success-950: oklch(0.266 0.065 152.934);
+
+    --fl-color-info-50: oklch(0.977 0.013 236.62);
+    --fl-color-info-100: oklch(0.951 0.026 236.824);
+    --fl-color-info-200: oklch(0.901 0.058 230.902);
+    --fl-color-info-300: oklch(0.828 0.111 230.318);
+    --fl-color-info-400: oklch(0.746 0.16 232.661);
+    --fl-color-info-500: oklch(0.685 0.169 237.323);
+    --fl-color-info-600: oklch(0.588 0.158 241.966);
+    --fl-color-info-700: oklch(0.5 0.134 242.749);
+    --fl-color-info-800: oklch(0.443 0.11 240.79);
+    --fl-color-info-900: oklch(0.391 0.09 240.876);
+    --fl-color-info-950: oklch(0.293 0.066 243.157);
+
+    --fl-color-warning-50: oklch(0.987 0.026 102.212);
+    --fl-color-warning-100: oklch(0.973 0.071 103.193);
+    --fl-color-warning-200: oklch(0.945 0.129 101.54);
+    --fl-color-warning-300: oklch(0.905 0.182 98.111);
+    --fl-color-warning-400: oklch(0.852 0.199 91.936);
+    --fl-color-warning-500: oklch(0.795 0.184 86.047);
+    --fl-color-warning-600: oklch(0.681 0.162 75.834);
+    --fl-color-warning-700: oklch(0.554 0.135 66.442);
+    --fl-color-warning-800: oklch(0.476 0.114 61.907);
+    --fl-color-warning-900: oklch(0.421 0.095 57.708);
+    --fl-color-warning-950: oklch(0.286 0.066 53.813);
+
+    --fl-color-error-50: oklch(0.971 0.013 17.38);
+    --fl-color-error-100: oklch(0.936 0.032 17.717);
+    --fl-color-error-200: oklch(0.885 0.062 18.334);
+    --fl-color-error-300: oklch(0.808 0.114 19.571);
+    --fl-color-error-400: oklch(0.704 0.191 22.216);
+    --fl-color-error-500: oklch(0.637 0.237 25.331);
+    --fl-color-error-600: oklch(0.577 0.245 27.325);
+    --fl-color-error-700: oklch(0.505 0.213 27.518);
+    --fl-color-error-800: oklch(0.444 0.177 26.899);
+    --fl-color-error-900: oklch(0.396 0.141 25.723);
+    --fl-color-error-950: oklch(0.258 0.092 26.042);
+
+    /* Role aliases. Components consume these; they resolve a scale shade per
+     * scheme so a light/dark switch never needs a second override.
+     *
+     *   * `--fl-color-{role}` — the solid fill.
+     *   * `--fl-color-{role}-foreground` — the label on that fill.
+     *   * `--fl-color-{role}-text` — the shade to use when the role colors
+     *     text on the page.
+     *
+     * For the shipped default these are baked; `mix flint.palette` recomputes
+     * them from the imported scale so the fill/label and the text shade always
+     * clear AA contrast (see `FlintUI.Palette.Contrast`). */
+    --fl-color-primary: light-dark(
+        var(--fl-color-primary-900),
+        var(--fl-color-primary-200)
+    );
     --fl-color-primary-foreground: light-dark(
-        oklch(0.985 0 0),
-        oklch(0.205 0 0)
+        var(--fl-color-primary-50),
+        var(--fl-color-primary-950)
+    );
+    --fl-color-primary-text: light-dark(
+        var(--fl-color-primary-900),
+        var(--fl-color-primary-200)
     );
 
-    --fl-color-secondary: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
+    --fl-color-secondary: light-dark(
+        var(--fl-color-secondary-100),
+        var(--fl-color-secondary-800)
+    );
     --fl-color-secondary-foreground: light-dark(
-        oklch(0.205 0 0),
-        oklch(0.985 0 0)
+        var(--fl-color-secondary-950),
+        var(--fl-color-secondary-50)
+    );
+    --fl-color-secondary-text: light-dark(
+        var(--fl-color-secondary-500),
+        var(--fl-color-secondary-400)
     );
 
-    --fl-color-neutral: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
+    --fl-color-neutral: light-dark(
+        var(--fl-color-neutral-900),
+        var(--fl-color-neutral-200)
+    );
     --fl-color-neutral-foreground: light-dark(
-        oklch(0.985 0 0),
-        oklch(0.205 0 0)
+        var(--fl-color-neutral-50),
+        var(--fl-color-neutral-950)
+    );
+    --fl-color-neutral-text: light-dark(
+        var(--fl-color-neutral-900),
+        var(--fl-color-neutral-200)
     );
 
     --fl-color-success: light-dark(
-        oklch(0.723 0.192 149.58),
-        oklch(0.792 0.209 151.71)
+        var(--fl-color-success-500),
+        var(--fl-color-success-400)
     );
     --fl-color-success-foreground: light-dark(
-        oklch(0.985 0 0),
-        oklch(0.205 0 0)
+        var(--fl-color-success-950),
+        var(--fl-color-success-950)
+    );
+    --fl-color-success-text: light-dark(
+        var(--fl-color-success-700),
+        var(--fl-color-success-400)
     );
 
     --fl-color-info: light-dark(
-        oklch(0.685 0.169 237.32),
-        oklch(0.746 0.16 232.66)
+        var(--fl-color-info-500),
+        var(--fl-color-info-400)
     );
-    --fl-color-info-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+    --fl-color-info-foreground: light-dark(
+        var(--fl-color-info-950),
+        var(--fl-color-info-950)
+    );
+    --fl-color-info-text: light-dark(
+        var(--fl-color-info-700),
+        var(--fl-color-info-400)
+    );
 
     --fl-color-warning: light-dark(
-        oklch(0.795 0.184 86.05),
-        oklch(0.852 0.199 91.94)
+        var(--fl-color-warning-500),
+        var(--fl-color-warning-400)
     );
     --fl-color-warning-foreground: light-dark(
-        oklch(0.286 0.066 53.813),
-        oklch(0.286 0.066 53.813)
+        var(--fl-color-warning-950),
+        var(--fl-color-warning-950)
+    );
+    --fl-color-warning-text: light-dark(
+        var(--fl-color-warning-700),
+        var(--fl-color-warning-400)
     );
 
     --fl-color-error: light-dark(
-        oklch(0.577 0.245 27.325),
-        oklch(0.704 0.191 22.216)
+        var(--fl-color-error-700),
+        var(--fl-color-error-400)
     );
-    --fl-color-error-foreground: light-dark(oklch(0.985 0 0), oklch(0.985 0 0));
+    --fl-color-error-foreground: light-dark(
+        var(--fl-color-error-50),
+        var(--fl-color-error-950)
+    );
+    --fl-color-error-text: light-dark(
+        var(--fl-color-error-700),
+        var(--fl-color-error-400)
+    );
 
-    /* Deprecated: use --fl-color-error. */
-    --fl-color-destructive: var(--fl-color-error);
-    --fl-color-destructive-foreground: var(--fl-color-error-foreground);
+    /* Surfaces and text. */
+    --fl-color-background: light-dark(
+        oklch(1 0 0),
+        var(--fl-color-neutral-950)
+    );
+    --fl-color-foreground: light-dark(
+        var(--fl-color-neutral-950),
+        var(--fl-color-neutral-50)
+    );
+    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
+    --fl-color-surface-foreground: light-dark(
+        var(--fl-color-neutral-950),
+        var(--fl-color-neutral-50)
+    );
 
-    --fl-color-muted: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
-    --fl-color-muted-foreground: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
+    --fl-color-muted: light-dark(
+        var(--fl-color-neutral-100),
+        var(--fl-color-neutral-800)
+    );
+    --fl-color-muted-foreground: light-dark(
+        var(--fl-color-neutral-500),
+        var(--fl-color-neutral-400)
+    );
+    --fl-color-elevated: light-dark(
+        var(--fl-color-neutral-100),
+        var(--fl-color-neutral-800)
+    );
+    --fl-color-dimmed: light-dark(
+        var(--fl-color-neutral-400),
+        var(--fl-color-neutral-500)
+    );
+    --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
+    --fl-color-inverted-foreground: light-dark(
+        var(--fl-color-neutral-50),
+        var(--fl-color-neutral-900)
+    );
 
-    --fl-color-accent: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
+    --fl-color-accent: light-dark(
+        var(--fl-color-neutral-100),
+        var(--fl-color-neutral-800)
+    );
     --fl-color-accent-foreground: light-dark(
-        oklch(0.205 0 0),
-        oklch(0.985 0 0)
+        var(--fl-color-neutral-900),
+        var(--fl-color-neutral-50)
     );
 
-    --fl-color-border: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 10%));
-    --fl-color-input: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 15%));
-    --fl-color-ring: light-dark(oklch(0.708 0 0), oklch(0.556 0 0));
+    --fl-color-border: light-dark(
+        var(--fl-color-neutral-200),
+        oklch(1 0 0 / 10%)
+    );
+    --fl-color-border-muted: light-dark(
+        var(--fl-color-neutral-200),
+        var(--fl-color-neutral-700)
+    );
+    --fl-color-border-accented: light-dark(
+        var(--fl-color-neutral-300),
+        var(--fl-color-neutral-700)
+    );
+    --fl-color-input: light-dark(
+        var(--fl-color-neutral-200),
+        oklch(1 0 0 / 15%)
+    );
+    --fl-color-ring: light-dark(
+        var(--fl-color-neutral-400),
+        var(--fl-color-neutral-500)
+    );
 
     --fl-focus-ring-width: 2px;
     --fl-focus-ring-offset: 2px;
@@ -106,22 +392,10 @@
 }
 
 /* Manual control: force a scheme for the whole document. */
-[data-theme="light"] {
+[data-color-scheme="light"] {
     color-scheme: light;
 }
 
-[data-theme="dark"] {
+[data-color-scheme="dark"] {
     color-scheme: dark;
-}
-
-/* Custom themes: override tokens under a `data-theme` value. */
-[data-theme="pastel"] {
-    color-scheme: light;
-    --fl-color-primary: oklch(0.66 0.14 290);
-    --fl-color-primary-foreground: oklch(0.98 0.012 290);
-    --fl-color-accent: oklch(0.94 0.03 290);
-    --fl-color-accent-foreground: oklch(0.38 0.06 290);
-    --fl-color-border: oklch(0.85 0.028 300);
-    --fl-color-ring: oklch(0.74 0.13 290);
-    --fl-radius-md: 0.625rem;
 }

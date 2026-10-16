@@ -285,6 +285,14 @@ defmodule FlintUIDocsWeb.ComponentLive do
   end
 
   @impl true
+  # Example previews are documentation, not app code. A rendered example may
+  # carry a real `phx-click` (e.g. the button's destructive-confirm recipe), so
+  # swallow any event it emits instead of crashing the page.
+  def handle_event(_event, _params, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_params(%{"name" => name} = params, _uri, socket) do
     case find_component(name) do
       nil ->
@@ -376,7 +384,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   defp styled_attribute_row(prop) do
     %{
       name: prop.name,
-      type: :atom,
+      type: if(FlintUI.Styled.Prop.boolean?(prop), do: :boolean, else: :atom),
       values: prop.values,
       default: prop.default,
       data: FlintUI.Styled.Prop.attribute(prop),

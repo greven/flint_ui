@@ -11,7 +11,8 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
     [
       %{key: :variant, type: :select, default: "outline", label: "Variant"},
       %{key: :size, type: :select, default: "md", label: "Size"},
-      %{key: :flush, type: :boolean, default: false, label: "Flush"}
+      %{key: :flush, type: :boolean, default: false, label: "Flush"},
+      %{key: :divided, type: :boolean, default: false, label: "Dividers"}
     ]
   end
 
@@ -41,11 +42,13 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
         layer: :styled,
         body: """
         The generated component adds a `variant` attribute mapped onto the
-        `data-variant` hook the theme targets: `outline`, `solid` or `subtle`.
+        `data-variant` hook the theme targets. Variants are neutral surface
+        treatments with no color: `outline` (the default), `soft`, `subtle` and
+        `solid` (the inverted surface).
         """,
         code: """
         <div class="flex flex-col gap-4">
-          <.card :for={variant <- ~w(outline solid subtle)} variant={variant}>
+          <.card :for={variant <- ~w(outline soft subtle solid)} variant={variant}>
             <:title>{variant}</:title>
             <p>Body</p>
           </.card>
@@ -79,6 +82,23 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
         code: """
         <.card flush>
           <p>Full-bleed content</p>
+        </.card>
+        """
+      },
+      %{
+        id: :divided,
+        title: "Dividers",
+        layer: :styled,
+        body: """
+        Set `divided` to separate the header, body and footer with hairlines. The
+        spacing moves onto each region so the dividers sit against the content.
+        `flush` zeroes that spacing, leaving only the lines.
+        """,
+        code: """
+        <.card divided class="w-full max-w-md">
+          <:title>Deployments</:title>
+          <p>Your latest deployment is live.</p>
+          <:footer>Updated just now</:footer>
         </.card>
         """
       }
@@ -149,7 +169,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
         %{
           tag: "div",
           selector: ~s([data-element="card"][data-part="root"]),
-          hooks: ["data-variant", "data-size", "data-flush"],
+          hooks: ["data-variant", "data-size", "data-flush", "data-divided"],
           attributes: ["class", "as"],
           children: [
             %{
@@ -185,7 +205,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
           code: """
           [data-element="card"][data-variant="outline"] {
             border: 1px solid var(--fl-color-border);
-            background: var(--fl-color-card);
+            background: var(--fl-color-surface);
             border-radius: var(--fl-radius-xl);
           }
           """
@@ -207,7 +227,12 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
   @impl true
   def render_playground(%{layer: :styled} = assigns) do
     ~H"""
-    <Components.card variant={@props.variant} size={@props.size} flush={@props.flush}>
+    <Components.card
+      variant={@props.variant}
+      size={@props.size}
+      flush={@props.flush}
+      divided={@props.divided}
+    >
       <:title>Starred repositories</:title>
       <:description>Updated just now</:description>
       <p>Reorder or remove the repositories you follow.</p>
@@ -234,7 +259,8 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
       [
         Snippet.attr("variant", props.variant, "outline"),
         Snippet.attr("size", props.size, "md"),
-        Snippet.flag("flush", props.flush)
+        Snippet.flag("flush", props.flush),
+        Snippet.flag("divided", props.divided)
       ],
       body_code()
     )
@@ -267,7 +293,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
   def render_usage(%{block: :variant} = assigns) do
     ~H"""
     <div class="flex w-full max-w-md flex-col gap-4">
-      <Components.card :for={variant <- ~w(outline solid subtle)} variant={variant}>
+      <Components.card :for={variant <- ~w(outline soft subtle solid)} variant={variant}>
         <:title>{variant}</:title>
         <p>Body</p>
       </Components.card>
@@ -290,6 +316,16 @@ defmodule FlintUIDocsWeb.ComponentDocs.Card do
     ~H"""
     <Components.card flush>
       <p>Full-bleed content</p>
+    </Components.card>
+    """
+  end
+
+  def render_usage(%{block: :divided} = assigns) do
+    ~H"""
+    <Components.card divided class="w-full max-w-md">
+      <:title>Deployments</:title>
+      <p>Your latest deployment is live.</p>
+      <:footer>Updated just now</:footer>
     </Components.card>
     """
   end

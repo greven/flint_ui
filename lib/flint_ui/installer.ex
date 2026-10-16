@@ -5,6 +5,7 @@ if Code.ensure_loaded?(Igniter) do
     alias FlintUI.Generator
 
     @theme_css "assets/css/flint.css"
+    @palette_css "assets/css/flint-palette.css"
     @app_css "assets/css/app.css"
 
     @doc "Creates the generated components module if it does not exist."
@@ -51,6 +52,61 @@ if Code.ensure_loaded?(Igniter) do
         end)
       else
         Igniter.add_notice(igniter, "Add `@import \"./flint.css\";` to your main stylesheet.")
+      end
+    end
+
+    @doc """
+    Writes an imported palette stylesheet and imports it after `flint.css`.
+
+    The palette file is kept separate from `assets/css/flint.css` so
+    `mix flint.theme` (which overwrites that file) never clobbers a project's
+    imported colors.
+    """
+    def install_palette_css(igniter, css, opts \\ []) do
+      on_exists = Keyword.get(opts, :on_exists, :overwrite)
+
+      igniter
+      |> Igniter.create_new_file(@palette_css, css, on_exists: on_exists)
+      |> import_palette_css()
+    end
+
+    @doc "Adds `@import \"./flint-palette.css\";` right after the `flint.css` import."
+    def import_palette_css(igniter) do
+      path = @app_css
+
+      if Igniter.exists?(igniter, path) do
+        Igniter.update_file(igniter, path, fn source ->
+          content = Rewrite.Source.get(source, :content)
+
+          cond do
+            String.contains?(content, "flint-palette.css") ->
+              source
+
+            String.contains?(content, ~s(@import "./flint.css";)) ->
+              Rewrite.Source.update(
+                source,
+                :content,
+                String.replace(
+                  content,
+                  ~s(@import "./flint.css";),
+                  ~s(@import "./flint.css";\n@import "./flint-palette.css";),
+                  global: false
+                )
+              )
+
+            true ->
+              Rewrite.Source.update(
+                source,
+                :content,
+                String.trim_trailing(content) <> "\n\n@import \"./flint-palette.css\";\n"
+              )
+          end
+        end)
+      else
+        Igniter.add_notice(
+          igniter,
+          "Add `@import \"./flint-palette.css\";` after `./flint.css` in your stylesheet."
+        )
       end
     end
 

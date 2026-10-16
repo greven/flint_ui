@@ -37,7 +37,7 @@ defmodule FlintUI.Base.Card do
   def meta do
     %Meta{
       name: :card,
-      type: :layout,
+      type: :element,
       since: "0.1.0",
       status: :draft
     }

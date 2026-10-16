@@ -3,17 +3,11 @@
 
 @import "tailwindcss" source(none);
 @import "./flint.css";
+@import "./flint-palette.css";
 @import "./highlight.css";
 @source "../css";
 @source "../js";
 @source "../../lib/flint_ui_docs_web";
-
-/* Keep code-block backgrounds on the site's zinc scale rather than Makeup's
-   One Dark surface. Unlayered, so it wins over both the generated stylesheet
-   above and Tailwind's layered utilities. */
-.highlight {
-  background-color: var(--color-zinc-900);
-}
 
 /* A Tailwind plugin that makes "lucide-#{ICON}" classes available.
    The lucide icons installation itself is managed by your mix.exs */
@@ -25,8 +19,15 @@
 @custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
 /* Use the data attribute for dark mode  */
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:where([data-color-scheme=dark], [data-color-scheme=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session], [data-phx-teleported-src] { display: contents }
+[data-phx-session],
+[data-phx-teleported-src] {
+    display: contents;
+}
 
+/* Keep code-block backgrounds on the site's zinc scale rather than Makeup's One Dark surface. */
+.highlight {
+    background-color: var(--color-zinc-900);
+}

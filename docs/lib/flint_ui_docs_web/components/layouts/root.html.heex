@@ -12,21 +12,37 @@
     </script>
     <script>
       (() => {
-        const setTheme = (theme) => {
-          if (theme === "system") {
-            localStorage.removeItem("phx:theme");
-            document.documentElement.removeAttribute("data-theme");
+        const setScheme = (scheme) => {
+          if (scheme === "system") {
+            localStorage.removeItem("phx:scheme");
+            document.documentElement.removeAttribute("data-color-scheme");
           } else {
-            localStorage.setItem("phx:theme", theme);
-            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("phx:scheme", scheme);
+            document.documentElement.setAttribute("data-color-scheme", scheme);
           }
         };
-        if (!document.documentElement.hasAttribute("data-theme")) {
-          setTheme(localStorage.getItem("phx:theme") || "system");
+        const setPreset = (preset) => {
+          if (!preset || preset === "default") {
+            localStorage.removeItem("phx:preset");
+            document.documentElement.removeAttribute("data-theme");
+          } else {
+            localStorage.setItem("phx:preset", preset);
+            document.documentElement.setAttribute("data-theme", preset);
+          }
+        };
+        if (!document.documentElement.hasAttribute("data-color-scheme")) {
+          setScheme(localStorage.getItem("phx:scheme") || "system");
         }
-        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
-        
-        window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
+        if (!document.documentElement.hasAttribute("data-theme")) {
+          setPreset(localStorage.getItem("phx:preset") || "default");
+        }
+        window.addEventListener("storage", (e) => {
+          if (e.key === "phx:scheme") setScheme(e.newValue || "system");
+          if (e.key === "phx:preset") setPreset(e.newValue || "default");
+        });
+
+        window.addEventListener("phx:set-scheme", (e) => setScheme(e.target.dataset.phxScheme));
+        window.addEventListener("phx:set-preset", (e) => setPreset(e.target.dataset.phxPreset));
       })();
     </script>
   </head>

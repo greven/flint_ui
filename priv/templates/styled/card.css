@@ -7,29 +7,43 @@
    */
   [data-element="card"][data-card] {
     --fl-card-spacing: 1.25rem;
+    --fl-card-divider: var(--fl-color-border);
     display: flex;
     flex-direction: column;
     gap: var(--fl-card-spacing);
     padding-block: var(--fl-card-spacing);
-    border-radius: var(--fl-radius-xl);
+    border-radius: var(--fl-card-radius);
     font-family: var(--fl-font-sans);
     overflow: hidden;
   }
 
+  /* Variants are neutral surface treatments (no semantic color). `outline`
+   * sits on the default surface, `soft`/`subtle` on the elevated surface, and
+   * `solid` inverts. */
   [data-element="card"][data-variant="outline"] {
     border: 1px solid var(--fl-color-border);
-    background: var(--fl-color-card);
-    color: var(--fl-color-card-foreground);
+    background: var(--fl-color-surface);
+    color: var(--fl-color-surface-foreground);
   }
 
   [data-element="card"][data-variant="solid"] {
-    background: var(--fl-color-primary);
-    color: var(--fl-color-primary-foreground);
+    --fl-card-divider: color-mix(
+        in oklab,
+        var(--fl-color-inverted-foreground) 15%,
+        transparent
+    );
+    background: var(--fl-color-inverted);
+    color: var(--fl-color-inverted-foreground);
+  }
+
+  [data-element="card"][data-variant="soft"] {
+    background: color-mix(in oklab, var(--fl-color-elevated) 50%, transparent);
+    color: var(--fl-color-foreground);
   }
 
   [data-element="card"][data-variant="subtle"] {
     border: 1px solid var(--fl-color-border);
-    background: var(--fl-color-muted);
+    background: color-mix(in oklab, var(--fl-color-elevated) 50%, transparent);
     color: var(--fl-color-foreground);
   }
 
@@ -75,7 +89,31 @@
   }
 
   [data-element="card"][data-variant="solid"] [data-part="description"] {
-    color: color-mix(in oklab, var(--fl-color-primary-foreground) 70%, transparent);
+    color: var(--fl-color-dimmed);
+  }
+
+  /* Dividers: opt-in. The spacing moves onto each region and a hairline
+   * separates them (header/body/footer are the direct children). `flush`
+   * zeroes the spacing, leaving only the lines. The `false` rule is a no-op
+   * marker so both boolean states carry a hook (see `theme_contract_test`). */
+  [data-element="card"][data-divided="false"] {
+    --_fl-card-divided: false;
+  }
+
+  [data-element="card"][data-card][data-divided="true"] {
+    gap: 0;
+    padding-block: 0;
+  }
+
+  [data-element="card"][data-card][data-divided="true"] [data-part="header"],
+  [data-element="card"][data-card][data-divided="true"] [data-part="body"],
+  [data-element="card"][data-card][data-divided="true"] [data-part="footer"] {
+    padding-block: var(--fl-card-spacing);
+  }
+
+  [data-element="card"][data-divided="true"] [data-part="header"] + [data-part="body"],
+  [data-element="card"][data-divided="true"] [data-part="body"] + [data-part="footer"] {
+    border-top: 1px solid var(--fl-card-divider);
   }
 
   [data-element="card"][data-size="sm"] {

@@ -45,8 +45,12 @@ defmodule FlintUI.MixProject do
         "cmd --cd docs mix deps.get",
         "cmd --cd docs mix assets.setup",
         "cmd --cd docs mix assets.build"
-      ],
-      "docs.serve": ["cmd --cd docs mix phx.server"]
+      ]
     ]
+
+    # The docs site is its own Phoenix app; run it from its own directory:
+    #   cd docs && mix phx.server
+    # (wrapping it in `mix cmd` here would spawn the server in a separate OS
+    # session, so Ctrl+C could not stop it and it would be left on the port.)
   end
 end

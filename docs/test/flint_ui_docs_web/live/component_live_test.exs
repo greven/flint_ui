@@ -336,6 +336,23 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#example-button-icon-code span")
   end
 
+  test "the destructive confirm example renders and its event is tolerated", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(
+             view,
+             "#example-button-destructive_confirm [data-element='button'][data-confirm='Delete item?'][phx-value-id='67']"
+           )
+
+    # The confirm dialog is client-side, so the click lands here directly; the
+    # docs swallow the event instead of crashing on an unknown one.
+    view
+    |> element("#example-button-destructive_confirm [data-element='button']")
+    |> render_click()
+
+    assert has_element?(view, "#example-button-destructive_confirm [data-element='button']")
+  end
+
   test "the component page shows a section breadcrumb", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 

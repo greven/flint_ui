@@ -10,7 +10,7 @@ defmodule FlintUI.Styled.Button do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add button",
       css: "styled/button.css",
-      tokens: [:color, :radius, :font],
+      tokens: [:color, :radius, :font, :spacing, :shadow, :control, :duration, :ease],
       slots: [
         Slot.new(name: :leading, doc: "Optional content rendered before the label."),
         Slot.new(name: :trailing, doc: "Optional content rendered after the label.")
@@ -33,6 +33,13 @@ defmodule FlintUI.Styled.Button do
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The control size."
+        ),
+        Prop.new(
+          name: :depth,
+          values: [true, false],
+          default: true,
+          doc:
+            "Whether solid and outline buttons are raised. `true` (default) shows the highlight/line and the theme's `--fl-button-shadow`; `false` renders them flat."
         )
       ]
     }

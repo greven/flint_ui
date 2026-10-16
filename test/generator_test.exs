@@ -26,6 +26,8 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@color}"
     assert source =~ "data-size={@size}"
+    assert source =~ "data-depth={to_string(@depth)}"
+    assert source =~ "attr(:depth, :boolean"
     assert source =~ "<FlintUI.button"
     assert source =~ "render_slot(@inner_block)"
   end
@@ -56,10 +58,31 @@ defmodule FlintUI.GeneratorTest do
     assert css =~ "--fl-focus-ring-color:"
     assert css =~ "outline: var(--fl-focus-ring-width) solid var(--fl-focus-ring-color);"
 
+    for theme <- FlintUI.Theme.themes() do
+      assert css =~ ~s([data-theme="#{theme.name}"]),
+             "expected the assembled theme to include the #{theme.name} preset"
+    end
+
     for entry <- Styled.entries() do
       assert css =~ ~s([data-element="#{entry.name}"]),
              "expected the assembled theme to style #{entry.name}"
     end
+  end
+
+  test "tailwind bridge exposes role scales and radius" do
+    bridge = Generator.tailwind_bridge_source()
+
+    assert bridge =~ "@theme inline {"
+    assert bridge =~ "--color-primary-50: var(--fl-color-primary-50);"
+    assert bridge =~ "--color-error-950: var(--fl-color-error-950);"
+    assert bridge =~ "--radius-md: var(--fl-radius-md);"
+    assert bridge =~ "--font-sans: var(--fl-font-sans);"
+    assert bridge =~ "--font-mono: var(--fl-font-mono);"
+    assert bridge =~ "--spacing: var(--fl-spacing);"
+    assert bridge =~ "--spacing-lg: var(--fl-spacing-lg);"
+    assert bridge =~ "--text-sm: var(--fl-font-size-sm);"
+    assert bridge =~ "--shadow-md: var(--fl-shadow-md);"
+    assert bridge =~ "--ease-out: var(--fl-ease-out);"
   end
 
   test "writes the assembled theme to priv/static/flint.css idempotently" do

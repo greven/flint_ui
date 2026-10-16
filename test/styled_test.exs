@@ -60,7 +60,8 @@ defmodule FlintUI.StyledTest do
     assert Entry.hooks(entry) == %{
              variant: "data-variant",
              color: "data-color",
-             size: "data-size"
+             size: "data-size",
+             depth: "data-depth"
            }
 
     assert Prop.attribute(Entry.prop(entry, :variant)) == "data-variant"

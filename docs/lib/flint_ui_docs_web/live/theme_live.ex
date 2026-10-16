@@ -3,11 +3,17 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.DocBlocks
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, page_title: "Theming", token_groups: token_groups())}
+    {:ok,
+     assign(socket,
+       page_title: "Theming",
+       token_groups: token_groups(),
+       themes: FlintUI.Theme.presets()
+     )}
   end
 
   @impl true
@@ -46,6 +52,21 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </div>
         </DocBlocks.section>
 
+        <DocBlocks.section title="Theme presets" id="presets">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            FlintUI ships named presets. Select one by setting
+            <code class="font-mono">data-theme</code>
+            on the <code class="font-mono">&lt;html&gt;</code>
+            element; a preset only overrides tokens, so it composes with the
+            light/dark scheme. <strong>default</strong>
+            has no stylesheet — it is the base <code class="font-mono">:root</code>
+            theme — so selecting it clears <code class="font-mono">data-theme</code>.
+            Pick one to preview it on this page:
+          </p>
+          <Layouts.theme_preset_picker themes={@themes} class="mt-3" />
+          <DocBlocks.code_block code={snippet(:presets)} lang={:css} />
+        </DocBlocks.section>
+
         <DocBlocks.section title="Tokens" id="tokens">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Every component reads from these namespaces. Override any of them to change
@@ -66,12 +87,68 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </div>
         </DocBlocks.section>
 
+        <DocBlocks.section title="Color scales" id="colors">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Every semantic role ships a full <code class="font-mono">50..950</code>
+            scale. Components read the role alias
+            (<code class="font-mono">--fl-color-primary</code>), which resolves a
+            shade per scheme, so the same button looks right in light and dark
+            without a second override. Retint a whole role by overriding its
+            alias, or address a specific shade directly.
+          </p>
+          <DocBlocks.code_block code={snippet(:colors)} lang={:css} />
+        </DocBlocks.section>
+
+        <DocBlocks.section title="Scaling" id="scaling">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Type, spacing, elevation, breakpoints, and motion are tokens too.
+            Spacing and radius build from a base unit, so changing
+            <code class="font-mono">--fl-spacing</code>
+            or <code class="font-mono">--fl-radius</code>
+            retunes density and roundness across every component. Form controls
+            share a <code class="font-mono">--fl-control-*</code>
+            scale so buttons, inputs, and toggles line up.
+          </p>
+          <DocBlocks.code_block code={snippet(:scaling)} lang={:css} />
+        </DocBlocks.section>
+
+        <DocBlocks.section title="Depth" id="depth">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Solid and outline buttons are raised: <code class="font-mono">solid</code>
+            wears a top highlight and a smooth outer shadow, <code class="font-mono">outline</code>
+            a bottom inner line. The effect scales with
+            <code class="font-mono">--fl-button-depth</code>
+            and <code class="font-mono">--fl-button-shadow</code>
+            — set either to flatten every button at once. Pressing sinks the
+            button: the depth collapses as it nudges down with <code class="font-mono">--fl-button-press</code>.
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <Components.button variant="solid" color="primary">solid</Components.button>
+            <Components.button variant="outline">outline</Components.button>
+            <Components.button variant="solid" color="primary" depth={false}>flat</Components.button>
+            <Components.button variant="ghost">ghost (flat)</Components.button>
+          </div>
+          <DocBlocks.code_block code={snippet(:depth)} lang={:css} />
+        </DocBlocks.section>
+
+        <DocBlocks.section title="Overriding a color" id="color-override">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            The <code class="font-mono">color</code>
+            attribute selects a semantic role. To change a single instance
+            without touching the theme, override the component's public color
+            input — the rest of the variant derives from it.
+          </p>
+          <DocBlocks.code_block code={snippet(:override_css)} lang={:css} />
+          <DocBlocks.code_block code={snippet(:override_heex)} lang={:heex} />
+        </DocBlocks.section>
+
         <DocBlocks.section title="Light and dark" id="light-dark">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            Light and dark are automatic. To force a theme, set
-            <code class="font-mono">data-theme</code>
+            Light and dark are automatic. To force a scheme, set
+            <code class="font-mono">data-color-scheme</code>
             on the <code class="font-mono">&lt;html&gt;</code>
-            element — the header's theme toggle does this.
+            element — the header's toggle does this. The scheme is independent
+            of the selected preset.
           </p>
           <DocBlocks.code_block code={snippet(:light_dark)} />
         </DocBlocks.section>
@@ -82,6 +159,18 @@ defmodule FlintUIDocsWeb.ThemeLive do
             block that overrides the tokens you want, then select it via <code class="font-mono">data-theme</code>.
           </p>
           <DocBlocks.code_block code={snippet(:custom)} lang={:css} />
+        </DocBlocks.section>
+
+        <DocBlocks.section title="Importing a palette" id="palette">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Rather than hand-writing a scale, map a named palette onto the roles.
+            Tailwind's default palette ships with FlintUI, so no Tailwind install
+            is required, and the generated file is kept separate from
+            <code class="font-mono">flint.css</code>
+            so refreshing the theme never clobbers it.
+          </p>
+          <DocBlocks.code_block code={snippet(:palette_cli)} lang={:shell} />
+          <DocBlocks.code_block code={snippet(:palette_css)} lang={:css} />
         </DocBlocks.section>
 
         <DocBlocks.section title="Tailwind (optional)" id="tailwind">
@@ -101,24 +190,142 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     :root {
       color-scheme: light dark;
-      --fl-color-primary: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
+      --fl-color-primary-500: oklch(0.556 0 0);
+      --fl-color-primary: light-dark(
+        var(--fl-color-primary-900),
+        var(--fl-color-primary-200)
+      );
     }
+    """
+  end
+
+  defp snippet(:colors) do
+    """
+    /* Each role owns a 50..950 ramp ... */
+    --fl-color-primary-50: oklch(0.985 0 0);
+    --fl-color-primary-600: oklch(0.439 0 0);
+    --fl-color-primary-950: oklch(0.145 0 0);
+
+    /* ... and an alias that picks a shade per scheme. */
+    --fl-color-primary: light-dark(
+      var(--fl-color-primary-900),
+      var(--fl-color-primary-200)
+    );
+
+    /* Retint the role everywhere. */
+    --fl-color-primary: light-dark(
+      var(--fl-color-primary-600),
+      var(--fl-color-primary-400)
+    );
+    """
+  end
+
+  defp snippet(:depth) do
+    """
+    /* Depth, elevation, and press are button tokens. A preset can flatten them
+     * for the whole site: */
+    [data-theme="flat"] {
+      --fl-button-depth: 0; /* no highlight or inner line */
+      --fl-button-shadow: 0 0 #0000; /* no outer elevation */
+      --fl-button-press: none; /* no press movement */
+    }
+
+    /* …or override them on a single instance: */
+    .my-flat-button {
+      --fl-button-depth: 0;
+      --fl-button-shadow: 0 0 #0000;
+    }
+    """
+  end
+
+  defp snippet(:palette_cli) do
+    """
+    # Built-in default mapping, or pick specific colors:
+    mix flint.palette
+    mix flint.palette --primary indigo --neutral zinc --error red
+
+    # Emit as a selectable preset instead of overriding :root:
+    mix flint.palette --primary indigo --theme ocean
+    """
+  end
+
+  defp snippet(:palette_css) do
+    """
+    /* assets/css/flint-palette.css */
+    [data-theme="ocean"] {
+      --fl-palette-indigo-600: oklch(51.1% 0.262 276.966);
+
+      --fl-color-primary-600: var(--fl-palette-indigo-600);
+      --fl-color-primary: light-dark(
+        var(--fl-color-primary-600),
+        var(--fl-color-primary-400)
+      );
+      --fl-color-primary-foreground: light-dark(
+        var(--fl-color-primary-50),
+        var(--fl-color-primary-950)
+      );
+    }
+    """
+  end
+
+  defp snippet(:scaling) do
+    """
+    :root {
+      --fl-spacing: 0.25rem; /* base unit */
+      --fl-radius: 0.25rem; /* base unit */
+
+      --fl-font-size-md: 1rem;
+      --fl-font-weight-medium: 500;
+      --fl-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 10%);
+      --fl-duration-fast: 150ms;
+
+      /* Shared across form controls */
+      --fl-control-height-md: 2.25rem;
+      --fl-control-font-size-md: 0.875rem;
+    }
+    """
+  end
+
+  defp snippet(:override_css) do
+    """
+    /* Give this instance a custom accent without adding a color token. */
+    .danger-lite {
+      --fl-button-color: var(--fl-color-error-600);
+      --fl-button-color-foreground: var(--fl-color-error-50);
+    }
+    """
+  end
+
+  defp snippet(:override_heex) do
+    """
+    <.button color="secondary" class="danger-lite">Delete</.button>
+
+    <!-- or inline, for a one-off -->
+    <.button color="secondary" style="--fl-button-color: var(--fl-color-error-600)">
+      Delete
+    </.button>
+    """
+  end
+
+  defp snippet(:presets) do
+    """
+    <!-- Pick a shipped preset -->
+    <html data-theme="modern">
     """
   end
 
   defp snippet(:light_dark) do
     """
-    <!-- Force a theme -->
-    <html data-theme="dark">
+    <!-- Force a scheme, independent of the preset -->
+    <html data-color-scheme="dark">
     """
   end
 
   defp snippet(:custom) do
     """
-    [data-theme="pastel"] {
-      color-scheme: light;
-      --fl-color-primary: oklch(0.66 0.14 290);
-      --fl-radius-md: 0.625rem;
+    [data-theme="brand"] {
+      --fl-color-primary: oklch(0.55 0.24 275);
+      --fl-radius: 0.5rem;
     }
     """
   end

@@ -10,7 +10,7 @@ defmodule FlintUI.Styled.Toggle do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add toggle",
       css: "styled/toggle.css",
-      tokens: [:color, :radius, :font],
+      tokens: [:color, :radius, :font, :spacing, :control, :duration, :ease],
       slots: [
         Slot.new(name: :leading, doc: "Optional content rendered before the label."),
         Slot.new(name: :trailing, doc: "Optional content rendered after the label.")

@@ -1,0 +1,15 @@
+/* Pastel theme preset.
+ *
+ * Select it with `data-theme="pastel"` on <html>. A preset overrides tokens
+ * only; the light/dark scheme is controlled separately by `data-color-scheme`.
+ */
+[data-theme="pastel"] {
+    --fl-radius: 0.5rem;
+
+    --fl-color-primary: oklch(0.66 0.14 290);
+    --fl-color-primary-foreground: oklch(0.98 0.012 290);
+    --fl-color-accent: oklch(0.94 0.03 290);
+    --fl-color-accent-foreground: oklch(0.38 0.06 290);
+    --fl-color-border: oklch(0.85 0.028 300);
+    --fl-color-ring: oklch(0.74 0.13 290);
+}

@@ -8,6 +8,7 @@ defmodule FlintUI.Generator do
   """
 
   alias FlintUI.Styled
+  alias FlintUI.Theme
 
   @doc """
   Returns the wrapper function source for a component.
@@ -40,10 +41,14 @@ defmodule FlintUI.Generator do
   Absolute paths to every theme part, in assembly order.
 
   Tokens come first (they are unlayered), then the shared base rules, then each
-  registered component's stylesheet in registry order.
+  registered theme preset, then each registered component's stylesheet in
+  registry order.
   """
   def part_paths do
-    [@tokens_part, @base_part | Enum.map(Styled.entries(), & &1.css)]
+    theme_parts = Enum.map(Theme.themes(), & &1.css)
+    component_parts = Enum.map(Styled.entries(), & &1.css)
+
+    [@tokens_part, @base_part | theme_parts ++ component_parts]
     |> Enum.map(&part_path/1)
   end
 
@@ -90,14 +95,24 @@ defmodule FlintUI.Generator do
     end
   end
 
+  @color_roles ~w(primary secondary neutral success info warning error)
+  @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
+
   @doc "The `@theme` mapping that exposes FlintUI tokens as Tailwind utilities."
   def tailwind_bridge_source do
+    scales =
+      Enum.map_join(@color_roles, "\n", fn role ->
+        Enum.map_join(@color_shades, "\n", fn shade ->
+          "    --color-#{role}-#{shade}: var(--fl-color-#{role}-#{shade});"
+        end)
+      end)
+
     """
     @theme inline {
       --color-background: var(--fl-color-background);
       --color-foreground: var(--fl-color-foreground);
-      --color-card: var(--fl-color-card);
-      --color-card-foreground: var(--fl-color-card-foreground);
+      --color-surface: var(--fl-color-surface);
+      --color-surface-foreground: var(--fl-color-surface-foreground);
       --color-primary: var(--fl-color-primary);
       --color-primary-foreground: var(--fl-color-primary-foreground);
       --color-secondary: var(--fl-color-secondary);
@@ -116,17 +131,64 @@ defmodule FlintUI.Generator do
       --color-muted-foreground: var(--fl-color-muted-foreground);
       --color-accent: var(--fl-color-accent);
       --color-accent-foreground: var(--fl-color-accent-foreground);
-      --color-destructive: var(--fl-color-destructive);
+      --color-elevated: var(--fl-color-elevated);
+      --color-dimmed: var(--fl-color-dimmed);
+      --color-inverted: var(--fl-color-inverted);
+      --color-inverted-foreground: var(--fl-color-inverted-foreground);
       --color-border: var(--fl-color-border);
+      --color-border-muted: var(--fl-color-border-muted);
+      --color-border-accented: var(--fl-color-border-accented);
       --color-input: var(--fl-color-input);
       --color-ring: var(--fl-color-ring);
 
+      /* Semantic color scales */
+    #{scales}
+
+      --radius: var(--fl-radius);
+      --radius-xs: var(--fl-radius-xs);
       --radius-sm: var(--fl-radius-sm);
       --radius-md: var(--fl-radius-md);
       --radius-lg: var(--fl-radius-lg);
       --radius-xl: var(--fl-radius-xl);
+      --radius-2xl: var(--fl-radius-2xl);
 
       --font-sans: var(--fl-font-sans);
+      --font-mono: var(--fl-font-mono);
+
+      --spacing: var(--fl-spacing);
+      --spacing-xs: var(--fl-spacing-xs);
+      --spacing-sm: var(--fl-spacing-sm);
+      --spacing-md: var(--fl-spacing-md);
+      --spacing-lg: var(--fl-spacing-lg);
+      --spacing-xl: var(--fl-spacing-xl);
+      --spacing-2xl: var(--fl-spacing-2xl);
+      --spacing-3xl: var(--fl-spacing-3xl);
+
+      --text-xs: var(--fl-font-size-xs);
+      --text-xs--line-height: var(--fl-line-height-xs);
+      --text-sm: var(--fl-font-size-sm);
+      --text-sm--line-height: var(--fl-line-height-sm);
+      --text-base: var(--fl-font-size-md);
+      --text-base--line-height: var(--fl-line-height-md);
+      --text-lg: var(--fl-font-size-lg);
+      --text-lg--line-height: var(--fl-line-height-lg);
+      --text-xl: var(--fl-font-size-xl);
+      --text-xl--line-height: var(--fl-line-height-xl);
+
+      --font-weight-normal: var(--fl-font-weight-normal);
+      --font-weight-medium: var(--fl-font-weight-medium);
+      --font-weight-semibold: var(--fl-font-weight-semibold);
+      --font-weight-bold: var(--fl-font-weight-bold);
+
+      --shadow-2xs: var(--fl-shadow-2xs);
+      --shadow-xs: var(--fl-shadow-xs);
+      --shadow-sm: var(--fl-shadow-sm);
+      --shadow-md: var(--fl-shadow-md);
+      --shadow-lg: var(--fl-shadow-lg);
+      --shadow-xl: var(--fl-shadow-xl);
+
+      --ease-out: var(--fl-ease-out);
+      --ease-in-out: var(--fl-ease-in-out);
     }
     """
   end
@@ -156,10 +218,15 @@ defmodule FlintUI.Generator do
   end
 
   defp prop_attr(prop) do
-    values = "~w(#{Enum.join(prop.values, " ")})"
+    if FlintUI.Styled.Prop.boolean?(prop) do
+      "attr(:#{prop.name}, :boolean, " <>
+        "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
+    else
+      values = "~w(#{Enum.join(prop.values, " ")})"
 
-    "attr(:#{prop.name}, :string, values: #{values}, " <>
-      "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
+      "attr(:#{prop.name}, :string, values: #{values}, " <>
+        "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
+    end
   end
 
   defp slot_block(entry) do
