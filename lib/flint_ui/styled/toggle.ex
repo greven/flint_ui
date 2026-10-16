@@ -18,13 +18,19 @@ defmodule FlintUI.Styled.Toggle do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "outline", "ghost"],
+          values: ["solid", "subtle", "outline", "ghost", "dashed"],
           default: "solid",
           doc: "How the pressed state is emphasized."
         ),
         Prop.new(
+          name: :color,
+          values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
+          default: "neutral",
+          doc: "The theme color the variant is built from."
+        ),
+        Prop.new(
           name: :size,
-          values: ["sm", "md", "lg"],
+          values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The control size."
         )

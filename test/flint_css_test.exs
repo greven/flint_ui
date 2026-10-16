@@ -21,7 +21,10 @@ defmodule FlintUI.FlintCSSTest do
   test "styles each component behind its wrapper hook", %{css: css} do
     assert css =~ "@layer components {"
     assert css =~ ~s([data-element="button"][data-variant])
+    assert css =~ ~s([data-element="button"][data-color="neutral"])
+    assert css =~ ~s([data-element="card"][data-card])
     assert css =~ ~s([data-element="toggle"][data-variant])
+    assert css =~ ~s([data-element="toggle"][data-color="neutral"])
     assert css =~ ~s([data-element="loading"][data-size])
     assert css =~ ~s([data-element="icon"][data-size])
     assert css =~ ~s([data-element="collapsible"][data-collapsible])

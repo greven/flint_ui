@@ -6,14 +6,13 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.ComponentDocs.Snippet
 
-  @base "inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50"
-
   @impl true
   def controls do
     [
       %{key: :pressed, type: :boolean, default: false, label: "Pressed"},
       %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
       %{key: :variant, type: :select, default: "solid", label: "Variant"},
+      %{key: :color, type: :select, default: "neutral", label: "Color"},
       %{key: :size, type: :select, default: "md", label: "Size"}
     ]
   end
@@ -52,18 +51,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         """
       },
       %{
-        id: :on_click,
-        title: "Reacting to clicks",
-        layer: :base,
-        body: """
-        Pass `on_click` a `Phoenix.LiveView.JS` command or a server event name to
-        run when the button is clicked. The state flip still happens regardless.
-        """,
-        code: """
-        <.toggle on_click={JS.push("toggle-bold")}>Bold</.toggle>
-        """
-      },
-      %{
         id: :variant,
         title: "Variant",
         layer: :styled,
@@ -72,9 +59,44 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         `data-variant` hook the theme targets.
         """,
         code: """
-        <.toggle variant="solid" pressed>Bold</.toggle>
-        <.toggle variant="outline" pressed>Italic</.toggle>
-        <.toggle variant="ghost">Underline</.toggle>
+        <div class="flex flex-wrap items-center gap-3">
+          <.toggle :for={variant <- ~w(solid subtle outline ghost dashed)} variant={variant} pressed>
+            {variant}
+          </.toggle>
+        </div>
+        """
+      },
+      %{
+        id: :color,
+        title: "Color",
+        layer: :styled,
+        body: """
+        The generated component adds a `color` attribute mapped onto the
+        `data-color` hook the theme targets. `color` and `variant` compose
+        freely: the same palette drives every variant.
+        """,
+        code: """
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-wrap items-center gap-3">
+            <.toggle
+              :for={color <- ~w(primary secondary success info warning error neutral)}
+              color={color}
+              pressed
+            >
+              {color}
+            </.toggle>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <.toggle
+              :for={color <- ~w(primary secondary success info warning error neutral)}
+              variant="outline"
+              color={color}
+              pressed
+            >
+              {color}
+            </.toggle>
+          </div>
+        </div>
         """
       },
       %{
@@ -86,9 +108,9 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         `data-size` hook the theme targets.
         """,
         code: """
-        <.toggle size="sm" pressed>Small</.toggle>
-        <.toggle size="md" pressed>Medium</.toggle>
-        <.toggle size="lg" pressed>Large</.toggle>
+        <div class="flex flex-wrap items-center gap-3">
+          <.toggle :for={size <- ~w(xs sm md lg xl)} size={size} pressed>{size}</.toggle>
+        </div>
         """
       }
     ]
@@ -102,7 +124,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         title: "Icon and label",
         description: "Pair an icon with a text label.",
         code: """
-        <.toggle class="#{class(:solid)}">
+        <.toggle variant="solid">
           <.icon name="lucide-bold" class="size-4" /> Bold
         </.toggle>
         """
@@ -112,7 +134,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         title: "Icon only",
         description: "An icon-only toggle needs an accessible name.",
         code: """
-        <.toggle aria-label="Bold" class="#{class(:solid)}">
+        <.toggle variant="solid" aria-label="Bold">
           <.icon name="lucide-bold" class="size-4" />
         </.toggle>
         """
@@ -122,17 +144,29 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         title: "Toolbar group",
         description: "Several toggles arranged as a formatting toolbar.",
         code: """
-        <div class="inline-flex items-center gap-1 rounded-md border border-zinc-200 p-1">
-          <.toggle aria-label="Bold" pressed class="#{class(:solid)}">
+        <div class="inline-flex items-center gap-1 rounded-md border border-zinc-200 p-1 dark:border-zinc-800">
+          <.toggle variant="solid" aria-label="Bold" pressed>
             <.icon name="lucide-bold" class="size-4" />
           </.toggle>
-          <.toggle aria-label="Italic" class="#{class(:solid)}">
+          <.toggle variant="solid" aria-label="Italic">
             <.icon name="lucide-italic" class="size-4" />
           </.toggle>
-          <.toggle aria-label="Underline" class="#{class(:solid)}">
+          <.toggle variant="solid" aria-label="Underline">
             <.icon name="lucide-underline" class="size-4" />
           </.toggle>
         </div>
+        """
+      },
+      %{
+        id: :on_click,
+        title: "Reacting to clicks",
+        description:
+          "Pass `on_click` a `Phoenix.LiveView.JS` command or a server event name to run when the button is clicked. The state flip still happens regardless.",
+        preview: false,
+        code: """
+        <.toggle variant="solid" on_click={JS.push("toggle-bold")}>
+          <.icon name="lucide-bold" class="size-4" /> Bold
+        </.toggle>
         """
       }
     ]
@@ -173,6 +207,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
     ~H"""
     <Components.toggle
       variant={@props.variant}
+      color={@props.color}
       size={@props.size}
       pressed={@props.pressed}
       disabled={@props.disabled}
@@ -184,7 +219,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
 
   def render_playground(assigns) do
     ~H"""
-    <.toggle pressed={@props.pressed} disabled={@props.disabled} class={toggle_class(:solid)}>
+    <.toggle pressed={@props.pressed} disabled={@props.disabled}>
       <.icon name="lucide-bold" class="size-4" /> Bold
     </.toggle>
     """
@@ -196,6 +231,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
       ".toggle",
       [
         Snippet.attr("variant", props.variant, "solid"),
+        Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
         Snippet.flag("pressed", props.pressed),
         Snippet.flag("disabled", props.disabled)
@@ -215,22 +251,46 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   @impl true
   def render_usage(%{block: :pressed} = assigns) do
     ~H"""
-    <.toggle pressed class={toggle_class(:solid)}>Bold</.toggle>
-    """
-  end
-
-  def render_usage(%{block: :on_click} = assigns) do
-    ~H"""
-    <.toggle class={toggle_class(:solid)}>Bold</.toggle>
+    <.toggle pressed>Bold</.toggle>
     """
   end
 
   def render_usage(%{block: :variant} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.toggle :for={variant <- ~w(solid outline ghost)} variant={variant} pressed>
+      <Components.toggle
+        :for={variant <- ~w(solid subtle outline ghost dashed)}
+        variant={variant}
+        pressed
+      >
         {variant}
       </Components.toggle>
+    </div>
+    """
+  end
+
+  def render_usage(%{block: :color} = assigns) do
+    ~H"""
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.toggle
+          :for={color <- ~w(primary secondary success info warning error neutral)}
+          color={color}
+          pressed
+        >
+          {color}
+        </Components.toggle>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.toggle
+          :for={color <- ~w(primary secondary success info warning error neutral)}
+          variant="outline"
+          color={color}
+          pressed
+        >
+          {color}
+        </Components.toggle>
+      </div>
     </div>
     """
   end
@@ -238,7 +298,9 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   def render_usage(%{block: :size} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.toggle :for={size <- ~w(sm md lg)} size={size} pressed>{size}</Components.toggle>
+      <Components.toggle :for={size <- ~w(xs sm md lg xl)} size={size} pressed>
+        {size}
+      </Components.toggle>
     </div>
     """
   end
@@ -246,43 +308,35 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   @impl true
   def render_block(%{block: :icon} = assigns) do
     ~H"""
-    <.toggle class={toggle_class(:solid)}>
-      <.icon name="lucide-bold" class="size-4" /> Bold
-    </.toggle>
+    <Components.toggle variant="solid">
+      <Components.icon name="lucide-bold" class="size-4" /> Bold
+    </Components.toggle>
     """
   end
 
   def render_block(%{block: :icon_only} = assigns) do
     ~H"""
-    <.toggle aria-label="Bold" class={toggle_class(:solid)}>
-      <.icon name="lucide-bold" class="size-4" />
-    </.toggle>
+    <Components.toggle variant="solid" aria-label="Bold">
+      <Components.icon name="lucide-bold" class="size-4" />
+    </Components.toggle>
     """
   end
 
   def render_block(%{block: :group} = assigns) do
     ~H"""
     <div class="inline-flex items-center gap-1 rounded-md border border-zinc-200 p-1 dark:border-zinc-800">
-      <.toggle aria-label="Bold" pressed class={toggle_class(:solid)}>
-        <.icon name="lucide-bold" class="size-4" />
-      </.toggle>
-      <.toggle aria-label="Italic" class={toggle_class(:solid)}>
-        <.icon name="lucide-italic" class="size-4" />
-      </.toggle>
-      <.toggle aria-label="Underline" class={toggle_class(:solid)}>
-        <.icon name="lucide-underline" class="size-4" />
-      </.toggle>
+      <Components.toggle variant="solid" aria-label="Bold" pressed>
+        <Components.icon name="lucide-bold" class="size-4" />
+      </Components.toggle>
+      <Components.toggle variant="solid" aria-label="Italic">
+        <Components.icon name="lucide-italic" class="size-4" />
+      </Components.toggle>
+      <Components.toggle variant="solid" aria-label="Underline">
+        <Components.icon name="lucide-underline" class="size-4" />
+      </Components.toggle>
     </div>
     """
   end
 
-  defp toggle_class(:solid) do
-    [
-      @base,
-      "text-zinc-600 hover:bg-zinc-100 data-[state=on]:bg-zinc-900 data-[state=on]:text-white",
-      "dark:text-zinc-400 dark:hover:bg-zinc-800 dark:data-[state=on]:bg-white dark:data-[state=on]:text-zinc-900"
-    ]
-  end
-
-  defp class(variant), do: Enum.join(toggle_class(variant), " ")
+  def render_block(%{block: :on_click}), do: nil
 end

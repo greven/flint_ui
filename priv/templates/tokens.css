@@ -33,14 +33,30 @@
   --fl-color-secondary: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
   --fl-color-secondary-foreground: light-dark(oklch(0.205 0 0), oklch(0.985 0 0));
 
+  --fl-color-neutral: light-dark(oklch(0.205 0 0), oklch(0.922 0 0));
+  --fl-color-neutral-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+
+  --fl-color-success: light-dark(oklch(0.723 0.192 149.58), oklch(0.792 0.209 151.71));
+  --fl-color-success-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+
+  --fl-color-info: light-dark(oklch(0.685 0.169 237.32), oklch(0.746 0.16 232.66));
+  --fl-color-info-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+
+  --fl-color-warning: light-dark(oklch(0.795 0.184 86.05), oklch(0.852 0.199 91.94));
+  --fl-color-warning-foreground: light-dark(oklch(0.286 0.066 53.813), oklch(0.286 0.066 53.813));
+
+  --fl-color-error: light-dark(oklch(0.577 0.245 27.325), oklch(0.704 0.191 22.216));
+  --fl-color-error-foreground: light-dark(oklch(0.985 0 0), oklch(0.985 0 0));
+
+  /* Deprecated: use --fl-color-error. */
+  --fl-color-destructive: var(--fl-color-error);
+  --fl-color-destructive-foreground: var(--fl-color-error-foreground);
+
   --fl-color-muted: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
   --fl-color-muted-foreground: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
 
   --fl-color-accent: light-dark(oklch(0.97 0 0), oklch(0.269 0 0));
   --fl-color-accent-foreground: light-dark(oklch(0.205 0 0), oklch(0.985 0 0));
-
-  --fl-color-destructive: light-dark(oklch(0.577 0.245 27.325), oklch(0.704 0.191 22.216));
-  --fl-color-destructive-foreground: light-dark(oklch(0.985 0 0), oklch(0.985 0 0));
 
   --fl-color-border: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 10%));
   --fl-color-input: light-dark(oklch(0.922 0 0), oklch(1 0 0 / 15%));

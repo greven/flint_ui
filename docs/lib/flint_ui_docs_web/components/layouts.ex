@@ -202,11 +202,11 @@ defmodule FlintUIDocsWeb.Layouts do
             navigate={item.path}
             aria-current={if page_active?(item, @active, @page), do: "page", else: nil}
             class={[
-              "group -ml-px pr-2 pl-2 border-l transition-colors hover:text-zinc-800 dark:hover:text-zinc-100",
+              "group -ml-px pr-2 pl-1.5 border-l transition-colors hover:text-zinc-800 dark:hover:text-zinc-100",
               sidebar_item_class(page_active?(item, @active, @page))
             ]}
           >
-            <div class="px-2.5 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-zinc-400/5 dark:group-hover:bg-zinc-50/5">
+            <div class="px-2 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-zinc-400/5 dark:group-hover:bg-zinc-50/5">
               {item.label}
             </div>
           </.link>

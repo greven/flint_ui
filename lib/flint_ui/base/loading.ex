@@ -112,6 +112,7 @@ defmodule FlintUI.Base.Loading do
 
     ~H"""
     <svg
+      {@rest}
       viewBox="0 0 24 24"
       fill="none"
       class={@class}
@@ -119,7 +120,6 @@ defmodule FlintUI.Base.Loading do
       aria-label={@label}
       aria-hidden={is_nil(@label) && "true"}
       {@flint_parts[:root]}
-      {@rest}
     >
       <g :if={@variant in ["ring", "ring-bg"]}>
         <circle

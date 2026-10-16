@@ -2,7 +2,7 @@
    https://tailwindcss.com/docs/configuration */
 
 @import "tailwindcss" source(none);
-@import "../../../priv/static/flint.css";
+@import "./flint.css";
 @import "./highlight.css";
 @source "../css";
 @source "../js";

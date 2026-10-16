@@ -80,12 +80,12 @@ defmodule FlintUI.Base.Icon do
   def render(assigns) do
     ~H"""
     <span
+      {@rest}
       class={[@name, @class]}
       aria-hidden={is_nil(@label) && "true"}
       role={@label && "img"}
       aria-label={@label}
       {@flint_parts[:root]}
-      {@rest}
     />
     """
   end

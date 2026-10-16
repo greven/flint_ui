@@ -3,6 +3,7 @@ defmodule FlintUITest do
 
   test "components/0 lists the registered components" do
     assert :button in FlintUI.components()
+    assert :card in FlintUI.components()
     assert :collapsible in FlintUI.components()
     assert :icon in FlintUI.components()
     assert :loading in FlintUI.components()

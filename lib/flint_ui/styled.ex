@@ -14,6 +14,7 @@ defmodule FlintUI.Styled do
 
   @modules [
     FlintUI.Styled.Button,
+    FlintUI.Styled.Card,
     FlintUI.Styled.Collapsible,
     FlintUI.Styled.Icon,
     FlintUI.Styled.Loading,

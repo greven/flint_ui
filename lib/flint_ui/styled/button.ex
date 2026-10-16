@@ -18,13 +18,19 @@ defmodule FlintUI.Styled.Button do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "secondary", "outline", "ghost", "destructive", "link"],
+          values: ["solid", "subtle", "outline", "ghost", "dashed", "link"],
           default: "solid",
           doc: "The visual emphasis of the button."
         ),
         Prop.new(
+          name: :color,
+          values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
+          default: "neutral",
+          doc: "The theme color the variant is built from."
+        ),
+        Prop.new(
           name: :size,
-          values: ["sm", "md", "lg"],
+          values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The control size."
         )

@@ -13,6 +13,7 @@ defmodule FlintUI do
   ## Available Components
 
   - `button`
+  - `card`
   - `collapsible`
   - `icon`
   - `loading`
@@ -25,6 +26,7 @@ defmodule FlintUI do
 
   @components [
     {:button, []},
+    {:card, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
     {:icon, []},
     {:loading, []},

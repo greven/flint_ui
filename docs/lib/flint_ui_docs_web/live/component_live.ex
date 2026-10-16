@@ -94,9 +94,12 @@ defmodule FlintUIDocsWeb.ComponentLive do
               <PreviewComponent.preview
                 id={"usage-#{@active}-#{section.id}"}
                 kind={:usage}
+                layer={:styled}
                 name={@active}
                 block={section.id}
                 code={section[:code]}
+                codes={section[:codes]}
+                preview={section[:preview] != false}
               />
             </DocBlocks.subsection>
           </DocBlocks.section>
@@ -109,8 +112,10 @@ defmodule FlintUIDocsWeb.ComponentLive do
               name={@active}
               block={example.id}
               code={example[:code]}
+              codes={example[:codes]}
               title={example.title}
               description={example[:description]}
+              preview={example[:preview] != false}
             />
           </DocBlocks.section>
 
@@ -189,9 +194,12 @@ defmodule FlintUIDocsWeb.ComponentLive do
               <PreviewComponent.preview
                 id={"usage-#{@active}-#{section.id}"}
                 kind={:usage}
+                layer={:base}
                 name={@active}
                 block={section.id}
                 code={section[:code]}
+                codes={section[:codes]}
+                preview={section[:preview] != false}
               />
             </DocBlocks.subsection>
           </DocBlocks.section>

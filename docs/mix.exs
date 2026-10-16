@@ -10,7 +10,7 @@ defmodule FlintUIDocs.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      compilers: [:phoenix_live_view] ++ Mix.compilers(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers() ++ [:flint_docs_theme],
       listeners: [Phoenix.CodeReloader]
     ]
   end
@@ -54,6 +54,7 @@ defmodule FlintUIDocs.MixProject do
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:igniter, "~> 0.6", only: [:dev, :test]},
+      {:file_system, "~> 1.0"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:makeup, "~> 1.2"},

@@ -119,11 +119,6 @@ defmodule FlintUI.Base.Collapsible do
           description: "Whether interactions are suppressed."
         },
         %Meta.PartAttr{
-          name: "[data-element]",
-          value: "collapsible",
-          description: "Identifies the component type."
-        },
-        %Meta.PartAttr{
           name: "[data-part]",
           value: "trigger",
           description: "Identifies the trigger element."
@@ -170,11 +165,6 @@ defmodule FlintUI.Base.Collapsible do
           value: ~s(true | "until-found"),
           description:
             "Whether the content is hidden. `until-found` when `hidden_until_found` is set."
-        },
-        %Meta.PartAttr{
-          name: "[data-element]",
-          value: "collapsible",
-          description: "Identifies the component type."
         },
         %Meta.PartAttr{
           name: "[data-part]",
@@ -279,7 +269,6 @@ defmodule FlintUI.Base.Collapsible do
       trigger: %{
         "type" => "button",
         "disabled" => assigns.disabled,
-        "data-element" => "collapsible",
         "data-part" => "trigger",
         "data-disabled" => assigns.disabled,
         "data-state" => state,
@@ -294,7 +283,6 @@ defmodule FlintUI.Base.Collapsible do
             do: nil,
             else: if(assigns.hidden_until_found, do: "until-found", else: true)
           ),
-        "data-element" => "collapsible",
         "data-part" => "content",
         "data-disabled" => assigns.disabled,
         "data-state" => state
@@ -350,7 +338,7 @@ defmodule FlintUI.Base.Collapsible do
   @impl true
   def render(assigns) do
     ~H"""
-    <.dynamic_tag tag_name={@as} {@flint_parts[:root]} {@rest}>
+    <.dynamic_tag tag_name={@as} {@rest} {@flint_parts[:root]}>
       {render_slot(@trigger, @flint_parts[:trigger])}
       {render_slot(@content, @flint_parts[:content])}
     </.dynamic_tag>

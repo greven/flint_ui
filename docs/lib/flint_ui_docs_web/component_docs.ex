@@ -26,6 +26,7 @@ defmodule FlintUIDocsWeb.ComponentDocs do
 
   alias FlintUIDocsWeb.ComponentDocs.{
     Button,
+    Card,
     Collapsible,
     Default,
     Icon,
@@ -35,6 +36,7 @@ defmodule FlintUIDocsWeb.ComponentDocs do
 
   @modules %{
     button: Button,
+    card: Card,
     collapsible: Collapsible,
     icon: Icon,
     loading: Loading,
@@ -60,6 +62,7 @@ defmodule FlintUIDocsWeb.ComponentDocs do
   end
 
   attr(:name, :atom, required: true)
+  attr(:layer, :atom, default: :base)
   attr(:block, :atom, required: true)
   attr(:props, :map, default: %{})
   attr(:id, :string, required: true)

@@ -1,6 +1,14 @@
 @layer components {
   /* Toggle */
   [data-element="toggle"][data-variant] {
+    --_fl-toggle-color: var(--fl-color-neutral);
+    --_fl-toggle-color-foreground: var(--fl-color-neutral-foreground);
+    --_fl-toggle-text: var(--_fl-toggle-color);
+    --_fl-toggle-surface: color-mix(in oklab, var(--_fl-toggle-color) 10%, transparent);
+    --_fl-toggle-surface-hover: color-mix(in oklab, var(--_fl-toggle-color) 15%, transparent);
+    --_fl-toggle-border: color-mix(in oklab, var(--_fl-toggle-color) 50%, transparent);
+    --_fl-toggle-border-soft: color-mix(in oklab, var(--_fl-toggle-color) 25%, transparent);
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -26,8 +34,8 @@
   }
 
   [data-element="toggle"][data-variant]:hover {
-    background: var(--fl-color-accent);
-    color: var(--fl-color-accent-foreground);
+    background: var(--_fl-toggle-surface);
+    color: var(--fl-color-foreground);
   }
 
   [data-element="toggle"][data-disabled] {
@@ -36,13 +44,66 @@
     pointer-events: none;
   }
 
+  /* Color mapping. Each color resolves the shared variant variables; `neutral`
+   * is special-cased onto the surface tokens (like Nuxt UI). */
+  [data-element="toggle"][data-color="primary"] {
+    --_fl-toggle-color: var(--fl-color-primary);
+    --_fl-toggle-color-foreground: var(--fl-color-primary-foreground);
+  }
+
+  [data-element="toggle"][data-color="secondary"] {
+    --_fl-toggle-color: var(--fl-color-secondary);
+    --_fl-toggle-color-foreground: var(--fl-color-secondary-foreground);
+  }
+
+  [data-element="toggle"][data-color="success"] {
+    --_fl-toggle-color: var(--fl-color-success);
+    --_fl-toggle-color-foreground: var(--fl-color-success-foreground);
+  }
+
+  [data-element="toggle"][data-color="info"] {
+    --_fl-toggle-color: var(--fl-color-info);
+    --_fl-toggle-color-foreground: var(--fl-color-info-foreground);
+  }
+
+  [data-element="toggle"][data-color="warning"] {
+    --_fl-toggle-color: var(--fl-color-warning);
+    --_fl-toggle-color-foreground: var(--fl-color-warning-foreground);
+  }
+
+  [data-element="toggle"][data-color="error"] {
+    --_fl-toggle-color: var(--fl-color-error);
+    --_fl-toggle-color-foreground: var(--fl-color-error-foreground);
+  }
+
+  [data-element="toggle"][data-color="neutral"] {
+    --_fl-toggle-color: var(--fl-color-neutral);
+    --_fl-toggle-color-foreground: var(--fl-color-neutral-foreground);
+    --_fl-toggle-text: var(--fl-color-foreground);
+    --_fl-toggle-surface: var(--fl-color-secondary);
+    --_fl-toggle-surface-hover: var(--fl-color-accent);
+    --_fl-toggle-border: var(--fl-color-border);
+    --_fl-toggle-border-soft: var(--fl-color-border);
+  }
+
   [data-element="toggle"][data-variant="solid"][data-state="on"] {
-    background: var(--fl-color-primary);
-    color: var(--fl-color-primary-foreground);
+    background: var(--_fl-toggle-color);
+    color: var(--_fl-toggle-color-foreground);
   }
 
   [data-element="toggle"][data-variant="solid"][data-state="on"]:hover {
-    background: color-mix(in oklab, var(--fl-color-primary) 90%, transparent);
+    background: color-mix(in oklab, var(--_fl-toggle-color) 75%, transparent);
+  }
+
+  /* Subtle: ghost + outline, a tinted surface with a matching border. */
+  [data-element="toggle"][data-variant="subtle"] {
+    border-color: var(--_fl-toggle-border-soft);
+  }
+
+  [data-element="toggle"][data-variant="subtle"][data-state="on"] {
+    background: var(--_fl-toggle-surface);
+    color: var(--_fl-toggle-text);
+    border-color: var(--_fl-toggle-border-soft);
   }
 
   [data-element="toggle"][data-variant="outline"] {
@@ -50,14 +111,32 @@
   }
 
   [data-element="toggle"][data-variant="outline"][data-state="on"] {
-    background: var(--fl-color-accent);
-    color: var(--fl-color-accent-foreground);
-    border-color: var(--fl-color-border);
+    background: var(--_fl-toggle-surface);
+    color: var(--_fl-toggle-text);
+    border-color: var(--_fl-toggle-border);
   }
 
   [data-element="toggle"][data-variant="ghost"][data-state="on"] {
-    background: var(--fl-color-accent);
-    color: var(--fl-color-accent-foreground);
+    background: var(--_fl-toggle-surface);
+    color: var(--_fl-toggle-text);
+  }
+
+  [data-element="toggle"][data-variant="dashed"] {
+    border-style: dashed;
+    border-color: var(--fl-color-border);
+  }
+
+  [data-element="toggle"][data-variant="dashed"][data-state="on"] {
+    background: var(--_fl-toggle-surface);
+    color: var(--_fl-toggle-text);
+    border-color: var(--_fl-toggle-border);
+  }
+
+  [data-element="toggle"][data-size="xs"] {
+    height: 1.5rem;
+    padding-inline: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
   }
 
   [data-element="toggle"][data-size="sm"] {
@@ -74,5 +153,13 @@
     height: 2.5rem;
     padding-inline: 1rem;
     font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  [data-element="toggle"][data-size="xl"] {
+    height: 3rem;
+    padding-inline: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 }

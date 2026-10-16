@@ -35,6 +35,19 @@ defmodule FlintUI.Base.CollapsibleTest do
       </.collapsible>
       """
     end
+
+    def nested_trigger_example(assigns) do
+      ~H"""
+      <.collapsible id="nested">
+        <:trigger :let={attrs}>
+          <.button {attrs}>Toggle</.button>
+        </:trigger>
+        <:content :let={attrs}>
+          <div {attrs}>Content</div>
+        </:content>
+      </.collapsible>
+      """
+    end
   end
 
   defp render(assigns \\ []) do
@@ -92,6 +105,17 @@ defmodule FlintUI.Base.CollapsibleTest do
       assert LazyHTML.tag(trigger) == ["button"]
       assert LazyHTML.attribute(trigger, "type") == ["button"]
       assert LazyHTML.attribute(trigger, "aria-controls") == ["test-content"]
+    end
+
+    test "a nested FlintUI trigger keeps the part hook and its own identity" do
+      html =
+        render_component(&TestComponent.nested_trigger_example/1, %{}) |> LazyHTML.from_fragment()
+
+      trigger = part(html, "trigger")
+
+      assert LazyHTML.tag(trigger) == ["button"]
+      assert LazyHTML.attribute(trigger, "data-part") == ["trigger"]
+      assert LazyHTML.attribute(trigger, "data-element") == ["button"]
     end
 
     test "always renders an explicit aria-expanded string" do

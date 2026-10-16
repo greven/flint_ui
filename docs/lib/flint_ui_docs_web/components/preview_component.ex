@@ -26,7 +26,15 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       and `code` is shown as a fixed snippet
     * `:block` - an element of the Examples section
 
-  Pass a `code` string to show a fixed snippet instead of asking the page module.
+  Pass a `code` string (or a `codes` list of `%{label, lang, code, styles?}`
+  flavors) to show fixed snippet(s) instead of asking the page module. When more
+  than one flavor is given, the Code tab shows a switcher; a flavor's `styles`
+  renders as a labelled CSS block beneath its code.
+
+  Set `preview: false` for content that can only be shown as code (e.g. an
+  example that triggers a server event). The card then renders the Code tab
+  only, and the Preview/Code tab bar is hidden because it would offer a single
+  option.
   """
 
   use FlintUIDocsWeb, :live_component
@@ -44,9 +52,11 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   attr :controls, :list, default: []
   attr :defaults, :map, default: %{}
   attr :code, :string, default: nil
+  attr :codes, :list, default: nil
   attr :code_lang, :atom, default: :heex
   attr :title, :string, default: nil
   attr :description, :string, default: nil
+  attr :preview, :boolean, default: true
 
   def preview(assigns) do
     ~H"""
@@ -60,9 +70,11 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       controls={@controls}
       defaults={@defaults}
       code={@code}
+      codes={@codes}
       code_lang={@code_lang}
       title={@title}
       description={@description}
+      preview={@preview}
     />
     """
   end
@@ -81,6 +93,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       |> assign(assigns)
       |> assign(:props, props)
       |> assign_new(:tab, fn -> "preview" end)
+      |> assign_new(:code_index, fn -> 0 end)
 
     {:ok, socket}
   end
@@ -88,6 +101,10 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   @impl true
   def handle_event("tab", %{"tab" => tab}, socket) when tab in @tabs do
     {:noreply, assign(socket, :tab, tab)}
+  end
+
+  def handle_event("code", %{"index" => index}, socket) do
+    {:noreply, assign(socket, :code_index, String.to_integer(index))}
   end
 
   def handle_event("toggle", %{"key" => key}, socket) do
@@ -110,7 +127,17 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   @impl true
   def render(assigns) do
-    assigns = assign(assigns, :resolved_code, resolve_code(assigns))
+    flavors = resolve_flavors(assigns)
+    index = clamp_index(assigns[:code_index] || 0, flavors)
+    tab = if assigns[:preview] == false, do: "code", else: assigns[:tab]
+
+    assigns =
+      assign(assigns,
+        flavors: flavors,
+        code_index: index,
+        active_flavor: flavors && Enum.at(flavors, index),
+        tab: tab
+      )
 
     ~H"""
     <div id={@id} class="mt-6">
@@ -119,11 +146,63 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         <p :if={@description} class="text-sm text-zinc-600 dark:text-zinc-400">{@description}</p>
       </div>
 
-      <.toolbar :if={@resolved_code} id={@id} tab={@tab} myself={@myself} />
+      <.toolbar :if={@flavors} id={@id} tab={@tab} preview={@preview} myself={@myself} />
 
-      <%= if @tab == "code" && @resolved_code do %>
-        <div class="mt-3 overflow-hidden rounded-lg bg-zinc-900">
-          <pre class="highlight overflow-x-auto p-4 text-xs leading-relaxed text-zinc-100"><code id={"#{@id}-code"}>{Highlight.highlight(@resolved_code, @code_lang)}</code></pre>
+      <%= if @tab == "code" && @active_flavor do %>
+        <.flavors
+          :if={length(@flavors) > 1}
+          id={@id}
+          flavors={@flavors}
+          index={@code_index}
+          myself={@myself}
+        />
+        <div class="relative mt-3 overflow-hidden rounded-lg bg-zinc-900">
+          <button
+            type="button"
+            id={"#{@id}-copy"}
+            phx-hook=".CopyCode"
+            data-copy={"#{@id}-code"}
+            class="group absolute right-2 top-2 inline-flex items-center gap-1.5 rounded-md border border-white/10 px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100"
+          >
+            <span class="relative grid size-3.5 place-items-center">
+              <.icon
+                name="lucide-copy"
+                class="col-start-1 row-start-1 size-3.5 transition-opacity duration-200 group-data-[copied]:opacity-0"
+              />
+              <.icon
+                name="lucide-check"
+                class="col-start-1 row-start-1 size-3.5 text-green-400 opacity-0 transition-opacity duration-200 group-data-[copied]:opacity-100"
+              />
+            </span>
+            Copy
+          </button>
+          <pre class="highlight overflow-x-auto p-4 pr-16 text-xs leading-relaxed text-zinc-100"><code id={"#{@id}-code"}>{Highlight.highlight(@active_flavor.code, @active_flavor.lang)}</code></pre>
+
+          <script :type={Phoenix.LiveView.ColocatedHook} name=".CopyCode">
+            export default {
+              mounted() {
+                this.el.addEventListener("click", () => {
+                  const target = document.getElementById(this.el.dataset.copy)
+                  if (target) navigator.clipboard.writeText(target.textContent)
+
+                  this.el.dataset.copied = "true"
+                  clearTimeout(this.copiedTimeout)
+                  this.copiedTimeout = setTimeout(() => {
+                    delete this.el.dataset.copied
+                  }, 2000)
+                })
+              },
+              destroyed() {
+                clearTimeout(this.copiedTimeout)
+              }
+            }
+          </script>
+        </div>
+        <div :if={@active_flavor[:styles]} class="mt-3 overflow-hidden rounded-lg bg-zinc-900">
+          <div class="border-b border-white/10 px-4 py-2 font-mono text-xs text-zinc-400">
+            app.css
+          </div>
+          <pre class="highlight overflow-x-auto p-4 text-xs leading-relaxed text-zinc-100"><code id={"#{@id}-styles"}>{Highlight.highlight(@active_flavor.styles, :css)}</code></pre>
         </div>
       <% else %>
         <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/40">
@@ -138,6 +217,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
             <% :usage -> %>
               <ComponentDocs.render_usage
                 name={@name}
+                layer={@layer}
                 block={@block}
                 props={@props}
                 id={"#{@id}-canvas"}
@@ -153,7 +233,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         </div>
 
         <.controls
-          :if={@controls != []}
+          :if={@controls != [] && @preview}
           id={@id}
           name={@name}
           layer={@layer}
@@ -168,12 +248,16 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   attr :id, :string, required: true
   attr :tab, :string, required: true
+  attr :preview, :boolean, default: true
   attr :myself, :any, required: true
 
   defp toolbar(assigns) do
     ~H"""
     <div class="flex items-center justify-between gap-2">
-      <div class="inline-flex rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800">
+      <div
+        :if={@preview}
+        class="inline-flex rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800"
+      >
         <button
           type="button"
           phx-click="tab"
@@ -193,28 +277,29 @@ defmodule FlintUIDocsWeb.PreviewComponent do
           <.icon name="lucide-code" class="size-3.5" /> Code
         </button>
       </div>
+    </div>
+    """
+  end
+
+  attr :id, :string, required: true
+  attr :flavors, :list, required: true
+  attr :index, :integer, required: true
+  attr :myself, :any, required: true
+
+  defp flavors(assigns) do
+    ~H"""
+    <div class="mt-3 inline-flex rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800">
       <button
-        :if={@tab == "code"}
+        :for={{flavor, i} <- Enum.with_index(@flavors)}
         type="button"
-        id={"#{@id}-copy"}
-        phx-hook=".CopyCode"
-        data-copy={"#{@id}-code"}
-        class="inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2 py-1 text-xs text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800"
+        phx-click="code"
+        phx-target={@myself}
+        phx-value-index={i}
+        class={segment(i == @index)}
       >
-        <.icon name="lucide-copy" class="size-3.5" /> Copy
+        {flavor.label || "Code"}
       </button>
     </div>
-
-    <script :type={Phoenix.LiveView.ColocatedHook} name=".CopyCode">
-      export default {
-        mounted() {
-          this.el.addEventListener("click", () => {
-            const target = document.getElementById(this.el.dataset.copy)
-            if (target) navigator.clipboard.writeText(target.textContent)
-          })
-        }
-      }
-    </script>
     """
   end
 
@@ -285,18 +370,44 @@ defmodule FlintUIDocsWeb.PreviewComponent do
     """
   end
 
-  defp resolve_code(%{code: code}) when is_binary(code), do: code
+  defp resolve_flavors(assigns) do
+    cond do
+      is_list(assigns[:codes]) and assigns[:codes] != [] ->
+        normalize_codes(assigns[:codes])
 
-  defp resolve_code(%{kind: :playground, name: name} = assigns) do
-    ComponentDocs.render_code(%{
-      name: name,
-      layer: assigns.layer,
-      props: assigns.props,
-      id: assigns.id
-    })
+      is_binary(assigns[:code]) ->
+        [flavor(%{code: assigns[:code], lang: assigns[:code_lang] || :heex})]
+
+      assigns[:kind] == :playground ->
+        ComponentDocs.render_code(%{
+          name: assigns[:name],
+          layer: assigns[:layer],
+          props: assigns[:props],
+          id: assigns[:id]
+        })
+        |> normalize_codes()
+
+      true ->
+        nil
+    end
   end
 
-  defp resolve_code(_assigns), do: nil
+  defp normalize_codes(nil), do: nil
+  defp normalize_codes(code) when is_binary(code), do: [flavor(%{code: code})]
+  defp normalize_codes(codes) when is_list(codes), do: Enum.map(codes, &flavor/1)
+
+  defp flavor(%{} = flavor) do
+    %{
+      label: Map.get(flavor, :label),
+      lang: Map.get(flavor, :lang) || :heex,
+      code: Map.get(flavor, :code),
+      styles: Map.get(flavor, :styles)
+    }
+  end
+
+  defp clamp_index(_index, nil), do: 0
+  defp clamp_index(_index, []), do: 0
+  defp clamp_index(index, flavors), do: min(max(index, 0), length(flavors) - 1)
 
   defp select_options(control, name, layer) do
     values = control[:values]

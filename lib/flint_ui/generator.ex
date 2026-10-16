@@ -101,6 +101,16 @@ defmodule FlintUI.Generator do
       --color-primary-foreground: var(--fl-color-primary-foreground);
       --color-secondary: var(--fl-color-secondary);
       --color-secondary-foreground: var(--fl-color-secondary-foreground);
+      --color-neutral: var(--fl-color-neutral);
+      --color-neutral-foreground: var(--fl-color-neutral-foreground);
+      --color-success: var(--fl-color-success);
+      --color-success-foreground: var(--fl-color-success-foreground);
+      --color-info: var(--fl-color-info);
+      --color-info-foreground: var(--fl-color-info-foreground);
+      --color-warning: var(--fl-color-warning);
+      --color-warning-foreground: var(--fl-color-warning-foreground);
+      --color-error: var(--fl-color-error);
+      --color-error-foreground: var(--fl-color-error-foreground);
       --color-muted: var(--fl-color-muted);
       --color-muted-foreground: var(--fl-color-muted-foreground);
       --color-accent: var(--fl-color-accent);

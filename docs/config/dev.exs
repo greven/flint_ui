@@ -1,5 +1,8 @@
 import Config
 
+# Refresh the docs' theme copy when the library's theme templates change.
+config :flint_ui_docs, theme_watcher: true
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

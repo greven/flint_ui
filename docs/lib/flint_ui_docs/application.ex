@@ -7,15 +7,24 @@ defmodule FlintUIDocs.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      FlintUIDocsWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:flint_ui_docs, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: FlintUIDocs.PubSub},
-      # Start a worker by calling: FlintUIDocs.Worker.start_link(arg)
-      # {FlintUIDocs.Worker, arg},
-      # Start to serve requests, typically the last entry
-      FlintUIDocsWeb.Endpoint
-    ]
+    watcher =
+      if Application.get_env(:flint_ui_docs, :theme_watcher, false) do
+        [FlintUIDocs.ThemeWatcher]
+      else
+        []
+      end
+
+    children =
+      [
+        FlintUIDocsWeb.Telemetry,
+        {DNSCluster, query: Application.get_env(:flint_ui_docs, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: FlintUIDocs.PubSub}
+      ] ++
+        watcher ++
+        [
+          # Start to serve requests, typically the last entry
+          FlintUIDocsWeb.Endpoint
+        ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

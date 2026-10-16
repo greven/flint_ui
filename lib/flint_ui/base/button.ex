@@ -164,19 +164,19 @@ defmodule FlintUI.Base.Button do
         assigns = assign(assigns, :rest, drop_navigation(assigns.rest))
 
         ~H"""
-        <a role="link" aria-disabled="true" tabindex="0" {@flint_parts[:root]} {@rest}>
+        <a {@rest} role="link" aria-disabled="true" tabindex="0" {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </a>
         """
 
       link?(assigns) ->
         ~H"""
-        <.link {@flint_parts[:root]} {@rest}>{render_slot(@inner_block)}</.link>
+        <.link {@rest} {@flint_parts[:root]}>{render_slot(@inner_block)}</.link>
         """
 
       true ->
         ~H"""
-        <button type={@type} disabled={@disabled || @loading} {@flint_parts[:root]} {@rest}>
+        <button {@rest} type={@type} disabled={@disabled || @loading} {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </button>
         """

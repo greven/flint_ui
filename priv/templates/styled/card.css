@@ -1,0 +1,97 @@
+@layer components {
+  /* Card
+   *
+   * The root holds the surface and the shared spacing (`--fl-card-spacing`,
+   * derived from `size`). Sections only carry the inline inset, so a `flush`
+   * card hands spacing to its content (for example a full-bleed collapsible).
+   */
+  [data-element="card"][data-card] {
+    --fl-card-spacing: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--fl-card-spacing);
+    padding-block: var(--fl-card-spacing);
+    border-radius: var(--fl-radius-xl);
+    font-family: var(--fl-font-sans);
+    overflow: hidden;
+  }
+
+  [data-element="card"][data-variant="outline"] {
+    border: 1px solid var(--fl-color-border);
+    background: var(--fl-color-card);
+    color: var(--fl-color-card-foreground);
+  }
+
+  [data-element="card"][data-variant="solid"] {
+    background: var(--fl-color-primary);
+    color: var(--fl-color-primary-foreground);
+  }
+
+  [data-element="card"][data-variant="subtle"] {
+    border: 1px solid var(--fl-color-border);
+    background: var(--fl-color-muted);
+    color: var(--fl-color-foreground);
+  }
+
+  [data-element="card"][data-card] [data-part="header"],
+  [data-element="card"][data-card] [data-part="body"],
+  [data-element="card"][data-card] [data-part="footer"] {
+    padding-inline: var(--fl-card-spacing);
+  }
+
+  [data-element="card"][data-card] [data-part="header"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.25rem 0.75rem;
+  }
+
+  [data-element="card"][data-card] [data-part="title"] {
+    grid-column: 1;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  [data-element="card"][data-card] [data-part="description"] {
+    grid-column: 1;
+    color: var(--fl-color-muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.375;
+  }
+
+  [data-element="card"][data-card] [data-part="action"] {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: end;
+  }
+
+  [data-element="card"][data-card] [data-part="header-content"] {
+    grid-column: 1 / -1;
+  }
+
+  [data-element="card"][data-card] [data-part="footer"] {
+    display: flex;
+    align-items: center;
+  }
+
+  [data-element="card"][data-variant="solid"] [data-part="description"] {
+    color: color-mix(in oklab, var(--fl-color-primary-foreground) 70%, transparent);
+  }
+
+  [data-element="card"][data-size="sm"] {
+    --fl-card-spacing: 0.875rem;
+  }
+
+  [data-element="card"][data-size="md"] {
+    --fl-card-spacing: 1.25rem;
+  }
+
+  [data-element="card"][data-size="lg"] {
+    --fl-card-spacing: 1.75rem;
+  }
+
+  /* `flush` overrides `size`: a flush card hands spacing to its content. */
+  [data-element="card"][data-card][data-flush] {
+    --fl-card-spacing: 0;
+  }
+}

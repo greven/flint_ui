@@ -6,7 +6,7 @@ defmodule FlintUI.StyledTest do
 
   test "names/0 covers every component that ships a styled entry" do
     assert Enum.sort(Styled.names()) ==
-             Enum.sort([:button, :collapsible, :icon, :loading, :toggle])
+             Enum.sort([:button, :card, :collapsible, :icon, :loading, :toggle])
   end
 
   test "every entry is valid" do
@@ -31,16 +31,40 @@ defmodule FlintUI.StyledTest do
     entry = Styled.get(:button)
 
     variant = Entry.prop(entry, :variant)
-    assert variant.values == ["solid", "secondary", "outline", "ghost", "destructive", "link"]
+    assert variant.values == ["solid", "subtle", "outline", "ghost", "dashed", "link"]
     assert variant.default == "solid"
     assert variant.default in variant.values
+
+    color = Entry.prop(entry, :color)
+
+    assert color.values == [
+             "primary",
+             "secondary",
+             "success",
+             "info",
+             "warning",
+             "error",
+             "neutral"
+           ]
+
+    assert color.default == "neutral"
+
+    size = Entry.prop(entry, :size)
+    assert size.values == ["xs", "sm", "md", "lg", "xl"]
+    assert size.default == "md"
   end
 
   test "props map to the data attribute hooks a wrapper sets" do
     entry = Styled.get(:button)
 
-    assert Entry.hooks(entry) == %{variant: "data-variant", size: "data-size"}
+    assert Entry.hooks(entry) == %{
+             variant: "data-variant",
+             color: "data-color",
+             size: "data-size"
+           }
+
     assert Prop.attribute(Entry.prop(entry, :variant)) == "data-variant"
+    assert Prop.attribute(Entry.prop(entry, :color)) == "data-color"
   end
 
   test "Prop.new/1 rejects a default outside its values" do

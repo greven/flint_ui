@@ -148,7 +148,7 @@ defmodule FlintUI.Base.Toggle do
   @impl true
   def render(assigns) do
     ~H"""
-    <button {@flint_parts[:root]} {@rest}>
+    <button {@rest} {@flint_parts[:root]}>
       {render_slot(@inner_block)}
     </button>
     """

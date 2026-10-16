@@ -119,6 +119,9 @@ erl_crash.dump
 # Ignore assets that are produced by build tools.
 /priv/static/
 
+# The docs' copy of the assembled FlintUI theme (see FlintUIDocs.Theme).
+/docs/assets/css/flint.css
+
 # Project specific
 .tmp/
 screenshots/

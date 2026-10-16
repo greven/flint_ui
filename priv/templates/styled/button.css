@@ -1,6 +1,14 @@
 @layer components {
   /* Button */
   [data-element="button"][data-variant] {
+    --_fl-button-color: var(--fl-color-neutral);
+    --_fl-button-color-foreground: var(--fl-color-neutral-foreground);
+    --_fl-button-text: var(--_fl-button-color);
+    --_fl-button-surface: color-mix(in oklab, var(--_fl-button-color) 10%, transparent);
+    --_fl-button-surface-hover: color-mix(in oklab, var(--_fl-button-color) 15%, transparent);
+    --_fl-button-border: color-mix(in oklab, var(--_fl-button-color) 50%, transparent);
+    --_fl-button-border-soft: color-mix(in oklab, var(--_fl-button-color) 25%, transparent);
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -31,69 +39,125 @@
     pointer-events: none;
   }
 
+  /* Color mapping. Each color resolves the shared variant variables; `neutral`
+   * is special-cased onto the surface tokens (like Nuxt UI). */
+  [data-element="button"][data-color="primary"] {
+    --_fl-button-color: var(--fl-color-primary);
+    --_fl-button-color-foreground: var(--fl-color-primary-foreground);
+  }
+
+  [data-element="button"][data-color="secondary"] {
+    --_fl-button-color: var(--fl-color-secondary);
+    --_fl-button-color-foreground: var(--fl-color-secondary-foreground);
+  }
+
+  [data-element="button"][data-color="success"] {
+    --_fl-button-color: var(--fl-color-success);
+    --_fl-button-color-foreground: var(--fl-color-success-foreground);
+  }
+
+  [data-element="button"][data-color="info"] {
+    --_fl-button-color: var(--fl-color-info);
+    --_fl-button-color-foreground: var(--fl-color-info-foreground);
+  }
+
+  [data-element="button"][data-color="warning"] {
+    --_fl-button-color: var(--fl-color-warning);
+    --_fl-button-color-foreground: var(--fl-color-warning-foreground);
+  }
+
+  [data-element="button"][data-color="error"] {
+    --_fl-button-color: var(--fl-color-error);
+    --_fl-button-color-foreground: var(--fl-color-error-foreground);
+  }
+
+  [data-element="button"][data-color="neutral"] {
+    --_fl-button-color: var(--fl-color-neutral);
+    --_fl-button-color-foreground: var(--fl-color-neutral-foreground);
+    --_fl-button-text: var(--fl-color-foreground);
+    --_fl-button-surface: var(--fl-color-secondary);
+    --_fl-button-surface-hover: var(--fl-color-accent);
+    --_fl-button-border: var(--fl-color-border);
+    --_fl-button-border-soft: var(--fl-color-border);
+  }
+
+  /* Solid: the color fills the button. */
   [data-element="button"][data-variant="solid"] {
-    background: var(--fl-color-primary);
-    color: var(--fl-color-primary-foreground);
+    background: var(--_fl-button-color);
+    color: var(--_fl-button-color-foreground);
   }
 
   [data-element="button"][data-variant="solid"]:hover {
-    background: color-mix(in oklab, var(--fl-color-primary) 90%, transparent);
+    background: color-mix(in oklab, var(--_fl-button-color) 75%, transparent);
   }
 
   [data-element="button"][data-variant="solid"]:active {
-    background: color-mix(in oklab, var(--fl-color-primary) 80%, transparent);
+    background: color-mix(in oklab, var(--_fl-button-color) 70%, transparent);
   }
 
-  [data-element="button"][data-variant="secondary"] {
-    background: var(--fl-color-secondary);
-    color: var(--fl-color-secondary-foreground);
+  /* Subtle: ghost + outline, a tinted surface with a matching border. */
+  [data-element="button"][data-variant="subtle"] {
+    border-color: var(--_fl-button-border-soft);
+    background: var(--_fl-button-surface);
+    color: var(--_fl-button-text);
   }
 
-  [data-element="button"][data-variant="secondary"]:hover {
-    background: color-mix(in oklab, var(--fl-color-secondary) 80%, transparent);
+  [data-element="button"][data-variant="subtle"]:hover {
+    background: var(--_fl-button-surface-hover);
   }
 
+  /* Outline: a colored border and label over a transparent surface. */
   [data-element="button"][data-variant="outline"] {
-    border-color: var(--fl-color-border);
-    background: var(--fl-color-background);
-    color: var(--fl-color-foreground);
+    border-color: var(--_fl-button-border);
+    background: transparent;
+    color: var(--_fl-button-text);
   }
 
   [data-element="button"][data-variant="outline"]:hover {
-    background: var(--fl-color-accent);
-    color: var(--fl-color-accent-foreground);
+    background: var(--_fl-button-surface);
   }
 
+  /* Ghost: a colored label over a transparent surface. */
   [data-element="button"][data-variant="ghost"] {
     background: transparent;
-    color: var(--fl-color-foreground);
+    color: var(--_fl-button-text);
   }
 
   [data-element="button"][data-variant="ghost"]:hover {
-    background: var(--fl-color-accent);
-    color: var(--fl-color-accent-foreground);
+    background: var(--_fl-button-surface);
   }
 
-  [data-element="button"][data-variant="destructive"] {
-    background: var(--fl-color-destructive);
-    color: var(--fl-color-destructive-foreground);
+  /* Dashed: outline with a dashed border. */
+  [data-element="button"][data-variant="dashed"] {
+    border-style: dashed;
+    border-color: var(--_fl-button-border);
+    background: transparent;
+    color: var(--_fl-button-text);
   }
 
-  [data-element="button"][data-variant="destructive"]:hover {
-    background: color-mix(in oklab, var(--fl-color-destructive) 90%, transparent);
+  [data-element="button"][data-variant="dashed"]:hover {
+    background: var(--_fl-button-surface);
   }
 
   [data-element="button"][data-variant="link"] {
     height: auto;
     padding: 0;
     background: transparent;
-    color: var(--fl-color-primary);
+    color: var(--_fl-button-text);
     text-decoration: underline;
     text-underline-offset: 4px;
   }
 
   [data-element="button"][data-variant="link"]:hover {
+    color: color-mix(in oklab, var(--_fl-button-text) 75%, transparent);
     text-decoration-thickness: 2px;
+  }
+
+  [data-element="button"][data-size="xs"] {
+    height: 1.5rem;
+    padding-inline: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
   }
 
   [data-element="button"][data-size="sm"] {
@@ -110,5 +174,13 @@
     height: 2.5rem;
     padding-inline: 1.5rem;
     font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  [data-element="button"][data-size="xl"] {
+    height: 3rem;
+    padding-inline: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 }
