@@ -16,6 +16,18 @@ Repository-wide guidance for agents working on FlintUI.
 - Library: `mise exec -- mix format && mise exec -- mix compile --warnings-as-errors && mise exec -- mix test` (run from the repo root).
 - Docs: `mise exec -- mix precommit` (run from `docs/`; it runs `compile --warnings-as-errors`, `deps.unlock --unused`, `format`, `test`).
 
+### Tidewave in the docs dev server
+
+Tidewave is wired into the **docs** app only, for `MIX_ENV=dev`. Start the docs
+server before an opencode session so its MCP tools are available at
+`http://127.0.0.1:4000/tidewave/mcp` (configured in the root `opencode.json`):
+
+    cd docs && mise exec -- mix phx.server
+
+Use `tidewave_project_eval` and `tidewave_get_logs` for runtime behavior,
+rendered component output, and LiveView errors. Don't use runtime evaluation
+for work the test suite already covers.
+
 ## Conventions
 
 ### Dogfood FlintUI components in the docs

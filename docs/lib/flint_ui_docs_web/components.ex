@@ -13,6 +13,7 @@ defmodule FlintUIDocsWeb.Components do
   `data-variant`, `data-color`, `data-size`, and `data-depth` hooks the theme
   targets. Headless behavior comes from `FlintUI.button`.
   """
+
   attr(:variant, :string,
     values: ~w(solid soft subtle outline dashed ghost link),
     default: "subtle",

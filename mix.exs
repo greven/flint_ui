@@ -27,8 +27,7 @@ defmodule FlintUI.MixProject do
       {:phoenix_live_view, "~> 1.1.28"},
       {:igniter, "~> 0.6", optional: true},
       {:lazy_html, ">= 0.1.0", only: :test},
-      {:ex_doc, "~> 0.40", only: :dev},
-      {:tidewave, "~> 0.5", only: :dev}
+      {:ex_doc, "~> 0.40", only: :dev}
     ]
   end
 

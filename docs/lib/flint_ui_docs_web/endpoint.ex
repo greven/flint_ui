@@ -29,6 +29,12 @@ defmodule FlintUIDocsWeb.Endpoint do
     raise_on_missing_only: code_reloading?
   )
 
+  # Tidewave provides runtime inspection and MCP tools during development.
+  # It must run before the request body is parsed and before LiveReload.
+  if Mix.env() == :dev do
+    plug(Tidewave)
+  end
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do

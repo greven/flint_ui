@@ -205,7 +205,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
           <pre class="highlight overflow-x-auto p-4 text-xs leading-relaxed text-zinc-100"><code id={"#{@id}-styles"}>{Highlight.highlight(@active_flavor.styles, :css)}</code></pre>
         </div>
       <% else %>
-        <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/40">
+        <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/10 p-6 dark:border-zinc-800 dark:bg-zinc-900/10">
           <%= case @kind do %>
             <% :playground -> %>
               <ComponentDocs.render_playground
@@ -245,6 +245,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
     </div>
     """
   end
+
+  ## Components
 
   attr :id, :string, required: true
   attr :tab, :string, required: true
