@@ -6,15 +6,12 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.ComponentDocs.Snippet
 
-  @base "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-  @outline "border border-zinc-300 text-zinc-900 hover:bg-zinc-100 focus-visible:outline-zinc-900 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:focus-visible:outline-white"
-
   @impl true
   def controls do
     [
       %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
       %{key: :loading, type: :boolean, default: false, label: "Loading"},
-      %{key: :variant, type: :select, default: "solid", label: "Variant"},
+      %{key: :variant, type: :select, default: "subtle", label: "Variant"},
       %{key: :color, type: :select, default: "neutral", label: "Color"},
       %{key: :size, type: :select, default: "md", label: "Size"},
       %{key: :depth, type: :boolean, default: true, label: "Depth"}
@@ -95,7 +92,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         color role, each column a variant.
         """,
         code: """
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto py-1">
           <div class="grid grid-cols-7 items-center gap-x-3 gap-y-6">
             <div></div>
             <span
@@ -167,10 +164,12 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       %{
         id: :icon,
         title: "With an icon",
-        description: "Combine an icon with a text label.",
+        description:
+          "Use the `:leading` slot to place an icon before the content. A button sizes the `.icon` it wraps (following its own `size`) and mutes it to 70%, brightening on hover.",
         code: """
         <.button variant="solid">
-          <.icon name="lucide-plus" class="size-4" /> New project
+          <:leading><.icon name="lucide-plus" /></:leading>
+          New project
         </.button>
         """
       },
@@ -187,7 +186,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
           phx-value-id="67"
           data-confirm="Delete item?"
         >
-          <.icon name="lucide-trash" class="size-4" /> Delete project
+          <.icon name="lucide-trash" /> Delete project
         </.button>
         """
       },
@@ -197,17 +196,19 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         description: "Reveal a FlintUI loading indicator via the button's data-loading state.",
         code: """
         <.button variant="solid" loading>
-          <.loading class="hidden size-4 in-data-loading:inline-block" /> Save
+          <.loading class="hidden in-data-loading:inline-block" /> Save
         </.button>
         """
       },
       %{
         id: :link,
         title: "Link button",
-        description: "Render an anchor that looks and behaves like a button.",
+        description:
+          "Pass `href`, `navigate`, or `patch` to render an anchor. The `:trailing` slot places an icon after the content.",
         code: """
-        <.button href="https://hexdocs.pm/phoenix_live_view" target="_blank" rel="noopener" class="#{outline_class()}">
-          View docs <.icon name="lucide-arrow-up-right" class="size-4" />
+        <.button variant="outline" href="https://hexdocs.pm/phoenix_live_view" target="_blank" rel="noopener">
+          View docs
+          <:trailing><.icon name="lucide-arrow-up-right" /></:trailing>
         </.button>
         """
       }
@@ -224,7 +225,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       so you can style it without extra classes.
 
       The generated component adds `:leading` and `:trailing` slots around the
-      label; those are listed in the Docs tab's API reference, not here.
+      content; those are listed in the Docs tab's API reference, not here.
       """,
       nodes: [
         %{
@@ -296,7 +297,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       disabled={@props.disabled}
       loading={@props.loading}
     >
-      <.loading class="hidden size-4 in-data-loading:inline-block" /> Button
+      <.loading class="hidden in-data-loading:inline-block" /> Button
     </Components.button>
     """
   end
@@ -314,7 +315,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     Snippet.tag(
       ".button",
       [
-        Snippet.attr("variant", props.variant, "solid"),
+        Snippet.attr("variant", props.variant, "subtle"),
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
         Snippet.attr("depth", props.depth, true),
@@ -375,7 +376,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
 
   def render_usage(%{block: :color} = assigns) do
     ~H"""
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto py-1">
       <div class="grid grid-cols-7 items-center gap-x-3 gap-y-6">
         <div></div>
         <span
@@ -425,7 +426,8 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   def render_block(%{block: :icon} = assigns) do
     ~H"""
     <Components.button variant="solid">
-      <Components.icon name="lucide-plus" class="size-4" /> New project
+      <:leading><Components.icon name="lucide-plus" /></:leading>
+      New project
     </Components.button>
     """
   end
@@ -439,7 +441,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       phx-value-id="67"
       data-confirm="Delete item?"
     >
-      <Components.icon name="lucide-trash" class="size-4" /> Delete project
+      <Components.icon name="lucide-trash" /> Delete project
     </Components.button>
     """
   end
@@ -447,21 +449,24 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   def render_block(%{block: :loading} = assigns) do
     ~H"""
     <Components.button variant="solid" loading>
-      <Components.loading class="hidden size-4 in-data-loading:inline-block" /> Save
+      <Components.loading class="hidden in-data-loading:inline-block" /> Save
     </Components.button>
     """
   end
 
   def render_block(%{block: :link} = assigns) do
     ~H"""
-    <.button href={docs_url()} target="_blank" rel="noopener" class={classes()}>
-      View docs <.icon name="lucide-arrow-up-right" class="size-4" />
-    </.button>
+    <Components.button
+      variant="outline"
+      href={docs_url()}
+      target="_blank"
+      rel="noopener"
+    >
+      View docs
+      <:trailing><Components.icon name="lucide-arrow-up-right" /></:trailing>
+    </Components.button>
     """
   end
-
-  defp classes, do: [@base, @outline]
-  defp outline_class, do: Enum.join(classes(), " ")
 
   defp docs_url, do: "https://hexdocs.pm/phoenix_live_view"
 end

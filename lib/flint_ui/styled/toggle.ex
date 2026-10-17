@@ -12,8 +12,8 @@ defmodule FlintUI.Styled.Toggle do
       css: "styled/toggle.css",
       tokens: [:color, :radius, :font, :spacing, :control, :duration, :ease],
       slots: [
-        Slot.new(name: :leading, doc: "Optional content rendered before the label."),
-        Slot.new(name: :trailing, doc: "Optional content rendered after the label.")
+        Slot.new(name: :leading, doc: "Optional content rendered before the toggle's content."),
+        Slot.new(name: :trailing, doc: "Optional content rendered after the toggle's content.")
       ],
       props: [
         Prop.new(

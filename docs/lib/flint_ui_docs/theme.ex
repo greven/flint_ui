@@ -11,9 +11,9 @@ defmodule FlintUIDocs.Theme do
   The docs also ship a real color palette (see `palette/0`), so the component
   showcase demonstrates distinct color roles rather than the default neutral
   theme. It is written to `./flint-palette.css`, imported after the theme. The
-  mapping takes Nuxt UI's defaults for the state roles (`success` green, `info`
+  mapping takes Nuxt UI's defaults for the state roles (`success` emerald, `info`
   blue, `error` red) with `warning` on amber (Fluxon UI's warning), and adds a
-  red `primary` plus an indigo `secondary`; `neutral` stays achromatic so
+  red `primary` plus a gray `secondary`; `neutral` stays achromatic so
   components reading it render plain black/white.
   """
 
@@ -31,9 +31,9 @@ defmodule FlintUIDocs.Theme do
 
   FlintUI's default theme is neutral, so the roles would otherwise be
   indistinguishable. This follows Nuxt UI's defaults for the states
-  (`success` green, `info` blue, `error` red) but maps `warning` to amber
-  (Fluxon UI's warning), and gives the showcase a branded red `primary` plus an
-  indigo `secondary` (Nuxt ships `secondary` and `info` as the same hue; we give
+  (`success` emerald, `info` blue, `error` red) but maps `warning` to amber
+  (Fluxon UI's warning), and gives the showcase a branded red `primary` plus a
+  gray `secondary` (Nuxt ships `secondary` and `info` as the same hue; we give
   `secondary` its own).
   """
   def palette do
@@ -41,9 +41,9 @@ defmodule FlintUIDocs.Theme do
 
     [
       primary: {source, :red},
-      secondary: {source, :indigo},
+      secondary: {source, :gray},
       neutral: {source, :neutral},
-      success: {source, :green},
+      success: {source, :emerald},
       info: {source, :blue},
       warning: {source, :amber},
       error: {source, :red}
@@ -64,8 +64,8 @@ defmodule FlintUIDocs.Theme do
   end
 
   defp palette_source do
-    # `warning` pins to amber-400 (Fluxon's warning); `success` pins to green-700
-    # so its solid label can be near-white at AA (green-600 cannot clear AA
+    # `warning` pins to amber-400 (Fluxon's warning); `success` pins to emerald-700
+    # so its solid label can be near-white at AA (emerald-600 cannot clear AA
     # against white). Everything else uses the global 600 anchor in both schemes
     # — the fill stays equally saturated in dark instead of washing out; the
     # label/`-text` shades are computed.

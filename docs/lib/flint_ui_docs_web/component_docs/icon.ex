@@ -106,10 +106,10 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
       %{
         id: :in_button,
         title: "In a button",
-        description: "Pair an icon with a label.",
+        description: "A button sizes and tints the icon it wraps.",
         code: """
         <.button variant="solid">
-          <.icon name="lucide-download" class="size-4" /> Download
+          <.icon name="lucide-download" /> Download
         </.button>
         """
       }
@@ -128,8 +128,9 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
           title: "Size",
           code: """
           [data-element="icon"][data-size="md"] {
-            width: 1.25rem;
-            height: 1.25rem;
+            --fl-icon-size: 1.25rem;
+            width: var(--fl-icon-size);
+            height: var(--fl-icon-size);
           }
           """
         },
@@ -228,7 +229,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
   def render_block(%{block: :in_button} = assigns) do
     ~H"""
     <Components.button variant="solid">
-      <Components.icon name="lucide-download" class="size-4" /> Download
+      <Components.icon name="lucide-download" /> Download
     </Components.button>
     """
   end

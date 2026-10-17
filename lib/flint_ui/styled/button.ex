@@ -12,14 +12,14 @@ defmodule FlintUI.Styled.Button do
       css: "styled/button.css",
       tokens: [:color, :radius, :font, :spacing, :shadow, :control, :duration, :ease],
       slots: [
-        Slot.new(name: :leading, doc: "Optional content rendered before the label."),
-        Slot.new(name: :trailing, doc: "Optional content rendered after the label.")
+        Slot.new(name: :leading, doc: "Optional content rendered before the button's content."),
+        Slot.new(name: :trailing, doc: "Optional content rendered after the button's content.")
       ],
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "subtle", "outline", "ghost", "dashed", "link"],
-          default: "solid",
+          values: ["subtle", "solid", "outline", "ghost", "dashed", "link"],
+          default: "subtle",
           doc: "The visual emphasis of the button."
         ),
         Prop.new(

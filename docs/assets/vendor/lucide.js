@@ -18,6 +18,10 @@ module.exports = plugin(function ({ matchComponents, theme }) {
       lucide: ({ name, fullPath }) => {
         let content = fs.readFileSync(fullPath).toString().replace(/\r?\n|\r/g, "")
         content = encodeURIComponent(content)
+        // FlintUI's `<.icon>` owns the box: it exposes `--fl-icon-size`, which a
+        // control (button/toggle) can override to size the icon it wraps. Fall
+        // back to 24px when nothing sets the variable, so an icon used without a
+        // size still renders.
         let size = theme("spacing.6")
 
         return {
@@ -33,8 +37,8 @@ module.exports = plugin(function ({ matchComponents, theme }) {
           "background-color": "currentColor",
           "vertical-align": "middle",
           display: "inline-block",
-          width: size,
-          height: size,
+          width: `var(--fl-icon-size, ${size})`,
+          height: `var(--fl-icon-size, ${size})`,
         }
       },
     },

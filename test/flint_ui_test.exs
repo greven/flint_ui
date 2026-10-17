@@ -5,6 +5,7 @@ defmodule FlintUITest do
     assert :button in FlintUI.components()
     assert :card in FlintUI.components()
     assert :collapsible in FlintUI.components()
+    assert :group in FlintUI.components()
     assert :icon in FlintUI.components()
     assert :loading in FlintUI.components()
     assert :toggle in FlintUI.components()

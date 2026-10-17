@@ -280,7 +280,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
       --fl-duration-fast: 150ms;
 
       /* Shared across form controls */
-      --fl-control-height-md: 2.25rem;
+      --fl-control-height-md: 2rem;
       --fl-control-font-size-md: 0.875rem;
     }
     """

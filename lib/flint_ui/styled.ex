@@ -16,6 +16,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Button,
     FlintUI.Styled.Card,
     FlintUI.Styled.Collapsible,
+    FlintUI.Styled.Group,
     FlintUI.Styled.Icon,
     FlintUI.Styled.Loading,
     FlintUI.Styled.Toggle

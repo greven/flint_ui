@@ -6,7 +6,7 @@ defmodule FlintUI.StyledTest do
 
   test "names/0 covers every component that ships a styled entry" do
     assert Enum.sort(Styled.names()) ==
-             Enum.sort([:button, :card, :collapsible, :icon, :loading, :toggle])
+             Enum.sort([:button, :card, :collapsible, :group, :icon, :loading, :toggle])
   end
 
   test "every entry is valid" do
@@ -31,8 +31,8 @@ defmodule FlintUI.StyledTest do
     entry = Styled.get(:button)
 
     variant = Entry.prop(entry, :variant)
-    assert variant.values == ["solid", "subtle", "outline", "ghost", "dashed", "link"]
-    assert variant.default == "solid"
+    assert variant.values == ["subtle", "solid", "outline", "ghost", "dashed", "link"]
+    assert variant.default == "subtle"
     assert variant.default in variant.values
 
     color = Entry.prop(entry, :color)

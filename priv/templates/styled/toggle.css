@@ -20,6 +20,9 @@
     --_fl-toggle-border: var(--fl-toggle-border);
     --_fl-toggle-border-soft: var(--fl-toggle-border-soft);
 
+    /* The box given to a direct `.icon` child, overridden per `size` below. */
+    --_fl-toggle-icon-size: var(--fl-control-icon-md);
+
     /* Tint the shared focus ring with the toggle color. */
     --fl-focus-ring-color: var(--_fl-toggle-color);
 
@@ -45,6 +48,22 @@
   [data-element="toggle"][data-variant]:hover {
     background: var(--_fl-toggle-surface);
     color: var(--fl-color-foreground);
+  }
+
+  /* Icon child: the toggle sizes the `.icon` it contains, it never shrinks, and
+   * it is drawn at 70% of the label color, brightening on hover. Same contract
+   * as `button.css` (publishes `--fl-icon-size` so a host icon set follows it). */
+  [data-element="toggle"][data-variant] > [data-element="icon"] {
+    flex-shrink: 0;
+    --fl-icon-size: var(--_fl-toggle-icon-size);
+    width: var(--fl-icon-size);
+    height: var(--fl-icon-size);
+    color: color-mix(in oklab, currentColor 70%, transparent);
+    transition: color var(--fl-duration-fast) var(--fl-ease-out);
+  }
+
+  [data-element="toggle"][data-variant]:hover > [data-element="icon"] {
+    color: currentColor;
   }
 
   [data-element="toggle"][data-disabled] {
@@ -150,36 +169,46 @@
     border-color: var(--_fl-toggle-border);
   }
 
-  /* Sizes share the control metrics for height and type; horizontal padding is
-   * tighter than a button's for a denser segmented-control look. */
+  /* Sizes share the control metrics for height, padding, type and gap, so a
+   * toggle lines up with a button of the same size. */
   [data-element="toggle"][data-size="xs"] {
     height: var(--fl-control-height-xs);
-    padding-inline: 0.5rem;
+    padding-inline: var(--fl-control-padding-x-xs);
+    gap: var(--fl-control-gap-xs);
     font-size: var(--fl-control-font-size-xs);
     line-height: var(--fl-control-line-height-xs);
+    --_fl-toggle-icon-size: var(--fl-control-icon-xs);
   }
 
   [data-element="toggle"][data-size="sm"] {
     height: var(--fl-control-height-sm);
-    padding-inline: 0.625rem;
+    padding-inline: var(--fl-control-padding-x-sm);
+    gap: var(--fl-control-gap-sm);
+    --_fl-toggle-icon-size: var(--fl-control-icon-sm);
   }
 
   [data-element="toggle"][data-size="md"] {
     height: var(--fl-control-height-md);
-    padding-inline: 0.75rem;
+    padding-inline: var(--fl-control-padding-x-md);
+    gap: var(--fl-control-gap-md);
+    --_fl-toggle-icon-size: var(--fl-control-icon-md);
   }
 
   [data-element="toggle"][data-size="lg"] {
     height: var(--fl-control-height-lg);
-    padding-inline: 1rem;
+    padding-inline: var(--fl-control-padding-x-lg);
+    gap: var(--fl-control-gap-lg);
     font-size: var(--fl-control-font-size-lg);
     line-height: var(--fl-control-line-height-lg);
+    --_fl-toggle-icon-size: var(--fl-control-icon-lg);
   }
 
   [data-element="toggle"][data-size="xl"] {
     height: var(--fl-control-height-xl);
-    padding-inline: 1.25rem;
+    padding-inline: var(--fl-control-padding-x-xl);
+    gap: var(--fl-control-gap-xl);
     font-size: var(--fl-control-font-size-xl);
     line-height: var(--fl-control-line-height-xl);
+    --_fl-toggle-icon-size: var(--fl-control-icon-xl);
   }
 }

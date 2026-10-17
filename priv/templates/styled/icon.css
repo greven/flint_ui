@@ -1,22 +1,26 @@
 @layer components {
-  /* Icon */
+  /* Icon
+   *
+   * `--fl-icon-size` is the icon's box, exposed so a host icon set (or a
+   * control) can drive it. The per-size rules set it; a button/toggle with an
+   * icon child overrides it on that child, which is why an icon set that reads
+   * the variable (the docs' Lucide plugin does) sizes to the control. */
   [data-element="icon"][data-size] {
     display: inline-block;
     vertical-align: middle;
+    width: var(--fl-icon-size);
+    height: var(--fl-icon-size);
   }
 
   [data-element="icon"][data-size="sm"] {
-    width: 1rem;
-    height: 1rem;
+    --fl-icon-size: 1rem;
   }
 
   [data-element="icon"][data-size="md"] {
-    width: 1.25rem;
-    height: 1.25rem;
+    --fl-icon-size: 1.25rem;
   }
 
   [data-element="icon"][data-size="lg"] {
-    width: 1.5rem;
-    height: 1.5rem;
+    --fl-icon-size: 1.5rem;
   }
 }

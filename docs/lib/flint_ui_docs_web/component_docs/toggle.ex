@@ -122,10 +122,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
       %{
         id: :icon,
         title: "Icon and label",
-        description: "Pair an icon with a text label.",
+        description:
+          "Pair an icon with a text label. The toggle sizes and tints the `.icon` it wraps.",
         code: """
         <.toggle variant="solid">
-          <.icon name="lucide-bold" class="size-4" /> Bold
+          <.icon name="lucide-bold" /> Bold
         </.toggle>
         """
       },
@@ -135,26 +136,26 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         description: "An icon-only toggle needs an accessible name.",
         code: """
         <.toggle variant="solid" aria-label="Bold">
-          <.icon name="lucide-bold" class="size-4" />
+          <.icon name="lucide-bold" />
         </.toggle>
         """
       },
       %{
         id: :group,
         title: "Toolbar group",
-        description: "Several toggles arranged as a formatting toolbar.",
+        description: "Several toggles arranged as a formatting toolbar with a group.",
         code: """
-        <div class="inline-flex items-center gap-1 rounded-md border border-zinc-200 p-1 dark:border-zinc-800">
+        <.group variant="framed">
           <.toggle variant="solid" aria-label="Bold" pressed>
-            <.icon name="lucide-bold" class="size-4" />
+            <.icon name="lucide-bold" />
           </.toggle>
           <.toggle variant="solid" aria-label="Italic">
-            <.icon name="lucide-italic" class="size-4" />
+            <.icon name="lucide-italic" />
           </.toggle>
           <.toggle variant="solid" aria-label="Underline">
-            <.icon name="lucide-underline" class="size-4" />
+            <.icon name="lucide-underline" />
           </.toggle>
-        </div>
+        </.group>
         """
       },
       %{
@@ -165,7 +166,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         preview: false,
         code: """
         <.toggle variant="solid" on_click={JS.push("toggle-bold")}>
-          <.icon name="lucide-bold" class="size-4" /> Bold
+          <.icon name="lucide-bold" /> Bold
         </.toggle>
         """
       }
@@ -212,7 +213,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
       pressed={@props.pressed}
       disabled={@props.disabled}
     >
-      <.icon name="lucide-bold" class="size-4" /> Bold
+      <.icon name="lucide-bold" /> Bold
     </Components.toggle>
     """
   end
@@ -236,7 +237,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         Snippet.flag("pressed", props.pressed),
         Snippet.flag("disabled", props.disabled)
       ],
-      ~s(<.icon name="lucide-bold" class="size-4" /> Bold)
+      ~s(<.icon name="lucide-bold" /> Bold)
     )
   end
 
@@ -309,7 +310,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   def render_block(%{block: :icon} = assigns) do
     ~H"""
     <Components.toggle variant="solid">
-      <Components.icon name="lucide-bold" class="size-4" /> Bold
+      <Components.icon name="lucide-bold" /> Bold
     </Components.toggle>
     """
   end
@@ -317,24 +318,24 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   def render_block(%{block: :icon_only} = assigns) do
     ~H"""
     <Components.toggle variant="solid" aria-label="Bold">
-      <Components.icon name="lucide-bold" class="size-4" />
+      <Components.icon name="lucide-bold" />
     </Components.toggle>
     """
   end
 
   def render_block(%{block: :group} = assigns) do
     ~H"""
-    <div class="inline-flex items-center gap-1 rounded-md border border-zinc-200 p-1 dark:border-zinc-800">
+    <Components.group variant="framed">
       <Components.toggle variant="solid" aria-label="Bold" pressed>
-        <Components.icon name="lucide-bold" class="size-4" />
+        <Components.icon name="lucide-bold" />
       </Components.toggle>
       <Components.toggle variant="solid" aria-label="Italic">
-        <Components.icon name="lucide-italic" class="size-4" />
+        <Components.icon name="lucide-italic" />
       </Components.toggle>
       <Components.toggle variant="solid" aria-label="Underline">
-        <Components.icon name="lucide-underline" class="size-4" />
+        <Components.icon name="lucide-underline" />
       </Components.toggle>
-    </div>
+    </Components.group>
     """
   end
 

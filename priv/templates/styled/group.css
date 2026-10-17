@@ -1,0 +1,169 @@
+@layer components {
+  /* Group
+   *
+   * A structural container that lays out related controls as one unit. It is
+   * child-agnostic: the joining geometry targets `> *`, so the same rules work
+   * for buttons, toggles, inputs or any other element. The only place the group
+   * names a child is the `size` cascade, where new controls opt in.
+   *
+   * `--fl-group-gap` and `--fl-group-padding` are the public inputs (derived
+   * from `size`); override them per instance via `class` or `style`. */
+  [data-element="group"][data-group] {
+    --fl-group-gap: 0;
+    --fl-group-padding: 0;
+    display: inline-flex;
+    gap: var(--fl-group-gap);
+    vertical-align: middle;
+  }
+
+  [data-element="group"][data-orientation="horizontal"] {
+    flex-direction: row;
+  }
+
+  [data-element="group"][data-orientation="vertical"] {
+    flex-direction: column;
+  }
+
+  /* Keep the focused child above its neighbours so its ring is never covered. */
+  [data-element="group"] > *:focus-visible {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Grouped controls don't sink on press. The nudge (`--fl-button-press`) reads
+   * as jitter when neighbours are flush, so suppress it for every variant. */
+  [data-element="group"] > * {
+    --fl-button-press: none;
+  }
+
+  /* Size sets the shell metrics and cascades onto the known controls, so a
+   * group can size its children once. New controls opt in by adding their
+   * `data-element` to the selector below.
+   *
+   * The framed shell is akin to a segmented control, so the gap/inset stays
+   * small and barely grows with size (2/2/3/4/4px) rather than tracking the
+   * control scale. */
+  [data-element="group"][data-size="xs"] {
+    --fl-group-gap: calc(var(--fl-spacing) * 0.5);
+    --fl-group-padding: calc(var(--fl-spacing) * 0.5);
+  }
+
+  [data-element="group"][data-size="sm"] {
+    --fl-group-gap: calc(var(--fl-spacing) * 0.5);
+    --fl-group-padding: calc(var(--fl-spacing) * 0.5);
+  }
+
+  [data-element="group"][data-size="md"] {
+    --fl-group-gap: calc(var(--fl-spacing) * 0.75);
+    --fl-group-padding: calc(var(--fl-spacing) * 0.75);
+  }
+
+  [data-element="group"][data-size="lg"] {
+    --fl-group-gap: calc(var(--fl-spacing) * 1);
+    --fl-group-padding: calc(var(--fl-spacing) * 1);
+  }
+
+  [data-element="group"][data-size="xl"] {
+    --fl-group-gap: calc(var(--fl-spacing) * 1);
+    --fl-group-padding: calc(var(--fl-spacing) * 1);
+  }
+
+  [data-element="group"][data-size="xs"]
+    > :is([data-element="button"], [data-element="toggle"]) {
+    height: var(--fl-control-height-xs);
+    font-size: var(--fl-control-font-size-xs);
+    line-height: var(--fl-control-line-height-xs);
+  }
+
+  [data-element="group"][data-size="sm"]
+    > :is([data-element="button"], [data-element="toggle"]) {
+    height: var(--fl-control-height-sm);
+    font-size: var(--fl-control-font-size-sm);
+    line-height: var(--fl-control-line-height-sm);
+  }
+
+  [data-element="group"][data-size="md"]
+    > :is([data-element="button"], [data-element="toggle"]) {
+    height: var(--fl-control-height-md);
+    font-size: var(--fl-control-font-size-md);
+    line-height: var(--fl-control-line-height-md);
+  }
+
+  [data-element="group"][data-size="lg"]
+    > :is([data-element="button"], [data-element="toggle"]) {
+    height: var(--fl-control-height-lg);
+    font-size: var(--fl-control-font-size-lg);
+    line-height: var(--fl-control-line-height-lg);
+  }
+
+  [data-element="group"][data-size="xl"]
+    > :is([data-element="button"], [data-element="toggle"]) {
+    height: var(--fl-control-height-xl);
+    font-size: var(--fl-control-font-size-xl);
+    line-height: var(--fl-control-line-height-xl);
+  }
+
+  /* Attached: collapse the children into a single visual block. Their seams
+   * share one border and only the outer corners stay rounded. Filled and
+   * bordered children alike just touch, so the treatment is variant-agnostic.
+   *
+   * Seam: each child after the first drops its leading border, so the previous
+   * child's trailing border is the single 1px line between them. We do not
+   * overlap the boxes with a negative margin: an overlap paints the following
+   * child's *top and bottom* borders over the previous one's in the shared 1px
+   * column, and two translucent borders (`color-mix(… 50%, transparent)`)
+   * composited there darken into a nub. Removing the edge avoids any overlap.
+   * The total width is identical (N+1 borders either way); filled children have
+   * a transparent base border, so they simply touch. */
+  [data-element="group"][data-variant="attached"] {
+    --fl-group-gap: 0;
+    --fl-group-padding: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
+    > * + * {
+    border-inline-start-width: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="vertical"]
+    > * + * {
+    border-block-start-width: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
+    > :first-child:not(:last-child) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
+    > :last-child:not(:first-child) {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="vertical"]
+    > :first-child:not(:last-child) {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="vertical"]
+    > :last-child:not(:first-child) {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  [data-element="group"][data-variant="attached"] > :not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+
+  /* Framed: a padded, bordered shell around detached children. */
+  [data-element="group"][data-variant="framed"] {
+    padding: var(--fl-group-padding);
+    border: 1px solid var(--fl-color-border);
+    border-radius: var(--fl-radius-lg);
+    background: var(--fl-color-surface);
+    color: var(--fl-color-foreground);
+  }
+}

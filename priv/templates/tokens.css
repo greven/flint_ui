@@ -89,30 +89,47 @@
     --fl-ease-out: cubic-bezier(0, 0, 0.2, 1);
     --fl-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Shared control metrics, so button/input/select/toggle line up. */
+    /* Shared control metrics, so button/input/select/toggle line up. The
+     * heights follow Nuxt UI's scale (24/28/32/36/40), the most common 4px-grid
+     * control range. */
     --fl-control-height-xs: 1.5rem;
-    --fl-control-height-sm: 2rem;
-    --fl-control-height-md: 2.25rem;
-    --fl-control-height-lg: 2.5rem;
-    --fl-control-height-xl: 3rem;
+    --fl-control-height-sm: 1.75rem;
+    --fl-control-height-md: 2rem;
+    --fl-control-height-lg: 2.25rem;
+    --fl-control-height-xl: 2.5rem;
 
     --fl-control-padding-x-xs: 0.5rem;
-    --fl-control-padding-x-sm: 0.75rem;
-    --fl-control-padding-x-md: 1rem;
-    --fl-control-padding-x-lg: 1.5rem;
-    --fl-control-padding-x-xl: 2rem;
+    --fl-control-padding-x-sm: 0.625rem;
+    --fl-control-padding-x-md: 0.625rem;
+    --fl-control-padding-x-lg: 0.75rem;
+    --fl-control-padding-x-xl: 0.75rem;
 
     --fl-control-font-size-xs: 0.75rem;
-    --fl-control-font-size-sm: 0.875rem;
+    --fl-control-font-size-sm: 0.75rem;
     --fl-control-font-size-md: 0.875rem;
-    --fl-control-font-size-lg: 1rem;
-    --fl-control-font-size-xl: 1.125rem;
+    --fl-control-font-size-lg: 0.875rem;
+    --fl-control-font-size-xl: 1rem;
 
     --fl-control-line-height-xs: 1rem;
-    --fl-control-line-height-sm: 1.25rem;
+    --fl-control-line-height-sm: 1rem;
     --fl-control-line-height-md: 1.25rem;
-    --fl-control-line-height-lg: 1.5rem;
-    --fl-control-line-height-xl: 1.75rem;
+    --fl-control-line-height-lg: 1.25rem;
+    --fl-control-line-height-xl: 1.5rem;
+
+    /* Gap between a control's icon and its label, scaled with the control. */
+    --fl-control-gap-xs: 0.25rem;
+    --fl-control-gap-sm: 0.375rem;
+    --fl-control-gap-md: 0.375rem;
+    --fl-control-gap-lg: 0.5rem;
+    --fl-control-gap-xl: 0.5rem;
+
+    /* Icon box inside a control, scaled with the control so a button sets the
+     * size of the icon it contains. */
+    --fl-control-icon-xs: 0.875rem;
+    --fl-control-icon-sm: 1rem;
+    --fl-control-icon-md: 1rem;
+    --fl-control-icon-lg: 1.125rem;
+    --fl-control-icon-xl: 1.25rem;
 
     /* Unified radius scale. Change `--fl-radius` to retune every component at
      * once; each component can opt out through its own `--fl-<name>-radius`. */
@@ -169,17 +186,17 @@
     --fl-color-neutral-900: oklch(0.205 0 0);
     --fl-color-neutral-950: oklch(0.145 0 0);
 
-    --fl-color-success-50: oklch(0.982 0.018 155.826);
-    --fl-color-success-100: oklch(0.962 0.044 156.743);
-    --fl-color-success-200: oklch(0.925 0.084 155.995);
-    --fl-color-success-300: oklch(0.871 0.15 154.449);
-    --fl-color-success-400: oklch(0.792 0.209 151.711);
-    --fl-color-success-500: oklch(0.723 0.219 149.579);
-    --fl-color-success-600: oklch(0.627 0.194 149.214);
-    --fl-color-success-700: oklch(0.527 0.154 150.069);
-    --fl-color-success-800: oklch(0.448 0.119 151.328);
-    --fl-color-success-900: oklch(0.393 0.095 152.535);
-    --fl-color-success-950: oklch(0.266 0.065 152.934);
+    --fl-color-success-50: oklch(0.979 0.021 166.113);
+    --fl-color-success-100: oklch(0.95 0.052 163.051);
+    --fl-color-success-200: oklch(0.905 0.093 164.15);
+    --fl-color-success-300: oklch(0.845 0.143 164.978);
+    --fl-color-success-400: oklch(0.765 0.177 163.223);
+    --fl-color-success-500: oklch(0.696 0.17 162.48);
+    --fl-color-success-600: oklch(0.596 0.145 163.225);
+    --fl-color-success-700: oklch(0.508 0.118 165.612);
+    --fl-color-success-800: oklch(0.432 0.095 166.913);
+    --fl-color-success-900: oklch(0.378 0.077 168.94);
+    --fl-color-success-950: oklch(0.262 0.051 172.552);
 
     --fl-color-info-50: oklch(0.977 0.013 236.62);
     --fl-color-info-100: oklch(0.951 0.026 236.824);

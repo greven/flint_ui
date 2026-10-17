@@ -35,6 +35,9 @@
     --_fl-button-border: var(--fl-button-border);
     --_fl-button-border-soft: var(--fl-button-border-soft);
 
+    /* The box given to a direct `.icon` child, overridden per `size` below. */
+    --_fl-button-icon-size: var(--fl-control-icon-md);
+
     /* Tint the shared focus ring with the button color. */
     --fl-focus-ring-color: var(--_fl-button-color);
 
@@ -66,6 +69,28 @@
       border-color var(--fl-duration-fast) var(--fl-ease-out),
       box-shadow var(--fl-duration-fast) var(--fl-ease-out),
       transform var(--fl-duration-fast) var(--fl-ease-out);
+  }
+
+  /* Leading indicator. A button sizes the `.icon` or loading spinner it
+   * contains to the control: it never shrinks, and its box follows the button's
+   * `size` (see the per-size rules below), published as `--fl-icon-size` so an
+   * icon set that reads that variable — like the docs' Lucide plugin — picks up
+   * the control's size instead of its own. Both are chrome behind the label, so
+   * they are muted to 70% of the label color and brighten to full on hover
+   * (`currentColor` keeps this correct for every variant and color). */
+  [data-element="button"][data-variant]
+    > :is([data-element="icon"], [data-element="loading"]) {
+    flex-shrink: 0;
+    --fl-icon-size: var(--_fl-button-icon-size);
+    width: var(--fl-icon-size);
+    height: var(--fl-icon-size);
+    color: color-mix(in oklab, currentColor 70%, transparent);
+    transition: color var(--fl-duration-fast) var(--fl-ease-out);
+  }
+
+  [data-element="button"][data-variant]:hover
+    > :is([data-element="icon"], [data-element="loading"]) {
+    color: currentColor;
   }
 
   /* The depth rim light. A 1px `::before` border (`--fl-button-sheen`, set by
@@ -282,31 +307,41 @@
   [data-element="button"][data-size="xs"] {
     height: var(--fl-control-height-xs);
     padding-inline: var(--fl-control-padding-x-xs);
+    gap: var(--fl-control-gap-xs);
     font-size: var(--fl-control-font-size-xs);
     line-height: var(--fl-control-line-height-xs);
+    --_fl-button-icon-size: var(--fl-control-icon-xs);
   }
 
   [data-element="button"][data-size="sm"] {
     height: var(--fl-control-height-sm);
     padding-inline: var(--fl-control-padding-x-sm);
+    gap: var(--fl-control-gap-sm);
+    --_fl-button-icon-size: var(--fl-control-icon-sm);
   }
 
   [data-element="button"][data-size="md"] {
     height: var(--fl-control-height-md);
     padding-inline: var(--fl-control-padding-x-md);
+    gap: var(--fl-control-gap-md);
+    --_fl-button-icon-size: var(--fl-control-icon-md);
   }
 
   [data-element="button"][data-size="lg"] {
     height: var(--fl-control-height-lg);
     padding-inline: var(--fl-control-padding-x-lg);
+    gap: var(--fl-control-gap-lg);
     font-size: var(--fl-control-font-size-lg);
     line-height: var(--fl-control-line-height-lg);
+    --_fl-button-icon-size: var(--fl-control-icon-lg);
   }
 
   [data-element="button"][data-size="xl"] {
     height: var(--fl-control-height-xl);
     padding-inline: var(--fl-control-padding-x-xl);
+    gap: var(--fl-control-gap-xl);
     font-size: var(--fl-control-font-size-xl);
     line-height: var(--fl-control-line-height-xl);
+    --_fl-button-icon-size: var(--fl-control-icon-xl);
   }
 }

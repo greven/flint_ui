@@ -75,6 +75,22 @@ defmodule FlintUI.FlintCSSTest do
       assert css =~ "--fl-control-height-#{size}:"
       assert css =~ "--fl-control-font-size-#{size}:"
       assert css =~ "--fl-control-line-height-#{size}:"
+      assert css =~ "--fl-control-gap-#{size}:"
+      assert css =~ "--fl-control-icon-#{size}:"
+    end
+  end
+
+  test "control heights follow the Nuxt-style 4px grid scale", %{css: css} do
+    heights = %{
+      "xs" => "1.5rem",
+      "sm" => "1.75rem",
+      "md" => "2rem",
+      "lg" => "2.25rem",
+      "xl" => "2.5rem"
+    }
+
+    for {size, height} <- heights do
+      assert css =~ "--fl-control-height-#{size}: #{height};"
     end
   end
 
@@ -108,13 +124,19 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "@layer components {"
     assert css =~ ~s([data-element="button"][data-variant])
     assert css =~ ~s([data-element="button"][data-color="neutral"])
+    assert css =~ ~s{:is([data-element="icon"], [data-element="loading"])}
     assert css =~ ~s([data-element="card"][data-card])
     assert css =~ ~s([data-element="card"][data-variant="soft"])
     assert css =~ ~s([data-element="card"][data-divided="true"])
+    assert css =~ ~s([data-element="group"][data-variant="attached"])
+    assert css =~ ~s([data-element="group"][data-variant="framed"])
+    assert css =~ ~s([data-element="group"][data-size="md"])
     assert css =~ ~s([data-element="toggle"][data-variant])
+    assert css =~ ~s([data-element="toggle"][data-variant] > [data-element="icon"])
     assert css =~ ~s([data-element="toggle"][data-color="neutral"])
     assert css =~ ~s([data-element="loading"][data-size])
     assert css =~ ~s([data-element="icon"][data-size])
+    assert css =~ "--fl-icon-size:"
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
   end
 end

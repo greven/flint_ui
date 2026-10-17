@@ -198,23 +198,36 @@ defmodule FlintUI.Generator do
   end
 
   defp attr_block(entry) do
+    attrs = FlintUI.Docs.attrs(entry.name)
     prop_lines = Enum.map(entry.props, &prop_attr/1)
-    include = base_attr_names(entry)
 
     common = [
       ~s{attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")},
-      "attr(:rest, :global, include: ~w(#{Enum.join(include, " ")}), doc: \"Additional HTML attributes, forwarded to the headless component.\")"
+      rest_attr(attrs)
     ]
 
     Enum.join(prop_lines ++ common, "\n")
   end
 
-  defp base_attr_names(entry) do
-    entry.name
-    |> FlintUI.Docs.attrs()
-    |> Enum.map(&Atom.to_string(&1.name))
-    |> Enum.reject(&(&1 in ["rest", "class"]))
-    |> Enum.uniq()
+  # Whitelist the base's declared attributes, plus any attributes the base
+  # itself whitelists on its own `rest` (e.g. the button's link attributes), so
+  # the wrapper forwards the same contract to the headless component.
+  defp rest_attr(attrs) do
+    include =
+      attrs
+      |> Enum.map(&Atom.to_string(&1.name))
+      |> Enum.reject(&(&1 in ["rest", "class"]))
+      |> Kernel.++(rest_include(attrs) || [])
+      |> Enum.uniq()
+
+    "attr(:rest, :global, include: ~w(#{Enum.join(include, " ")}), doc: \"Additional HTML attributes, forwarded to the headless component.\")"
+  end
+
+  defp rest_include(attrs) do
+    case Enum.find(attrs, &(&1.name == :rest)) do
+      nil -> nil
+      attr -> Keyword.get(attr.opts, :include)
+    end
   end
 
   defp prop_attr(prop) do

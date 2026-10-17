@@ -29,6 +29,7 @@ defmodule FlintUIDocsWeb.ComponentDocs do
     Card,
     Collapsible,
     Default,
+    Group,
     Icon,
     Loading,
     Toggle
@@ -38,6 +39,7 @@ defmodule FlintUIDocsWeb.ComponentDocs do
     button: Button,
     card: Card,
     collapsible: Collapsible,
+    group: Group,
     icon: Icon,
     loading: Loading,
     toggle: Toggle

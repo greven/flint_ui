@@ -15,6 +15,7 @@ defmodule FlintUI do
   - `button`
   - `card`
   - `collapsible`
+  - `group`
   - `icon`
   - `loading`
   - `toggle`
@@ -28,6 +29,7 @@ defmodule FlintUI do
     {:button, []},
     {:card, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
+    {:group, []},
     {:icon, []},
     {:loading, []},
     {:toggle, []}

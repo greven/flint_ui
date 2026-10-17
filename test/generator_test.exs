@@ -22,7 +22,7 @@ defmodule FlintUI.GeneratorTest do
     source = Generator.component_source(:button)
 
     assert source =~ "attr(:variant, :string"
-    assert source =~ "values: ~w(solid subtle outline ghost dashed link)"
+    assert source =~ "values: ~w(subtle solid outline ghost dashed link)"
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@color}"
     assert source =~ "data-size={@size}"
@@ -44,8 +44,12 @@ defmodule FlintUI.GeneratorTest do
     source = Generator.component_source(:button)
 
     assert source =~ ~s{slot(:inner_block, required: true, doc: "The content of the button.")}
-    assert source =~ ~s{slot(:leading, doc: "Optional content rendered before the label.")}
-    assert source =~ ~s{slot(:trailing, doc: "Optional content rendered after the label.")}
+
+    assert source =~
+             ~s{slot(:leading, doc: "Optional content rendered before the button's content.")}
+
+    assert source =~
+             ~s{slot(:trailing, doc: "Optional content rendered after the button's content.")}
   end
 
   test "assembles the theme from tokens, base rules, then each component part" do
