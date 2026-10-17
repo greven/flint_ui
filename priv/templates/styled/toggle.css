@@ -9,8 +9,8 @@
     --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
     --fl-toggle-text: var(--fl-toggle-color);
     --fl-toggle-surface: color-mix(in oklab, var(--fl-toggle-color) 10%, transparent);
-    --fl-toggle-border: color-mix(in oklab, var(--fl-toggle-color) 50%, transparent);
-    --fl-toggle-border-soft: color-mix(in oklab, var(--fl-toggle-color) 25%, transparent);
+    --fl-toggle-border: var(--fl-color-neutral-border);
+    --fl-toggle-border-soft: var(--fl-color-neutral-border-soft);
 
     /* Internals, derived from the inputs above. */
     --_fl-toggle-color: var(--fl-toggle-color);
@@ -82,36 +82,48 @@
     --fl-toggle-color: var(--fl-color-primary);
     --fl-toggle-color-foreground: var(--fl-color-primary-foreground);
     --fl-toggle-text: var(--fl-color-primary-text);
+    --fl-toggle-border: var(--fl-color-primary-border);
+    --fl-toggle-border-soft: var(--fl-color-primary-border-soft);
   }
 
   [data-element="toggle"][data-color="secondary"] {
     --fl-toggle-color: var(--fl-color-secondary);
     --fl-toggle-color-foreground: var(--fl-color-secondary-foreground);
     --fl-toggle-text: var(--fl-color-secondary-text);
+    --fl-toggle-border: var(--fl-color-secondary-border);
+    --fl-toggle-border-soft: var(--fl-color-secondary-border-soft);
   }
 
   [data-element="toggle"][data-color="success"] {
     --fl-toggle-color: var(--fl-color-success);
     --fl-toggle-color-foreground: var(--fl-color-success-foreground);
     --fl-toggle-text: var(--fl-color-success-text);
+    --fl-toggle-border: var(--fl-color-success-border);
+    --fl-toggle-border-soft: var(--fl-color-success-border-soft);
   }
 
   [data-element="toggle"][data-color="info"] {
     --fl-toggle-color: var(--fl-color-info);
     --fl-toggle-color-foreground: var(--fl-color-info-foreground);
     --fl-toggle-text: var(--fl-color-info-text);
+    --fl-toggle-border: var(--fl-color-info-border);
+    --fl-toggle-border-soft: var(--fl-color-info-border-soft);
   }
 
   [data-element="toggle"][data-color="warning"] {
     --fl-toggle-color: var(--fl-color-warning);
     --fl-toggle-color-foreground: var(--fl-color-warning-foreground);
     --fl-toggle-text: var(--fl-color-warning-text);
+    --fl-toggle-border: var(--fl-color-warning-border);
+    --fl-toggle-border-soft: var(--fl-color-warning-border-soft);
   }
 
   [data-element="toggle"][data-color="error"] {
     --fl-toggle-color: var(--fl-color-error);
     --fl-toggle-color-foreground: var(--fl-color-error-foreground);
     --fl-toggle-text: var(--fl-color-error-text);
+    --fl-toggle-border: var(--fl-color-error-border);
+    --fl-toggle-border-soft: var(--fl-color-error-border-soft);
   }
 
   [data-element="toggle"][data-color="neutral"] {
@@ -119,8 +131,8 @@
     --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
     --fl-toggle-text: var(--fl-color-foreground);
     --fl-toggle-surface: var(--fl-color-muted);
-    --fl-toggle-border: var(--fl-color-border);
-    --fl-toggle-border-soft: var(--fl-color-border);
+    --fl-toggle-border: var(--fl-color-neutral-border);
+    --fl-toggle-border-soft: var(--fl-color-neutral-border-soft);
   }
 
   [data-element="toggle"][data-variant="solid"][data-state="on"] {
@@ -144,7 +156,7 @@
   }
 
   [data-element="toggle"][data-variant="outline"] {
-    border-color: var(--fl-color-border);
+    border-color: var(--_fl-toggle-border);
   }
 
   [data-element="toggle"][data-variant="outline"][data-state="on"] {
@@ -160,7 +172,7 @@
 
   [data-element="toggle"][data-variant="dashed"] {
     border-style: dashed;
-    border-color: var(--fl-color-border);
+    border-color: var(--_fl-toggle-border);
   }
 
   [data-element="toggle"][data-variant="dashed"][data-state="on"] {

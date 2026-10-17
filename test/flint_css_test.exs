@@ -131,6 +131,9 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="group"][data-variant="attached"])
     assert css =~ ~s([data-element="group"][data-variant="framed"])
     assert css =~ ~s([data-element="group"][data-size="md"])
+    assert css =~ "margin-inline-start: -1px"
+    assert css =~ "--fl-color-primary-border:"
+    assert css =~ "--fl-color-neutral-border:"
     assert css =~ ~s([data-element="toggle"][data-variant])
     assert css =~ ~s([data-element="toggle"][data-variant] > [data-element="icon"])
     assert css =~ ~s([data-element="toggle"][data-color="neutral"])

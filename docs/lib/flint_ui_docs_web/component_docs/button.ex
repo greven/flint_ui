@@ -75,7 +75,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         """,
         code: """
         <div class="flex flex-wrap items-center gap-3">
-          <.button :for={variant <- ~w(solid subtle outline ghost dashed link)} variant={variant}>
+          <.button :for={variant <- ~w(solid soft subtle outline dashed ghost link)} variant={variant}>
             {variant}
           </.button>
         </div>
@@ -93,10 +93,10 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         """,
         code: """
         <div class="overflow-x-auto py-1">
-          <div class="grid grid-cols-7 items-center gap-x-3 gap-y-6">
+          <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
             <div></div>
             <span
-              :for={variant <- ~w(solid subtle outline dashed ghost link)}
+              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
               class="text-center text-xs font-medium text-zinc-500"
             >
               {variant}
@@ -107,7 +107,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
             >
               <span class="text-xs font-medium text-zinc-500">{color}</span>
               <.button
-                :for={variant <- ~w(solid subtle outline dashed ghost link)}
+                :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
                 variant={variant}
                 color={color}
               >
@@ -147,9 +147,9 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         """,
         code: """
         <div class="flex flex-wrap items-center gap-3">
-          <.button variant="solid" color="primary">Raised</.button>
+          <.button variant="solid" color="info">Raised</.button>
           <.button variant="outline">Raised</.button>
-          <.button variant="solid" color="primary" depth={false}>Flat</.button>
+          <.button variant="solid" color="info" depth={false}>Flat</.button>
           <.button variant="outline" depth={false}>Flat</.button>
           <.button variant="ghost" depth={false}>Ghost</.button>
         </div>
@@ -338,9 +338,23 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   end
 
   @impl true
+  def render_usage(%{block: :disabled, layer: :styled} = assigns) do
+    ~H"""
+    <Components.button disabled>Delete</Components.button>
+    """
+  end
+
   def render_usage(%{block: :disabled} = assigns) do
     ~H"""
     <.button disabled>Delete</.button>
+    """
+  end
+
+  def render_usage(%{block: :loading, layer: :styled} = assigns) do
+    ~H"""
+    <Components.button loading>
+      <Components.loading class="hidden in-data-loading:inline-block" /> Save
+    </Components.button>
     """
   end
 
@@ -349,6 +363,17 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     <.button loading>
       <.loading class="hidden size-4 in-data-loading:inline-block" /> Save
     </.button>
+    """
+  end
+
+  def render_usage(%{block: :links, layer: :styled} = assigns) do
+    ~H"""
+    <div class="flex flex-col items-start gap-3">
+      <Components.button navigate="/settings">Settings</Components.button>
+      <Components.button href="https://example.com" target="_blank" rel="noopener" disabled>
+        Visit
+      </Components.button>
+    </div>
     """
   end
 
@@ -365,7 +390,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
       <Components.button
-        :for={variant <- ~w(solid subtle outline ghost dashed link)}
+        :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
         variant={variant}
       >
         {variant}
@@ -377,10 +402,10 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   def render_usage(%{block: :color} = assigns) do
     ~H"""
     <div class="overflow-x-auto py-1">
-      <div class="grid grid-cols-7 items-center gap-x-3 gap-y-6">
+      <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
         <div></div>
         <span
-          :for={variant <- ~w(solid subtle outline dashed ghost link)}
+          :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
           class="text-center text-xs font-medium text-zinc-500"
         >
           {variant}
@@ -391,7 +416,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         >
           <span class="text-xs font-medium text-zinc-500">{color}</span>
           <Components.button
-            :for={variant <- ~w(solid subtle outline dashed ghost link)}
+            :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
             variant={variant}
             color={color}
           >
@@ -414,10 +439,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   def render_usage(%{block: :depth} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" color="primary">Raised</Components.button>
+      <Components.button variant="solid" color="info">Raised</Components.button>
       <Components.button variant="outline">Raised</Components.button>
-      <Components.button variant="solid" color="primary" depth={false}>Flat</Components.button>
+      <Components.button variant="solid" color="info" depth={false}>Flat</Components.button>
       <Components.button variant="outline" depth={false}>Flat</Components.button>
+      <Components.button variant="ghost" depth={false}>Ghost</Components.button>
     </div>
     """
   end

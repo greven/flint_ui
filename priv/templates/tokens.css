@@ -336,6 +336,66 @@
         var(--fl-color-error-400)
     );
 
+    /* Opaque control borders. Grouped controls overlap their borders, so a
+     * translucent border would composite at the shared seam and no longer match
+     * the outer edge. Fixed scale shades keep every control consistent. */
+    --fl-color-primary-border: light-dark(
+        var(--fl-color-primary-400),
+        var(--fl-color-primary-700)
+    );
+    --fl-color-primary-border-soft: light-dark(
+        var(--fl-color-primary-300),
+        var(--fl-color-primary-700)
+    );
+    --fl-color-secondary-border: light-dark(
+        var(--fl-color-secondary-400),
+        var(--fl-color-secondary-700)
+    );
+    --fl-color-secondary-border-soft: light-dark(
+        var(--fl-color-secondary-300),
+        var(--fl-color-secondary-700)
+    );
+    --fl-color-success-border: light-dark(
+        var(--fl-color-success-400),
+        var(--fl-color-success-700)
+    );
+    --fl-color-success-border-soft: light-dark(
+        var(--fl-color-success-300),
+        var(--fl-color-success-700)
+    );
+    --fl-color-info-border: light-dark(
+        var(--fl-color-info-400),
+        var(--fl-color-info-700)
+    );
+    --fl-color-info-border-soft: light-dark(
+        var(--fl-color-info-300),
+        var(--fl-color-info-700)
+    );
+    --fl-color-warning-border: light-dark(
+        var(--fl-color-warning-400),
+        var(--fl-color-warning-700)
+    );
+    --fl-color-warning-border-soft: light-dark(
+        var(--fl-color-warning-300),
+        var(--fl-color-warning-700)
+    );
+    --fl-color-error-border: light-dark(
+        var(--fl-color-error-400),
+        var(--fl-color-error-700)
+    );
+    --fl-color-error-border-soft: light-dark(
+        var(--fl-color-error-300),
+        var(--fl-color-error-700)
+    );
+    --fl-color-neutral-border: light-dark(
+        var(--fl-color-neutral-200),
+        var(--fl-color-neutral-800)
+    );
+    --fl-color-neutral-border-soft: light-dark(
+        var(--fl-color-neutral-300),
+        var(--fl-color-neutral-700)
+    );
+
     /* Surfaces and text. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
@@ -374,8 +434,8 @@
     );
 
     --fl-color-accent: light-dark(
-        var(--fl-color-neutral-100),
-        var(--fl-color-neutral-800)
+        var(--fl-color-neutral-200),
+        var(--fl-color-neutral-700)
     );
     --fl-color-accent-foreground: light-dark(
         var(--fl-color-neutral-900),

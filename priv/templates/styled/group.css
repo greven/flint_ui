@@ -103,18 +103,12 @@
     line-height: var(--fl-control-line-height-xl);
   }
 
-  /* Attached: collapse the children into a single visual block. Their seams
-   * share one border and only the outer corners stay rounded. Filled and
-   * bordered children alike just touch, so the treatment is variant-agnostic.
-   *
-   * Seam: each child after the first drops its leading border, so the previous
-   * child's trailing border is the single 1px line between them. We do not
-   * overlap the boxes with a negative margin: an overlap paints the following
-   * child's *top and bottom* borders over the previous one's in the shared 1px
-   * column, and two translucent borders (`color-mix(… 50%, transparent)`)
-   * composited there darken into a nub. Removing the edge avoids any overlap.
-   * The total width is identical (N+1 borders either way); filled children have
-   * a transparent base border, so they simply touch. */
+  /* Attached: collapse the children into a single visual block. Every child
+   * keeps its full (opaque) border and the boxes overlap by 1px, so the
+   * following child's leading border and the previous child's trailing border
+   * occupy the same column. Raising the hovered or focused child makes its
+   * complete border win, and because the borders are opaque the shared line
+   * stays exactly the same color as an outer edge. */
   [data-element="group"][data-variant="attached"] {
     --fl-group-gap: 0;
     --fl-group-padding: 0;
@@ -122,12 +116,45 @@
 
   [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
     > * + * {
-    border-inline-start-width: 0;
+    margin-inline-start: -1px;
   }
 
   [data-element="group"][data-variant="attached"][data-orientation="vertical"]
     > * + * {
+    margin-block-start: -1px;
+  }
+
+  [data-element="group"][data-variant="attached"]
+    > *:is(:hover, :focus-visible) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* The depth rim light is a pseudo-element border, so it does not follow the
+   * element's border widths. Let it inherit the joined radii and drop both
+   * edges that meet at an internal seam, so a solid group reads as one surface. */
+  [data-element="group"][data-variant="attached"] > *::before {
+    border-radius: inherit;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
+    > * + *::before {
+    border-inline-start-width: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
+    > *:not(:last-child)::before {
+    border-inline-end-width: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="vertical"]
+    > * + *::before {
     border-block-start-width: 0;
+  }
+
+  [data-element="group"][data-variant="attached"][data-orientation="vertical"]
+    > *:not(:last-child)::before {
+    border-block-end-width: 0;
   }
 
   [data-element="group"][data-variant="attached"][data-orientation="horizontal"]

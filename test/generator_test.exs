@@ -22,7 +22,7 @@ defmodule FlintUI.GeneratorTest do
     source = Generator.component_source(:button)
 
     assert source =~ "attr(:variant, :string"
-    assert source =~ "values: ~w(subtle solid outline ghost dashed link)"
+    assert source =~ "values: ~w(solid soft subtle outline dashed ghost link)"
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@color}"
     assert source =~ "data-size={@size}"

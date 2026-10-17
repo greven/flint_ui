@@ -80,7 +80,8 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets. `attached` collapses the children
         into one block; `framed` wraps them in a padded, bordered shell. The
-        theme is child-agnostic, so the same variant works for any controls.
+        theme is child-agnostic, so the same variant works for any controls and
+        each child keeps its own button variant.
         """,
         code: """
         <div class="flex flex-col items-start gap-4">
@@ -88,6 +89,16 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
             <.button variant="outline">Left</.button>
             <.button variant="outline">Center</.button>
             <.button variant="outline">Right</.button>
+          </.group>
+          <.group variant="attached">
+            <.button variant="dashed">Left</.button>
+            <.button variant="dashed">Center</.button>
+            <.button variant="dashed">Right</.button>
+          </.group>
+          <.group variant="attached">
+            <.button variant="ghost">Left</.button>
+            <.button variant="ghost">Center</.button>
+            <.button variant="ghost">Right</.button>
           </.group>
           <.group variant="framed">
             <.toggle>Day</.toggle>
@@ -135,6 +146,42 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
           <.toggle variant="solid" aria-label="Underline">
             <.icon name="lucide-underline" />
           </.toggle>
+        </.group>
+        """
+      },
+      %{
+        id: :with_icons,
+        title: "With icons",
+        description: "Pair an icon with a label in each control.",
+        code: """
+        <.group variant="attached">
+          <.button variant="outline">
+            <.icon name="lucide-copy" /> Copy
+          </.button>
+          <.button variant="outline">
+            <.icon name="lucide-scissors" /> Cut
+          </.button>
+          <.button variant="outline">
+            <.icon name="lucide-clipboard-paste" /> Paste
+          </.button>
+        </.group>
+        """
+      },
+      %{
+        id: :icon_only,
+        title: "Icon only",
+        description: "Give each icon-only control an accessible name with `aria-label`.",
+        code: """
+        <.group variant="attached">
+          <.button variant="outline" aria-label="Copy">
+            <.icon name="lucide-copy" />
+          </.button>
+          <.button variant="outline" aria-label="Cut">
+            <.icon name="lucide-scissors" />
+          </.button>
+          <.button variant="outline" aria-label="Paste">
+            <.icon name="lucide-clipboard-paste" />
+          </.button>
         </.group>
         """
       },
@@ -195,13 +242,25 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
       children, and on `data-orientation` to flip the axis. Grouped controls also
       suppress the button press nudge, so a row of buttons does not jitter when
       clicked.
+
+      In an attached group the children overlap by 1px and keep their full
+      borders. Control borders are opaque, so the shared seam keeps the exact
+      border color, and the hovered or focused child is raised so its complete
+      border wins.
       """,
       snippets: [
         %{
           title: "Attached",
           code: """
-          [data-element="group"][data-variant="attached"] > * + * {
-            border-inline-start-width: 0;
+          [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
+            > * + * {
+            margin-inline-start: -1px;
+          }
+
+          [data-element="group"][data-variant="attached"]
+            > *:is(:hover, :focus-visible) {
+            position: relative;
+            z-index: 1;
           }
 
           [data-element="group"][data-variant="attached"]
@@ -283,6 +342,21 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
   end
 
   @impl true
+  def render_usage(%{block: :orientation, layer: :styled} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-start gap-4">
+      <Components.group orientation="horizontal">
+        <Components.button>Copy</Components.button>
+        <Components.button>Paste</Components.button>
+      </Components.group>
+      <Components.group orientation="vertical">
+        <Components.button>Copy</Components.button>
+        <Components.button>Paste</Components.button>
+      </Components.group>
+    </div>
+    """
+  end
+
   def render_usage(%{block: :orientation} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-start gap-4">
@@ -295,6 +369,15 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
         <.button>Paste</.button>
       </.group>
     </div>
+    """
+  end
+
+  def render_usage(%{block: :label, layer: :styled} = assigns) do
+    ~H"""
+    <Components.group label="Text formatting">
+      <Components.toggle aria-label="Bold">Bold</Components.toggle>
+      <Components.toggle aria-label="Italic">Italic</Components.toggle>
+    </Components.group>
     """
   end
 
@@ -314,6 +397,16 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
         <Components.button variant="outline">Left</Components.button>
         <Components.button variant="outline">Center</Components.button>
         <Components.button variant="outline">Right</Components.button>
+      </Components.group>
+      <Components.group variant="attached">
+        <Components.button variant="dashed">Left</Components.button>
+        <Components.button variant="dashed">Center</Components.button>
+        <Components.button variant="dashed">Right</Components.button>
+      </Components.group>
+      <Components.group variant="attached">
+        <Components.button variant="ghost">Left</Components.button>
+        <Components.button variant="ghost">Center</Components.button>
+        <Components.button variant="ghost">Right</Components.button>
       </Components.group>
       <Components.group variant="framed">
         <Components.toggle>Day</Components.toggle>
@@ -348,6 +441,38 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
       <Components.toggle variant="solid" aria-label="Underline">
         <Components.icon name="lucide-underline" />
       </Components.toggle>
+    </Components.group>
+    """
+  end
+
+  def render_block(%{block: :with_icons} = assigns) do
+    ~H"""
+    <Components.group variant="attached">
+      <Components.button variant="outline">
+        <Components.icon name="lucide-copy" /> Copy
+      </Components.button>
+      <Components.button variant="outline">
+        <Components.icon name="lucide-scissors" /> Cut
+      </Components.button>
+      <Components.button variant="outline">
+        <Components.icon name="lucide-clipboard-paste" /> Paste
+      </Components.button>
+    </Components.group>
+    """
+  end
+
+  def render_block(%{block: :icon_only} = assigns) do
+    ~H"""
+    <Components.group variant="attached">
+      <Components.button variant="outline" aria-label="Copy">
+        <Components.icon name="lucide-copy" />
+      </Components.button>
+      <Components.button variant="outline" aria-label="Cut">
+        <Components.icon name="lucide-scissors" />
+      </Components.button>
+      <Components.button variant="outline" aria-label="Paste">
+        <Components.icon name="lucide-clipboard-paste" />
+      </Components.button>
     </Components.group>
     """
   end

@@ -14,7 +14,7 @@ defmodule FlintUIDocsWeb.Components do
   targets. Headless behavior comes from `FlintUI.button`.
   """
   attr(:variant, :string,
-    values: ~w(subtle solid outline ghost dashed link),
+    values: ~w(solid soft subtle outline dashed ghost link),
     default: "subtle",
     doc: "The visual emphasis of the button."
   )

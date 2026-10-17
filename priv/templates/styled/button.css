@@ -10,8 +10,8 @@
     --fl-button-text: var(--fl-button-color);
     --fl-button-surface: color-mix(in oklab, var(--fl-button-color) 10%, transparent);
     --fl-button-surface-hover: color-mix(in oklab, var(--fl-button-color) 15%, transparent);
-    --fl-button-border: color-mix(in oklab, var(--fl-button-color) 50%, transparent);
-    --fl-button-border-soft: color-mix(in oklab, var(--fl-button-color) 25%, transparent);
+    --fl-button-border: var(--fl-color-neutral-border);
+    --fl-button-border-soft: var(--fl-color-neutral-border-soft);
 
     /* Depth (mirroring FluxonUI): solid wears a 1px white rim light that fades
      * from the top edge down toward the bottom, outline a black 5% bottom line,
@@ -147,8 +147,8 @@
 
   /* Depth: only solid and outline are raised. Solid wears a top rim light (the
    * masked `::before` border) and the theme's outer elevation; outline a bottom
-   * inner line (no shadow); subtle, dashed, ghost, and link stay flat by
-   * design. */
+   * inner line (no shadow); soft, subtle, dashed, ghost, and link stay flat
+   * by design. */
   [data-element="button"][data-variant="solid"] {
     --fl-button-sheen: var(--fl-button-highlight);
     --_fl-button-elevation: var(--fl-button-shadow, 0 0 #0000);
@@ -190,38 +190,48 @@
     --fl-button-color: var(--fl-color-primary);
     --fl-button-color-foreground: var(--fl-color-primary-foreground);
     --fl-button-text: var(--fl-color-primary-text);
+    --fl-button-border: var(--fl-color-primary-border);
+    --fl-button-border-soft: var(--fl-color-primary-border-soft);
   }
 
   [data-element="button"][data-color="success"] {
     --fl-button-color: var(--fl-color-success);
     --fl-button-color-foreground: var(--fl-color-success-foreground);
     --fl-button-text: var(--fl-color-success-text);
+    --fl-button-border: var(--fl-color-success-border);
+    --fl-button-border-soft: var(--fl-color-success-border-soft);
   }
 
   [data-element="button"][data-color="info"] {
     --fl-button-color: var(--fl-color-info);
     --fl-button-color-foreground: var(--fl-color-info-foreground);
     --fl-button-text: var(--fl-color-info-text);
+    --fl-button-border: var(--fl-color-info-border);
+    --fl-button-border-soft: var(--fl-color-info-border-soft);
   }
 
   [data-element="button"][data-color="warning"] {
     --fl-button-color: var(--fl-color-warning);
     --fl-button-color-foreground: var(--fl-color-warning-foreground);
     --fl-button-text: var(--fl-color-warning-text);
+    --fl-button-border: var(--fl-color-warning-border);
+    --fl-button-border-soft: var(--fl-color-warning-border-soft);
   }
 
   [data-element="button"][data-color="error"] {
     --fl-button-color: var(--fl-color-error);
     --fl-button-color-foreground: var(--fl-color-error-foreground);
     --fl-button-text: var(--fl-color-error-text);
+    --fl-button-border: var(--fl-color-error-border);
+    --fl-button-border-soft: var(--fl-color-error-border-soft);
   }
 
   [data-element="button"][data-color="neutral"] {
     --fl-button-text: var(--fl-color-foreground);
     --fl-button-surface: var(--fl-color-muted);
     --fl-button-surface-hover: var(--fl-color-accent);
-    --fl-button-border: var(--fl-color-border);
-    --fl-button-border-soft: var(--fl-color-border);
+    --fl-button-border: var(--fl-color-neutral-border);
+    --fl-button-border-soft: var(--fl-color-neutral-border-soft);
     --fl-button-color: var(--fl-color-inverted);
     --fl-button-color-foreground: var(--fl-color-inverted-foreground);
   }
@@ -230,6 +240,8 @@
     --fl-button-color: var(--fl-color-secondary);
     --fl-button-color-foreground: var(--fl-color-secondary-foreground);
     --fl-button-text: var(--fl-color-secondary-text);
+    --fl-button-border: var(--fl-color-secondary-border);
+    --fl-button-border-soft: var(--fl-color-secondary-border-soft);
   }
 
   /* Solid: the color fills the button. */
@@ -244,6 +256,16 @@
 
   [data-element="button"][data-variant="solid"]:active {
     background: color-mix(in oklab, var(--_fl-button-color) 70%, transparent);
+  }
+
+  /* Soft: a tinted surface with no border. */
+  [data-element="button"][data-variant="soft"] {
+    background: var(--_fl-button-surface);
+    color: var(--_fl-button-text);
+  }
+
+  [data-element="button"][data-variant="soft"]:hover {
+    background: var(--_fl-button-surface-hover);
   }
 
   /* Subtle: ghost + outline, a tinted surface with a matching border. */
