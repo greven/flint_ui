@@ -70,12 +70,6 @@
         box-shadow: 0 0 #0000;
     }
 
-    /* Inversion swaps the neutral roles used by every variant. Solid becomes the
-   * full inverted surface; soft/muted keep their relative tint strength. The
-   * `false` rule keeps a hook for both boolean states. */
-    [data-element="card"][data-inverted="false"] {
-    }
-
     [data-element="card"][data-inverted="true"] {
         --fl-card-surface-foreground: var(--fl-color-inverted-foreground);
         --fl-card-border: color-mix(
@@ -139,7 +133,10 @@
 
     /* Flush keeps a panel gap, but it matches the tighter header/footer inset. */
     [data-element="card"][data-body="flush"][data-card][data-orientation="vertical"] {
-        gap: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
+        gap: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
     }
 
     [data-element="card"][data-body="inset"][data-card] > [data-part="body"],
@@ -164,10 +161,10 @@
         );
     }
 
-    [data-element="card"]:is(
-            [data-variant="soft"],
-            [data-variant="muted"]
-        ):is([data-body="inset"], [data-body="flush"])
+    [data-element="card"]:is([data-variant="soft"], [data-variant="muted"]):is(
+            [data-body="inset"],
+            [data-body="flush"]
+        )
         > [data-part="body"] {
         background: light-dark(
             var(--fl-color-surface),
@@ -211,8 +208,7 @@
         margin-inline: 0;
     }
 
-    [data-element="card"][data-orientation="horizontal"]
-        > [data-part="body"] {
+    [data-element="card"][data-orientation="horizontal"] > [data-part="body"] {
         flex-direction: row;
         gap: 0;
         padding-block: 0;
@@ -304,10 +300,8 @@
         );
     }
 
-    [data-element="card"][data-body="separated-header"]
-        > [data-part="footer"],
-    [data-element="card"][data-body="separated-footer"]
-        > [data-part="header"] {
+    [data-element="card"][data-body="separated-header"] > [data-part="footer"],
+    [data-element="card"][data-body="separated-footer"] > [data-part="header"] {
         background: var(--fl-card-surface, var(--fl-color-surface));
         color: var(
             --fl-card-surface-foreground,
