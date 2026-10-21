@@ -3,6 +3,9 @@ import Config
 # Refresh the docs' theme copy when the library's theme templates change.
 config :flint_ui_docs, theme_watcher: true
 
+# Add a cache-busting query to the built assets while developing.
+config :flint_ui_docs, asset_version: true
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
