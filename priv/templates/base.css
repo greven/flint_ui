@@ -1,8 +1,6 @@
 @layer components {
-    /* Shared focus affordance for every interactive root and part.
-   *
-   * `:where()` keeps specificity at 0, so components can override the ring by
-   * setting `--fl-focus-ring-color` (or the width/offset) locally. */
+    /* Shared focus ring. `:where()` keeps specificity at 0, so components can
+     * override it locally. */
     :where([data-element], [data-part]):focus-visible {
         outline: var(--fl-focus-ring-width) solid var(--fl-focus-ring-color);
         outline-offset: var(--fl-focus-ring-offset);

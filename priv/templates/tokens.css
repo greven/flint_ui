@@ -1,23 +1,10 @@
-/* FlintUI default theme tokens.
+/* FlintUI theme tokens: plain `--fl-*` custom properties, Tailwind optional.
  *
- * Framework-agnostic: plain CSS custom properties plus component rules keyed on
- * the data attributes emitted by the headless components. Tailwind is optional.
+ * Light/dark is automatic (`color-scheme` + `light-dark()`); force a scheme with
+ * `data-color-scheme` and pick a preset from `themes/*.css` with
+ * `data-theme="<name>"` on <html>. Scheme and preset are independent.
  *
- *   * Tokens are prefixed `--fl-*` to avoid collisions with host variables.
- *   * Light/dark is automatic via `color-scheme` + `light-dark()`; force a
- *     scheme by setting `data-color-scheme` on <html>.
- *   * Named theme presets live in `themes/*.css` and select with
- *     `data-theme="<name>"` on <html>. Scheme and preset are independent.
- *
- * Tailwind users can expose these tokens as utilities by mapping them to
- * `@theme` in their own stylesheet (run `mix flint.setup --tailwind`):
- *
- *   @theme inline {
- *     --color-primary: var(--fl-color-primary);
- *     --color-background: var(--fl-color-background);
- *     --radius-md: var(--fl-radius-md);
- *     ...
- *   }
+ * `mix flint.setup --tailwind` maps these into `@theme` to expose utilities.
  */
 
 :root {
@@ -47,7 +34,7 @@
     --fl-font-weight-semibold: 600;
     --fl-font-weight-bold: 700;
 
-    /* Spacing scale. `--fl-spacing` is the base unit */
+    /* Spacing scale; `--fl-spacing` is the base unit. */
     --fl-spacing: 0.25rem;
     --fl-spacing-xs: calc(var(--fl-spacing) * 1);
     --fl-spacing-sm: calc(var(--fl-spacing) * 2);
@@ -57,8 +44,7 @@
     --fl-spacing-2xl: calc(var(--fl-spacing) * 8);
     --fl-spacing-3xl: calc(var(--fl-spacing) * 12);
 
-    /* Breakpoints */
-    /* Default values: 640px; 768px; 1024px; 1280px; 1536px */
+    /* Breakpoints (40/48/64/80/96rem). */
     --fl-breakpoint-sm: 40rem;
     --fl-breakpoint-md: 48rem;
     --fl-breakpoint-lg: 64rem;
@@ -92,8 +78,7 @@
     --fl-control-shadow: var(--fl-shadow-base);
     --fl-control-press: translateY(1px);
 
-    /* Shared control metrics. */
-    /* Default sizes: 24px; 28px; 32px; 36px; 40px */
+    /* Control metrics (24/28/32/36/40px heights). */
     --fl-control-height-xs: 1.5rem;
     --fl-control-height-sm: 1.75rem;
     --fl-control-height-md: 2rem;
@@ -125,8 +110,7 @@
     --fl-control-gap-lg: 0.5rem;
     --fl-control-gap-xl: 0.5rem;
 
-    /* Icon box inside a control, scaled with the control so a button sets the
-     * size of the icon it contains. */
+    /* Icon box, scaled with the control. */
     --fl-control-icon-xs: 0.875rem;
     --fl-control-icon-sm: 1rem;
     --fl-control-icon-md: 1rem;
@@ -143,14 +127,11 @@
     --fl-radius-2xl: calc(var(--fl-radius) * 4);
     --fl-radius-full: 9999px;
 
-    /* The radius shared by buttons, toggles, and future form controls. It tracks
-     * the control step in the scale, so changing `--fl-radius` still retunes
-     * controls proportionally; a theme can square or pill only controls without
-     * touching cards or other components. */
+    /* Shared by buttons, toggles and future form controls: it tracks the control
+     * step, so retuning `--fl-radius` still retunes controls proportionally. */
     --fl-control-radius: var(--fl-radius-md);
 
-    /* Semantic color scales. Each role owns a `50..950` ramp; components read
-     * the role alias (`--fl-color-primary`), which picks a shade per scheme. */
+    /* Semantic color scales: each role owns a 50..950 ramp. */
     --fl-color-primary-50: oklch(0.985 0 0);
     --fl-color-primary-100: oklch(0.97 0 0);
     --fl-color-primary-200: oklch(0.922 0 0);
@@ -235,17 +216,10 @@
     --fl-color-error-900: oklch(0.396 0.141 25.723);
     --fl-color-error-950: oklch(0.258 0.092 26.042);
 
-    /* Role aliases. Components consume these; they resolve a scale shade per
-     * scheme so a light/dark switch never needs a second override.
-     *
-     *   * `--fl-color-{role}` — the solid fill.
-     *   * `--fl-color-{role}-foreground` — the label on that fill.
-     *   * `--fl-color-{role}-text` — the shade to use when the role colors
-     *     text on the page.
-     *
-     * For the shipped default these are baked; `mix flint.palette` recomputes
-     * them from the imported scale so the fill/label and the text shade always
-     * clear AA contrast (see `FlintUI.Palette.Contrast`). */
+    /* Role aliases, resolved per scheme: `{role}` is the solid fill,
+     * `-foreground` the label on it, `-text` the shade for text on the page.
+     * `mix flint.palette` recomputes them from the imported scale so they clear
+     * AA contrast (see `FlintUI.Palette.Contrast`). */
     --fl-color-primary: light-dark(
         var(--fl-color-primary-900),
         var(--fl-color-primary-200)

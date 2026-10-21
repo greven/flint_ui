@@ -1,13 +1,6 @@
 @layer components {
-    /* Collapsible
-     *
-     * The styled layer only adds the reveal transition; there is no container
-     * chrome. A collapsible's look is composition: put a button (or a styled
-     * `<.button>`) in the trigger slot and wrap the content as you like.
-     *
-     * Every selector is gated on the `data-collapsible` presence hook the
-     * generated wrapper sets, so the headless base stays unstyled.
-     */
+    /* Collapsible. The styled layer only adds the reveal transition; gate every
+     * selector on `data-collapsible` so the headless base stays unstyled. */
     [data-element="collapsible"][data-collapsible] [data-part="trigger"] {
         cursor: pointer;
     }
@@ -19,24 +12,13 @@
     }
 }
 
-/* Content reveal.
- *
- * Follows the Radix/Ark model: the content clips itself (never the root) and the
- * open/closed transition is a keyframe animation keyed on `data-state`. The hook
- * measures the content and publishes its natural size as `--_fl-collapsible-height`
- * (and `--_fl-collapsible-width`), which the keyframes interpolate. At rest the
- * height is `auto`, so async/patched content is never stuck at a stale size.
- *
- * The keyframes are gated on `[data-animate]`, which the hook only sets when it
- * drives a transition. A server-rendered `open` element therefore appears open
- * immediately instead of animating on first paint, before the hook mounts.
- *
- * Timing is customizable through the `--fl-collapsible-duration` and
- * `--fl-collapsible-easing` custom properties.
- *
- * Keep the content element free of padding/border: with `box-sizing: border-box`
- * a box cannot collapse below its padding, so the reveal would clamp and stutter.
- */
+/* Content reveal. The content clips itself and animates keyframes driven by the
+ * `--_fl-collapsible-height`/`-width` the hook measures; at rest height is `auto`,
+ * so patched content never sticks. Keyframes only run under `[data-animate]`
+ * (set once the hook is ready), so server-rendered open content appears
+ * immediately. Timing: `--fl-collapsible-duration` / `--fl-collapsible-easing`.
+ * Keep the content free of padding and borders: border-box cannot collapse
+ * below them. */
 [data-element="collapsible"][data-collapsible] [data-part="content"] {
     overflow: hidden;
     border-radius: inherit;

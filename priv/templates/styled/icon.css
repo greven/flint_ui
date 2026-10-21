@@ -1,10 +1,6 @@
 @layer components {
-  /* Icon
-   *
-   * `--fl-icon-size` is the icon's box, exposed so a host icon set (or a
-   * control) can drive it. The per-size rules set it; a button/toggle with an
-   * icon child overrides it on that child, which is why an icon set that reads
-   * the variable (the docs' Lucide plugin does) sizes to the control. */
+  /* Icon. `--fl-icon-size` is the box; per-size rules set it and a control can
+   * override it on its child, so host icon sets that read it follow the control. */
   [data-element="icon"][data-size] {
     display: inline-block;
     vertical-align: middle;

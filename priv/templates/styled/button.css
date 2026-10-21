@@ -1,10 +1,6 @@
 @layer components {
-    /* Button
-   *
-   * `--fl-button-color`, `--fl-button-color-foreground` and `--fl-button-text`
-   * are the public per-instance inputs. Everything else derives from
-   * the theme tokens; shared depth, elevation and press behavior
-   * comes from `--fl-control-*`. */
+    /* Button. Public inputs: `--fl-button-color`, `-color-foreground`, `-text`.
+     * Shared depth, elevation and press behavior come from `--fl-control-*`. */
     [data-element="button"][data-variant] {
         display: inline-flex;
         position: relative;
@@ -34,8 +30,8 @@
         --fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));
     }
 
-    /* Leading indicator. The control publishes `--fl-icon-size`, so a host icon
-     * set that reads it follows the selected size. */
+    /* Leading icon/loading. The published `--fl-icon-size` lets host icon sets
+     * follow the control size. */
     [data-element="button"][data-variant]
         > :is([data-element="icon"], [data-element="loading"]) {
         flex-shrink: 0;
@@ -96,8 +92,8 @@
         border-color: rgb(255 255 255 / calc(12% * var(--fl-control-depth, 1)));
     }
 
-    /* Elevation: solid, subtle, and outline sit on the shared control shadow.
-     * Override `--fl-control-shadow` on the theme or the instance to remove it. */
+    /* Elevation: solid, subtle and outline share the control shadow; override
+     * `--fl-control-shadow` to remove it. */
     [data-element="button"][data-variant="solid"],
     [data-element="button"][data-variant="subtle"] {
         box-shadow: var(--fl-control-shadow, 0 0 #0000);
@@ -120,8 +116,8 @@
         pointer-events: none;
     }
 
-    /* Color mapping: each color sets the three public inputs. Neutral routes
-     * through the inverted surface instead of the neutral hue. */
+    /* Each color sets the three public inputs; neutral uses the inverted
+     * surface instead of the neutral hue. */
     [data-element="button"][data-color="primary"] {
         --fl-button-color: var(--fl-color-primary);
         --fl-button-color-foreground: var(--fl-color-primary-foreground);
@@ -293,8 +289,7 @@
         text-decoration-thickness: 2px;
     }
 
-    /* Neutral surfaces use the shared neutral hierarchy rather than a tint of
-     * the inverted fill. */
+    /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
     [data-element="button"][data-color="neutral"]:is(
             [data-variant="soft"],
             [data-variant="subtle"]

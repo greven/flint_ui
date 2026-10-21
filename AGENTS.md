@@ -351,12 +351,13 @@ FlintUI does not require Tailwind.
   Regions own their inline inset, so divided lines span the card edge to edge. A
   divided padded section or footer also gets block-start padding below the line;
   in horizontal orientation regions own the block inset so the dividers span the
-  card height. Header/footer block padding is one base step tighter than the
-  card spacing (`--fl-card-spacing - --fl-spacing`, 16px at the default) while
-  body and section spacing keep `--fl-card-spacing`. Vertical flush cards use
-  that same region spacing for the gap around the panel. A full-bleed first/last
-  section cancels the card's block inset in the non-panel treatments; inside a
-  panel it bleeds to the panel edge.
+  card height, and that inset matches the sections so every column's content
+  lines up. In vertical cards, header/footer block padding is one base step
+  tighter than the card spacing (`--fl-card-spacing - --fl-spacing`, 16px at the
+  default) while body and section spacing keep `--fl-card-spacing`. Vertical
+  flush cards use that same region spacing for the gap around the panel. A
+  full-bleed first/last section cancels the card's block inset in the non-panel
+  treatments; inside a panel it bleeds to the panel edge.
   The **`color="neutral"`** role (button/toggle, the default) is the inverted
   surface — plain black/white — not the `--fl-color-neutral` hue alias, so it
   stays monochrome even when a palette remaps the neutral ramp. `secondary`

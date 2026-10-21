@@ -18,8 +18,21 @@
 @custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
 @custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
-/* Use the data attribute for dark mode  */
-@custom-variant dark (&:where([data-color-scheme=dark], [data-color-scheme=dark] *));
+/* Dark mode follows an explicit `data-color-scheme` when set, otherwise the OS
+   preference. The docs' "system" scheme clears the attribute, so the media
+   query is what keeps the site chrome in step with the FlintUI tokens (which
+   rely on `color-scheme` + `light-dark()`). */
+@custom-variant dark {
+  &:where([data-color-scheme="dark"], [data-color-scheme="dark"] *) {
+    @slot;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:where(:not([data-color-scheme="light"], [data-color-scheme="light"] *)) {
+      @slot;
+    }
+  }
+}
 
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session],

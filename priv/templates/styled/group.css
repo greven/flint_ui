@@ -1,13 +1,7 @@
 @layer components {
-  /* Group
-   *
-   * A structural container that lays out related controls as one unit. It is
-   * child-agnostic: the joining geometry targets `> *`, so the same rules work
-   * for buttons, toggles, inputs or any other element. The only place the group
-   * names a child is the `size` cascade, where new controls opt in.
-   *
-   * `--fl-group-gap` and `--fl-group-padding` are the public inputs (derived
-   * from `size`); override them per instance via `class` or `style`. */
+  /* Group: a child-agnostic container that joins related controls. Geometry
+   * targets `> *`; only the size cascade names known controls. Public inputs are
+   * `--fl-group-gap` and `--fl-group-padding` (set by `size`). */
   [data-element="group"][data-group] {
     --fl-group-gap: 0;
     --fl-group-padding: 0;
@@ -30,19 +24,14 @@
     z-index: 1;
   }
 
-  /* Grouped controls don't sink on press. The nudge (`--fl-control-press`) reads
-   * as jitter when neighbours are flush, so suppress it for every control. */
+  /* Flush neighbours make the press nudge read as jitter, so suppress it. */
   [data-element="group"] > * {
     --fl-control-press: none;
   }
 
-  /* Size sets the shell metrics and cascades onto the known controls, so a
-   * group can size its children once. New controls opt in by adding their
-   * `data-element` to the selector below.
-   *
-   * The framed shell is akin to a segmented control, so the gap/inset stays
-   * small and barely grows with size (2/2/3/4/4px) rather than tracking the
-   * control scale. */
+  /* `size` sets the shell metrics and cascades onto known controls; new controls
+   * opt in by adding their `data-element` below. The framed shell stays near
+   * segmented-control density (2/2/3/4/4px) rather than tracking the scale. */
   [data-element="group"][data-size="xs"] {
     --fl-group-gap: calc(var(--fl-spacing) * 0.5);
     --fl-group-padding: calc(var(--fl-spacing) * 0.5);
@@ -103,12 +92,8 @@
     line-height: var(--fl-control-line-height-xl);
   }
 
-  /* Attached: collapse the children into a single visual block. Every child
-   * keeps its full (opaque) border and the boxes overlap by 1px, so the
-   * following child's leading border and the previous child's trailing border
-   * occupy the same column. Raising the hovered or focused child makes its
-   * complete border win, and because the borders are opaque the shared line
-   * stays exactly the same color as an outer edge. */
+  /* Attached: children overlap by 1px so their opaque borders share a line;
+   * raising the hovered/focused child lets its full border win. */
   [data-element="group"][data-variant="attached"] {
     --fl-group-gap: 0;
     --fl-group-padding: 0;
@@ -130,9 +115,8 @@
     z-index: 1;
   }
 
-  /* The depth rim light is a pseudo-element border, so it does not follow the
-   * element's border widths. Let it inherit the joined radii and drop both
-   * edges that meet at an internal seam, so a solid group reads as one surface. */
+  /* The rim is a pseudo-element border: inherit the joined radii and drop the
+   * edges that meet at an internal seam. */
   [data-element="group"][data-variant="attached"] > *::before {
     border-radius: inherit;
   }

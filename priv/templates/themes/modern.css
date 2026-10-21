@@ -1,9 +1,5 @@
-/* Modern theme preset.
- *
- * Select it with `data-theme="modern"` on <html>. Demonstrates a preset that
- * retunes radius, type, and the primary color together while leaving the
- * light/dark scheme to `data-color-scheme`.
- */
+/* Modern preset (`data-theme="modern"`): retunes radius, type and primary color;
+ * the scheme stays independent. */
 [data-theme="modern"] {
     --fl-radius: 0.625rem;
 

@@ -1,8 +1,5 @@
-/* Pastel theme preset.
- *
- * Select it with `data-theme="pastel"` on <html>. A preset overrides tokens
- * only; the light/dark scheme is controlled separately by `data-color-scheme`.
- */
+/* Pastel preset (`data-theme="pastel"`). Presets override tokens only; the
+ * light/dark scheme is controlled separately by `data-color-scheme`. */
 [data-theme="pastel"] {
     --fl-radius: 0.5rem;
 

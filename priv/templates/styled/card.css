@@ -1,10 +1,7 @@
 @layer components {
-    /* Card
-   *
-   * `--fl-card-spacing`, `--fl-card-surface`, `--fl-card-surface-foreground`,
-   * `--fl-card-border` and `--fl-card-shadow` are the public per-instance
-   * inputs. Bands, panels, dividers and inverted surfaces derive from them and
-   * the surrounding theme. */
+    /* Card. Public inputs: `--fl-card-spacing`, `-surface`,
+     * `-surface-foreground`, `-border`, `-shadow`; bands, panels and dividers
+     * derive from them and the theme. */
     [data-element="card"][data-card] {
         display: flex;
         flex-direction: column;
@@ -38,9 +35,8 @@
         min-width: 0;
     }
 
-    /* Variants are neutral surface treatments (no semantic color). They step
-   * from the base surface toward the elevated/muted step: light steps darker,
-   * dark steps lighter. `soft` is the half-step; `muted` is the full step. */
+    /* Variants are neutral surface steps: `soft` is the half-step toward
+     * elevated/muted, `muted` the full step. Light steps darker, dark lighter. */
     [data-element="card"][data-variant="solid"] {
         --fl-card-surface: var(--fl-color-surface);
     }
@@ -83,8 +79,7 @@
         --fl-card-surface: var(--fl-color-inverted);
     }
 
-    /* Inverted soft/muted stay opaque steps over the inverted surface; the
-    * strong inverted role still drives text and hairlines. */
+    /* Inverted soft/muted stay opaque steps over the inverted surface. */
     [data-element="card"][data-inverted="true"][data-variant="soft"] {
         --fl-card-surface: color-mix(
             in oklab,
@@ -101,10 +96,8 @@
         );
     }
 
-    /* Seamless dissolves the body box, so its sections share the root gap.
-     * Separated bodies sit on the card surface, with bands a darker shade of it;
-     * divided bodies inherit the card surface because the lines are the
-     * treatment; inset/flush turn the body into a panel. */
+    /* Body treatments: seamless dissolves the body box, separated tints its outer
+     * regions, divided draws lines on the card surface, inset/flush make a panel. */
     [data-element="card"][data-body="seamless"][data-card]
         > [data-part="body"] {
         display: contents;
@@ -119,9 +112,8 @@
         gap: 0;
     }
 
-    /* Divided has no tint of its own. Keeping the body transparent lets the
-     * padded space around the lines show the card surface instead of a solid
-     * band that reads as extra header or footer padding. */
+    /* Divided stays transparent so the padded space shows the card surface
+     * instead of reading as extra header/footer padding. */
     [data-element="card"][data-body="divided"][data-card] {
         gap: 0;
     }
@@ -223,8 +215,7 @@
         margin-block: var(--fl-spacing);
     }
 
-    /* Flush panels overlap the card border by one pixel so the two hairlines
-     * merge instead of sitting side by side. */
+    /* Flush panels overlap the card border by 1px so the hairlines merge. */
     [data-element="card"][data-card][data-body="flush"] > [data-part="body"] {
         border-radius: var(--fl-radius-lg);
     }
@@ -244,8 +235,8 @@
         margin-block-end: -1px;
     }
 
-    /* Without a footer, the body panel owns the card's bottom edge: inset keeps
-     * its small panel gap, while flush reaches the card edge. */
+    /* Without a footer the panel owns the bottom edge: inset keeps its small
+     * gap, flush reaches the edge. */
     [data-element="card"][data-card][data-body="inset"]:not(
             :has(> [data-part="footer"])
         ) {
@@ -258,9 +249,8 @@
         padding-block-end: 0;
     }
 
-    /* Separated turns one or both outer regions into darker bands of the card
-     * surface. The unbanded region stays on the card surface so it matches the
-     * body. */
+    /* Separated bands are a darker shade of the card surface; the unbanded
+     * region matches the body. */
     [data-element="card"][data-body="separated"]
         > :is([data-part="header"], [data-part="footer"]),
     [data-element="card"][data-body="separated-header"] > [data-part="header"],
@@ -309,34 +299,8 @@
         );
     }
 
-    /* Separated bands use the tighter header/footer inset. */
-    [data-element="card"]:is(
-            [data-body="separated"],
-            [data-body="separated-header"],
-            [data-body="separated-footer"]
-        )[data-orientation="vertical"]
-        > [data-part="header"] {
-        padding-block-start: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
-    }
-
-    [data-element="card"]:is(
-            [data-body="separated"],
-            [data-body="separated-header"],
-            [data-body="separated-footer"]
-        )[data-orientation="vertical"]
-        > [data-part="footer"] {
-        padding-block-end: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
-    }
-
-    /* Both outer regions cancel the card's block inset so the band, or the
-     * body-colored unbanded region, reaches the rounded edge. Header and footer
-     * use a slightly tighter inset than the body. */
+    /* Outer regions cancel the card's block inset so the band (or unbanded
+     * region) reaches the rounded edge, with a slightly tighter inset. */
     [data-element="card"][data-card][data-orientation="vertical"]
         > [data-part="header"] {
         padding-block-start: calc(
@@ -359,6 +323,20 @@
         );
     }
 
+    /* A band also needs the inset on its body-facing side, since separated roots
+     * have no gap. Unbanded regions keep only their outer inset. */
+    [data-element="card"][data-body="separated"][data-orientation="vertical"]
+        > :is([data-part="header"], [data-part="footer"]),
+    [data-element="card"][data-body="separated-header"][data-orientation="vertical"]
+        > [data-part="header"],
+    [data-element="card"][data-body="separated-footer"][data-orientation="vertical"]
+        > [data-part="footer"] {
+        padding-block: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
+    }
+
     /* Regions own the inline inset so dividers can run edge to edge. */
     [data-element="card"][data-card]
         :is([data-part="header"], [data-part="footer"], [data-part="section"]) {
@@ -370,14 +348,11 @@
         padding-inline: 0;
     }
 
-    /* In a row, the regions own the vertical inset too, so a stretched region's
-   * leading divider spans the full height of the card. */
+    /* In a row, regions own the block inset (so dividers span the height) and
+     * match the sections, so every column's content sits on the same line. */
     [data-element="card"][data-card][data-orientation="horizontal"]
         > :is([data-part="header"], [data-part="footer"]) {
-        padding-block: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
+        padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
     [data-element="card"][data-card][data-orientation="horizontal"]
@@ -385,9 +360,8 @@
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
-    /* Divided draws a line between every region. The first region never gets a
-   * leading line. A padded section, or the footer, also gets breathing room
-   * below the line; the root gap provides the space above it. */
+    /* Divided draws a line between every region, never before the first. A padded
+     * section or the footer gets breathing room below the line. */
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]
         > [data-part="section"]:not(:first-child),
@@ -420,9 +394,8 @@
         );
     }
 
-    /* A full-bleed first/last section cancels the card's block inset so it can
-   * sit flush against the rounded edge. Panel treatments keep the inset; there
-   * full-bleed means flush to the panel edge. */
+    /* A first/last full-bleed section cancels the card's block inset so it sits
+     * flush against the rounded edge (or the panel edge). */
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:first-child
         > [data-part="section"][data-padded="false"]:first-child {
@@ -509,8 +482,8 @@
         margin-inline-start: auto;
     }
 
-    /* In a horizontal card the footer is a side column, so its content and
-     * actions stack and the actions settle at the bottom. */
+    /* In a horizontal card the footer is a side column: content and actions
+     * stack, with the actions at the bottom. */
     [data-element="card"][data-orientation="horizontal"] [data-part="footer"] {
         flex-direction: column;
         align-items: flex-start;
