@@ -109,11 +109,6 @@
             var(--fl-control-shadow, 0 0 #0000);
     }
 
-    /* `depth` is a boolean; `true` keeps the variant's default treatment and
-     * lets a theme-level `--fl-control-depth` through. */
-    [data-element="button"][data-depth="true"] {
-    }
-
     /* `false` flattens the rim and inner line only; shadows are independent. */
     [data-element="button"][data-depth="false"] {
         --fl-control-depth: 0;
