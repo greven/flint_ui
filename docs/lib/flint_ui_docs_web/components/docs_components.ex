@@ -82,7 +82,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def attr_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[36rem] text-left text-sm">
+      <table class="w-full min-w-xl text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Attr</th>
@@ -118,7 +118,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def attributes_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[44rem] text-left text-sm">
+      <table class="w-full min-w-176 text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Attr</th>
@@ -447,7 +447,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def slot_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[36rem] text-left text-sm">
+      <table class="w-full min-w-xl text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Name</th>
@@ -488,7 +488,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def events_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[36rem] text-left text-sm">
+      <table class="w-full min-w-xl text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Name</th>
@@ -523,7 +523,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
       <p class="text-xs font-semibold tracking-wider text-zinc-400 uppercase">{part}</p>
       <div class="mt-2 overflow-x-auto">
-        <table class="w-full min-w-[36rem] text-left text-sm">
+        <table class="w-full min-w-xl text-left text-sm">
           <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
             <tr>
               <th class="py-3 pr-6 font-medium">Attribute</th>
@@ -571,7 +571,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def css_vars_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[40rem] text-left text-sm">
+      <table class="w-full min-w-160 text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Name</th>
@@ -619,7 +619,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def selectors_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[36rem] text-left text-sm">
+      <table class="w-full min-w-xl text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Selector</th>
@@ -650,7 +650,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def keyboard_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[36rem] text-left text-sm">
+      <table class="w-full min-w-xl text-left text-sm">
         <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
           <tr>
             <th class="py-3 pr-6 font-medium">Keys</th>

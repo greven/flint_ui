@@ -57,6 +57,15 @@
     --fl-spacing-2xl: calc(var(--fl-spacing) * 8);
     --fl-spacing-3xl: calc(var(--fl-spacing) * 12);
 
+    /* Breakpoints */
+    --fl-breakpoint-sm: 40rem;
+    --fl-breakpoint-md: 48rem;
+    --fl-breakpoint-lg: 64rem;
+    --fl-breakpoint-xl: 80rem;
+    --fl-breakpoint-2xl: 96rem;
+
+    --fl-container: 80rem;
+
     /* Elevation. `base` is the scheme-aware default control shadow. */
     --fl-shadow-base: 0 1px 2px 0 light-dark(#0000000d, #0000004d);
     --fl-shadow-2xs: 0 1px rgb(0 0 0 / 5%);
@@ -70,19 +79,6 @@
     --fl-shadow-xl:
         0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
-    /* Button effect defaults. */
-    --fl-button-depth: 1;
-    --fl-button-shadow: var(--fl-shadow-base);
-    --fl-button-press: translateY(1px);
-
-    --fl-breakpoint-sm: 40rem;
-    --fl-breakpoint-md: 48rem;
-    --fl-breakpoint-lg: 64rem;
-    --fl-breakpoint-xl: 80rem;
-    --fl-breakpoint-2xl: 96rem;
-
-    --fl-container: 80rem;
-
     /* Motion. */
     --fl-duration-fast: 150ms;
     --fl-duration-base: 200ms;
@@ -90,7 +86,13 @@
     --fl-ease-out: cubic-bezier(0, 0, 0.2, 1);
     --fl-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Shared control metrics, so button/input/select/toggle line up. */
+    /* Button effect defaults. */
+    --fl-button-depth: 1;
+    --fl-button-shadow: var(--fl-shadow-base);
+    --fl-button-press: translateY(1px);
+
+    /* Shared control metrics, so buttons, inputs, etc. line up. */
+    /* Default sizes: 24px; 28px; 32px; 36px; 40px */
     --fl-control-height-xs: 1.5rem;
     --fl-control-height-sm: 1.75rem;
     --fl-control-height-md: 2rem;
@@ -143,7 +145,7 @@
 
     --fl-button-radius: var(--fl-radius-md);
     --fl-toggle-radius: var(--fl-radius-md);
-    --fl-card-radius: var(--fl-radius-xl);
+    --fl-card-radius: var(--fl-radius-lg);
     --fl-input-radius: var(--fl-radius-md);
 
     /* Semantic color scales. Each role owns a `50..950` ramp; components read
@@ -386,11 +388,11 @@
     );
     --fl-color-neutral-border: light-dark(
         var(--fl-color-neutral-200),
-        var(--fl-color-neutral-800)
+        oklch(1 0 0 / 10%)
     );
     --fl-color-neutral-border-soft: light-dark(
         var(--fl-color-neutral-300),
-        var(--fl-color-neutral-700)
+        oklch(1 0 0 / 14%)
     );
 
     /* Surfaces and text. The surface scale is opaque and moves from the base
@@ -406,19 +408,20 @@
         var(--fl-color-neutral-950),
         var(--fl-color-neutral-50)
     );
-    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
+    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
     --fl-color-muted: light-dark(
         var(--fl-color-neutral-100),
-        var(--fl-color-neutral-800)
+        color-mix(
+            in oklab,
+            var(--fl-color-neutral-800) 80%,
+            var(--fl-color-neutral-700) 20%
+        )
     );
     --fl-color-muted-foreground: light-dark(
         var(--fl-color-neutral-500),
         var(--fl-color-neutral-400)
     );
-    --fl-color-elevated: light-dark(
-        var(--fl-color-neutral-100),
-        var(--fl-color-neutral-800)
-    );
+    --fl-color-elevated: var(--fl-color-muted);
     --fl-color-surface-soft: color-mix(
         in oklab,
         var(--fl-color-elevated) 50%,
@@ -446,7 +449,11 @@
 
     --fl-color-accent: light-dark(
         var(--fl-color-neutral-200),
-        var(--fl-color-neutral-700)
+        color-mix(
+            in oklab,
+            var(--fl-color-neutral-700) 50%,
+            var(--fl-color-neutral-800) 50%
+        )
     );
     --fl-color-accent-foreground: light-dark(
         var(--fl-color-neutral-900),
@@ -455,19 +462,19 @@
 
     --fl-color-border: light-dark(
         var(--fl-color-neutral-200),
-        oklch(1 0 0 / 10%)
+        oklch(1 0 0 / 8%)
     );
     --fl-color-border-muted: light-dark(
         var(--fl-color-neutral-200),
-        var(--fl-color-neutral-700)
+        oklch(1 0 0 / 5%)
     );
     --fl-color-border-accented: light-dark(
         var(--fl-color-neutral-300),
-        var(--fl-color-neutral-700)
+        oklch(1 0 0 / 12%)
     );
     --fl-color-input: light-dark(
         var(--fl-color-neutral-200),
-        oklch(1 0 0 / 15%)
+        oklch(1 0 0 / 12%)
     );
     --fl-color-ring: light-dark(
         var(--fl-color-neutral-400),

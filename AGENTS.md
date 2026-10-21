@@ -293,11 +293,16 @@ FlintUI does not require Tailwind.
   `--fl-color-dimmed`/`--fl-color-muted-foreground`, plus
   `--fl-color-disabled`/`-foreground`/`-border` and `--fl-disabled-opacity`.
   The scale is opaque and moves from the base surface toward `elevated`: light
-  steps darker, dark steps lighter. Never make a surface token translucent over
-  the page; composite over `--fl-color-surface` or use the scale directly.
-  Disabled surfaces use the muted fill with a dimmed label; colored controls
-  keep their hue and dim through `--fl-disabled-opacity`. They derive from the
-  `neutral` role's scale, so a palette remap carries through. Components that
+  steps darker, dark steps lighter. In dark the base surface is `neutral-800`
+  and muted/elevated is an 80/20 `neutral-800`/`neutral-700` mix, keeping cards
+  lifted off the near-black page. Dark borders are foreground-alpha steps
+  (5% muted, 8% default, 12% accented/input, 10% neutral, 14% neutral-soft)
+  over the surface, so they follow it instead of sitting at a fixed contrast.
+  Never make a surface token translucent over the page; composite over
+  `--fl-color-surface` or use the scale directly. Disabled surfaces use the
+  muted fill with a dimmed label; colored controls keep their hue and dim
+  through `--fl-disabled-opacity`. They derive from the `neutral` role's scale,
+  so a palette remap carries through. Components that
   shouldn't take a `color` use these: **Card** exposes only neutral surface
   `variant`s (`solid` default, `soft`, `muted`), never a hue. `outline` and
   `shadow` (both true by default) and `inverted` compose with every variant.
@@ -326,15 +331,15 @@ FlintUI does not require Tailwind.
   reach the rounded edge.
   Inset/flush add a border and radius to the body panel; separated/divided remain
   edge-to-edge.
-  Band tint is a 1.5% black shade of the card surface in light and 15% in dark
+  Band tint is a 1.5% black shade of the card surface in light and 10% in dark
   through `--fl-card-band-surface`, so bands stay darker than the body without
   becoming heavy in light mode. Inverted cards swap those strengths. Bands layer
   over solid, soft and muted shells alike; the muted variant no longer
   strengthens them separately because its surface is already the stronger step.
   Inset/flush panels use
-  `--fl-card-panel-surface`/`--fl-card-panel-shadow`, which resolve to a well on
-  solid cards and a raised white (white/4 in dark) panel on tinted ones. Both
-  work in either scheme and on inverted cards.
+  `--fl-card-panel-surface`/`--fl-card-panel-shadow`: a subtle well on light solid
+  cards, a raised tonal panel in dark and on soft/muted cards. Inverted cards
+  keep a well with an inset shadow. The panel shadow follows the same elevation.
   Regions own their inline inset, so divided lines span the card edge to edge. A
   divided padded section or footer also gets block-start padding below the line;
   in horizontal orientation regions own the block inset so the dividers span the

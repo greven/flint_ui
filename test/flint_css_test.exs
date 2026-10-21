@@ -33,6 +33,11 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-color-disabled-foreground:"
     assert css =~ "--fl-color-disabled-border:"
     assert css =~ "--fl-disabled-opacity: 0.5;"
+    assert css =~ "oklch(1 0 0 / 5%)"
+    assert css =~ "oklch(1 0 0 / 8%)"
+    assert css =~ "oklch(1 0 0 / 10%)"
+    assert css =~ "oklch(1 0 0 / 12%)"
+    assert css =~ "oklch(1 0 0 / 14%)"
   end
 
   test "surface steps are opaque and move toward the elevated step", %{css: css} do
@@ -42,6 +47,13 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-color-surface-muted: var(--fl-color-muted);"
     assert css =~ "--fl-color-disabled: var(--fl-color-surface-muted);"
     assert css =~ "--fl-color-disabled-foreground: var(--fl-color-dimmed);"
+    assert css =~ "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));"
+
+    assert css =~
+             ~r/--fl-color-muted: light-dark\(\s*var\(--fl-color-neutral-100\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-800\) 80%,\s*var\(--fl-color-neutral-700\) 20%\s*\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-accent: light-dark\(\s*var\(--fl-color-neutral-200\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-700\) 50%,\s*var\(--fl-color-neutral-800\) 50%\s*\)\s*\)/
   end
 
   test "components expose public color inputs and tint focus", %{css: css} do
@@ -127,6 +139,8 @@ defmodule FlintUI.FlintCSSTest do
   test "ships named theme presets selectable through data-theme", %{css: css} do
     assert css =~ ~s([data-theme="pastel"])
     assert css =~ ~s([data-theme="modern"])
+    assert css =~ ~r/\[data-theme="pastel"\][\s\S]*?--fl-color-accent: light-dark\(/
+    assert css =~ ~r/\[data-theme="pastel"\][\s\S]*?--fl-color-border: light-dark\(/
   end
 
   test "card variants are neutral surfaces with no semantic color", %{css: css} do
@@ -139,7 +153,7 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="card"][data-variant="muted"])
     assert css =~ "--fl-card-band-surface:"
     assert css =~ "black 1.5%,"
-    assert css =~ "black 15%,"
+    assert css =~ "black 10%,"
     assert css =~ "var(--fl-card-surface)"
     assert css =~ "--fl-card-body-surface:"
     assert css =~ "--fl-card-body-foreground:"
@@ -151,6 +165,8 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "padding-block-end: var(--_fl-card-region-spacing);"
     assert css =~ "--_fl-card-gap: var(--_fl-card-region-spacing);"
     assert css =~ "--_fl-card-body-surface: var(--fl-card-surface);"
+    assert css =~ "var(--fl-card-surface-foreground) 2.5%,"
+    assert css =~ "inset 0 1px 2px rgb(0 0 0 / 0.05)"
     assert css =~ "--fl-card-body-border:"
     assert css =~ "--_fl-card-body-background: var(--fl-card-panel-surface);"
     assert css =~ "--_fl-card-body-shadow: var(--fl-card-panel-shadow);"
@@ -187,7 +203,7 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-inverted="true"\]\[data-variant="muted"\][\s\S]*?var\(--fl-color-inverted-foreground\) 8%[\s\S]*?var\(--fl-color-inverted\)/
 
     assert css =~
-             ~r/\[data-inverted="true"\]\s*\{\s*--fl-card-band-surface: light-dark\(\s*color-mix\(in oklab, black 15%, var\(--fl-card-surface\)\),\s*color-mix\(in oklab, black 1\.5%, var\(--fl-card-surface\)\)/
+             ~r/\[data-inverted="true"\]\s*\{\s*--fl-card-band-surface: light-dark\(\s*color-mix\(in oklab, black 10%, var\(--fl-card-surface\)\),\s*color-mix\(in oklab, black 1\.5%, var\(--fl-card-surface\)\)/
 
     assert css =~ ~s([data-element="card"][data-card][data-orientation="horizontal"])
     assert css =~ ~s([data-element="card"][data-spacing="xs"])

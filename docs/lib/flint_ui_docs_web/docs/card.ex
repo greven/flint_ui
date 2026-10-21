@@ -200,9 +200,10 @@ defmodule FlintUIDocsWeb.Docs.Card do
         edge while the other stays on the card surface. The body and unbanded
         edge both use the selected variant's surface, so soft and muted cards
         carry through. `divided` draws lines at the body boundaries, and `inset`
-        or `flush` mount the body in a bordered panel. On a solid card the panel
-        is a recessed well; on a soft or muted card it is raised above the
-        shell. `flush` drops the horizontal inset but keeps the border and
+        or `flush` mount the body in a bordered panel. In light, a solid card's
+        panel is a subtle well while soft and muted cards use a raised panel; in
+        dark the panel is a raised surface above the card. Inverted cards keep a
+        well. `flush` drops the horizontal inset but keeps the border and
         radius. Divided bodies inherit the card surface so the lines are the
         only treatment. Bands stay a darker shade of the card surface in both
         schemes. The root `padded` setting still controls the section inset.
@@ -493,8 +494,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
       },
       %{
         id: :body_inset_well,
-        title: "Recessed inset body",
-        description: "On a solid card the inset body panel becomes a recessed well.",
+        title: "Inset body",
+        description: "A subtle well on a light solid card; raised on a dark card.",
         code: """
         <.card body="inset" class="w-full max-w-md">
           <:title>Notifications</:title>
@@ -1030,8 +1031,9 @@ defmodule FlintUIDocsWeb.Docs.Card do
       selects the surface, while `outline`, `shadow`, `inverted`, and `spacing`
       adjust it. Separated bodies use the card surface with darker bands; divided
       bodies inherit the card surface; inset and flush render a panel that is a
-      recessed well on solid cards and raised on soft or muted cards.
-      The public `--fl-card-*` variables are the supported per-instance inputs.
+      subtle well on light solid cards and raised in dark or on soft and muted
+      cards. Inverted cards keep a well. The public `--fl-card-*` variables are
+      the supported per-instance inputs.
       """,
       snippets: [
         %{

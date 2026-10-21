@@ -46,9 +46,9 @@ defmodule FlintUI.Styled.Card do
         Var.new(
           name: "--fl-card-band-surface",
           default:
-            "light-dark(color-mix(in oklab, black 1.5%, var(--fl-card-surface)), color-mix(in oklab, black 15%, var(--fl-card-surface)))",
+            "light-dark(color-mix(in oklab, black 1.5%, var(--fl-card-surface)), color-mix(in oklab, black 10%, var(--fl-card-surface)))",
           doc:
-            "The darker band used by separated headers and footers: 1.5% black in light, 15% in dark; inverted cards swap the strengths."
+            "The darker band used by separated headers and footers: 1.5% black in light, 10% in dark; inverted cards swap the strengths."
         ),
         Var.new(
           name: "--fl-card-body-surface",
@@ -63,14 +63,14 @@ defmodule FlintUI.Styled.Card do
         Var.new(
           name: "--fl-card-panel-surface",
           default:
-            "light-dark(color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent), color-mix(in oklab, black 15%, transparent))",
+            "light-dark(color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent), color-mix(in oklab, var(--fl-card-surface-foreground) 2.5%, var(--fl-card-surface)))",
           doc:
-            "The inset/flush panel fill: a recessed well on solid cards, raised on soft/muted cards."
+            "The inset/flush panel fill: a well on light solid and inverted cards, and a raised surface in dark or on tinted cards."
         ),
         Var.new(
           name: "--fl-card-panel-shadow",
-          default: "inset 0 1px 2px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.35))",
-          doc: "The inset/flush panel depth: an inset well shadow or a raised shadow."
+          default: "light-dark(inset 0 1px 2px rgb(0 0 0 / 0.05), var(--fl-shadow-xs))",
+          doc: "The inset/flush panel depth: inset for wells and raised for elevated panels."
         ),
         Var.new(
           name: "--fl-card-panel-inset",
