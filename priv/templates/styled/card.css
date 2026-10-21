@@ -1,83 +1,31 @@
 @layer components {
     /* Card
    *
-   * `--fl-card-*` are the public inputs. The internal `--_fl-card-*` values
-   * derive from them, so a consumer can override one per instance without
-   * fighting the variant rules. The root owns the surface and block spacing;
-   * regions own the inline inset, so dividers can run edge to edge.
-   */
+   * `--fl-card-spacing`, `--fl-card-surface`, `--fl-card-surface-foreground`,
+   * `--fl-card-border` and `--fl-card-shadow` are the public per-instance
+   * inputs. Bands, panels, dividers and inverted surfaces derive from them and
+   * the surrounding theme. */
     [data-element="card"][data-card] {
-        --fl-card-spacing: 1.25rem;
-        --_fl-card-surface: var(--fl-color-surface);
-        --_fl-card-surface-foreground: var(--fl-color-surface-foreground);
-        --_fl-card-border: var(--fl-color-border);
-        --_fl-card-shadow: var(--fl-shadow-base);
-        --_fl-card-description: var(--fl-color-muted-foreground);
-        --_fl-card-divider: var(--fl-color-border);
-        --_fl-card-gap: var(--fl-card-spacing);
-        --_fl-card-region-spacing: calc(var(--fl-card-spacing) - var(--fl-spacing));
-        --_fl-card-region-padding-block: 0;
-        --_fl-card-body-display: flex;
-        --_fl-card-body-direction: column;
-        --_fl-card-body-gap: var(--fl-card-spacing);
-        --_fl-card-body-padding-block: var(--fl-card-spacing);
-        --_fl-card-body-background: var(--fl-card-body-surface);
-        --_fl-card-body-color: var(--fl-card-body-foreground);
-        --_fl-card-body-outline: 0 solid transparent;
-        --_fl-card-body-radius: 0;
-        --_fl-card-body-shadow: none;
-        --_fl-card-body-margin-block: 0;
-        --_fl-card-body-margin-inline: 0;
-        --_fl-card-body-surface: var(--fl-card-surface);
-        --_fl-card-body-foreground: var(--fl-card-surface-foreground);
-        --_fl-card-panel-surface: light-dark(
-            color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
-            color-mix(
-                in oklab,
-                var(--fl-card-surface-foreground) 2.5%,
-                var(--fl-card-surface)
-            )
-        );
-        --_fl-card-panel-shadow: light-dark(
-            inset 0 1px 2px rgb(0 0 0 / 0.05),
-            var(--fl-shadow-xs)
-        );
-        --fl-card-surface: var(--_fl-card-surface);
-        --fl-card-surface-foreground: var(--_fl-card-surface-foreground);
-        --fl-card-border: var(--_fl-card-border);
-        --fl-card-shadow: var(--_fl-card-shadow);
-        --fl-card-divider: var(--_fl-card-divider);
-        --fl-card-band-surface: light-dark(
-            color-mix(in oklab, black 1.5%, var(--fl-card-surface)),
-            color-mix(in oklab, black 10%, var(--fl-card-surface))
-        );
-        --fl-card-body-surface: var(--_fl-card-body-surface);
-        --fl-card-body-foreground: var(--_fl-card-body-foreground);
-        --fl-card-panel-surface: var(--_fl-card-panel-surface);
-        --fl-card-panel-shadow: var(--_fl-card-panel-shadow);
-        --fl-card-panel-inset: var(--fl-spacing);
-        --fl-card-body-border: var(--fl-card-border);
-        --fl-card-body-radius: var(--fl-radius-lg);
         display: flex;
         flex-direction: column;
-        gap: var(--_fl-card-gap);
-        padding-block: var(--fl-card-spacing);
-        border: 1px solid var(--fl-card-border);
-        border-radius: var(--fl-card-radius);
-        background: var(--fl-card-surface);
-        color: var(--fl-card-surface-foreground);
-        box-shadow: var(--fl-card-shadow);
+        gap: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
+        padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
+        border: 1px solid var(--fl-card-border, var(--fl-color-border));
+        border-radius: var(--fl-radius-lg);
+        background: var(--fl-card-surface, var(--fl-color-surface));
+        color: var(
+            --fl-card-surface-foreground,
+            var(--fl-color-surface-foreground)
+        );
+        box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));
         font-family: var(--fl-font-sans);
         overflow: hidden;
     }
 
     [data-element="card"][data-card][data-orientation="horizontal"] {
-        --_fl-card-gap: 0;
-        --_fl-card-body-direction: row;
-        --_fl-card-body-gap: 0;
-        --_fl-card-body-padding-block: 0;
         flex-direction: row;
         align-items: stretch;
+        gap: 0;
         padding-block: 0;
     }
 
@@ -94,33 +42,20 @@
    * from the base surface toward the elevated/muted step: light steps darker,
    * dark steps lighter. `soft` is the half-step; `muted` is the full step. */
     [data-element="card"][data-variant="solid"] {
-        --_fl-card-surface: var(--fl-color-surface);
-        --_fl-card-surface-foreground: var(--fl-color-surface-foreground);
-    }
-
-    [data-element="card"]:is([data-variant="soft"], [data-variant="muted"]) {
-        --_fl-card-panel-surface: light-dark(
-            var(--fl-color-surface),
-            color-mix(
-                in oklab,
-                var(--fl-card-surface-foreground) 2.5%,
-                var(--fl-card-surface)
-            )
-        );
-        --_fl-card-panel-shadow: var(--fl-shadow-xs);
+        --fl-card-surface: var(--fl-color-surface);
     }
 
     [data-element="card"][data-variant="soft"] {
-        --_fl-card-surface: var(--fl-color-surface-soft);
+        --fl-card-surface: var(--fl-color-surface-soft);
     }
 
     [data-element="card"][data-variant="muted"] {
-        --_fl-card-surface: var(--fl-color-surface-muted);
+        --fl-card-surface: var(--fl-color-surface-muted);
     }
 
     /* Outline and shadow are independent boolean props; both default to on. */
     [data-element="card"][data-outline="true"] {
-        border-color: var(--fl-card-border);
+        border-color: var(--fl-card-border, var(--fl-color-border));
     }
 
     [data-element="card"][data-outline="false"] {
@@ -128,47 +63,36 @@
     }
 
     [data-element="card"][data-shadow="true"] {
-        --_fl-card-shadow: var(--fl-shadow-base);
+        box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));
     }
 
     [data-element="card"][data-shadow="false"] {
-        --_fl-card-shadow: 0 0 #0000;
+        box-shadow: 0 0 #0000;
     }
 
     /* Inversion swaps the neutral roles used by every variant. Solid becomes the
    * full inverted surface; soft/muted keep their relative tint strength. The
-   * `false` rule is a no-op marker so both boolean states carry a hook. */
+   * `false` rule keeps a hook for both boolean states. */
     [data-element="card"][data-inverted="false"] {
-        --_fl-card-inverted: false;
     }
 
     [data-element="card"][data-inverted="true"] {
-        --_fl-card-surface-foreground: var(--fl-color-inverted-foreground);
-        --_fl-card-border: color-mix(
+        --fl-card-surface-foreground: var(--fl-color-inverted-foreground);
+        --fl-card-border: color-mix(
             in oklab,
             var(--fl-color-inverted-foreground) 20%,
-            transparent
-        );
-        --_fl-card-description: color-mix(
-            in oklab,
-            var(--fl-color-inverted-foreground) 75%,
-            transparent
-        );
-        --_fl-card-divider: color-mix(
-            in oklab,
-            var(--fl-color-inverted-foreground) 15%,
             transparent
         );
     }
 
     [data-element="card"][data-inverted="true"][data-variant="solid"] {
-        --_fl-card-surface: var(--fl-color-inverted);
+        --fl-card-surface: var(--fl-color-inverted);
     }
 
     /* Inverted soft/muted stay opaque steps over the inverted surface; the
-   * strong inverted role still drives text and hairlines. */
+    * strong inverted role still drives text and hairlines. */
     [data-element="card"][data-inverted="true"][data-variant="soft"] {
-        --_fl-card-surface: color-mix(
+        --fl-card-surface: color-mix(
             in oklab,
             var(--fl-color-inverted-foreground) 4%,
             var(--fl-color-inverted)
@@ -176,38 +100,21 @@
     }
 
     [data-element="card"][data-inverted="true"][data-variant="muted"] {
-        --_fl-card-surface: color-mix(
+        --fl-card-surface: color-mix(
             in oklab,
             var(--fl-color-inverted-foreground) 8%,
             var(--fl-color-inverted)
         );
     }
 
-    /* Inverted surfaces flip lightness, so swap the band strengths with them.
-     * Their panels stay wells: the card is already the high-contrast surface. */
-    [data-element="card"][data-card][data-inverted="true"] {
-        --fl-card-band-surface: light-dark(
-            color-mix(in oklab, black 10%, var(--fl-card-surface)),
-            color-mix(in oklab, black 1.5%, var(--fl-card-surface))
-        );
-        --_fl-card-panel-surface: light-dark(
-            color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
-            color-mix(
-                in oklab,
-                var(--fl-card-surface-foreground) 2.5%,
-                var(--fl-card-surface)
-            )
-        );
-        --_fl-card-panel-shadow: inset 0 1px 2px rgb(0 0 0 / 0.05);
-    }
-
     /* Seamless dissolves the body box, so its sections share the root gap.
-     * Separated bodies use the card surface, with bands a darker shade of it;
+     * Separated bodies sit on the card surface, with bands a darker shade of it;
      * divided bodies inherit the card surface because the lines are the
      * treatment; inset/flush turn the body into a panel. */
-    [data-element="card"][data-body="seamless"][data-card] {
-        --_fl-card-body-display: contents;
-        --_fl-card-body-color: inherit;
+    [data-element="card"][data-body="seamless"][data-card]
+        > [data-part="body"] {
+        display: contents;
+        color: inherit;
     }
 
     [data-element="card"][data-card]:is(
@@ -215,80 +122,130 @@
             [data-body="separated-header"],
             [data-body="separated-footer"]
         ) {
-        --_fl-card-gap: 0;
+        gap: 0;
     }
 
     /* Divided has no tint of its own. Keeping the body transparent lets the
      * padded space around the lines show the card surface instead of a solid
      * band that reads as extra header or footer padding. */
     [data-element="card"][data-body="divided"][data-card] {
-        --_fl-card-gap: 0;
-        --_fl-card-body-background: transparent;
-        --_fl-card-body-color: inherit;
+        gap: 0;
+    }
+
+    [data-element="card"][data-body="divided"][data-card] > [data-part="body"] {
+        background: transparent;
+        color: inherit;
     }
 
     /* Flush keeps a panel gap, but it matches the tighter header/footer inset. */
     [data-element="card"][data-body="flush"][data-card][data-orientation="vertical"] {
-        --_fl-card-gap: var(--_fl-card-region-spacing);
+        gap: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
     }
 
-    [data-element="card"][data-card]:is(
+    [data-element="card"][data-body="inset"][data-card] > [data-part="body"],
+    [data-element="card"][data-body="flush"][data-card] > [data-part="body"] {
+        border: 1px solid var(--fl-card-border, var(--fl-color-border));
+        border-radius: var(--fl-radius-lg);
+        background: light-dark(
+            color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
+            color-mix(
+                in oklab,
+                var(
+                        --fl-card-surface-foreground,
+                        var(--fl-color-surface-foreground)
+                    )
+                    2.5%,
+                var(--fl-card-surface, var(--fl-color-surface))
+            )
+        );
+        box-shadow: light-dark(
+            inset 0 1px 2px rgb(0 0 0 / 0.05),
+            var(--fl-shadow-xs)
+        );
+    }
+
+    [data-element="card"]:is(
+            [data-variant="soft"],
+            [data-variant="muted"]
+        ):is([data-body="inset"], [data-body="flush"])
+        > [data-part="body"] {
+        background: light-dark(
+            var(--fl-color-surface),
+            color-mix(
+                in oklab,
+                var(
+                        --fl-card-surface-foreground,
+                        var(--fl-color-surface-foreground)
+                    )
+                    2.5%,
+                var(--fl-card-surface, var(--fl-color-surface))
+            )
+        );
+        box-shadow: var(--fl-shadow-xs);
+    }
+
+    /* Inverted surfaces flip lightness, so their panels stay wells. */
+    [data-element="card"][data-inverted="true"]:is(
             [data-body="inset"],
             [data-body="flush"]
-        ) {
-        --_fl-card-body-background: var(--fl-card-panel-surface);
-        --_fl-card-body-outline: 1px solid var(--fl-card-body-border);
-        --_fl-card-body-radius: var(--fl-card-body-radius);
-        --_fl-card-body-shadow: var(--fl-card-panel-shadow);
+        )
+        > [data-part="body"] {
+        background: light-dark(
+            color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
+            color-mix(
+                in oklab,
+                var(--fl-color-inverted-foreground) 2.5%,
+                var(--fl-card-surface, var(--fl-color-inverted))
+            )
+        );
+        box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.05);
     }
 
     [data-element="card"][data-card] > [data-part="body"] {
-        display: var(--_fl-card-body-display);
-        flex-direction: var(--_fl-card-body-direction);
-        gap: var(--_fl-card-body-gap);
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
         min-width: 0;
-        padding-block: var(--_fl-card-body-padding-block);
-        margin-block: var(--_fl-card-body-margin-block)
-            var(
-                --_fl-card-body-margin-block-end,
-                var(--_fl-card-body-margin-block)
-            );
-        margin-inline: var(--_fl-card-body-margin-inline);
-        border: var(--_fl-card-body-outline);
-        border-radius: var(--_fl-card-body-radius);
-        background: var(--_fl-card-body-background);
-        color: var(--_fl-card-body-color);
-        box-shadow: var(--_fl-card-body-shadow);
+        padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
+        margin-block: 0;
+        margin-inline: 0;
+    }
+
+    [data-element="card"][data-orientation="horizontal"]
+        > [data-part="body"] {
+        flex-direction: row;
+        gap: 0;
+        padding-block: 0;
     }
 
     [data-element="card"][data-body="inset"] > [data-part="body"] {
-        --_fl-card-body-margin-inline: var(--fl-card-panel-inset);
+        margin-inline: var(--fl-spacing);
     }
 
     [data-element="card"][data-body="inset"][data-orientation="horizontal"]
         > [data-part="body"] {
-        --_fl-card-body-margin-block: var(--fl-card-panel-inset);
+        margin-block: var(--fl-spacing);
     }
 
     /* Flush panels overlap the card border by one pixel so the two hairlines
      * merge instead of sitting side by side. */
     [data-element="card"][data-card][data-body="flush"] > [data-part="body"] {
-        --_fl-card-body-radius: var(--fl-card-radius);
+        border-radius: var(--fl-radius-lg);
     }
 
     [data-element="card"][data-body="flush"][data-orientation="vertical"]
         > [data-part="body"] {
-        --_fl-card-body-margin-inline: -1px;
+        margin-inline: -1px;
     }
 
     [data-element="card"][data-body="flush"][data-orientation="horizontal"]
         > [data-part="body"] {
-        --_fl-card-body-margin-block: -1px;
+        margin-block: -1px;
     }
 
     [data-element="card"][data-body="flush"]:not(:has(> [data-part="footer"]))
         > [data-part="body"] {
-        --_fl-card-body-margin-block-end: -1px;
+        margin-block-end: -1px;
     }
 
     /* Without a footer, the body panel owns the card's bottom edge: inset keeps
@@ -296,7 +253,7 @@
     [data-element="card"][data-card][data-body="inset"]:not(
             :has(> [data-part="footer"])
         ) {
-        padding-block-end: var(--fl-card-panel-inset);
+        padding-block-end: var(--fl-spacing);
     }
 
     [data-element="card"][data-card][data-body="flush"]:not(
@@ -306,21 +263,56 @@
     }
 
     /* Separated turns one or both outer regions into darker bands of the card
-     * surface. The unbanded region stays on the body surface so it matches the
+     * surface. The unbanded region stays on the card surface so it matches the
      * body. */
     [data-element="card"][data-body="separated"]
         > :is([data-part="header"], [data-part="footer"]),
     [data-element="card"][data-body="separated-header"] > [data-part="header"],
     [data-element="card"][data-body="separated-footer"] > [data-part="footer"] {
-        background: var(--fl-card-band-surface);
+        background: light-dark(
+            color-mix(
+                in oklab,
+                black 1.5%,
+                var(--fl-card-surface, var(--fl-color-surface))
+            ),
+            color-mix(
+                in oklab,
+                black 10%,
+                var(--fl-card-surface, var(--fl-color-surface))
+            )
+        );
+    }
+
+    /* Inverted surfaces flip lightness, so swap the band strengths with them. */
+    [data-element="card"][data-card][data-inverted="true"][data-body="separated"]
+        > :is([data-part="header"], [data-part="footer"]),
+    [data-element="card"][data-card][data-inverted="true"][data-body="separated-header"]
+        > [data-part="header"],
+    [data-element="card"][data-card][data-inverted="true"][data-body="separated-footer"]
+        > [data-part="footer"] {
+        background: light-dark(
+            color-mix(
+                in oklab,
+                black 10%,
+                var(--fl-card-surface, var(--fl-color-inverted))
+            ),
+            color-mix(
+                in oklab,
+                black 1.5%,
+                var(--fl-card-surface, var(--fl-color-inverted))
+            )
+        );
     }
 
     [data-element="card"][data-body="separated-header"]
         > [data-part="footer"],
     [data-element="card"][data-body="separated-footer"]
         > [data-part="header"] {
-        background: var(--fl-card-body-surface);
-        color: var(--fl-card-body-foreground);
+        background: var(--fl-card-surface, var(--fl-color-surface));
+        color: var(
+            --fl-card-surface-foreground,
+            var(--fl-color-surface-foreground)
+        );
     }
 
     /* Separated bands use the tighter header/footer inset. */
@@ -330,7 +322,10 @@
             [data-body="separated-footer"]
         )[data-orientation="vertical"]
         > [data-part="header"] {
-        --_fl-card-region-padding-block: var(--_fl-card-region-spacing);
+        padding-block-start: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
     }
 
     [data-element="card"]:is(
@@ -339,7 +334,10 @@
             [data-body="separated-footer"]
         )[data-orientation="vertical"]
         > [data-part="footer"] {
-        --_fl-card-region-padding-block: var(--_fl-card-region-spacing);
+        padding-block-end: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
     }
 
     /* Both outer regions cancel the card's block inset so the band, or the
@@ -347,21 +345,30 @@
      * use a slightly tighter inset than the body. */
     [data-element="card"][data-card][data-orientation="vertical"]
         > [data-part="header"] {
-        padding-block-start: var(--_fl-card-region-spacing);
-        margin-block-start: calc(var(--fl-card-spacing) * -1);
+        padding-block-start: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
+        margin-block-start: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
+        );
     }
 
     [data-element="card"][data-card][data-orientation="vertical"]
         > [data-part="footer"] {
-        padding-block-end: var(--_fl-card-region-spacing);
-        margin-block-end: calc(var(--fl-card-spacing) * -1);
+        padding-block-end: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
+        margin-block-end: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
+        );
     }
 
     /* Regions own the inline inset so dividers can run edge to edge. */
     [data-element="card"][data-card]
         :is([data-part="header"], [data-part="footer"], [data-part="section"]) {
-        padding-block: var(--_fl-card-region-padding-block);
-        padding-inline: var(--fl-card-spacing);
+        padding-inline: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
     [data-element="card"][data-card]
@@ -373,12 +380,15 @@
    * leading divider spans the full height of the card. */
     [data-element="card"][data-card][data-orientation="horizontal"]
         > :is([data-part="header"], [data-part="footer"]) {
-        --_fl-card-region-padding-block: var(--_fl-card-region-spacing);
+        padding-block: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
     }
 
     [data-element="card"][data-card][data-orientation="horizontal"]
         [data-part="section"][data-padded="true"] {
-        --_fl-card-region-padding-block: var(--fl-card-spacing);
+        padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
     /* Divided draws a line between every region. The first region never gets a
@@ -392,7 +402,8 @@
         > [data-part="section"]:first-child,
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="footer"]:not(:first-child) {
-        border-block-start: 1px solid var(--fl-card-divider);
+        border-block-start: 1px solid
+            var(--fl-card-border, var(--fl-color-border));
     }
 
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
@@ -401,12 +412,18 @@
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]:not(:first-child)
         > [data-part="section"][data-padded="true"]:first-child {
-        padding-block-start: var(--fl-card-spacing);
+        padding-block-start: var(
+            --fl-card-spacing,
+            calc(var(--fl-spacing) * 5)
+        );
     }
 
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="footer"]:not(:first-child) {
-        padding-block-start: var(--_fl-card-region-spacing);
+        padding-block-start: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
+                var(--fl-spacing)
+        );
     }
 
     /* A full-bleed first/last section cancels the card's block inset so it can
@@ -415,13 +432,17 @@
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:first-child
         > [data-part="section"][data-padded="false"]:first-child {
-        margin-block-start: calc(var(--fl-card-spacing) * -1);
+        margin-block-start: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
+        );
     }
 
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:last-child
         > [data-part="section"][data-padded="false"]:last-child {
-        margin-block-end: calc(var(--fl-card-spacing) * -1);
+        margin-block-end: calc(
+            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
+        );
     }
 
     [data-element="card"][data-orientation="horizontal"][data-body="divided"]
@@ -432,7 +453,8 @@
         > [data-part="section"]:first-child,
     [data-element="card"][data-orientation="horizontal"][data-body="divided"]
         > [data-part="footer"]:not(:first-child) {
-        border-inline-start: 1px solid var(--fl-card-divider);
+        border-inline-start: 1px solid
+            var(--fl-card-border, var(--fl-color-border));
     }
 
     [data-element="card"][data-card] [data-part="header"] {
@@ -450,9 +472,17 @@
 
     [data-element="card"][data-card] [data-part="description"] {
         grid-column: 1;
-        color: var(--_fl-card-description);
+        color: var(--fl-color-muted-foreground);
         font-size: var(--fl-font-size-sm);
         line-height: 1.375;
+    }
+
+    [data-element="card"][data-inverted="true"] [data-part="description"] {
+        color: color-mix(
+            in oklab,
+            var(--fl-color-inverted-foreground) 75%,
+            transparent
+        );
     }
 
     [data-element="card"][data-card] [data-part="header-actions"] {

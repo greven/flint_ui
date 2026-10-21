@@ -70,7 +70,9 @@ defmodule FlintUIDocsWeb.ThemeLive do
         <DocsComponents.section title="Tokens" id="tokens">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Every component reads from these namespaces. Override any of them to change
-            the look.
+            the look. The few component-prefixed entries
+            (<code class="font-mono">--fl-button-*</code>, <code class="font-mono">--fl-card-*</code>, …) are narrow
+            per-instance inputs; prefer the semantic theme tokens above them.
           </p>
           <div :for={{namespace, tokens} <- @token_groups} class="mt-5">
             <p class="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
@@ -146,16 +148,30 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:scaling)} lang={:css} />
         </DocsComponents.section>
 
+        <DocsComponents.section title="Radius" id="radius">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Roundness starts from <code class="font-mono">--fl-radius</code>
+            and its
+            scale steps. Buttons, toggles, and future form controls share
+            <code class="font-mono">--fl-control-radius</code>
+            (default <code class="font-mono">var(--fl-radius-md)</code>). Components with
+            their own shape, such as cards, badges, avatars, and switches, read the
+            scale step that fits their anatomy. A theme that wants a
+            component-specific exception targets its hook.
+          </p>
+          <DocsComponents.code_block code={snippet(:radius)} lang={:css} />
+        </DocsComponents.section>
+
         <DocsComponents.section title="Depth" id="depth">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Solid and outline buttons are raised: <code class="font-mono">solid</code>
             wears a top highlight, <code class="font-mono">outline</code>
-            a bottom inner line, and both scale with <code class="font-mono">--fl-button-depth</code>.
-            Shadows are independent and always on for <code class="font-mono">solid</code>, <code class="font-mono">subtle</code>, and <code class="font-mono">outline</code>; set
-            <code class="font-mono">--fl-button-shadow</code>
+            a bottom inner line, and both scale with the shared <code class="font-mono">--fl-control-depth</code>. Shadows are
+            independent and always on for <code class="font-mono">solid</code>, <code class="font-mono">subtle</code>, and <code class="font-mono">outline</code>;
+            set <code class="font-mono">--fl-control-shadow</code>
             to <code class="font-mono">0 0 #0000</code>
             to remove them. Pressing
-            sinks the button with <code class="font-mono">--fl-button-press</code>.
+            sinks the button with <code class="font-mono">--fl-control-press</code>.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button variant="solid" color="primary">solid</Components.button>
@@ -275,16 +291,16 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   defp snippet(:depth) do
     """
-    /* Depth and press are button tokens. A preset can flatten them for the
-     * whole site: */
+    /* Depth and press are shared control tokens. A preset can flatten every
+     * control for the whole site: */
     [data-theme="flat"] {
-      --fl-button-depth: 0; /* no highlight or inner line */
-      --fl-button-press: none; /* no press movement */
+      --fl-control-depth: 0; /* no highlight or inner line */
+      --fl-control-press: none; /* no press movement */
     }
 
     /* Shadows are independent of depth. Remove them per theme or instance: */
     .my-shadowless-button {
-      --fl-button-shadow: 0 0 #0000;
+      --fl-control-shadow: 0 0 #0000;
     }
     """
   end
@@ -315,6 +331,30 @@ defmodule FlintUIDocsWeb.ThemeLive do
         var(--fl-color-primary-50),
         var(--fl-color-primary-950)
       );
+    }
+    """
+  end
+
+  defp snippet(:radius) do
+    """
+    :root {
+      --fl-radius: 0.25rem; /* base unit */
+      --fl-control-radius: var(--fl-radius-md);
+    }
+
+    /* Square only controls */
+    :root {
+      --fl-control-radius: 0;
+    }
+
+    /* Pill only controls */
+    :root {
+      --fl-control-radius: var(--fl-radius-full);
+    }
+
+    /* A component-specific exception stays in the theme */
+    [data-theme="sharp"] [data-element="badge"] {
+      border-radius: var(--fl-radius-sm);
     }
     """
   end

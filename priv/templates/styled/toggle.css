@@ -1,37 +1,16 @@
 @layer components {
   /* Toggle
    *
-   * The `--fl-toggle-*` custom properties are the public inputs: override them
-   * per instance (via `class` or `style`) to retint this toggle. Everything
-   * below the inputs derives from them. */
+   * `--fl-toggle-color`, `--fl-toggle-color-foreground` and `--fl-toggle-text`
+   * are the public per-instance inputs. Surfaces, borders and focus follow from
+   * those inputs plus the theme tokens. */
   [data-element="toggle"][data-variant] {
-    --fl-toggle-color: var(--fl-color-inverted);
-    --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
-    --fl-toggle-text: var(--fl-toggle-color);
-    --fl-toggle-surface: color-mix(in oklab, var(--fl-toggle-color) 10%, transparent);
-    --fl-toggle-border: var(--fl-color-neutral-border);
-    --fl-toggle-border-soft: var(--fl-color-neutral-border-soft);
-
-    /* Internals, derived from the inputs above. */
-    --_fl-toggle-color: var(--fl-toggle-color);
-    --_fl-toggle-color-foreground: var(--fl-toggle-color-foreground);
-    --_fl-toggle-text: var(--fl-toggle-text);
-    --_fl-toggle-surface: var(--fl-toggle-surface);
-    --_fl-toggle-border: var(--fl-toggle-border);
-    --_fl-toggle-border-soft: var(--fl-toggle-border-soft);
-
-    /* The box given to a direct `.icon` child, overridden per `size` below. */
-    --_fl-toggle-icon-size: var(--fl-control-icon-md);
-
-    /* Tint the shared focus ring with the toggle color. */
-    --fl-focus-ring-color: var(--_fl-toggle-color);
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--fl-spacing-sm);
     border: 1px solid transparent;
-    border-radius: var(--fl-toggle-radius);
+    border-radius: var(--fl-control-radius);
     font-family: var(--fl-font-sans);
     font-size: var(--fl-control-font-size-md);
     font-weight: var(--fl-font-weight-medium);
@@ -43,19 +22,25 @@
       background-color var(--fl-duration-fast) var(--fl-ease-out),
       color var(--fl-duration-fast) var(--fl-ease-out),
       border-color var(--fl-duration-fast) var(--fl-ease-out);
+
+    /* Tint the shared focus ring with the toggle color. */
+    --fl-focus-ring-color: var(--fl-toggle-color, var(--fl-color-inverted));
   }
 
   [data-element="toggle"][data-variant]:hover {
-    background: var(--_fl-toggle-surface);
+    background: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
+      transparent
+    );
     color: var(--fl-color-foreground);
   }
 
   /* Icon child: the toggle sizes the `.icon` it contains, it never shrinks, and
-   * it is drawn at 70% of the label color, brightening on hover. Same contract
-   * as `button.css` (publishes `--fl-icon-size` so a host icon set follows it). */
+   * it is drawn at 70% of the label color, brightening on hover. */
   [data-element="toggle"][data-variant] > [data-element="icon"] {
     flex-shrink: 0;
-    --fl-icon-size: var(--_fl-toggle-icon-size);
+    --fl-icon-size: var(--fl-control-icon-md);
     width: var(--fl-icon-size);
     height: var(--fl-icon-size);
     color: color-mix(in oklab, currentColor 70%, transparent);
@@ -72,113 +57,167 @@
     pointer-events: none;
   }
 
-  /* Color mapping. Each color resolves the shared variant variables; the solid
-   * "on" state fills with `--fl-toggle-color` and its contrast-picked
-   * `-foreground`, while the text-carrying variants use the separate `-text`
-   * shade so a bright fill still reads as text. `neutral` is special-cased onto
-   * the surface tokens (like Nuxt UI), with its solid state using the inverted
-   * surface (plain black/white). */
+  /* Color mapping. Neutral routes through the inverted surface; the other roles
+   * use the contrast-picked text shade. */
   [data-element="toggle"][data-color="primary"] {
     --fl-toggle-color: var(--fl-color-primary);
     --fl-toggle-color-foreground: var(--fl-color-primary-foreground);
     --fl-toggle-text: var(--fl-color-primary-text);
-    --fl-toggle-border: var(--fl-color-primary-border);
-    --fl-toggle-border-soft: var(--fl-color-primary-border-soft);
   }
 
   [data-element="toggle"][data-color="secondary"] {
     --fl-toggle-color: var(--fl-color-secondary);
     --fl-toggle-color-foreground: var(--fl-color-secondary-foreground);
     --fl-toggle-text: var(--fl-color-secondary-text);
-    --fl-toggle-border: var(--fl-color-secondary-border);
-    --fl-toggle-border-soft: var(--fl-color-secondary-border-soft);
   }
 
   [data-element="toggle"][data-color="success"] {
     --fl-toggle-color: var(--fl-color-success);
     --fl-toggle-color-foreground: var(--fl-color-success-foreground);
     --fl-toggle-text: var(--fl-color-success-text);
-    --fl-toggle-border: var(--fl-color-success-border);
-    --fl-toggle-border-soft: var(--fl-color-success-border-soft);
   }
 
   [data-element="toggle"][data-color="info"] {
     --fl-toggle-color: var(--fl-color-info);
     --fl-toggle-color-foreground: var(--fl-color-info-foreground);
     --fl-toggle-text: var(--fl-color-info-text);
-    --fl-toggle-border: var(--fl-color-info-border);
-    --fl-toggle-border-soft: var(--fl-color-info-border-soft);
   }
 
   [data-element="toggle"][data-color="warning"] {
     --fl-toggle-color: var(--fl-color-warning);
     --fl-toggle-color-foreground: var(--fl-color-warning-foreground);
     --fl-toggle-text: var(--fl-color-warning-text);
-    --fl-toggle-border: var(--fl-color-warning-border);
-    --fl-toggle-border-soft: var(--fl-color-warning-border-soft);
   }
 
   [data-element="toggle"][data-color="error"] {
     --fl-toggle-color: var(--fl-color-error);
     --fl-toggle-color-foreground: var(--fl-color-error-foreground);
     --fl-toggle-text: var(--fl-color-error-text);
-    --fl-toggle-border: var(--fl-color-error-border);
-    --fl-toggle-border-soft: var(--fl-color-error-border-soft);
   }
 
   [data-element="toggle"][data-color="neutral"] {
     --fl-toggle-color: var(--fl-color-inverted);
     --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
     --fl-toggle-text: var(--fl-color-foreground);
-    --fl-toggle-surface: var(--fl-color-muted);
-    --fl-toggle-border: var(--fl-color-neutral-border);
-    --fl-toggle-border-soft: var(--fl-color-neutral-border-soft);
   }
 
   [data-element="toggle"][data-variant="solid"][data-state="on"] {
-    background: var(--_fl-toggle-color);
-    color: var(--_fl-toggle-color-foreground);
+    background: var(--fl-toggle-color, var(--fl-color-inverted));
+    color: var(
+      --fl-toggle-color-foreground,
+      var(--fl-color-inverted-foreground)
+    );
   }
 
   [data-element="toggle"][data-variant="solid"][data-state="on"]:hover {
-    background: color-mix(in oklab, var(--_fl-toggle-color) 75%, transparent);
+    background: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted)) 75%,
+      transparent
+    );
   }
 
   /* Subtle: ghost + outline, a tinted surface with a matching border. */
   [data-element="toggle"][data-variant="subtle"] {
-    border-color: var(--_fl-toggle-border-soft);
+    border-color: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+        var(--fl-border-strength-soft),
+      transparent
+    );
   }
 
   [data-element="toggle"][data-variant="subtle"][data-state="on"] {
-    background: var(--_fl-toggle-surface);
-    color: var(--_fl-toggle-text);
-    border-color: var(--_fl-toggle-border-soft);
+    background: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
+      transparent
+    );
+    color: var(
+      --fl-toggle-text,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+    );
   }
 
   [data-element="toggle"][data-variant="outline"] {
-    border-color: var(--_fl-toggle-border);
+    border-color: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+        var(--fl-border-strength),
+      transparent
+    );
   }
 
   [data-element="toggle"][data-variant="outline"][data-state="on"] {
-    background: var(--_fl-toggle-surface);
-    color: var(--_fl-toggle-text);
-    border-color: var(--_fl-toggle-border);
+    background: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
+      transparent
+    );
+    color: var(
+      --fl-toggle-text,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+    );
   }
 
   [data-element="toggle"][data-variant="ghost"][data-state="on"] {
-    background: var(--_fl-toggle-surface);
-    color: var(--_fl-toggle-text);
+    background: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
+      transparent
+    );
+    color: var(
+      --fl-toggle-text,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+    );
   }
 
   [data-element="toggle"][data-variant="dashed"] {
     border-style: dashed;
-    border-color: var(--_fl-toggle-border);
+    border-color: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+        var(--fl-border-strength),
+      transparent
+    );
   }
 
   [data-element="toggle"][data-variant="dashed"][data-state="on"] {
-    background: var(--_fl-toggle-surface);
-    color: var(--_fl-toggle-text);
-    border-color: var(--_fl-toggle-border);
+    background: color-mix(
+      in oklab,
+      var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
+      transparent
+    );
+    color: var(
+      --fl-toggle-text,
+      var(--fl-toggle-color, var(--fl-color-inverted))
+    );
+  }
+
+  /* Neutral surfaces use the shared neutral hierarchy rather than a tint of the
+   * inverted fill. */
+  [data-element="toggle"][data-color="neutral"]:not(
+      [data-variant="solid"][data-state="on"]
+    ):hover,
+  [data-element="toggle"][data-color="neutral"]:is(
+      [data-variant="subtle"],
+      [data-variant="outline"],
+      [data-variant="ghost"],
+      [data-variant="dashed"]
+    )[data-state="on"] {
+    background: var(--fl-color-muted);
+    color: var(--fl-color-foreground);
+  }
+
+  [data-element="toggle"][data-color="neutral"]:is(
+      [data-variant="outline"],
+      [data-variant="dashed"]
+    ) {
+    border-color: var(--fl-color-border);
+  }
+
+  [data-element="toggle"][data-color="neutral"][data-variant="subtle"] {
+    border-color: var(--fl-color-border-muted);
   }
 
   /* Sizes share the control metrics for height, padding, type and gap, so a
@@ -189,21 +228,18 @@
     gap: var(--fl-control-gap-xs);
     font-size: var(--fl-control-font-size-xs);
     line-height: var(--fl-control-line-height-xs);
-    --_fl-toggle-icon-size: var(--fl-control-icon-xs);
   }
 
   [data-element="toggle"][data-size="sm"] {
     height: var(--fl-control-height-sm);
     padding-inline: var(--fl-control-padding-x-sm);
     gap: var(--fl-control-gap-sm);
-    --_fl-toggle-icon-size: var(--fl-control-icon-sm);
   }
 
   [data-element="toggle"][data-size="md"] {
     height: var(--fl-control-height-md);
     padding-inline: var(--fl-control-padding-x-md);
     gap: var(--fl-control-gap-md);
-    --_fl-toggle-icon-size: var(--fl-control-icon-md);
   }
 
   [data-element="toggle"][data-size="lg"] {
@@ -212,7 +248,6 @@
     gap: var(--fl-control-gap-lg);
     font-size: var(--fl-control-font-size-lg);
     line-height: var(--fl-control-line-height-lg);
-    --_fl-toggle-icon-size: var(--fl-control-icon-lg);
   }
 
   [data-element="toggle"][data-size="xl"] {
@@ -221,6 +256,25 @@
     gap: var(--fl-control-gap-xl);
     font-size: var(--fl-control-font-size-xl);
     line-height: var(--fl-control-line-height-xl);
-    --_fl-toggle-icon-size: var(--fl-control-icon-xl);
+  }
+
+  [data-element="toggle"][data-size="xs"] > [data-element="icon"] {
+    --fl-icon-size: var(--fl-control-icon-xs);
+  }
+
+  [data-element="toggle"][data-size="sm"] > [data-element="icon"] {
+    --fl-icon-size: var(--fl-control-icon-sm);
+  }
+
+  [data-element="toggle"][data-size="md"] > [data-element="icon"] {
+    --fl-icon-size: var(--fl-control-icon-md);
+  }
+
+  [data-element="toggle"][data-size="lg"] > [data-element="icon"] {
+    --fl-icon-size: var(--fl-control-icon-lg);
+  }
+
+  [data-element="toggle"][data-size="xl"] > [data-element="icon"] {
+    --fl-icon-size: var(--fl-control-icon-xl);
   }
 }

@@ -13,15 +13,5 @@
 
     --fl-color-primary: oklch(0.55 0.24 275);
     --fl-color-primary-foreground: oklch(0.98 0.012 275);
-    --fl-color-primary-border: color-mix(
-        in oklab,
-        var(--fl-color-primary) 50%,
-        var(--fl-color-background)
-    );
-    --fl-color-primary-border-soft: color-mix(
-        in oklab,
-        var(--fl-color-primary) 25%,
-        var(--fl-color-background)
-    );
     --fl-color-ring: oklch(0.55 0.24 275);
 }

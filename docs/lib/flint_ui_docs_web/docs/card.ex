@@ -1032,8 +1032,10 @@ defmodule FlintUIDocsWeb.Docs.Card do
       adjust it. Separated bodies use the card surface with darker bands; divided
       bodies inherit the card surface; inset and flush render a panel that is a
       subtle well on light solid cards and raised in dark or on soft and muted
-      cards. Inverted cards keep a well. The public `--fl-card-*` variables are
-      the supported per-instance inputs.
+      cards. Inverted cards keep a well. The public inputs are
+      `--fl-card-spacing`, `--fl-card-surface`, `--fl-card-surface-foreground`,
+      `--fl-card-border`, and `--fl-card-shadow`; dividers, bands, and panels
+      derive from them and the theme tokens.
       """,
       snippets: [
         %{
@@ -1054,38 +1056,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
           code: """
           .compact-card {
             --fl-card-spacing: 0.75rem;
-          }
-          """
-        },
-        %{
-          title: "Custom divider",
-          body: "Tint the hairline used by `body=\"divided\"`.",
-          code: """
-          .accent-card {
-            --fl-card-divider: var(--fl-color-primary-border);
-          }
-          """
-        },
-        %{
-          title: "Separated bands",
-          body: "Retint the darker bands used by the `separated` body variants.",
-          code: """
-          .accent-card {
-            --fl-card-band-surface: var(--fl-color-primary-50);
-          }
-          """
-        },
-        %{
-          title: "Inset body panel",
-          body:
-            "Adjust the panel surface, depth, inset, border, or radius used by `inset` and `flush`.",
-          code: """
-          .accent-card {
-            --fl-card-panel-surface: var(--fl-color-surface);
-            --fl-card-panel-shadow: var(--fl-shadow-xs);
-            --fl-card-panel-inset: var(--fl-spacing);
-            --fl-card-body-border: var(--fl-color-primary-border);
-            --fl-card-body-radius: var(--fl-radius-md);
           }
           """
         }

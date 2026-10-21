@@ -23,21 +23,27 @@ defmodule FlintUI.FlintCSSTest do
     end
   end
 
-  test "defines semantic surface, text, and border emphasis tokens", %{css: css} do
+  test "defines semantic surface, text, border, and disabled tokens", %{css: css} do
     assert css =~ "--fl-color-elevated:"
     assert css =~ "--fl-color-dimmed:"
     assert css =~ "--fl-color-inverted:"
+    assert css =~ "--fl-color-border:"
     assert css =~ "--fl-color-border-muted:"
     assert css =~ "--fl-color-border-accented:"
     assert css =~ "--fl-color-disabled:"
     assert css =~ "--fl-color-disabled-foreground:"
     assert css =~ "--fl-color-disabled-border:"
     assert css =~ "--fl-disabled-opacity: 0.5;"
-    assert css =~ "oklch(1 0 0 / 5%)"
-    assert css =~ "oklch(1 0 0 / 8%)"
-    assert css =~ "oklch(1 0 0 / 10%)"
-    assert css =~ "oklch(1 0 0 / 12%)"
-    assert css =~ "oklch(1 0 0 / 14%)"
+  end
+
+  test "border weight is a theme knob instead of a token per role", %{css: css} do
+    assert css =~ "--fl-border-strength: 50%;"
+    assert css =~ "--fl-border-strength-soft: 25%;"
+
+    for role <- ~w(primary secondary neutral success info warning error) do
+      refute css =~ "--fl-color-#{role}-border:"
+      refute css =~ "--fl-color-#{role}-border-soft:"
+    end
   end
 
   test "surface steps are opaque and move toward the elevated step", %{css: css} do
@@ -48,42 +54,29 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-color-disabled: var(--fl-color-surface-muted);"
     assert css =~ "--fl-color-disabled-foreground: var(--fl-color-dimmed);"
     assert css =~ "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));"
-
-    assert css =~
-             ~r/--fl-color-muted: light-dark\(\s*var\(--fl-color-neutral-100\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-800\) 80%,\s*var\(--fl-color-neutral-700\) 20%\s*\)\s*\)/
-
-    assert css =~
-             ~r/--fl-color-accent: light-dark\(\s*var\(--fl-color-neutral-200\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-700\) 50%,\s*var\(--fl-color-neutral-800\) 50%\s*\)\s*\)/
   end
 
-  test "components expose public color inputs and tint focus", %{css: css} do
-    assert css =~ "--fl-button-color: var(--fl-color-inverted);"
-    assert css =~ "--fl-toggle-color: var(--fl-color-inverted);"
-    assert css =~ "--fl-focus-ring-color: var(--_fl-button-color);"
-    assert css =~ "--fl-focus-ring-color: var(--_fl-toggle-color);"
+  test "shared control effects replace per-component effect and radius tokens", %{css: css} do
+    assert css =~ "--fl-control-depth: 1;"
+    assert css =~ "--fl-control-shadow: var(--fl-shadow-base);"
+    assert css =~ "--fl-control-press: translateY(1px);"
+
+    refute css =~ "--fl-button-depth:"
+    refute css =~ "--fl-button-shadow:"
+    refute css =~ "--fl-button-press:"
+    refute css =~ "--fl-button-radius:"
+    refute css =~ "--fl-toggle-radius:"
+    refute css =~ "--fl-card-radius:"
+    refute css =~ "--fl-input-radius:"
   end
 
-  test "exposes depth, elevation, and press inputs", %{css: css} do
-    assert css =~ "--fl-button-depth: 1;"
-    assert css =~ "--fl-button-sheen-stop: 100%;"
-    assert css =~ ~r/--fl-button-highlight: rgb\(\s*255 255 255 \//
-    assert css =~ "--fl-button-inner-line:"
-    assert css =~ "--fl-button-shadow: var(--fl-shadow-base);"
-    assert css =~ "--fl-shadow-base: 0 1px 2px 0 light-dark(#0000000d, #0000004d);"
-    assert css =~ "--fl-button-press:"
+  test "controls share one radius token that follows the scale", %{css: css} do
+    assert css =~ "--fl-control-radius: var(--fl-radius-md);"
+    assert css =~ "border-radius: var(--fl-control-radius);"
+    assert css =~ "border-radius: calc(var(--fl-control-radius) - 1px);"
 
-    assert css =~ ~s([data-element="button"][data-variant]::before)
-    assert css =~ "--fl-button-sheen: var(--fl-button-highlight);"
-    assert css =~ "mask-image: linear-gradient("
-
-    for value <- ~w(true false) do
-      assert css =~ ~s([data-element="button"][data-depth="#{value}"])
-    end
-
-    refute css =~ ~s([data-element="button"][data-shadow=])
-
-    assert css =~
-             ~r/\[data-element="button"\]\[data-depth="false"\] \{\n\s*--fl-button-depth: 0;\n\s*\}/
+    refute css =~ "--fl-button-radius:"
+    refute css =~ "--fl-toggle-radius:"
   end
 
   test "defines type, spacing, elevation, and motion scales", %{css: css} do
@@ -109,128 +102,14 @@ defmodule FlintUI.FlintCSSTest do
     end
   end
 
-  test "control heights follow the Nuxt-style 4px grid scale", %{css: css} do
-    heights = %{
-      "xs" => "1.5rem",
-      "sm" => "1.75rem",
-      "md" => "2rem",
-      "lg" => "2.25rem",
-      "xl" => "2.5rem"
-    }
-
-    for {size, height} <- heights do
-      assert css =~ "--fl-control-height-#{size}: #{height};"
-    end
-  end
-
-  test "exposes shared and per-component radius tokens", %{css: css} do
-    assert css =~ "--fl-radius: 0.25rem;"
-    assert css =~ "--fl-radius-md: calc(var(--fl-radius) * 1.5);"
-    assert css =~ "--fl-button-radius: var(--fl-radius-md);"
-    assert css =~ "--fl-toggle-radius: var(--fl-radius-md);"
-    assert css =~ "--fl-card-radius: var(--fl-radius-xl);"
-  end
-
-  test "controls the scheme through data-color-scheme", %{css: css} do
+  test "controls the scheme and ships named presets", %{css: css} do
     assert css =~ ~s([data-color-scheme="light"])
     assert css =~ ~s([data-color-scheme="dark"])
-  end
-
-  test "ships named theme presets selectable through data-theme", %{css: css} do
     assert css =~ ~s([data-theme="pastel"])
     assert css =~ ~s([data-theme="modern"])
-    assert css =~ ~r/\[data-theme="pastel"\][\s\S]*?--fl-color-accent: light-dark\(/
-    assert css =~ ~r/\[data-theme="pastel"\][\s\S]*?--fl-color-border: light-dark\(/
   end
 
-  test "card variants are neutral surfaces with no semantic color", %{css: css} do
-    assert css =~ "--fl-color-surface:"
-    assert css =~ "--fl-color-surface-soft:"
-    assert css =~ "--fl-color-surface-muted:"
-    assert css =~ "--fl-color-surface-foreground:"
-    assert css =~ ~s([data-element="card"][data-variant="solid"])
-    assert css =~ ~s([data-element="card"][data-variant="soft"])
-    assert css =~ ~s([data-element="card"][data-variant="muted"])
-    assert css =~ "--fl-card-band-surface:"
-    assert css =~ "black 1.5%,"
-    assert css =~ "black 10%,"
-    assert css =~ "var(--fl-card-surface)"
-    assert css =~ "--fl-card-body-surface:"
-    assert css =~ "--fl-card-body-foreground:"
-    assert css =~ "--fl-card-panel-surface:"
-    assert css =~ "--fl-card-panel-shadow:"
-    assert css =~ "--fl-card-panel-inset: var(--fl-spacing);"
-    assert css =~ "--_fl-card-region-spacing: calc(var(--fl-card-spacing) - var(--fl-spacing));"
-    assert css =~ "padding-block-start: var(--_fl-card-region-spacing);"
-    assert css =~ "padding-block-end: var(--_fl-card-region-spacing);"
-    assert css =~ "--_fl-card-gap: var(--_fl-card-region-spacing);"
-    assert css =~ "--_fl-card-body-surface: var(--fl-card-surface);"
-    assert css =~ "var(--fl-card-surface-foreground) 2.5%,"
-    assert css =~ "inset 0 1px 2px rgb(0 0 0 / 0.05)"
-    assert css =~ "--fl-card-body-border:"
-    assert css =~ "--_fl-card-body-background: var(--fl-card-panel-surface);"
-    assert css =~ "--_fl-card-body-shadow: var(--fl-card-panel-shadow);"
-    assert css =~ "--_fl-card-body-margin-inline: var(--fl-card-panel-inset);"
-    assert css =~ "--_fl-card-body-margin-block: var(--fl-card-panel-inset);"
-    assert css =~ "--fl-card-body-radius:"
-    assert css =~ ~s([data-element="card"][data-body="seamless"])
-    assert css =~ ~s([data-element="card"][data-body="inset"])
-    assert css =~ ~s([data-body="flush"])
-    assert css =~ ~s([data-body="divided"])
-    assert css =~ ~s([data-body="separated"])
-    assert css =~ ~s([data-body="separated-header"])
-    assert css =~ ~s([data-body="separated-footer"])
-    assert css =~ "--_fl-card-body-display: contents;"
-    assert css =~ "background: var(--fl-card-band-surface);"
-    assert css =~ ~r/\[data-body="separated-header"\]\s*>\s*\[data-part="footer"\]/
-    assert css =~ ~r/\[data-body="separated-footer"\]\s*>\s*\[data-part="header"\]/
-    assert css =~ "--_fl-card-body-background: var(--fl-card-body-surface);"
-    assert css =~ "--_fl-card-body-background: transparent;"
-    assert css =~ "--_fl-card-body-outline: 1px solid var(--fl-card-body-border);"
-    assert css =~ "--_fl-card-body-radius: var(--fl-card-body-radius);"
-    assert css =~ "display: var(--_fl-card-body-display);"
-    assert css =~ "padding-block: var(--_fl-card-body-padding-block);"
-    assert css =~ ~s([data-element="card"][data-outline="true"])
-    assert css =~ ~s([data-element="card"][data-outline="false"])
-    assert css =~ ~s([data-element="card"][data-shadow="true"])
-    assert css =~ ~s([data-element="card"][data-shadow="false"])
-    assert css =~ ~s([data-element="card"][data-inverted="true"])
-
-    assert css =~
-             ~r/\[data-inverted="true"\]\[data-variant="soft"\][\s\S]*?var\(--fl-color-inverted-foreground\) 4%[\s\S]*?var\(--fl-color-inverted\)/
-
-    assert css =~
-             ~r/\[data-inverted="true"\]\[data-variant="muted"\][\s\S]*?var\(--fl-color-inverted-foreground\) 8%[\s\S]*?var\(--fl-color-inverted\)/
-
-    assert css =~
-             ~r/\[data-inverted="true"\]\s*\{\s*--fl-card-band-surface: light-dark\(\s*color-mix\(in oklab, black 10%, var\(--fl-card-surface\)\),\s*color-mix\(in oklab, black 1\.5%, var\(--fl-card-surface\)\)/
-
-    assert css =~ ~s([data-element="card"][data-card][data-orientation="horizontal"])
-    assert css =~ ~s([data-element="card"][data-spacing="xs"])
-    assert css =~ ~s([data-element="card"][data-spacing="sm"])
-    assert css =~ ~s([data-element="card"][data-spacing="md"])
-    assert css =~ ~s([data-element="card"][data-spacing="lg"])
-    assert css =~ ~s([data-element="card"][data-spacing="xl"])
-    assert css =~ "calc(var(--fl-spacing) * 3.5)"
-    assert css =~ "calc(var(--fl-spacing) * 5)"
-    assert css =~ ~s([data-part="section"][data-padded="true"])
-    assert css =~ ~s([data-part="section"][data-padded="false"])
-    assert css =~ ~r/\[data-part="body"\]\s*>\s*\[data-part="section"\]:not\(:first-child\)/
-    assert css =~ ~s([data-body="divided"])
-    assert css =~ ~s(> [data-part="body"]:first-child)
-    refute css =~ "data-divider"
-    assert css =~ "border-block-start: 1px solid var(--fl-card-divider);"
-    assert css =~ "border-inline-start: 1px solid var(--fl-card-divider);"
-    assert css =~ "padding-block-start: var(--fl-card-spacing);"
-    assert css =~ "margin-block-start: calc(var(--fl-card-spacing) * -1);"
-
-    refute css =~ ~s([data-element="card"][data-variant="outline"])
-    refute css =~ ~s([data-element="card"][data-divided])
-    refute css =~ ~s([data-element="card"][data-card][data-flush])
-    refute File.read!(FlintUI.Generator.part_path("styled/card.css")) =~ "--fl-color-primary"
-  end
-
-  test "styles each component behind its wrapper hook", %{css: css} do
+  test "styles every component behind its wrapper hook", %{css: css} do
     assert css =~ "@layer components {"
     assert css =~ ~s([data-element="button"][data-variant])
     assert css =~ ~s([data-element="button"][data-color="neutral"])
@@ -239,10 +118,7 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="card"][data-variant="soft"])
     assert css =~ ~s([data-element="group"][data-variant="attached"])
     assert css =~ ~s([data-element="group"][data-variant="framed"])
-    assert css =~ ~s([data-element="group"][data-size="md"])
-    assert css =~ "margin-inline-start: -1px"
-    assert css =~ "--fl-color-primary-border:"
-    assert css =~ "--fl-color-neutral-border:"
+    assert css =~ "--fl-color-primary:"
     assert css =~ ~s([data-element="toggle"][data-variant])
     assert css =~ ~s([data-element="toggle"][data-variant] > [data-element="icon"])
     assert css =~ ~s([data-element="toggle"][data-color="neutral"])
@@ -250,5 +126,61 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="icon"][data-size])
     assert css =~ "--fl-icon-size:"
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
+  end
+
+  test "button and toggle expose only public color inputs", %{css: css} do
+    refute css =~ "--_fl-button-"
+    refute css =~ "--_fl-toggle-"
+    refute css =~ "--fl-button-surface"
+    refute css =~ "--fl-toggle-surface"
+
+    assert css =~ "--fl-button-color: var(--fl-color-primary);"
+    assert css =~ "--fl-toggle-color: var(--fl-color-primary);"
+    assert css =~ "--fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));"
+
+    assert css =~
+             "--fl-focus-ring-color: var(--fl-toggle-color, var(--fl-color-inverted));"
+
+    assert css =~ "var(--fl-control-shadow, 0 0 #0000)"
+    assert css =~ "var(--fl-control-press, none)"
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-depth="false"\] \{\s*--fl-control-depth: 0;/
+
+    refute css =~
+             ~r/\[data-element="button"\]\[data-depth="true"\] \{\s*--fl-control-depth: 1;/
+  end
+
+  test "card exposes five inputs and styles bodies directly", %{css: css} do
+    refute css =~ "--_fl-card-"
+    refute css =~ "--fl-card-band-surface"
+    refute css =~ "--fl-card-body-"
+    refute css =~ "--fl-card-panel-"
+    refute css =~ "--fl-card-divider"
+    refute File.read!(FlintUI.Generator.part_path("styled/card.css")) =~ "--fl-color-primary"
+
+    for body <- ~w(seamless inset flush divided separated separated-header separated-footer) do
+      assert css =~ ~s([data-body="#{body}"])
+    end
+
+    for spacing <- ~w(xs sm md lg xl) do
+      assert css =~ ~s([data-element="card"][data-spacing="#{spacing}"])
+    end
+
+    assert css =~ ~s([data-element="card"][data-outline="true"])
+    assert css =~ ~s([data-element="card"][data-outline="false"])
+    assert css =~ ~s([data-element="card"][data-shadow="true"])
+    assert css =~ ~s([data-element="card"][data-shadow="false"])
+    assert css =~ ~s([data-element="card"][data-inverted="true"])
+    assert css =~ "background: var(--fl-card-surface, var(--fl-color-surface));"
+    assert css =~ "border: 1px solid var(--fl-card-border, var(--fl-color-border));"
+    assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));"
+  end
+
+  test "collapsible exposes timing inputs and runtime-only size hooks", %{css: css} do
+    assert css =~ "--fl-collapsible-duration, var(--fl-duration-base)"
+    assert css =~ "--fl-collapsible-easing, var(--fl-ease-in-out)"
+    assert css =~ "var(--_fl-collapsible-height, auto)"
+    refute css =~ "var(--fl-collapsible-height"
   end
 end

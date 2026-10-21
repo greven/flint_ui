@@ -162,7 +162,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         inner line. The other variants have no depth treatment. Set
         `depth={false}` to remove the rim or inner line. Depth does not control
         shadows: solid, subtle, and outline always sit on
-        `--fl-button-shadow`; set that variable to `0 0 #0000` to remove them.
+        `--fl-control-shadow`; set that variable to `0 0 #0000` to remove them.
         Pressing a button sinks it, fading the highlight as it nudges down.
         """,
         code: """
@@ -498,8 +498,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
     %{
       body: """
       The generated button maps its props onto data hooks and lets the theme do
-      the rest. Public `--fl-button-*` variables are the supported per-instance
-      inputs; variants, colors and sizes only choose values for them.
+      the rest. The public inputs are `--fl-button-color`,
+      `--fl-button-color-foreground`, and `--fl-button-text`; borders, tinted
+      surfaces, and focus all derive from them and the theme tokens.
       """,
       snippets: [
         %{
@@ -510,27 +511,25 @@ defmodule FlintUIDocsWeb.Docs.Button do
             --fl-button-color: var(--fl-color-error);
             --fl-button-color-foreground: var(--fl-color-error-foreground);
             --fl-button-text: var(--fl-color-error-text);
-            --fl-button-border: var(--fl-color-error-border);
-            --fl-button-border-soft: var(--fl-color-error-border-soft);
           }
           """
         },
         %{
           title: "Flatten depth",
-          body: "Disable the rim, inner line, and press nudge. Shadows stay on.",
+          body: "Disable every control's rim, inner line, and press nudge. Shadows stay on.",
           code: """
-          .flat-action {
-            --fl-button-depth: 0;
-            --fl-button-press: none;
+          [data-theme="flat"] {
+            --fl-control-depth: 0;
+            --fl-control-press: none;
           }
           """
         },
         %{
           title: "Remove shadows",
-          body: "Solid, subtle, and outline buttons share one shadow input.",
+          body: "Solid, subtle, and outline buttons share one control shadow.",
           code: """
-          .shadowless-action {
-            --fl-button-shadow: 0 0 #0000;
+          [data-theme="flat"] {
+            --fl-control-shadow: 0 0 #0000;
           }
           """
         }

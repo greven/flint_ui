@@ -58,6 +58,7 @@
     --fl-spacing-3xl: calc(var(--fl-spacing) * 12);
 
     /* Breakpoints */
+    /* Default values: 640px; 768px; 1024px; 1280px; 1536px */
     --fl-breakpoint-sm: 40rem;
     --fl-breakpoint-md: 48rem;
     --fl-breakpoint-lg: 64rem;
@@ -86,12 +87,12 @@
     --fl-ease-out: cubic-bezier(0, 0, 0.2, 1);
     --fl-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Button effect defaults. */
-    --fl-button-depth: 1;
-    --fl-button-shadow: var(--fl-shadow-base);
-    --fl-button-press: translateY(1px);
+    /* Shared control effects. */
+    --fl-control-depth: 1;
+    --fl-control-shadow: var(--fl-shadow-base);
+    --fl-control-press: translateY(1px);
 
-    /* Shared control metrics, so buttons, inputs, etc. line up. */
+    /* Shared control metrics. */
     /* Default sizes: 24px; 28px; 32px; 36px; 40px */
     --fl-control-height-xs: 1.5rem;
     --fl-control-height-sm: 1.75rem;
@@ -132,8 +133,7 @@
     --fl-control-icon-lg: 1.125rem;
     --fl-control-icon-xl: 1.25rem;
 
-    /* Unified radius scale. Change `--fl-radius` to retune every component at
-     * once; each component can opt out through its own `--fl-<name>-radius`. */
+    /* Unified radius scale. Change `--fl-radius` to retune every component. */
     --fl-radius: 0.25rem;
     --fl-radius-xs: calc(var(--fl-radius) * 0.5);
     --fl-radius-sm: var(--fl-radius);
@@ -143,14 +143,14 @@
     --fl-radius-2xl: calc(var(--fl-radius) * 4);
     --fl-radius-full: 9999px;
 
-    --fl-button-radius: var(--fl-radius-md);
-    --fl-toggle-radius: var(--fl-radius-md);
-    --fl-card-radius: var(--fl-radius-lg);
-    --fl-input-radius: var(--fl-radius-md);
+    /* The radius shared by buttons, toggles, and future form controls. It tracks
+     * the control step in the scale, so changing `--fl-radius` still retunes
+     * controls proportionally; a theme can square or pill only controls without
+     * touching cards or other components. */
+    --fl-control-radius: var(--fl-radius-md);
 
     /* Semantic color scales. Each role owns a `50..950` ramp; components read
-     * the role alias (`--fl-color-primary`), which picks a shade per scheme.
-     * Remap a role by overriding its scale, or override the alias directly. */
+     * the role alias (`--fl-color-primary`), which picks a shade per scheme. */
     --fl-color-primary-50: oklch(0.985 0 0);
     --fl-color-primary-100: oklch(0.97 0 0);
     --fl-color-primary-200: oklch(0.922 0 0);
@@ -337,69 +337,11 @@
         var(--fl-color-error-400)
     );
 
-    /* Controls borders */
-    --fl-color-primary-border: light-dark(
-        var(--fl-color-primary-400),
-        var(--fl-color-primary-700)
-    );
-    --fl-color-primary-border-soft: light-dark(
-        var(--fl-color-primary-300),
-        var(--fl-color-primary-700)
-    );
-    --fl-color-secondary-border: light-dark(
-        var(--fl-color-secondary-400),
-        var(--fl-color-secondary-700)
-    );
-    --fl-color-secondary-border-soft: light-dark(
-        var(--fl-color-secondary-300),
-        var(--fl-color-secondary-700)
-    );
-    --fl-color-success-border: light-dark(
-        var(--fl-color-success-400),
-        var(--fl-color-success-700)
-    );
-    --fl-color-success-border-soft: light-dark(
-        var(--fl-color-success-300),
-        var(--fl-color-success-700)
-    );
-    --fl-color-info-border: light-dark(
-        var(--fl-color-info-400),
-        var(--fl-color-info-700)
-    );
-    --fl-color-info-border-soft: light-dark(
-        var(--fl-color-info-300),
-        var(--fl-color-info-700)
-    );
-    --fl-color-warning-border: light-dark(
-        var(--fl-color-warning-400),
-        var(--fl-color-warning-700)
-    );
-    --fl-color-warning-border-soft: light-dark(
-        var(--fl-color-warning-300),
-        var(--fl-color-warning-700)
-    );
-    --fl-color-error-border: light-dark(
-        var(--fl-color-error-400),
-        var(--fl-color-error-700)
-    );
-    --fl-color-error-border-soft: light-dark(
-        var(--fl-color-error-300),
-        var(--fl-color-error-700)
-    );
-    --fl-color-neutral-border: light-dark(
-        var(--fl-color-neutral-200),
-        oklch(1 0 0 / 10%)
-    );
-    --fl-color-neutral-border-soft: light-dark(
-        var(--fl-color-neutral-300),
-        oklch(1 0 0 / 14%)
-    );
+    /* Colored control borders derive from the role color. */
+    --fl-border-strength: 50%;
+    --fl-border-strength-soft: 25%;
 
-    /* Surfaces and text. The surface scale is opaque and moves from the base
-     * `surface` toward `elevated`: light steps darker, dark steps lighter.
-     * `soft` is the half-step and `muted` the full de-emphasized step. Disabled
-     * uses the muted fill with a dimmed label; colored controls that must keep
-     * their hue dim through `--fl-disabled-opacity` instead. */
+    /* Surfaces and text. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
         var(--fl-color-neutral-950)
@@ -486,7 +428,7 @@
     --fl-focus-ring-color: var(--fl-color-ring);
 }
 
-/* Manual control: force a scheme for the whole document. */
+/* Force a scheme for the whole document. */
 [data-color-scheme="light"] {
     color-scheme: light;
 }

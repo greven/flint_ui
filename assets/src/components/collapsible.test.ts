@@ -108,8 +108,8 @@ describe("Collapsible hook", () => {
 
     trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    expect(content.style.getPropertyValue("--fl-collapsible-height")).toBe("120px");
-    expect(content.style.getPropertyValue("--fl-collapsible-width")).toBe("300px");
+    expect(content.style.getPropertyValue("--_fl-collapsible-height")).toBe("120px");
+    expect(content.style.getPropertyValue("--_fl-collapsible-width")).toBe("300px");
     expect(content.style.animationName).toBe("");
     expect(content.getAttribute("data-state")).toBe("open");
   });
@@ -192,7 +192,7 @@ describe("Collapsible hook", () => {
     Object.defineProperty(content, "scrollHeight", { configurable: true, value: 240 });
     hook.updated();
 
-    expect(content.style.getPropertyValue("--fl-collapsible-height")).toBe("240px");
+    expect(content.style.getPropertyValue("--_fl-collapsible-height")).toBe("240px");
   });
 
   it("does not re-measure the content while closed", () => {
@@ -201,7 +201,7 @@ describe("Collapsible hook", () => {
     Object.defineProperty(content, "scrollHeight", { configurable: true, value: 240 });
     hook.updated();
 
-    expect(content.style.getPropertyValue("--fl-collapsible-height")).not.toBe("240px");
+    expect(content.style.getPropertyValue("--_fl-collapsible-height")).not.toBe("240px");
   });
 
   it("dispatches a change event on state changes", () => {

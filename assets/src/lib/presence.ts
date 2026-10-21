@@ -32,7 +32,7 @@ interface PresenceResult {
  * Orchestrates a CSS keyframe enter/leave transition.
  *
  * Follows the Radix/Ark model: freeze the element's animations, measure its
- * natural size into `--fl-{prefix}-height` / `--fl-{prefix}-width`, let the
+ * natural size into `--_fl-{prefix}-height` / `--_fl-{prefix}-width`, let the
  * caller apply `data-state`, then release the keyframes for that state and wait
  * for them to finish.
  *
@@ -54,8 +54,8 @@ export function animatePresence(el: HTMLElement, opts: PresenceOptions): Presenc
 
   // `scrollHeight`/`scrollWidth` describe the natural content size even when the
   // element is clipped to `height: 0`.
-  el.style.setProperty(`--fl-${cssVarPrefix}-height`, `${el.scrollHeight}px`);
-  el.style.setProperty(`--fl-${cssVarPrefix}-width`, `${el.scrollWidth}px`);
+  el.style.setProperty(`--_fl-${cssVarPrefix}-height`, `${el.scrollHeight}px`);
+  el.style.setProperty(`--_fl-${cssVarPrefix}-width`, `${el.scrollWidth}px`);
 
   // Apply the target state while frozen, then release the keyframes for it.
   applyState?.();

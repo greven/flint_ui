@@ -197,14 +197,14 @@ defmodule FlintUI.Base.Collapsible do
   def css_vars do
     [
       %Meta.CSSVar{
-        name: "--fl-collapsible-height",
+        name: "--_fl-collapsible-height",
         description:
-          "Natural scroll height of the content in pixels. Set by the underlying Presence animation engine."
+          "Runtime-only natural scroll height of the content in pixels, published by the Presence animation engine."
       },
       %Meta.CSSVar{
-        name: "--fl-collapsible-width",
+        name: "--_fl-collapsible-width",
         description:
-          "Natural scroll width of the content in pixels. Set by the underlying Presence animation engine."
+          "Runtime-only natural scroll width of the content in pixels, published by the Presence animation engine."
       }
     ]
   end

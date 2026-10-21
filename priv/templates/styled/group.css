@@ -30,10 +30,10 @@
     z-index: 1;
   }
 
-  /* Grouped controls don't sink on press. The nudge (`--fl-button-press`) reads
-   * as jitter when neighbours are flush, so suppress it for every variant. */
+  /* Grouped controls don't sink on press. The nudge (`--fl-control-press`) reads
+   * as jitter when neighbours are flush, so suppress it for every control. */
   [data-element="group"] > * {
-    --fl-button-press: none;
+    --fl-control-press: none;
   }
 
   /* Size sets the shell metrics and cascades onto the known controls, so a

@@ -259,8 +259,12 @@ FlintUI does not require Tailwind.
   UI-selectable list (`:default` plus the CSS-backed `themes/0`); `:default` has
   no stylesheet — it is the `:root` baseline — so selecting it clears
   `data-theme`. The radius scale is `--fl-radius` plus
-  the `--fl-radius-*` multipliers, with per-component overrides
-  (`--fl-button-radius`, `--fl-toggle-radius`, `--fl-card-radius`). Each
+  the `--fl-radius-*` multipliers. Buttons, toggles, and future form controls
+  share `--fl-control-radius` (default `var(--fl-radius-md)`); components with
+  their own shape (card, badge, avatar, switch) read the scale step that fits
+  their anatomy directly. There are no per-component radius tokens: a theme that
+  needs a component-specific shape targets its `data-element` hook in theme CSS.
+  Each
   semantic color role owns a `--fl-color-{role}-{50..950}` scale plus three
   aliases: `--fl-color-{role}` (the solid fill), `-foreground` (the label on
   that fill) and `-text` (the role as text on the page). `mix flint.palette`
@@ -276,14 +280,19 @@ FlintUI does not require Tailwind.
   washes it out and pairs it with a dark label, so dark solids stay as saturated
   as light ones (like FluxonUI/Nuxt); only the computed text shade differs per
   scheme.
-  Components expose **public per-component color inputs** (e.g.
-  `--fl-button-color`, `--fl-button-color-foreground`, `--fl-button-text`,
-  `--fl-button-surface`) that a consumer can override per instance via
-  `class`/`style`; internal `--_fl-{name}-*` values derive from them. The focus
-  ring is tinted with the component color. Component rules live in
+  **Component inputs are a narrow escape hatch, not the theme API.** A styled
+  component may declare at most five public `--fl-{name}-*` inputs, and only for
+  something a prop or theme token cannot express (per-instance tinting or
+  anatomy-specific geometry). Button and Toggle expose just
+  `--fl-{button,toggle}-color`, `-color-foreground`, and `-text`; Card exposes
+  spacing, surface, foreground, border, and shadow. Everything else derives
+  from theme tokens. `--_fl-*` is reserved for JS-published runtime hooks and
+  must never be documented as an input. Component rules live in
   `@layer components` and are keyed on the wrapper hooks, so the headless base
-  stays unstyled. The `color` attribute only accepts semantic roles; arbitrary
-  colors are a CSS-level override, not a component prop.
+  stays unstyled. The focus ring is tinted with the component color. The
+  `color` attribute only accepts semantic roles; arbitrary colors are a
+  CSS-level override, not a component prop. A new component-level variable must
+  justify why the theme cannot own it.
 - **Surfaces are neutral tokens, not colors.** Alongside the semantic roles sit
   scheme-aware neutral surface/text tokens — `--fl-color-surface` (the default
   panel, ≈ Nuxt's `bg-default`), `--fl-color-surface-soft` (an opaque half-step
@@ -296,8 +305,10 @@ FlintUI does not require Tailwind.
   steps darker, dark steps lighter. In dark the base surface is `neutral-800`
   and muted/elevated is an 80/20 `neutral-800`/`neutral-700` mix, keeping cards
   lifted off the near-black page. Dark borders are foreground-alpha steps
-  (5% muted, 8% default, 12% accented/input, 10% neutral, 14% neutral-soft)
-  over the surface, so they follow it instead of sitting at a fixed contrast.
+  (5% muted, 8% default, 12% accented/input) over the surface, so they follow it
+  instead of sitting at a fixed contrast. Colored control borders derive from
+  the role color with `--fl-border-strength` / `--fl-border-strength-soft`
+  instead of shipping a border token per role.
   Never make a surface token translucent over the page; composite over
   `--fl-color-surface` or use the scale directly. Disabled surfaces use the
   muted fill with a dimmed label; colored controls keep their hue and dim
@@ -322,24 +333,21 @@ FlintUI does not require Tailwind.
   `flush` (a panel reaching the card's edges). Section and footer slot attributes
   are intentionally absent; dividers and inset are root/body concerns.
   Seamless makes the body `display: contents`, preserving the original
-  direct-child gap layout. Separated bodies use the card surface
-  (`--fl-card-body-surface`, with `--fl-card-body-foreground`, defaulting to the
-  card surface/foreground) so the selected variant and inverted treatment carry
-  through; bands are a darker shade of that same surface. Divided bodies inherit
-  the card surface because the lines are the treatment. In separated modes both
-  outer regions cancel the card's block inset, so the banded and unbanded edges
-  reach the rounded edge.
+  direct-child gap layout. Separated bodies sit on the card surface so the
+  selected variant and inverted treatment carry through; bands are a darker
+  shade of that same surface. Divided bodies inherit the card surface because
+  the lines are the treatment. In separated modes both outer regions cancel the
+  card's block inset, so the banded and unbanded edges reach the rounded edge.
   Inset/flush add a border and radius to the body panel; separated/divided remain
-  edge-to-edge.
-  Band tint is a 1.5% black shade of the card surface in light and 10% in dark
-  through `--fl-card-band-surface`, so bands stay darker than the body without
-  becoming heavy in light mode. Inverted cards swap those strengths. Bands layer
-  over solid, soft and muted shells alike; the muted variant no longer
-  strengthens them separately because its surface is already the stronger step.
-  Inset/flush panels use
-  `--fl-card-panel-surface`/`--fl-card-panel-shadow`: a subtle well on light solid
-  cards, a raised tonal panel in dark and on soft/muted cards. Inverted cards
-  keep a well with an inset shadow. The panel shadow follows the same elevation.
+  edge-to-edge. These treatments are direct `[data-body]`/`[data-part]` rules,
+  not an internal variable pipeline.
+  Band tint is a 1.5% black shade of the card surface in light and 10% in dark,
+  so bands stay darker than the body without becoming heavy in light mode.
+  Inverted cards swap those strengths. Bands layer over solid, soft and muted
+  shells alike; the muted variant does not strengthen them separately because
+  its surface is already the stronger step. Inset/flush panels are a subtle well
+  on light solid cards and a raised tonal panel in dark and on soft/muted cards;
+  inverted cards keep a well with an inset shadow.
   Regions own their inline inset, so divided lines span the card edge to edge. A
   divided padded section or footer also gets block-start padding below the line;
   in horizontal orientation regions own the block inset so the dividers span the
@@ -355,31 +363,26 @@ FlintUI does not require Tailwind.
   behaves like any hue (it tints); the docs lean on Nuxt UI's state defaults
   (`success` emerald, `info` blue, `warning` amber, `error` red).
 - **Surface effects are layered too.** Depth and shadows are separate:
-  `solid` wears a top **rim light** — a 1px `::before` border
-  (`--fl-button-highlight`) masked top-to-bottom so the line runs a little way
-  down the sides before fading (`--fl-button-sheen-stop`) — while `outline`
-  wears a bottom inner line (`--fl-button-inner-line`). The `depth` prop is a
-  boolean (`data-depth="true"|"false"`; boolean props set the string so both
-  states have a selector) that flattens only that highlight/line on demand.
-  Shadows are always on for `solid`, `subtle`, and `outline` through
-  `--fl-button-shadow` (defaulting to the scheme-aware `--fl-shadow-base`);
-  override it with `0 0 #0000` per instance or theme to remove them.
-  `dashed`/`ghost`/`link` stay flat, and `soft` has no shadow.
-  The look derives from theme tokens (`--fl-button-depth` scaling the rim and
-  inner line, `--fl-button-shadow` the outer elevation, `--fl-button-press` the
-  `:active` nudge), so a preset can flatten or gloss every button at once and a
-  consumer overrides the same names per instance via `class`/`style`. The
-  elevation and the outline inner line compose into one `box-shadow` through
-  transparent `0 0 #0000` placeholders (never `none`), and relevance is enforced
-  by which variant rule sets `--_fl-button-inner`/`-elevation`; the solid rim is
-  the separate `--fl-button-sheen` `::before` border. Pressing sinks the button:
-  `:active` nudges it, fades the rim's opacity to 0, and drops the elevation to a
-  transparent shadow (same count/inset-ness, so `box-shadow` transitions), and
-  `prefers-reduced-motion` drops only the nudge.
+  `solid` wears a top **rim light** — a 1px `::before` border masked
+  top-to-bottom so the line runs a little way down the sides before fading —
+  while `outline` wears a bottom inner line. The `depth` prop is a boolean
+  (`data-depth="true"|"false"`; boolean props set the string so both states have
+  a selector) that flattens only that highlight/line on demand. Shadows are
+  always on for `solid`, `subtle`, and `outline` through the shared
+  `--fl-control-shadow`; override it with `0 0 #0000` per instance or theme to
+  remove them. `dashed`/`ghost`/`link` stay flat, and `soft` has no shadow.
+  Shared control effects live in the theme: `--fl-control-depth` scales the rim
+  and inner line, `--fl-control-shadow` is the outer elevation, and
+  `--fl-control-press` is the `:active` nudge, so a preset can flatten or gloss
+  every control at once and a consumer overrides the same names per instance via
+  `class`/`style`. Pressing sinks the button: `:active` nudges it, fades the
+  rim's opacity to 0, and drops the elevation to a transparent shadow (same
+  count/inset-ness, so `box-shadow` transitions), and `prefers-reduced-motion`
+  drops only the nudge.
 - **Scales are tokens.** `--fl-font-size-*`, `--fl-line-height-*`,
   `--fl-font-weight-*`, `--fl-spacing-*` (base `--fl-spacing` + multipliers),
   `--fl-shadow-*`, `--fl-breakpoint-*`, `--fl-container`, `--fl-duration-*`,
-  `--fl-ease-*`, plus a shared
+  `--fl-ease-*`, plus `--fl-control-radius` and a shared
   `--fl-control-{height,padding-x,font-size,line-height,gap,icon}-*` scale that
   controls consume (button/toggle read it; the icon size drives any direct
   `[data-element="icon"]` or `[data-element="loading"]` child, which controls

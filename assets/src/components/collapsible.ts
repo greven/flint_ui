@@ -69,12 +69,12 @@ export class Collapsible extends FlintHook {
     const content = this.parts.content;
     if (!content) return;
 
-    content.style.setProperty(`--fl-${CSS_VAR_PREFIX}-height`, `${content.scrollHeight}px`);
-    content.style.setProperty(`--fl-${CSS_VAR_PREFIX}-width`, `${content.scrollWidth}px`);
+    content.style.setProperty(`--_fl-${CSS_VAR_PREFIX}-height`, `${content.scrollHeight}px`);
+    content.style.setProperty(`--_fl-${CSS_VAR_PREFIX}-width`, `${content.scrollWidth}px`);
   }
 
   /**
-   * Keeps `--fl-collapsible-height` fresh while open, so CSS consumers that read
+   * Keeps `--_fl-collapsible-height` fresh while open, so CSS consumers that read
    * the variable (and the next animation) see the current natural size even when
    * async content is patched in. Updates are skipped while an animation runs to
    * avoid feeding the animating size back into the keyframes.

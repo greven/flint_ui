@@ -53,14 +53,12 @@ defmodule FlintUI.ThemeContractTest do
     end
   end
 
-  test "every per-component radius token a stylesheet uses is defined", %{css: css} do
+  test "components use the shared radius scale, not per-component radius tokens" do
     for entry <- Styled.entries() do
       source = File.read!(FlintUI.Generator.part_path(entry.css))
 
-      if source =~ "--fl-#{entry.name}-radius" do
-        assert css =~ "--fl-#{entry.name}-radius:",
-               "expected --fl-#{entry.name}-radius to be defined for #{entry.name}"
-      end
+      refute source =~ "--fl-#{entry.name}-radius",
+             "#{entry.name} should read the shared radius scale"
     end
   end
 

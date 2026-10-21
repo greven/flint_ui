@@ -10,7 +10,7 @@ defmodule FlintUI.Styled.Card do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add card",
       css: "styled/card.css",
-      tokens: [:color, :radius, :font],
+      tokens: [:color, :radius, :font, :shadow, :spacing],
       slots: [],
       vars: [
         Var.new(
@@ -31,66 +31,12 @@ defmodule FlintUI.Styled.Card do
         Var.new(
           name: "--fl-card-border",
           default: "var(--fl-color-border)",
-          doc: "The outline color when `outline` is set."
+          doc: "The outline color and the source for dividers and panel borders."
         ),
         Var.new(
           name: "--fl-card-shadow",
           default: "var(--fl-shadow-base)",
           doc: "The outer elevation; set it to `0 0 #0000` to remove the shadow."
-        ),
-        Var.new(
-          name: "--fl-card-divider",
-          default: "var(--fl-color-border)",
-          doc: "The hairline color used by divided body lines."
-        ),
-        Var.new(
-          name: "--fl-card-band-surface",
-          default:
-            "light-dark(color-mix(in oklab, black 1.5%, var(--fl-card-surface)), color-mix(in oklab, black 10%, var(--fl-card-surface)))",
-          doc:
-            "The darker band used by separated headers and footers: 1.5% black in light, 10% in dark; inverted cards swap the strengths."
-        ),
-        Var.new(
-          name: "--fl-card-body-surface",
-          default: "var(--fl-card-surface)",
-          doc: "The content surface used by separated bodies; defaults to the card surface."
-        ),
-        Var.new(
-          name: "--fl-card-body-foreground",
-          default: "var(--fl-card-surface-foreground)",
-          doc: "The text color on the separated body surface."
-        ),
-        Var.new(
-          name: "--fl-card-panel-surface",
-          default:
-            "light-dark(color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent), color-mix(in oklab, var(--fl-card-surface-foreground) 2.5%, var(--fl-card-surface)))",
-          doc:
-            "The inset/flush panel fill: a well on light solid and inverted cards, and a raised surface in dark or on tinted cards."
-        ),
-        Var.new(
-          name: "--fl-card-panel-shadow",
-          default: "light-dark(inset 0 1px 2px rgb(0 0 0 / 0.05), var(--fl-shadow-xs))",
-          doc: "The inset/flush panel depth: inset for wells and raised for elevated panels."
-        ),
-        Var.new(
-          name: "--fl-card-panel-inset",
-          default: "var(--fl-spacing)",
-          doc: "The small gap between an inset body panel and the card shell."
-        ),
-        Var.new(
-          name: "--fl-card-body-border",
-          default: "var(--fl-card-border)",
-          doc: "The border color of inset and flush body panels."
-        ),
-        Var.new(
-          name: "--fl-card-body-radius",
-          default: "var(--fl-radius-lg)",
-          doc: "The corner radius of inset and flush body panels."
-        ),
-        Var.new(
-          name: "--fl-card-radius",
-          default: "var(--fl-radius-xl)",
-          doc: "The card corner radius."
         )
       ],
       props: [

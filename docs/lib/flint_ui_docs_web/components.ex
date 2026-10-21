@@ -31,7 +31,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:depth, :boolean,
     default: true,
     doc:
-      "Whether solid and outline buttons show their highlight/inner line. Shadows are always on for solid, subtle, and outline; remove them with `--fl-button-shadow`."
+      "Whether solid and outline buttons show their highlight/inner line. Shadows are always on for solid, subtle, and outline; remove them with `--fl-control-shadow`."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")

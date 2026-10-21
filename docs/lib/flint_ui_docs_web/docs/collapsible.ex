@@ -132,7 +132,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
         covers: [],
         body: """
         The generated component adds the themed reveal: the content clips itself
-        and animates open and closed using the `--fl-collapsible-height` the hook
+        and animates open and closed using the `--_fl-collapsible-height` the hook
         measures. Customize the timing with the `--fl-collapsible-duration` and
         `--fl-collapsible-easing` custom properties. This preview runs at `400ms`
         with an overshoot easing.

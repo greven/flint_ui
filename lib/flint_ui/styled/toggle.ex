@@ -19,7 +19,7 @@ defmodule FlintUI.Styled.Toggle do
         Var.new(
           name: "--fl-toggle-color",
           default: "var(--fl-color-inverted)",
-          doc: "The pressed fill and focus ring color."
+          doc: "The pressed fill and the source for tinted surfaces and focus."
         ),
         Var.new(
           name: "--fl-toggle-color-foreground",
@@ -30,26 +30,6 @@ defmodule FlintUI.Styled.Toggle do
           name: "--fl-toggle-text",
           default: "var(--fl-toggle-color)",
           doc: "The label color for text-carrying variants."
-        ),
-        Var.new(
-          name: "--fl-toggle-surface",
-          default: "color-mix(in oklab, var(--fl-toggle-color) 10%, transparent)",
-          doc: "The pressed tint for subtle, outline, ghost, and dashed variants."
-        ),
-        Var.new(
-          name: "--fl-toggle-border",
-          default: "var(--fl-color-neutral-border)",
-          doc: "The border color for outline and dashed toggles."
-        ),
-        Var.new(
-          name: "--fl-toggle-border-soft",
-          default: "var(--fl-color-neutral-border-soft)",
-          doc: "The border color for subtle toggles."
-        ),
-        Var.new(
-          name: "--fl-toggle-radius",
-          default: "var(--fl-radius-md)",
-          doc: "The toggle corner radius."
         )
       ],
       props: [

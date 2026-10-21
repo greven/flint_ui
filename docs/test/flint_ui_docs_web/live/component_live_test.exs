@@ -59,7 +59,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#theme")
     assert has_element?(view, "#selectors")
     assert has_element?(view, "#css-variables")
-    assert has_element?(view, "#css-variables code", "--fl-collapsible-height")
+    assert has_element?(view, "#css-variables code", "--fl-collapsible-duration")
     assert has_element?(view, "#customization")
     refute has_element?(view, "#setup")
   end

@@ -394,8 +394,9 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     %{
       body: """
       The styled toggle maps `variant`, `color`, and `size` onto data hooks and
-      leaves the pressed state to `data-state`. Public `--fl-toggle-*` variables
-      are the supported per-instance inputs.
+      leaves the pressed state to `data-state`. The public inputs are
+      `--fl-toggle-color`, `--fl-toggle-color-foreground`, and
+      `--fl-toggle-text`; surfaces, borders, and focus derive from them.
       """,
       snippets: [
         %{
@@ -406,17 +407,6 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
             --fl-toggle-color: var(--fl-color-error);
             --fl-toggle-color-foreground: var(--fl-color-error-foreground);
             --fl-toggle-text: var(--fl-color-error-text);
-            --fl-toggle-border: var(--fl-color-error-border);
-            --fl-toggle-border-soft: var(--fl-color-error-border-soft);
-          }
-          """
-        },
-        %{
-          title: "Change the pressed surface",
-          body: "Tint the pressed state for text-carrying variants.",
-          code: """
-          .soft-toggle {
-            --fl-toggle-surface: color-mix(in oklab, var(--fl-color-primary) 20%, transparent);
           }
           """
         }

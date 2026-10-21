@@ -10,28 +10,18 @@ defmodule FlintUI.Styled.Collapsible do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add collapsible",
       css: "styled/collapsible.css",
-      tokens: [:color, :radius],
+      tokens: [:color, :radius, :duration, :ease],
       slots: [],
       vars: [
         Var.new(
           name: "--fl-collapsible-duration",
-          default: "250ms",
+          default: "var(--fl-duration-base)",
           doc: "Duration of the open/close reveal."
         ),
         Var.new(
           name: "--fl-collapsible-easing",
-          default: "ease",
+          default: "var(--fl-ease-in-out)",
           doc: "Timing function of the reveal."
-        ),
-        Var.new(
-          name: "--fl-collapsible-height",
-          default: "auto",
-          doc: "Natural content height, published by the hook and used by the keyframes."
-        ),
-        Var.new(
-          name: "--fl-collapsible-width",
-          default: "auto",
-          doc: "Natural content width, published by the hook."
         )
       ],
       props: []
