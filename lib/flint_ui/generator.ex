@@ -112,6 +112,8 @@ defmodule FlintUI.Generator do
       --color-background: var(--fl-color-background);
       --color-foreground: var(--fl-color-foreground);
       --color-surface: var(--fl-color-surface);
+      --color-surface-soft: var(--fl-color-surface-soft);
+      --color-surface-muted: var(--fl-color-surface-muted);
       --color-surface-foreground: var(--fl-color-surface-foreground);
       --color-primary: var(--fl-color-primary);
       --color-primary-foreground: var(--fl-color-primary-foreground);
@@ -133,6 +135,9 @@ defmodule FlintUI.Generator do
       --color-accent-foreground: var(--fl-color-accent-foreground);
       --color-elevated: var(--fl-color-elevated);
       --color-dimmed: var(--fl-color-dimmed);
+      --color-disabled: var(--fl-color-disabled);
+      --color-disabled-foreground: var(--fl-color-disabled-foreground);
+      --color-disabled-border: var(--fl-color-disabled-border);
       --color-inverted: var(--fl-color-inverted);
       --color-inverted-foreground: var(--fl-color-inverted-foreground);
       --color-border: var(--fl-color-border);
@@ -180,6 +185,7 @@ defmodule FlintUI.Generator do
       --font-weight-semibold: var(--fl-font-weight-semibold);
       --font-weight-bold: var(--fl-font-weight-bold);
 
+      --shadow-base: var(--fl-shadow-base);
       --shadow-2xs: var(--fl-shadow-2xs);
       --shadow-xs: var(--fl-shadow-xs);
       --shadow-sm: var(--fl-shadow-sm);
@@ -252,6 +258,20 @@ defmodule FlintUI.Generator do
   end
 
   defp slot_decl(slot) do
+    head = slot_head(slot)
+    attrs = Map.get(slot, :attrs, [])
+
+    case attrs do
+      [] ->
+        head
+
+      attrs ->
+        nested = Enum.map_join(attrs, "\n", &("  " <> attr_decl(&1)))
+        head <> " do\n" <> nested <> "\nend"
+    end
+  end
+
+  defp slot_head(slot) do
     opts = []
     opts = if slot.required, do: opts ++ [required: true], else: opts
     opts = if slot.doc, do: opts ++ [doc: slot.doc], else: opts
@@ -259,6 +279,17 @@ defmodule FlintUI.Generator do
     case opts do
       [] -> "slot(:#{slot.name})"
       opts -> "slot(:#{slot.name}, #{Enum.map_join(opts, ", ", &opt/1)})"
+    end
+  end
+
+  defp attr_decl(attr) do
+    opts = Map.get(attr, :opts) || []
+    opts = if attr.required, do: opts ++ [required: true], else: opts
+    opts = if attr.doc, do: opts ++ [doc: attr.doc], else: opts
+
+    case opts do
+      [] -> "attr(:#{attr.name}, #{inspect(attr.type)})"
+      opts -> "attr(:#{attr.name}, #{inspect(attr.type)}, #{Enum.map_join(opts, ", ", &opt/1)})"
     end
   end
 

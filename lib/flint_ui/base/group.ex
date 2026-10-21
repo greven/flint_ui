@@ -17,23 +17,22 @@ defmodule FlintUI.Base.Group do
   stack them vertically.
 
   The group is a plain container and carries no implicit role. Pass `label` to
-  expose it as a named `group`, or set `role="toolbar"` (or any other role)
-  yourself when the content calls for it.
+  expose it as a named `group`. A group that is only visual needs neither.
 
   ## Accessibility
 
   A group is a generic container, so it has no implicit role. Give it an
   accessible name with `label` when the grouping is meaningful; that exposes it
-  as a `group` landmark. Set `role="toolbar"` when the children form a toolbar,
-  and `orientation` so the arrow-key expectation matches the layout. A group
-  that is only visual (for example a set of buttons that happen to sit together)
-  needs neither.
+  as a `group` landmark. The `orientation` attribute is a styling hook: it sets
+  `data-orientation`, but does not add arrow-key behavior. If you pass
+  `role="toolbar"` yourself, also pass `aria-orientation` to match the layout
+  and provide the keyboard interaction the role expects. Roving-focus support
+  for toolbars is not implemented yet.
 
   ## Keyboard
 
-  The group adds no keyboard interaction of its own; it only reports its
-  `orientation` to assistive technology. Keyboard behavior comes from the
-  grouped controls.
+  The group adds no keyboard interaction of its own. Keyboard behavior comes
+  from the grouped controls.
   """
 
   use FlintUI.Component
@@ -83,17 +82,6 @@ defmodule FlintUI.Base.Group do
   end
 
   @impl true
-  def css_vars do
-    [
-      %Meta.CSSVar{
-        name: "--fl-group-gap",
-        description:
-          "The gap between children. `attached` sets it to `0`; `framed` leaves it at the size value. Override it in CSS to customize the spacing."
-      }
-    ]
-  end
-
-  @impl true
   def build_attrs(assigns) do
     %{
       root:
@@ -122,7 +110,8 @@ defmodule FlintUI.Base.Group do
     doc: "An accessible name for the group. When set, the group is exposed with the `group` role."
 
   attr :rest, :global,
-    doc: "Additional HTML attributes. Pass `role=\"toolbar\"` to expose a toolbar instead."
+    doc:
+      "Additional HTML attributes. If you pass `role=\"toolbar\"`, also pass `aria-orientation` and provide the expected keyboard interaction."
 
   slot :inner_block, required: true, doc: "The grouped children."
 

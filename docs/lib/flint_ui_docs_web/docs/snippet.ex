@@ -1,4 +1,4 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Snippet do
+defmodule FlintUIDocsWeb.Docs.Snippet do
   @moduledoc """
   Small helpers for rendering a component's HEEx source from playground props.
 

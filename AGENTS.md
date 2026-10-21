@@ -11,6 +11,14 @@ Repository-wide guidance for agents working on FlintUI.
 
 `mix` is not on `PATH`; run Elixir commands through `mise exec -- mix ...`.
 
+## Development status
+
+FlintUI is pre-release and has no published release. Do not add compatibility
+layers, deprecation shims, or migration paths for old component APIs: change the
+API directly and update every internal consumer and doc in the same change.
+Breaking changes are expected until the first release; reserve careful migration
+work for published versions.
+
 ## Verification
 
 - Library: `mise exec -- mix format && mise exec -- mix compile --warnings-as-errors && mise exec -- mix test` (run from the repo root).
@@ -37,7 +45,7 @@ FlintUI component supersedes a bespoke pattern in the docs, replace the bespoke 
 the same change that adds the component. This exercises components in real use while they
 are being built.
 
-Exception: the modules under `docs/lib/flint_ui_docs_web/component_docs/` may keep raw HTML when
+Exception: the modules under `docs/lib/flint_ui_docs_web/docs/` may keep raw HTML when
 they are deliberately demonstrating the unstyled component API.
 
 ### Site structure and navigation
@@ -64,52 +72,56 @@ Routes are section-prefixed — `/`, `/getting-started/introduction`,
 `/guides`) redirect to their first page. Standalone lives live in
 `docs/lib/flint_ui_docs_web/live/`: `HomeLive` (landing), `IntroductionLive`,
 `GettingStartedLive` (Installation), `StylingLive` (which aggregates the base
-styling snippets from `FlintUIDocsWeb.ComponentDocs.styling/1`), `ThemeLive`
+styling snippets from `FlintUIDocsWeb.Docs.styling/1`), `ThemeLive`
 (which lists tokens by reading `FlintUI.Generator.theme_source/0`), and
 `ComponentsLive` (the component index).
 
 ### Component docs pages
 
 Every component page (`/components/:name`, rendered by `FlintUIDocsWeb.ComponentLive`)
-has three URL-driven tabs — **Docs** (default), **Base** (`?tab=base`), and
-**Styles** (`?tab=styles`). The generated styled component is centre stage on
-Docs; Base documents the headless imported component; Styles gathers what you
-consume when styling this component. Legacy `?tab=styled` / `?tab=api` links
-resolve to Docs.
+has three URL-driven tabs — **Styled** (default), **Base** (`?tab=base`), and
+**CSS** (`?tab=css`). The generated styled component is centre stage on Styled;
+Base documents the headless imported component; CSS gathers the styled layer's
+CSS contract. Legacy `?tab=styled` / `?tab=api` / `?tab=styles` links resolve to
+Styled or CSS as appropriate.
 
-- **Docs** — the generated component: `Usage` (the interactive styled playground
-  plus one subsection per attribute, each with its own preview), `Examples` (the
-  recipe cards), `API reference` (the full surface as it is usable on the
-  generated component — base attributes and styled props merged into one table,
-  base + styled slots, and events, with a link to the Base tab's `Data attributes`),
-  and `Changelog` (placeholder).
+- **Styled** — the generated component: `Usage` (the interactive styled
+  playground plus one subsection per styled attribute), a `Base behavior` block
+  linking to the Base tab instead of repeating base semantics, `Examples` (the
+  recipe cards), `Setup` (the install command and wrapper source),
+  and `API reference` (base attributes and styled props merged into one table
+  with Attr, Layer, Type, and Description columns; defaults and data hooks are
+  folded into each description, data first).
 - **Base** — the headless component: `Anatomy` (a structured tree of the rendered
-  markup: wrapper, inner parts, `data-*` hooks, and states), `Usage` (the
-  playground with no controls, plus the base-only usage subsections),
-  `Accessibility` (prose plus the `Keyboard` table), and `API reference` (base
-  `Attributes`, `Slots`, `Events`, and `Data attributes`).
-- **Styles** — the styling contract: `Theme` (the token namespaces the component
-  reads, with links to Theming and Styling) and `CSS variables` (any runtime
-  custom properties the component sets, e.g. `--fl-collapsible-height`).
+  markup: wrapper, inner parts, `data-*` hooks, and states), `Usage` (prose plus
+  code for each base attribute, with no live previews), `Examples` (prose plus
+  complete code), `Accessibility` (prose plus the `Keyboard` table), and `API
+  reference` (base `Attributes`, `Slots`, `Events`, `Data attributes`, and
+  runtime CSS variables).
+- **CSS** — the styled layer contract: `Styling contract` prose, `Public CSS
+  variables` (`FlintUI.Styled.Var`), `Selectors and state hooks`, `Theme` (token
+  namespaces), and `Customization` recipes.
 
 Page content is authored per component in
-`docs/lib/flint_ui_docs_web/component_docs/<name>.ex` (behaviour
-`FlintUIDocsWeb.ComponentDocs.Page`), not in the template. Each module declares
-`controls/0` (the Docs playground), `usage/0`, `examples/0`, `anatomy/0`,
-`styling/0`, `structure/0`, `render_playground/1`, `render_code/1`,
+`docs/lib/flint_ui_docs_web/docs/<name>.ex` (behaviour
+`FlintUIDocsWeb.Docs.Page`), not in the template. Each module declares
+`controls/0` (the Styled playground), `usage/0`, `examples/0`, `anatomy/0`,
+`styling/0`, `css/0`, `structure/0`, `render_playground/1`, `render_code/1`,
 `render_usage/1`, and `render_block/1`. `accessibility/0` defaults to the
 `## Accessibility` section of the component's moduledoc (`FlintUI.Docs.section/2`);
 keyboard comes from the component's `keyboard/0`.
 
 `usage/0` is the single source of truth for the per-attribute subsections: each
-entry is tagged `layer: :base` or `layer: :styled`, and both tabs render the
-entries that apply to them from the same list (`ComponentDocs.usage/1` vs
-`ComponentDocs.base_usage/1`). `render_usage/1` matches on the entry `id` and
-receives the tab's `layer`, so the Docs tab previews the generated component and
-the Base tab previews the headless one from the same clause; entries that cannot
-be demonstrated live (e.g. a pushed server event) set `preview: false` to render
-the Code tab only. `render_block/1` renders the Examples recipes. `anatomy/0` returns a
-`%{body, nodes}` tree rendered by `FlintUIDocsWeb.DocBlocks.anatomy/1`, with
+public attribute has an entry tagged `layer: :base` or `layer: :styled` and a
+`covers` list, and each tab renders only its layer (`Docs.styled_usage/1`
+vs `Docs.base_usage/1`). A docs test enforces that every public base
+attribute and styled prop is covered. `render_usage/1` matches on the entry `id`;
+Styled entries that cannot be demonstrated live set `preview: false` to render the
+Code tab only. Base usage and examples are always prose + code and never render a
+preview. `examples/0` entries may be tagged `layer: :base`; the Styled tab shows
+only styled examples and Base shows only base examples.
+`render_block/1` renders the Examples recipes. `anatomy/0` returns a
+`%{body, nodes}` tree rendered by `FlintUIDocsWeb.DocsComponents.anatomy/1`, with
 `structure/0` kept as a code-snippet fallback for components that have not been
 authored yet. The API tables are derived from the component metadata
 (`FlintUI.Docs.*`) plus the `FlintUI.Styled` entry props/slots.
@@ -174,6 +186,10 @@ knowing their type. The only place the group names a child is the `size` cascade
 (`> :is([data-element="button"], [data-element="toggle"])`); a new control opts in
 by adding its `data-element` there. Prefer composing `<.group>` over a bespoke
 wrapper when a set of controls should read as one unit.
+
+Future work: `role="toolbar"` currently only gets the role if the host passes
+it. The group does not implement roving focus or arrow-key movement, so the docs
+must not present it as a complete toolbar pattern until that lands.
 
 ### Keep parity with Phoenix `core_components`
 
@@ -270,36 +286,88 @@ FlintUI does not require Tailwind.
   colors are a CSS-level override, not a component prop.
 - **Surfaces are neutral tokens, not colors.** Alongside the semantic roles sit
   scheme-aware neutral surface/text tokens — `--fl-color-surface` (the default
-  panel, ≈ Nuxt's `bg-default`), `--fl-color-elevated`/`--fl-color-muted`
+  panel, ≈ Nuxt's `bg-default`), `--fl-color-surface-soft` (an opaque half-step
+  toward `elevated`), `--fl-color-surface-muted` (the full muted step, aliasing
+  `--fl-color-muted`), `--fl-color-elevated`/`--fl-color-muted`
   (`bg-elevated`/`bg-muted`), `--fl-color-inverted`, `--fl-color-border`,
-  `--fl-color-dimmed`/`--fl-color-muted-foreground`. They derive from the
+  `--fl-color-dimmed`/`--fl-color-muted-foreground`, plus
+  `--fl-color-disabled`/`-foreground`/`-border` and `--fl-disabled-opacity`.
+  The scale is opaque and moves from the base surface toward `elevated`: light
+  steps darker, dark steps lighter. Never make a surface token translucent over
+  the page; composite over `--fl-color-surface` or use the scale directly.
+  Disabled surfaces use the muted fill with a dimmed label; colored controls
+  keep their hue and dim through `--fl-disabled-opacity`. They derive from the
   `neutral` role's scale, so a palette remap carries through. Components that
   shouldn't take a `color` use these: **Card** exposes only neutral surface
-  `variant`s (`outline` default, `soft`, `subtle`, `solid` = inverted), never a
-  hue. **Card** also takes an opt-in `divided` boolean (`data-divided`; `:root`
-  spacing moves onto each region and a hairline separates header/body/footer).
+  `variant`s (`solid` default, `soft`, `muted`), never a hue. `outline` and
+  `shadow` (both true by default) and `inverted` compose with every variant.
+  `spacing` runs `xs`/`sm`/`md`/`lg`/`xl` (14/16/20/24/32px, `md` default).
+  The Card is a flex container whose `orientation` (`vertical` default,
+  `horizontal`) lays out the optional header, body region, and optional footer.
+  The body wraps the default slot and the repeatable `:section` regions; there is
+  no separate body slot. All body sections share the root `padded` boolean
+  (default true); set `padded={false}` for full-bleed content. Header and footer
+  actions use the flat `:header_actions`/`:footer_actions` slots because Phoenix
+  slot entries must be direct children of the component and cannot nest. The
+  styled `body` prop sets how the regions separate: `seamless` (default),
+  `separated` (darker header and footer bands), `separated-header`/
+  `separated-footer` (one band, with the unbanded region on the body
+  surface), `divided` (full-width lines between every
+  region and body section), `inset` (a body panel inset from the edges), or
+  `flush` (a panel reaching the card's edges). Section and footer slot attributes
+  are intentionally absent; dividers and inset are root/body concerns.
+  Seamless makes the body `display: contents`, preserving the original
+  direct-child gap layout. Separated bodies use the card surface
+  (`--fl-card-body-surface`, with `--fl-card-body-foreground`, defaulting to the
+  card surface/foreground) so the selected variant and inverted treatment carry
+  through; bands are a darker shade of that same surface. Divided bodies inherit
+  the card surface because the lines are the treatment. In separated modes both
+  outer regions cancel the card's block inset, so the banded and unbanded edges
+  reach the rounded edge.
+  Inset/flush add a border and radius to the body panel; separated/divided remain
+  edge-to-edge.
+  Band tint is a 1.5% black shade of the card surface in light and 15% in dark
+  through `--fl-card-band-surface`, so bands stay darker than the body without
+  becoming heavy in light mode. Inverted cards swap those strengths. Bands layer
+  over solid, soft and muted shells alike; the muted variant no longer
+  strengthens them separately because its surface is already the stronger step.
+  Inset/flush panels use
+  `--fl-card-panel-surface`/`--fl-card-panel-shadow`, which resolve to a well on
+  solid cards and a raised white (white/4 in dark) panel on tinted ones. Both
+  work in either scheme and on inverted cards.
+  Regions own their inline inset, so divided lines span the card edge to edge. A
+  divided padded section or footer also gets block-start padding below the line;
+  in horizontal orientation regions own the block inset so the dividers span the
+  card height. Header/footer block padding is one base step tighter than the
+  card spacing (`--fl-card-spacing - --fl-spacing`, 16px at the default) while
+  body and section spacing keep `--fl-card-spacing`. Vertical flush cards use
+  that same region spacing for the gap around the panel. A full-bleed first/last
+  section cancels the card's block inset in the non-panel treatments; inside a
+  panel it bleeds to the panel edge.
   The **`color="neutral"`** role (button/toggle, the default) is the inverted
   surface — plain black/white — not the `--fl-color-neutral` hue alias, so it
   stays monochrome even when a palette remaps the neutral ramp. `secondary`
   behaves like any hue (it tints); the docs lean on Nuxt UI's state defaults
   (`success` emerald, `info` blue, `warning` amber, `error` red).
-- **Surface effects are layered too.** Only `solid` and `outline` are raised:
-  solid wears a top **rim light** — a 1px `::before` border (`--fl-button-highlight`)
-  masked top-to-bottom so the line runs a little way down the sides before fading
-  (`--fl-button-sheen-stop`) — plus the smooth outer elevation (`--fl-shadow-xs`,
-  Tailwind's `shadow-xs`), while outline wears a bottom inner line;
-  `subtle`/`dashed`/`ghost`/`link` are flat by design. The
-  `depth` prop is a boolean (`data-depth="true"|"false"`; boolean props set the
-  string so both states have a selector) that flattens solid/outline on demand.
+- **Surface effects are layered too.** Depth and shadows are separate:
+  `solid` wears a top **rim light** — a 1px `::before` border
+  (`--fl-button-highlight`) masked top-to-bottom so the line runs a little way
+  down the sides before fading (`--fl-button-sheen-stop`) — while `outline`
+  wears a bottom inner line (`--fl-button-inner-line`). The `depth` prop is a
+  boolean (`data-depth="true"|"false"`; boolean props set the string so both
+  states have a selector) that flattens only that highlight/line on demand.
+  Shadows are always on for `solid`, `subtle`, and `outline` through
+  `--fl-button-shadow` (defaulting to the scheme-aware `--fl-shadow-base`);
+  override it with `0 0 #0000` per instance or theme to remove them.
+  `dashed`/`ghost`/`link` stay flat, and `soft` has no shadow.
   The look derives from theme tokens (`--fl-button-depth` scaling the rim and
-  the `--fl-button-inner-line` value declared on the element,
-  `--fl-button-shadow` the outer elevation, `--fl-button-press` the `:active`
-  nudge), so a preset can flatten or gloss every button at once and a consumer
-  overrides the same names per instance via `class`/`style`. The elevation and
-  the outline inner line compose into one `box-shadow` through transparent
-  `0 0 #0000` placeholders (never `none`), and relevance is enforced by which
-  variant rule sets `--_fl-button-inner`/`-elevation`; the solid rim is the
-  separate `--fl-button-sheen` `::before` border. Pressing sinks the button:
+  inner line, `--fl-button-shadow` the outer elevation, `--fl-button-press` the
+  `:active` nudge), so a preset can flatten or gloss every button at once and a
+  consumer overrides the same names per instance via `class`/`style`. The
+  elevation and the outline inner line compose into one `box-shadow` through
+  transparent `0 0 #0000` placeholders (never `none`), and relevance is enforced
+  by which variant rule sets `--_fl-button-inner`/`-elevation`; the solid rim is
+  the separate `--fl-button-sheen` `::before` border. Pressing sinks the button:
   `:active` nudges it, fades the rim's opacity to 0, and drops the elevation to a
   transparent shadow (same count/inset-ness, so `box-shadow` transitions), and
   `prefers-reduced-motion` drops only the nudge.
@@ -349,8 +417,8 @@ in the same change:
    the entry's `css`). `test/theme_contract_test.exs` fails if a registry value
    has no matching selector (add to its exceptions only if the value is handled
    structurally).
-4. `docs/lib/flint_ui_docs_web/component_docs/foo.ex` - a
-   `FlintUIDocsWeb.ComponentDocs.Page` with `controls/0`, `usage/0` (base/styled
+4. `docs/lib/flint_ui_docs_web/docs/foo.ex` - a
+   `FlintUIDocsWeb.Docs.Page` with `controls/0`, `usage/0` (base/styled
    entries), `examples/0`, `render_playground/1`, `render_usage/1`,
    `render_block/1`, and `styling/0` with plain-CSS snippets for the base.
 

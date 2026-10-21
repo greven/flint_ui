@@ -32,6 +32,33 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "render_slot(@inner_block)"
   end
 
+  test "card forwards its action, section, and footer slots" do
+    source = Generator.component_source(:card)
+
+    assert source =~ "include: ~w(as orientation padded title_id)"
+    assert source =~ "attr(:body, :string"
+
+    assert source =~
+             "values: ~w(seamless inset flush divided separated separated-header separated-footer)"
+
+    assert source =~ "data-body={@body}"
+
+    assert source =~
+             ~s{slot(:section, doc: "An additional body section rendered after the implicit first section.")}
+
+    refute source =~ "attr(:divider, :boolean"
+    refute source =~ "attr(:padded, :boolean"
+
+    assert source =~ "<:section :for={section <- @section}>"
+    assert source =~ "{render_slot(section)}"
+    refute source =~ "divider={section[:divider]}"
+    refute source =~ "padded={section[:padded]}"
+    assert source =~ "<:footer>{render_slot(@footer)}</:footer>"
+    refute source =~ "<:footer divider="
+    assert source =~ "<:header_actions>{render_slot(@header_actions)}</:header_actions>"
+    assert source =~ "<:footer_actions>{render_slot(@footer_actions)}</:footer_actions>"
+  end
+
   test "collapsible forwards its trigger and content slots" do
     source = Generator.component_source(:collapsible)
 
@@ -85,6 +112,12 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--spacing: var(--fl-spacing);"
     assert bridge =~ "--spacing-lg: var(--fl-spacing-lg);"
     assert bridge =~ "--text-sm: var(--fl-font-size-sm);"
+    assert bridge =~ "--color-surface-soft: var(--fl-color-surface-soft);"
+    assert bridge =~ "--color-surface-muted: var(--fl-color-surface-muted);"
+    assert bridge =~ "--color-disabled: var(--fl-color-disabled);"
+    assert bridge =~ "--color-disabled-foreground: var(--fl-color-disabled-foreground);"
+    assert bridge =~ "--color-disabled-border: var(--fl-color-disabled-border);"
+    assert bridge =~ "--shadow-base: var(--fl-shadow-base);"
     assert bridge =~ "--shadow-md: var(--fl-shadow-md);"
     assert bridge =~ "--ease-out: var(--fl-ease-out);"
   end

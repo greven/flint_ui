@@ -3,8 +3,8 @@ defmodule FlintUIDocsWeb.StylingLive do
 
   use FlintUIDocsWeb, :live_view
 
-  alias FlintUIDocsWeb.ComponentDocs
-  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.Docs
+  alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Markdown
 
   @impl true
@@ -12,7 +12,7 @@ defmodule FlintUIDocsWeb.StylingLive do
     pages =
       FlintUI.components()
       |> Enum.sort()
-      |> Enum.map(fn name -> {name, ComponentDocs.styling(name)} end)
+      |> Enum.map(fn name -> {name, Docs.styling(name)} end)
       |> Enum.reject(fn {_name, styling} -> is_nil(styling) end)
 
     {:ok, assign(socket, page_title: "Styling", pages: pages)}
@@ -32,16 +32,16 @@ defmodule FlintUIDocsWeb.StylingLive do
           your own design system, or Tailwind. No stylesheet is required.
         </p>
 
-        <DocBlocks.section title="How it works" id="how">
+        <DocsComponents.section title="How it works" id="how">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Every base component forwards <code class="font-mono">class</code> and the rest
             of your attributes onto its root element and marks itself with <code class="font-mono">data-element</code>. Style the root, or any part it
             exposes, with a plain selector.
           </p>
-          <DocBlocks.code_block code={snippet(:base)} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:base)} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Targeting state" id="state">
+        <DocsComponents.section title="Targeting state" id="state">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             State such as disabled, loading, open, or pressed is reflected as
             <code class="font-mono">data-*</code>
@@ -49,11 +49,11 @@ defmodule FlintUIDocsWeb.StylingLive do
             attributes), so you can style it without tracking state yourself. Each
             component's Base tab documents the exact hooks it sets.
           </p>
-          <DocBlocks.code_block code={snippet(:state)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:state)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="By component" id="components">
-          <DocBlocks.subsection
+        <DocsComponents.section title="By component" id="components">
+          <DocsComponents.subsection
             :for={{name, styling} <- @pages}
             title={humanize(name)}
             id={to_string(name)}
@@ -61,10 +61,10 @@ defmodule FlintUIDocsWeb.StylingLive do
             <Markdown.markdown :if={styling[:body]} content={styling[:body]} />
             <div :for={snippet <- styling.snippets} class="mt-4">
               <p class="text-sm font-medium">{snippet.title}</p>
-              <DocBlocks.code_block code={snippet.code} lang={:css} />
+              <DocsComponents.code_block code={snippet.code} lang={:css} />
             </div>
-          </DocBlocks.subsection>
-        </DocBlocks.section>
+          </DocsComponents.subsection>
+        </DocsComponents.section>
 
         <p class="mt-8 text-sm text-zinc-500">
           Prefer a starting point? The generated styled layer ships an opinionated theme.
@@ -89,7 +89,7 @@ defmodule FlintUIDocsWeb.StylingLive do
 
   defp snippet(:state) do
     """
-    [data-element="button"][data-disabled] { opacity: 0.5; }
+    [data-element="button"][data-disabled] { opacity: var(--fl-disabled-opacity, 0.5); }
 
     [data-element="toggle"][data-state="on"] { font-weight: 600; }
 

@@ -47,12 +47,15 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
 
     assert has_element?(view, "#how")
     assert has_element?(view, "#tokens")
+    assert has_element?(view, "#surfaces")
     assert has_element?(view, "#light-dark")
     assert has_element?(view, "#custom")
     assert has_element?(view, "#tailwind")
 
     html = render(view)
     assert html =~ "--fl-color-primary"
+    assert html =~ "--fl-color-surface-soft"
+    assert html =~ "--fl-disabled-opacity"
     assert html =~ "data-theme"
   end
 

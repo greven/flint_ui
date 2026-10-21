@@ -14,8 +14,9 @@ defmodule FlintUI.API do
   By default it will generate one component function with the same name as the component,
   but additional functions can be defined in the component module and will be imported as well.
 
-  The component module must implement the `FlintUI.Component` behaviour, which requires
-  defining the `meta/0` and `attrs/1` functions.
+  The component module must implement the `FlintUI.Component` behaviour: it
+  declares its public attributes with `attr/3`, its parts with `build_attrs/1`,
+  and its markup with `render/1`, and returns its `FlintUI.Meta` from `meta/0`.
   """
   defmacro component(name, opts \\ []) do
     other = Keyword.get(opts, :other, [])

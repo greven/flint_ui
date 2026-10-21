@@ -60,6 +60,10 @@ defmodule FlintUIDocsWeb.Layouts do
   defp breadcrumb_trail(%{section: nil}), do: []
   defp breadcrumb_trail(%{section: :components, active: nil}), do: []
 
+  defp breadcrumb_trail(%{section: :components, active: active}) do
+    FlintUIDocsWeb.Nav.breadcrumbs(:components, active)
+  end
+
   defp breadcrumb_trail(%{section: section, page: page}) do
     FlintUIDocsWeb.Nav.breadcrumbs(section, page)
   end

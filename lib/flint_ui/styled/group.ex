@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Group do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop}
+  alias FlintUI.Styled.{Entry, Prop, Var}
 
   def entry do
     %Entry{
@@ -12,6 +12,19 @@ defmodule FlintUI.Styled.Group do
       css: "styled/group.css",
       tokens: [:color, :radius, :spacing, :control],
       slots: [],
+      vars: [
+        Var.new(
+          name: "--fl-group-gap",
+          default: "0",
+          doc:
+            "The gap between children; `attached` sets it to `0` and `framed` derives it from `size`."
+        ),
+        Var.new(
+          name: "--fl-group-padding",
+          default: "0",
+          doc: "The framed shell padding; derived from `size` and `0` for attached groups."
+        )
+      ],
       props: [
         Prop.new(
           name: :variant,

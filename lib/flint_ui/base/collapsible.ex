@@ -205,16 +205,6 @@ defmodule FlintUI.Base.Collapsible do
         name: "--fl-collapsible-width",
         description:
           "Natural scroll width of the content in pixels. Set by the underlying Presence animation engine."
-      },
-      %Meta.CSSVar{
-        name: "--fl-collapsible-duration",
-        description:
-          "Duration of the styled reveal transition (the theme defaults it to `250ms`). Override it in CSS to customize the animation."
-      },
-      %Meta.CSSVar{
-        name: "--fl-collapsible-easing",
-        description:
-          "Timing function of the styled reveal transition (the theme defaults it to `ease`). Override it in CSS to customize the animation."
       }
     ]
   end
@@ -315,17 +305,17 @@ defmodule FlintUI.Base.Collapsible do
   attr :open_event, :string,
     default: nil,
     doc: "The event pushed to the server when the collapsible is opened.
-      The event will receive the collapsible's id and state as the payload."
+      The event will receive a map with the collapsible's `id` and `open` state."
 
   attr :close_event, :string,
     default: nil,
     doc: "The event pushed to the server when the collapsible is closed.
-      The event will receive the collapsible's id and state as the payload."
+      The event will receive a map with the collapsible's `id` and `open` state."
 
   attr :toggle_event, :string,
     default: nil,
     doc: "The event pushed to the server when the collapsible is toggled.
-      The event will receive the collapsible's id and state as the payload."
+      The event will receive a map with the collapsible's `id` and `open` state."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 

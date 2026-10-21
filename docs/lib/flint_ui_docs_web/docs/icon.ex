@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Icon do
+defmodule FlintUIDocsWeb.Docs.Icon do
   @moduledoc false
 
-  use FlintUIDocsWeb.ComponentDocs.Page, component: :icon
+  use FlintUIDocsWeb.Docs.Page, component: :icon
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.ComponentDocs.Snippet
+  alias FlintUIDocsWeb.Docs.Snippet
 
   @impl true
   def controls do
@@ -18,11 +18,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
   @impl true
   def structure do
     """
-    <.icon name="lucide-house" />
+    <FlintUI.icon name="lucide-house" class="size-4" />
 
-    <.icon name="lucide-x" class="size-5" />
+    <FlintUI.icon name="lucide-x" class="size-5" />
 
-    <.icon name="lucide-circle-alert" label="Error" class="size-5 text-red-500" />
+    <FlintUI.icon name="lucide-circle-alert" label="Error" class="size-5 text-red-500" />
     """
     |> String.trim()
   end
@@ -31,18 +31,33 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
   def usage do
     [
       %{
-        id: :sizing,
+        id: :name,
+        title: "Icon name",
+        layer: :base,
+        covers: [:name],
+        body: """
+        `name` is applied verbatim as a CSS class. FlintUI ships no icon assets,
+        so the host provides them — the docs use a Tailwind plugin that exposes
+        `lucide-*`.
+        """,
+        code: """
+        <FlintUI.icon name="lucide-house" class="size-5" />
+        """
+      },
+      %{
+        id: :class,
         title: "Sizing and color",
         layer: :base,
+        covers: [:class],
         body: """
-        The `name` is applied verbatim as a CSS class. FlintUI ships no icon
-        assets, so the host provides them — the docs use a Tailwind plugin that
-        exposes `lucide-*`. Size and color come from `class`.
+        The base icon ships no size or color of its own. Size and color come
+        from `class`, so the component works with any icon set and any styling
+        approach.
         """,
         code: """
         <div class="flex items-center gap-6">
-          <.icon name="lucide-x" class="size-5" />
-          <.icon name="lucide-circle-alert" class="size-5 text-red-500" />
+          <FlintUI.icon name="lucide-x" class="size-5" />
+          <FlintUI.icon name="lucide-circle-alert" class="size-5 text-red-500" />
         </div>
         """
       },
@@ -50,22 +65,25 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
         id: :label,
         title: "Accessible name",
         layer: :base,
+        covers: [:label],
         body: """
         Icons are decorative and hidden from assistive technology by default.
         When an icon conveys meaning on its own, pass `label` to expose it as a
         labeled image.
         """,
         code: """
-        <.icon name="lucide-circle-alert" label="Error" class="size-5 text-red-500" />
+        <FlintUI.icon name="lucide-circle-alert" label="Error" class="size-5 text-red-500" />
         """
       },
       %{
         id: :size,
         title: "Size",
         layer: :styled,
+        covers: [:size],
         body: """
         The generated component adds a `size` attribute mapped onto the
-        `data-size` hook the theme targets.
+        `data-size` hook the theme targets. The theme publishes the box as
+        `--fl-icon-size`, which icon sets can follow.
         """,
         code: """
         <div class="flex items-center gap-6">
@@ -112,25 +130,68 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
           <.icon name="lucide-download" /> Download
         </.button>
         """
+      },
+      %{
+        id: :base_decorative,
+        title: "Decorative icon",
+        layer: :base,
+        description:
+          "A decorative icon sits next to a text label and is hidden from assistive technology.",
+        code: """
+        <p class="flex items-center gap-2">
+          <FlintUI.icon name="lucide-circle-check" class="size-5 text-green-600" />
+          Saved
+        </p>
+        """
+      },
+      %{
+        id: :base_labeled,
+        title: "Labeled status",
+        layer: :base,
+        description: "When the icon carries the meaning, give it a label.",
+        code: """
+        <FlintUI.icon name="lucide-circle-alert" label="Warning" class="size-5 text-amber-500" />
+        """
       }
     ]
+  end
+
+  @impl true
+  def anatomy do
+    %{
+      body: """
+      The icon renders a single `<span>` with the icon class applied. It is
+      decorative by default, or exposed as a labeled image when `label` is set.
+      """,
+      nodes: [
+        %{
+          tag: "span",
+          selector: ~s([data-element="icon"][data-part="root"]),
+          hooks: ["class"],
+          attributes: ["aria-hidden", "role", "aria-label"],
+          children: []
+        }
+      ]
+    }
   end
 
   @impl true
   def styling do
     %{
       body: """
-      Icons are styled entirely through `class`. The icon asset comes from your
-      icon set; FlintUI only sets the size and lets the color inherit.
+      The base icon renders a `<span>` whose `name` is a CSS class. Size and
+      color come from `class` and `currentColor`; FlintUI does not ship the icon
+      asset. The generated styled component's `data-size` contract is documented
+      on the CSS tab.
       """,
       snippets: [
         %{
           title: "Size",
           code: """
-          [data-element="icon"][data-size="md"] {
-            --fl-icon-size: 1.25rem;
-            width: var(--fl-icon-size);
-            height: var(--fl-icon-size);
+          [data-element="icon"] {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
           }
           """
         },
@@ -138,7 +199,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
           title: "Color",
           code: """
           [data-element="icon"] {
-            color: var(--fl-color-foreground);
+            color: currentColor;
           }
           """
         }
@@ -150,12 +211,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
   def render_playground(%{layer: :styled} = assigns) do
     ~H"""
     <Components.icon name={@props.name} label={blank_to_nil(@props.label)} size={@props.size} />
-    """
-  end
-
-  def render_playground(assigns) do
-    ~H"""
-    <.icon name={@props.name} label={blank_to_nil(@props.label)} />
     """
   end
 
@@ -171,32 +226,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
     )
   end
 
-  def render_code(%{props: props}) do
-    Snippet.component(
-      ".icon",
-      [
-        Snippet.attr("name", props.name),
-        Snippet.attr("label", blank_to_nil(props.label))
-      ]
-    )
-  end
-
   @impl true
-  def render_usage(%{block: :sizing} = assigns) do
-    ~H"""
-    <div class="flex items-center gap-6">
-      <.icon name="lucide-x" class="size-5" />
-      <.icon name="lucide-circle-alert" class="size-5 text-red-500" />
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :label} = assigns) do
-    ~H"""
-    <.icon name="lucide-circle-alert" label="Error" class="size-5 text-red-500" />
-    """
-  end
-
   def render_usage(%{block: :size} = assigns) do
     ~H"""
     <div class="flex items-center gap-6">
@@ -232,6 +262,39 @@ defmodule FlintUIDocsWeb.ComponentDocs.Icon do
       <Components.icon name="lucide-download" /> Download
     </Components.button>
     """
+  end
+
+  @impl true
+  def css do
+    %{
+      body: """
+      The styled icon maps `size` to `data-size` and publishes the box as
+      `--fl-icon-size`. The icon set itself comes from the host. The docs' Lucide
+      plugin reads the variable, so generated buttons and toggles can size their
+      icon children.
+      """,
+      snippets: [
+        %{
+          title: "Follow the control size",
+          body: "An icon that reads `--fl-icon-size` follows the surrounding control.",
+          code: """
+          [data-element="icon"] {
+            width: var(--fl-icon-size, 1.25rem);
+            height: var(--fl-icon-size, 1.25rem);
+          }
+          """
+        },
+        %{
+          title: "Recolor one icon",
+          body: "Color is inherited, so set it on the instance or its parent.",
+          code: """
+          .status-icon {
+            color: var(--fl-color-success-text);
+          }
+          """
+        }
+      ]
+    }
   end
 
   defp blank_to_nil(nil), do: nil

@@ -58,7 +58,7 @@ defmodule FlintUIDocsWeb.Nav do
         label: type_label(type),
         pages:
           Enum.map(names, fn name ->
-            %{id: name, name: name, label: to_string(name), path: "/components/#{name}"}
+            %{id: name, name: name, label: humanize(name), path: "/components/#{name}"}
           end)
       }
     end)
@@ -94,7 +94,13 @@ defmodule FlintUIDocsWeb.Nav do
     "/" <> (section.id |> Atom.to_string() |> String.replace("_", "-"))
   end
 
-  defp group_crumbs(%{id: :components}, _page_id), do: []
+  defp group_crumbs(%{id: :components} = section, page_id) when not is_nil(page_id) do
+    Enum.find_value(section.groups, [], fn group ->
+      if Enum.any?(group.pages, &(&1.name == page_id)) do
+        [%{label: group.label, path: "/components"}]
+      end
+    end)
+  end
 
   defp group_crumbs(section, page_id) do
     Enum.find_value(section.groups, [], fn group ->
@@ -112,5 +118,12 @@ defmodule FlintUIDocsWeb.Nav do
     |> Atom.to_string()
     |> String.replace("_", " ")
     |> String.capitalize()
+  end
+
+  defp humanize(name) do
+    name
+    |> Atom.to_string()
+    |> String.split("_")
+    |> Enum.map_join(" ", &String.capitalize/1)
   end
 end

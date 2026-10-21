@@ -68,7 +68,9 @@ defmodule FlintUI.Base.Icon do
     required: true,
     doc: "The icon CSS class (e.g. `\"lucide-house\"`), applied verbatim as a class."
 
-  attr :class, :any, default: "size-4", doc: "Additional classes for sizing and color."
+  attr :class, :any,
+    default: nil,
+    doc: "Additional classes for sizing. The base component ships no size of its own."
 
   attr :label, :string,
     default: nil,

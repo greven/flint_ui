@@ -1,9 +1,9 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Default do
+defmodule FlintUIDocsWeb.Docs.Default do
   @moduledoc """
   Fallback page for a library component that does not have an authored one yet.
   """
 
-  use FlintUIDocsWeb.ComponentDocs.Page, component: :default
+  use FlintUIDocsWeb.Docs.Page, component: :default
 
   @impl true
   def controls, do: []

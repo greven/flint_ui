@@ -3,9 +3,9 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   Reusable component preview card.
 
   Renders a live component, an optional panel of controls that mutate its
-  props, and a syntax-highlighted Code tab. It is used for the Docs playground,
-  every usage subsection preview, every example in the Examples section, and the
-  Base playground, so all of them share one look and one set of interactions.
+  props, and a syntax-highlighted Code tab. It is used for the Styled playground,
+  every Styled usage subsection preview, and every Styled example in the
+  Examples section, so all of them share one look and one set of interactions.
 
   Used as a function component:
 
@@ -14,14 +14,13 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         kind={:playground}
         layer={:styled}
         name={:button}
-        controls={ComponentDocs.controls(:button)}
-        defaults={ComponentDocs.defaults(:button)}
+        controls={Docs.controls(:button)}
+        defaults={Docs.defaults(:button)}
       />
 
   `kind` selects what is drawn:
 
-    * `:playground` - the interactive playground; `layer` (`:base` or `:styled`)
-      picks the rendered component and the generated code
+    * `:playground` - the interactive Styled playground and its generated code
     * `:usage` - one usage subsection preview; `block` is the usage entry id
       and `code` is shown as a fixed snippet
     * `:block` - an element of the Examples section
@@ -39,7 +38,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   use FlintUIDocsWeb, :live_component
 
-  alias FlintUIDocsWeb.ComponentDocs
+  alias FlintUIDocsWeb.Docs
   alias FlintUIDocsWeb.Highlight
 
   @tabs ~w(preview code)
@@ -208,14 +207,14 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/10 p-6 dark:border-zinc-800 dark:bg-zinc-900/10">
           <%= case @kind do %>
             <% :playground -> %>
-              <ComponentDocs.render_playground
+              <Docs.render_playground
                 name={@name}
                 layer={@layer}
                 props={@props}
                 id={"#{@id}-canvas"}
               />
             <% :usage -> %>
-              <ComponentDocs.render_usage
+              <Docs.render_usage
                 name={@name}
                 layer={@layer}
                 block={@block}
@@ -223,8 +222,9 @@ defmodule FlintUIDocsWeb.PreviewComponent do
                 id={"#{@id}-canvas"}
               />
             <% :block -> %>
-              <ComponentDocs.render_block
+              <Docs.render_block
                 name={@name}
+                layer={@layer}
                 block={@block}
                 props={@props}
                 id={"#{@id}-canvas"}
@@ -381,7 +381,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         [flavor(%{code: assigns[:code], lang: assigns[:code_lang] || :heex})]
 
       assigns[:kind] == :playground ->
-        ComponentDocs.render_code(%{
+        Docs.render_code(%{
           name: assigns[:name],
           layer: assigns[:layer],
           props: assigns[:props],

@@ -10,7 +10,7 @@ defmodule FlintUIDocsWeb.Markdown do
 
   use Phoenix.Component
 
-  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Highlight
 
   import Phoenix.HTML, only: [html_escape: 1, raw: 1, safe_to_string: 1]
@@ -25,7 +25,7 @@ defmodule FlintUIDocsWeb.Markdown do
       <%= for block <- @blocks do %>
         <%= case block do %>
           <% {:code, code, lang} -> %>
-            <DocBlocks.code_block code={code} lang={lang} />
+            <DocsComponents.code_block code={code} lang={lang} />
           <% {:p, text} -> %>
             <p>{text}</p>
         <% end %>

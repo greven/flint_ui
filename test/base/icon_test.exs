@@ -42,13 +42,12 @@ defmodule FlintUI.Base.IconTest do
     do: attr(html, "class") |> Enum.join(" ") |> String.split(" ", trim: true)
 
   describe "icon" do
-    test "renders a span with the icon class and a default size" do
+    test "renders a span with the icon class and no built-in size" do
       html = default_fragment()
 
       assert tag(html) == ["span"]
       assert attr(html, "data-element") == ["icon"]
-      assert "lucide-house" in class_list(html)
-      assert "size-4" in class_list(html)
+      assert class_list(html) == ["lucide-house"]
     end
 
     test "is decorative by default" do
@@ -66,7 +65,6 @@ defmodule FlintUI.Base.IconTest do
       assert "lucide-house" in classes
       assert "size-5" in classes
       assert "text-red-500" in classes
-      refute "size-4" in classes
     end
 
     test "a label exposes the icon as an image" do

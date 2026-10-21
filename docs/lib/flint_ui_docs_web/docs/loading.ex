@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Loading do
+defmodule FlintUIDocsWeb.Docs.Loading do
   @moduledoc false
 
-  use FlintUIDocsWeb.ComponentDocs.Page, component: :loading
+  use FlintUIDocsWeb.Docs.Page, component: :loading
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.ComponentDocs.Snippet
+  alias FlintUIDocsWeb.Docs.Snippet
 
   @variants ~w(ring ring-bg dots-fade dots-bounce)
 
@@ -20,17 +20,17 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
   @impl true
   def structure do
     """
-    <.loading />
+    <FlintUI.loading class="size-4" />
 
-    <.loading variant="ring-bg" class="size-6 text-zinc-500" />
+    <FlintUI.loading variant="ring-bg" class="size-6 text-zinc-500" />
 
-    <.loading variant="dots-fade" duration={300} class="size-4" />
+    <FlintUI.loading variant="dots-fade" duration={300} class="size-4" />
 
     <%!-- Reveal inside a FlintUI button via its [data-loading] attribute --%>
-    <.button loading>
-      <.loading class="hidden size-4 in-data-loading:inline-block" />
+    <FlintUI.button loading>
+      <FlintUI.loading class="hidden size-4 in-data-loading:inline-block" />
       Saving
-    </.button>
+    </FlintUI.button>
     """
     |> String.trim()
   end
@@ -42,9 +42,92 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
         id: :variant,
         title: "Variants",
         layer: :base,
+        covers: [:variant],
         body: """
         Choose the indicator shape with `variant`: `ring`, `ring-bg`,
         `dots-fade`, or `dots-bounce`.
+        """,
+        code: """
+        <div class="flex items-center gap-6">
+          <FlintUI.loading
+            :for={variant <- ~w(ring ring-bg dots-fade dots-bounce)}
+            variant={variant}
+            class="size-4"
+          />
+        </div>
+        """
+      },
+      %{
+        id: :duration,
+        title: "Speed",
+        layer: :base,
+        covers: [:duration],
+        body: """
+        `duration` sets how long one full animation cycle takes, in milliseconds.
+        """,
+        code: """
+        <div class="flex items-center gap-6">
+          <FlintUI.loading duration={300} class="size-4" />
+          <FlintUI.loading duration={600} class="size-4" />
+          <FlintUI.loading duration={1200} class="size-4" />
+        </div>
+        """
+      },
+      %{
+        id: :class,
+        title: "Sizing and color",
+        layer: :base,
+        covers: [:class],
+        body: """
+        The base spinner ships no size of its own. Size it with `class`; color
+        comes from `currentColor`, so set `color` on the spinner or its parent.
+        """,
+        code: """
+        <div class="flex items-center gap-6">
+          <FlintUI.loading class="size-4" />
+          <FlintUI.loading class="size-6 text-zinc-500" />
+        </div>
+        """
+      },
+      %{
+        id: :label,
+        title: "Accessible name",
+        layer: :base,
+        covers: [:label],
+        body: """
+        The spinner is decorative by default. For a standalone status, pass
+        `label` to expose it as a labeled image. Inside a button that already
+        sets `aria-busy`, leave it decorative.
+        """,
+        code: """
+        <FlintUI.loading label="Loading" class="size-6" />
+        """
+      },
+      %{
+        id: :container,
+        title: "Linking to a container",
+        layer: :base,
+        covers: [],
+        body: """
+        A function component cannot see its parent, so reveal the spinner either
+        conditionally or through a parent's data attribute. `FlintUI.Base.Button` sets
+        `data-loading` while loading, which the spinner can key off.
+        """,
+        code: """
+        <FlintUI.button loading>
+          <FlintUI.loading class="hidden size-4 in-data-loading:inline-block" />
+          Saving
+        </FlintUI.button>
+        """
+      },
+      %{
+        id: :styled_variant,
+        title: "Variant",
+        layer: :styled,
+        covers: [:variant],
+        body: """
+        The generated component accepts the same `variant` values and maps
+        `size` onto the theme's icon-scale box.
         """,
         code: """
         <div class="flex items-center gap-6">
@@ -53,40 +136,10 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
         """
       },
       %{
-        id: :duration,
-        title: "Speed",
-        layer: :base,
-        body: """
-        `duration` sets how long one full animation cycle takes, in milliseconds.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading duration={300} />
-          <.loading duration={600} />
-          <.loading duration={1200} />
-        </div>
-        """
-      },
-      %{
-        id: :container,
-        title: "Linking to a container",
-        layer: :base,
-        body: """
-        A function component cannot see its parent, so reveal the spinner either
-        conditionally or through a parent's data attribute. `FlintUI.Base.Button` sets
-        `data-loading` while loading, which the spinner can key off.
-        """,
-        code: """
-        <.button loading>
-          <.loading class="hidden size-4 in-data-loading:inline-block" />
-          Saving
-        </.button>
-        """
-      },
-      %{
         id: :size,
         title: "Size",
         layer: :styled,
+        covers: [:size],
         body: """
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets.
@@ -135,24 +188,65 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
         code: """
         <.loading label="Loading" class="size-6" />
         """
+      },
+      %{
+        id: :base_status,
+        title: "Labeled status",
+        layer: :base,
+        description: "A standalone spinner with a screen-reader name.",
+        code: """
+        <FlintUI.loading label="Loading" class="size-6" />
+        """
+      },
+      %{
+        id: :base_inline,
+        title: "Inline with text",
+        layer: :base,
+        description: "A decorative spinner next to a status message.",
+        code: """
+        <p class="flex items-center gap-2">
+          <FlintUI.loading class="size-4" /> Saving changes
+        </p>
+        """
       }
     ]
+  end
+
+  @impl true
+  def anatomy do
+    %{
+      body: """
+      The loading indicator renders an inline SVG. The shape is selected by
+      `variant`; `duration` controls one animation cycle. It is decorative by
+      default, or a labeled image when `label` is set.
+      """,
+      nodes: [
+        %{
+          tag: "svg",
+          selector: ~s([data-element="loading"][data-part="root"]),
+          hooks: ["data-variant", "class"],
+          attributes: ["viewBox", "role", "aria-label", "aria-hidden"],
+          children: []
+        }
+      ]
+    }
   end
 
   @impl true
   def styling do
     %{
       body: """
-      The spinner inherits `currentColor` and takes its size from the `class` you
-      pass. Style it with plain CSS or utilities — no theme tokens required.
+      The base spinner inherits `currentColor` and takes its size from `class`.
+      It has no built-in Tailwind dependency. The generated styled component's
+      `data-size` contract is documented on the CSS tab.
       """,
       snippets: [
         %{
           title: "Size",
           code: """
-          [data-element="loading"][data-size="md"] {
-            width: 1.5rem;
-            height: 1.5rem;
+          [data-element="loading"] {
+            width: 1rem;
+            height: 1rem;
           }
           """
         },
@@ -175,12 +269,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
     """
   end
 
-  def render_playground(assigns) do
-    ~H"""
-    <.loading variant={variant(@props)} duration={duration(@props)} />
-    """
-  end
-
   @impl true
   def render_code(%{layer: :styled, props: props}) do
     Snippet.component(
@@ -193,40 +281,15 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
     )
   end
 
-  def render_code(%{props: props}) do
-    Snippet.component(
-      ".loading",
-      [
-        Snippet.attr("variant", variant(props), "ring"),
-        Snippet.attr("duration", duration(props), 600)
-      ]
-    )
-  end
-
   @impl true
-  def render_usage(%{block: :variant} = assigns) do
+  def render_usage(%{block: :styled_variant} = assigns) do
     ~H"""
     <div class="flex items-center gap-6">
-      <.loading :for={variant <- all_variants()} variant={variant} />
+      <Components.loading
+        :for={variant <- ~w(ring ring-bg dots-fade dots-bounce)}
+        variant={variant}
+      />
     </div>
-    """
-  end
-
-  def render_usage(%{block: :duration} = assigns) do
-    ~H"""
-    <div class="flex items-center gap-6">
-      <.loading duration={300} />
-      <.loading duration={600} />
-      <.loading duration={1200} />
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :container} = assigns) do
-    ~H"""
-    <.button loading>
-      <.loading class="hidden size-4 in-data-loading:inline-block" /> Saving
-    </.button>
     """
   end
 
@@ -261,6 +324,28 @@ defmodule FlintUIDocsWeb.ComponentDocs.Loading do
     ~H"""
     <.loading label="Loading" class="size-6" />
     """
+  end
+
+  @impl true
+  def css do
+    %{
+      body: """
+      The styled loading indicator has no public variables of its own. Size
+      comes from the generated `size` prop, and the spinner inherits
+      `currentColor` from its context.
+      """,
+      snippets: [
+        %{
+          title: "Recolor a spinner",
+          body: "Set the color on the spinner or its parent.",
+          code: """
+          .muted-spinner {
+            color: var(--fl-color-muted-foreground);
+          }
+          """
+        }
+      ]
+    }
   end
 
   defp all_variants, do: @variants

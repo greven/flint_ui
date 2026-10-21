@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Group do
+defmodule FlintUIDocsWeb.Docs.Group do
   @moduledoc false
 
-  use FlintUIDocsWeb.ComponentDocs.Page, component: :group
+  use FlintUIDocsWeb.Docs.Page, component: :group
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.ComponentDocs.Snippet
+  alias FlintUIDocsWeb.Docs.Snippet
 
   @impl true
   def controls do
@@ -18,15 +18,15 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
   @impl true
   def structure do
     """
-    <.group>
-      <.button>Copy</.button>
-      <.button>Paste</.button>
-    </.group>
+    <FlintUI.group>
+      <FlintUI.button>Copy</FlintUI.button>
+      <FlintUI.button>Paste</FlintUI.button>
+    </FlintUI.group>
 
-    <.group variant="framed">
-      <.toggle aria-label="Bold">Bold</.toggle>
-      <.toggle aria-label="Italic">Italic</.toggle>
-    </.group>
+    <FlintUI.group label="Text formatting">
+      <FlintUI.toggle aria-label="Bold">Bold</FlintUI.toggle>
+      <FlintUI.toggle aria-label="Italic">Italic</FlintUI.toggle>
+    </FlintUI.group>
     """
     |> String.trim()
   end
@@ -35,24 +35,42 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
   def usage do
     [
       %{
+        id: :as,
+        title: "Root element",
+        layer: :base,
+        covers: [:as],
+        body: """
+        Choose the root element with `as`. The default is a plain `div`; use a
+        semantic element when the grouping is part of the page structure.
+        """,
+        code: """
+        <FlintUI.group as="section" label="Text formatting">
+          <FlintUI.toggle aria-label="Bold">Bold</FlintUI.toggle>
+          <FlintUI.toggle aria-label="Italic">Italic</FlintUI.toggle>
+        </FlintUI.group>
+        """
+      },
+      %{
         id: :orientation,
         title: "Orientation",
         layer: :base,
+        covers: [:orientation],
         body: """
-        `orientation` lays the children out in a row or a column. It also
-        reports itself to assistive technology, so a group exposed with a role
-        announces the right arrow-key expectation.
+        `orientation` lays the children out in a row or a column and sets the
+        `data-orientation` styling hook. It does not add arrow-key behavior; if
+        you pass a role that expects orientation, such as `toolbar`, set
+        `aria-orientation` yourself.
         """,
         code: """
         <div class="flex flex-wrap items-start gap-4">
-          <.group orientation="horizontal">
-            <.button>Copy</.button>
-            <.button>Paste</.button>
-          </.group>
-          <.group orientation="vertical">
-            <.button>Copy</.button>
-            <.button>Paste</.button>
-          </.group>
+          <FlintUI.group orientation="horizontal">
+            <FlintUI.button>Copy</FlintUI.button>
+            <FlintUI.button>Paste</FlintUI.button>
+          </FlintUI.group>
+          <FlintUI.group orientation="vertical">
+            <FlintUI.button>Copy</FlintUI.button>
+            <FlintUI.button>Paste</FlintUI.button>
+          </FlintUI.group>
         </div>
         """
       },
@@ -60,22 +78,25 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
         id: :label,
         title: "Accessible name",
         layer: :base,
+        covers: [:label],
         body: """
         A group has no implicit role. Pass `label` to expose it as a named
-        `group`, or set `role="toolbar"` yourself when the children form a
-        toolbar.
+        `group`. If you pass `role="toolbar"` yourself, also pass
+        `aria-orientation` and provide the arrow-key interaction the role
+        expects; roving focus is not implemented yet.
         """,
         code: """
-        <.group label="Text formatting">
-          <.toggle aria-label="Bold">Bold</.toggle>
-          <.toggle aria-label="Italic">Italic</.toggle>
-        </.group>
+        <FlintUI.group label="Text formatting">
+          <FlintUI.toggle aria-label="Bold">Bold</FlintUI.toggle>
+          <FlintUI.toggle aria-label="Italic">Italic</FlintUI.toggle>
+        </FlintUI.group>
         """
       },
       %{
         id: :variant,
         title: "Variant",
         layer: :styled,
+        covers: [:variant],
         body: """
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets. `attached` collapses the children
@@ -112,6 +133,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
         id: :size,
         title: "Size",
         layer: :styled,
+        covers: [:size],
         body: """
         `size` sets the group spacing and cascades onto the child controls, so
         the whole unit stays aligned from one attribute.
@@ -133,7 +155,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
     [
       %{
         id: :toolbar,
-        title: "Formatting toolbar",
+        title: "Formatting group",
         description: "A framed group of icon toggles.",
         code: """
         <.group variant="framed">
@@ -209,6 +231,31 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
           <.toggle variant="subtle" aria-label="Month">Month</.toggle>
         </.group>
         """
+      },
+      %{
+        id: :base_list,
+        title: "Grouped controls",
+        layer: :base,
+        description: "A structural group with a named, accessible container.",
+        code: """
+        <FlintUI.group label="Clipboard actions">
+          <FlintUI.button>Copy</FlintUI.button>
+          <FlintUI.button>Paste</FlintUI.button>
+        </FlintUI.group>
+        """
+      },
+      %{
+        id: :base_vertical,
+        title: "Vertical group",
+        layer: :base,
+        description:
+          "Orientation is a layout hook; the grouped controls keep their own semantics.",
+        code: """
+        <FlintUI.group orientation="vertical" label="View options">
+          <FlintUI.button>Details</FlintUI.button>
+          <FlintUI.button>History</FlintUI.button>
+        </FlintUI.group>
+        """
       }
     ]
   end
@@ -237,51 +284,29 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
   def styling do
     %{
       body: """
-      The group ships layout, not appearance. The headless base renders a single
-      container; the styled layer keys on `data-variant` to join or frame the
-      children, and on `data-orientation` to flip the axis. Grouped controls also
-      suppress the button press nudge, so a row of buttons does not jitter when
-      clicked.
-
-      In an attached group the children overlap by 1px and keep their full
-      borders. Control borders are opaque, so the shared seam keeps the exact
-      border color, and the hovered or focused child is raised so its complete
-      border wins.
+      The base group renders a single container with `data-orientation`. It does
+      not style its children. The generated styled layer's attached/framed
+      geometry and public group variables are documented on the CSS tab.
       """,
       snippets: [
         %{
-          title: "Attached",
+          title: "Layout",
           code: """
-          [data-element="group"][data-variant="attached"][data-orientation="horizontal"]
-            > * + * {
-            margin-inline-start: -1px;
+          [data-element="group"] {
+            display: inline-flex;
+            gap: 0.5rem;
           }
 
-          [data-element="group"][data-variant="attached"]
-            > *:is(:hover, :focus-visible) {
-            position: relative;
-            z-index: 1;
-          }
-
-          [data-element="group"][data-variant="attached"]
-            > :first-child:not(:last-child) {
-            border-start-end-radius: 0;
-            border-end-end-radius: 0;
+          [data-element="group"][data-orientation="vertical"] {
+            flex-direction: column;
           }
           """
         },
         %{
-          title: "Framed",
+          title: "Join direct children",
           code: """
-          [data-element="group"][data-size="md"] {
-            --fl-group-gap: calc(var(--fl-spacing) * 0.75);
-            --fl-group-padding: calc(var(--fl-spacing) * 0.75);
-          }
-
-          [data-element="group"][data-variant="framed"] {
-            padding: var(--fl-group-padding);
-            border: 1px solid var(--fl-color-border);
-            border-radius: var(--fl-radius-lg);
+          [data-element="group"] > * + * {
+            margin-inline-start: -1px;
           }
           """
         }
@@ -303,15 +328,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
     """
   end
 
-  def render_playground(assigns) do
-    ~H"""
-    <.group orientation={@props.orientation}>
-      <.button>Copy</.button>
-      <.button>Paste</.button>
-    </.group>
-    """
-  end
-
   @impl true
   def render_code(%{layer: :styled, props: props}) do
     Snippet.tag(
@@ -329,67 +345,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
     )
   end
 
-  def render_code(%{props: props}) do
-    Snippet.tag(
-      ".group",
-      [Snippet.attr("orientation", props.orientation, "horizontal")],
-      """
-      <.button>Copy</.button>
-      <.button>Paste</.button>
-      """
-      |> String.trim()
-    )
-  end
-
   @impl true
-  def render_usage(%{block: :orientation, layer: :styled} = assigns) do
-    ~H"""
-    <div class="flex flex-wrap items-start gap-4">
-      <Components.group orientation="horizontal">
-        <Components.button>Copy</Components.button>
-        <Components.button>Paste</Components.button>
-      </Components.group>
-      <Components.group orientation="vertical">
-        <Components.button>Copy</Components.button>
-        <Components.button>Paste</Components.button>
-      </Components.group>
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :orientation} = assigns) do
-    ~H"""
-    <div class="flex flex-wrap items-start gap-4">
-      <.group orientation="horizontal">
-        <.button>Copy</.button>
-        <.button>Paste</.button>
-      </.group>
-      <.group orientation="vertical">
-        <.button>Copy</.button>
-        <.button>Paste</.button>
-      </.group>
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :label, layer: :styled} = assigns) do
-    ~H"""
-    <Components.group label="Text formatting">
-      <Components.toggle aria-label="Bold">Bold</Components.toggle>
-      <Components.toggle aria-label="Italic">Italic</Components.toggle>
-    </Components.group>
-    """
-  end
-
-  def render_usage(%{block: :label} = assigns) do
-    ~H"""
-    <.group label="Text formatting">
-      <.toggle aria-label="Bold">Bold</.toggle>
-      <.toggle aria-label="Italic">Italic</.toggle>
-    </.group>
-    """
-  end
-
   def render_usage(%{block: :variant} = assigns) do
     ~H"""
     <div class="flex flex-col items-start gap-4">
@@ -495,5 +451,36 @@ defmodule FlintUIDocsWeb.ComponentDocs.Group do
       <Components.toggle variant="subtle" aria-label="Month">Month</Components.toggle>
     </Components.group>
     """
+  end
+
+  @impl true
+  def css do
+    %{
+      body: """
+      The styled group adds layout and joining geometry, not control styling.
+      It targets direct children with `> *`, so buttons, toggles, and future
+      controls can be mixed. `size` cascades onto known controls.
+      """,
+      snippets: [
+        %{
+          title: "Loosen an attached group",
+          body: "Give a specific group a small gap without changing its variant.",
+          code: """
+          .spaced-group {
+            --fl-group-gap: 0.5rem;
+          }
+          """
+        },
+        %{
+          title: "Pad a framed group",
+          body: "Override the shell padding on one instance.",
+          code: """
+          .roomy-group {
+            --fl-group-padding: 0.75rem;
+          }
+          """
+        }
+      ]
+    }
   end
 end

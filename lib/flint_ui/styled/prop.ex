@@ -8,8 +8,8 @@ defmodule FlintUI.Styled.Prop do
 
   @type t :: %__MODULE__{
           name: atom(),
-          values: [atom()],
-          default: atom(),
+          values: [term()],
+          default: term(),
           doc: String.t() | nil
         }
 

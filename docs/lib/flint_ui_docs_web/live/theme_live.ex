@@ -4,7 +4,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
   use FlintUIDocsWeb, :live_view
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.DocsComponents
 
   @impl true
   def mount(_params, _session, socket) do
@@ -27,14 +27,14 @@ defmodule FlintUIDocsWeb.ThemeLive do
           custom properties, so FlintUI works with or without Tailwind.
         </p>
 
-        <DocBlocks.section title="How it works" id="how">
+        <DocsComponents.section title="How it works" id="how">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Tokens live on <code class="font-mono">:root</code>
             and switch automatically
             with the user's color scheme through <code class="font-mono">color-scheme</code>
             and <code class="font-mono">light-dark()</code>. No JavaScript is required.
           </p>
-          <DocBlocks.code_block code={snippet(:how)} lang={:css} />
+          <DocsComponents.code_block code={snippet(:how)} lang={:css} />
 
           <div class="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
             <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -50,9 +50,9 @@ defmodule FlintUIDocsWeb.ThemeLive do
               or target those hooks yourself.
             </p>
           </div>
-        </DocBlocks.section>
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Theme presets" id="presets">
+        <DocsComponents.section title="Theme presets" id="presets">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             FlintUI ships named presets. Select one by setting
             <code class="font-mono">data-theme</code>
@@ -64,10 +64,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
             Pick one to preview it on this page:
           </p>
           <Layouts.theme_preset_picker themes={@themes} class="mt-3" />
-          <DocBlocks.code_block code={snippet(:presets)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:presets)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Tokens" id="tokens">
+        <DocsComponents.section title="Tokens" id="tokens">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Every component reads from these namespaces. Override any of them to change
             the look.
@@ -85,9 +85,43 @@ defmodule FlintUIDocsWeb.ThemeLive do
               </li>
             </ul>
           </div>
-        </DocBlocks.section>
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Color scales" id="colors">
+        <DocsComponents.section title="Surfaces" id="surfaces">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Surfaces are one opaque neutral scale. <code class="font-mono">solid</code>
+            is the base, <code class="font-mono">soft</code>
+            is a half-step toward the elevated step, and <code class="font-mono">muted</code>
+            is the full de-emphasized step. The scale moves toward <code class="font-mono">elevated</code>: light steps darker, dark steps
+            lighter. <code class="font-mono">disabled</code>
+            aliases the muted fill with a dimmed label; colored controls keep their
+            hue and dim with <code class="font-mono">--fl-disabled-opacity</code>.
+          </p>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <Components.card :for={variant <- ~w(solid soft muted)} variant={variant}>
+              <:title>{variant}</:title>
+              <p class="text-sm text-zinc-600 dark:text-zinc-400">Body</p>
+            </Components.card>
+            <div
+              class="rounded-xl border p-5"
+              style="background: var(--fl-color-disabled); color: var(--fl-color-foreground); border-color: var(--fl-color-disabled-border);"
+            >
+              <p class="font-semibold leading-5">disabled</p>
+              <p class="text-sm" style="color: var(--fl-color-disabled-foreground);">
+                Muted, dimmed label
+              </p>
+            </div>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <Components.button variant="subtle" disabled>Disabled subtle</Components.button>
+            <Components.button variant="solid" color="primary" disabled>
+              Disabled solid
+            </Components.button>
+          </div>
+          <DocsComponents.code_block code={snippet(:surfaces)} lang={:css} />
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Color scales" id="colors">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Every semantic role ships a full <code class="font-mono">50..950</code>
             scale. Components read the role alias
@@ -96,10 +130,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
             without a second override. Retint a whole role by overriding its
             alias, or address a specific shade directly.
           </p>
-          <DocBlocks.code_block code={snippet(:colors)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:colors)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Scaling" id="scaling">
+        <DocsComponents.section title="Scaling" id="scaling">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Type, spacing, elevation, breakpoints, and motion are tokens too.
             Spacing and radius build from a base unit, so changing
@@ -109,18 +143,19 @@ defmodule FlintUIDocsWeb.ThemeLive do
             share a <code class="font-mono">--fl-control-*</code>
             scale so buttons, inputs, and toggles line up.
           </p>
-          <DocBlocks.code_block code={snippet(:scaling)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:scaling)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Depth" id="depth">
+        <DocsComponents.section title="Depth" id="depth">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Solid and outline buttons are raised: <code class="font-mono">solid</code>
-            wears a top highlight and a smooth outer shadow, <code class="font-mono">outline</code>
-            a bottom inner line. The effect scales with
-            <code class="font-mono">--fl-button-depth</code>
-            and <code class="font-mono">--fl-button-shadow</code>
-            — set either to flatten every button at once. Pressing sinks the
-            button: the depth collapses as it nudges down with <code class="font-mono">--fl-button-press</code>.
+            wears a top highlight, <code class="font-mono">outline</code>
+            a bottom inner line, and both scale with <code class="font-mono">--fl-button-depth</code>.
+            Shadows are independent and always on for <code class="font-mono">solid</code>, <code class="font-mono">subtle</code>, and <code class="font-mono">outline</code>; set
+            <code class="font-mono">--fl-button-shadow</code>
+            to <code class="font-mono">0 0 #0000</code>
+            to remove them. Pressing
+            sinks the button with <code class="font-mono">--fl-button-press</code>.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button variant="solid" color="primary">solid</Components.button>
@@ -128,21 +163,21 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <Components.button variant="solid" color="primary" depth={false}>flat</Components.button>
             <Components.button variant="ghost">ghost (flat)</Components.button>
           </div>
-          <DocBlocks.code_block code={snippet(:depth)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:depth)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Overriding a color" id="color-override">
+        <DocsComponents.section title="Overriding a color" id="color-override">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             The <code class="font-mono">color</code>
             attribute selects a semantic role. To change a single instance
             without touching the theme, override the component's public color
             input — the rest of the variant derives from it.
           </p>
-          <DocBlocks.code_block code={snippet(:override_css)} lang={:css} />
-          <DocBlocks.code_block code={snippet(:override_heex)} lang={:heex} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:override_css)} lang={:css} />
+          <DocsComponents.code_block code={snippet(:override_heex)} lang={:heex} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Light and dark" id="light-dark">
+        <DocsComponents.section title="Light and dark" id="light-dark">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Light and dark are automatic. To force a scheme, set
             <code class="font-mono">data-color-scheme</code>
@@ -150,18 +185,18 @@ defmodule FlintUIDocsWeb.ThemeLive do
             element — the header's toggle does this. The scheme is independent
             of the selected preset.
           </p>
-          <DocBlocks.code_block code={snippet(:light_dark)} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:light_dark)} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Custom themes" id="custom">
+        <DocsComponents.section title="Custom themes" id="custom">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Add a <code class="font-mono">[data-theme="…"]</code>
             block that overrides the tokens you want, then select it via <code class="font-mono">data-theme</code>.
           </p>
-          <DocBlocks.code_block code={snippet(:custom)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:custom)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Importing a palette" id="palette">
+        <DocsComponents.section title="Importing a palette" id="palette">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Rather than hand-writing a scale, map a named palette onto the roles.
             Tailwind's default palette ships with FlintUI, so no Tailwind install
@@ -169,18 +204,18 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <code class="font-mono">flint.css</code>
             so refreshing the theme never clobbers it.
           </p>
-          <DocBlocks.code_block code={snippet(:palette_cli)} lang={:shell} />
-          <DocBlocks.code_block code={snippet(:palette_css)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:palette_cli)} lang={:shell} />
+          <DocsComponents.code_block code={snippet(:palette_css)} lang={:css} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Tailwind (optional)" id="tailwind">
+        <DocsComponents.section title="Tailwind (optional)" id="tailwind">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             To use tokens as Tailwind utilities, map them in your own <code class="font-mono">@theme</code>.
             <code class="font-mono">mix flint.setup --tailwind</code>
             writes this for you.
           </p>
-          <DocBlocks.code_block code={snippet(:tailwind)} lang={:css} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:tailwind)} lang={:css} />
+        </DocsComponents.section>
       </div>
     </Layouts.app>
     """
@@ -195,6 +230,24 @@ defmodule FlintUIDocsWeb.ThemeLive do
         var(--fl-color-primary-900),
         var(--fl-color-primary-200)
       );
+    }
+    """
+  end
+
+  defp snippet(:surfaces) do
+    """
+    :root {
+      --fl-color-surface: light-dark(white, var(--fl-color-neutral-900));
+      --fl-color-surface-soft: color-mix(
+        in oklab,
+        var(--fl-color-elevated) 50%,
+        var(--fl-color-surface)
+      );
+      --fl-color-surface-muted: var(--fl-color-muted);
+
+      --fl-color-disabled: var(--fl-color-surface-muted);
+      --fl-color-disabled-foreground: var(--fl-color-dimmed);
+      --fl-disabled-opacity: 0.5;
     }
     """
   end
@@ -222,17 +275,15 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   defp snippet(:depth) do
     """
-    /* Depth, elevation, and press are button tokens. A preset can flatten them
-     * for the whole site: */
+    /* Depth and press are button tokens. A preset can flatten them for the
+     * whole site: */
     [data-theme="flat"] {
       --fl-button-depth: 0; /* no highlight or inner line */
-      --fl-button-shadow: 0 0 #0000; /* no outer elevation */
       --fl-button-press: none; /* no press movement */
     }
 
-    /* …or override them on a single instance: */
-    .my-flat-button {
-      --fl-button-depth: 0;
+    /* Shadows are independent of depth. Remove them per theme or instance: */
+    .my-shadowless-button {
       --fl-button-shadow: 0 0 #0000;
     }
     """

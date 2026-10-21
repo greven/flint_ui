@@ -67,7 +67,7 @@
   }
 
   [data-element="toggle"][data-disabled] {
-    opacity: 0.5;
+    opacity: var(--fl-disabled-opacity, 0.5);
     cursor: not-allowed;
     pointer-events: none;
   }

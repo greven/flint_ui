@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Icon do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop}
+  alias FlintUI.Styled.{Entry, Prop, Var}
 
   def entry do
     %Entry{
@@ -12,6 +12,14 @@ defmodule FlintUI.Styled.Icon do
       css: "styled/icon.css",
       tokens: [:color],
       slots: [],
+      vars: [
+        Var.new(
+          name: "--fl-icon-size",
+          default: "1.25rem",
+          doc:
+            "The icon box. Icon sets that read this variable, such as the docs' Lucide plugin, follow the selected `size`."
+        )
+      ],
       props: [
         Prop.new(
           name: :size,

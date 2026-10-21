@@ -3,8 +3,8 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
   use FlintUIDocsWeb, :live_view
 
-  alias FlintUIDocsWeb.ComponentDocs
-  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.Docs
+  alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Markdown
   alias FlintUIDocsWeb.PreviewComponent
 
@@ -38,13 +38,13 @@ defmodule FlintUIDocsWeb.ComponentLive do
         >
           <.link
             patch={~p"/components/#{@active}"}
-            id="tab-docs"
+            id="tab-styled"
             role="tab"
-            aria-selected={to_string(@tab == "docs")}
-            aria-controls="panel-docs"
-            class={tab_class(@tab == "docs")}
+            aria-selected={to_string(@tab == "styled")}
+            aria-controls="panel-styled"
+            class={tab_class(@tab == "styled")}
           >
-            Docs
+            Styled
           </.link>
           <.link
             patch={~p"/components/#{@active}?tab=base"}
@@ -57,25 +57,25 @@ defmodule FlintUIDocsWeb.ComponentLive do
             Base
           </.link>
           <.link
-            patch={~p"/components/#{@active}?tab=styles"}
-            id="tab-styles"
+            patch={~p"/components/#{@active}?tab=css"}
+            id="tab-css"
             role="tab"
-            aria-selected={to_string(@tab == "styles")}
-            aria-controls="panel-styles"
-            class={tab_class(@tab == "styles")}
+            aria-selected={to_string(@tab == "css")}
+            aria-controls="panel-css"
+            class={tab_class(@tab == "css")}
           >
-            Styles
+            CSS
           </.link>
         </div>
 
         <section
-          :if={@tab == "docs"}
-          id="panel-docs"
+          :if={@tab == "styled"}
+          id="panel-styled"
           role="tabpanel"
-          aria-labelledby="tab-docs"
+          aria-labelledby="tab-styled"
           tabindex="0"
         >
-          <DocBlocks.section title="Usage" id="usage">
+          <DocsComponents.section title="Usage" id="usage">
             <PreviewComponent.preview
               id={"playground-#{@active}"}
               kind={:playground}
@@ -85,8 +85,8 @@ defmodule FlintUIDocsWeb.ComponentLive do
               defaults={@defaults}
             />
 
-            <DocBlocks.subsection
-              :for={section <- @usage}
+            <DocsComponents.subsection
+              :for={section <- @styled_usage}
               title={section.title}
               id={"usage-#{section.id}"}
             >
@@ -101,14 +101,33 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 codes={section[:codes]}
                 preview={section[:preview] != false}
               />
-            </DocBlocks.subsection>
-          </DocBlocks.section>
+            </DocsComponents.subsection>
+          </DocsComponents.section>
 
-          <DocBlocks.section :if={@examples != []} title="Examples" id="examples">
+          <DocsComponents.section :if={@base_usage != []} title="Base behavior" id="base-behavior">
+            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              The generated component inherits these attributes from its headless
+              base. Their behavior and accessible semantics are documented on the
+              Base tab rather than repeated here.
+            </p>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              <li :for={section <- @base_usage}>
+                <.link
+                  patch={"#{~p"/components/#{@active}?tab=base"}#usage-#{section.id}"}
+                  class="rounded-md border border-zinc-200 px-2.5 py-1 text-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
+                >
+                  {section.title}
+                </.link>
+              </li>
+            </ul>
+          </DocsComponents.section>
+
+          <DocsComponents.section :if={@styled_examples != []} title="Examples" id="examples">
             <PreviewComponent.preview
-              :for={example <- @examples}
+              :for={example <- @styled_examples}
               id={"example-#{@active}-#{example.id}"}
               kind={:block}
+              layer={:styled}
               name={@active}
               block={example.id}
               code={example[:code]}
@@ -117,9 +136,24 @@ defmodule FlintUIDocsWeb.ComponentLive do
               description={example[:description]}
               preview={example[:preview] != false}
             />
-          </DocBlocks.section>
+          </DocsComponents.section>
 
-          <DocBlocks.section title="API reference" id="api">
+          <DocsComponents.section title="Setup" id="setup">
+            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              Generate the styled wrapper into your app with:
+            </p>
+            <DocsComponents.code_block code={@install_command} lang={:shell} />
+            <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+              The wrapper is intentionally thin: it declares the styled props, maps them
+              onto <code class="font-mono">data-*</code>
+              hooks, forwards <code class="font-mono">class</code>
+              and the base attributes, and delegates behavior to the headless component.
+              You own and can edit this code.
+            </p>
+            <DocsComponents.code_block code={@wrapper_source} lang={:elixir} />
+          </DocsComponents.section>
+
+          <DocsComponents.section title="API Reference" id="api">
             <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
               The <code class="font-mono">data-*</code>
               hooks this component sets on its rendered markup are listed under
@@ -132,34 +166,28 @@ defmodule FlintUIDocsWeb.ComponentLive do
               on the Base tab.
             </p>
 
-            <DocBlocks.subsection title="Attributes" id="attributes">
+            <DocsComponents.subsection title="Attributes" id="attributes">
               <p :if={@attribute_rows == []} class="mt-2 text-sm text-zinc-400">
                 No attributes documented.
               </p>
-              <DocBlocks.attributes_table
+              <DocsComponents.attributes_table
                 :if={@attribute_rows != []}
                 rows={@attribute_rows}
               />
-            </DocBlocks.subsection>
+            </DocsComponents.subsection>
 
-            <DocBlocks.subsection title="Slots" id="slots">
+            <DocsComponents.subsection title="Slots" id="slots">
               <p :if={@merged_slots == []} class="mt-2 text-sm text-zinc-400">
                 No slots documented.
               </p>
-              <DocBlocks.slot_table :if={@merged_slots != []} slots={@merged_slots} />
-            </DocBlocks.subsection>
+              <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
+            </DocsComponents.subsection>
 
-            <DocBlocks.subsection title="Events" id="events">
+            <DocsComponents.subsection title="Events" id="events">
               <p :if={@events == []} class="mt-2 text-sm text-zinc-400">No events documented.</p>
-              <DocBlocks.events_table :if={@events != []} events={@events} />
-            </DocBlocks.subsection>
-          </DocBlocks.section>
-
-          <DocBlocks.section title="Changelog" id="changelog">
-            <p class="mt-2 text-sm text-zinc-500">
-              Release notes for this component are coming soon.
-            </p>
-          </DocBlocks.section>
+              <DocsComponents.events_table :if={@events != []} events={@events} />
+            </DocsComponents.subsection>
+          </DocsComponents.section>
         </section>
 
         <section
@@ -169,85 +197,136 @@ defmodule FlintUIDocsWeb.ComponentLive do
           aria-labelledby="tab-base"
           tabindex="0"
         >
-          <DocBlocks.section :if={@anatomy || @structure} title="Anatomy" id="anatomy">
+          <div class="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
+            <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+              These components are headless.
+            </p>
+            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+              The examples below show the accessible markup and attribute contract,
+              without styling or live previews. For an interactive demo, use the
+              <.link patch={~p"/components/#{@active}"} class="font-medium underline">
+                Styled
+              </.link>
+              tab.
+            </p>
+          </div>
+
+          <DocsComponents.section :if={@anatomy || @structure} title="Anatomy" id="anatomy">
             <Markdown.markdown :if={@anatomy && @anatomy[:body]} content={@anatomy[:body]} />
-            <DocBlocks.anatomy :if={@anatomy} nodes={@anatomy.nodes} />
-            <DocBlocks.code_block :if={!@anatomy && @structure} code={@structure} />
-          </DocBlocks.section>
+            <DocsComponents.anatomy :if={@anatomy} nodes={@anatomy.nodes} />
+            <DocsComponents.code_block :if={!@anatomy && @structure} code={@structure} />
+          </DocsComponents.section>
 
-          <DocBlocks.section title="Usage" id="usage">
-            <PreviewComponent.preview
-              id={"playground-#{@active}"}
-              kind={:playground}
-              layer={:base}
-              name={@active}
-              controls={[]}
-              defaults={@defaults}
-            />
-
-            <DocBlocks.subsection
+          <DocsComponents.section title="Usage" id="usage">
+            <DocsComponents.subsection
               :for={section <- @base_usage}
               title={section.title}
               id={"usage-#{section.id}"}
             >
               <Markdown.markdown :if={section[:body]} content={section.body} />
-              <PreviewComponent.preview
-                id={"usage-#{@active}-#{section.id}"}
-                kind={:usage}
-                layer={:base}
-                name={@active}
-                block={section.id}
-                code={section[:code]}
-                codes={section[:codes]}
-                preview={section[:preview] != false}
+              <DocsComponents.code_block :if={section[:code]} code={section[:code]} />
+              <DocsComponents.code_block
+                :for={flavor <- section[:codes] || []}
+                code={flavor[:code]}
+                lang={flavor[:lang] || :heex}
               />
-            </DocBlocks.subsection>
-          </DocBlocks.section>
+            </DocsComponents.subsection>
+          </DocsComponents.section>
 
-          <DocBlocks.section
+          <DocsComponents.section :if={@base_examples != []} title="Examples" id="examples">
+            <DocsComponents.subsection
+              :for={example <- @base_examples}
+              title={example.title}
+              id={"example-#{@active}-#{example.id}"}
+            >
+              <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                {example[:description]}
+              </p>
+              <DocsComponents.code_block :if={example[:code]} code={example[:code]} />
+              <DocsComponents.code_block
+                :for={flavor <- example[:codes] || []}
+                code={flavor[:code]}
+                lang={flavor[:lang] || :heex}
+              />
+            </DocsComponents.subsection>
+          </DocsComponents.section>
+
+          <DocsComponents.section
             :if={@accessibility || @keyboard != []}
             title="Accessibility"
             id="accessibility"
           >
             <Markdown.markdown :if={@accessibility} content={@accessibility} />
-            <DocBlocks.subsection :if={@keyboard != []} title="Keyboard" id="keyboard">
-              <DocBlocks.keyboard_table keyboard={@keyboard} />
-            </DocBlocks.subsection>
-          </DocBlocks.section>
+            <DocsComponents.subsection :if={@keyboard != []} title="Keyboard" id="keyboard">
+              <DocsComponents.keyboard_table keyboard={@keyboard} />
+            </DocsComponents.subsection>
+          </DocsComponents.section>
 
-          <DocBlocks.section title="API reference" id="api">
-            <DocBlocks.subsection title="Attributes" id="attributes">
+          <DocsComponents.section title="API reference" id="api">
+            <DocsComponents.subsection title="Attributes" id="attributes">
               <p :if={@attrs == []} class="mt-2 text-sm text-zinc-400">No attributes documented.</p>
-              <DocBlocks.attr_table :if={@attrs != []} attrs={@attrs} />
-            </DocBlocks.subsection>
+              <DocsComponents.attr_table :if={@attrs != []} attrs={@attrs} />
+            </DocsComponents.subsection>
 
-            <DocBlocks.subsection title="Slots" id="slots">
+            <DocsComponents.subsection title="Slots" id="slots">
               <p :if={@slots == []} class="mt-2 text-sm text-zinc-400">No slots documented.</p>
-              <DocBlocks.slot_table :if={@slots != []} slots={@slots} />
-            </DocBlocks.subsection>
+              <DocsComponents.slot_table :if={@slots != []} slots={@slots} />
+            </DocsComponents.subsection>
 
-            <DocBlocks.subsection title="Events" id="events">
+            <DocsComponents.subsection title="Events" id="events">
               <p :if={@events == []} class="mt-2 text-sm text-zinc-400">No events documented.</p>
-              <DocBlocks.events_table :if={@events != []} events={@events} />
-            </DocBlocks.subsection>
+              <DocsComponents.events_table :if={@events != []} events={@events} />
+            </DocsComponents.subsection>
 
-            <DocBlocks.subsection title="Data attributes" id="data-attributes">
+            <DocsComponents.subsection title="Data attributes" id="data-attributes">
               <p :if={@parts == []} class="mt-2 text-sm text-zinc-400">
                 No data attributes documented.
               </p>
-              <DocBlocks.parts_tables :if={@parts != []} parts={@parts} />
-            </DocBlocks.subsection>
-          </DocBlocks.section>
+              <DocsComponents.parts_tables :if={@parts != []} parts={@parts} />
+            </DocsComponents.subsection>
+
+            <DocsComponents.subsection title="CSS variables" id="css-variables">
+              <p :if={@css_vars == []} class="mt-2 text-sm text-zinc-400">
+                No runtime CSS variables documented.
+              </p>
+              <DocsComponents.css_vars_table :if={@css_vars != []} css_vars={@css_vars} />
+            </DocsComponents.subsection>
+          </DocsComponents.section>
         </section>
 
         <section
-          :if={@tab == "styles"}
-          id="panel-styles"
+          :if={@tab == "css"}
+          id="panel-css"
           role="tabpanel"
-          aria-labelledby="tab-styles"
+          aria-labelledby="tab-css"
           tabindex="0"
         >
-          <DocBlocks.section title="Theme" id="theme">
+          <DocsComponents.section
+            :if={@css_contract}
+            title="Styling contract"
+            id="styling-contract"
+          >
+            <Markdown.markdown :if={@css_contract[:body]} content={@css_contract[:body]} />
+          </DocsComponents.section>
+
+          <DocsComponents.section title="Public CSS variables" id="css-variables">
+            <p :if={@style_vars == []} class="mt-2 text-sm text-zinc-400">
+              This component has no public CSS variables. Its appearance is
+              controlled by its props and the surrounding theme.
+            </p>
+            <DocsComponents.css_vars_table :if={@style_vars != []} css_vars={@style_vars} />
+          </DocsComponents.section>
+
+          <DocsComponents.section title="Selectors and state hooks" id="selectors">
+            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              The styled theme targets the component through these hooks. The headless
+              base sets the same <code class="font-mono">data-*</code>
+              attributes, so the selectors work without the generated wrapper too.
+            </p>
+            <DocsComponents.selectors_table selectors={@css_selectors} />
+          </DocsComponents.section>
+
+          <DocsComponents.section title="Theme tokens" id="theme">
             <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               This component reads these token namespaces:
             </p>
@@ -261,18 +340,25 @@ defmodule FlintUIDocsWeb.ComponentLive do
             </ul>
             <p class="mt-3 text-sm text-zinc-500">
               See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
-              for tokens and custom themes, or
+              for tokens and custom themes. For the headless base, see
               <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>
-              to style the headless base.
+              and this component's Base tab.
             </p>
-          </DocBlocks.section>
+          </DocsComponents.section>
 
-          <DocBlocks.section title="CSS variables" id="css-variables">
-            <p :if={@css_vars == []} class="mt-2 text-sm text-zinc-400">
-              No CSS variables documented.
-            </p>
-            <DocBlocks.css_vars_table :if={@css_vars != []} css_vars={@css_vars} />
-          </DocBlocks.section>
+          <DocsComponents.section
+            :if={@css_contract && @css_contract[:snippets] not in [nil, []]}
+            title="Customization"
+            id="customization"
+          >
+            <div :for={snippet <- @css_contract[:snippets]} class="mt-4">
+              <p class="text-sm font-medium">{snippet.title}</p>
+              <p :if={snippet[:body]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                {snippet[:body]}
+              </p>
+              <DocsComponents.code_block code={snippet.code} lang={snippet[:lang] || :css} />
+            </div>
+          </DocsComponents.section>
         </section>
       </div>
     </Layouts.app>
@@ -327,16 +413,22 @@ defmodule FlintUIDocsWeb.ComponentLive do
       keyboard: FlintUI.Docs.keyboard(name),
       css_vars: FlintUI.Docs.css_vars(name),
       entry: entry,
-      usage: ComponentDocs.usage(name),
-      base_usage: ComponentDocs.base_usage(name),
-      examples: ComponentDocs.examples(name),
-      anatomy: ComponentDocs.anatomy(name),
-      structure: ComponentDocs.structure(name),
+      styled_usage: Docs.styled_usage(name),
+      base_usage: Docs.base_usage(name),
+      styled_examples: Docs.styled_examples(name),
+      base_examples: Docs.base_examples(name),
+      css_contract: Docs.css(name),
+      style_vars: if(entry, do: entry.vars, else: []),
+      css_selectors: css_selectors(entry),
+      install_command: (entry && entry.install) || "mix flint.add #{name}",
+      wrapper_source: FlintUI.Generator.component_source(name),
+      anatomy: Docs.anatomy(name),
+      structure: Docs.structure(name),
       attribute_rows: attribute_rows(attrs, entry),
       merged_slots: merged_slots(slots, entry),
-      accessibility: ComponentDocs.accessibility(name),
-      controls: ComponentDocs.controls(name),
-      defaults: ComponentDocs.defaults(name)
+      accessibility: Docs.accessibility(name),
+      controls: Docs.controls(name),
+      defaults: Docs.defaults(name)
     )
   end
 
@@ -345,8 +437,11 @@ defmodule FlintUIDocsWeb.ComponentLive do
   end
 
   defp normalize_tab("base"), do: "base"
-  defp normalize_tab("styles"), do: "styles"
-  defp normalize_tab(_), do: "docs"
+  defp normalize_tab("css"), do: "css"
+  defp normalize_tab("styles"), do: "css"
+  defp normalize_tab("styled"), do: "styled"
+  defp normalize_tab("api"), do: "styled"
+  defp normalize_tab(_), do: "styled"
 
   defp tab_class(true) do
     "-mb-px border-b-2 border-zinc-900 px-3 pb-2 text-sm font-medium text-zinc-900 dark:border-white dark:text-white"
@@ -372,6 +467,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
           default: attr[:default],
           data: nil,
           required: attr[:required],
+          layer: :base,
           doc: attr[:doc]
         }
       end)
@@ -384,11 +480,12 @@ defmodule FlintUIDocsWeb.ComponentLive do
   defp styled_attribute_row(prop) do
     %{
       name: prop.name,
-      type: if(FlintUI.Styled.Prop.boolean?(prop), do: :boolean, else: :atom),
+      type: if(FlintUI.Styled.Prop.boolean?(prop), do: :boolean, else: :string),
       values: prop.values,
       default: prop.default,
       data: FlintUI.Styled.Prop.attribute(prop),
       required: false,
+      layer: :styled,
       doc: prop.doc
     }
   end
@@ -403,6 +500,37 @@ defmodule FlintUIDocsWeb.ComponentLive do
   defp merged_slots(slots, entry) do
     extra = if entry, do: entry.slots, else: []
     slots ++ extra
+  end
+
+  defp css_selectors(nil), do: []
+
+  defp css_selectors(entry) do
+    root = ~s([data-element="#{entry.name}"])
+
+    prop_selectors =
+      Enum.map(entry.props, fn prop ->
+        %{
+          selector: root <> ~s([#{FlintUI.Styled.Prop.attribute(prop)}]),
+          description: "Targets this component by its #{prop.name} value."
+        }
+      end)
+
+    part_selectors =
+      entry.name
+      |> FlintUI.Docs.parts_attrs()
+      |> Map.keys()
+      |> Enum.reject(&(&1 == :root))
+      |> Enum.map(fn part ->
+        %{
+          selector: root <> ~s( [data-part="#{part}"]),
+          description: "Targets the #{part} part."
+        }
+      end)
+
+    [
+      %{selector: root, description: "Targets the component root."}
+      | prop_selectors ++ part_selectors
+    ]
   end
 
   defp humanize(name) do

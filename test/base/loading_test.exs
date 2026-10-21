@@ -53,6 +53,12 @@ defmodule FlintUI.Base.LoadingTest do
     assert attr(html, "aria-hidden") == []
   end
 
+  test "ships no built-in size class" do
+    html = render()
+
+    assert attr(html, "class") in [[], [""]]
+  end
+
   test "applies class and passes through global attributes" do
     html = render(class: "size-6 text-zinc-500")
 

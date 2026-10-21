@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
+defmodule FlintUIDocsWeb.Docs.Toggle do
   @moduledoc false
 
-  use FlintUIDocsWeb.ComponentDocs.Page, component: :toggle
+  use FlintUIDocsWeb.Docs.Page, component: :toggle
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.ComponentDocs.Snippet
+  alias FlintUIDocsWeb.Docs.Snippet
 
   @impl true
   def controls do
@@ -20,15 +20,15 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
   @impl true
   def structure do
     """
-    <.toggle>Bold</.toggle>
+    <FlintUI.toggle>Bold</FlintUI.toggle>
 
-    <.toggle pressed>
-      <.icon name="lucide-bold" class="size-4" /> Bold
-    </.toggle>
+    <FlintUI.toggle pressed>
+      <FlintUI.icon name="lucide-bold" class="size-4" /> Bold
+    </FlintUI.toggle>
 
-    <.toggle on_click={JS.push("toggle-italic")}>
-      <.icon name="lucide-italic" class="size-4" /> Italic
-    </.toggle>
+    <FlintUI.toggle on_click={JS.push("toggle-italic")}>
+      <FlintUI.icon name="lucide-italic" class="size-4" /> Italic
+    </FlintUI.toggle>
     """
     |> String.trim()
   end
@@ -40,6 +40,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         id: :pressed,
         title: "Pressed state",
         layer: :base,
+        covers: [:pressed],
         body: """
         The `pressed` attribute is the server-side source of truth. On click the
         button optimistically toggles its own `aria-pressed` and `data-state`, so
@@ -47,13 +48,54 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         next render.
         """,
         code: """
-        <.toggle pressed>Bold</.toggle>
+        <FlintUI.toggle pressed>Bold</FlintUI.toggle>
+        """
+      },
+      %{
+        id: :disabled,
+        title: "Disabled",
+        layer: :base,
+        covers: [:disabled],
+        body: """
+        Set `disabled` to prevent interaction. The native button is disabled and
+        the root is marked with `data-disabled` for styling.
+        """,
+        code: """
+        <FlintUI.toggle disabled>Bold</FlintUI.toggle>
+        """
+      },
+      %{
+        id: :type,
+        title: "Button type",
+        layer: :base,
+        covers: [:type],
+        body: """
+        `type` sets the native button type. Use `submit` when the toggle is part
+        of a form submission; the default is `button`.
+        """,
+        code: """
+        <FlintUI.toggle type="submit" pressed>Bold</FlintUI.toggle>
+        """
+      },
+      %{
+        id: :on_click,
+        title: "Reacting to clicks",
+        layer: :base,
+        covers: [:on_click],
+        body: """
+        Pass `on_click` a `Phoenix.LiveView.JS` command or a server event name.
+        The client still flips `aria-pressed` and `data-state` immediately, then
+        the server reconciles on the next render.
+        """,
+        code: """
+        <FlintUI.toggle on_click={JS.push("toggle-bold")}>Bold</FlintUI.toggle>
         """
       },
       %{
         id: :variant,
         title: "Variant",
         layer: :styled,
+        covers: [:variant],
         body: """
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets.
@@ -70,6 +112,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         id: :color,
         title: "Color",
         layer: :styled,
+        covers: [:color],
         body: """
         The generated component adds a `color` attribute mapped onto the
         `data-color` hook the theme targets. `color` and `variant` compose
@@ -103,6 +146,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         id: :size,
         title: "Size",
         layer: :styled,
+        covers: [:size],
         body: """
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets.
@@ -142,8 +186,8 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
       },
       %{
         id: :group,
-        title: "Toolbar group",
-        description: "Several toggles arranged as a formatting toolbar with a group.",
+        title: "Formatting group",
+        description: "Several toggles arranged as a formatting group.",
         code: """
         <.group variant="framed">
           <.toggle variant="solid" aria-label="Bold" pressed>
@@ -159,18 +203,46 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
         """
       },
       %{
-        id: :on_click,
-        title: "Reacting to clicks",
-        description:
-          "Pass `on_click` a `Phoenix.LiveView.JS` command or a server event name to run when the button is clicked. The state flip still happens regardless.",
-        preview: false,
+        id: :base_icon_only,
+        title: "Icon-only toggle",
+        layer: :base,
+        description: "An icon-only toggle needs an accessible name.",
         code: """
-        <.toggle variant="solid" on_click={JS.push("toggle-bold")}>
-          <.icon name="lucide-bold" /> Bold
-        </.toggle>
+        <FlintUI.toggle aria-label="Bold">
+          <FlintUI.icon name="lucide-bold" class="size-4" />
+        </FlintUI.toggle>
+        """
+      },
+      %{
+        id: :base_preference,
+        title: "Preference toggle",
+        layer: :base,
+        description: "The pressed state is the server-side source of truth.",
+        code: """
+        <FlintUI.toggle pressed>Email notifications</FlintUI.toggle>
         """
       }
     ]
+  end
+
+  @impl true
+  def anatomy do
+    %{
+      body: """
+      The toggle renders a native `<button>` with `aria-pressed` and a
+      `data-state` hook. The inner block is the button's content and its
+      accessible name.
+      """,
+      nodes: [
+        %{
+          tag: "button",
+          selector: ~s([data-element="toggle"][data-part="root"]),
+          hooks: ["type", "aria-pressed", "data-state", "data-disabled", "disabled", "phx-click"],
+          attributes: ["class"],
+          children: []
+        }
+      ]
+    }
   end
 
   @impl true
@@ -194,7 +266,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
           title: "Disabled",
           code: """
           [data-element="toggle"][data-disabled] {
-            opacity: 0.5;
+            opacity: var(--fl-disabled-opacity, 0.5);
             pointer-events: none;
           }
           """
@@ -218,14 +290,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
     """
   end
 
-  def render_playground(assigns) do
-    ~H"""
-    <.toggle pressed={@props.pressed} disabled={@props.disabled}>
-      <.icon name="lucide-bold" class="size-4" /> Bold
-    </.toggle>
-    """
-  end
-
   @impl true
   def render_code(%{layer: :styled, props: props}) do
     Snippet.tag(
@@ -241,21 +305,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
     )
   end
 
-  def render_code(%{props: props}) do
-    Snippet.tag(
-      ".toggle",
-      [Snippet.flag("pressed", props.pressed), Snippet.flag("disabled", props.disabled)],
-      ~s(<.icon name="lucide-bold" class="size-4" /> Bold)
-    )
-  end
-
   @impl true
-  def render_usage(%{block: :pressed} = assigns) do
-    ~H"""
-    <.toggle pressed>Bold</.toggle>
-    """
-  end
-
   def render_usage(%{block: :variant} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
@@ -339,5 +389,38 @@ defmodule FlintUIDocsWeb.ComponentDocs.Toggle do
     """
   end
 
-  def render_block(%{block: :on_click}), do: nil
+  @impl true
+  def css do
+    %{
+      body: """
+      The styled toggle maps `variant`, `color`, and `size` onto data hooks and
+      leaves the pressed state to `data-state`. Public `--fl-toggle-*` variables
+      are the supported per-instance inputs.
+      """,
+      snippets: [
+        %{
+          title: "Retint one toggle",
+          body: "Override the public color inputs on the instance.",
+          code: """
+          .danger-toggle {
+            --fl-toggle-color: var(--fl-color-error);
+            --fl-toggle-color-foreground: var(--fl-color-error-foreground);
+            --fl-toggle-text: var(--fl-color-error-text);
+            --fl-toggle-border: var(--fl-color-error-border);
+            --fl-toggle-border-soft: var(--fl-color-error-border-soft);
+          }
+          """
+        },
+        %{
+          title: "Change the pressed surface",
+          body: "Tint the pressed state for text-carrying variants.",
+          code: """
+          .soft-toggle {
+            --fl-toggle-surface: color-mix(in oklab, var(--fl-color-primary) 20%, transparent);
+          }
+          """
+        }
+      ]
+    }
+  end
 end

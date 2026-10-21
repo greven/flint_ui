@@ -3,7 +3,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
 
   use FlintUIDocsWeb, :live_view
 
-  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.DocsComponents
 
   @commands [
     {"mix flint.setup", "Create the components module and install the theme."},
@@ -29,15 +29,15 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           into your own app. Theming is plain CSS, so Tailwind is optional.
         </p>
 
-        <DocBlocks.section title="1. Add the dependency" id="install">
-          <DocBlocks.code_block code={snippet(:dependency)} lang={:elixir} />
+        <DocsComponents.section title="1. Add the dependency" id="install">
+          <DocsComponents.code_block code={snippet(:dependency)} lang={:elixir} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Then run <code class="font-mono">mix deps.get</code>.
           </p>
-        </DocBlocks.section>
+        </DocsComponents.section>
 
-        <DocBlocks.section title="2. Set up the theme" id="setup">
-          <DocBlocks.code_block code="mix flint.setup" lang={:shell} />
+        <DocsComponents.section title="2. Set up the theme" id="setup">
+          <DocsComponents.code_block code="mix flint.setup" lang={:shell} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             This creates <code class="font-mono">MyAppWeb.Components</code>, copies the
             theme stylesheet to <code class="font-mono">assets/css/flint.css</code>, imports
@@ -47,31 +47,31 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
             Using Tailwind? Pass <code class="font-mono">--tailwind</code> to also map the
             FlintUI tokens onto utilities (<code class="font-mono">bg-primary</code>, <code class="font-mono">border-border</code>, …).
           </p>
-          <DocBlocks.code_block code="mix flint.setup --tailwind" lang={:shell} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code="mix flint.setup --tailwind" lang={:shell} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="3. Generate components" id="generate">
+        <DocsComponents.section title="3. Generate components" id="generate">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Generate the styled wrappers you need. They are written into your app, so you
             own and can edit them.
           </p>
-          <DocBlocks.code_block code={snippet(:add)} lang={:shell} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:add)} lang={:shell} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="4. Use a component" id="usage">
+        <DocsComponents.section title="4. Use a component" id="usage">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Generated components are imported from <code class="font-mono">MyAppWeb.Components</code>, so you use them with the
             familiar tag syntax:
           </p>
-          <DocBlocks.code_block code={snippet(:usage)} />
+          <DocsComponents.code_block code={snippet(:usage)} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             The headless base stays available explicitly — useful when you want full
             control and no default styling:
           </p>
-          <DocBlocks.code_block code={snippet(:headless)} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:headless)} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Commands" id="commands">
+        <DocsComponents.section title="Commands" id="commands">
           <table class="mt-2 w-full text-left text-sm">
             <thead class="text-xs tracking-wider text-zinc-400 uppercase">
               <tr>
@@ -86,7 +86,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
               </tr>
             </tbody>
           </table>
-        </DocBlocks.section>
+        </DocsComponents.section>
 
         <p class="mt-8 text-sm text-zinc-500">
           Next: browse the <.link navigate="/components" class="underline">components</.link>

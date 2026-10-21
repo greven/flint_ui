@@ -13,6 +13,15 @@ defmodule FlintUI.StyledTest do
     assert Styled.validate_all() == :ok
   end
 
+  test "every public CSS variable is present in the component stylesheet" do
+    for entry <- Styled.entries(), var <- entry.vars do
+      css = File.read!(FlintUI.Generator.part_path(entry.css))
+
+      assert css =~ var.name,
+             "expected #{entry.name} to declare #{var.name} in #{entry.css}"
+    end
+  end
+
   test "each entry points at the matching headless base module" do
     for entry <- Styled.entries() do
       assert entry.base == FlintUI.API.component_module(entry.name)

@@ -1,369 +1,361 @@
 @layer components {
-  /* Button
+    /* Button
    *
    * The `--fl-button-*` custom properties are the public inputs: override them
    * per instance (via `class` or `style`) to retint this button without a new
    * color token. Everything below the inputs derives from them. */
-  [data-element="button"][data-variant] {
-    --fl-button-color: var(--fl-color-inverted);
-    --fl-button-color-foreground: var(--fl-color-inverted-foreground);
-    --fl-button-text: var(--fl-button-color);
-    --fl-button-surface: color-mix(in oklab, var(--fl-button-color) 10%, transparent);
-    --fl-button-surface-hover: color-mix(in oklab, var(--fl-button-color) 15%, transparent);
-    --fl-button-border: var(--fl-color-neutral-border);
-    --fl-button-border-soft: var(--fl-color-neutral-border-soft);
-
-    /* Depth (mirroring FluxonUI): solid wears a 1px white rim light that fades
-     * from the top edge down toward the bottom, outline a black 5% bottom line,
-     * so the button reads as raised without competing with its own color.
-     * `--fl-button-depth` (a theme token) scales both; 0 makes them invisible.
-     * The rim is a 1px `::before` border masked top-to-bottom
-     * (`--fl-button-sheen`/`--fl-button-sheen-stop`); the inner line stays a
-     * `box-shadow`. */
-    --fl-button-sheen-stop: 100%;
-    --fl-button-highlight: rgb(255 255 255 / calc(12% * var(--fl-button-depth, 1)));
-    --fl-button-sheen: transparent;
-    --fl-button-inner-line: inset 0 -1px 0
-        rgb(0 0 0 / calc(5% * var(--fl-button-depth, 1)));
-
-    /* Internals, derived from the inputs above. */
-    --_fl-button-color: var(--fl-button-color);
-    --_fl-button-color-foreground: var(--fl-button-color-foreground);
-    --_fl-button-text: var(--fl-button-text);
-    --_fl-button-surface: var(--fl-button-surface);
-    --_fl-button-surface-hover: var(--fl-button-surface-hover);
-    --_fl-button-border: var(--fl-button-border);
-    --_fl-button-border-soft: var(--fl-button-border-soft);
-
-    /* The box given to a direct `.icon` child, overridden per `size` below. */
-    --_fl-button-icon-size: var(--fl-control-icon-md);
-
-    /* Tint the shared focus ring with the button color. */
-    --fl-focus-ring-color: var(--_fl-button-color);
-
-    /* Depth and elevation. Transparent placeholders (never `none`) keep the
-     * list composable; solid and outline opt in below. */
-    --_fl-button-inner: 0 0 #0000;
-    --_fl-button-elevation: 0 0 #0000;
-
-    display: inline-flex;
-    position: relative;
-    isolation: isolate;
-    align-items: center;
-    justify-content: center;
-    gap: var(--fl-spacing-sm);
-    border: 1px solid transparent;
-    border-radius: var(--fl-button-radius);
-    font-family: var(--fl-font-sans);
-    font-size: var(--fl-control-font-size-md);
-    font-weight: var(--fl-font-weight-medium);
-    line-height: var(--fl-control-line-height-md);
-    white-space: nowrap;
-    text-decoration: none;
-    touch-action: manipulation;
-    cursor: pointer;
-    box-shadow: var(--_fl-button-inner), var(--_fl-button-elevation);
-    transition:
-      background-color var(--fl-duration-fast) var(--fl-ease-out),
-      color var(--fl-duration-fast) var(--fl-ease-out),
-      border-color var(--fl-duration-fast) var(--fl-ease-out),
-      box-shadow var(--fl-duration-fast) var(--fl-ease-out),
-      transform var(--fl-duration-fast) var(--fl-ease-out);
-  }
-
-  /* Leading indicator. A button sizes the `.icon` or loading spinner it
-   * contains to the control: it never shrinks, and its box follows the button's
-   * `size` (see the per-size rules below), published as `--fl-icon-size` so an
-   * icon set that reads that variable — like the docs' Lucide plugin — picks up
-   * the control's size instead of its own. Both are chrome behind the label, so
-   * they are muted to 70% of the label color and brighten to full on hover
-   * (`currentColor` keeps this correct for every variant and color). */
-  [data-element="button"][data-variant]
-    > :is([data-element="icon"], [data-element="loading"]) {
-    flex-shrink: 0;
-    --fl-icon-size: var(--_fl-button-icon-size);
-    width: var(--fl-icon-size);
-    height: var(--fl-icon-size);
-    color: color-mix(in oklab, currentColor 70%, transparent);
-    transition: color var(--fl-duration-fast) var(--fl-ease-out);
-  }
-
-  [data-element="button"][data-variant]:hover
-    > :is([data-element="icon"], [data-element="loading"]) {
-    color: currentColor;
-  }
-
-  /* The depth rim light. A 1px `::before` border (`--fl-button-sheen`, set by
-   * solid) masked so it is bright along the top edge and fades toward the
-   * bottom, running the line a little way down the sides. `z-index: -1` paints
-   * it over the button's own background but under its text/icons; `isolation`
-   * on the button keeps it from slipping behind an ancestor surface. */
-  [data-element="button"][data-variant]::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border: 1px solid var(--fl-button-sheen);
-    border-radius: calc(var(--fl-button-radius) - 1px);
-    pointer-events: none;
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        #000 0%,
-        transparent var(--fl-button-sheen-stop)
-      );
-    mask-image: linear-gradient(
-        to bottom,
-        #000 0%,
-        transparent var(--fl-button-sheen-stop)
-      );
-    transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
-  }
-
-  /* Press feedback: the button sinks. `--fl-button-press` nudges it down and
-   * the depth collapses — the sheen fades out and the inner line/elevation drop
-   * to transparent. The shadow targets keep their count and inset-ness so the
-   * single `box-shadow` transition interpolates instead of jumping. Tokens make
-   * the nudge theme-tunable and disable-able; honor the reduced-motion
-   * preference. */
-  [data-element="button"][data-variant]:not([data-disabled]):active {
-    transform: var(--fl-button-press, none);
-    --_fl-button-inner: inset 0 0 0 0 #0000;
-    --_fl-button-elevation: 0 0 0 0 #0000;
-  }
-
-  [data-element="button"][data-variant="solid"]:not([data-disabled]):active::before {
-    opacity: 0;
-  }
-
-  [data-element="button"][data-variant="link"]:active {
-    transform: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
     [data-element="button"][data-variant] {
-      --fl-button-press: none;
+        --fl-button-color: var(--fl-color-inverted);
+        --fl-button-color-foreground: var(--fl-color-inverted-foreground);
+        --fl-button-text: var(--fl-button-color);
+        --fl-button-surface: color-mix(
+            in oklab,
+            var(--fl-button-color) 10%,
+            transparent
+        );
+        --fl-button-surface-hover: color-mix(
+            in oklab,
+            var(--fl-button-color) 15%,
+            transparent
+        );
+        --fl-button-border: var(--fl-color-neutral-border);
+        --fl-button-border-soft: var(--fl-color-neutral-border-soft);
+
+        /* Depth */
+        --fl-button-sheen-stop: 100%;
+        --fl-button-highlight: rgb(
+            255 255 255 / calc(12% * var(--fl-button-depth, 1))
+        );
+        --fl-button-sheen: transparent;
+        --fl-button-inner-line: inset 0 -1px 0
+            rgb(0 0 0 / calc(5% * var(--fl-button-depth, 1)));
+
+        /* Internals, derived from the inputs above. */
+        --_fl-button-color: var(--fl-button-color);
+        --_fl-button-color-foreground: var(--fl-button-color-foreground);
+        --_fl-button-text: var(--fl-button-text);
+        --_fl-button-surface: var(--fl-button-surface);
+        --_fl-button-surface-hover: var(--fl-button-surface-hover);
+        --_fl-button-border: var(--fl-button-border);
+        --_fl-button-border-soft: var(--fl-button-border-soft);
+
+        /* The box given to a direct `.icon` child, overridden per `size` below. */
+        --_fl-button-icon-size: var(--fl-control-icon-md);
+
+        /* Tint the shared focus ring with the button color. */
+        --fl-focus-ring-color: var(--_fl-button-color);
+
+        /* Depth and elevation. */
+        --_fl-button-inner: 0 0 #0000;
+        --_fl-button-elevation: 0 0 #0000;
+
+        display: inline-flex;
+        position: relative;
+        isolation: isolate;
+        align-items: center;
+        justify-content: center;
+        gap: var(--fl-spacing-sm);
+        border: 1px solid transparent;
+        border-radius: var(--fl-button-radius);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        white-space: nowrap;
+        text-decoration: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        box-shadow: var(--_fl-button-inner), var(--_fl-button-elevation);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            box-shadow var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
     }
-  }
 
-  /* Depth: only solid and outline are raised. Solid wears a top rim light (the
-   * masked `::before` border) and the theme's outer elevation; outline a bottom
-   * inner line (no shadow); soft, subtle, dashed, ghost, and link stay flat
-   * by design. */
-  [data-element="button"][data-variant="solid"] {
-    --fl-button-sheen: var(--fl-button-highlight);
-    --_fl-button-elevation: var(--fl-button-shadow, 0 0 #0000);
-  }
+    /* Leading indicator. */
+    [data-element="button"][data-variant]
+        > :is([data-element="icon"], [data-element="loading"]) {
+        flex-shrink: 0;
+        --fl-icon-size: var(--_fl-button-icon-size);
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+        color: color-mix(in oklab, currentColor 70%, transparent);
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
 
-  [data-element="button"][data-variant="outline"] {
-    --_fl-button-inner: var(--fl-button-inner-line);
-  }
+    [data-element="button"][data-variant]:hover
+        > :is([data-element="icon"], [data-element="loading"]) {
+        color: currentColor;
+    }
 
-  /* `depth` is a boolean, so `true` keeps the variant's default treatment. The
-   * marker keeps the value backed by a matching hook (see
-   * `theme_contract_test`) and survives minification. */
-  [data-element="button"][data-depth="true"] {
-    --_fl-button-effects: auto;
-  }
+    /* The depth rim light. */
+    [data-element="button"][data-variant]::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border: 1px solid var(--fl-button-sheen);
+        border-radius: calc(var(--fl-button-radius) - 1px);
+        pointer-events: none;
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            transparent var(--fl-button-sheen-stop)
+        );
+        mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            transparent var(--fl-button-sheen-stop)
+        );
+        transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
+    }
 
-  /* `false` flattens every variant: no inner line and no elevation. */
-  [data-element="button"][data-depth="false"] {
-    --fl-button-depth: 0;
-    --fl-button-shadow: 0 0 #0000;
-  }
+    /* Press feedback: the button sinks. */
+    [data-element="button"][data-variant]:not([data-disabled]):active {
+        transform: var(--fl-button-press, none);
+        --_fl-button-inner: inset 0 0 0 0 #0000;
+        --_fl-button-elevation: 0 0 0 0 #0000;
+    }
 
-  [data-element="button"][data-disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+    [data-element="button"][data-variant="solid"]:not(
+            [data-disabled]
+        ):active::before {
+        opacity: 0;
+    }
 
-  /* Color mapping. Each color resolves the shared variant variables. The solid
-   * fill uses `--fl-color-{role}` with its contrast-picked `-foreground`; the
-   * text-carrying variants (subtle/outline/ghost/dashed/link) use the separate
-   * `-text` shade so a bright fill (e.g. amber-400) still reads as text.
-   * `neutral` is a surface role: its label and surfaces come from the
-   * foreground/muted/border tokens (like Nuxt UI) rather than a hue, and its
-   * solid variant uses the inverted surface — plain black in light mode, white
-   * in dark — so it stays black/white even when a palette remaps the neutral
-   * ramp. */
-  [data-element="button"][data-color="primary"] {
-    --fl-button-color: var(--fl-color-primary);
-    --fl-button-color-foreground: var(--fl-color-primary-foreground);
-    --fl-button-text: var(--fl-color-primary-text);
-    --fl-button-border: var(--fl-color-primary-border);
-    --fl-button-border-soft: var(--fl-color-primary-border-soft);
-  }
+    [data-element="button"][data-variant="link"]:active {
+        transform: none;
+    }
 
-  [data-element="button"][data-color="success"] {
-    --fl-button-color: var(--fl-color-success);
-    --fl-button-color-foreground: var(--fl-color-success-foreground);
-    --fl-button-text: var(--fl-color-success-text);
-    --fl-button-border: var(--fl-color-success-border);
-    --fl-button-border-soft: var(--fl-color-success-border-soft);
-  }
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="button"][data-variant] {
+            --fl-button-press: none;
+        }
+    }
 
-  [data-element="button"][data-color="info"] {
-    --fl-button-color: var(--fl-color-info);
-    --fl-button-color-foreground: var(--fl-color-info-foreground);
-    --fl-button-text: var(--fl-color-info-text);
-    --fl-button-border: var(--fl-color-info-border);
-    --fl-button-border-soft: var(--fl-color-info-border-soft);
-  }
+    /* Depth: solid wears a top rim light */
+    [data-element="button"][data-variant="solid"] {
+        --fl-button-sheen: var(--fl-button-highlight);
+    }
 
-  [data-element="button"][data-color="warning"] {
-    --fl-button-color: var(--fl-color-warning);
-    --fl-button-color-foreground: var(--fl-color-warning-foreground);
-    --fl-button-text: var(--fl-color-warning-text);
-    --fl-button-border: var(--fl-color-warning-border);
-    --fl-button-border-soft: var(--fl-color-warning-border-soft);
-  }
+    [data-element="button"][data-variant="outline"] {
+        --_fl-button-inner: var(--fl-button-inner-line);
+    }
 
-  [data-element="button"][data-color="error"] {
-    --fl-button-color: var(--fl-color-error);
-    --fl-button-color-foreground: var(--fl-color-error-foreground);
-    --fl-button-text: var(--fl-color-error-text);
-    --fl-button-border: var(--fl-color-error-border);
-    --fl-button-border-soft: var(--fl-color-error-border-soft);
-  }
+    /* Elevation: solid, subtle, and outline always sit on the shared button
+   * shadow. Override `--fl-button-shadow` (per instance or theme) with
+   * `0 0 #0000` to remove it. */
+    [data-element="button"][data-variant="solid"],
+    [data-element="button"][data-variant="subtle"],
+    [data-element="button"][data-variant="outline"] {
+        --_fl-button-elevation: var(--fl-button-shadow, 0 0 #0000);
+    }
 
-  [data-element="button"][data-color="neutral"] {
-    --fl-button-text: var(--fl-color-foreground);
-    --fl-button-surface: var(--fl-color-muted);
-    --fl-button-surface-hover: var(--fl-color-accent);
-    --fl-button-border: var(--fl-color-neutral-border);
-    --fl-button-border-soft: var(--fl-color-neutral-border-soft);
-    --fl-button-color: var(--fl-color-inverted);
-    --fl-button-color-foreground: var(--fl-color-inverted-foreground);
-  }
+    /* `depth` is a boolean, so `true` keeps the variant's default treatment. */
+    [data-element="button"][data-depth="true"] {
+        --_fl-button-effects: auto;
+    }
 
-  [data-element="button"][data-color="secondary"] {
-    --fl-button-color: var(--fl-color-secondary);
-    --fl-button-color-foreground: var(--fl-color-secondary-foreground);
-    --fl-button-text: var(--fl-color-secondary-text);
-    --fl-button-border: var(--fl-color-secondary-border);
-    --fl-button-border-soft: var(--fl-color-secondary-border-soft);
-  }
+    /* `false` flattens the rim and inner line only; shadows are independent. */
+    [data-element="button"][data-depth="false"] {
+        --fl-button-depth: 0;
+    }
 
-  /* Solid: the color fills the button. */
-  [data-element="button"][data-variant="solid"] {
-    background: var(--_fl-button-color);
-    color: var(--_fl-button-color-foreground);
-  }
+    [data-element="button"][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+        pointer-events: none;
+    }
 
-  [data-element="button"][data-variant="solid"]:hover {
-    background: color-mix(in oklab, var(--_fl-button-color) 75%, transparent);
-  }
+    /* Color mapping. Each color resolves the shared variant variables. */
+    [data-element="button"][data-color="primary"] {
+        --fl-button-color: var(--fl-color-primary);
+        --fl-button-color-foreground: var(--fl-color-primary-foreground);
+        --fl-button-text: var(--fl-color-primary-text);
+        --fl-button-border: var(--fl-color-primary-border);
+        --fl-button-border-soft: var(--fl-color-primary-border-soft);
+    }
 
-  [data-element="button"][data-variant="solid"]:active {
-    background: color-mix(in oklab, var(--_fl-button-color) 70%, transparent);
-  }
+    [data-element="button"][data-color="success"] {
+        --fl-button-color: var(--fl-color-success);
+        --fl-button-color-foreground: var(--fl-color-success-foreground);
+        --fl-button-text: var(--fl-color-success-text);
+        --fl-button-border: var(--fl-color-success-border);
+        --fl-button-border-soft: var(--fl-color-success-border-soft);
+    }
 
-  /* Soft: a tinted surface with no border. */
-  [data-element="button"][data-variant="soft"] {
-    background: var(--_fl-button-surface);
-    color: var(--_fl-button-text);
-  }
+    [data-element="button"][data-color="info"] {
+        --fl-button-color: var(--fl-color-info);
+        --fl-button-color-foreground: var(--fl-color-info-foreground);
+        --fl-button-text: var(--fl-color-info-text);
+        --fl-button-border: var(--fl-color-info-border);
+        --fl-button-border-soft: var(--fl-color-info-border-soft);
+    }
 
-  [data-element="button"][data-variant="soft"]:hover {
-    background: var(--_fl-button-surface-hover);
-  }
+    [data-element="button"][data-color="warning"] {
+        --fl-button-color: var(--fl-color-warning);
+        --fl-button-color-foreground: var(--fl-color-warning-foreground);
+        --fl-button-text: var(--fl-color-warning-text);
+        --fl-button-border: var(--fl-color-warning-border);
+        --fl-button-border-soft: var(--fl-color-warning-border-soft);
+    }
 
-  /* Subtle: ghost + outline, a tinted surface with a matching border. */
-  [data-element="button"][data-variant="subtle"] {
-    border-color: var(--_fl-button-border-soft);
-    background: var(--_fl-button-surface);
-    color: var(--_fl-button-text);
-  }
+    [data-element="button"][data-color="error"] {
+        --fl-button-color: var(--fl-color-error);
+        --fl-button-color-foreground: var(--fl-color-error-foreground);
+        --fl-button-text: var(--fl-color-error-text);
+        --fl-button-border: var(--fl-color-error-border);
+        --fl-button-border-soft: var(--fl-color-error-border-soft);
+    }
 
-  [data-element="button"][data-variant="subtle"]:hover {
-    background: var(--_fl-button-surface-hover);
-  }
+    [data-element="button"][data-color="neutral"] {
+        --fl-button-text: var(--fl-color-foreground);
+        --fl-button-surface: var(--fl-color-muted);
+        --fl-button-surface-hover: var(--fl-color-accent);
+        --fl-button-border: var(--fl-color-neutral-border);
+        --fl-button-border-soft: var(--fl-color-neutral-border-soft);
+        --fl-button-color: var(--fl-color-inverted);
+        --fl-button-color-foreground: var(--fl-color-inverted-foreground);
+    }
 
-  /* Outline: a colored border and label over a transparent surface. */
-  [data-element="button"][data-variant="outline"] {
-    border-color: var(--_fl-button-border);
-    background: transparent;
-    color: var(--_fl-button-text);
-  }
+    [data-element="button"][data-color="secondary"] {
+        --fl-button-color: var(--fl-color-secondary);
+        --fl-button-color-foreground: var(--fl-color-secondary-foreground);
+        --fl-button-text: var(--fl-color-secondary-text);
+        --fl-button-border: var(--fl-color-secondary-border);
+        --fl-button-border-soft: var(--fl-color-secondary-border-soft);
+    }
 
-  [data-element="button"][data-variant="outline"]:hover {
-    background: var(--_fl-button-surface);
-  }
+    /* Solid: the color fills the button. */
+    [data-element="button"][data-variant="solid"] {
+        background: var(--_fl-button-color);
+        color: var(--_fl-button-color-foreground);
+    }
 
-  /* Ghost: a colored label over a transparent surface. */
-  [data-element="button"][data-variant="ghost"] {
-    background: transparent;
-    color: var(--_fl-button-text);
-  }
+    [data-element="button"][data-variant="solid"]:hover {
+        background: color-mix(
+            in oklab,
+            var(--_fl-button-color) 75%,
+            transparent
+        );
+    }
 
-  [data-element="button"][data-variant="ghost"]:hover {
-    background: var(--_fl-button-surface);
-  }
+    [data-element="button"][data-variant="solid"]:active {
+        background: color-mix(
+            in oklab,
+            var(--_fl-button-color) 70%,
+            transparent
+        );
+    }
 
-  /* Dashed: outline with a dashed border. */
-  [data-element="button"][data-variant="dashed"] {
-    border-style: dashed;
-    border-color: var(--_fl-button-border);
-    background: transparent;
-    color: var(--_fl-button-text);
-  }
+    /* Soft: a tinted surface with no border. */
+    [data-element="button"][data-variant="soft"] {
+        background: var(--_fl-button-surface);
+        color: var(--_fl-button-text);
+    }
 
-  [data-element="button"][data-variant="dashed"]:hover {
-    background: var(--_fl-button-surface);
-  }
+    [data-element="button"][data-variant="soft"]:hover {
+        background: var(--_fl-button-surface-hover);
+    }
 
-  [data-element="button"][data-variant="link"] {
-    height: auto;
-    padding: 0;
-    background: transparent;
-    color: var(--_fl-button-text);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
+    /* Subtle: ghost + outline, a tinted surface with a matching border. */
+    [data-element="button"][data-variant="subtle"] {
+        border-color: var(--_fl-button-border-soft);
+        background: var(--_fl-button-surface);
+        color: var(--_fl-button-text);
+    }
 
-  [data-element="button"][data-variant="link"]:hover {
-    color: color-mix(in oklab, var(--_fl-button-text) 75%, transparent);
-    text-decoration-thickness: 2px;
-  }
+    [data-element="button"][data-variant="subtle"]:hover {
+        background: var(--_fl-button-surface-hover);
+    }
 
-  [data-element="button"][data-size="xs"] {
-    height: var(--fl-control-height-xs);
-    padding-inline: var(--fl-control-padding-x-xs);
-    gap: var(--fl-control-gap-xs);
-    font-size: var(--fl-control-font-size-xs);
-    line-height: var(--fl-control-line-height-xs);
-    --_fl-button-icon-size: var(--fl-control-icon-xs);
-  }
+    /* Outline: a colored border and label over a transparent surface. */
+    [data-element="button"][data-variant="outline"] {
+        border-color: var(--_fl-button-border);
+        background: transparent;
+        color: var(--_fl-button-text);
+    }
 
-  [data-element="button"][data-size="sm"] {
-    height: var(--fl-control-height-sm);
-    padding-inline: var(--fl-control-padding-x-sm);
-    gap: var(--fl-control-gap-sm);
-    --_fl-button-icon-size: var(--fl-control-icon-sm);
-  }
+    [data-element="button"][data-variant="outline"]:hover {
+        background: var(--_fl-button-surface);
+    }
 
-  [data-element="button"][data-size="md"] {
-    height: var(--fl-control-height-md);
-    padding-inline: var(--fl-control-padding-x-md);
-    gap: var(--fl-control-gap-md);
-    --_fl-button-icon-size: var(--fl-control-icon-md);
-  }
+    /* Ghost: a colored label over a transparent surface. */
+    [data-element="button"][data-variant="ghost"] {
+        background: transparent;
+        color: var(--_fl-button-text);
+    }
 
-  [data-element="button"][data-size="lg"] {
-    height: var(--fl-control-height-lg);
-    padding-inline: var(--fl-control-padding-x-lg);
-    gap: var(--fl-control-gap-lg);
-    font-size: var(--fl-control-font-size-lg);
-    line-height: var(--fl-control-line-height-lg);
-    --_fl-button-icon-size: var(--fl-control-icon-lg);
-  }
+    [data-element="button"][data-variant="ghost"]:hover {
+        background: var(--_fl-button-surface);
+    }
 
-  [data-element="button"][data-size="xl"] {
-    height: var(--fl-control-height-xl);
-    padding-inline: var(--fl-control-padding-x-xl);
-    gap: var(--fl-control-gap-xl);
-    font-size: var(--fl-control-font-size-xl);
-    line-height: var(--fl-control-line-height-xl);
-    --_fl-button-icon-size: var(--fl-control-icon-xl);
-  }
+    /* Dashed: outline with a dashed border. */
+    [data-element="button"][data-variant="dashed"] {
+        border-style: dashed;
+        border-color: var(--_fl-button-border);
+        background: transparent;
+        color: var(--_fl-button-text);
+    }
+
+    [data-element="button"][data-variant="dashed"]:hover {
+        background: var(--_fl-button-surface);
+    }
+
+    [data-element="button"][data-variant="link"] {
+        height: auto;
+        padding: 0;
+        background: transparent;
+        color: var(--_fl-button-text);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    [data-element="button"][data-variant="link"]:hover {
+        color: color-mix(in oklab, var(--_fl-button-text) 75%, transparent);
+        text-decoration-thickness: 2px;
+    }
+
+    [data-element="button"][data-size="xs"] {
+        height: var(--fl-control-height-xs);
+        padding-inline: var(--fl-control-padding-x-xs);
+        gap: var(--fl-control-gap-xs);
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+        --_fl-button-icon-size: var(--fl-control-icon-xs);
+    }
+
+    [data-element="button"][data-size="sm"] {
+        height: var(--fl-control-height-sm);
+        padding-inline: var(--fl-control-padding-x-sm);
+        gap: var(--fl-control-gap-sm);
+        --_fl-button-icon-size: var(--fl-control-icon-sm);
+    }
+
+    [data-element="button"][data-size="md"] {
+        height: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-md);
+        gap: var(--fl-control-gap-md);
+        --_fl-button-icon-size: var(--fl-control-icon-md);
+    }
+
+    [data-element="button"][data-size="lg"] {
+        height: var(--fl-control-height-lg);
+        padding-inline: var(--fl-control-padding-x-lg);
+        gap: var(--fl-control-gap-lg);
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+        --_fl-button-icon-size: var(--fl-control-icon-lg);
+    }
+
+    [data-element="button"][data-size="xl"] {
+        height: var(--fl-control-height-xl);
+        padding-inline: var(--fl-control-padding-x-xl);
+        gap: var(--fl-control-gap-xl);
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+        --_fl-button-icon-size: var(--fl-control-icon-xl);
+    }
 }

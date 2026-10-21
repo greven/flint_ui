@@ -40,9 +40,10 @@ defmodule FlintUIDocsWeb.NavTest do
            ]
   end
 
-  test "breadcrumbs/2 omits the group for components", %{} do
+  test "breadcrumbs/2 includes the component type", %{} do
     assert Nav.breadcrumbs(:components, :button) == [
-             %{label: "Components", path: "/components"}
+             %{label: "Components", path: "/components"},
+             %{label: "Element", path: "/components"}
            ]
   end
 

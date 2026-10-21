@@ -1,10 +1,10 @@
-defmodule FlintUIDocsWeb.ComponentDocs.Button do
+defmodule FlintUIDocsWeb.Docs.Button do
   @moduledoc false
 
-  use FlintUIDocsWeb.ComponentDocs.Page, component: :button
+  use FlintUIDocsWeb.Docs.Page, component: :button
 
   alias FlintUIDocsWeb.Components
-  alias FlintUIDocsWeb.ComponentDocs.Snippet
+  alias FlintUIDocsWeb.Docs.Snippet
 
   @impl true
   def controls do
@@ -25,34 +25,37 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         id: :disabled,
         title: "Disabled",
         layer: :base,
+        covers: [:disabled],
         body: """
         Set `disabled` to prevent interaction. A disabled action button is removed
         from the tab order and ignores pointer and keyboard input.
         """,
         code: """
-        <.button disabled>Delete</.button>
+        <FlintUI.button disabled>Delete</FlintUI.button>
         """
       },
       %{
         id: :loading,
         title: "Loading",
         layer: :base,
+        covers: [:loading],
         body: """
         Set `loading` while an action is in progress. The button is disabled and
         marked with `aria-busy="true"` and `data-loading` instead of a visual
         change, so you are free to render your own indicator.
         """,
         code: """
-        <.button loading>
-          <.loading class="hidden size-4 in-data-loading:inline-block" />
+        <FlintUI.button loading>
+          <FlintUI.loading class="hidden size-4 in-data-loading:inline-block" />
           Save
-        </.button>
+        </FlintUI.button>
         """
       },
       %{
         id: :links,
         title: "Links",
         layer: :base,
+        covers: [],
         body: """
         Pass `href`, `navigate`, or `patch` to render an anchor instead of a
         button. A disabled link keeps its place in the tab order and is marked
@@ -60,15 +63,29 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         """,
         code: """
         <div class="flex flex-col items-start gap-3">
-          <.button navigate="/settings">Settings</.button>
-          <.button href="https://example.com" target="_blank" rel="noopener" disabled>Visit</.button>
+          <FlintUI.button navigate="/settings">Settings</FlintUI.button>
+          <FlintUI.button href="https://example.com" target="_blank" rel="noopener" disabled>Visit</FlintUI.button>
         </div>
+        """
+      },
+      %{
+        id: :type,
+        title: "Button type",
+        layer: :base,
+        covers: [:type],
+        body: """
+        `type` sets the native button type. Use `submit` for a form's primary
+        action, or `reset` to clear a form. A link ignores `type`.
+        """,
+        code: """
+        <FlintUI.button type="submit">Save changes</FlintUI.button>
         """
       },
       %{
         id: :variant,
         title: "Variant",
         layer: :styled,
+        covers: [:variant],
         body: """
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets.
@@ -85,6 +102,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         id: :color,
         title: "Color",
         layer: :styled,
+        covers: [:color],
         body: """
         The generated component adds a `color` attribute mapped onto the
         `data-color` hook the theme targets. `color` and `variant` compose
@@ -122,6 +140,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         id: :size,
         title: "Size",
         layer: :styled,
+        covers: [:size],
         body: """
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets.
@@ -136,22 +155,23 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
         id: :depth,
         title: "Depth",
         layer: :styled,
+        covers: [:depth],
         body: """
-        `depth` is a boolean that raises `solid` and `outline` buttons: `solid`
-        wears a top rim light that fades as it runs down the sides plus a smooth
-        outer shadow, `outline` a bottom inner line. The other variants are flat
-        by design. Set `depth={false}` to
-        flatten any of them, or turn off `--fl-button-depth` /
-        `--fl-button-shadow` in the theme to flatten every button at once.
-        Pressing a button sinks it: the depth collapses as it nudges down.
+        `depth` is a boolean that controls the surface highlight: `solid` wears
+        a top rim light that fades as it runs down the sides, `outline` a bottom
+        inner line. The other variants have no depth treatment. Set
+        `depth={false}` to remove the rim or inner line. Depth does not control
+        shadows: solid, subtle, and outline always sit on
+        `--fl-button-shadow`; set that variable to `0 0 #0000` to remove them.
+        Pressing a button sinks it, fading the highlight as it nudges down.
         """,
         code: """
         <div class="flex flex-wrap items-center gap-3">
-          <.button variant="solid" color="info">Raised</.button>
-          <.button variant="outline">Raised</.button>
-          <.button variant="solid" color="info" depth={false}>Flat</.button>
-          <.button variant="outline" depth={false}>Flat</.button>
-          <.button variant="ghost" depth={false}>Ghost</.button>
+          <.button variant="solid" color="info">With highlight</.button>
+          <.button variant="outline">With line</.button>
+          <.button variant="solid" color="info" depth={false}>No highlight</.button>
+          <.button variant="outline" depth={false}>No line</.button>
+          <.button variant="subtle">Shadow only</.button>
         </div>
         """
       }
@@ -211,6 +231,27 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
           <:trailing><.icon name="lucide-arrow-up-right" /></:trailing>
         </.button>
         """
+      },
+      %{
+        id: :base_form,
+        title: "Form submit",
+        layer: :base,
+        description: "A native submit button inside a form.",
+        code: """
+        <form phx-submit="save">
+          <FlintUI.button type="submit">Save changes</FlintUI.button>
+        </form>
+        """
+      },
+      %{
+        id: :base_link,
+        title: "Navigation link",
+        layer: :base,
+        description:
+          "Use `navigate` or `patch` for LiveView navigation, or `href` for an external URL.",
+        code: """
+        <FlintUI.button navigate="/settings">Settings</FlintUI.button>
+        """
       }
     ]
   end
@@ -225,7 +266,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       so you can style it without extra classes.
 
       The generated component adds `:leading` and `:trailing` slots around the
-      content; those are listed in the Docs tab's API reference, not here.
+      content; those are listed in the Styled tab's API reference, not here.
       """,
       nodes: [
         %{
@@ -257,7 +298,7 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
           title: "Disabled",
           code: """
           [data-element="button"][data-disabled] {
-            opacity: 0.5;
+            opacity: var(--fl-disabled-opacity, 0.5);
             pointer-events: none;
           }
           """
@@ -302,14 +343,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     """
   end
 
-  def render_playground(assigns) do
-    ~H"""
-    <.button disabled={@props.disabled} loading={@props.loading}>
-      <.loading class="hidden size-4 in-data-loading:inline-block" /> Button
-    </.button>
-    """
-  end
-
   @impl true
   def render_code(%{layer: :styled, props: props}) do
     Snippet.tag(
@@ -326,27 +359,10 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     )
   end
 
-  def render_code(%{props: props}) do
-    Snippet.tag(
-      ".button",
-      [
-        Snippet.flag("disabled", props.disabled),
-        Snippet.flag("loading", props.loading)
-      ],
-      "Button"
-    )
-  end
-
   @impl true
   def render_usage(%{block: :disabled, layer: :styled} = assigns) do
     ~H"""
     <Components.button disabled>Delete</Components.button>
-    """
-  end
-
-  def render_usage(%{block: :disabled} = assigns) do
-    ~H"""
-    <.button disabled>Delete</.button>
     """
   end
 
@@ -358,14 +374,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
     """
   end
 
-  def render_usage(%{block: :loading} = assigns) do
-    ~H"""
-    <.button loading>
-      <.loading class="hidden size-4 in-data-loading:inline-block" /> Save
-    </.button>
-    """
-  end
-
   def render_usage(%{block: :links, layer: :styled} = assigns) do
     ~H"""
     <div class="flex flex-col items-start gap-3">
@@ -373,15 +381,6 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       <Components.button href="https://example.com" target="_blank" rel="noopener" disabled>
         Visit
       </Components.button>
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :links} = assigns) do
-    ~H"""
-    <div class="flex flex-col items-start gap-3">
-      <.button navigate="/settings">Settings</.button>
-      <.button href="https://example.com" target="_blank" rel="noopener" disabled>Visit</.button>
     </div>
     """
   end
@@ -439,11 +438,11 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
   def render_usage(%{block: :depth} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" color="info">Raised</Components.button>
-      <Components.button variant="outline">Raised</Components.button>
-      <Components.button variant="solid" color="info" depth={false}>Flat</Components.button>
-      <Components.button variant="outline" depth={false}>Flat</Components.button>
-      <Components.button variant="ghost" depth={false}>Ghost</Components.button>
+      <Components.button variant="solid" color="info">With highlight</Components.button>
+      <Components.button variant="outline">With line</Components.button>
+      <Components.button variant="solid" color="info" depth={false}>No highlight</Components.button>
+      <Components.button variant="outline" depth={false}>No line</Components.button>
+      <Components.button variant="subtle">Shadow only</Components.button>
     </div>
     """
   end
@@ -492,6 +491,51 @@ defmodule FlintUIDocsWeb.ComponentDocs.Button do
       <:trailing><Components.icon name="lucide-arrow-up-right" /></:trailing>
     </Components.button>
     """
+  end
+
+  @impl true
+  def css do
+    %{
+      body: """
+      The generated button maps its props onto data hooks and lets the theme do
+      the rest. Public `--fl-button-*` variables are the supported per-instance
+      inputs; variants, colors and sizes only choose values for them.
+      """,
+      snippets: [
+        %{
+          title: "Retint one button",
+          body: "Override the public color inputs on the instance.",
+          code: """
+          .danger-action {
+            --fl-button-color: var(--fl-color-error);
+            --fl-button-color-foreground: var(--fl-color-error-foreground);
+            --fl-button-text: var(--fl-color-error-text);
+            --fl-button-border: var(--fl-color-error-border);
+            --fl-button-border-soft: var(--fl-color-error-border-soft);
+          }
+          """
+        },
+        %{
+          title: "Flatten depth",
+          body: "Disable the rim, inner line, and press nudge. Shadows stay on.",
+          code: """
+          .flat-action {
+            --fl-button-depth: 0;
+            --fl-button-press: none;
+          }
+          """
+        },
+        %{
+          title: "Remove shadows",
+          body: "Solid, subtle, and outline buttons share one shadow input.",
+          code: """
+          .shadowless-action {
+            --fl-button-shadow: 0 0 #0000;
+          }
+          """
+        }
+      ]
+    }
   end
 
   defp docs_url, do: "https://hexdocs.pm/phoenix_live_view"

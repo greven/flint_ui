@@ -1,11 +1,21 @@
-# FlintUi
+# FlintUI
 
-**TODO: Add description**
+Accessible, unstyled UI components for Phoenix LiveView, plus a styled layer
+you generate into your own application.
+
+FlintUI ships two layers:
+
+- **Base** — headless `FlintUI.*` components with accessible markup, ARIA
+  state, and keyboard behavior. They ship no CSS.
+- **Styled** — thin wrappers generated with `mix flint.add`. They map a small
+  set of presentational props onto `data-*` hooks and delegate behavior to the
+  base. You own and can edit the generated code.
+
+Theming is plain CSS built from `--fl-*` tokens, so Tailwind is optional.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `flint_ui` to your list of dependencies in `mix.exs`:
+Add FlintUI to your dependencies:
 
 ```elixir
 def deps do
@@ -15,20 +25,49 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/flint_ui>.
+Then set up the components module and theme:
+
+```sh
+mix flint.setup
+```
+
+Generate the styled wrappers you need:
+
+```sh
+mix flint.add button
+mix flint.add --all
+```
+
+Use the generated components through your HTML helpers:
+
+```heex
+<.button variant="solid">Save</.button>
+```
+
+The headless base stays available explicitly:
+
+```heex
+<FlintUI.button class="my-button">Save</FlintUI.button>
+```
+
+## Documentation
+
+The docs site is a separate Phoenix app under `docs/`. It covers the styled
+component, the headless base, and the CSS contract for every component.
+
+```sh
+cd docs && mise exec -- mix phx.server
+```
 
 ## Development
 
-The library and the docs site are two separate Mix projects. Run each from its
-own directory (`mix` is on `PATH` via `mise exec --`):
+The library and the docs site are two separate Mix projects. `mix` is available
+through `mise`:
 
 ```sh
-mise exec -- mix test                 # library
-cd docs && mise exec -- mix phx.server # docs site (http://localhost:4000)
+mise exec -- mix test                    # library
+cd docs && mise exec -- mix precommit    # docs
 ```
 
-Don't wrap the docs server in a root Mix alias: `mix cmd` runs it in a separate
-OS session, so Ctrl+C can't stop it and it is left listening on the port.
-
+The docs server should be run from `docs/` so it can be stopped normally. Do
+not wrap it in a root Mix alias; `mix cmd` runs it in a separate OS session.

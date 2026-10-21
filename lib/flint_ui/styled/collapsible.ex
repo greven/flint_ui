@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Collapsible do
   @moduledoc false
 
-  alias FlintUI.Styled.Entry
+  alias FlintUI.Styled.{Entry, Var}
 
   def entry do
     %Entry{
@@ -12,6 +12,28 @@ defmodule FlintUI.Styled.Collapsible do
       css: "styled/collapsible.css",
       tokens: [:color, :radius],
       slots: [],
+      vars: [
+        Var.new(
+          name: "--fl-collapsible-duration",
+          default: "250ms",
+          doc: "Duration of the open/close reveal."
+        ),
+        Var.new(
+          name: "--fl-collapsible-easing",
+          default: "ease",
+          doc: "Timing function of the reveal."
+        ),
+        Var.new(
+          name: "--fl-collapsible-height",
+          default: "auto",
+          doc: "Natural content height, published by the hook and used by the keyframes."
+        ),
+        Var.new(
+          name: "--fl-collapsible-width",
+          default: "auto",
+          doc: "Natural content width, published by the hook."
+        )
+      ],
       props: []
     }
   end

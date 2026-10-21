@@ -4,7 +4,8 @@ defmodule FlintUI.Styled do
 
   Each entry (see `FlintUI.Styled.Entry`) describes how a headless (base)
   FlintUI component is lifted into a styled wrapper: the base module, the generated
-  target, the extra attributes and slots it adds, and the theme tokens it consumes.
+  target, the extra attributes and slots it adds, the public CSS variables it
+  exposes, and the theme tokens it consumes.
 
   The generator (`mix flint.add`) and the docs both read from here, so the
   styled API has a single source of truth.

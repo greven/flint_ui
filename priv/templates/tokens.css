@@ -57,7 +57,8 @@
     --fl-spacing-2xl: calc(var(--fl-spacing) * 8);
     --fl-spacing-3xl: calc(var(--fl-spacing) * 12);
 
-    /* Elevation. */
+    /* Elevation. `base` is the scheme-aware default control shadow. */
+    --fl-shadow-base: 0 1px 2px 0 light-dark(#0000000d, #0000004d);
     --fl-shadow-2xs: 0 1px rgb(0 0 0 / 5%);
     --fl-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 5%);
     --fl-shadow-sm:
@@ -71,7 +72,7 @@
 
     /* Button effect defaults. */
     --fl-button-depth: 1;
-    --fl-button-shadow: var(--fl-shadow-xs);
+    --fl-button-shadow: var(--fl-shadow-base);
     --fl-button-press: translateY(1px);
 
     --fl-breakpoint-sm: 40rem;
@@ -89,9 +90,7 @@
     --fl-ease-out: cubic-bezier(0, 0, 0.2, 1);
     --fl-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Shared control metrics, so button/input/select/toggle line up. The
-     * heights follow Nuxt UI's scale (24/28/32/36/40), the most common 4px-grid
-     * control range. */
+    /* Shared control metrics, so button/input/select/toggle line up. */
     --fl-control-height-xs: 1.5rem;
     --fl-control-height-sm: 1.75rem;
     --fl-control-height-md: 2rem;
@@ -336,9 +335,7 @@
         var(--fl-color-error-400)
     );
 
-    /* Opaque control borders. Grouped controls overlap their borders, so a
-     * translucent border would composite at the shared seam and no longer match
-     * the outer edge. Fixed scale shades keep every control consistent. */
+    /* Controls borders */
     --fl-color-primary-border: light-dark(
         var(--fl-color-primary-400),
         var(--fl-color-primary-700)
@@ -396,7 +393,11 @@
         var(--fl-color-neutral-700)
     );
 
-    /* Surfaces and text. */
+    /* Surfaces and text. The surface scale is opaque and moves from the base
+     * `surface` toward `elevated`: light steps darker, dark steps lighter.
+     * `soft` is the half-step and `muted` the full de-emphasized step. Disabled
+     * uses the muted fill with a dimmed label; colored controls that must keep
+     * their hue dim through `--fl-disabled-opacity` instead. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
         var(--fl-color-neutral-950)
@@ -406,11 +407,6 @@
         var(--fl-color-neutral-50)
     );
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
-    --fl-color-surface-foreground: light-dark(
-        var(--fl-color-neutral-950),
-        var(--fl-color-neutral-50)
-    );
-
     --fl-color-muted: light-dark(
         var(--fl-color-neutral-100),
         var(--fl-color-neutral-800)
@@ -423,6 +419,21 @@
         var(--fl-color-neutral-100),
         var(--fl-color-neutral-800)
     );
+    --fl-color-surface-soft: color-mix(
+        in oklab,
+        var(--fl-color-elevated) 50%,
+        var(--fl-color-surface)
+    );
+    --fl-color-surface-muted: var(--fl-color-muted);
+    --fl-color-surface-foreground: light-dark(
+        var(--fl-color-neutral-950),
+        var(--fl-color-neutral-50)
+    );
+    --fl-color-disabled: var(--fl-color-surface-muted);
+    --fl-color-disabled-foreground: var(--fl-color-dimmed);
+    --fl-color-disabled-border: var(--fl-color-border-muted);
+    --fl-disabled-opacity: 0.5;
+
     --fl-color-dimmed: light-dark(
         var(--fl-color-neutral-400),
         var(--fl-color-neutral-500)

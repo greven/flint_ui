@@ -4,9 +4,10 @@ defmodule FlintUI.Styled.Entry do
 
   An entry ties a component's headless base module (`:base`) to the styled
   wrapper the generator produces (`:target`), the extra presentational attributes
-  it adds (`:props`), the extra slots it adds (`:slots`), the theme token
-  namespaces it consumes (`:tokens`), and its theme stylesheet part (`:css`,
-  relative to `priv/templates`). The docs and the generator both read from here.
+  it adds (`:props`), the extra slots it adds (`:slots`), the public CSS variables
+  it exposes (`:vars`), the theme token namespaces it consumes (`:tokens`), and
+  its theme stylesheet part (`:css`, relative to `priv/templates`). The docs and
+  the generator both read from here.
 
   The generator merges `:slots` with the base component's own slots when it
   renders the wrapper's `slot/2` declarations.
@@ -20,7 +21,8 @@ defmodule FlintUI.Styled.Entry do
           css: String.t() | nil,
           tokens: [atom()],
           props: [FlintUI.Styled.Prop.t()],
-          slots: [FlintUI.Styled.Slot.t()]
+          slots: [FlintUI.Styled.Slot.t()],
+          vars: [FlintUI.Styled.Var.t()]
         }
 
   @enforce_keys [:name, :base, :target]
@@ -31,7 +33,8 @@ defmodule FlintUI.Styled.Entry do
             css: nil,
             tokens: [],
             props: [],
-            slots: []
+            slots: [],
+            vars: []
 
   @doc """
   Returns the extra attribute with the given name, or `nil`.

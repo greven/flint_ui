@@ -3,7 +3,7 @@ defmodule FlintUIDocsWeb.IntroductionLive do
 
   use FlintUIDocsWeb, :live_view
 
-  alias FlintUIDocsWeb.DocBlocks
+  alias FlintUIDocsWeb.DocsComponents
 
   @impl true
   def mount(_params, _session, socket) do
@@ -22,17 +22,17 @@ defmodule FlintUIDocsWeb.IntroductionLive do
           and own outright.
         </p>
 
-        <DocBlocks.section title="Headless base" id="base">
+        <DocsComponents.section title="Headless base" id="base">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Base components (<code class="font-mono">FlintUI.button/1</code>, …) are
             accessible and unstyled. They render semantic markup with the ARIA roles,
             states, and keyboard behavior the pattern requires, and forward the rest of
             your attributes. Styling is entirely up to you.
           </p>
-          <DocBlocks.code_block code={snippet(:base)} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:base)} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Styled layer" id="styled">
+        <DocsComponents.section title="Styled layer" id="styled">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Prefer a starting point? Generate a styled wrapper into your app. It stays
             thin — it declares a few presentational attributes, maps them onto
@@ -40,16 +40,16 @@ defmodule FlintUIDocsWeb.IntroductionLive do
             hooks, and delegates behavior to the base. Adjust or delete it freely; you
             own the code.
           </p>
-          <DocBlocks.code_block code={snippet(:styled)} />
-        </DocBlocks.section>
+          <DocsComponents.code_block code={snippet(:styled)} />
+        </DocsComponents.section>
 
-        <DocBlocks.section title="Framework-agnostic theming" id="theming">
+        <DocsComponents.section title="Framework-agnostic theming" id="theming">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             The theme is plain CSS built from prefixed <code class="font-mono">--fl-*</code>
             tokens, with automatic light and dark support. Tailwind is optional — map the
             tokens onto utilities only if you want to.
           </p>
-        </DocBlocks.section>
+        </DocsComponents.section>
 
         <p class="mt-8 text-sm text-zinc-500">
           Next: <.link navigate="/getting-started/installation" class="underline">

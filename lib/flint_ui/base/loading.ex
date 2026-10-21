@@ -94,7 +94,9 @@ defmodule FlintUI.Base.Loading do
     default: 600,
     doc: "Duration of one full animation cycle, in milliseconds."
 
-  attr :class, :any, default: "size-4", doc: "Additional classes for sizing and color."
+  attr :class, :any,
+    default: nil,
+    doc: "Additional classes for sizing and color. The base component ships no size of its own."
 
   attr :label, :string,
     default: nil,
