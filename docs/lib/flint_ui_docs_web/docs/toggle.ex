@@ -119,26 +119,14 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         freely: the same palette drives every variant.
         """,
         code: """
-        <div class="flex flex-col gap-3">
-          <div class="flex flex-wrap items-center gap-3">
-            <.toggle
-              :for={color <- ~w(primary secondary success info warning error neutral)}
-              color={color}
-              pressed
-            >
-              {color}
-            </.toggle>
-          </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <.toggle
-              :for={color <- ~w(primary secondary success info warning error neutral)}
-              variant="outline"
-              color={color}
-              pressed
-            >
-              {color}
-            </.toggle>
-          </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <.toggle
+            :for={color <- ~w(primary secondary success info warning error neutral)}
+            color={color}
+            pressed
+          >
+            {color}
+          </.toggle>
         </div>
         """
       },

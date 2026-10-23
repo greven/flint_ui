@@ -32,11 +32,16 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert render(view) =~ "mix flint.add"
   end
 
-  test "styling page aggregates the base styling snippets", %{conn: conn} do
+  test "styling page maps needs onto the available mechanisms", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/getting-started/styling")
 
-    assert has_element?(view, "#how")
+    assert has_element?(view, "#scope")
+    assert has_element?(view, "#class")
+    assert has_element?(view, "#style")
+    assert has_element?(view, "#parts")
     assert has_element?(view, "#state")
+    assert has_element?(view, "#utilities")
+    assert has_element?(view, "#attributes")
     assert has_element?(view, "#components")
     assert has_element?(view, "#button")
     assert has_element?(view, "#section-getting-started[aria-current='page']")

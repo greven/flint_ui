@@ -40,7 +40,7 @@
     display: contents;
 }
 
-/* Keep code-block backgrounds on the site's zinc scale rather than Makeup's One Dark surface. */
+/* Code panels provide their own subtle surface; keep .highlight transparent. */
 .highlight {
-    background-color: var(--color-zinc-900);
+    background-color: transparent;
 }

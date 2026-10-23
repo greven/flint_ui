@@ -4,7 +4,11 @@ defmodule FlintUIDocsWeb.Highlight do
 
   `highlight/2` returns HTML that is safe to embed inside
   `<pre class="highlight">`; the token colours come from
-  `assets/css/highlight.css`, generated from Makeup's One Dark style map.
+  `assets/css/highlight.css`, generated from Makeup's Paraiso Light (light) and
+  Paraiso Dark (dark) styles. Every token colour is emitted with `light-dark()`, so
+  the stylesheet follows the docs' color scheme from one set of classes. The
+  `.highlight` background is transparent; the surrounding code panel supplies the
+  surface.
   """
 
   import Phoenix.HTML, only: [html_escape: 1, raw: 1]

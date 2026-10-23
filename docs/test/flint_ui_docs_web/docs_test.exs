@@ -40,6 +40,19 @@ defmodule FlintUIDocsWeb.DocsTest do
     end
   end
 
+  test "playground control selections reference known controls" do
+    for {name, _module} <- Docs.modules(),
+        keys = Docs.playground_controls(name),
+        is_list(keys) do
+      known = Enum.map(Docs.controls(name), & &1.key)
+
+      for key <- keys do
+        assert key in known,
+               "expected #{name} playground control #{inspect(key)} to exist in controls/0"
+      end
+    end
+  end
+
   test "every component has a CSS contract" do
     for {name, _module} <- Docs.modules() do
       assert %{body: body, snippets: snippets} = Docs.css(name)

@@ -6,6 +6,9 @@ config :flint_ui_docs, theme_watcher: true
 # Add a cache-busting query to the built assets while developing.
 config :flint_ui_docs, asset_version: true
 
+# Show the preview card's Source tab, which reads the render callback source.
+config :flint_ui_docs, dev_tools: true
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

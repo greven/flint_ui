@@ -11,6 +11,10 @@ config :flint_ui_docs,
   namespace: FlintUIDocs,
   generators: [timestamp_type: :utc_datetime]
 
+# Dev-only affordances on the docs site (the preview card's Source tab).
+# Enabled in config/dev.exs.
+config :flint_ui_docs, dev_tools: false
+
 # Configure the endpoint
 config :flint_ui_docs, FlintUIDocsWeb.Endpoint,
   url: [host: "localhost"],

@@ -28,10 +28,25 @@ defmodule FlintUIDocsWeb.Docs.Page do
     * `css/0` - `%{body, snippets}` describing the styled layer's CSS contract.
       Public variables come from `FlintUI.Styled.Entry.vars`; selectors are
       derived from the entry's props and the base's parts.
+
+  The `code` on a usage or example entry is the public teaching snippet (the code
+  block). It is deliberately independent of the markup that renders the preview: it
+  should stay concise and copy-pasteable even when `render_usage/1` or
+  `render_block/1` demonstrates a fuller composition. In development,
+  `FlintUIDocsWeb.Docs.Source` reads those render callbacks and exposes their real
+  source through a toggle in the code block header.
+
+  A styled entry may set `preview_only: true` (and omit `code`) when the rendered
+  demo is the whole point, such as a full color/variant matrix. The preview card
+  then renders only the demo, with no code section.
+
+  `controls/0` describes every playground control. Override `playground_controls/0`
+  with a list of keys to show only a subset; hidden controls keep their defaults.
   """
 
   @callback component() :: atom()
   @callback controls() :: [map()]
+  @callback playground_controls() :: [atom()] | nil
   @callback defaults() :: map()
   @callback usage() :: [map()]
   @callback examples() :: [map()]
@@ -61,6 +76,14 @@ defmodule FlintUIDocsWeb.Docs.Page do
       @doc "Playground controls for the Styled tab (styled attributes)."
       def controls, do: []
 
+      @doc """
+      The subset of `controls/0` shown in the Styled playground.
+
+      Return `nil` to show every control, or a list of keys to keep the demo
+      panel slim. Hidden controls keep their defaults.
+      """
+      def playground_controls, do: nil
+
       @doc "Usage sections. Override to document attribute groups."
       def usage, do: []
 
@@ -82,7 +105,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
       @doc "Renders the interactive playground for the Styled tab."
       def render_playground(_assigns), do: nil
 
-      @doc "Generates the HEEx source for the Styled playground, or `nil` to hide the Code tab."
+      @doc "Generates the HEEx source for the Styled playground, or `nil` to hide the code block."
       def render_code(_assigns), do: nil
 
       @doc "Renders one Styled usage subsection preview. Override and match on `:block`."
@@ -101,6 +124,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
 
       defoverridable component: 0,
                      controls: 0,
+                     playground_controls: 0,
                      usage: 0,
                      examples: 0,
                      anatomy: 0,

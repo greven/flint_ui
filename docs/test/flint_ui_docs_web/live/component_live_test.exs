@@ -173,9 +173,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible")
 
     assert has_element?(view, "#usage-collapsible-reveal [data-element='collapsible'][style]")
-
-    view |> element("#usage-collapsible-reveal button[phx-value-tab='code']") |> render_click()
-
     assert has_element?(view, "#usage-collapsible-reveal-code", "--fl-collapsible-duration")
     assert has_element?(view, "#usage-collapsible-reveal-code", "cubic-bezier")
   end
@@ -197,10 +194,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
   test "example code offers Tailwind and CSS flavors", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible")
-
-    view
-    |> element("#example-collapsible-repos button[phx-value-tab='code']")
-    |> render_click()
 
     assert has_element?(view, "#example-collapsible-repos code", "max-w-74")
 
@@ -382,13 +375,16 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#keyboard code", "Space")
   end
 
-  test "toggling the disabled control updates the preview", %{conn: conn} do
+  test "the playground only shows its selected controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
-    refute has_element?(view, "#playground-button [data-disabled]")
 
-    view |> element("button[phx-value-key='disabled']") |> render_click()
+    assert has_element?(view, "#playground-button-controls select[name='variant']")
+    assert has_element?(view, "#playground-button-controls select[name='color']")
+    assert has_element?(view, "#playground-button-controls select[name='size']")
 
-    assert has_element?(view, "#playground-button [data-disabled]")
+    refute has_element?(view, "#playground-button-controls button[phx-value-key='disabled']")
+    refute has_element?(view, "#playground-button-controls button[phx-value-key='loading']")
+    refute has_element?(view, "#playground-button-controls button[phx-value-key='depth']")
   end
 
   test "the styled controls offer variant and size selects", %{conn: conn} do
@@ -398,40 +394,55 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-button-controls select[name='size']")
   end
 
+  test "the preview canvas is solid and glues its controls", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#playground-button [data-preview-canvas].border-solid")
+    refute has_element?(view, "#playground-button [data-preview-canvas].border-dashed")
+    assert has_element?(view, "#playground-button [data-preview-canvas].rounded-t-lg")
+    refute has_element?(view, "#playground-button [data-preview-controls].rounded-b-lg")
+    refute has_element?(view, "#playground-button [data-preview-controls].mt-3")
+    assert has_element?(view, "#playground-button [data-preview-code].rounded-b-lg")
+
+    assert has_element?(view, "#usage-button-variant [data-preview-canvas].rounded-t-lg")
+
+    assert has_element?(view, "#usage-button-color [data-preview-canvas].rounded-lg")
+    refute has_element?(view, "#usage-button-color [data-preview-code]")
+  end
+
   test "switching tabs resets the playground to its defaults", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
-    view |> element("button[phx-value-key='disabled']") |> render_click()
-    assert has_element?(view, "#playground-button [data-disabled]")
+
+    view
+    |> element("#playground-button-controls")
+    |> render_change(%{"variant" => "solid"})
+
+    assert has_element?(view, "#playground-button [data-variant='solid']")
 
     view |> element("#tab-base") |> render_click()
 
     assert has_element?(view, "#panel-base")
-    refute has_element?(view, "#playground-button [data-disabled]")
+    refute has_element?(view, "#playground-button [data-variant='solid']")
 
     view |> element("#tab-styled") |> render_click()
 
-    refute has_element?(view, "#playground-button [data-disabled]")
+    assert has_element?(view, "#playground-button [data-variant='subtle']")
   end
 
-  test "the playground code tab reflects the current props", %{conn: conn} do
+  test "the playground code block reflects the current props", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    view |> element("#playground-button button[phx-value-tab='code']") |> render_click()
     assert has_element?(view, "#playground-button-code", "<.button")
 
-    refute has_element?(view, "#playground-button [data-element='button']")
+    view
+    |> element("#playground-button-controls")
+    |> render_change(%{"variant" => "solid"})
 
-    view |> element("#playground-button button[phx-value-tab='preview']") |> render_click()
-    view |> element("button[phx-value-key='disabled']") |> render_click()
-
-    view |> element("#playground-button button[phx-value-tab='code']") |> render_click()
-    assert has_element?(view, "#playground-button-code", "disabled")
+    assert has_element?(view, "#playground-button-code", ~s(variant="solid"))
   end
 
-  test "the playground code tab offers a copy button", %{conn: conn} do
+  test "the playground code block offers a copy button", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    view |> element("#playground-button button[phx-value-tab='code']") |> render_click()
 
     assert has_element?(view, "#playground-button-copy[phx-hook]")
     assert has_element?(view, "#playground-button-copy .lucide-copy")
@@ -458,25 +469,27 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#setup pre.highlight code span")
   end
 
-  test "usage subsections expose a preview and code tab", %{conn: conn} do
+  test "code-only sections use the shared code block", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
+
+    assert has_element?(view, "pre.highlight code#base-usage-button-disabled-code")
+    assert has_element?(view, "#base-usage-button-disabled-code-copy[phx-hook]")
+  end
+
+  test "usage subsections show their preview and code together", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#usage-button-variant [data-element='button']")
-    assert has_element?(view, "#usage-button-variant button[phx-value-tab='code']")
-
-    view |> element("#usage-button-variant button[phx-value-tab='code']") |> render_click()
-
     assert has_element?(view, "#usage-button-variant-code span")
+    refute has_element?(view, "#usage-button-variant button[phx-value-tab]")
   end
 
-  test "example cards expose a code tab", %{conn: conn} do
+  test "example cards show their preview and code together", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#example-button-icon button[phx-value-tab='code']")
-
-    view |> element("#example-button-icon button[phx-value-tab='code']") |> render_click()
-
+    assert has_element?(view, "#example-button-icon [data-element='button']")
     assert has_element?(view, "#example-button-icon-code span")
+    refute has_element?(view, "#example-button-icon button[phx-value-tab]")
   end
 
   test "the destructive confirm example renders and its event is tolerated", %{conn: conn} do

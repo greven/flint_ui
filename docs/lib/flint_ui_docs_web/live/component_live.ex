@@ -3,6 +3,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Docs
   alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Markdown
@@ -70,12 +71,13 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
         <section
           :if={@tab == "styled"}
+          class="flex flex-col gap-16"
           id="panel-styled"
           role="tabpanel"
           aria-labelledby="tab-styled"
           tabindex="0"
         >
-          <DocsComponents.section title="Usage" id="usage">
+          <DocsComponents.section title="Usage" id="usage" class="mt-12">
             <PreviewComponent.preview
               id={"playground-#{@active}"}
               kind={:playground}
@@ -83,6 +85,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               name={@active}
               controls={@controls}
               defaults={@defaults}
+              class="mt-6"
             />
 
             <DocsComponents.subsection
@@ -99,7 +102,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 block={section.id}
                 code={section[:code]}
                 codes={section[:codes]}
-                preview={section[:preview] != false}
+                preview_only={section[:preview_only] == true}
               />
             </DocsComponents.subsection>
           </DocsComponents.section>
@@ -134,7 +137,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               codes={example[:codes]}
               title={example.title}
               description={example[:description]}
-              preview={example[:preview] != false}
+              preview_only={example[:preview_only] == true}
             />
           </DocsComponents.section>
 
@@ -224,11 +227,18 @@ defmodule FlintUIDocsWeb.ComponentLive do
               id={"usage-#{section.id}"}
             >
               <Markdown.markdown :if={section[:body]} content={section.body} />
-              <DocsComponents.code_block :if={section[:code]} code={section[:code]} />
-              <DocsComponents.code_block
-                :for={flavor <- section[:codes] || []}
+              <CodeBlock.code
+                :if={section[:code]}
+                id={"base-usage-#{@active}-#{section.id}-code"}
+                code={section[:code]}
+                class="mt-3 rounded-lg"
+              />
+              <CodeBlock.code
+                :for={{flavor, index} <- Enum.with_index(section[:codes] || [])}
+                id={"base-usage-#{@active}-#{section.id}-#{index}-code"}
                 code={flavor[:code]}
                 lang={flavor[:lang] || :heex}
+                class="mt-3 rounded-lg"
               />
             </DocsComponents.subsection>
           </DocsComponents.section>
@@ -242,11 +252,18 @@ defmodule FlintUIDocsWeb.ComponentLive do
               <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                 {example[:description]}
               </p>
-              <DocsComponents.code_block :if={example[:code]} code={example[:code]} />
-              <DocsComponents.code_block
-                :for={flavor <- example[:codes] || []}
+              <CodeBlock.code
+                :if={example[:code]}
+                id={"base-example-#{@active}-#{example.id}-code"}
+                code={example[:code]}
+                class="mt-3 rounded-lg"
+              />
+              <CodeBlock.code
+                :for={{flavor, index} <- Enum.with_index(example[:codes] || [])}
+                id={"base-example-#{@active}-#{example.id}-#{index}-code"}
                 code={flavor[:code]}
                 lang={flavor[:lang] || :heex}
+                class="mt-3 rounded-lg"
               />
             </DocsComponents.subsection>
           </DocsComponents.section>
@@ -427,9 +444,18 @@ defmodule FlintUIDocsWeb.ComponentLive do
       attribute_rows: attribute_rows(attrs, entry),
       merged_slots: merged_slots(slots, entry),
       accessibility: Docs.accessibility(name),
-      controls: Docs.controls(name),
+      controls: playground_controls(name),
       defaults: Docs.defaults(name)
     )
+  end
+
+  defp playground_controls(name) do
+    controls = Docs.controls(name)
+
+    case Docs.playground_controls(name) do
+      nil -> controls
+      keys -> Enum.filter(controls, &(&1.key in keys))
+    end
   end
 
   defp find_component(name) do

@@ -191,6 +191,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </p>
           <DocsComponents.code_block code={snippet(:override_css)} lang={:css} />
           <DocsComponents.code_block code={snippet(:override_heex)} lang={:heex} />
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            For scoping a change in general — theme, class, inline style, parts, and
+            states — see <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>.
+          </p>
         </DocsComponents.section>
 
         <DocsComponents.section title="Light and dark" id="light-dark">

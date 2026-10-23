@@ -21,6 +21,7 @@ defmodule FlintUIDocsWeb.Docs do
     * `render_playground/1` - the live playground render for the Styled tab
     * `render_usage/1` - the render for a Styled usage subsection preview
     * `render_block/1` - the render for a Styled example preview
+    * `source/3` - the dev-only source of a preview's render callback
   """
 
   use Phoenix.Component
@@ -33,6 +34,7 @@ defmodule FlintUIDocsWeb.Docs do
     Group,
     Icon,
     Loading,
+    Source,
     Toggle
   }
 
@@ -85,11 +87,22 @@ defmodule FlintUIDocsWeb.Docs do
   end
 
   @doc """
+  The dev-only source of a preview's render callback, or `nil`.
+
+  `kind` is `:playground`, `:usage`, or `:block`. See
+  `FlintUIDocsWeb.Docs.Source` for the `:block` and `:layer` options.
+  """
+  def source(name, kind, opts \\ []) do
+    Source.get(module(name), kind, opts)
+  end
+
+  @doc """
   Returns the registered `{name, module}` page modules.
   """
   def modules, do: @modules
 
   def controls(name), do: module(name).controls()
+  def playground_controls(name), do: module(name).playground_controls()
   def defaults(name), do: module(name).defaults()
   def usage(name), do: module(name).usage()
   def base_usage(name), do: Enum.filter(usage(name), &(&1.layer == :base))

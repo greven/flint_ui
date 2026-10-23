@@ -36,7 +36,7 @@ defmodule FlintUI.Styled.Button do
         Prop.new(
           name: :variant,
           values: ["solid", "soft", "subtle", "outline", "dashed", "ghost", "link"],
-          default: "subtle",
+          default: "outline",
           doc: "The visual emphasis of the button."
         ),
         Prop.new(

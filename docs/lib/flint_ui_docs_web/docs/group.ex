@@ -111,20 +111,9 @@ defmodule FlintUIDocsWeb.Docs.Group do
             <.button variant="outline">Center</.button>
             <.button variant="outline">Right</.button>
           </.group>
-          <.group variant="attached">
-            <.button variant="dashed">Left</.button>
-            <.button variant="dashed">Center</.button>
-            <.button variant="dashed">Right</.button>
-          </.group>
-          <.group variant="attached">
-            <.button variant="ghost">Left</.button>
-            <.button variant="ghost">Center</.button>
-            <.button variant="ghost">Right</.button>
-          </.group>
           <.group variant="framed">
             <.toggle>Day</.toggle>
             <.toggle>Week</.toggle>
-            <.toggle>Month</.toggle>
           </.group>
         </div>
         """

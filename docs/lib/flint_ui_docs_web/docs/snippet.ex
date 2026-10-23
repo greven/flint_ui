@@ -3,7 +3,7 @@ defmodule FlintUIDocsWeb.Docs.Snippet do
   Small helpers for rendering a component's HEEx source from playground props.
 
   Example modules use these in `render_code/1` so the generated snippet in the
-  Code tab stays in step with the live props without hand-built string
+  code block stays in step with the live props without hand-built string
   concatenation. Attributes equal to their default (or blank) are omitted, so
   the snippet only shows what the current props actually set.
   """
@@ -25,10 +25,59 @@ defmodule FlintUIDocsWeb.Docs.Snippet do
   def attr(name, value, _default) when is_binary(value), do: ~s(#{name}="#{value}")
   def attr(name, value, _default), do: ~s(#{name}={#{inspect(value)}})
 
+  @inline_width 80
+
   @doc """
   Renders a component with attributes and an inner body.
+
+  A short, single-line body stays inline (`<.button>Button</.button>`). A body
+  with multiple lines, or a tag that would not fit on one line, is indented on
+  its own lines.
   """
   def tag(name, attrs, body) do
+    body = String.trim(body)
+    attrs = Enum.reject(attrs, &is_nil/1)
+
+    if String.contains?(body, "\n") do
+      block_tag(name, attrs, body)
+    else
+      inline = inline_tag(name, attrs, body)
+
+      if String.length(inline) <= @inline_width do
+        inline
+      else
+        block_tag(name, attrs, body)
+      end
+    end
+  end
+
+  @doc """
+  Renders a self-closing component with attributes.
+
+  Short tags stay on one line; longer ones break the attributes out.
+  """
+  def component(name, attrs) do
+    attrs = Enum.reject(attrs, &is_nil/1)
+
+    inline =
+      case attrs do
+        [] -> "<#{name} />"
+        attrs -> "<#{name} #{Enum.join(attrs, " ")} />"
+      end
+
+    if String.length(inline) <= @inline_width do
+      inline
+    else
+      "<#{name}\n#{lines(attrs)}\n/>"
+    end
+  end
+
+  defp inline_tag(name, [], body), do: "<#{name}>#{body}</#{name}>"
+
+  defp inline_tag(name, attrs, body),
+    do: "<#{name} #{Enum.join(attrs, " ")}>#{body}</#{name}>"
+
+  defp block_tag(name, attrs, body) do
     body =
       body
       |> String.split("\n")
@@ -40,19 +89,8 @@ defmodule FlintUIDocsWeb.Docs.Snippet do
     end
   end
 
-  @doc """
-  Renders a self-closing component with attributes.
-  """
-  def component(name, attrs) do
-    case lines(attrs) do
-      "" -> "<#{name} />"
-      lines -> "<#{name}\n#{lines}\n/>"
-    end
-  end
-
   defp lines(attrs) do
     attrs
-    |> Enum.reject(&is_nil/1)
     |> Enum.map_join("\n", &("  " <> &1))
   end
 end

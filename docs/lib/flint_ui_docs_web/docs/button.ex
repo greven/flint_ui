@@ -6,17 +6,30 @@ defmodule FlintUIDocsWeb.Docs.Button do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
+  @sizes [
+    {"Extra Small", "xs"},
+    {"Small", "sm"},
+    {"Medium", "md"},
+    {"Large", "lg"},
+    {"Extra Large", "xl"}
+  ]
+
+  defp sizes, do: @sizes
+
   @impl true
   def controls do
     [
       %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
       %{key: :loading, type: :boolean, default: false, label: "Loading"},
-      %{key: :variant, type: :select, default: "subtle", label: "Variant"},
+      %{key: :variant, type: :select, default: "outline", label: "Variant"},
       %{key: :color, type: :select, default: "neutral", label: "Color"},
       %{key: :size, type: :select, default: "md", label: "Size"},
       %{key: :depth, type: :boolean, default: true, label: "Depth"}
     ]
   end
+
+  @impl true
+  def playground_controls, do: [:variant, :color, :size]
 
   @impl true
   def usage do
@@ -102,38 +115,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
         id: :color,
         title: "Color",
         layer: :styled,
+        preview_only: true,
         covers: [:color],
         body: """
         The generated component adds a `color` attribute mapped onto the
         `data-color` hook the theme targets. `color` and `variant` compose
         freely: every variant is available in every role. Each row below is a
         color role, each column a variant.
-        """,
-        code: """
-        <div class="overflow-x-auto py-1">
-          <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
-            <div></div>
-            <span
-              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
-              class="text-center text-xs font-medium text-zinc-500"
-            >
-              {variant}
-            </span>
-            <div
-              :for={color <- ~w(primary secondary success info warning error neutral)}
-              class="contents"
-            >
-              <span class="text-xs font-medium text-zinc-500">{color}</span>
-              <.button
-                :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
-                variant={variant}
-                color={color}
-              >
-                {String.capitalize(variant)}
-              </.button>
-            </div>
-          </div>
-        </div>
         """
       },
       %{
@@ -147,7 +135,11 @@ defmodule FlintUIDocsWeb.Docs.Button do
         """,
         code: """
         <div class="flex flex-wrap items-center gap-3">
-          <.button :for={size <- ~w(xs sm md lg xl)} size={size}>{size}</.button>
+          <.button size="xs">Extra Small</.button>
+          <.button size="sm">Small</.button>
+          <.button size="md">Medium</.button>
+          <.button size="lg">Large</.button>
+          <.button size="xl">Extra Large</.button>
         </div>
         """
       },
@@ -338,7 +330,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       disabled={@props.disabled}
       loading={@props.loading}
     >
-      <.loading class="hidden in-data-loading:inline-block" /> Button
+      <.loading class="hidden in-data-loading:inline-block" /> Unbound
     </Components.button>
     """
   end
@@ -410,7 +402,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           {variant}
         </span>
         <div
-          :for={color <- ~w(primary secondary success info warning error neutral)}
+          :for={color <- ~w(primary secondary neutral info success warning error)}
           class="contents"
         >
           <span class="text-xs font-medium text-zinc-500">{color}</span>
@@ -430,7 +422,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_usage(%{block: :size} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.button :for={size <- ~w(xs sm md lg xl)} size={size}>{size}</Components.button>
+      <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
     </div>
     """
   end

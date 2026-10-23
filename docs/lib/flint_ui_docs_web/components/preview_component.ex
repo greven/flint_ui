@@ -1,47 +1,25 @@
 defmodule FlintUIDocsWeb.PreviewComponent do
   @moduledoc """
-  Reusable component preview card.
+  Stacked component preview card: rendered demo, optional controls, code.
 
-  Renders a live component, an optional panel of controls that mutate its
-  props, and a syntax-highlighted Code tab. It is used for the Styled playground,
-  every Styled usage subsection preview, and every Styled example in the
-  Examples section, so all of them share one look and one set of interactions.
+  The demo is always visible. When controls are given they sit directly beneath
+  it, and the code block sits beneath those, all sharing one border. There is no
+  Preview/Code tab bar; the code is part of the card.
 
-  Used as a function component:
+  The code block is a `FlintUIDocsWeb.CodeBlock`. In development it also gets a
+  Source toggle next to its copy button: the toggle swaps the public snippet for
+  the actual `~H` body of the preview's `render_*` callback, read automatically
+  by `FlintUIDocsWeb.Docs.Source`. The toggle is hidden in every other
+  environment.
 
-      <PreviewComponent.preview
-        id="playground-button"
-        kind={:playground}
-        layer={:styled}
-        name={:button}
-        controls={Docs.controls(:button)}
-        defaults={Docs.defaults(:button)}
-      />
-
-  `kind` selects what is drawn:
-
-    * `:playground` - the interactive Styled playground and its generated code
-    * `:usage` - one usage subsection preview; `block` is the usage entry id
-      and `code` is shown as a fixed snippet
-    * `:block` - an element of the Examples section
-
-  Pass a `code` string (or a `codes` list of `%{label, lang, code, styles?}`
-  flavors) to show fixed snippet(s) instead of asking the page module. When more
-  than one flavor is given, the Code tab shows a switcher; a flavor's `styles`
-  renders as a labelled CSS block beneath its code.
-
-  Set `preview: false` for content that can only be shown as code (e.g. an
-  example that triggers a server event). The card then renders the Code tab
-  only, and the Preview/Code tab bar is hidden because it would offer a single
-  option.
+  Set `preview_only: true` for a card whose value is purely the rendered demo,
+  such as a full variant/color matrix. It renders the demo with no code section.
   """
 
   use FlintUIDocsWeb, :live_component
 
+  alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Docs
-  alias FlintUIDocsWeb.Highlight
-
-  @tabs ~w(preview code)
 
   attr :id, :string, required: true
   attr :kind, :atom, default: :playground
@@ -55,7 +33,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   attr :code_lang, :atom, default: :heex
   attr :title, :string, default: nil
   attr :description, :string, default: nil
-  attr :preview, :boolean, default: true
+  attr :preview_only, :boolean, default: false
+  attr :class, :any, default: nil
 
   def preview(assigns) do
     ~H"""
@@ -73,7 +52,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       code_lang={@code_lang}
       title={@title}
       description={@description}
-      preview={@preview}
+      preview_only={@preview_only}
+      class={@class}
     />
     """
   end
@@ -91,15 +71,18 @@ defmodule FlintUIDocsWeb.PreviewComponent do
       socket
       |> assign(assigns)
       |> assign(:props, props)
-      |> assign_new(:tab, fn -> "preview" end)
+      |> assign_new(:source, fn ->
+        if assigns[:preview_only], do: nil, else: preview_source(assigns)
+      end)
+      |> assign_new(:code_view, fn -> "code" end)
       |> assign_new(:code_index, fn -> 0 end)
 
     {:ok, socket}
   end
 
   @impl true
-  def handle_event("tab", %{"tab" => tab}, socket) when tab in @tabs do
-    {:noreply, assign(socket, :tab, tab)}
+  def handle_event("code_view", %{"view" => view}, socket) when view in ~w(code source) do
+    {:noreply, assign(socket, :code_view, view)}
   end
 
   def handle_event("code", %{"index" => index}, socket) do
@@ -128,83 +111,43 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   def render(assigns) do
     flavors = resolve_flavors(assigns)
     index = clamp_index(assigns[:code_index] || 0, flavors)
-    tab = if assigns[:preview] == false, do: "code", else: assigns[:tab]
+    active_flavor = flavors && Enum.at(flavors, index)
+    source = assigns[:source]
+
+    code_view =
+      if source && assigns[:code_view] == "source", do: "source", else: "code"
+
+    show_code? = active_flavor != nil and not assigns[:preview_only]
+    below? = assigns[:controls] != [] or show_code?
 
     assigns =
       assign(assigns,
         flavors: flavors,
         code_index: index,
-        active_flavor: flavors && Enum.at(flavors, index),
-        tab: tab
+        active_flavor: active_flavor,
+        code_view: code_view,
+        show_code?: show_code?,
+        below?: below?,
+        display_code: display_code(active_flavor, source, code_view),
+        display_lang: display_lang(active_flavor, code_view),
+        code_caption: code_caption(source, code_view)
       )
 
     ~H"""
-    <div id={@id} class="mt-6">
+    <div id={@id} class={["mt-6", @class]}>
       <div :if={@title || @description} class="flex flex-col gap-1">
         <h4 :if={@title} class="text-sm font-semibold">{@title}</h4>
         <p :if={@description} class="text-sm text-zinc-600 dark:text-zinc-400">{@description}</p>
       </div>
 
-      <.toolbar :if={@flavors} id={@id} tab={@tab} preview={@preview} myself={@myself} />
-
-      <%= if @tab == "code" && @active_flavor do %>
-        <.flavors
-          :if={length(@flavors) > 1}
-          id={@id}
-          flavors={@flavors}
-          index={@code_index}
-          myself={@myself}
-        />
-        <div class="relative mt-3 overflow-hidden rounded-lg bg-zinc-900">
-          <button
-            type="button"
-            id={"#{@id}-copy"}
-            phx-hook=".CopyCode"
-            data-copy={"#{@id}-code"}
-            class="group absolute right-2 top-2 inline-flex items-center gap-1.5 rounded-md border border-white/10 px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100"
-          >
-            <span class="relative grid size-3.5 place-items-center">
-              <.icon
-                name="lucide-copy"
-                class="col-start-1 row-start-1 size-3.5 transition-opacity duration-200 group-data-copied:opacity-0"
-              />
-              <.icon
-                name="lucide-check"
-                class="col-start-1 row-start-1 size-3.5 text-green-400 opacity-0 transition-opacity duration-200 group-data-copied:opacity-100"
-              />
-            </span>
-            Copy
-          </button>
-          <pre class="highlight overflow-x-auto p-4 pr-16 text-xs leading-relaxed text-zinc-100"><code id={"#{@id}-code"}>{Highlight.highlight(@active_flavor.code, @active_flavor.lang)}</code></pre>
-
-          <script :type={Phoenix.LiveView.ColocatedHook} name=".CopyCode">
-            export default {
-              mounted() {
-                this.el.addEventListener("click", () => {
-                  const target = document.getElementById(this.el.dataset.copy)
-                  if (target) navigator.clipboard.writeText(target.textContent)
-
-                  this.el.dataset.copied = "true"
-                  clearTimeout(this.copiedTimeout)
-                  this.copiedTimeout = setTimeout(() => {
-                    delete this.el.dataset.copied
-                  }, 2000)
-                })
-              },
-              destroyed() {
-                clearTimeout(this.copiedTimeout)
-              }
-            }
-          </script>
-        </div>
-        <div :if={@active_flavor[:styles]} class="mt-3 overflow-hidden rounded-lg bg-zinc-900">
-          <div class="border-b border-white/10 px-4 py-2 font-mono text-xs text-zinc-400">
-            app.css
-          </div>
-          <pre class="highlight overflow-x-auto p-4 text-xs leading-relaxed text-zinc-100"><code id={"#{@id}-styles"}>{Highlight.highlight(@active_flavor.styles, :css)}</code></pre>
-        </div>
-      <% else %>
-        <div class="mt-3 grid min-h-24 place-items-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/10 p-6 dark:border-zinc-800 dark:bg-zinc-900/10">
+      <div class="mt-3 rounded-lg shadow-lg/3">
+        <div
+          data-preview-canvas
+          class={[
+            "grid min-h-24 place-items-center border border-solid border-zinc-200 bg-black/1 p-6 dark:border-zinc-800 dark:bg-white/1",
+            if(@below?, do: "rounded-t-lg", else: "rounded-lg")
+          ]}
+        >
           <%= case @kind do %>
             <% :playground -> %>
               <Docs.render_playground
@@ -233,96 +176,106 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         </div>
 
         <.controls
-          :if={@controls != [] && @preview}
+          :if={@controls != []}
           id={@id}
           name={@name}
           layer={@layer}
           controls={@controls}
           props={@props}
+          last={!@show_code?}
           myself={@myself}
         />
-      <% end %>
-    </div>
-    """
-  end
 
-  ## Components
-
-  attr :id, :string, required: true
-  attr :tab, :string, required: true
-  attr :preview, :boolean, default: true
-  attr :myself, :any, required: true
-
-  defp toolbar(assigns) do
-    ~H"""
-    <div class="flex items-center justify-between gap-2">
-      <div
-        :if={@preview}
-        class="inline-flex rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800"
-      >
-        <button
-          type="button"
-          phx-click="tab"
-          phx-target={@myself}
-          phx-value-tab="preview"
-          class={segment(@tab == "preview")}
+        <div
+          :if={@show_code?}
+          data-preview-code
+          class="overflow-hidden rounded-b-lg border-x border-b border-zinc-200 dark:border-zinc-800"
         >
-          <.icon name="lucide-eye" class="size-3.5" /> Preview
-        </button>
-        <button
-          type="button"
-          phx-click="tab"
-          phx-target={@myself}
-          phx-value-tab="code"
-          class={segment(@tab == "code")}
-        >
-          <.icon name="lucide-code" class="size-3.5" /> Code
-        </button>
+          <CodeBlock.code
+            id={"#{@id}-code"}
+            copy_id={"#{@id}-copy"}
+            code={@display_code}
+            lang={@display_lang}
+            caption={@code_caption}
+            class="rounded-none"
+          >
+            <:tabs :if={@code_view == "code" && length(@flavors) > 1}>
+              <button
+                :for={{flavor, i} <- Enum.with_index(@flavors)}
+                type="button"
+                phx-click="code"
+                phx-target={@myself}
+                phx-value-index={i}
+                class={code_tab(i == @code_index)}
+              >
+                {flavor.label || "Code"}
+              </button>
+            </:tabs>
+
+            <:actions :if={@source}>
+              <button
+                type="button"
+                id={"#{@id}-source-toggle"}
+                phx-click="code_view"
+                phx-target={@myself}
+                phx-value-view={if @code_view == "source", do: "code", else: "source"}
+                class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-100"
+              >
+                <.icon
+                  name={if @code_view == "source", do: "lucide-code", else: "lucide-file-code"}
+                  class="size-3.5"
+                />
+                {if @code_view == "source", do: "Code", else: "Source"}
+              </button>
+            </:actions>
+          </CodeBlock.code>
+
+          <div
+            :if={@code_view == "code" && @active_flavor[:styles]}
+            class="border-t border-zinc-200 dark:border-zinc-800"
+          >
+            <CodeBlock.code
+              id={"#{@id}-styles"}
+              code={@active_flavor.styles}
+              lang={:css}
+              caption="app.css"
+              class="rounded-none"
+            />
+          </div>
+        </div>
       </div>
     </div>
     """
   end
 
-  attr :id, :string, required: true
-  attr :flavors, :list, required: true
-  attr :index, :integer, required: true
-  attr :myself, :any, required: true
-
-  defp flavors(assigns) do
-    ~H"""
-    <div class="mt-3 inline-flex rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800">
-      <button
-        :for={{flavor, i} <- Enum.with_index(@flavors)}
-        type="button"
-        phx-click="code"
-        phx-target={@myself}
-        phx-value-index={i}
-        class={segment(i == @index)}
-      >
-        {flavor.label || "Code"}
-      </button>
-    </div>
-    """
-  end
+  ## Controls
 
   attr :id, :string, required: true
   attr :name, :atom, default: nil
   attr :layer, :atom, default: :base
   attr :controls, :list, required: true
   attr :props, :map, required: true
+  attr :last, :boolean, default: true
   attr :myself, :any, required: true
 
   defp controls(assigns) do
     ~H"""
-    <div class="mt-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+    <div
+      data-preview-controls
+      class={[
+        "overflow-x-auto border-x border-b border-zinc-200 bg-black/2 px-3 py-2.5 dark:border-zinc-800 dark:bg-white/2",
+        "bg-[repeating-linear-gradient(135deg,rgba(0,0,0,0.03)_0,rgba(0,0,0,0.03)_1px,transparent_1px,transparent_6px)]",
+        "dark:bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.03)_0,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_6px)]",
+        @last && "rounded-b-lg"
+      ]}
+    >
       <form
         id={"#{@id}-controls"}
         phx-change="set"
         phx-target={@myself}
-        class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+        class="flex flex-wrap items-center gap-2.5"
       >
-        <label :for={control <- @controls} class="flex flex-col gap-1">
-          <span class="text-xs text-zinc-500">{control.label}</span>
+        <%= for control <- @controls do %>
           <%= case control.type do %>
             <% :boolean -> %>
               <button
@@ -330,47 +283,76 @@ defmodule FlintUIDocsWeb.PreviewComponent do
                 phx-click="toggle"
                 phx-target={@myself}
                 phx-value-key={control.key}
-                class={toggle_class(Map.get(@props, control.key))}
+                aria-pressed={to_string(Map.get(@props, control.key) == true)}
+                class={addon_shell("w-48")}
               >
-                <span>{if Map.get(@props, control.key), do: "true", else: "false"}</span>
+                <span class={addon_label()}>{control.label}</span>
+                <span class="flex flex-1 items-center justify-end px-2.5">
+                  <span class={switch_track(Map.get(@props, control.key))}>
+                    <span class={switch_thumb(Map.get(@props, control.key))} />
+                  </span>
+                </span>
               </button>
             <% :select -> %>
-              <div class="relative">
-                <select name={control.key} class={select_class()}>
-                  <option
-                    :for={value <- select_options(control, @name, @layer)}
-                    value={value}
-                    selected={to_string(Map.get(@props, control.key)) == value}
-                  >
-                    {value}
-                  </option>
-                </select>
-                <.icon
-                  name="lucide-chevron-down"
-                  class="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-zinc-400"
-                />
-              </div>
+              <label class={addon_shell("w-44")}>
+                <span class={addon_label()}>{control.label}</span>
+                <span class="relative min-w-0 flex-1">
+                  <select name={control.key} class={select_class()}>
+                    <option
+                      :for={value <- select_options(control, @name, @layer)}
+                      value={value}
+                      selected={to_string(Map.get(@props, control.key)) == value}
+                    >
+                      {value}
+                    </option>
+                  </select>
+                  <.icon
+                    name="lucide-chevron-down"
+                    class="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-zinc-400"
+                  />
+                </span>
+              </label>
             <% :number -> %>
-              <input
-                type="number"
-                name={control.key}
-                value={Map.get(@props, control.key)}
-                class={input_class()}
-              />
+              <label class={addon_shell("w-40")}>
+                <span class={addon_label()}>{control.label}</span>
+                <input
+                  type="number"
+                  name={control.key}
+                  value={Map.get(@props, control.key)}
+                  class={input_class()}
+                />
+              </label>
             <% _ -> %>
-              <input
-                type="text"
-                name={control.key}
-                value={Map.get(@props, control.key)}
-                autocomplete="off"
-                class={input_class()}
-              />
+              <label class={addon_shell("w-72")}>
+                <span class={addon_label()}>{control.label}</span>
+                <input
+                  type="text"
+                  name={control.key}
+                  value={Map.get(@props, control.key)}
+                  autocomplete="off"
+                  class={input_class()}
+                />
+              </label>
           <% end %>
-        </label>
+        <% end %>
       </form>
     </div>
     """
   end
+
+  ## Helpers
+
+  defp display_code(_active_flavor, source, "source"), do: source.code
+  defp display_code(active_flavor, _source, _view), do: active_flavor && active_flavor.code
+
+  defp display_lang(_active_flavor, "source"), do: :heex
+  defp display_lang(active_flavor, _view), do: (active_flavor && active_flavor.lang) || :heex
+
+  defp code_caption(source, "source") do
+    "#{source.callback} · #{source.path}:#{source.line}"
+  end
+
+  defp code_caption(_source, _view), do: nil
 
   defp resolve_flavors(assigns) do
     cond do
@@ -410,6 +392,13 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   defp clamp_index(_index, nil), do: 0
   defp clamp_index(_index, []), do: 0
   defp clamp_index(index, flavors), do: min(max(index, 0), length(flavors) - 1)
+
+  defp preview_source(%{name: name, kind: kind} = assigns)
+       when is_atom(name) and kind in [:playground, :usage, :block] do
+    Docs.source(name, kind, block: assigns[:block], layer: assigns[:layer])
+  end
+
+  defp preview_source(_assigns), do: nil
 
   defp select_options(control, name, layer) do
     values = control[:values]
@@ -468,27 +457,46 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   ## CSS classes
 
-  defp segment(true) do
-    "inline-flex items-center gap-1.5 rounded bg-white px-2.5 py-1 text-xs font-medium text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+  defp code_tab(true) do
+    "rounded bg-zinc-900/5 px-2 py-1 text-xs font-medium text-zinc-900 dark:bg-white/10 dark:text-zinc-100"
   end
 
-  defp segment(false) do
-    "inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-xs text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+  defp code_tab(false) do
+    "rounded px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-zinc-100"
   end
 
-  defp toggle_class(true) do
-    "flex items-center justify-between rounded-md border border-zinc-900 bg-zinc-900 px-3 py-1.5 text-sm text-white transition-colors dark:border-white dark:bg-white dark:text-zinc-900"
+  defp addon_shell(width) do
+    [
+      "flex min-w-0 items-stretch overflow-hidden rounded-md border border-zinc-200 bg-white text-left transition-colors focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-300 focus-within:ring-inset focus-visible:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:focus-within:border-zinc-700 dark:focus-within:ring-zinc-700",
+      width
+    ]
   end
 
-  defp toggle_class(false) do
-    "flex items-center justify-between rounded-md border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800"
+  defp addon_label do
+    "flex shrink-0 items-center border-r border-zinc-200 bg-zinc-50 px-2 text-xs font-medium whitespace-nowrap text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
   end
 
   defp input_class do
-    "rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950"
+    "min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
   end
 
   defp select_class do
-    input_class() <> " w-full appearance-none pr-8"
+    "w-full appearance-none bg-transparent py-1.5 pr-7 pl-2.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
+  end
+
+  defp switch_track(true) do
+    "relative inline-flex h-4 w-7 items-center rounded-full bg-zinc-900 transition-colors dark:bg-zinc-100"
+  end
+
+  defp switch_track(false) do
+    "relative inline-flex h-4 w-7 items-center rounded-full bg-zinc-200 transition-colors dark:bg-zinc-700"
+  end
+
+  defp switch_thumb(true) do
+    "inline-block size-3 translate-x-3.5 rounded-full bg-white transition-transform dark:bg-zinc-900"
+  end
+
+  defp switch_thumb(false) do
+    "inline-block size-3 translate-x-0.5 rounded-full bg-white transition-transform dark:bg-zinc-400"
   end
 end

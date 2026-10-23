@@ -1,8 +1,11 @@
-/* Generated from Makeup's One Dark style map:
-   mix run -e 'IO.puts(Makeup.stylesheet(:one_dark_style, "highlight"))' > assets/css/highlight.css
-   The token colours are scoped under .highlight, used by FlintUIDocsWeb.Highlight. */
-.highlight .hll {background-color: #31353f}
-.highlight {background-color: #282c34}.highlight .unselectable {
+Compiling 1 file (.ex)
+/* Generated from Makeup's Paraiso Light (light) and Paraiso Dark (dark) styles:
+   mix run scripts/generate_highlight_css.exs > assets/css/highlight.css
+   The token colours are scoped under .highlight and selected with light-dark().
+   The panel background is supplied by the host so it can match the surrounding card. */
+.highlight { color: light-dark(#2f1e2e, #e7e9db); background-color: transparent; }
+.highlight .hll { background-color: light-dark(#a39e9b, #4f424c); }
+.highlight .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -11,64 +14,80 @@
   user-select: none;
 }
 
-.highlight .bp {color: #E5C07B; } /* :name_builtin_pseudo */
-.highlight .c {color: #8C92A3; } /* :comment */
-.highlight .c1 {color: #8C92A3; } /* :comment_single */
-.highlight .ch {color: #8C92A3; } /* :comment_hashbang */
-.highlight .cm {color: #8C92A3; } /* :comment_multiline */
-.highlight .cp {color: #8C92A3; } /* :comment_preproc */
-.highlight .cpf {color: #8C92A3; } /* :comment_preproc_file */
-.highlight .cs {color: #8C92A3; } /* :comment_special */
-.highlight .dl {color: #98C379; } /* :string_delimiter */
-.highlight .fm {color: #56B6C2; font-weight: bold; } /* :name_function_magic */
-.highlight .il {color: #D19A66; } /* :number_integer_long */
-.highlight .k {color: #C678DD; } /* :keyword */
-.highlight .kc {color: #E5C07B; } /* :keyword_constant */
-.highlight .kd {color: #C678DD; } /* :keyword_declaration */
-.highlight .kn {color: #C678DD; } /* :keyword_namespace */
-.highlight .kp {color: #C678DD; } /* :keyword_pseudo */
-.highlight .kr {color: #C678DD; } /* :keyword_reserved */
-.highlight .kt {color: #E5C07B; } /* :keyword_type */
-.highlight .m {color: #D19A66; } /* :number */
-.highlight .mb {color: #D19A66; } /* :number_bin */
-.highlight .mf {color: #D19A66; } /* :number_float */
-.highlight .mh {color: #D19A66; } /* :number_hex */
-.highlight .mi {color: #D19A66; } /* :number_integer */
-.highlight .mo {color: #D19A66; } /* :number_oct */
-.highlight .n {color: #C4CAD6; } /* :name */
-.highlight .na {color: #E06C75; } /* :name_attribute */
-.highlight .nb {color: #E5C07B; } /* :name_builtin */
-.highlight .nc {color: #E06C75; } /* :name_class */
-.highlight .nd {color: #61AFEF; } /* :name_decorator */
-.highlight .ne {color: #C4CAD6; } /* :name_exception */
-.highlight .nf {color: #61AFEF; font-weight: bold; } /* :name_function */
-.highlight .ni {color: #C4CAD6; } /* :name_entity */
-.highlight .nl {color: #C4CAD6; } /* :name_label */
-.highlight .nn {color: #C4CAD6; } /* :name_namespace */
-.highlight .no {color: #61AFEF; } /* :name_constant */
-.highlight .nt {color: #E06C75; } /* :name_tag */
-.highlight .nv {color: #C4CAD6; } /* :name_variable */
-.highlight .nx {color: #E06C75; } /* :name_other */
-.highlight .o {color: #56B6C2; } /* :operator */
-.highlight .ow {color: #56B6C2; } /* :operator_word */
-.highlight .p {color: #ABB2BF; } /* :punctuation */
-.highlight .py {color: #C4CAD6; } /* :name_property */
-.highlight .s {color: #98C379; } /* :string */
-.highlight .s1 {color: #98C379; } /* :string_single */
-.highlight .s2 {color: #98C379; } /* :string_double */
-.highlight .sa {color: #98C379; } /* :string_affix */
-.highlight .sb {color: #98C379; } /* :string_backtick */
-.highlight .sc {color: #98C379; } /* :string_char */
-.highlight .sd {color: #98C379; } /* :string_doc */
-.highlight .se {color: #98C379; } /* :string_escape */
-.highlight .sh {color: #98C379; } /* :string_heredoc */
-.highlight .si {color: #98C379; } /* :string_interpol */
-.highlight .sr {color: #98C379; } /* :string_regex */
-.highlight .ss {color: #61AFEF; } /* :string_symbol */
-.highlight .sx {color: #98C379; } /* :string_other */
-.highlight .sx {color: #98C379; } /* :string_sigil */
-.highlight .vc {color: #C4CAD6; } /* :name_variable_class */
-.highlight .vg {color: #C4CAD6; } /* :name_variable_global */
-.highlight .vi {color: #C4CAD6; } /* :name_variable_instance */
-.highlight .vm {color: #C4CAD6; } /* :name_variable_magic */
-
+.highlight .bp { color: light-dark(#2f1e2e, #e7e9db); } /* :name_builtin_pseudo */
+.highlight .c { color: light-dark(#8d8687, #776e71); } /* :comment */
+.highlight .c1 { color: light-dark(#8d8687, #776e71); } /* :comment_single */
+.highlight .ch { color: light-dark(#8d8687, #776e71); } /* :comment_hashbang */
+.highlight .cm { color: light-dark(#8d8687, #776e71); } /* :comment_multiline */
+.highlight .cp { color: light-dark(#8d8687, #776e71); } /* :comment_preproc */
+.highlight .cpf { color: light-dark(#8d8687, #776e71); } /* :comment_preproc_file */
+.highlight .cs { color: light-dark(#8d8687, #776e71); } /* :comment_special */
+.highlight .dl { color: light-dark(#48b685, #48b685); } /* :string_delimiter */
+.highlight .err { color: light-dark(#ef6155, #ef6155); } /* :error */
+.highlight .esc { color: light-dark(#2f1e2e, #e7e9db); } /* :escape */
+.highlight .fm { color: light-dark(#06b6ef, #06b6ef); } /* :name_function_magic */
+.highlight .g { color: light-dark(#2f1e2e, #e7e9db); } /* :generic */
+.highlight .gd { color: light-dark(#ef6155, #ef6155); } /* :generic_deleted */
+.highlight .ge { color: light-dark(#2f1e2e, #e7e9db); font-style: italic; } /* :generic_emph */
+.highlight .gh { color: light-dark(#2f1e2e, #e7e9db); font-weight: bold; } /* :generic_heading */
+.highlight .gi { color: light-dark(#48b685, #48b685); } /* :generic_inserted */
+.highlight .go { color: light-dark(#2f1e2e, #e7e9db); } /* :generic_output */
+.highlight .gp { color: light-dark(#8d8687, #776e71); font-weight: bold; } /* :generic_prompt */
+.highlight .gr { color: light-dark(#2f1e2e, #e7e9db); } /* :generic_error */
+.highlight .gs { color: light-dark(#2f1e2e, #e7e9db); font-weight: bold; } /* :generic_strong */
+.highlight .gt { color: light-dark(#2f1e2e, #e7e9db); } /* :generic_traceback */
+.highlight .gu { color: light-dark(#5bc4bf, #5bc4bf); font-weight: bold; } /* :generic_subheading */
+.highlight .il { color: light-dark(#f99b15, #f99b15); } /* :number_integer_long */
+.highlight .k { color: light-dark(#815ba4, #815ba4); } /* :keyword */
+.highlight .kc { color: light-dark(#815ba4, #815ba4); } /* :keyword_constant */
+.highlight .kd { color: light-dark(#815ba4, #815ba4); } /* :keyword_declaration */
+.highlight .kn { color: light-dark(#5bc4bf, #5bc4bf); } /* :keyword_namespace */
+.highlight .kp { color: light-dark(#815ba4, #815ba4); } /* :keyword_pseudo */
+.highlight .kr { color: light-dark(#815ba4, #815ba4); } /* :keyword_reserved */
+.highlight .kt { color: light-dark(#fec418, #fec418); } /* :keyword_type */
+.highlight .l { color: light-dark(#f99b15, #f99b15); } /* :literal */
+.highlight .ld { color: light-dark(#f99b15, #f99b15); } /* :literal_date */
+.highlight .m { color: light-dark(#f99b15, #f99b15); } /* :number */
+.highlight .mb { color: light-dark(#f99b15, #f99b15); } /* :number_bin */
+.highlight .mf { color: light-dark(#f99b15, #f99b15); } /* :number_float */
+.highlight .mh { color: light-dark(#f99b15, #f99b15); } /* :number_hex */
+.highlight .mi { color: light-dark(#f99b15, #f99b15); } /* :number_integer */
+.highlight .mo { color: light-dark(#f99b15, #f99b15); } /* :number_oct */
+.highlight .n { color: light-dark(#2f1e2e, #e7e9db); } /* :name */
+.highlight .na { color: light-dark(#06b6ef, #06b6ef); } /* :name_attribute */
+.highlight .nb { color: light-dark(#2f1e2e, #e7e9db); } /* :name_builtin */
+.highlight .nc { color: light-dark(#fec418, #fec418); } /* :name_class */
+.highlight .nd { color: light-dark(#5bc4bf, #5bc4bf); } /* :name_decorator */
+.highlight .ne { color: light-dark(#ef6155, #ef6155); } /* :name_exception */
+.highlight .nf { color: light-dark(#06b6ef, #06b6ef); } /* :name_function */
+.highlight .ni { color: light-dark(#2f1e2e, #e7e9db); } /* :name_entity */
+.highlight .nl { color: light-dark(#2f1e2e, #e7e9db); } /* :name_label */
+.highlight .nn { color: light-dark(#fec418, #fec418); } /* :name_namespace */
+.highlight .no { color: light-dark(#ef6155, #ef6155); } /* :name_constant */
+.highlight .nt { color: light-dark(#5bc4bf, #5bc4bf); } /* :name_tag */
+.highlight .nv { color: light-dark(#ef6155, #ef6155); } /* :name_variable */
+.highlight .nx { color: light-dark(#06b6ef, #06b6ef); } /* :name_other */
+.highlight .o { color: light-dark(#5bc4bf, #5bc4bf); } /* :operator */
+.highlight .ow { color: light-dark(#5bc4bf, #5bc4bf); } /* :operator_word */
+.highlight .p { color: light-dark(#2f1e2e, #e7e9db); } /* :punctuation */
+.highlight .py { color: light-dark(#2f1e2e, #e7e9db); } /* :name_property */
+.highlight .s { color: light-dark(#48b685, #48b685); } /* :string */
+.highlight .s1 { color: light-dark(#48b685, #48b685); } /* :string_single */
+.highlight .s2 { color: light-dark(#48b685, #48b685); } /* :string_double */
+.highlight .sa { color: light-dark(#48b685, #48b685); } /* :string_affix */
+.highlight .sb { color: light-dark(#48b685, #48b685); } /* :string_backtick */
+.highlight .sc { color: light-dark(#2f1e2e, #e7e9db); } /* :string_char */
+.highlight .sd { color: light-dark(#8d8687, #776e71); } /* :string_doc */
+.highlight .se { color: light-dark(#f99b15, #f99b15); } /* :string_escape */
+.highlight .sh { color: light-dark(#48b685, #48b685); } /* :string_heredoc */
+.highlight .si { color: light-dark(#f99b15, #f99b15); } /* :string_interpol */
+.highlight .sr { color: light-dark(#48b685, #48b685); } /* :string_regex */
+.highlight .ss { color: light-dark(#48b685, #48b685); } /* :string_symbol */
+.highlight .sx { color: light-dark(#48b685, #48b685); } /* :string_sigil */
+.highlight .sx { color: light-dark(#48b685, #48b685); } /* :string_other */
+.highlight .vc { color: light-dark(#ef6155, #ef6155); } /* :name_variable_class */
+.highlight .vg { color: light-dark(#ef6155, #ef6155); } /* :name_variable_global */
+.highlight .vi { color: light-dark(#ef6155, #ef6155); } /* :name_variable_instance */
+.highlight .vm { color: light-dark(#ef6155, #ef6155); } /* :name_variable_magic */
+.highlight .w { color: light-dark(#2f1e2e, #e7e9db); } /* :whitespace */
+.highlight .x { color: light-dark(#2f1e2e, #e7e9db); } /* :other */

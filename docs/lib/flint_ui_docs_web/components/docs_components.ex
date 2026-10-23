@@ -10,12 +10,13 @@ defmodule FlintUIDocsWeb.DocsComponents do
   @doc false
 
   attr :id, :string, default: nil
+  attr :class, :string, default: nil
   attr :title, :string, default: nil
   slot :inner_block, required: true
 
   def section(assigns) do
     ~H"""
-    <section id={@id} class="mt-10 scroll-mt-20">
+    <section id={@id} class={[@class, "scroll-mt-20"]}>
       <h2 :if={@title} class="text-lg font-semibold">{@title}</h2>
       {render_slot(@inner_block)}
     </section>
@@ -44,7 +45,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def code_block(assigns) do
     ~H"""
-    <pre class="highlight mt-3 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-xs leading-relaxed text-zinc-100 dark:bg-zinc-900"><code>{Highlight.highlight(@code, @lang)}</code></pre>
+    <pre class={[
+      "highlight mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-black/3 p-4 text-xs leading-relaxed",
+      "dark:border-zinc-800 dark:bg-white/3"
+    ]}><code>{Highlight.highlight(@code, @lang)}</code></pre>
     """
   end
 
