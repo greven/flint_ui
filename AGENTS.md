@@ -238,6 +238,17 @@ does **not** own them. When FlintUI ships a form/field component it should accep
 already-translated error strings (or call `translate_error/1` only if the host defines
 it). Revisit in depth when inputs are implemented.
 
+### Password-manager opt-outs
+
+Password managers inject their fill icon and prompts from their own heuristics;
+`autocomplete="off"` alone does not stop them. `FlintUI.Autofill` holds the vendor
+opt-outs: `ignore_attributes/0` covers 1Password, LastPass, Bitwarden, Proton Pass,
+and Dashlane, and `ignore_class/0` covers Keeper. Use it on any input where autofill
+makes no sense, including the docs preview controls. When FlintUI's field/input
+component lands, expose the same behaviour as a prop (`autofill="off"` or similar)
+that spreads those attributes and adds the class, so consumers do not have to
+memorise vendor names.
+
 ### Use the built-in `JSON` moduleElixir 1.18+ ships a `JSON` module that implements the interface `Phoenix.json_library/0`
 
 expects (`encode!/1`, `decode!/1`, `encode_to_iodata!/1`). Configure it with

@@ -387,6 +387,23 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#playground-button-controls button[phx-value-key='depth']")
   end
 
+  test "preview controls opt out of password-manager autofill", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/icon")
+
+    selector =
+      "#playground-icon-controls input[name='name']" <>
+        "[autocomplete='off'][data-1p-ignore][data-form-type='other'][class*='keeper-ignore']"
+
+    assert has_element?(view, selector)
+
+    {:ok, view, _html} = live(conn, ~p"/components/loading")
+
+    assert has_element?(
+             view,
+             "#playground-loading-controls input[name='duration'][data-lpignore='true'][data-bwignore='true']"
+           )
+  end
+
   test "the styled controls offer variant and size selects", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 

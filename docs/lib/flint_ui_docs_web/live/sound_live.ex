@@ -333,7 +333,8 @@ defmodule FlintUIDocsWeb.SoundLive do
                 type="text"
                 data-sound-type="thock"
                 placeholder="Type a few words…"
-                class="mt-3 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                {FlintUI.Autofill.ignore_attributes()}
+                class="keeper-ignore mt-3 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
               />
               <DocsComponents.code_block code={snippet(:type)} />
             </div>

@@ -319,6 +319,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
                   type="number"
                   name={control.key}
                   value={Map.get(@props, control.key)}
+                  {FlintUI.Autofill.ignore_attributes()}
                   class={input_class()}
                 />
               </label>
@@ -329,7 +330,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
                   type="text"
                   name={control.key}
                   value={Map.get(@props, control.key)}
-                  autocomplete="off"
+                  {FlintUI.Autofill.ignore_attributes()}
                   class={input_class()}
                 />
               </label>
@@ -477,7 +478,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   end
 
   defp input_class do
-    "min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
+    "keeper-ignore min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
   end
 
   defp select_class do
