@@ -26,6 +26,7 @@ defmodule FlintUIDocsWeb.Router do
 
     get("/guides", RedirectController, :guides)
     live("/guides/theming", ThemeLive, :index)
+    live("/guides/sound", SoundLive, :index)
 
     live("/components", ComponentsLive, :index)
     live("/components/:name", ComponentLive, :show)

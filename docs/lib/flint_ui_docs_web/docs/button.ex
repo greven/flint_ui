@@ -225,6 +225,17 @@ defmodule FlintUIDocsWeb.Docs.Button do
         """
       },
       %{
+        id: :sound,
+        title: "Interface sounds",
+        description:
+          "Add `data-sound` to play a synthesized cue on activation. The palette and the provider are covered in the Sounds guide; a button can also own a press and a release with `data-sound-press` / `data-sound-release`.",
+        code: """
+        <.button variant="outline" data-sound="tap">Tap</.button>
+        <.button variant="outline" data-sound="success">Success</.button>
+        <.button variant="outline" data-sound="error">Error</.button>
+        """
+      },
+      %{
         id: :base_form,
         title: "Form submit",
         layer: :base,
@@ -340,7 +351,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     Snippet.tag(
       ".button",
       [
-        Snippet.attr("variant", props.variant, "subtle"),
+        Snippet.attr("variant", props.variant, "outline"),
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
         Snippet.attr("depth", props.depth, true),
@@ -468,6 +479,16 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <Components.button variant="solid" loading>
       <Components.loading class="hidden in-data-loading:inline-block" /> Save
     </Components.button>
+    """
+  end
+
+  def render_block(%{block: :sound} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap gap-2">
+      <Components.button variant="outline" data-sound="tap">Tap</Components.button>
+      <Components.button variant="outline" data-sound="success">Success</Components.button>
+      <Components.button variant="outline" data-sound="error">Error</Components.button>
+    </div>
     """
   end
 

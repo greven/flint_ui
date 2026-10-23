@@ -34,6 +34,20 @@
   }
 }
 
+/* Interface sound toggle: mirror the document-level `data-sound` state with the
+   label that matches it. Default to the off state before the hook mounts. */
+[data-sound-icon="on"] {
+  display: none;
+}
+
+html[data-flint-sound="on"] [data-sound-icon="on"] {
+  display: inline-flex;
+}
+
+html[data-flint-sound="on"] [data-sound-icon="off"] {
+  display: none;
+}
+
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session],
 [data-phx-teleported-src] {

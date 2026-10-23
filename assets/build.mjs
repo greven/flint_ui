@@ -23,8 +23,9 @@ const loader = {};
 const plugins = [];
 
 let buildOptions = {
-  entryPoints: ["src/index.ts"],
-  outfile: "../priv/static/flint.js",
+  entryPoints: { flint: "src/index.ts", "flint-sound": "src/sound.ts" },
+  outdir: "../priv/static",
+  entryNames: "[name]",
   bundle: true,
   format: "esm",
   platform: "browser",

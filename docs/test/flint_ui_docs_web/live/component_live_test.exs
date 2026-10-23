@@ -426,7 +426,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     view |> element("#tab-styled") |> render_click()
 
-    assert has_element?(view, "#playground-button [data-variant='subtle']")
+    assert has_element?(view, "#playground-button [data-variant='outline']")
   end
 
   test "the playground code block reflects the current props", %{conn: conn} do

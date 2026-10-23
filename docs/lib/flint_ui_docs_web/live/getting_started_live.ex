@@ -6,7 +6,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
   alias FlintUIDocsWeb.DocsComponents
 
   @commands [
-    {"mix flint.setup", "Create the components module and install the theme."},
+    {"mix flint.setup",
+     "Create the components module, install the theme, and register the JS hooks."},
     {"mix flint.setup --tailwind", "Also map tokens onto Tailwind utilities."},
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
@@ -41,11 +42,16 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             This creates <code class="font-mono">MyAppWeb.Components</code>, copies the
             theme stylesheet to <code class="font-mono">assets/css/flint.css</code>, imports
-            it, and wires the components module into your HTML helpers.
+            it, wires the components module into your HTML helpers, and registers FlintUI's
+            LiveView hooks in <code class="font-mono">assets/js/app.js</code>.
           </p>
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            Using Tailwind? Pass <code class="font-mono">--tailwind</code> to also map the
+            Using Tailwind? Pass <code class="font-mono">--tailwind</code>
+            to also map the
             FlintUI tokens onto utilities (<code class="font-mono">bg-primary</code>, <code class="font-mono">border-border</code>, …).
+            Pass <code class="font-mono">--no-js</code>
+            if you wire <code class="font-mono">app.js</code>
+            yourself.
           </p>
           <DocsComponents.code_block code="mix flint.setup --tailwind" lang={:shell} />
         </DocsComponents.section>

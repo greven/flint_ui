@@ -47,6 +47,10 @@ defmodule FlintUIDocsWeb.Nav do
       %{
         label: "Theming",
         pages: [%{id: :theming, label: "Theming", path: "/guides/theming"}]
+      },
+      %{
+        label: "Interaction",
+        pages: [%{id: :sound, label: "Sounds", path: "/guides/sound"}]
       }
     ]
   end

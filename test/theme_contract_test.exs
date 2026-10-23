@@ -25,10 +25,13 @@ defmodule FlintUI.ThemeContractTest do
     end
   end
 
-  test "every registry prop value has a matching hook in flint.css", %{css: css} do
+  test "every non-default registry prop value has a matching hook in flint.css", %{css: css} do
+    # The default value is the base treatment, so it may be expressed by the
+    # absence of an override (e.g. `depth: true` or `inverted: false`).
     for entry <- Styled.entries(),
         prop <- entry.props,
         value <- prop.values,
+        value != prop.default,
         {entry.name, prop.name} not in @selector_exceptions do
       selector = ~s([data-element="#{entry.name}"][#{Prop.attribute(prop)}="#{value}"])
 

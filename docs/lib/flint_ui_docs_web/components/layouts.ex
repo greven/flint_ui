@@ -35,6 +35,9 @@ defmodule FlintUIDocsWeb.Layouts do
 
     ~H"""
     <div class="min-h-screen bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
+      <%!-- One provider per document, mounted with the shared layout. --%>
+      <FlintUI.sound_provider enabled={false} theme="default" />
+
       <.site_header sections={@sections} section={@section} />
 
       <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6 lg:px-8">
@@ -84,7 +87,7 @@ defmodule FlintUIDocsWeb.Layouts do
           <.icon
             :if={index > 0}
             name="lucide-chevron-right"
-            class="size-3.5 shrink-0 text-zinc-300 dark:text-zinc-600"
+            class="size-4 shrink-0 translate-y-px text-zinc-300 dark:text-zinc-600"
           />
           <.link
             :if={index < length(@crumbs) - 1}

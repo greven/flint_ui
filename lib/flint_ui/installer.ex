@@ -7,6 +7,9 @@ if Code.ensure_loaded?(Igniter) do
     @theme_css "assets/css/flint.css"
     @palette_css "assets/css/flint-palette.css"
     @app_css "assets/css/app.css"
+    @app_js "assets/js/app.js"
+    @flint_js_import ~s(import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js")
+    @sound_js_import ~s(import {hooks as soundHooks} from "../../deps/flint_ui/priv/static/flint-sound.js")
 
     @doc "Creates the generated components module if it does not exist."
     def ensure_components_module(igniter, module) do
@@ -156,6 +159,168 @@ if Code.ensure_loaded?(Igniter) do
           "Import #{inspect(components_module)} where your HTML helpers are defined."
         )
       end
+    end
+
+    @doc """
+    Registers FlintUI's LiveView hooks in `assets/js/app.js`.
+
+    Adds the core import and merges `...flintHooks` into the `LiveSocket`
+    `hooks` option. Pass `sound: true` to also import the optional sound bundle
+    and merge `...soundHooks`.
+
+    The patch is deliberately conservative: when `app.js` does not look like a
+    plain `new LiveSocket(..., {...})` with an object `hooks:` value, it leaves
+    the file alone and adds a notice with the exact snippet instead.
+    """
+    def install_js_hooks(igniter, opts \\ []) do
+      sound? = Keyword.get(opts, :sound, false)
+
+      if Igniter.exists?(igniter, @app_js) do
+        igniter =
+          Igniter.update_file(igniter, @app_js, fn source ->
+            content =
+              source
+              |> Rewrite.Source.get(:content)
+              |> maybe_add_sound_import(sound?)
+              |> ensure_import("flint.js", @flint_js_import)
+              |> register_hooks(sound?)
+
+            Rewrite.Source.update(source, :content, content)
+          end)
+
+        content = rewritten_content(igniter, @app_js)
+
+        igniter =
+          if String.contains?(content, "...flintHooks") do
+            igniter
+          else
+            Igniter.add_notice(igniter, manual_js_notice(sound?))
+          end
+
+        if sound? do
+          Igniter.add_notice(igniter, sound_provider_notice())
+        else
+          igniter
+        end
+      else
+        Igniter.add_notice(igniter, missing_js_notice(sound?))
+      end
+    end
+
+    defp rewritten_content(igniter, path) do
+      case igniter.rewrite.sources[path] do
+        nil -> ""
+        source -> Rewrite.Source.get(source, :content)
+      end
+    end
+
+    defp ensure_import(content, needle, line) do
+      if String.contains?(content, needle), do: content, else: line <> "\n" <> content
+    end
+
+    defp maybe_add_sound_import(content, true),
+      do: ensure_import(content, "flint-sound.js", @sound_js_import)
+
+    defp maybe_add_sound_import(content, false), do: content
+
+    defp register_hooks(content, sound?) do
+      spread = if sound?, do: "...flintHooks, ...soundHooks", else: "...flintHooks"
+
+      cond do
+        String.contains?(content, "...flintHooks") and
+            (not sound? or String.contains?(content, "...soundHooks")) ->
+          content
+
+        String.contains?(content, "...flintHooks") and sound? ->
+          String.replace(content, "...flintHooks", "...flintHooks, ...soundHooks", global: false)
+
+        String.contains?(content, "hooks:") ->
+          add_to_hooks_object(content, spread)
+
+        true ->
+          add_hooks_option(content, spread)
+      end
+    end
+
+    # `hooks: {` already exists: inject the spreads right after the brace.
+    defp add_to_hooks_object(content, spread) do
+      case Regex.run(~r/hooks:\s*\{/, content, return: :index) do
+        [{start, _length} | _] ->
+          rest = binary_part(content, start, byte_size(content) - start)
+
+          case :binary.match(rest, "{") do
+            {brace, _} ->
+              at = start + brace + 1
+
+              binary_part(content, 0, at) <>
+                spread <> ", " <> binary_part(content, at, byte_size(content) - at)
+
+            :nomatch ->
+              content
+          end
+
+        nil ->
+          content
+      end
+    end
+
+    # No `hooks:` key: add one as the first option of the LiveSocket call.
+    defp add_hooks_option(content, spread) do
+      case :binary.match(content, "new LiveSocket(") do
+        {pos, _length} ->
+          rest = binary_part(content, pos, byte_size(content) - pos)
+
+          case :binary.match(rest, "{") do
+            {brace, _} ->
+              at = pos + brace + 1
+              insertion = "\n  hooks: {#{spread}},"
+
+              binary_part(content, 0, at) <>
+                insertion <> binary_part(content, at, byte_size(content) - at)
+
+            :nomatch ->
+              content
+          end
+
+        :nomatch ->
+          content
+      end
+    end
+
+    defp manual_js_notice(sound?) do
+      hooks = if sound?, do: "{...flintHooks, ...soundHooks}", else: "{...flintHooks}"
+
+      imports =
+        if sound? do
+          """
+          import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js"
+          import {hooks as soundHooks} from "../../deps/flint_ui/priv/static/flint-sound.js"
+          """
+        else
+          """
+          import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js"
+          """
+        end
+
+      """
+      Register FlintUI's hooks where you construct LiveSocket:
+
+      #{imports}
+      let liveSocket = new LiveSocket("/live", Socket, {hooks: #{hooks}})
+      """
+    end
+
+    defp missing_js_notice(sound?) do
+      "assets/js/app.js was not found. " <> manual_js_notice(sound?)
+    end
+
+    defp sound_provider_notice do
+      """
+      The sound hook is registered, but nothing plays until you mount it once in \
+      your shared layout:
+
+          <FlintUI.sound_provider enabled={false} theme="default" />
+      """
     end
   end
 end

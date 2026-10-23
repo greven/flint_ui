@@ -20,8 +20,12 @@
   "types": "./priv/static/index.d.ts",
   "exports": {
     ".": {
-      "import": "./priv/static/flint.js",
-      "require": "./priv/static/flint.cjs.js"
+      "types": "./priv/static/index.d.ts",
+      "import": "./priv/static/flint.js"
+    },
+    "./sound": {
+      "types": "./priv/static/sound.d.ts",
+      "import": "./priv/static/flint-sound.js"
     }
   }
 }
