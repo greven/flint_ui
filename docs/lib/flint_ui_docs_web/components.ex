@@ -129,7 +129,7 @@ defmodule FlintUIDocsWeb.Components do
   from `FlintUI.loading`.
   """
   attr(:variant, :string,
-    values: ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale),
+    values: ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity),
     default: "ring",
     doc: "The indicator shape."
   )

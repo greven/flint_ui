@@ -103,6 +103,7 @@ defmodule FlintUI.Base.LoadingTest do
       assert raw(variant: "ring", duration: nil) =~ "animation-duration: 600ms"
       assert raw(variant: "dots-bounce", duration: nil) =~ "animation-duration: 600ms"
       assert raw(variant: "bars-scale", duration: nil) =~ "animation-duration: 600ms"
+      assert raw(variant: "infinity", duration: nil) =~ "animation-duration: 2000ms"
     end
 
     test "every ring variant shares the same weight and radius" do
@@ -163,6 +164,24 @@ defmodule FlintUI.Base.LoadingTest do
       refute html =~ "<animate"
     end
 
+    test "infinity draws one continuously dashed loop" do
+      html = raw(variant: "infinity", duration: nil)
+
+      assert html =~ ~s(data-variant="infinity")
+      assert count(html, "<path") == 1
+      assert html =~ ~s(data-part="loop")
+      assert html =~ ~s(stroke-width="2.0")
+      assert html =~ ~s(stroke-dasharray="41.054228515625 10.26355712890625")
+      assert html =~ "animation-duration: 2000ms"
+      refute html =~ "<animate"
+    end
+
+    test "infinity scales the stroke with weight" do
+      html = raw(variant: "infinity", weight: 3)
+
+      assert html =~ ~s(stroke-width="3")
+    end
+
     test "duration publishes the cycle length on every animated part" do
       html = raw(variant: "dots-fade", duration: 300)
 
@@ -193,7 +212,7 @@ defmodule FlintUI.Base.LoadingTest do
     assert %FlintUI.Meta.PartAttr{name: "[data-variant]"} =
              Enum.find(parts.root, &(&1.name == "[data-variant]"))
 
-    for part <- [:track, :arc, :dot, :bar] do
+    for part <- [:track, :arc, :dot, :bar, :loop] do
       assert %FlintUI.Meta.PartAttr{name: "[data-part]"} =
                Enum.find(parts[part], &(&1.name == "[data-part]"))
     end

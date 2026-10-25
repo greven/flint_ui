@@ -11,6 +11,7 @@ defmodule FlintUI.Base.Loading do
       <.loading variant="dots-fade" />
       <.loading variant="dots-bounce" />
       <.loading variant="bars-scale" />
+      <.loading variant="infinity" />
       <.loading duration={300} class="size-4" />
 
   The shapes are animated with CSS keyframes shipped in `flint.css`. The base
@@ -42,7 +43,7 @@ defmodule FlintUI.Base.Loading do
 
   use FlintUI.Component
 
-  @variants ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale)
+  @variants ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)
 
   @impl true
   def meta do
@@ -70,7 +71,7 @@ defmodule FlintUI.Base.Loading do
         },
         %Meta.PartAttr{
           name: "[data-variant]",
-          value: "ring | ring-bg | ring-dash | dots-fade | dots-bounce | bars-scale",
+          value: "ring | ring-bg | ring-dash | dots-fade | dots-bounce | bars-scale | infinity",
           description: "The selected `variant`."
         }
       ],
@@ -111,6 +112,13 @@ defmodule FlintUI.Base.Loading do
           value: "0..4",
           description: "The bar's position in the sequence; drives its animation delay."
         }
+      ],
+      loop: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "loop",
+          description: "The dashed infinity path, rendered by `infinity`."
+        }
       ]
     }
   end
@@ -126,7 +134,8 @@ defmodule FlintUI.Base.Loading do
       track: %{"data-part" => "track"},
       arc: %{"data-part" => "arc"},
       dot: %{"data-part" => "dot"},
-      bar: %{"data-part" => "bar"}
+      bar: %{"data-part" => "bar"},
+      loop: %{"data-part" => "loop"}
     }
   end
 
@@ -142,12 +151,12 @@ defmodule FlintUI.Base.Loading do
   attr :duration, :integer,
     default: nil,
     doc:
-      "Duration of one full animation cycle, in milliseconds. Defaults to 600, or 1000 for `ring-dash`, which uses it for the dash morph and rotates over 4/3 of it."
+      "Duration of one full animation cycle, in milliseconds. Defaults to 600, 2000 for `infinity`, or 1000 for `ring-dash`, which uses it for the dash morph and rotates over 4/3 of it."
 
   attr :weight, :any,
     default: nil,
     doc:
-      "Stroke width for rings, radius for dots, and bar width for bars, in SVG user units. Defaults to 2, or 2.8 for `bars-scale`."
+      "Stroke width for rings and the infinity loop, radius for dots, and bar width for bars, in SVG user units. Defaults to 2, or 2.8 for `bars-scale`."
 
   attr :class, :any,
     default: nil,
@@ -254,6 +263,20 @@ defmodule FlintUI.Base.Loading do
           style={timing(@duration, index, 9)}
         />
       </g>
+
+      <g :if={@variant == "infinity"}>
+        <%!-- The reference infinity path, scaled into this viewBox so `weight`
+        reads like the other variants. --%>
+        <path
+          {@flint_parts[:loop]}
+          d="M6.86 8C4.28 8 3 10.66 3 12s1.28 4 3.86 4c3.86 0 6.42-8 10.28-8C19.72 8 21 10.66 21 12s-1.28 4-3.86 4C13.28 16 10.72 8 6.86 8z"
+          stroke="currentColor"
+          stroke-width={@weight}
+          stroke-linecap="round"
+          stroke-dasharray="41.054228515625 10.26355712890625"
+          style={timing(@duration, 0, 1)}
+        />
+      </g>
     </svg>
     """
   end
@@ -275,8 +298,10 @@ defmodule FlintUI.Base.Loading do
   The default animation cycle for a variant, in milliseconds.
 
   `ring-dash` defaults to 1000ms because its dash morph reads better slower;
-  the other variants default to 600ms.
+  `infinity` defaults to 2000ms so the loop reads as ambient; the other
+  variants default to 600ms.
   """
+  def default_duration("infinity"), do: 2000
   def default_duration("ring-dash"), do: 1000
   def default_duration(variant) when variant in @variants, do: 600
 

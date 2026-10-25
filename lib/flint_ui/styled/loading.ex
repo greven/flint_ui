@@ -15,7 +15,15 @@ defmodule FlintUI.Styled.Loading do
       props: [
         Prop.new(
           name: :variant,
-          values: ["ring", "ring-bg", "ring-dash", "dots-fade", "dots-bounce", "bars-scale"],
+          values: [
+            "ring",
+            "ring-bg",
+            "ring-dash",
+            "dots-fade",
+            "dots-bounce",
+            "bars-scale",
+            "infinity"
+          ],
           default: "ring",
           doc: "The indicator shape."
         ),

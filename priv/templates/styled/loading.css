@@ -83,6 +83,10 @@
     transform-box: fill-box;
     transform-origin: center;
   }
+
+  [data-element="loading"][data-variant="infinity"] [data-part="loop"] {
+    animation: fl-loading-infinity 2000ms linear infinite;
+  }
 }
 
 @keyframes fl-loading-spin {
@@ -143,5 +147,13 @@
   33.33% {
     transform: scaleY(1.8333);
     animation-timing-function: cubic-bezier(0.36, 0.61, 0.3, 0.98);
+  }
+}
+
+/* Travel exactly one path length per cycle, so the dash pattern loops
+ * seamlessly around the infinity path. */
+@keyframes fl-loading-infinity {
+  to {
+    stroke-dashoffset: 51.31778564453125;
   }
 }

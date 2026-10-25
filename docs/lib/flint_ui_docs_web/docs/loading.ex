@@ -6,7 +6,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
-  @variants ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale)
+  @variants ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)
 
   @impl true
   def controls do
@@ -35,6 +35,8 @@ defmodule FlintUIDocsWeb.Docs.Loading do
 
     <FlintUI.loading variant="bars-scale" class="size-4" />
 
+    <FlintUI.loading variant="infinity" class="size-4" />
+
     <%!-- Reveal inside a FlintUI button via its [data-loading] attribute --%>
     <FlintUI.button loading>
       <FlintUI.loading class="hidden size-4 in-data-loading:inline-block" />
@@ -54,12 +56,12 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         covers: [:variant],
         body: """
         Choose the indicator shape with `variant`: `ring`, `ring-bg`,
-        `ring-dash`, `dots-fade`, `dots-bounce`, or `bars-scale`.
+        `ring-dash`, `dots-fade`, `dots-bounce`, `bars-scale`, or `infinity`.
         """,
         code: """
         <div class="flex items-center gap-6">
           <FlintUI.loading
-            :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale)}
+            :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)}
             variant={variant}
             class="size-4"
           />
@@ -73,8 +75,9 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         covers: [:duration],
         body: """
         `duration` sets how long one full animation cycle takes, in milliseconds.
-        It defaults to 600, or 1000 for `ring-dash`, which uses it for the dash
-        morph and rotates the ring over 4/3 of it.
+        It defaults to 600, 2000 for `infinity` so the loop reads as ambient,
+        or 1000 for `ring-dash`, which uses it for the dash morph and rotates
+        the ring over 4/3 of it.
         """,
         code: """
         <div class="flex items-center gap-6">
@@ -106,8 +109,9 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         layer: :base,
         covers: [:weight],
         body: """
-        `weight` sets the ring stroke width, the dot radius, or the bar width,
-        in SVG user units. It defaults to 2, or 2.8 for `bars-scale`.
+        `weight` sets the ring stroke width, the infinity loop stroke width, the
+        dot radius, or the bar width, in SVG user units. It defaults to 2, or
+        2.8 for `bars-scale`.
         """,
         code: """
         <div class="flex items-center gap-6">
@@ -160,7 +164,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         code: """
         <div class="flex items-center gap-6">
           <.loading
-            :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale)}
+            :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)}
             variant={variant}
           />
         </div>
@@ -196,13 +200,15 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         covers: [],
         body: """
         `duration` sets one animation cycle in milliseconds. It defaults to 600,
-        or 1000 for `ring-dash`; the styled wrapper forwards it to the base.
+        2000 for `infinity`, or 1000 for `ring-dash`; the styled wrapper
+        forwards it to the base.
         """,
         code: """
         <div class="flex items-center gap-6">
           <.loading duration={300} />
           <.loading duration={600} />
           <.loading variant="ring-dash" duration={1000} />
+          <.loading variant="infinity" duration={2000} />
         </div>
         """
       },
@@ -212,8 +218,8 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         layer: :styled,
         covers: [],
         body: """
-        `weight` controls the ring stroke, dot radius, or bar width. It defaults
-        to 2, or 2.8 for `bars-scale`.
+        `weight` controls the ring stroke, infinity loop stroke, dot radius, or
+        bar width. It defaults to 2, or 2.8 for `bars-scale`.
         """,
         code: """
         <div class="flex items-center gap-6">
@@ -256,6 +262,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
           <.loading variant="dots-fade" class="size-6" />
           <.loading variant="dots-bounce" class="size-6" />
           <.loading variant="bars-scale" class="size-6" />
+          <.loading variant="infinity" class="size-6" />
         </div>
         """
       },
@@ -342,6 +349,12 @@ defmodule FlintUIDocsWeb.Docs.Loading do
               selector: ~s([data-part="bar"]),
               note: "one of five staggered bars (`bars-scale`)",
               children: []
+            },
+            %{
+              tag: "path",
+              selector: ~s([data-part="loop"]),
+              note: "the dashed infinity loop (`infinity`)",
+              children: []
             }
           ]
         }
@@ -397,6 +410,9 @@ defmodule FlintUIDocsWeb.Docs.Loading do
           @keyframes fl-loading-bar-scale {
             33.33% { transform: scaleY(1.8333); }
           }
+          @keyframes fl-loading-infinity {
+            to { stroke-dashoffset: 51.31778564453125; }
+          }
 
           [data-element="loading"][data-variant="ring"] [data-part="arc"],
           [data-element="loading"][data-variant="ring-bg"] [data-part="arc"] {
@@ -421,6 +437,9 @@ defmodule FlintUIDocsWeb.Docs.Loading do
             animation: fl-loading-bar-scale 600ms linear infinite;
             transform-box: fill-box;
             transform-origin: center;
+          }
+          [data-element="loading"][data-variant="infinity"] [data-part="loop"] {
+            animation: fl-loading-infinity 2000ms linear infinite;
           }
           """
         }
@@ -462,7 +481,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
     ~H"""
     <div class="flex items-center gap-6">
       <Components.loading
-        :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale)}
+        :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)}
         variant={variant}
       />
     </div>
@@ -498,6 +517,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
       <Components.loading duration={300} />
       <Components.loading duration={600} />
       <Components.loading variant="ring-dash" duration={1000} />
+      <Components.loading variant="infinity" duration={2000} />
     </div>
     """
   end
