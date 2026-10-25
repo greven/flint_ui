@@ -60,13 +60,13 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "aria-disabled") == []
     end
 
-    test "renders loading with aria-busy and suppresses interaction" do
+    test "renders loading with aria-busy without disabling" do
       html = render(loading: true)
 
       assert attr(html, "aria-busy") == ["true"]
       assert attr(html, "data-loading") == [""]
-      assert attr(html, "data-disabled") == [""]
-      assert attr(html, "disabled") == [""]
+      assert attr(html, "data-disabled") == []
+      assert attr(html, "disabled") == []
     end
 
     test "passes through global attributes" do
@@ -112,6 +112,16 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "aria-disabled") == ["true"]
       assert attr(html, "tabindex") == ["0"]
       assert attr(html, "data-disabled") == [""]
+    end
+
+    test "a loading link keeps its destination" do
+      html = render(href: "/foo", loading: true)
+
+      assert tag(html) == ["a"]
+      assert attr(html, "href") == ["/foo"]
+      assert attr(html, "data-loading") == [""]
+      assert attr(html, "aria-disabled") == []
+      assert attr(html, "data-disabled") == []
     end
   end
 

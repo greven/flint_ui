@@ -73,6 +73,11 @@ defmodule FlintUI.Base.Loading do
           name: "[data-variant]",
           value: "ring | ring-bg | ring-dash | dots-fade | dots-bounce | bars-scale | infinity",
           description: "The selected `variant`."
+        },
+        %Meta.PartAttr{
+          name: "[data-loading-indicator]",
+          description:
+            "Marks the element as a loading indicator so a parent can bind its visibility to its own loading state."
         }
       ],
       track: [
@@ -129,7 +134,8 @@ defmodule FlintUI.Base.Loading do
       root: %{
         "data-element" => "loading",
         "data-part" => "root",
-        "data-variant" => assigns.variant
+        "data-variant" => assigns.variant,
+        "data-loading-indicator" => true
       },
       track: %{"data-part" => "track"},
       arc: %{"data-part" => "arc"},

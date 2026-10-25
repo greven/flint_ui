@@ -9,9 +9,11 @@ defmodule FlintUI.Base.Button do
       <.button phx-click="delete" disabled>Delete</.button>
       <.button loading aria-label="Saving">Save</.button>
 
-  While `loading`, the button sets `aria-busy`, disables interaction, and is
-  marked with `data-loading`. FlintUI is unstyled, so add an indicator yourself
-  when you want one:
+  While `loading`, the button sets `aria-busy` and is marked with `data-loading`,
+  but it stays interactive so the pointer can still reach it. The styled layer
+  shows `cursor: progress`; guard repeated submissions in your own handler. To
+  block activation entirely, pass `disabled={@loading}` as well. FlintUI is
+  unstyled, so add an indicator yourself when you want one:
 
       <.button loading>
         <.icon :if={@loading} name="lucide-loader-circle" class="size-4 animate-spin" />
@@ -40,8 +42,12 @@ defmodule FlintUI.Base.Button do
   destination is removed, the link is marked with `aria-disabled="true"`, and it
   stays in the tab order so its state can be discovered. It cannot be activated.
 
-  While `loading` is set the button is disabled and marked with `aria-busy="true"`
-  and `data-loading`.
+  While `loading` is set the button is marked with `aria-busy="true"` and
+  `data-loading`. It is not disabled, so it stays focusable and announces the
+  busy state; ignore repeat activations in the handler for the action it is
+  running. Passing `disabled={@loading}` blocks activation entirely, but the
+  button then leaves the focus order, so announce the progress separately when
+  the action is long-running.
 
   ## Keyboard
 
@@ -79,7 +85,7 @@ defmodule FlintUI.Base.Button do
           name: "[data-disabled]",
           value: "boolean",
           description:
-            "Present when the button cannot be interacted with, either because `disabled` or `loading` is set."
+            "Present when the button cannot be interacted with because `disabled` is set."
         },
         %Meta.PartAttr{
           name: "[data-loading]",
@@ -145,7 +151,7 @@ defmodule FlintUI.Base.Button do
   attr :loading, :boolean,
     default: false,
     doc:
-      "Whether the button is in a loading state. Sets `aria-busy` and `data-loading`, and suppresses interaction."
+      "Whether the button is in a loading state. Sets `aria-busy` and `data-loading` without disabling the button."
 
   attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download
@@ -176,7 +182,7 @@ defmodule FlintUI.Base.Button do
 
       true ->
         ~H"""
-        <button {@rest} type={@type} disabled={@disabled || @loading} {@flint_parts[:root]}>
+        <button {@rest} type={@type} disabled={@disabled} {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </button>
         """
@@ -188,7 +194,7 @@ defmodule FlintUI.Base.Button do
     rest[:href] || rest[:navigate] || rest[:patch]
   end
 
-  defp disabled?(assigns), do: assigns.disabled || assigns.loading
+  defp disabled?(assigns), do: assigns.disabled
 
   defp drop_navigation(rest) do
     Map.drop(rest, [:href, :navigate, :patch, :replace, :method, :csrf_token])

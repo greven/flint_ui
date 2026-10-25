@@ -35,12 +35,13 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
 
     <FlintUI.loading_text text="Uploading" variant="wave" />
 
-    <%!-- Reveal inside a FlintUI button via its [data-loading] attribute --%>
+    <%!-- Reveal inside a FlintUI button via its [data-loading] attribute. Keep
+    the component's `inline-flex` display so the dots stay tight to the copy. --%>
     <FlintUI.button loading>
       <FlintUI.loading_text
         text="Saving"
         variant="dots"
-        class="hidden in-data-loading:inline-block"
+        class="hidden in-data-loading:inline-flex"
       />
     </FlintUI.button>
     """
@@ -255,7 +256,8 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
       %{
         id: :button,
         title: "Button",
-        description: "Use the text animation when the action label itself is the loading state.",
+        description:
+          "Use the text animation when the action label itself is the loading state. The theme hides any `[data-loading-indicator]` child until the button is loading.",
         code: """
         <.button variant="solid" loading>
           <.loading_text text="Saving" variant="dots" />
@@ -309,13 +311,15 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
       replaces it with one span per grapheme so each character can animate.
       The dots are hidden from assistive technology. Animations are CSS
       keyframes driven by the `data-variant` hook; the base publishes the cycle
-      length and stagger inline.
+      length and stagger inline. The root also marks itself with
+      `data-loading-indicator`, so a parent can hide it while idle (the button
+      theme does this).
       """,
       nodes: [
         %{
           tag: "span",
           selector: ~s([data-element="loading_text"][data-part="root"]),
-          hooks: ["data-variant", "class"],
+          hooks: ["data-variant", "data-loading-indicator", "class"],
           attributes: ["role"],
           children: [
             %{

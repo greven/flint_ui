@@ -404,7 +404,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-button-controls select[name='size']")
 
     refute has_element?(view, "#playground-button-controls select[name='disabled']")
-    refute has_element?(view, "#playground-button-controls select[name='loading']")
+    assert has_element?(view, "#playground-button-controls select[name='loading']")
     refute has_element?(view, "#playground-button-controls select[name='depth']")
   end
 

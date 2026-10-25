@@ -77,6 +77,13 @@ defmodule FlintUI.Styled.Button do
           default: true,
           doc:
             "Whether solid and outline buttons show their highlight/inner line. Shadows are always on for solid, subtle, and outline; remove them with `--fl-control-shadow`."
+        ),
+        Prop.new(
+          name: :inset,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether to negate the button's invisible padding so its content aligns with surrounding content. Most useful on ghost and link variants; the hit area is unchanged."
         )
       ]
     }

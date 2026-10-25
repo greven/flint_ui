@@ -142,8 +142,11 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         covers: [],
         body: """
         A function component cannot see its parent, so reveal the spinner either
-        conditionally or through a parent's data attribute. `FlintUI.Base.Button` sets
-        `data-loading` while loading, which the spinner can key off.
+        conditionally or through a parent's data attribute. `FlintUI.Base.Button`
+        sets `data-loading` while loading, and the spinner publishes
+        `data-loading-indicator` as the hook a parent can target. The styled
+        theme hides marked indicators until the button is loading; in a headless
+        setup, key your own rule off the same marker.
         """,
         code: """
         <FlintUI.button loading>
@@ -316,14 +319,16 @@ defmodule FlintUIDocsWeb.Docs.Loading do
       The loading indicator renders an inline SVG. The shape is selected by
       `variant`; `duration` controls one animation cycle. The animated parts
       carry `data-part` hooks and publish the cycle length inline as
-      `animation-duration`, so the theme's CSS keyframes drive them. The
-      spinner is decorative by default, or a labeled image when `label` is set.
+      `animation-duration`, so the theme's CSS keyframes drive them. The spinner
+      is decorative by default, or a labeled image when `label` is set. It also
+      marks itself with `data-loading-indicator`, so a parent can hide it while
+      idle (the button theme does this).
       """,
       nodes: [
         %{
           tag: "svg",
           selector: ~s([data-element="loading"][data-part="root"]),
-          hooks: ["data-variant", "class"],
+          hooks: ["data-variant", "data-loading-indicator", "class"],
           attributes: ["viewBox", "role", "aria-label", "aria-hidden"],
           children: [
             %{

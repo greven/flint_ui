@@ -39,11 +39,20 @@ defmodule FlintUI.FlintCSSTest do
   test "border weight is a theme knob instead of a token per role", %{css: css} do
     assert css =~ "--fl-border-strength: 50%;"
     assert css =~ "--fl-border-strength-soft: 25%;"
+    assert css =~ "--fl-border-strength-solid: 12%;"
 
     for role <- ~w(primary secondary neutral success info warning error) do
       refute css =~ "--fl-color-#{role}-border:"
       refute css =~ "--fl-color-#{role}-border-soft:"
     end
+  end
+
+  test "solid buttons darken their fill for the border", %{css: css} do
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="solid"\] \{[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-button-color, var\(--fl-color-inverted\)\),\s*oklch\(0% 0 0\) var\(--fl-border-strength-solid\)/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
   end
 
   test "surface steps are opaque and move toward the elevated step", %{css: css} do
@@ -315,6 +324,29 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "padding-inline: 0;"
     assert css =~ ~s([data-element="button"][data-wide="true"])
     assert css =~ "width: 100%;"
+  end
+
+  test "inset buttons negate their padding", %{css: css} do
+    for size <- ~w(xs sm md lg xl) do
+      assert css =~
+               ~r/\[data-element="button"\]\[data-inset="true"\]\[data-size="#{size}"\] \{\s*margin-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
+
+      assert css =~
+               ~r/\[data-inset="true"\]\[data-square="true"\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{\s*margin: calc\(/
+    end
+  end
+
+  test "loading buttons keep a progress cursor", %{css: css} do
+    assert css =~
+             ~r/\[data-element="button"\]\[data-loading\]:not\(\[data-disabled\]\) \{\s*cursor: progress;/
+
+    assert css =~ ":not([data-loading]):hover::after"
+    assert css =~ ":not([data-loading]):active"
+  end
+
+  test "loading indicators are hidden until the button is loading", %{css: css} do
+    assert css =~
+             ~r/\[data-element="button"\]:not\(\[data-loading\]\) > \[data-loading-indicator\] \{\s*display: none;/
   end
 
   test "card exposes five inputs and styles bodies directly", %{css: css} do

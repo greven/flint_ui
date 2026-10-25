@@ -41,6 +41,7 @@ defmodule FlintUI.Base.LoadingTest do
     assert tag(html) == ["svg"]
     assert attr(html, "data-element") == ["loading"]
     assert attr(html, "data-variant") == ["ring"]
+    assert attr(html, "data-loading-indicator") == [""]
     assert attr(html, "aria-hidden") == ["true"]
     assert attr(html, "role") == []
     assert attr(html, "aria-label") == []
@@ -211,6 +212,9 @@ defmodule FlintUI.Base.LoadingTest do
 
     assert %FlintUI.Meta.PartAttr{name: "[data-variant]"} =
              Enum.find(parts.root, &(&1.name == "[data-variant]"))
+
+    assert %FlintUI.Meta.PartAttr{name: "[data-loading-indicator]"} =
+             Enum.find(parts.root, &(&1.name == "[data-loading-indicator]"))
 
     for part <- [:track, :arc, :dot, :bar, :loop] do
       assert %FlintUI.Meta.PartAttr{name: "[data-part]"} =

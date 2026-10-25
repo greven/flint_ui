@@ -32,6 +32,8 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "attr(:square, :boolean"
     assert source =~ "attr(:wide, :boolean"
     assert source =~ "attr(:depth, :boolean"
+    assert source =~ "attr(:inset, :boolean"
+    assert source =~ "data-inset={to_string(@inset)}"
     assert source =~ "<FlintUI.button"
     assert source =~ "render_slot(@inner_block)"
   end

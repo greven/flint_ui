@@ -69,6 +69,11 @@ defmodule FlintUI.Base.LoadingText do
           name: "[data-variant]",
           value: "dots | blink | shimmer | wave",
           description: "The selected `variant`."
+        },
+        %Meta.PartAttr{
+          name: "[data-loading-indicator]",
+          description:
+            "Marks the element as a loading indicator so a parent can bind its visibility to its own loading state."
         }
       ],
       text: [
@@ -120,7 +125,8 @@ defmodule FlintUI.Base.LoadingText do
       root: %{
         "data-element" => "loading_text",
         "data-part" => "root",
-        "data-variant" => assigns.variant
+        "data-variant" => assigns.variant,
+        "data-loading-indicator" => true
       },
       text: %{"data-part" => "text"},
       dots: %{"data-part" => "dots", "aria-hidden" => "true"},

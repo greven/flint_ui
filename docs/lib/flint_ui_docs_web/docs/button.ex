@@ -19,17 +19,17 @@ defmodule FlintUIDocsWeb.Docs.Button do
   @impl true
   def controls do
     [
-      %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
-      %{key: :loading, type: :boolean, default: false, label: "Loading"},
       %{key: :variant, type: :select, default: "outline", label: "Variant"},
       %{key: :color, type: :select, default: "neutral", label: "Color"},
       %{key: :size, type: :select, default: "md", label: "Size"},
-      %{key: :depth, type: :boolean, default: true, label: "Depth"}
+      %{key: :depth, type: :boolean, default: true, label: "Depth"},
+      %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
+      %{key: :loading, type: :boolean, default: false, label: "Loading"}
     ]
   end
 
   @impl true
-  def playground_controls, do: [:variant, :color, :size]
+  def playground_controls, do: [:variant, :color, :size, :loading]
 
   @impl true
   def usage do
@@ -53,9 +53,16 @@ defmodule FlintUIDocsWeb.Docs.Button do
         layer: :base,
         covers: [:loading],
         body: """
-        Set `loading` while an action is in progress. The button is disabled and
-        marked with `aria-busy="true"` and `data-loading` instead of a visual
-        change, so you are free to render your own indicator.
+        Set `loading` while an action is in progress. The button is marked with
+        `aria-busy="true"` and `data-loading` instead of being disabled, so it
+        stays focusable and the pointer can still reach it. The styled layer
+        shows a progress cursor, suppresses hover feedback, and hides
+        `[data-loading-indicator]` children such as `.loading` and
+        `.loading_text` until the button is loading. Guard repeat submissions in
+        your handler, or pass `disabled={@loading}` when the action must not be
+        activated again at all (a form submit, for example). A disabled button
+        leaves the focus order, and the styled layer dims it and drops the
+        progress cursor, so announce progress separately if it matters.
         """,
         code: """
         <FlintUI.button loading>
@@ -210,6 +217,30 @@ defmodule FlintUIDocsWeb.Docs.Button do
         """
       },
       %{
+        id: :inset,
+        title: "Inset",
+        layer: :styled,
+        covers: [:inset],
+        body: """
+        Set `inset` to pull the control over the padding it keeps for its hit
+        area, so its content lines up with surrounding content. It is most
+        useful on `ghost` and `link` buttons, whose box is otherwise invisible;
+        the hit area itself keeps its size. Square icon buttons inset by the
+        leftover space around the icon. Since this is an outer margin, avoid
+        combining it with `wide` or using it inside a `<.group>`.
+        """,
+        code: """
+        <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
+          <span class="text-sm font-medium">Post successfully created.</span>
+          <div class="flex items-center gap-4">
+            <.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+              <.icon name="lucide-x" />
+            </.button>
+          </div>
+        </div>
+        """
+      },
+      %{
         id: :depth,
         title: "Depth",
         layer: :styled,
@@ -270,12 +301,26 @@ defmodule FlintUIDocsWeb.Docs.Button do
       },
       %{
         id: :loading,
-        title: "Loading with a spinner",
-        description: "Reveal a FlintUI loading indicator via the button's data-loading state.",
+        title: "Loading states",
+        description:
+          "Loading composes with every variant. A spinner and label work on any button; the dots variant of `.loading_text` lets the label itself carry the progress.
+          Indicators marked `data-loading-indicator` are hidden until the button is loading, so no reveal classes are needed. Every loading button stays interactive and shows a progress cursor.
+          To block repeat activation entirely, a form submit for example, pass `disabled={@loading}` as well.",
         code: """
-        <.button variant="solid" loading>
-          <.loading class="hidden in-data-loading:inline-block" /> Save
-        </.button>
+        <div class="flex flex-wrap items-center gap-3">
+          <.button variant="solid" color="info" loading square>
+            <.loading />
+          </.button>
+          <.button variant="solid" loading>
+            <.loading variant="ring-dash" /> Save
+          </.button>
+          <.button variant="outline" loading>
+            <.loading_text text="Loading" variant="dots" />
+          </.button>
+          <.button variant="outline" loading disabled>
+            <.loading_text text="Loading" variant="blink" />
+          </.button>
+        </div>
         """
       },
       %{
@@ -375,6 +420,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
         %{
           title: "Loading",
           code: """
+          [data-element="button"][data-loading] {
+            cursor: progress;
+          }
           [data-element="button"][data-loading] .my-spinner {
             display: inline-block;
           }
@@ -407,7 +455,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       disabled={@props.disabled}
       loading={@props.loading}
     >
-      <.loading class="hidden in-data-loading:inline-block" /> Unbound
+      <.loading /> Unbound
     </Components.button>
     """
   end
@@ -432,14 +480,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_usage(%{block: :disabled, layer: :styled} = assigns) do
     ~H"""
     <Components.button disabled>Delete</Components.button>
-    """
-  end
-
-  def render_usage(%{block: :loading, layer: :styled} = assigns) do
-    ~H"""
-    <Components.button loading>
-      <Components.loading class="hidden in-data-loading:inline-block" /> Save
-    </Components.button>
     """
   end
 
@@ -547,6 +587,19 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_usage(%{block: :inset} = assigns) do
+    ~H"""
+    <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
+      <span class="text-sm font-medium">Post successfully created.</span>
+      <div class="flex items-center gap-4">
+        <Components.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+          <Components.icon name="lucide-x" />
+        </Components.button>
+      </div>
+    </div>
+    """
+  end
+
   def render_usage(%{block: :depth} = assigns) do
     ~H"""
     <div class="flex flex-wrap items-center gap-3">
@@ -585,9 +638,20 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_block(%{block: :loading} = assigns) do
     ~H"""
-    <Components.button variant="solid" loading>
-      <Components.loading class="hidden in-data-loading:inline-block" /> Save
-    </Components.button>
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button variant="solid" color="info" loading square>
+        <Components.loading />
+      </Components.button>
+      <Components.button variant="solid" loading>
+        <Components.loading variant="ring-dash" /> Save
+      </Components.button>
+      <Components.button variant="outline" loading>
+        <Components.loading_text text="Loading" variant="dots" />
+      </Components.button>
+      <Components.button variant="outline" loading disabled>
+        <Components.loading_text text="Loading" variant="blink" />
+      </Components.button>
+    </div>
     """
   end
 
@@ -623,7 +687,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
       the rest. The public inputs are `--fl-button-color`,
       `--fl-button-color-foreground`, `--fl-button-text`, and
       `--fl-button-soft-text`; borders, tinted surfaces, and focus all derive
-      from them and the theme tokens. Ghost and link read
+      from them and the theme tokens. Solid buttons mix the fill with black by
+      `--fl-border-strength-solid` (12% by default) for the border, so retinting
+      the fill retints the edge too. Ghost and link read
       `--fl-button-text`, the role's regular `-text` token. Tinted and bordered
       variants read `--fl-button-soft-text`, the role's `-soft-foreground`
       label, so they read lighter in dark; solid uses

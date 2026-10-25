@@ -62,6 +62,7 @@ defmodule FlintUI.Base.LoadingTextTest do
     assert attr(html, "data-element") == ["loading_text"]
     assert attr(html, "data-part") == ["root"]
     assert attr(html, "data-variant") == ["dots"]
+    assert attr(html, "data-loading-indicator") == [""]
     assert part_text(html, "text") == "Loading"
   end
 
@@ -179,6 +180,9 @@ defmodule FlintUI.Base.LoadingTextTest do
 
     assert %FlintUI.Meta.PartAttr{name: "[data-variant]"} =
              Enum.find(parts.root, &(&1.name == "[data-variant]"))
+
+    assert %FlintUI.Meta.PartAttr{name: "[data-loading-indicator]"} =
+             Enum.find(parts.root, &(&1.name == "[data-loading-indicator]"))
 
     for part <- [:text, :dots, :dot, :char] do
       assert %FlintUI.Meta.PartAttr{name: "[data-part]"} =

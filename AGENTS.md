@@ -262,6 +262,17 @@ component lands, expose the same behaviour as a prop (`autofill="off"` or simila
 that spreads those attributes and adds the class, so consumers do not have to
 memorise vendor names.
 
+### Loading indicators advertise themselves
+
+A component that renders a loading indicator sets `data-loading-indicator` on its
+root (`FlintUI.Base.Loading` and `FlintUI.Base.LoadingText` both do). A parent that
+owns a busy state hides marked children until that state is on, so consumers do not
+have to add reveal classes. The rule belongs to the parent's stylesheet — currently
+`[data-element="button"]:not([data-loading]) > [data-loading-indicator]` in
+`button.css`. New loading components must include the marker; do not add their names
+to each parent's selector. A display utility in the `utilities` layer still wins when
+an indicator must stay visible while the parent is idle.
+
 ### Use the built-in `JSON` moduleElixir 1.18+ ships a `JSON` module that implements the interface `Phoenix.json_library/0`
 
 expects (`encode!/1`, `decode!/1`, `encode_to_iodata!/1`). Configure it with

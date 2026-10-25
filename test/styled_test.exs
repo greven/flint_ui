@@ -81,7 +81,8 @@ defmodule FlintUI.StyledTest do
              size: "data-size",
              square: "data-square",
              wide: "data-wide",
-             depth: "data-depth"
+             depth: "data-depth",
+             inset: "data-inset"
            }
 
     assert Prop.attribute(Entry.prop(entry, :variant)) == "data-variant"
