@@ -49,6 +49,14 @@
         --fl-card-surface: var(--fl-color-surface-muted);
     }
 
+    /* Ghost keeps no surface or elevation of its own: with `outline` on it reads
+     * as a plain outlined card, with `outline={false}` as a bare container. Body
+     * bands and panels become translucent tints over the page. */
+    [data-element="card"][data-variant="ghost"] {
+        --fl-card-surface: transparent;
+        --fl-card-shadow: 0 0 #0000;
+    }
+
     /* Outline and shadow are independent boolean props; both default to on. */
     [data-element="card"][data-outline="true"] {
         border-color: var(--fl-card-border, var(--fl-color-border));
@@ -71,8 +79,15 @@
         --fl-card-border: color-mix(
             in oklab,
             var(--fl-color-inverted-foreground) 20%,
-            transparent
+            var(--fl-color-inverted)
         );
+    }
+
+    /* A ghost card has no surface to invert, so keep the page foreground and
+     * border; otherwise inverted would paint light text on a light page. */
+    [data-element="card"][data-inverted="true"][data-variant="ghost"] {
+        --fl-card-surface-foreground: var(--fl-color-surface-foreground);
+        --fl-card-border: var(--fl-color-border);
     }
 
     [data-element="card"][data-inverted="true"][data-variant="solid"] {
@@ -444,7 +459,8 @@
         line-height: 1.375;
     }
 
-    [data-element="card"][data-inverted="true"] [data-part="description"] {
+    [data-element="card"][data-inverted="true"]:not([data-variant="ghost"])
+        [data-part="description"] {
         color: color-mix(
             in oklab,
             var(--fl-color-inverted-foreground) 75%,

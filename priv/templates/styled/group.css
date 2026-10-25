@@ -92,8 +92,11 @@
     line-height: var(--fl-control-line-height-xl);
   }
 
-  /* Attached: children overlap by 1px so their opaque borders share a line;
-   * raising the hovered/focused child lets its full border win. */
+  /* Attached: collapse the children into a single block. Bordered controls
+   * paint an opaque `--fl-color-control` fill, so the later child's fill covers
+   * the previous child's border in the shared column and only one seam shows.
+   * Hover is an in-border overlay, keeping the alpha border's backdrop stable.
+   * Raising the hovered/focused child lets its complete border win the seam. */
   [data-element="group"][data-variant="attached"] {
     --fl-group-gap: 0;
     --fl-group-padding: 0;

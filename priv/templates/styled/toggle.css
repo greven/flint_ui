@@ -3,6 +3,8 @@
    * surfaces, borders and focus follow from them plus the theme tokens. */
   [data-element="toggle"][data-variant] {
     display: inline-flex;
+    position: relative;
+    isolation: isolate;
     align-items: center;
     justify-content: center;
     gap: var(--fl-spacing-sm);
@@ -24,13 +26,49 @@
     --fl-focus-ring-color: var(--fl-toggle-color, var(--fl-color-inverted));
   }
 
-  [data-element="toggle"][data-variant]:hover {
-    background: color-mix(
-      in oklab,
-      var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
-      transparent
-    );
-    color: var(--fl-color-foreground);
+  /* Hover/active are a `currentColor` overlay inside the border, not a fill
+   * swap. The variant fill stays opaque, so the alpha border keeps a stable
+   * backdrop (including at attached-group seams). The overlay is drawn on the
+   * border box and clipped to the padding box for bordered variants, so it
+   * follows the inner (and joined) radii without a corner gap and never tints
+   * the border. */
+  [data-element="toggle"][data-variant]::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
+  }
+
+  /* Borderless variants stay unclipped, so the overlay reaches the full fill. */
+  [data-element="toggle"][data-variant]:is(
+      [data-variant="outline"],
+      [data-variant="dashed"],
+      [data-variant="subtle"]
+    ) {
+    overflow: hidden;
+    overflow: clip;
+  }
+
+  [data-element="toggle"][data-variant]:not(
+      [data-disabled]
+    ):hover::after {
+    opacity: var(--fl-control-hover-opacity);
+  }
+
+  [data-element="toggle"][data-variant]:not(
+      [data-disabled]
+    ):active::after {
+    opacity: var(--fl-control-active-opacity);
+  }
+
+  [data-element="toggle"][data-variant="solid"] {
+    --fl-control-hover-opacity: 0.15;
+    --fl-control-active-opacity: 0.22;
   }
 
   /* Icon child: sized by the toggle, never shrinks, and drawn at 70% of the
@@ -105,21 +143,14 @@
     );
   }
 
-  [data-element="toggle"][data-variant="solid"][data-state="on"]:hover {
-    background: color-mix(
-      in oklab,
-      var(--fl-toggle-color, var(--fl-color-inverted)) 75%,
-      transparent
-    );
-  }
-
-  /* Subtle: ghost + outline, a tinted surface with a matching border. */
+  /* Subtle: ghost + outline, a tinted control surface with a matching border. */
   [data-element="toggle"][data-variant="subtle"] {
+    background: var(--fl-color-control);
     border-color: color-mix(
       in oklab,
       var(--fl-toggle-color, var(--fl-color-inverted))
         var(--fl-border-strength-soft),
-      transparent
+      var(--fl-color-control)
     );
   }
 
@@ -127,7 +158,7 @@
     background: color-mix(
       in oklab,
       var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
-      transparent
+      var(--fl-color-control)
     );
     color: var(
       --fl-toggle-text,
@@ -136,11 +167,12 @@
   }
 
   [data-element="toggle"][data-variant="outline"] {
+    background: var(--fl-color-control);
     border-color: color-mix(
       in oklab,
       var(--fl-toggle-color, var(--fl-color-inverted))
         var(--fl-border-strength),
-      transparent
+      var(--fl-color-control)
     );
   }
 
@@ -148,7 +180,7 @@
     background: color-mix(
       in oklab,
       var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
-      transparent
+      var(--fl-color-control)
     );
     color: var(
       --fl-toggle-text,
@@ -169,12 +201,13 @@
   }
 
   [data-element="toggle"][data-variant="dashed"] {
+    background: var(--fl-color-control);
     border-style: dashed;
     border-color: color-mix(
       in oklab,
       var(--fl-toggle-color, var(--fl-color-inverted))
         var(--fl-border-strength),
-      transparent
+      var(--fl-color-control)
     );
   }
 
@@ -182,7 +215,7 @@
     background: color-mix(
       in oklab,
       var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
-      transparent
+      var(--fl-color-control)
     );
     color: var(
       --fl-toggle-text,
@@ -191,9 +224,6 @@
   }
 
   /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
-  [data-element="toggle"][data-color="neutral"]:not(
-      [data-variant="solid"][data-state="on"]
-    ):hover,
   [data-element="toggle"][data-color="neutral"]:is(
       [data-variant="subtle"],
       [data-variant="outline"],

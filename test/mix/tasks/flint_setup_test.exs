@@ -78,10 +78,10 @@ defmodule Mix.Tasks.Flint.SetupTest do
     source = content(run_setup(), "assets/js/app.js")
 
     assert source =~
-             ~s(import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js")
+             ~s(import {hooks as flintHooks} from "flint_ui")
 
     assert source =~ "hooks: {...flintHooks}"
-    refute source =~ "flint-sound.js"
+    refute source =~ ~s(from "flint_ui/sound")
     refute source =~ "soundHooks"
   end
 
@@ -103,7 +103,7 @@ defmodule Mix.Tasks.Flint.SetupTest do
     source = content(run_setup([], ["--sound"]), "assets/js/app.js")
 
     assert source =~
-             ~s(import {hooks as soundHooks} from "../../deps/flint_ui/priv/static/flint-sound.js")
+             ~s(import {hooks as soundHooks} from "flint_ui/sound")
 
     assert source =~ "hooks: {...flintHooks, ...soundHooks}"
   end

@@ -8,8 +8,8 @@ if Code.ensure_loaded?(Igniter) do
     @palette_css "assets/css/flint-palette.css"
     @app_css "assets/css/app.css"
     @app_js "assets/js/app.js"
-    @flint_js_import ~s(import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js")
-    @sound_js_import ~s(import {hooks as soundHooks} from "../../deps/flint_ui/priv/static/flint-sound.js")
+    @flint_js_import ~s(import {hooks as flintHooks} from "flint_ui")
+    @sound_js_import ~s(import {hooks as soundHooks} from "flint_ui/sound")
 
     @doc "Creates the generated components module if it does not exist."
     def ensure_components_module(igniter, module) do
@@ -182,7 +182,7 @@ if Code.ensure_loaded?(Igniter) do
               source
               |> Rewrite.Source.get(:content)
               |> maybe_add_sound_import(sound?)
-              |> ensure_import("flint.js", @flint_js_import)
+              |> ensure_import(~s(from "flint_ui"), @flint_js_import)
               |> register_hooks(sound?)
 
             Rewrite.Source.update(source, :content, content)
@@ -219,7 +219,7 @@ if Code.ensure_loaded?(Igniter) do
     end
 
     defp maybe_add_sound_import(content, true),
-      do: ensure_import(content, "flint-sound.js", @sound_js_import)
+      do: ensure_import(content, ~s(from "flint_ui/sound"), @sound_js_import)
 
     defp maybe_add_sound_import(content, false), do: content
 
@@ -293,12 +293,12 @@ if Code.ensure_loaded?(Igniter) do
       imports =
         if sound? do
           """
-          import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js"
-          import {hooks as soundHooks} from "../../deps/flint_ui/priv/static/flint-sound.js"
+          import {hooks as flintHooks} from "flint_ui"
+          import {hooks as soundHooks} from "flint_ui/sound"
           """
         else
           """
-          import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js"
+          import {hooks as flintHooks} from "flint_ui"
           """
         end
 

@@ -56,6 +56,44 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));"
   end
 
+  test "foreground tiers are softened neutrals that clear AA where used", %{css: css} do
+    assert css =~
+             ~r/--fl-color-foreground: light-dark\(\s*var\(--fl-color-neutral-700\),\s*var\(--fl-color-neutral-200\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-foreground-soft: light-dark\(\s*var\(--fl-color-neutral-600\),\s*var\(--fl-color-neutral-300\)\s*\)/
+
+    assert css =~ "--fl-color-surface-foreground: var(--fl-color-foreground);"
+
+    assert css =~
+             ~r/--fl-color-inverted-foreground: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-color-neutral-800\)\s*\)/
+
+    neutral = fn shade ->
+      [_, value] = Regex.run(~r/--fl-color-neutral-#{shade}: ([^;]+);/, css)
+      value
+    end
+
+    white = "oklch(100% 0 none)"
+    light_control = white
+    light_muted = neutral.(100)
+    dark_control = FlintUI.Palette.Contrast.mix(neutral.(950), neutral.(800), 0.75)
+    dark_muted = FlintUI.Palette.Contrast.mix(neutral.(800), neutral.(700), 0.80)
+
+    for {fg, surfaces} <- [
+          {neutral.(700), [light_control, light_muted]},
+          {neutral.(200), [dark_control, dark_muted]},
+          {neutral.(600), [light_control, light_muted]},
+          {neutral.(300), [dark_control, dark_muted]}
+        ],
+        surface <- surfaces do
+      assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
+    end
+
+    # Solid neutral keeps a high-contrast label in both schemes.
+    assert FlintUI.Palette.Contrast.ratio(white, neutral.(900)) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(neutral.(800), white) >= 4.5
+  end
+
   test "shared control effects replace per-component effect and radius tokens", %{css: css} do
     assert css =~ "--fl-control-depth: 1;"
     assert css =~ "--fl-control-shadow: var(--fl-shadow-base);"
@@ -116,6 +154,9 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s{:is([data-element="icon"], [data-element="loading"])}
     assert css =~ ~s([data-element="card"][data-card])
     assert css =~ ~s([data-element="card"][data-variant="soft"])
+    assert css =~ ~s([data-element="card"][data-variant="ghost"])
+    assert css =~ "--fl-card-surface: transparent;"
+    assert css =~ ~s([data-element="card"][data-inverted="true"][data-variant="ghost"])
     assert css =~ ~s([data-element="group"][data-variant="attached"])
     assert css =~ ~s([data-element="group"][data-variant="framed"])
     assert css =~ "--fl-color-primary:"
@@ -126,6 +167,29 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="icon"][data-size])
     assert css =~ "--fl-icon-size:"
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
+  end
+
+  test "an attached group overlaps children onto an opaque control fill", %{css: css} do
+    # The later child's opaque fill covers the previous border at the seam, so
+    # only one line shows. Neutral borders can stay alpha because the fill under
+    # them does not change on hover.
+    assert css =~ "margin-inline-start: -1px"
+    assert css =~ "margin-block-start: -1px"
+    assert css =~ "--fl-color-control:"
+    assert css =~ "oklch(1 0 0 / 8%)"
+
+    # Chromatic borders are opaque against the control fill.
+    assert css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-control\)/
+    assert css =~ ~r/var\(--fl-border-strength-soft\),\s+var\(--fl-color-control\)/
+  end
+
+  test "bordered controls paint an opaque fill and a clipped hover overlay", %{css: css} do
+    assert css =~ "background: var(--fl-color-control);"
+    assert css =~ "background: currentColor;"
+    assert css =~ "inset: -1px;"
+    assert css =~ "overflow: clip;"
+    assert css =~ "--fl-control-hover-opacity: 0.04;"
+    assert css =~ "--fl-control-active-opacity: 0.07;"
   end
 
   test "button and toggle expose only public color inputs", %{css: css} do

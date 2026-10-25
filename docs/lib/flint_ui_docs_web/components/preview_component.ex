@@ -89,12 +89,6 @@ defmodule FlintUIDocsWeb.PreviewComponent do
     {:noreply, assign(socket, :code_index, String.to_integer(index))}
   end
 
-  def handle_event("toggle", %{"key" => key}, socket) do
-    control = control!(socket, key)
-    props = Map.update!(socket.assigns.props, control.key, &(!&1))
-    {:noreply, assign(socket, :props, props)}
-  end
-
   def handle_event("set", params, socket) do
     props =
       Enum.reduce(socket.assigns.controls, socket.assigns.props, fn control, acc ->
@@ -276,23 +270,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
         class="flex flex-wrap items-center gap-2.5"
       >
         <%= for control <- @controls do %>
-          <%= case control.type do %>
-            <% :boolean -> %>
-              <button
-                type="button"
-                phx-click="toggle"
-                phx-target={@myself}
-                phx-value-key={control.key}
-                aria-pressed={to_string(Map.get(@props, control.key) == true)}
-                class={addon_shell("w-48")}
-              >
-                <span class={addon_label()}>{control.label}</span>
-                <span class="flex flex-1 items-center justify-end px-2.5">
-                  <span class={switch_track(Map.get(@props, control.key))}>
-                    <span class={switch_thumb(Map.get(@props, control.key))} />
-                  </span>
-                </span>
-              </button>
+          <%= case control_kind(control) do %>
             <% :select -> %>
               <label class={addon_shell("w-44")}>
                 <span class={addon_label()}>{control.label}</span>
@@ -401,6 +379,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   defp preview_source(_assigns), do: nil
 
+  defp select_options(%{type: :boolean}, _name, _layer), do: ~w(true false)
+
   defp select_options(control, name, layer) do
     values = control[:values]
 
@@ -451,10 +431,9 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   defp coerce(%{type: :boolean}, value), do: value in [true, "true", "on", "1"]
   defp coerce(_control, value), do: value
 
-  defp control!(socket, key) do
-    Enum.find(socket.assigns.controls, &(Atom.to_string(&1.key) == key)) ||
-      raise ArgumentError, "unknown preview control #{inspect(key)}"
-  end
+  # Booleans render as a `true`/`false` select, so a single branch covers both.
+  defp control_kind(%{type: type}) when type in [:select, :boolean], do: :select
+  defp control_kind(%{type: type}), do: type
 
   ## CSS classes
 
@@ -483,21 +462,5 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   defp select_class do
     "w-full appearance-none bg-transparent py-1.5 pr-7 pl-2.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
-  end
-
-  defp switch_track(true) do
-    "relative inline-flex h-4 w-7 items-center rounded-full bg-zinc-900 transition-colors dark:bg-zinc-100"
-  end
-
-  defp switch_track(false) do
-    "relative inline-flex h-4 w-7 items-center rounded-full bg-zinc-200 transition-colors dark:bg-zinc-700"
-  end
-
-  defp switch_thumb(true) do
-    "inline-block size-3 translate-x-3.5 rounded-full bg-white transition-transform dark:bg-zinc-900"
-  end
-
-  defp switch_thumb(false) do
-    "inline-block size-3 translate-x-0.5 rounded-full bg-white transition-transform dark:bg-zinc-400"
   end
 end

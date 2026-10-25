@@ -36,15 +36,17 @@ defmodule FlintUI.Styled.Card do
         Var.new(
           name: "--fl-card-shadow",
           default: "var(--fl-shadow-base)",
-          doc: "The outer elevation; set it to `0 0 #0000` to remove the shadow."
+          doc:
+            "The outer elevation; set it to `0 0 #0000` to remove the shadow. The ghost variant already clears it."
         )
       ],
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "soft", "muted"],
+          values: ["solid", "soft", "muted", "ghost"],
           default: "solid",
-          doc: "The neutral surface treatment of the card."
+          doc:
+            "The neutral surface treatment of the card. `ghost` drops the card's own surface and elevation, composing with `outline` for an outline-only card or a bare container."
         ),
         Prop.new(
           name: :body,

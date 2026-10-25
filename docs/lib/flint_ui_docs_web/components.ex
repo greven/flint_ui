@@ -212,9 +212,10 @@ defmodule FlintUIDocsWeb.Components do
   from `FlintUI.card`.
   """
   attr(:variant, :string,
-    values: ~w(solid soft muted),
+    values: ~w(solid soft muted ghost),
     default: "solid",
-    doc: "The neutral surface treatment of the card."
+    doc:
+      "The neutral surface treatment of the card. `ghost` drops the card's own surface and elevation, composing with `outline` for an outline-only card or a bare container."
   )
 
   attr(:body, :string,

@@ -77,6 +77,8 @@
     --fl-control-depth: 1;
     --fl-control-shadow: var(--fl-shadow-base);
     --fl-control-press: translateY(1px);
+    --fl-control-hover-opacity: 0.04;
+    --fl-control-active-opacity: 0.07;
 
     /* Control metrics (24/28/32/36/40px heights). */
     --fl-control-height-xs: 1.5rem;
@@ -127,8 +129,7 @@
     --fl-radius-2xl: calc(var(--fl-radius) * 4);
     --fl-radius-full: 9999px;
 
-    /* Shared by buttons, toggles and future form controls: it tracks the control
-     * step, so retuning `--fl-radius` still retunes controls proportionally. */
+    /* Shared by buttons, toggles and future form controls. */
     --fl-control-radius: var(--fl-radius-md);
 
     /* Semantic color scales: each role owns a 50..950 ramp. */
@@ -315,16 +316,33 @@
     --fl-border-strength: 50%;
     --fl-border-strength-soft: 25%;
 
-    /* Surfaces and text. */
+    /* Surfaces and text. The default ink is a softened neutral (Tailwind Plus
+     * and Fluxon both use neutral-700 / neutral-200), not near-black or white.
+     * The scale steps lighter; `-soft` is secondary copy and `muted-foreground`
+     * is the next step up. Solid labels stay on the role `-foreground` aliases,
+     * which `mix flint.palette` selects for AA contrast. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
         var(--fl-color-neutral-950)
     );
     --fl-color-foreground: light-dark(
-        var(--fl-color-neutral-950),
-        var(--fl-color-neutral-50)
+        var(--fl-color-neutral-700),
+        var(--fl-color-neutral-200)
+    );
+    --fl-color-foreground-soft: light-dark(
+        var(--fl-color-neutral-600),
+        var(--fl-color-neutral-300)
     );
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
+
+    --fl-color-control: light-dark(
+        var(--fl-color-surface),
+        color-mix(
+            in oklab,
+            var(--fl-color-background) 75%,
+            var(--fl-color-surface) 25%
+        )
+    );
     --fl-color-muted: light-dark(
         var(--fl-color-neutral-100),
         color-mix(
@@ -344,10 +362,7 @@
         var(--fl-color-surface)
     );
     --fl-color-surface-muted: var(--fl-color-muted);
-    --fl-color-surface-foreground: light-dark(
-        var(--fl-color-neutral-950),
-        var(--fl-color-neutral-50)
-    );
+    --fl-color-surface-foreground: var(--fl-color-foreground);
     --fl-color-disabled: var(--fl-color-surface-muted);
     --fl-color-disabled-foreground: var(--fl-color-dimmed);
     --fl-color-disabled-border: var(--fl-color-border-muted);
@@ -359,8 +374,8 @@
     );
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
     --fl-color-inverted-foreground: light-dark(
-        var(--fl-color-neutral-50),
-        var(--fl-color-neutral-900)
+        oklch(1 0 0),
+        var(--fl-color-neutral-800)
     );
 
     --fl-color-accent: light-dark(
@@ -371,6 +386,7 @@
             var(--fl-color-neutral-800) 50%
         )
     );
+
     --fl-color-accent-foreground: light-dark(
         var(--fl-color-neutral-900),
         var(--fl-color-neutral-50)
@@ -380,18 +396,22 @@
         var(--fl-color-neutral-200),
         oklch(1 0 0 / 8%)
     );
+
     --fl-color-border-muted: light-dark(
         var(--fl-color-neutral-200),
         oklch(1 0 0 / 5%)
     );
+
     --fl-color-border-accented: light-dark(
         var(--fl-color-neutral-300),
         oklch(1 0 0 / 12%)
     );
+
     --fl-color-input: light-dark(
         var(--fl-color-neutral-200),
         oklch(1 0 0 / 12%)
     );
+
     --fl-color-ring: light-dark(
         var(--fl-color-neutral-400),
         var(--fl-color-neutral-500)

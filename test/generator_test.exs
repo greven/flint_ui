@@ -37,6 +37,7 @@ defmodule FlintUI.GeneratorTest do
 
     assert source =~ "include: ~w(as orientation padded title_id)"
     assert source =~ "attr(:body, :string"
+    assert source =~ "values: ~w(solid soft muted ghost)"
 
     assert source =~
              "values: ~w(seamless inset flush divided separated separated-header separated-footer)"
@@ -112,8 +113,10 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--spacing: var(--fl-spacing);"
     assert bridge =~ "--spacing-lg: var(--fl-spacing-lg);"
     assert bridge =~ "--text-sm: var(--fl-font-size-sm);"
+    assert bridge =~ "--color-foreground-soft: var(--fl-color-foreground-soft);"
     assert bridge =~ "--color-surface-soft: var(--fl-color-surface-soft);"
     assert bridge =~ "--color-surface-muted: var(--fl-color-surface-muted);"
+    assert bridge =~ "--color-control: var(--fl-color-control);"
     assert bridge =~ "--color-disabled: var(--fl-color-disabled);"
     assert bridge =~ "--color-disabled-foreground: var(--fl-color-disabled-foreground);"
     assert bridge =~ "--color-disabled-border: var(--fl-color-disabled-border);"

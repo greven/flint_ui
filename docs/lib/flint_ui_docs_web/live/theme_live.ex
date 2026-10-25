@@ -95,7 +95,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
             is the base, <code class="font-mono">soft</code>
             is a half-step toward the elevated step, and <code class="font-mono">muted</code>
             is the full de-emphasized step. The scale moves toward <code class="font-mono">elevated</code>: light steps darker, dark steps
-            lighter. <code class="font-mono">disabled</code>
+            lighter. Bordered controls paint <code class="font-mono">control</code>,
+            an opaque fill just off the page, so attached-group seams stay single
+            while the neutral borders can stay semi-transparent.
+            <code class="font-mono">disabled</code>
             aliases the muted fill with a dimmed label; colored controls keep their
             hue and dim with <code class="font-mono">--fl-disabled-opacity</code>.
           </p>
@@ -121,6 +124,41 @@ defmodule FlintUIDocsWeb.ThemeLive do
             </Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:surfaces)} lang={:css} />
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Text" id="text">
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            The default ink is a softened neutral — <code class="font-mono">neutral-700</code>
+            in light, <code class="font-mono">neutral-200</code>
+            in dark — rather than near-black or white. <code class="font-mono">foreground-soft</code>
+            is one step lighter for secondary copy. Solid controls don't use these:
+            their labels come from the role <code class="font-mono">-foreground</code>
+            aliases, which are chosen to clear AA against the fill (usually white or
+            the darkest shade).
+          </p>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div
+              :for={
+                {name, token} <-
+                  [
+                    {"foreground", "var(--fl-color-foreground)"},
+                    {"foreground-soft", "var(--fl-color-foreground-soft)"},
+                    {"muted-foreground", "var(--fl-color-muted-foreground)"},
+                    {"dimmed", "var(--fl-color-dimmed)"}
+                  ]
+              }
+              class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+              style={"color: #{token};"}
+            >
+              <p class="font-semibold leading-5">{name}</p>
+              <p class="mt-1 text-sm">The quick brown fox</p>
+            </div>
+          </div>
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            <code class="font-mono">dimmed</code>
+            is for disabled labels, where contrast minimums don't apply.
+          </p>
+          <DocsComponents.code_block code={snippet(:text)} lang={:css} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Color scales" id="colors">
@@ -172,6 +210,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
             to <code class="font-mono">0 0 #0000</code>
             to remove them. Pressing
             sinks the button with <code class="font-mono">--fl-control-press</code>.
+            Hover and active are a <code class="font-mono">currentColor</code>
+            overlay inside the border; retune them with
+            <code class="font-mono">--fl-control-hover-opacity</code>
+            and <code class="font-mono">--fl-control-active-opacity</code>.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button variant="solid" color="primary">solid</Components.button>
@@ -265,9 +307,42 @@ defmodule FlintUIDocsWeb.ThemeLive do
       );
       --fl-color-surface-muted: var(--fl-color-muted);
 
+      /* Opaque fill for bordered controls (a subtle step off the page). */
+      --fl-color-control: light-dark(
+        white,
+        color-mix(
+          in oklab,
+          var(--fl-color-background) 75%,
+          var(--fl-color-surface) 25%
+        )
+      );
+
       --fl-color-disabled: var(--fl-color-surface-muted);
       --fl-color-disabled-foreground: var(--fl-color-dimmed);
       --fl-disabled-opacity: 0.5;
+    }
+    """
+  end
+
+  defp snippet(:text) do
+    """
+    :root {
+      --fl-color-foreground: light-dark(
+        var(--fl-color-neutral-700),
+        var(--fl-color-neutral-200)
+      );
+      --fl-color-foreground-soft: light-dark(
+        var(--fl-color-neutral-600),
+        var(--fl-color-neutral-300)
+      );
+      --fl-color-muted-foreground: light-dark(
+        var(--fl-color-neutral-500),
+        var(--fl-color-neutral-400)
+      );
+      --fl-color-dimmed: light-dark(
+        var(--fl-color-neutral-400),
+        var(--fl-color-neutral-500)
+      );
     }
     """
   end
@@ -300,6 +375,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
     [data-theme="flat"] {
       --fl-control-depth: 0; /* no highlight or inner line */
       --fl-control-press: none; /* no press movement */
+    }
+
+    /* Hover/active are an in-border currentColor overlay. Retune per theme: */
+    [data-theme="quiet"] {
+      --fl-control-hover-opacity: 0.02;
+      --fl-control-active-opacity: 0.05;
     }
 
     /* Shadows are independent of depth. Remove them per theme or instance: */

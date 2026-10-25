@@ -276,6 +276,11 @@ defmodule FlintUIDocsWeb.Docs.Group do
       The base group renders a single container with `data-orientation`. It does
       not style its children. The generated styled layer's attached/framed
       geometry and public group variables are documented on the CSS tab.
+
+      Attached children overlap by 1px. Every bordered control paints an
+      opaque control surface, so the later child's fill covers the previous
+      border at the seam and only one line shows; hover is an in-border overlay,
+      keeping that border stable while the fill tints.
       """,
       snippets: [
         %{

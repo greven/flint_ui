@@ -111,10 +111,12 @@ defmodule FlintUI.Generator do
     @theme inline {
       --color-background: var(--fl-color-background);
       --color-foreground: var(--fl-color-foreground);
+      --color-foreground-soft: var(--fl-color-foreground-soft);
       --color-surface: var(--fl-color-surface);
       --color-surface-soft: var(--fl-color-surface-soft);
       --color-surface-muted: var(--fl-color-surface-muted);
       --color-surface-foreground: var(--fl-color-surface-foreground);
+      --color-control: var(--fl-color-control);
       --color-primary: var(--fl-color-primary);
       --color-primary-foreground: var(--fl-color-primary-foreground);
       --color-secondary: var(--fl-color-secondary);

@@ -65,6 +65,54 @@
         transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
     }
 
+    /* Hover/active are a `currentColor` overlay inside the border, not a fill
+     * swap. The base fill stays opaque, so the alpha border keeps a stable
+     * backdrop (including at attached-group seams). The overlay is drawn on the
+     * border box and clipped to the padding box for bordered variants, so it
+     * follows the inner (and joined) radii without a corner gap and never tints
+     * the border. */
+    [data-element="button"][data-variant]:not(
+            [data-variant="link"]
+        )::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: inherit;
+        background: currentColor;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Borderless variants stay unclipped, so the overlay reaches the full fill
+     * (including the transparent 1px border area) when hovered. */
+    [data-element="button"][data-variant]:is(
+            [data-variant="outline"],
+            [data-variant="dashed"],
+            [data-variant="subtle"]
+        ) {
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    [data-element="button"][data-variant]:not(
+            [data-variant="link"]
+        ):not([data-disabled]):hover::after {
+        opacity: var(--fl-control-hover-opacity);
+    }
+
+    [data-element="button"][data-variant]:not(
+            [data-variant="link"]
+        ):not([data-disabled]):active::after {
+        opacity: var(--fl-control-active-opacity);
+    }
+
+    [data-element="button"][data-variant="solid"] {
+        --fl-control-hover-opacity: 0.15;
+        --fl-control-active-opacity: 0.22;
+    }
+
     /* Press feedback: the button sinks. */
     [data-element="button"][data-variant]:not([data-disabled]):active {
         transform: var(--fl-control-press, none);
@@ -160,7 +208,8 @@
         --fl-button-text: var(--fl-color-foreground);
     }
 
-    /* Solid: the color fills the button. */
+    /* Solid: the color fills the button. Hover/active come from the shared
+     * `::after` overlay so the fill stays opaque. */
     [data-element="button"][data-variant="solid"] {
         background: var(--fl-button-color, var(--fl-color-inverted));
         color: var(
@@ -169,42 +218,17 @@
         );
     }
 
-    [data-element="button"][data-variant="solid"]:hover {
-        background: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) 75%,
-            transparent
-        );
-    }
-
-    [data-element="button"][data-variant="solid"]:active {
-        background: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) 70%,
-            transparent
-        );
-    }
-
-    /* Soft: a tinted surface with no border. */
+    /* Soft: a tinted control surface with no border. */
     [data-element="button"][data-variant="soft"],
     [data-element="button"][data-variant="subtle"] {
         background: color-mix(
             in oklab,
             var(--fl-button-color, var(--fl-color-inverted)) 10%,
-            transparent
+            var(--fl-color-control)
         );
         color: var(
             --fl-button-text,
             var(--fl-button-color, var(--fl-color-inverted))
-        );
-    }
-
-    [data-element="button"][data-variant="soft"]:hover,
-    [data-element="button"][data-variant="subtle"]:hover {
-        background: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) 15%,
-            transparent
         );
     }
 
@@ -214,32 +238,22 @@
             in oklab,
             var(--fl-button-color, var(--fl-color-inverted))
                 var(--fl-border-strength-soft),
-            transparent
+            var(--fl-color-control)
         );
     }
 
-    /* Outline: a colored border and label over a transparent surface. */
+    /* Outline: a colored border and label over the control surface. */
     [data-element="button"][data-variant="outline"] {
         border-color: color-mix(
             in oklab,
             var(--fl-button-color, var(--fl-color-inverted))
                 var(--fl-border-strength),
-            transparent
+            var(--fl-color-control)
         );
-        background: transparent;
+        background: var(--fl-color-control);
         color: var(
             --fl-button-text,
             var(--fl-button-color, var(--fl-color-inverted))
-        );
-    }
-
-    [data-element="button"][data-variant="outline"]:hover,
-    [data-element="button"][data-variant="ghost"]:hover,
-    [data-element="button"][data-variant="dashed"]:hover {
-        background: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) 10%,
-            transparent
         );
     }
 
@@ -252,16 +266,16 @@
         );
     }
 
-    /* Dashed: outline with a dashed border. */
+    /* Dashed: outline with a dashed border on the control surface. */
     [data-element="button"][data-variant="dashed"] {
         border-style: dashed;
         border-color: color-mix(
             in oklab,
             var(--fl-button-color, var(--fl-color-inverted))
                 var(--fl-border-strength),
-            transparent
+            var(--fl-color-control)
         );
-        background: transparent;
+        background: var(--fl-color-control);
         color: var(
             --fl-button-text,
             var(--fl-button-color, var(--fl-color-inverted))
@@ -299,13 +313,6 @@
     }
 
     [data-element="button"][data-color="neutral"]:is(
-            [data-variant="soft"],
-            [data-variant="subtle"]
-        ):hover {
-        background: var(--fl-color-accent);
-    }
-
-    [data-element="button"][data-color="neutral"]:is(
             [data-variant="outline"],
             [data-variant="dashed"]
         ) {
@@ -322,14 +329,6 @@
             [data-variant="dashed"]
         ) {
         color: var(--fl-color-foreground);
-    }
-
-    [data-element="button"][data-color="neutral"]:is(
-            [data-variant="outline"],
-            [data-variant="ghost"],
-            [data-variant="dashed"]
-        ):hover {
-        background: var(--fl-color-muted);
     }
 
     [data-element="button"][data-size="xs"] {

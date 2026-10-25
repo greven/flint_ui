@@ -20,6 +20,10 @@ defmodule FlintUIDocsWeb.Docs.Card do
   end
 
   @impl true
+  def playground_controls,
+    do: [:variant, :body, :spacing, :outline, :shadow, :inverted]
+
+  @impl true
   def usage do
     [
       %{
@@ -176,11 +180,14 @@ defmodule FlintUIDocsWeb.Docs.Card do
         treatments with no color: `solid` (the default) uses the base surface,
         `soft` is a half-step off it, and `muted` is the full de-emphasized
         step. In light the steps darken; in dark they lighten, following the
-        surface scale. All variants draw an outline and shadow by default.
+        surface scale. `ghost` has no surface or elevation of its own, so it
+        composes with `outline`: keep the outline for an outline-only card, or
+        set `outline={false}` for a bare container. Every other variant draws
+        an outline and shadow by default.
         """,
         code: """
-        <div class="grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
-          <.card :for={variant <- ~w(solid soft muted)} variant={variant}>
+        <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
+          <.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
             <:title>{variant}</:title>
             <p>Body</p>
           </.card>
@@ -225,8 +232,11 @@ defmodule FlintUIDocsWeb.Docs.Card do
         layer: :styled,
         covers: [:outline],
         body: """
-        `outline` is on by default for every variant. Set `outline={false}` to
-        remove the border while keeping the surface, shadow and spacing.
+        `outline` is on by default for every variant, including `ghost`. On
+        solid, soft and muted cards it removes the border while keeping the
+        surface, shadow and spacing. On a ghost card it is the only thing that
+        draws the card: `variant="ghost"` with the outline is an outline-only
+        card, and `outline={false}` leaves a bare container.
         """,
         code: """
         <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
@@ -526,6 +536,24 @@ defmodule FlintUIDocsWeb.Docs.Card do
         """
       },
       %{
+        id: :ghost,
+        title: "Ghost card",
+        description:
+          "The ghost variant drops the card's own surface and elevation. Keep the outline for an outline-only card, or remove it for a bare container.",
+        code: """
+        <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+          <.card variant="ghost">
+            <:title>Outline card</:title>
+            <p>Body</p>
+          </.card>
+          <.card variant="ghost" outline={false}>
+            <:title>Bare container</:title>
+            <p>Body</p>
+          </.card>
+        </div>
+        """
+      },
+      %{
         id: :base_section,
         title: "Accessible section",
         layer: :base,
@@ -748,8 +776,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
   @impl true
   def render_usage(%{block: :variant} = assigns) do
     ~H"""
-    <div class="grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
-      <Components.card :for={variant <- ~w(solid soft muted)} variant={variant}>
+    <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
+      <Components.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
         <:title>{variant}</:title>
         <p>Body</p>
       </Components.card>
@@ -1019,6 +1047,21 @@ defmodule FlintUIDocsWeb.Docs.Card do
     """
   end
 
+  def render_block(%{block: :ghost} = assigns) do
+    ~H"""
+    <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+      <Components.card variant="ghost">
+        <:title>Outline card</:title>
+        <p>Body</p>
+      </Components.card>
+      <Components.card variant="ghost" outline={false}>
+        <:title>Bare container</:title>
+        <p>Body</p>
+      </Components.card>
+    </div>
+    """
+  end
+
   @impl true
   def css do
     %{
@@ -1029,7 +1072,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
       header, body and footer are set apart: seamless, separated (or one-sided
       `separated-header`/`separated-footer`), divided, inset or flush. `variant`
       selects the surface, while `outline`, `shadow`, `inverted`, and `spacing`
-      adjust it. Separated bodies use the card surface with darker bands; divided
+      adjust it. `ghost` removes the surface and elevation entirely, leaving the
+      outline and spacing as the card's only treatment. Separated bodies use the card surface with darker bands; divided
       bodies inherit the card surface; inset and flush render a panel that is a
       subtle well on light solid cards and raised in dark or on soft and muted
       cards. Inverted cards keep a well. The public inputs are

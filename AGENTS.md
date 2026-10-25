@@ -5,7 +5,11 @@ Repository-wide guidance for agents working on FlintUI.
 ## What this repo is
 
 - `lib/` — the `flint_ui` library: accessible, unstyled Phoenix LiveView components.
-- `assets/` — the TypeScript runtime (hooks), bundled into `priv/static/flint.js`.
+- `assets/` — the TypeScript runtime (hooks), bundled into `priv/static/flint.js` and
+  `priv/static/flint-sound.js`; consumers import them as `"flint_ui"` and `"flint_ui/sound"`
+  (the package `exports` map hides `priv/static`), never by a relative path into `deps`.
+  Both bundles are listed explicitly in `package/0`, so a Hex build fails if
+  `mix assets.build` has not run.
 - `docs/` — the docs website (its own Mix project; see `docs/AGENTS.md`).
 - `dev/` — the workbench app (its own Mix project).
 
@@ -210,8 +214,15 @@ another FlintUI component without clobbering that child's `data-element`-keyed t
 seam/corner geometry, so buttons, toggles and future inputs mash without the group
 knowing their type. The only place the group names a child is the `size` cascade
 (`> :is([data-element="button"], [data-element="toggle"])`); a new control opts in
-by adding its `data-element` there. Prefer composing `<.group>` over a bespoke
-wrapper when a set of controls should read as one unit.
+by adding its `data-element` there. Attached children overlap by 1px; each
+bordered control paints the opaque `--fl-color-control` fill, so the later
+child's fill covers the previous border at the seam and only one line shows.
+Hover/active are an in-border `currentColor` overlay (clipped to the padding box
+for bordered variants, so it follows joined corners and never tints the border),
+keeping the alpha border's backdrop stable. The hover overlay is weaker than the
+border alpha, so the border still reads while hovering. The hovered/focused child
+wins the seam via `z-index`. Prefer composing `<.group>` over a bespoke wrapper
+when a set of controls should read as one unit.
 
 Future work: `role="toolbar"` currently only gets the role if the host passes
 it. The group does not implement roving focus or arrow-key movement, so the docs
@@ -335,25 +346,44 @@ FlintUI does not require Tailwind.
   panel, ≈ Nuxt's `bg-default`), `--fl-color-surface-soft` (an opaque half-step
   toward `elevated`), `--fl-color-surface-muted` (the full muted step, aliasing
   `--fl-color-muted`), `--fl-color-elevated`/`--fl-color-muted`
-  (`bg-elevated`/`bg-muted`), `--fl-color-inverted`, `--fl-color-border`,
-  `--fl-color-dimmed`/`--fl-color-muted-foreground`, plus
+  (`bg-elevated`/`bg-muted`), `--fl-color-inverted`, `--fl-color-control`,
+  `--fl-color-border`, `--fl-color-dimmed`/`--fl-color-muted-foreground`, plus
   `--fl-color-disabled`/`-foreground`/`-border` and `--fl-disabled-opacity`.
+  Ink is a neutral scale too, not near-black/white: `--fl-color-foreground`
+  (`neutral-700` light / `neutral-200` dark) is the default label, matching
+  Fluxon and Tailwind Plus; `--fl-color-foreground-soft` (`neutral-600` /
+  `neutral-300`) is secondary copy; `--fl-color-muted-foreground` (`neutral-500` /
+  `neutral-400`) is the next step, and `--fl-color-dimmed` is disabled-only.
+  `--fl-color-surface-foreground` aliases the default ink. Solid control labels
+  do not use the page ink: they use the role `-foreground` aliases, which
+  `mix flint.palette` selects for AA against the fill (usually pure white or the
+  darkest shade). Keep the foreground steps at or above AA (4.5:1) on the
+  surfaces they are used on; `muted-foreground` on a light muted surface is the
+  known edge case still to resolve.
   The scale is opaque and moves from the base surface toward `elevated`: light
   steps darker, dark steps lighter. In dark the base surface is `neutral-800`
   and muted/elevated is an 80/20 `neutral-800`/`neutral-700` mix, keeping cards
-  lifted off the near-black page. Dark borders are foreground-alpha steps
-  (5% muted, 8% default, 12% accented/input) over the surface, so they follow it
-  instead of sitting at a fixed contrast. Colored control borders derive from
-  the role color with `--fl-border-strength` / `--fl-border-strength-soft`
-  instead of shipping a border token per role.
+  lifted off the near-black page. `--fl-color-control` is the opaque fill every
+  bordered control paints (light: the surface; dark: a subtle lift off the page),
+  so an attached group's later child covers its neighbour's border at the seam.
+  Neutral dark borders are foreground-alpha steps (5% muted, 8% default, 12%
+  accented/input) so they follow the fill they sit on; because every bordered
+  control paints `--fl-color-control` and hover is an in-border overlay, the
+  backdrop stays stable. Colored control borders mix the role color with
+  `--fl-color-control` using `--fl-border-strength` /
+  `--fl-border-strength-soft` instead of shipping a border token per role.
   Never make a surface token translucent over the page; composite over
   `--fl-color-surface` or use the scale directly. Disabled surfaces use the
   muted fill with a dimmed label; colored controls keep their hue and dim
   through `--fl-disabled-opacity`. They derive from the `neutral` role's scale,
   so a palette remap carries through. Components that
   shouldn't take a `color` use these: **Card** exposes only neutral surface
-  `variant`s (`solid` default, `soft`, `muted`), never a hue. `outline` and
-  `shadow` (both true by default) and `inverted` compose with every variant.
+  `variant`s (`solid` default, `soft`, `muted`, `ghost`), never a hue. `ghost`
+  has no surface or elevation of its own, so `outline` alone reads as an
+  outline-only card and `outline={false}` as a bare container; `inverted` is a
+  no-op there (there is no surface to invert). `outline` and
+  `shadow` (both true by default) and `inverted` compose with every other
+  variant.
   `spacing` runs `xs`/`sm`/`md`/`lg`/`xl` (14/16/20/24/32px, `md` default).
   The Card is a flex container whose `orientation` (`vertical` default,
   `horizontal`) lays out the optional header, body region, and optional footer.
@@ -410,13 +440,14 @@ FlintUI does not require Tailwind.
   `--fl-control-shadow`; override it with `0 0 #0000` per instance or theme to
   remove them. `dashed`/`ghost`/`link` stay flat, and `soft` has no shadow.
   Shared control effects live in the theme: `--fl-control-depth` scales the rim
-  and inner line, `--fl-control-shadow` is the outer elevation, and
-  `--fl-control-press` is the `:active` nudge, so a preset can flatten or gloss
-  every control at once and a consumer overrides the same names per instance via
-  `class`/`style`. Pressing sinks the button: `:active` nudges it, fades the
-  rim's opacity to 0, and drops the elevation to a transparent shadow (same
-  count/inset-ness, so `box-shadow` transitions), and `prefers-reduced-motion`
-  drops only the nudge.
+  and inner line, `--fl-control-shadow` is the outer elevation,
+  `--fl-control-hover-opacity`/`--fl-control-active-opacity` are the in-border
+  `currentColor` overlay, and `--fl-control-press` is the `:active` nudge, so a
+  preset can flatten or gloss every control at once and a consumer overrides the
+  same names per instance via `class`/`style`. Pressing sinks the button:
+  `:active` nudges it, fades the rim's opacity to 0, and drops the elevation to a
+  transparent shadow (same count/inset-ness, so `box-shadow` transitions), and
+  `prefers-reduced-motion` drops only the nudge.
 - **Scales are tokens.** `--fl-font-size-*`, `--fl-line-height-*`,
   `--fl-font-weight-*`, `--fl-spacing-*` (base `--fl-spacing` + multipliers),
   `--fl-shadow-*`, `--fl-breakpoint-*`, `--fl-container`, `--fl-duration-*`,

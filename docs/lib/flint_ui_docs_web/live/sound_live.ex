@@ -485,13 +485,14 @@ defmodule FlintUIDocsWeb.SoundLive do
               <span
                 :if={@saving}
                 data-sound-enter="loading"
-                class="inline-flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400"
+                class="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400"
               >
-                <.icon name="lucide-loader-circle" class="size-4 animate-spin" /> Saving…
+                <%!-- <.icon name="lucide-loader-circle" class="size-4 animate-spin" /> Saving… --%>
+                <.loading class="size-4" /> Save Saving…
               </span>
               <span
                 :if={@saved}
-                class="inline-flex items-center gap-1.5 font-medium text-emerald-700 dark:text-emerald-400"
+                class="flex items-center gap-1.5 font-medium text-emerald-700 dark:text-emerald-400"
               >
                 <.icon name="lucide-check" class="size-4" /> Saved just now
               </span>
@@ -560,8 +561,8 @@ defmodule FlintUIDocsWeb.SoundLive do
 
   defp snippet(:js_setup) do
     """
-    import {hooks as flintHooks} from "../../deps/flint_ui/priv/static/flint.js"
-    import {hooks as soundHooks} from "../../deps/flint_ui/priv/static/flint-sound.js"
+    import {hooks as flintHooks} from "flint_ui"
+    import {hooks as soundHooks} from "flint_ui/sound"
 
     const liveSocket = new LiveSocket("/live", Socket, {
       hooks: {...flintHooks, ...soundHooks},
@@ -674,7 +675,7 @@ defmodule FlintUIDocsWeb.SoundLive do
 
   defp snippet(:register) do
     """
-    import { sound } from "../../deps/flint_ui/priv/static/flint-sound.js"
+    import { sound } from "flint_ui/sound"
 
     sound.register("boop", [
       { kind: "tone", f: 660, f2: 990, a: 0.004, d: 0.08, peak: 0.16, send: 0.2 },

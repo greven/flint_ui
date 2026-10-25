@@ -80,9 +80,8 @@ defmodule FlintUI do
   every page, every live navigation, and markup rendered later.
 
   Sounds ship as an optional bundle, so the core `flint.js` does not register
-  this hook. Run `mix flint.setup --sound` (or import
-  `priv/static/flint-sound.js` and merge its `hooks` yourself); without it the
-  provider has nothing attached.
+  this hook. Run `mix flint.setup --sound` (or import `flint_ui/sound` and merge
+  its `hooks` yourself); without it the provider has nothing attached.
 
   Sounds are off by default. A cue plays only when an element opts in with a
   `data-sound*` attribute, and only while the provider is enabled.

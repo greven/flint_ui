@@ -151,7 +151,9 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-collapsible [data-element='collapsible']")
     assert has_element?(view, "#playground-collapsible .border-dashed")
 
-    view |> element("#playground-collapsible button[phx-value-key='disabled']") |> render_click()
+    view
+    |> element("#playground-collapsible-controls")
+    |> render_change(%{"disabled" => "true"})
 
     assert has_element?(view, "#playground-collapsible [data-part='trigger'][disabled]")
 
@@ -282,21 +284,22 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
            )
   end
 
-  test "card orientation control lays sections out in a row", %{conn: conn} do
+  test "card orientation stays out of the playground and renders in the example", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
+
+    refute has_element?(
+             view,
+             "#playground-card-controls select[name='orientation']"
+           )
 
     assert has_element?(
              view,
              "#playground-card [data-element='card'][data-orientation='vertical']"
            )
 
-    view
-    |> element("#playground-card-controls")
-    |> render_change(%{"orientation" => "horizontal"})
-
     assert has_element?(
              view,
-             "#playground-card [data-element='card'][data-orientation='horizontal']"
+             "#example-card-horizontal [data-element='card'][data-orientation='horizontal']"
            )
   end
 
@@ -319,6 +322,22 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
            )
   end
 
+  test "boolean controls render as true/false selects", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/card")
+
+    assert has_element?(
+             view,
+             "#playground-card-controls select[name='outline'] option[value='true']"
+           )
+
+    assert has_element?(
+             view,
+             "#playground-card-controls select[name='outline'] option[value='false']"
+           )
+
+    refute has_element?(view, "#playground-card-controls button[phx-value-key]")
+  end
+
   test "card shadow control toggles the default", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
 
@@ -328,8 +347,8 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
            )
 
     view
-    |> element("#playground-card button[phx-value-key='shadow']")
-    |> render_click()
+    |> element("#playground-card-controls")
+    |> render_change(%{"shadow" => "false"})
 
     assert has_element?(
              view,
@@ -354,7 +373,9 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(view, "#playground-toggle [data-element='toggle'][aria-pressed='false']")
 
-    view |> element("button[phx-value-key='pressed']") |> render_click()
+    view
+    |> element("#playground-toggle-controls")
+    |> render_change(%{"pressed" => "true"})
 
     assert has_element?(view, "#playground-toggle [data-element='toggle'][aria-pressed='true']")
   end
@@ -382,9 +403,9 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-button-controls select[name='color']")
     assert has_element?(view, "#playground-button-controls select[name='size']")
 
-    refute has_element?(view, "#playground-button-controls button[phx-value-key='disabled']")
-    refute has_element?(view, "#playground-button-controls button[phx-value-key='loading']")
-    refute has_element?(view, "#playground-button-controls button[phx-value-key='depth']")
+    refute has_element?(view, "#playground-button-controls select[name='disabled']")
+    refute has_element?(view, "#playground-button-controls select[name='loading']")
+    refute has_element?(view, "#playground-button-controls select[name='depth']")
   end
 
   test "preview controls opt out of password-manager autofill", %{conn: conn} do

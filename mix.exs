@@ -9,7 +9,32 @@ defmodule FlintUI.MixProject do
       start_permanent: Mix.env() == :prod,
       compilers: Mix.compilers() ++ [:flint_theme],
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      package: package(),
+      description: "Accessible, unstyled Phoenix LiveView components with a CSS theme layer"
+    ]
+  end
+
+  # The JS bundles and declarations under priv/static are build artifacts (the
+  # directory is gitignored). Listing the two bundles explicitly makes
+  # `mix hex.build`/`mix hex.publish` fail with "Missing files" unless
+  # `mix assets.build` ran first; `priv` still packages the rest of the output.
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/greven/flint_ui"},
+      files: ~w(
+        lib
+        priv
+        priv/static/flint.js
+        priv/static/flint-sound.js
+        mix.exs
+        package.json
+        .formatter.exs
+        README.md
+        LICENSE.md
+        NOTICE.md
+      )
     ]
   end
 
