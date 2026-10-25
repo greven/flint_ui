@@ -18,6 +18,7 @@ defmodule FlintUI do
   - `group`
   - `icon`
   - `loading`
+  - `loading_text`
   - `toggle`
 
   ## Sounds
@@ -38,6 +39,7 @@ defmodule FlintUI do
     {:group, []},
     {:icon, []},
     {:loading, []},
+    {:loading_text, []},
     {:toggle, []}
   ]
 

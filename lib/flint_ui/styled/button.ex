@@ -59,6 +59,19 @@ defmodule FlintUI.Styled.Button do
           doc: "The control size."
         ),
         Prop.new(
+          name: :square,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether the button is square. Use it for icon-only buttons; the width follows the selected size."
+        ),
+        Prop.new(
+          name: :wide,
+          values: [true, false],
+          default: false,
+          doc: "Whether the button fills the width of its container."
+        ),
+        Prop.new(
           name: :depth,
           values: [true, false],
           default: true,

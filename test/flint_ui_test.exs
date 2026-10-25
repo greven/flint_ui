@@ -8,6 +8,7 @@ defmodule FlintUITest do
     assert :group in FlintUI.components()
     assert :icon in FlintUI.components()
     assert :loading in FlintUI.components()
+    assert :loading_text in FlintUI.components()
     assert :toggle in FlintUI.components()
   end
 

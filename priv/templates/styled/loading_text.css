@@ -1,0 +1,156 @@
+@layer components {
+  /* Loading text. The base publishes the cycle length (and the dot or character
+   * stagger) inline as `animation-duration`/`animation-delay`, so the theme only
+   * supplies the keyframes and timing. Typography follows the context. */
+  [data-element="loading_text"] {
+    display: inline-flex;
+    align-items: baseline;
+    color: currentColor;
+  }
+
+  /* Semantic roles read the role's text token, so the copy stays legible on the
+   * page. `inherit` (the default) has no rule and follows `currentColor`. */
+  [data-element="loading_text"][data-color="primary"] {
+    color: var(--fl-color-primary-text);
+  }
+
+  [data-element="loading_text"][data-color="secondary"] {
+    color: var(--fl-color-secondary-text);
+  }
+
+  [data-element="loading_text"][data-color="success"] {
+    color: var(--fl-color-success-text);
+  }
+
+  [data-element="loading_text"][data-color="info"] {
+    color: var(--fl-color-info-text);
+  }
+
+  [data-element="loading_text"][data-color="warning"] {
+    color: var(--fl-color-warning-text);
+  }
+
+  [data-element="loading_text"][data-color="error"] {
+    color: var(--fl-color-error-text);
+  }
+
+  [data-element="loading_text"][data-color="neutral"] {
+    color: var(--fl-color-neutral-text);
+  }
+
+  /* Dots. `inline-flex` keeps template whitespace between the dot spans from
+   * turning into gaps. */
+  [data-element="loading_text"][data-variant="dots"] [data-part="dots"] {
+    display: inline-flex;
+  }
+
+  [data-element="loading_text"][data-variant="dots"] [data-part="dot"] {
+    opacity: 0;
+    animation: fl-loading-text-dot 1400ms linear infinite;
+  }
+
+  [data-element="loading_text"][data-variant="blink"] [data-part="text"] {
+    animation: fl-loading-text-blink 2000ms ease-in-out infinite;
+  }
+
+  /* A moving highlight over a dimmer base. The gradient carries the base color
+   * too, so the copy stays visible when the animation is disabled. */
+  [data-element="loading_text"][data-variant="shimmer"] [data-part="text"] {
+    background-image: linear-gradient(
+      90deg,
+      color-mix(in oklab, currentColor 55%, transparent) 0%,
+      color-mix(in oklab, currentColor 55%, transparent) 46%,
+      currentColor 50%,
+      color-mix(in oklab, currentColor 55%, transparent) 54%,
+      color-mix(in oklab, currentColor 55%, transparent) 100%
+    );
+    background-position: 100% center;
+    background-repeat: no-repeat;
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fl-loading-text-shimmer 2000ms linear infinite;
+  }
+
+  /* Wave. A flex row lets the character spans sit side by side while the
+   * template's whitespace is ignored; real spaces are their own
+   * `white-space: pre` spans. */
+  [data-element="loading_text"][data-variant="wave"] [data-part="text"] {
+    display: inline-flex;
+    align-items: baseline;
+    perspective: 500px;
+  }
+
+  [data-element="loading_text"][data-variant="wave"] [data-part="char"] {
+    display: inline-block;
+    color: color-mix(in oklab, currentColor 55%, transparent);
+    white-space: pre;
+    transform-style: preserve-3d;
+    animation: fl-loading-text-wave 1000ms ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-element="loading_text"],
+    [data-element="loading_text"] [data-part="dot"],
+    [data-element="loading_text"] [data-part="text"],
+    [data-element="loading_text"] [data-part="char"] {
+      animation: none;
+    }
+
+    [data-element="loading_text"][data-variant="shimmer"] [data-part="text"] {
+      background: none;
+      -webkit-text-fill-color: currentColor;
+    }
+
+    [data-element="loading_text"][data-variant="dots"] [data-part="dot"] {
+      opacity: 1;
+    }
+
+    [data-element="loading_text"][data-variant="wave"] [data-part="char"] {
+      color: inherit;
+      transform: none;
+    }
+  }
+}
+
+@keyframes fl-loading-text-dot {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fl-loading-text-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes fl-loading-text-shimmer {
+  to {
+    background-position: 0% center;
+  }
+}
+
+@keyframes fl-loading-text-wave {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1) rotateY(0);
+    color: color-mix(in oklab, currentColor 55%, transparent);
+  }
+
+  50% {
+    transform: translate3d(2px, -2px, 10px) scale(1.1) rotateY(10deg);
+    color: currentColor;
+  }
+}

@@ -34,6 +34,7 @@ defmodule FlintUIDocsWeb.Docs do
     Group,
     Icon,
     Loading,
+    LoadingText,
     Source,
     Toggle
   }
@@ -45,6 +46,7 @@ defmodule FlintUIDocsWeb.Docs do
     group: Group,
     icon: Icon,
     loading: Loading,
+    loading_text: LoadingText,
     toggle: Toggle
   }
 

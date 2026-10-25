@@ -144,6 +144,72 @@ defmodule FlintUIDocsWeb.Docs.Button do
         """
       },
       %{
+        id: :square,
+        title: "Square",
+        layer: :styled,
+        covers: [:square],
+        body: """
+        Set `square` for an icon-only button. The box stays square at every
+        `size`, and inline padding is dropped so the icon fills it. The button
+        still needs an accessible name, so pass `aria-label` or
+        `aria-labelledby` (the icon is not a label). `square` has no effect on
+        the `link` variant, which has no box of its own.
+        """,
+        code: """
+        <div class="flex flex-wrap items-center gap-3">
+          <.button square variant="ghost" aria-label="More options">
+            <.icon name="lucide-ellipsis" />
+          </.button>
+          <.button square variant="dashed" aria-label="Add item">
+            <.icon name="lucide-plus" />
+          </.button>
+          <.button square variant="outline" aria-label="Edit">
+            <.icon name="lucide-pencil" />
+          </.button>
+          <.button square variant="solid" aria-label="Delete">
+            <.icon name="lucide-trash" />
+          </.button>
+          <.button square variant="solid" color="info" aria-label="Download">
+            <.icon name="lucide-download" />
+          </.button>
+        </div>
+        """
+      },
+      %{
+        id: :square_sizes,
+        title: "Square sizes",
+        layer: :styled,
+        covers: [],
+        body: """
+        `size` scales the square box and the icon inside it, so an icon-only
+        button lines up with a text button of the same size.
+        """,
+        code: """
+        <div class="flex flex-wrap items-center gap-3">
+          <.button square size="xs" aria-label="Add item"><.icon name="lucide-plus" /></.button>
+          <.button square size="sm" aria-label="Add item"><.icon name="lucide-plus" /></.button>
+          <.button square size="md" aria-label="Add item"><.icon name="lucide-plus" /></.button>
+          <.button square size="lg" aria-label="Add item"><.icon name="lucide-plus" /></.button>
+          <.button square size="xl" aria-label="Add item"><.icon name="lucide-plus" /></.button>
+        </div>
+        """
+      },
+      %{
+        id: :wide,
+        title: "Full width",
+        layer: :styled,
+        covers: [:wide],
+        body: """
+        Set `wide` to fill the width of the surrounding container, which is
+        useful for a form's primary action or a mobile call to action. It is
+        layout, not emphasis: combine it with any `variant` and `size`. Avoid it
+        inside a `<.group>`, whose children share the row.
+        """,
+        code: """
+        <.button wide variant="solid">Continue</.button>
+        """
+      },
+      %{
         id: :depth,
         title: "Depth",
         layer: :styled,
@@ -435,6 +501,49 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <div class="flex flex-wrap items-center gap-3">
       <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
     </div>
+    """
+  end
+
+  def render_usage(%{block: :square} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button square variant="ghost" aria-label="More options">
+        <Components.icon name="lucide-ellipsis" />
+      </Components.button>
+      <Components.button square variant="dashed" aria-label="Add item">
+        <Components.icon name="lucide-plus" />
+      </Components.button>
+      <Components.button square variant="outline" aria-label="Edit">
+        <Components.icon name="lucide-pencil" />
+      </Components.button>
+      <Components.button square variant="solid" aria-label="Delete">
+        <Components.icon name="lucide-trash" />
+      </Components.button>
+      <Components.button square variant="solid" color="info" aria-label="Download">
+        <Components.icon name="lucide-download" />
+      </Components.button>
+    </div>
+    """
+  end
+
+  def render_usage(%{block: :square_sizes} = assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button
+        :for={{label, size} <- sizes()}
+        square
+        size={size}
+        aria-label={"Add item (#{label})"}
+      >
+        <Components.icon name="lucide-plus" />
+      </Components.button>
+    </div>
+    """
+  end
+
+  def render_usage(%{block: :wide} = assigns) do
+    ~H"""
+    <Components.button wide variant="solid">Continue</Components.button>
     """
   end
 

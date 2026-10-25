@@ -394,4 +394,24 @@
         > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xl);
     }
+
+    /* Square: equal width and height for icon-only buttons. The height comes from
+     * the size scale, so the width follows it; inline padding and gap are dropped
+     * so the icon (or a visually hidden label) cannot widen the box. Link has no
+     * box of its own, so square does not apply there. */
+    [data-element="button"][data-square="true"]:not(
+            [data-variant="link"]
+        ) {
+        aspect-ratio: 1;
+        padding-inline: 0;
+        gap: 0;
+    }
+
+    /* Wide: fills the container. Block-level so stacked wide buttons do not sit
+     * on an inline baseline (which leaves a descender gap between them). Not for
+     * buttons inside a group, whose children share the row. */
+    [data-element="button"][data-wide="true"] {
+        display: flex;
+        width: 100%;
+    }
 }

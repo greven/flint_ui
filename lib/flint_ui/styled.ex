@@ -20,6 +20,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Group,
     FlintUI.Styled.Icon,
     FlintUI.Styled.Loading,
+    FlintUI.Styled.LoadingText,
     FlintUI.Styled.Toggle
   ]
 

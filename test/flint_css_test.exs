@@ -234,6 +234,10 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="toggle"][data-variant] > [data-element="icon"])
     assert css =~ ~s([data-element="toggle"][data-color="neutral"])
     assert css =~ ~s([data-element="loading"][data-size])
+    assert css =~ ~s([data-element="loading_text"][data-variant="dots"])
+    assert css =~ ~s([data-element="loading_text"][data-variant="blink"])
+    assert css =~ ~s([data-element="loading_text"][data-variant="shimmer"])
+    assert css =~ ~s([data-element="loading_text"][data-variant="wave"])
     assert css =~ ~s([data-element="icon"][data-size])
     assert css =~ "--fl-icon-size:"
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
@@ -303,6 +307,14 @@ defmodule FlintUI.FlintCSSTest do
 
     refute css =~
              ~r/\[data-element="button"\]\[data-depth="true"\] \{\s*--fl-control-depth: 1;/
+  end
+
+  test "square and wide buttons are boxed and full-width", %{css: css} do
+    assert css =~ ~s([data-element="button"][data-square="true"])
+    assert css =~ "aspect-ratio: 1;"
+    assert css =~ "padding-inline: 0;"
+    assert css =~ ~s([data-element="button"][data-wide="true"])
+    assert css =~ "width: 100%;"
   end
 
   test "card exposes five inputs and styles bodies directly", %{css: css} do
