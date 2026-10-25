@@ -217,10 +217,7 @@
     --fl-color-error-900: oklch(0.396 0.141 25.723);
     --fl-color-error-950: oklch(0.258 0.092 26.042);
 
-    /* Role aliases, resolved per scheme: `{role}` is the solid fill,
-     * `-foreground` the label on it, `-text` the shade for text on the page.
-     * `mix flint.palette` recomputes them from the imported scale so they clear
-     * AA contrast (see `FlintUI.Palette.Contrast`). */
+    /* Color aliases */
     --fl-color-primary: light-dark(
         var(--fl-color-primary-900),
         var(--fl-color-primary-200)
@@ -312,15 +309,36 @@
         var(--fl-color-error-400)
     );
 
+    --fl-color-primary-soft-foreground: light-dark(
+        var(--fl-color-primary-text),
+        color-mix(in oklab, var(--fl-color-primary), oklch(1 0 0) 15%)
+    );
+    --fl-color-secondary-soft-foreground: light-dark(
+        var(--fl-color-secondary-text),
+        color-mix(in oklab, var(--fl-color-secondary), oklch(1 0 0) 15%)
+    );
+    --fl-color-success-soft-foreground: light-dark(
+        var(--fl-color-success-text),
+        color-mix(in oklab, var(--fl-color-success), oklch(1 0 0) 15%)
+    );
+    --fl-color-info-soft-foreground: light-dark(
+        var(--fl-color-info-text),
+        color-mix(in oklab, var(--fl-color-info), oklch(1 0 0) 15%)
+    );
+    --fl-color-warning-soft-foreground: light-dark(
+        var(--fl-color-warning-text),
+        color-mix(in oklab, var(--fl-color-warning), oklch(1 0 0) 15%)
+    );
+    --fl-color-error-soft-foreground: light-dark(
+        var(--fl-color-error-text),
+        color-mix(in oklab, var(--fl-color-error), oklch(1 0 0) 15%)
+    );
+
     /* Colored control borders derive from the role color. */
     --fl-border-strength: 50%;
     --fl-border-strength-soft: 25%;
 
-    /* Surfaces and text. The default ink is a softened neutral (Tailwind Plus
-     * and Fluxon both use neutral-700 / neutral-200), not near-black or white.
-     * The scale steps lighter; `-soft` is secondary copy and `muted-foreground`
-     * is the next step up. Solid labels stay on the role `-foreground` aliases,
-     * which `mix flint.palette` selects for AA contrast. */
+    /* Surfaces and text. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
         var(--fl-color-neutral-950)

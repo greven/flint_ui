@@ -169,7 +169,20 @@ defmodule FlintUIDocsWeb.ThemeLive do
             shade per scheme, so the same button looks right in light and dark
             without a second override. Retint a whole role by overriding its
             alias, or address a specific shade directly.
+            Tinted and outlined colored controls use <code class="font-mono">-soft-foreground</code>
+            for their label: light follows <code class="font-mono">-text</code>, dark
+            mixes the role fill with white (60%, 30% for warning) so the hue reads
+            lighter and less saturated without dropping below AA. Solid keeps <code class="font-mono">-foreground</code>.
           </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <Components.button
+              :for={role <- ~w(primary secondary success info warning error)}
+              variant="outline"
+              color={role}
+            >
+              {role}
+            </Components.button>
+          </div>
           <DocsComponents.code_block code={snippet(:colors)} lang={:css} />
         </DocsComponents.section>
 
@@ -364,6 +377,16 @@ defmodule FlintUIDocsWeb.ThemeLive do
     --fl-color-primary: light-dark(
       var(--fl-color-primary-600),
       var(--fl-color-primary-400)
+    );
+
+    /* Tinted and outlined colored controls use a softer label in dark. */
+    --fl-color-primary-soft-foreground: light-dark(
+      var(--fl-color-primary-text),
+      color-mix(in oklab, var(--fl-color-primary), white 60%)
+    );
+    --fl-color-warning-soft-foreground: light-dark(
+      var(--fl-color-warning-text),
+      color-mix(in oklab, var(--fl-color-warning), white 30%)
     );
     """
   end

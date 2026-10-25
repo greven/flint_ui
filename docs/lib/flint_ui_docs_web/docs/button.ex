@@ -514,6 +514,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
       the rest. The public inputs are `--fl-button-color`,
       `--fl-button-color-foreground`, and `--fl-button-text`; borders, tinted
       surfaces, and focus all derive from them and the theme tokens.
+      `--fl-button-text` resolves to the role's `-soft-foreground` label, so
+      tinted and outlined colored buttons read lighter in dark; solid uses
+      `--fl-button-color-foreground`.
       """,
       snippets: [
         %{
@@ -523,7 +526,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           .danger-action {
             --fl-button-color: var(--fl-color-error);
             --fl-button-color-foreground: var(--fl-color-error-foreground);
-            --fl-button-text: var(--fl-color-error-text);
+            --fl-button-text: var(--fl-color-error-soft-foreground);
           }
           """
         },

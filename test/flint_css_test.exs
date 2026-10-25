@@ -94,6 +94,56 @@ defmodule FlintUI.FlintCSSTest do
     assert FlintUI.Palette.Contrast.ratio(neutral.(800), white) >= 4.5
   end
 
+  test "colored soft foregrounds lighten the role in dark", %{css: css} do
+    for role <- ~w(primary secondary success info warning error) do
+      assert css =~ "--fl-color-#{role}-soft-foreground: light-dark("
+      assert css =~ "--fl-button-text: var(--fl-color-#{role}-soft-foreground);"
+      assert css =~ "--fl-toggle-text: var(--fl-color-#{role}-soft-foreground);"
+    end
+
+    assert css =~
+             ~r/--fl-color-primary-soft-foreground: light-dark\(\s*var\(--fl-color-primary-text\),\s*color-mix\(in oklab, var\(--fl-color-primary\), oklch\(1 0 0\) 60%\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-warning-soft-foreground: light-dark\(\s*var\(--fl-color-warning-text\),\s*color-mix\(in oklab, var\(--fl-color-warning\), oklch\(1 0 0\) 30%\)\s*\)/
+
+    # Neutral colored text keeps the page ink instead of a role tint.
+    assert css =~ "--fl-button-text: var(--fl-color-foreground);"
+    assert css =~ "--fl-toggle-text: var(--fl-color-foreground);"
+  end
+
+  test "colored soft foregrounds clear AA on dark control and tinted surfaces", %{css: css} do
+    alias FlintUI.Palette.{Contrast, Tailwind}
+
+    neutral = fn shade ->
+      [_, value] = Regex.run(~r/--fl-color-neutral-#{shade}: ([^;]+);/, css)
+      value
+    end
+
+    white = "oklch(100% 0 none)"
+    dark_control = Contrast.mix(neutral.(950), neutral.(800), 0.75)
+
+    roles = [
+      {"primary", :red, 600, 0.4},
+      {"secondary", :gray, 600, 0.4},
+      {"success", :emerald, 700, 0.4},
+      {"info", :blue, 600, 0.4},
+      {"warning", :amber, 400, 0.7},
+      {"error", :red, 600, 0.4}
+    ]
+
+    for {role, color, shade, fill_weight} <- roles do
+      fill = Tailwind.shades(color) |> Map.fetch!(shade)
+      soft = Contrast.mix(fill, white, fill_weight)
+      tint = Contrast.mix(fill, dark_control, 0.10)
+
+      for {surface, background} <- [{"control", dark_control}, {"tint", tint}] do
+        ratio = Contrast.ratio(soft, background)
+        assert ratio >= 4.5, "#{role} soft foreground on #{surface}: #{Float.round(ratio, 2)}"
+      end
+    end
+  end
+
   test "shared control effects replace per-component effect and radius tokens", %{css: css} do
     assert css =~ "--fl-control-depth: 1;"
     assert css =~ "--fl-control-shadow: var(--fl-shadow-base);"

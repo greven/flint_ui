@@ -385,6 +385,9 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       leaves the pressed state to `data-state`. The public inputs are
       `--fl-toggle-color`, `--fl-toggle-color-foreground`, and
       `--fl-toggle-text`; surfaces, borders, and focus derive from them.
+      `--fl-toggle-text` resolves to the role's `-soft-foreground` label, so
+      tinted and outlined colored toggles read lighter in dark; solid uses
+      `--fl-toggle-color-foreground`.
       """,
       snippets: [
         %{
@@ -394,7 +397,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           .danger-toggle {
             --fl-toggle-color: var(--fl-color-error);
             --fl-toggle-color-foreground: var(--fl-color-error-foreground);
-            --fl-toggle-text: var(--fl-color-error-text);
+            --fl-toggle-text: var(--fl-color-error-soft-foreground);
           }
           """
         }

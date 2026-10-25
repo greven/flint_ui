@@ -313,15 +313,21 @@ FlintUI does not require Tailwind.
   their anatomy directly. There are no per-component radius tokens: a theme that
   needs a component-specific shape targets its `data-element` hook in theme CSS.
   Each
-  semantic color role owns a `--fl-color-{role}-{50..950}` scale plus three
+  semantic color role owns a `--fl-color-{role}-{50..950}` scale plus four
   aliases: `--fl-color-{role}` (the solid fill), `-foreground` (the label on
-  that fill) and `-text` (the role as text on the page). `mix flint.palette`
+  that fill), `-text` (the role as text on the page), and `-soft-foreground`
+  (the label on tinted/outlined colored controls). `mix flint.palette`
   computes the label and text shades from the imported scale with
   `FlintUI.Palette.Contrast` (WCAG) so they clear AA — no hardcoded
   foregrounds. The target is configurable (`:contrast` / `--contrast aaa`); the
   label falls back to pure white/black when a mid-tone fill's ramp extremes miss
   it, and the text shade is scored against the subtle surface tint (not the bare
-  page) so the tinted variants stay legible. Only the fill's alias shade is a
+  page) so the tinted variants stay legible. `-soft-foreground` delegates to
+  `-text` in light and mixes the role fill with white in dark (60%, 30% for
+  warning), matching Fluxon's model: the hue reads lighter and less saturated on
+  dark surfaces while staying AA. Colored non-solid controls read
+  `-soft-foreground`; solid controls keep `-foreground`. Only the fill's alias
+  shade is a
   design input (a mid-tone fill cannot reach AA against any label, so pick a
   darker/lighter anchor — e.g. `green-700` for a light label). The alias uses the
   **same anchor in both schemes** (default `600`): lightening the fill in dark
