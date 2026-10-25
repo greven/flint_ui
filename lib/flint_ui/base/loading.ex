@@ -2,14 +2,21 @@ defmodule FlintUI.Base.Loading do
   @moduledoc """
   Renders an animated loading indicator.
 
-  Self-contained loading indicator with an inline SVG animated with SMIL.
-  Size and color come from `class`, and `variant` selects the shape:
+  Self-contained loading indicator with an inline SVG. Size and color come from
+  `class`, and `variant` selects the shape:
 
       <.loading />
       <.loading variant="ring-bg" />
+      <.loading variant="ring-dash" />
       <.loading variant="dots-fade" />
       <.loading variant="dots-bounce" />
+      <.loading variant="bars-scale" />
       <.loading duration={300} class="size-4" />
+
+  The shapes are animated with CSS keyframes shipped in `flint.css`. The base
+  renders the geometry and publishes the cycle length inline, so a headless
+  setup needs the same keyframes; see the component docs for the copyable
+  snippet.
 
   ## Accessibility
 
@@ -35,7 +42,7 @@ defmodule FlintUI.Base.Loading do
 
   use FlintUI.Component
 
-  @variants ~w(ring ring-bg dots-fade dots-bounce)
+  @variants ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale)
 
   @impl true
   def meta do
@@ -63,8 +70,46 @@ defmodule FlintUI.Base.Loading do
         },
         %Meta.PartAttr{
           name: "[data-variant]",
-          value: "ring | ring-bg | dots-fade | dots-bounce",
+          value: "ring | ring-bg | ring-dash | dots-fade | dots-bounce | bars-scale",
           description: "The selected `variant`."
+        }
+      ],
+      track: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "track",
+          description: "The static background track, rendered by `ring-bg` and `ring-dash`."
+        }
+      ],
+      arc: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "arc",
+          description: "The animated arc, rendered by `ring`, `ring-bg`, and `ring-dash`."
+        }
+      ],
+      dot: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "dot",
+          description: "One of the three dots, rendered by `dots-fade` and `dots-bounce`."
+        },
+        %Meta.PartAttr{
+          name: "[data-index]",
+          value: "0 | 1 | 2",
+          description: "The dot's position in the sequence; drives its animation delay."
+        }
+      ],
+      bar: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "bar",
+          description: "One of the five bars, rendered by `bars-scale`."
+        },
+        %Meta.PartAttr{
+          name: "[data-index]",
+          value: "0..4",
+          description: "The bar's position in the sequence; drives its animation delay."
         }
       ]
     }
@@ -77,7 +122,11 @@ defmodule FlintUI.Base.Loading do
         "data-element" => "loading",
         "data-part" => "root",
         "data-variant" => assigns.variant
-      }
+      },
+      track: %{"data-part" => "track"},
+      arc: %{"data-part" => "arc"},
+      dot: %{"data-part" => "dot"},
+      bar: %{"data-part" => "bar"}
     }
   end
 
@@ -91,8 +140,14 @@ defmodule FlintUI.Base.Loading do
     doc: "The indicator shape. One of `#{Enum.join(@variants, "`, `")}`."
 
   attr :duration, :integer,
-    default: 600,
-    doc: "Duration of one full animation cycle, in milliseconds."
+    default: nil,
+    doc:
+      "Duration of one full animation cycle, in milliseconds. Defaults to 600, or 1000 for `ring-dash`, which uses it for the dash morph and rotates over 4/3 of it."
+
+  attr :weight, :any,
+    default: nil,
+    doc:
+      "Stroke width for rings, radius for dots, and bar width for bars, in SVG user units. Defaults to 2, or 2.8 for `bars-scale`."
 
   attr :class, :any,
     default: nil,
@@ -106,11 +161,14 @@ defmodule FlintUI.Base.Loading do
 
   @impl true
   def render(assigns) do
+    variant = variant!(assigns.variant)
+    weight = weight!(assigns.weight || default_weight(variant))
+
     assigns =
       assigns
-      |> assign(:variant, variant!(assigns.variant))
-      |> assign(:dot_delay, div(assigns.duration, 6))
-      |> assign(:dot_delay2, div(assigns.duration, 3))
+      |> assign(:variant, variant)
+      |> assign(:duration, assigns.duration || default_duration(variant))
+      |> assign(:weight, weight)
 
     ~H"""
     <svg
@@ -126,103 +184,123 @@ defmodule FlintUI.Base.Loading do
       <g :if={@variant in ["ring", "ring-bg"]}>
         <circle
           :if={@variant == "ring-bg"}
+          {@flint_parts[:track]}
           cx="12"
           cy="12"
-          r="9"
+          r="9.5"
           stroke="currentColor"
-          stroke-width="3"
+          stroke-width={@weight}
           opacity="0.25"
         />
         <circle
+          {@flint_parts[:arc]}
           cx="12"
           cy="12"
-          r="9"
+          r="9.5"
           stroke="currentColor"
-          stroke-width="3"
+          stroke-width={@weight}
           stroke-linecap="round"
-          stroke-dasharray="42 15"
-        >
-          <animateTransform
-            attributeName="transform"
-            type="rotate"
-            from="0 12 12"
-            to="360 12 12"
-            dur={"#{@duration}ms"}
-            repeatCount="indefinite"
-          />
-        </circle>
+          stroke-dasharray="44 16"
+          style={timing(@duration, 0, 1)}
+        />
       </g>
 
-      <g :if={@variant == "dots-fade"}>
-        <circle cx="6" cy="12" r="2" fill="currentColor">
-          <animate
-            attributeName="opacity"
-            values="1;0.25;1"
-            dur={"#{@duration}ms"}
-            begin="0ms"
-            repeatCount="indefinite"
-          />
-        </circle>
-        <circle cx="12" cy="12" r="2" fill="currentColor">
-          <animate
-            attributeName="opacity"
-            values="1;0.25;1"
-            dur={"#{@duration}ms"}
-            begin={"#{@dot_delay}ms"}
-            repeatCount="indefinite"
-          />
-        </circle>
-        <circle cx="18" cy="12" r="2" fill="currentColor">
-          <animate
-            attributeName="opacity"
-            values="1;0.25;1"
-            dur={"#{@duration}ms"}
-            begin={"#{@dot_delay2}ms"}
-            repeatCount="indefinite"
-          />
-        </circle>
+      <g :if={@variant == "ring-dash"}>
+        <circle
+          {@flint_parts[:track]}
+          cx="12"
+          cy="12"
+          r="9.5"
+          stroke="currentColor"
+          stroke-width={@weight}
+          opacity="0.1"
+        />
+        <circle
+          {@flint_parts[:arc]}
+          cx="12"
+          cy="12"
+          r="9.5"
+          stroke="currentColor"
+          stroke-width={@weight}
+          stroke-linecap="round"
+          stroke-dasharray="44 16"
+          style={ring_dash_timing(@duration)}
+        />
       </g>
 
-      <g :if={@variant == "dots-bounce"}>
-        <circle cx="6" cy="12" r="2" fill="currentColor">
-          <animate
-            attributeName="cy"
-            values="12;7;12"
-            dur={"#{@duration}ms"}
-            begin="0ms"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keyTimes="0;0.5;1"
-            keySplines="0.5 0 0.5 1;0.5 0 0.5 1"
-          />
-        </circle>
-        <circle cx="12" cy="12" r="2" fill="currentColor">
-          <animate
-            attributeName="cy"
-            values="12;7;12"
-            dur={"#{@duration}ms"}
-            begin={"#{@dot_delay}ms"}
-            repeatCount="indefinite"
-            calcMode="spline"
-            keyTimes="0;0.5;1"
-            keySplines="0.5 0 0.5 1;0.5 0 0.5 1"
-          />
-        </circle>
-        <circle cx="18" cy="12" r="2" fill="currentColor">
-          <animate
-            attributeName="cy"
-            values="12;7;12"
-            dur={"#{@duration}ms"}
-            begin={"#{@dot_delay2}ms"}
-            repeatCount="indefinite"
-            calcMode="spline"
-            keyTimes="0;0.5;1"
-            keySplines="0.5 0 0.5 1;0.5 0 0.5 1"
-          />
-        </circle>
+      <g :if={@variant in ["dots-fade", "dots-bounce"]}>
+        <circle
+          :for={{x, index} <- Enum.with_index([6, 12, 18])}
+          {@flint_parts[:dot]}
+          data-index={index}
+          cx={x}
+          cy="12"
+          r={@weight}
+          fill="currentColor"
+          style={timing(@duration, index, 3)}
+        />
+      </g>
+
+      <g :if={@variant == "bars-scale"}>
+        <rect
+          :for={{x, index} <- Enum.with_index(bar_positions(@weight))}
+          {@flint_parts[:bar]}
+          data-index={index}
+          x={x}
+          y="6"
+          width={@weight}
+          height="12"
+          fill="currentColor"
+          style={timing(@duration, index, 9)}
+        />
       </g>
     </svg>
     """
+  end
+
+  defp timing(duration, 0, _steps), do: "animation-duration: #{duration}ms"
+
+  defp timing(duration, index, steps) do
+    "animation-duration: #{duration}ms; animation-delay: -#{div(duration * index, steps)}ms"
+  end
+
+  # The dash ring runs two animations on the same part: the spin, then the
+  # dasharray/dashoffset morph. The order here must match the theme's
+  # `animation` shorthand. The 4/3 ratio matches the reference spinner.
+  defp ring_dash_timing(duration) do
+    "animation-duration: #{div(duration * 4, 3)}ms, #{duration}ms"
+  end
+
+  @doc """
+  The default animation cycle for a variant, in milliseconds.
+
+  `ring-dash` defaults to 1000ms because its dash morph reads better slower;
+  the other variants default to 600ms.
+  """
+  def default_duration("ring-dash"), do: 1000
+  def default_duration(variant) when variant in @variants, do: 600
+
+  @doc """
+  The default weight for a variant, in SVG user units.
+
+  Bars default to 2.8 so the five bars stay chunky at their narrower width;
+  rings and dots default to 2.
+  """
+  def default_weight("bars-scale"), do: 2.8
+  def default_weight(variant) when variant in @variants, do: 2.0
+
+  defp weight!(weight) when is_number(weight) and weight > 0, do: weight
+
+  defp weight!(weight) do
+    raise ArgumentError,
+          "weight must be a positive number, got: #{inspect(weight)}"
+  end
+
+  # Five bars spread across the inner 22 units (1..23). Keep the gap even when
+  # the bar width changes, so a heavier weight does not push them out of view.
+  defp bar_positions(weight) do
+    gap = max((22 - 5 * weight) / 4, 0)
+    for index <- 0..4, do: 1 + index * (weight + gap)
   end
 
   defp variant!(variant) when variant in @variants, do: variant

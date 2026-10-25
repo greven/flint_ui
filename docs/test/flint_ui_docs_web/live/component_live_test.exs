@@ -416,13 +416,17 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
         "[autocomplete='off'][data-1p-ignore][data-form-type='other'][class*='keeper-ignore']"
 
     assert has_element?(view, selector)
+  end
 
+  test "the loading playground hides the duration and weight controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
 
-    assert has_element?(
-             view,
-             "#playground-loading-controls input[name='duration'][data-lpignore='true'][data-bwignore='true']"
-           )
+    assert has_element?(view, "#playground-loading-controls select[name='variant']")
+    assert has_element?(view, "#playground-loading-controls select[name='color']")
+    assert has_element?(view, "#playground-loading-controls select[name='size']")
+
+    refute has_element?(view, "#playground-loading-controls input[name='duration']")
+    refute has_element?(view, "#playground-loading-controls input[name='weight']")
   end
 
   test "the styled controls offer variant and size selects", %{conn: conn} do

@@ -15,9 +15,25 @@ defmodule FlintUI.Styled.Loading do
       props: [
         Prop.new(
           name: :variant,
-          values: ["ring", "ring-bg", "dots-fade", "dots-bounce"],
+          values: ["ring", "ring-bg", "ring-dash", "dots-fade", "dots-bounce", "bars-scale"],
           default: "ring",
           doc: "The indicator shape."
+        ),
+        Prop.new(
+          name: :color,
+          values: [
+            "inherit",
+            "primary",
+            "secondary",
+            "success",
+            "info",
+            "warning",
+            "error",
+            "neutral"
+          ],
+          default: "inherit",
+          doc:
+            "The theme color of the indicator. `inherit` follows the surrounding `currentColor`."
         ),
         Prop.new(
           name: :size,

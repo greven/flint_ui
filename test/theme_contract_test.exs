@@ -4,10 +4,6 @@ defmodule FlintUI.ThemeContractTest do
   alias FlintUI.Styled
   alias FlintUI.Styled.Prop
 
-  # Props whose values are handled structurally rather than by a selector
-  # (e.g. the loading shape is inherent to the SVG markup).
-  @selector_exceptions [{:loading, :variant}]
-
   @color_roles ~w(primary secondary neutral success info warning error)
   @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
 
@@ -31,8 +27,7 @@ defmodule FlintUI.ThemeContractTest do
     for entry <- Styled.entries(),
         prop <- entry.props,
         value <- prop.values,
-        value != prop.default,
-        {entry.name, prop.name} not in @selector_exceptions do
+        value != prop.default do
       selector = ~s([data-element="#{entry.name}"][#{Prop.attribute(prop)}="#{value}"])
 
       assert css =~ selector,

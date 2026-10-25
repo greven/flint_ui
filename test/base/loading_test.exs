@@ -11,6 +11,7 @@ defmodule FlintUI.Base.LoadingTest do
       <.loading
         variant={@variant}
         duration={@duration}
+        weight={@weight}
         class={@class}
         label={@label}
         data-role="test"
@@ -19,7 +20,7 @@ defmodule FlintUI.Base.LoadingTest do
     end
   end
 
-  @defaults %{variant: "ring", duration: 600, class: nil, label: nil}
+  @defaults %{variant: "ring", duration: 600, weight: nil, class: nil, label: nil}
 
   defp raw(overrides) do
     render_component(&TestComponent.loading_example/1, Map.merge(@defaults, Map.new(overrides)))
@@ -72,7 +73,9 @@ defmodule FlintUI.Base.LoadingTest do
 
       assert html =~ ~s(data-variant="ring")
       assert count(html, "<circle") == 1
-      assert html =~ "animateTransform"
+      assert html =~ ~s(data-part="arc")
+      assert html =~ "animation-duration: 600ms"
+      refute html =~ "<animate"
     end
 
     test "ring-bg adds a background track" do
@@ -80,21 +83,98 @@ defmodule FlintUI.Base.LoadingTest do
 
       assert html =~ ~s(data-variant="ring-bg")
       assert count(html, "<circle") == 2
-      assert html =~ "animateTransform"
+      assert html =~ ~s(data-part="track")
+      assert html =~ ~s(data-part="arc")
+      refute html =~ "<animate"
     end
 
-    test "dots-fade animates three dots' opacity" do
+    test "ring-dash morphs the arc with two staggered animations" do
+      html = raw(variant: "ring-dash", duration: nil)
+
+      assert html =~ ~s(data-variant="ring-dash")
+      assert count(html, "<circle") == 2
+      assert html =~ ~s(data-part="track")
+      assert html =~ ~s(data-part="arc")
+      assert html =~ "animation-duration: 1333ms, 1000ms"
+      refute html =~ "<animate"
+    end
+
+    test "variants fall back to their own default duration" do
+      assert raw(variant: "ring", duration: nil) =~ "animation-duration: 600ms"
+      assert raw(variant: "dots-bounce", duration: nil) =~ "animation-duration: 600ms"
+      assert raw(variant: "bars-scale", duration: nil) =~ "animation-duration: 600ms"
+    end
+
+    test "every ring variant shares the same weight and radius" do
+      for variant <- ~w(ring ring-bg ring-dash) do
+        html = raw(variant: variant, weight: nil)
+        assert html =~ ~s(r="9.5")
+        assert html =~ ~s(stroke-width="2.0")
+      end
+    end
+
+    test "variants fall back to their own default weight" do
+      assert raw(variant: "dots-fade", weight: nil) =~ ~s(r="2.0")
+      assert raw(variant: "bars-scale", weight: nil) =~ ~s(width="2.8")
+    end
+
+    test "weight sets the ring stroke, dot radius, and bar width" do
+      assert raw(variant: "ring", weight: 3) =~ ~s(stroke-width="3")
+      assert raw(variant: "dots-fade", weight: 3) =~ ~s(r="3")
+
+      html = raw(variant: "bars-scale", weight: 4)
+      assert count(html, ~s(width="4")) == 5
+    end
+
+    test "raises on a non-positive weight" do
+      assert_raise ArgumentError, fn -> raw(variant: "ring", weight: 0) end
+    end
+
+    test "dots-fade staggers three dots' opacity" do
       html = raw(variant: "dots-fade")
 
       assert count(html, "<circle") == 3
-      assert html =~ ~s(attributeName="opacity")
+      assert count(html, ~s(data-part="dot")) == 3
+      assert html =~ "animation-delay: -200ms"
+      assert html =~ "animation-delay: -400ms"
+      refute html =~ "<animate"
     end
 
-    test "dots-bounce animates three dots' position" do
+    test "dots-bounce staggers three dots' transform" do
       html = raw(variant: "dots-bounce")
 
       assert count(html, "<circle") == 3
-      assert html =~ ~s(attributeName="cy")
+      assert count(html, ~s(data-part="dot")) == 3
+      assert html =~ "animation-delay: -200ms"
+      assert html =~ "animation-delay: -400ms"
+      refute html =~ "<animate"
+    end
+
+    test "bars-scale draws five staggered bars" do
+      html = raw(variant: "bars-scale")
+
+      assert count(html, "<rect") == 5
+      assert count(html, ~s(data-part="bar")) == 5
+      assert count(html, ~s(data-index)) == 5
+      assert html =~ "animation-delay: -66ms"
+      assert html =~ "animation-delay: -133ms"
+      assert html =~ "animation-delay: -200ms"
+      assert html =~ "animation-delay: -266ms"
+      refute html =~ "<animate"
+    end
+
+    test "duration publishes the cycle length on every animated part" do
+      html = raw(variant: "dots-fade", duration: 300)
+
+      assert count(html, "animation-duration: 300ms") == 3
+      assert html =~ "animation-delay: -100ms"
+      assert html =~ "animation-delay: -200ms"
+    end
+
+    test "ring-dash scales both cycles from duration" do
+      html = raw(variant: "ring-dash", duration: 1500)
+
+      assert html =~ "animation-duration: 2000ms, 1500ms"
     end
 
     test "raises on an unknown variant" do
@@ -112,5 +192,10 @@ defmodule FlintUI.Base.LoadingTest do
 
     assert %FlintUI.Meta.PartAttr{name: "[data-variant]"} =
              Enum.find(parts.root, &(&1.name == "[data-variant]"))
+
+    for part <- [:track, :arc, :dot, :bar] do
+      assert %FlintUI.Meta.PartAttr{name: "[data-part]"} =
+               Enum.find(parts[part], &(&1.name == "[data-part]"))
+    end
   end
 end
