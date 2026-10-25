@@ -7,6 +7,11 @@ if Code.ensure_loaded?(Igniter) do
     the result to `assets/css/flint-palette.css`, imported right after
     `flint.css`.
 
+    This is optional: most projects theme by overriding the role tokens in their
+    app stylesheet after the `flint.css` import. Generate a full scale when you
+    want the `50..950` shades and Tailwind utilities; override the generated
+    file's tokens in the app stylesheet afterwards.
+
     Colors are resolved through a `FlintUI.Palette` implementation. Tailwind's
     default palette ships with FlintUI, so no Tailwind install is required:
 

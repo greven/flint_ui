@@ -119,9 +119,9 @@ erl_crash.dump
 # Ignore assets that are produced by build tools.
 /priv/static/
 
-# The docs' copy of the assembled FlintUI theme and palette (see FlintUIDocs.Theme).
+# The docs' copy of the assembled FlintUI theme (see FlintUIDocs.Theme).
+# The palette is checked in as a CSS source file.
 /docs/assets/css/flint.css
-/docs/assets/css/flint-palette.css
 
 # Project specific
 .tmp/

@@ -11,7 +11,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     {"mix flint.setup --tailwind", "Also map tokens onto Tailwind utilities."},
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
-    {"mix flint.theme", "Refresh the theme stylesheet from the library."}
+    {"mix flint.theme", "Refresh the generated theme stylesheet from the library."},
+    {"mix flint.palette", "Optionally generate a full Tailwind-derived color palette."}
   ]
 
   @impl true
@@ -56,7 +57,23 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           <DocsComponents.code_block code="mix flint.setup --tailwind" lang={:shell} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="3. Generate components" id="generate">
+        <DocsComponents.section title="3. Brand colors (optional)" id="colors">
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">
+            Override semantic tokens in your app stylesheet, after the theme
+            import. The soft/outline label derives from the fill, so a role
+            needs only its fill and solid label:
+          </p>
+          <DocsComponents.code_block code={snippet(:brand)} lang={:css} />
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            For a full Tailwind-derived <code class="font-mono">50..950</code>
+            scale, run <code class="font-mono">mix flint.palette</code>. It writes
+            an optional <code class="font-mono">flint-palette.css</code>
+            you can
+            still override in <code class="font-mono">app.css</code>.
+          </p>
+        </DocsComponents.section>
+
+        <DocsComponents.section title="4. Generate components" id="generate">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Generate the styled wrappers you need. They are written into your app, so you
             own and can edit them.
@@ -64,7 +81,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           <DocsComponents.code_block code={snippet(:add)} lang={:shell} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="4. Use a component" id="usage">
+        <DocsComponents.section title="5. Use a component" id="usage">
           <p class="text-sm text-zinc-600 dark:text-zinc-400">
             Generated components are imported from <code class="font-mono">MyAppWeb.Components</code>, so you use them with the
             familiar tag syntax:
@@ -112,6 +129,18 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
 
     # or every component
     mix flint.add --all
+    """
+  end
+
+  defp snippet(:brand) do
+    """
+    /* assets/css/app.css */
+    @import "./flint.css";
+
+    :root {
+      --fl-color-primary: oklch(0.55 0.24 275);
+      --fl-color-primary-foreground: oklch(1 0 0);
+    }
     """
   end
 

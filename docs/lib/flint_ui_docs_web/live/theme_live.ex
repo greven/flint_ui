@@ -12,7 +12,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
      assign(socket,
        page_title: "Theming",
        token_groups: token_groups(),
-       themes: FlintUI.Theme.presets()
+       themes: FlintUI.Theme.presets() ++ [:brand]
      )}
   end
 
@@ -167,12 +167,19 @@ defmodule FlintUIDocsWeb.ThemeLive do
             scale. Components read the role alias
             (<code class="font-mono">--fl-color-primary</code>), which resolves a
             shade per scheme, so the same button looks right in light and dark
-            without a second override. Retint a whole role by overriding its
-            alias, or address a specific shade directly.
-            Tinted and outlined colored controls use <code class="font-mono">-soft-foreground</code>
-            for their label: light follows <code class="font-mono">-text</code>, dark
-            mixes the role fill with white (60%, 30% for warning) so the hue reads
-            lighter and less saturated without dropping below AA. Solid keeps <code class="font-mono">-foreground</code>.
+            without a second override. Override the role in your app stylesheet
+            after the theme import:
+          </p>
+          <DocsComponents.code_block code={snippet(:brand_css)} lang={:css} />
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            The solid label comes from <code class="font-mono">-foreground</code>.
+            Tinted and outlined controls use <code class="font-mono">-soft-foreground</code>, which derives from the
+            fill — light mixes 15% black (45% for warning), dark mixes 60% white
+            (30% for warning) — so changing the fill updates the label too. Ghost
+            and link use the regular <code class="font-mono">-text</code> token,
+            which is contrast-picked for AA, so set it alongside the fill when you
+            retint a role by hand. If your brand color is unusually light or dark,
+            set <code class="font-mono">-soft-foreground</code> explicitly.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button
@@ -247,8 +254,13 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:override_css)} lang={:css} />
           <DocsComponents.code_block code={snippet(:override_heex)} lang={:heex} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            For scoping a change in general — theme, class, inline style, parts, and
-            states — see <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>.
+            For a theme-wide role change, override the role tokens in your app CSS
+            (see <a href="#colors" class="underline">Color scales</a>); for one
+            instance, use the public input above. For scoping a change in general —
+            theme, class, inline style, parts, and states — see <.link
+              navigate={~p"/getting-started/styling"}
+              class="underline"
+            >Styling</.link>.
           </p>
         </DocsComponents.section>
 
@@ -266,20 +278,29 @@ defmodule FlintUIDocsWeb.ThemeLive do
         <DocsComponents.section title="Custom themes" id="custom">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
             Add a <code class="font-mono">[data-theme="…"]</code>
-            block that overrides the tokens you want, then select it via <code class="font-mono">data-theme</code>.
+            block to your app CSS, after the theme import, then select it via <code class="font-mono">data-theme</code>.
+            This site's own <code class="font-mono">brand</code>
+            preset lives in <code class="font-mono">docs/assets/css/app.css</code>
+            and is selectable in the preset picker above.
           </p>
           <DocsComponents.code_block code={snippet(:custom)} lang={:css} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="Importing a palette" id="palette">
+        <DocsComponents.section title="Full palettes" id="palette">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            Rather than hand-writing a scale, map a named palette onto the roles.
-            Tailwind's default palette ships with FlintUI, so no Tailwind install
-            is required, and the generated file is kept separate from
-            <code class="font-mono">flint.css</code>
-            so refreshing the theme never clobbers it.
+            The CSS overrides above are enough for most apps. If you want a
+            complete Tailwind-derived <code class="font-mono">50..950</code>
+            scale for every role — including the shade utilities — run the
+            optional generator. It writes <code class="font-mono">assets/css/flint-palette.css</code>
+            and imports it after <code class="font-mono">flint.css</code>:
           </p>
           <DocsComponents.code_block code={snippet(:palette_cli)} lang={:shell} />
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            The generated file is a starting point, not a configuration file.
+            Override anything you want in <code class="font-mono">app.css</code>
+            after the imports; <code class="font-mono">-soft-foreground</code>
+            continues to derive from the role fill.
+          </p>
           <DocsComponents.code_block code={snippet(:palette_css)} lang={:css} />
         </DocsComponents.section>
 
@@ -379,15 +400,32 @@ defmodule FlintUIDocsWeb.ThemeLive do
       var(--fl-color-primary-400)
     );
 
-    /* Tinted and outlined colored controls use a softer label in dark. */
+    /* Tinted and outlined controls derive their label from the fill. */
     --fl-color-primary-soft-foreground: light-dark(
-      var(--fl-color-primary-text),
+      color-mix(in oklab, var(--fl-color-primary), black 15%),
       color-mix(in oklab, var(--fl-color-primary), white 60%)
     );
     --fl-color-warning-soft-foreground: light-dark(
-      var(--fl-color-warning-text),
+      color-mix(in oklab, var(--fl-color-warning), black 45%),
       color-mix(in oklab, var(--fl-color-warning), white 30%)
     );
+    """
+  end
+
+  defp snippet(:brand_css) do
+    """
+    /* assets/css/app.css */
+    @import "./flint.css";
+
+    :root {
+      --fl-color-primary: oklch(0.55 0.24 275);
+      --fl-color-primary-foreground: oklch(1 0 0);
+      /* Ghost and link read -text, so retint that AA shade with the fill. */
+      --fl-color-primary-text: light-dark(
+        oklch(0.491 0.27 292.581),
+        oklch(0.702 0.183 293.541)
+      );
+    }
     """
   end
 
@@ -419,25 +457,32 @@ defmodule FlintUIDocsWeb.ThemeLive do
     mix flint.palette
     mix flint.palette --primary indigo --neutral zinc --error red
 
-    # Emit as a selectable preset instead of overriding :root:
+    # Pin one role to a shade:
+    mix flint.palette --warning amber-400
+
+    # Emit a selectable preset instead of overriding :root:
     mix flint.palette --primary indigo --theme ocean
     """
   end
 
   defp snippet(:palette_css) do
     """
-    /* assets/css/flint-palette.css */
-    [data-theme="ocean"] {
+    /* assets/css/flint-palette.css — generated, imported after flint.css */
+    :root {
       --fl-palette-indigo-600: oklch(51.1% 0.262 276.966);
 
       --fl-color-primary-600: var(--fl-palette-indigo-600);
       --fl-color-primary: light-dark(
         var(--fl-color-primary-600),
-        var(--fl-color-primary-400)
+        var(--fl-color-primary-600)
       );
       --fl-color-primary-foreground: light-dark(
-        var(--fl-color-primary-50),
-        var(--fl-color-primary-950)
+        oklch(100% 0 0),
+        oklch(100% 0 0)
+      );
+      --fl-color-primary-text: light-dark(
+        var(--fl-color-primary-700),
+        var(--fl-color-primary-500)
       );
     }
     """
@@ -522,9 +567,15 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   defp snippet(:custom) do
     """
+    /* assets/css/app.css, after the flint.css import */
     [data-theme="brand"] {
       --fl-color-primary: oklch(0.55 0.24 275);
-      --fl-radius: 0.5rem;
+      --fl-color-primary-foreground: oklch(1 0 0);
+      --fl-color-primary-text: light-dark(
+        oklch(0.491 0.27 292.581),
+        oklch(0.702 0.183 293.541)
+      );
+      --fl-radius: 0.375rem;
     }
     """
   end

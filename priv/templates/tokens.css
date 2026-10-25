@@ -309,29 +309,33 @@
         var(--fl-color-error-400)
     );
 
+    /* Labels on tinted and outlined colored controls. They derive from the
+     * role fill, so overriding `--fl-color-{role}` updates the label too:
+     * light darkens the fill, dark lightens it (warning starts light, so it
+     * moves less). Generated palettes emit an explicit AA-checked light value. */
     --fl-color-primary-soft-foreground: light-dark(
-        var(--fl-color-primary-text),
-        color-mix(in oklab, var(--fl-color-primary), oklch(1 0 0) 15%)
+        color-mix(in oklab, var(--fl-color-primary), oklch(0% 0 0) 15%),
+        color-mix(in oklab, var(--fl-color-primary), oklch(1 0 0) 60%)
     );
     --fl-color-secondary-soft-foreground: light-dark(
-        var(--fl-color-secondary-text),
-        color-mix(in oklab, var(--fl-color-secondary), oklch(1 0 0) 15%)
+        color-mix(in oklab, var(--fl-color-secondary), oklch(0% 0 0) 15%),
+        color-mix(in oklab, var(--fl-color-secondary), oklch(1 0 0) 60%)
     );
     --fl-color-success-soft-foreground: light-dark(
-        var(--fl-color-success-text),
-        color-mix(in oklab, var(--fl-color-success), oklch(1 0 0) 15%)
+        color-mix(in oklab, var(--fl-color-success), oklch(0% 0 0) 15%),
+        color-mix(in oklab, var(--fl-color-success), oklch(1 0 0) 60%)
     );
     --fl-color-info-soft-foreground: light-dark(
-        var(--fl-color-info-text),
-        color-mix(in oklab, var(--fl-color-info), oklch(1 0 0) 15%)
+        color-mix(in oklab, var(--fl-color-info), oklch(0% 0 0) 15%),
+        color-mix(in oklab, var(--fl-color-info), oklch(1 0 0) 60%)
     );
     --fl-color-warning-soft-foreground: light-dark(
-        var(--fl-color-warning-text),
-        color-mix(in oklab, var(--fl-color-warning), oklch(1 0 0) 15%)
+        color-mix(in oklab, var(--fl-color-warning), oklch(0% 0 0) 45%),
+        color-mix(in oklab, var(--fl-color-warning), oklch(1 0 0) 30%)
     );
     --fl-color-error-soft-foreground: light-dark(
-        var(--fl-color-error-text),
-        color-mix(in oklab, var(--fl-color-error), oklch(1 0 0) 15%)
+        color-mix(in oklab, var(--fl-color-error), oklch(0% 0 0) 15%),
+        color-mix(in oklab, var(--fl-color-error), oklch(1 0 0) 60%)
     );
 
     /* Colored control borders derive from the role color. */

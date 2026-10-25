@@ -8,8 +8,11 @@ if Code.ensure_loaded?(Igniter) do
 
         mix flint.theme
 
-    Pass `--tailwind` to also refresh the `@theme` token bridge. Edit
-    `assets/css/flint.css` freely; re-running this task overwrites it.
+    Pass `--tailwind` to also refresh the `@theme` token bridge.
+
+    `flint.css` is generated: re-running this task overwrites it. Put your own
+    token overrides in your app stylesheet after the `flint.css` import (the same
+    file that imports the theme).
     """
 
     use Igniter.Mix.Task

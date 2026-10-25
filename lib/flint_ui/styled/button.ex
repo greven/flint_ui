@@ -29,7 +29,14 @@ defmodule FlintUI.Styled.Button do
         Var.new(
           name: "--fl-button-text",
           default: "var(--fl-button-color)",
-          doc: "The label color for text-carrying variants."
+          doc:
+            "The label color for ghost and link variants; it maps to the role's regular `-text` token."
+        ),
+        Var.new(
+          name: "--fl-button-soft-text",
+          default: "var(--fl-button-color)",
+          doc:
+            "The label color for tinted and bordered variants (soft, subtle, outline, dashed); it maps to the role's `-soft-foreground` token."
         )
       ],
       props: [

@@ -512,10 +512,12 @@ defmodule FlintUIDocsWeb.Docs.Button do
       body: """
       The generated button maps its props onto data hooks and lets the theme do
       the rest. The public inputs are `--fl-button-color`,
-      `--fl-button-color-foreground`, and `--fl-button-text`; borders, tinted
-      surfaces, and focus all derive from them and the theme tokens.
-      `--fl-button-text` resolves to the role's `-soft-foreground` label, so
-      tinted and outlined colored buttons read lighter in dark; solid uses
+      `--fl-button-color-foreground`, `--fl-button-text`, and
+      `--fl-button-soft-text`; borders, tinted surfaces, and focus all derive
+      from them and the theme tokens. Ghost and link read
+      `--fl-button-text`, the role's regular `-text` token. Tinted and bordered
+      variants read `--fl-button-soft-text`, the role's `-soft-foreground`
+      label, so they read lighter in dark; solid uses
       `--fl-button-color-foreground`.
       """,
       snippets: [
@@ -526,7 +528,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
           .danger-action {
             --fl-button-color: var(--fl-color-error);
             --fl-button-color-foreground: var(--fl-color-error-foreground);
-            --fl-button-text: var(--fl-color-error-soft-foreground);
+            --fl-button-text: var(--fl-color-error-text);
+            --fl-button-soft-text: var(--fl-color-error-soft-foreground);
           }
           """
         },

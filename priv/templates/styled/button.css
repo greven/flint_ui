@@ -164,48 +164,57 @@
         pointer-events: none;
     }
 
-    /* Each color sets the three public inputs; neutral uses the inverted
-     * surface instead of the neutral hue. */
+    /* Each color sets the public inputs. Neutral uses the inverted surface
+     * instead of the neutral hue. `--fl-button-text` is the role's regular
+     * text token (ghost/link); `--fl-button-soft-text` is the softer label for
+     * tinted and bordered variants. */
     [data-element="button"][data-color="primary"] {
         --fl-button-color: var(--fl-color-primary);
         --fl-button-color-foreground: var(--fl-color-primary-foreground);
-        --fl-button-text: var(--fl-color-primary-soft-foreground);
+        --fl-button-text: var(--fl-color-primary-text);
+        --fl-button-soft-text: var(--fl-color-primary-soft-foreground);
     }
 
     [data-element="button"][data-color="success"] {
         --fl-button-color: var(--fl-color-success);
         --fl-button-color-foreground: var(--fl-color-success-foreground);
-        --fl-button-text: var(--fl-color-success-soft-foreground);
+        --fl-button-text: var(--fl-color-success-text);
+        --fl-button-soft-text: var(--fl-color-success-soft-foreground);
     }
 
     [data-element="button"][data-color="info"] {
         --fl-button-color: var(--fl-color-info);
         --fl-button-color-foreground: var(--fl-color-info-foreground);
-        --fl-button-text: var(--fl-color-info-soft-foreground);
+        --fl-button-text: var(--fl-color-info-text);
+        --fl-button-soft-text: var(--fl-color-info-soft-foreground);
     }
 
     [data-element="button"][data-color="warning"] {
         --fl-button-color: var(--fl-color-warning);
         --fl-button-color-foreground: var(--fl-color-warning-foreground);
-        --fl-button-text: var(--fl-color-warning-soft-foreground);
+        --fl-button-text: var(--fl-color-warning-text);
+        --fl-button-soft-text: var(--fl-color-warning-soft-foreground);
     }
 
     [data-element="button"][data-color="error"] {
         --fl-button-color: var(--fl-color-error);
         --fl-button-color-foreground: var(--fl-color-error-foreground);
-        --fl-button-text: var(--fl-color-error-soft-foreground);
+        --fl-button-text: var(--fl-color-error-text);
+        --fl-button-soft-text: var(--fl-color-error-soft-foreground);
     }
 
     [data-element="button"][data-color="secondary"] {
         --fl-button-color: var(--fl-color-secondary);
         --fl-button-color-foreground: var(--fl-color-secondary-foreground);
-        --fl-button-text: var(--fl-color-secondary-soft-foreground);
+        --fl-button-text: var(--fl-color-secondary-text);
+        --fl-button-soft-text: var(--fl-color-secondary-soft-foreground);
     }
 
     [data-element="button"][data-color="neutral"] {
         --fl-button-color: var(--fl-color-inverted);
         --fl-button-color-foreground: var(--fl-color-inverted-foreground);
         --fl-button-text: var(--fl-color-foreground);
+        --fl-button-soft-text: var(--fl-color-foreground);
     }
 
     /* Solid: the color fills the button. Hover/active come from the shared
@@ -227,7 +236,7 @@
             var(--fl-color-control)
         );
         color: var(
-            --fl-button-text,
+            --fl-button-soft-text,
             var(--fl-button-color, var(--fl-color-inverted))
         );
     }
@@ -252,12 +261,14 @@
         );
         background: var(--fl-color-control);
         color: var(
-            --fl-button-text,
+            --fl-button-soft-text,
             var(--fl-button-color, var(--fl-color-inverted))
         );
     }
 
-    /* Ghost: a colored label over a transparent surface. */
+    /* Ghost and link use the role's regular text token, so a colored ghost
+     * reads as strongly as the solid variant's background. Tinted and bordered
+     * variants keep the softer `--fl-button-soft-text` label. */
     [data-element="button"][data-variant="ghost"] {
         background: transparent;
         color: var(
@@ -277,7 +288,7 @@
         );
         background: var(--fl-color-control);
         color: var(
-            --fl-button-text,
+            --fl-button-soft-text,
             var(--fl-button-color, var(--fl-color-inverted))
         );
     }
@@ -321,14 +332,6 @@
 
     [data-element="button"][data-color="neutral"][data-variant="subtle"] {
         border-color: var(--fl-color-border-muted);
-    }
-
-    [data-element="button"][data-color="neutral"]:is(
-            [data-variant="outline"],
-            [data-variant="ghost"],
-            [data-variant="dashed"]
-        ) {
-        color: var(--fl-color-foreground);
     }
 
     [data-element="button"][data-size="xs"] {

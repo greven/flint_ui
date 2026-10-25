@@ -95,7 +95,7 @@ defmodule FlintUIDocsWeb.StylingLive do
                 <tr class="align-top">
                   <td class="py-3 pr-6">Change a component permanently</td>
                   <td class="py-3 pr-6 text-zinc-600 dark:text-zinc-400">
-                    The generated wrapper or the theme CSS
+                    The generated wrapper or your app CSS
                   </td>
                   <td class="py-3 text-zinc-600 dark:text-zinc-400">Your app</td>
                 </tr>
@@ -103,8 +103,9 @@ defmodule FlintUIDocsWeb.StylingLive do
             </table>
           </div>
           <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
-            Theme-wide changes are plain CSS in your app. See
-            <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
+            Theme-wide changes are plain CSS in your app stylesheet, after the
+            <code class="font-mono">flint.css</code>
+            import. See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
             for the token list, presets, and how to override them.
           </p>
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
@@ -322,7 +323,7 @@ defmodule FlintUIDocsWeb.StylingLive do
 
   defp snippet(:variants) do
     """
-    <.card class="[&_[data-part=title]]:tracking-tight [&_[data-part=header]]:pb-2">
+    <.card class="**:data-[part=title]:tracking-tight **:data-[part=header]:pb-2">
       <:title>Deployments</:title>
       <p>Last deploy 2 minutes ago.</p>
     </.card>

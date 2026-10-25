@@ -94,25 +94,27 @@ defmodule FlintUI.FlintCSSTest do
     assert FlintUI.Palette.Contrast.ratio(neutral.(800), white) >= 4.5
   end
 
-  test "colored soft foregrounds lighten the role in dark", %{css: css} do
+  test "colored soft foregrounds derive from the role fill", %{css: css} do
     for role <- ~w(primary secondary success info warning error) do
       assert css =~ "--fl-color-#{role}-soft-foreground: light-dark("
-      assert css =~ "--fl-button-text: var(--fl-color-#{role}-soft-foreground);"
+      assert css =~ "--fl-button-text: var(--fl-color-#{role}-text);"
+      assert css =~ "--fl-button-soft-text: var(--fl-color-#{role}-soft-foreground);"
       assert css =~ "--fl-toggle-text: var(--fl-color-#{role}-soft-foreground);"
     end
 
     assert css =~
-             ~r/--fl-color-primary-soft-foreground: light-dark\(\s*var\(--fl-color-primary-text\),\s*color-mix\(in oklab, var\(--fl-color-primary\), oklch\(1 0 0\) 60%\)\s*\)/
+             ~r/--fl-color-primary-soft-foreground: light-dark\(\s*color-mix\(in oklab, var\(--fl-color-primary\), oklch\(0% 0 0\) 15%\),\s*color-mix\(in oklab, var\(--fl-color-primary\), oklch\(1 0 0\) 60%\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-warning-soft-foreground: light-dark\(\s*var\(--fl-color-warning-text\),\s*color-mix\(in oklab, var\(--fl-color-warning\), oklch\(1 0 0\) 30%\)\s*\)/
+             ~r/--fl-color-warning-soft-foreground: light-dark\(\s*color-mix\(in oklab, var\(--fl-color-warning\), oklch\(0% 0 0\) 45%\),\s*color-mix\(in oklab, var\(--fl-color-warning\), oklch\(1 0 0\) 30%\)\s*\)/
 
     # Neutral colored text keeps the page ink instead of a role tint.
     assert css =~ "--fl-button-text: var(--fl-color-foreground);"
+    assert css =~ "--fl-button-soft-text: var(--fl-color-foreground);"
     assert css =~ "--fl-toggle-text: var(--fl-color-foreground);"
   end
 
-  test "colored soft foregrounds clear AA on dark control and tinted surfaces", %{css: css} do
+  test "derived colored soft foregrounds clear AA in both schemes", %{css: css} do
     alias FlintUI.Palette.{Contrast, Tailwind}
 
     neutral = fn shade ->
@@ -121,25 +123,43 @@ defmodule FlintUI.FlintCSSTest do
     end
 
     white = "oklch(100% 0 none)"
+    black = "oklch(0% 0 none)"
     dark_control = Contrast.mix(neutral.(950), neutral.(800), 0.75)
+    light_muted = neutral.(100)
 
     roles = [
-      {"primary", :red, 600, 0.4},
-      {"secondary", :gray, 600, 0.4},
-      {"success", :emerald, 700, 0.4},
-      {"info", :blue, 600, 0.4},
-      {"warning", :amber, 400, 0.7},
-      {"error", :red, 600, 0.4}
+      {"primary", :red, 600, 0.85, 0.4},
+      {"secondary", :gray, 600, 0.85, 0.4},
+      {"success", :emerald, 700, 0.85, 0.4},
+      {"info", :blue, 600, 0.85, 0.4},
+      {"warning", :amber, 400, 0.55, 0.7},
+      {"error", :red, 600, 0.85, 0.4}
     ]
 
-    for {role, color, shade, fill_weight} <- roles do
+    for {role, color, shade, light_fill_weight, dark_fill_weight} <- roles do
       fill = Tailwind.shades(color) |> Map.fetch!(shade)
-      soft = Contrast.mix(fill, white, fill_weight)
-      tint = Contrast.mix(fill, dark_control, 0.10)
+      light_soft = Contrast.mix(fill, black, light_fill_weight)
+      dark_soft = Contrast.mix(fill, white, dark_fill_weight)
 
-      for {surface, background} <- [{"control", dark_control}, {"tint", tint}] do
-        ratio = Contrast.ratio(soft, background)
-        assert ratio >= 4.5, "#{role} soft foreground on #{surface}: #{Float.round(ratio, 2)}"
+      for {surface, background} <- [
+            {"light control", white},
+            {"light muted", light_muted},
+            {"light tint", Contrast.mix(fill, white, 0.10)}
+          ] do
+        ratio = Contrast.ratio(light_soft, background)
+
+        assert ratio >= 4.5,
+               "#{role} light soft foreground on #{surface}: #{Float.round(ratio, 2)}"
+      end
+
+      for {surface, background} <- [
+            {"dark control", dark_control},
+            {"dark tint", Contrast.mix(fill, dark_control, 0.10)}
+          ] do
+        ratio = Contrast.ratio(dark_soft, background)
+
+        assert ratio >= 4.5,
+               "#{role} dark soft foreground on #{surface}: #{Float.round(ratio, 2)}"
       end
     end
   end
@@ -240,6 +260,26 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "overflow: clip;"
     assert css =~ "--fl-control-hover-opacity: 0.04;"
     assert css =~ "--fl-control-active-opacity: 0.07;"
+  end
+
+  test "ghost and link buttons use the role's regular text token", %{css: css} do
+    # Ghost/link read `--fl-button-text` (the role `-text` token) instead of the
+    # softer `--fl-button-soft-text` used on tinted and bordered surfaces.
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="ghost"\] \{\s*background: transparent;\s*color: var\(\s*--fl-button-text,/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="link"\] \{[^}]*color: var\(\s*--fl-button-text,/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="link"\]:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-color-inverted\)\) 75%,\s*transparent\s*\);/
+
+    # Tinted and bordered variants use the soft label.
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="soft"\],\s*\[data-element="button"\]\[data-variant="subtle"\] \{[^}]*--fl-button-soft-text/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="dashed"\] \{[^}]*--fl-button-soft-text/
   end
 
   test "button and toggle expose only public color inputs", %{css: css} do

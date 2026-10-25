@@ -1,0 +1,244 @@
+/* The docs' color palette. This is a normal CSS source file, not a build
+ * artifact: it is imported after flint.css and can be edited directly.
+ * It was generated once with the equivalent of:
+ *
+ *   mix flint.palette --primary red --secondary gray --neutral neutral \
+ *     --success emerald-700 --info blue --warning amber-400 --error red
+ */
+:root {
+  --fl-palette-red-50: oklch(97.1% 0.013 17.38);
+  --fl-palette-red-100: oklch(93.6% 0.032 17.717);
+  --fl-palette-red-200: oklch(88.5% 0.062 18.334);
+  --fl-palette-red-300: oklch(80.8% 0.114 19.571);
+  --fl-palette-red-400: oklch(70.4% 0.191 22.216);
+  --fl-palette-red-500: oklch(63.7% 0.237 25.331);
+  --fl-palette-red-600: oklch(57.7% 0.245 27.325);
+  --fl-palette-red-700: oklch(50.5% 0.213 27.518);
+  --fl-palette-red-800: oklch(44.4% 0.177 26.899);
+  --fl-palette-red-900: oklch(39.6% 0.141 25.723);
+  --fl-palette-red-950: oklch(25.8% 0.092 26.042);
+  --fl-palette-gray-50: oklch(98.5% 0.002 247.839);
+  --fl-palette-gray-100: oklch(96.7% 0.003 264.542);
+  --fl-palette-gray-200: oklch(92.8% 0.006 264.531);
+  --fl-palette-gray-300: oklch(87.2% 0.01 258.338);
+  --fl-palette-gray-400: oklch(70.7% 0.022 261.325);
+  --fl-palette-gray-500: oklch(55.1% 0.027 264.364);
+  --fl-palette-gray-600: oklch(44.6% 0.03 256.802);
+  --fl-palette-gray-700: oklch(37.3% 0.034 259.733);
+  --fl-palette-gray-800: oklch(27.8% 0.033 256.848);
+  --fl-palette-gray-900: oklch(21% 0.034 264.665);
+  --fl-palette-gray-950: oklch(13% 0.028 261.692);
+  --fl-palette-neutral-50: oklch(98.5% 0 none);
+  --fl-palette-neutral-100: oklch(97% 0 none);
+  --fl-palette-neutral-200: oklch(92.2% 0 none);
+  --fl-palette-neutral-300: oklch(87% 0 none);
+  --fl-palette-neutral-400: oklch(70.8% 0 none);
+  --fl-palette-neutral-500: oklch(55.6% 0 none);
+  --fl-palette-neutral-600: oklch(43.9% 0 none);
+  --fl-palette-neutral-700: oklch(37.1% 0 none);
+  --fl-palette-neutral-800: oklch(26.9% 0 none);
+  --fl-palette-neutral-900: oklch(20.5% 0 none);
+  --fl-palette-neutral-950: oklch(14.5% 0 none);
+  --fl-palette-emerald-50: oklch(97.9% 0.021 166.113);
+  --fl-palette-emerald-100: oklch(95% 0.052 163.051);
+  --fl-palette-emerald-200: oklch(90.5% 0.093 164.15);
+  --fl-palette-emerald-300: oklch(84.5% 0.143 164.978);
+  --fl-palette-emerald-400: oklch(76.5% 0.177 163.223);
+  --fl-palette-emerald-500: oklch(69.6% 0.17 162.48);
+  --fl-palette-emerald-600: oklch(59.6% 0.145 163.225);
+  --fl-palette-emerald-700: oklch(50.8% 0.118 165.612);
+  --fl-palette-emerald-800: oklch(43.2% 0.095 166.913);
+  --fl-palette-emerald-900: oklch(37.8% 0.077 168.94);
+  --fl-palette-emerald-950: oklch(26.2% 0.051 172.552);
+  --fl-palette-blue-50: oklch(97% 0.014 254.604);
+  --fl-palette-blue-100: oklch(93.2% 0.032 255.585);
+  --fl-palette-blue-200: oklch(88.2% 0.059 254.128);
+  --fl-palette-blue-300: oklch(80.9% 0.105 251.813);
+  --fl-palette-blue-400: oklch(70.7% 0.165 254.624);
+  --fl-palette-blue-500: oklch(62.3% 0.214 259.815);
+  --fl-palette-blue-600: oklch(54.6% 0.245 262.881);
+  --fl-palette-blue-700: oklch(48.8% 0.243 264.376);
+  --fl-palette-blue-800: oklch(42.4% 0.199 265.638);
+  --fl-palette-blue-900: oklch(37.9% 0.146 265.522);
+  --fl-palette-blue-950: oklch(28.2% 0.091 267.935);
+  --fl-palette-amber-50: oklch(98.7% 0.022 95.277);
+  --fl-palette-amber-100: oklch(96.2% 0.059 95.617);
+  --fl-palette-amber-200: oklch(92.4% 0.12 95.746);
+  --fl-palette-amber-300: oklch(87.9% 0.169 91.605);
+  --fl-palette-amber-400: oklch(82.8% 0.189 84.429);
+  --fl-palette-amber-500: oklch(76.9% 0.188 70.08);
+  --fl-palette-amber-600: oklch(66.6% 0.179 58.318);
+  --fl-palette-amber-700: oklch(55.5% 0.163 48.998);
+  --fl-palette-amber-800: oklch(47.3% 0.137 46.201);
+  --fl-palette-amber-900: oklch(41.4% 0.112 45.904);
+  --fl-palette-amber-950: oklch(27.9% 0.077 45.635);
+
+  --fl-color-primary-50: var(--fl-palette-red-50);
+  --fl-color-primary-100: var(--fl-palette-red-100);
+  --fl-color-primary-200: var(--fl-palette-red-200);
+  --fl-color-primary-300: var(--fl-palette-red-300);
+  --fl-color-primary-400: var(--fl-palette-red-400);
+  --fl-color-primary-500: var(--fl-palette-red-500);
+  --fl-color-primary-600: var(--fl-palette-red-600);
+  --fl-color-primary-700: var(--fl-palette-red-700);
+  --fl-color-primary-800: var(--fl-palette-red-800);
+  --fl-color-primary-900: var(--fl-palette-red-900);
+  --fl-color-primary-950: var(--fl-palette-red-950);
+
+  --fl-color-primary: light-dark(
+    var(--fl-color-primary-600),
+    var(--fl-color-primary-600)
+  );
+  --fl-color-primary-foreground: light-dark(
+    oklch(100% 0 0),
+    oklch(100% 0 0)
+  );
+  --fl-color-primary-text: light-dark(
+    var(--fl-color-primary-700),
+    var(--fl-color-primary-500)
+  );
+  --fl-color-secondary-50: var(--fl-palette-gray-50);
+  --fl-color-secondary-100: var(--fl-palette-gray-100);
+  --fl-color-secondary-200: var(--fl-palette-gray-200);
+  --fl-color-secondary-300: var(--fl-palette-gray-300);
+  --fl-color-secondary-400: var(--fl-palette-gray-400);
+  --fl-color-secondary-500: var(--fl-palette-gray-500);
+  --fl-color-secondary-600: var(--fl-palette-gray-600);
+  --fl-color-secondary-700: var(--fl-palette-gray-700);
+  --fl-color-secondary-800: var(--fl-palette-gray-800);
+  --fl-color-secondary-900: var(--fl-palette-gray-900);
+  --fl-color-secondary-950: var(--fl-palette-gray-950);
+
+  --fl-color-secondary: light-dark(
+    var(--fl-color-secondary-600),
+    var(--fl-color-secondary-600)
+  );
+  --fl-color-secondary-foreground: light-dark(
+    var(--fl-color-secondary-50),
+    var(--fl-color-secondary-50)
+  );
+  --fl-color-secondary-text: light-dark(
+    var(--fl-color-secondary-600),
+    var(--fl-color-secondary-400)
+  );
+  --fl-color-neutral-50: var(--fl-palette-neutral-50);
+  --fl-color-neutral-100: var(--fl-palette-neutral-100);
+  --fl-color-neutral-200: var(--fl-palette-neutral-200);
+  --fl-color-neutral-300: var(--fl-palette-neutral-300);
+  --fl-color-neutral-400: var(--fl-palette-neutral-400);
+  --fl-color-neutral-500: var(--fl-palette-neutral-500);
+  --fl-color-neutral-600: var(--fl-palette-neutral-600);
+  --fl-color-neutral-700: var(--fl-palette-neutral-700);
+  --fl-color-neutral-800: var(--fl-palette-neutral-800);
+  --fl-color-neutral-900: var(--fl-palette-neutral-900);
+  --fl-color-neutral-950: var(--fl-palette-neutral-950);
+
+  --fl-color-neutral: light-dark(
+    var(--fl-color-neutral-600),
+    var(--fl-color-neutral-600)
+  );
+  --fl-color-neutral-foreground: light-dark(
+    var(--fl-color-neutral-50),
+    var(--fl-color-neutral-50)
+  );
+  --fl-color-neutral-text: light-dark(
+    var(--fl-color-neutral-600),
+    var(--fl-color-neutral-400)
+  );
+  --fl-color-success-50: var(--fl-palette-emerald-50);
+  --fl-color-success-100: var(--fl-palette-emerald-100);
+  --fl-color-success-200: var(--fl-palette-emerald-200);
+  --fl-color-success-300: var(--fl-palette-emerald-300);
+  --fl-color-success-400: var(--fl-palette-emerald-400);
+  --fl-color-success-500: var(--fl-palette-emerald-500);
+  --fl-color-success-600: var(--fl-palette-emerald-600);
+  --fl-color-success-700: var(--fl-palette-emerald-700);
+  --fl-color-success-800: var(--fl-palette-emerald-800);
+  --fl-color-success-900: var(--fl-palette-emerald-900);
+  --fl-color-success-950: var(--fl-palette-emerald-950);
+
+  --fl-color-success: light-dark(
+    var(--fl-color-success-700),
+    var(--fl-color-success-700)
+  );
+  --fl-color-success-foreground: light-dark(
+    var(--fl-color-success-50),
+    var(--fl-color-success-50)
+  );
+  --fl-color-success-text: light-dark(
+    var(--fl-color-success-800),
+    var(--fl-color-success-600)
+  );
+  --fl-color-info-50: var(--fl-palette-blue-50);
+  --fl-color-info-100: var(--fl-palette-blue-100);
+  --fl-color-info-200: var(--fl-palette-blue-200);
+  --fl-color-info-300: var(--fl-palette-blue-300);
+  --fl-color-info-400: var(--fl-palette-blue-400);
+  --fl-color-info-500: var(--fl-palette-blue-500);
+  --fl-color-info-600: var(--fl-palette-blue-600);
+  --fl-color-info-700: var(--fl-palette-blue-700);
+  --fl-color-info-800: var(--fl-palette-blue-800);
+  --fl-color-info-900: var(--fl-palette-blue-900);
+  --fl-color-info-950: var(--fl-palette-blue-950);
+
+  --fl-color-info: light-dark(
+    var(--fl-color-info-600),
+    var(--fl-color-info-600)
+  );
+  --fl-color-info-foreground: light-dark(
+    var(--fl-color-info-50),
+    var(--fl-color-info-50)
+  );
+  --fl-color-info-text: light-dark(
+    var(--fl-color-info-700),
+    var(--fl-color-info-500)
+  );
+  --fl-color-warning-50: var(--fl-palette-amber-50);
+  --fl-color-warning-100: var(--fl-palette-amber-100);
+  --fl-color-warning-200: var(--fl-palette-amber-200);
+  --fl-color-warning-300: var(--fl-palette-amber-300);
+  --fl-color-warning-400: var(--fl-palette-amber-400);
+  --fl-color-warning-500: var(--fl-palette-amber-500);
+  --fl-color-warning-600: var(--fl-palette-amber-600);
+  --fl-color-warning-700: var(--fl-palette-amber-700);
+  --fl-color-warning-800: var(--fl-palette-amber-800);
+  --fl-color-warning-900: var(--fl-palette-amber-900);
+  --fl-color-warning-950: var(--fl-palette-amber-950);
+
+  --fl-color-warning: light-dark(
+    var(--fl-color-warning-400),
+    var(--fl-color-warning-400)
+  );
+  --fl-color-warning-foreground: light-dark(
+    var(--fl-color-warning-950),
+    var(--fl-color-warning-950)
+  );
+  --fl-color-warning-text: light-dark(
+    var(--fl-color-warning-700),
+    var(--fl-color-warning-400)
+  );
+  --fl-color-error-50: var(--fl-palette-red-50);
+  --fl-color-error-100: var(--fl-palette-red-100);
+  --fl-color-error-200: var(--fl-palette-red-200);
+  --fl-color-error-300: var(--fl-palette-red-300);
+  --fl-color-error-400: var(--fl-palette-red-400);
+  --fl-color-error-500: var(--fl-palette-red-500);
+  --fl-color-error-600: var(--fl-palette-red-600);
+  --fl-color-error-700: var(--fl-palette-red-700);
+  --fl-color-error-800: var(--fl-palette-red-800);
+  --fl-color-error-900: var(--fl-palette-red-900);
+  --fl-color-error-950: var(--fl-palette-red-950);
+
+  --fl-color-error: light-dark(
+    var(--fl-color-error-600),
+    var(--fl-color-error-600)
+  );
+  --fl-color-error-foreground: light-dark(
+    oklch(100% 0 0),
+    oklch(100% 0 0)
+  );
+  --fl-color-error-text: light-dark(
+    var(--fl-color-error-700),
+    var(--fl-color-error-500)
+  );
+}

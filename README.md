@@ -50,6 +50,38 @@ The headless base stays available explicitly:
 <FlintUI.button class="my-button">Save</FlintUI.button>
 ```
 
+## Theming
+
+The generated theme is plain CSS. Import it and override semantic tokens in
+your app stylesheet:
+
+```css
+/* assets/css/app.css */
+@import "./flint.css";
+
+:root {
+  --fl-color-primary: oklch(0.55 0.24 275);
+  --fl-color-primary-foreground: oklch(1 0 0);
+  /* Ghost and link use the role's AA text shade. */
+  --fl-color-primary-text: light-dark(
+    oklch(0.491 0.27 292.581),
+    oklch(0.702 0.183 293.541)
+  );
+}
+```
+
+Tinted and outlined control labels derive from the role fill, so changing the
+fill updates them too. For a full Tailwind-derived `50..950` scale, run the
+optional generator:
+
+```sh
+mix flint.palette --primary indigo --neutral zinc
+```
+
+It writes `assets/css/flint-palette.css` (imported after the theme). Override it
+in `app.css` afterwards, or skip the generator and theme entirely in CSS. Custom
+themes are `[data-theme="…"]` blocks in the same app stylesheet.
+
 ## Documentation
 
 The docs site is a separate Phoenix app under `docs/`. It covers the styled

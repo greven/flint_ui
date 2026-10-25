@@ -2,12 +2,33 @@
    https://tailwindcss.com/docs/configuration */
 
 @import "tailwindcss" source(none);
-@import "./flint.css";
-@import "./flint-palette.css";
-@import "./highlight.css";
 @source "../css";
 @source "../js";
 @source "../../lib/flint_ui_docs_web";
+
+@import "./flint.css";
+@import "./flint-palette.css";
+
+@import "./highlight.css";
+
+/* FlintUI overrides live here, after the theme/palette imports. `flint.css` is
+   generated; anything below this point is site-owned. */
+:root {
+    /* Match FlintUI controls to the docs' Tailwind sans stack. */
+    --fl-font-sans: var(--font-sans);
+}
+
+/* A live custom preset. Select "brand" in the theming guide's preset picker. */
+[data-theme="brand"] {
+    --fl-color-primary: oklch(0.55 0.24 275);
+    --fl-color-primary-foreground: oklch(1 0 0);
+    /* Ghost and link read the role's AA text shade, so retint it with the fill. */
+    --fl-color-primary-text: light-dark(
+        oklch(0.491 0.27 292.581),
+        oklch(0.702 0.183 293.541)
+    );
+    --fl-radius: 0.375rem;
+}
 
 /* A Tailwind plugin that makes "lucide-#{ICON}" classes available.
    The lucide icons installation itself is managed by your mix.exs */
@@ -23,29 +44,31 @@
    query is what keeps the site chrome in step with the FlintUI tokens (which
    rely on `color-scheme` + `light-dark()`). */
 @custom-variant dark {
-  &:where([data-color-scheme="dark"], [data-color-scheme="dark"] *) {
-    @slot;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    &:where(:not([data-color-scheme="light"], [data-color-scheme="light"] *)) {
-      @slot;
+    &:where([data-color-scheme="dark"], [data-color-scheme="dark"] *) {
+        @slot;
     }
-  }
+
+    @media (prefers-color-scheme: dark) {
+        &:where(
+            :not([data-color-scheme="light"], [data-color-scheme="light"] *)
+        ) {
+            @slot;
+        }
+    }
 }
 
 /* Interface sound toggle: mirror the document-level `data-sound` state with the
    label that matches it. Default to the off state before the hook mounts. */
 [data-sound-icon="on"] {
-  display: none;
+    display: none;
 }
 
 html[data-flint-sound="on"] [data-sound-icon="on"] {
-  display: inline-flex;
+    display: inline-flex;
 }
 
 html[data-flint-sound="on"] [data-sound-icon="off"] {
-  display: none;
+    display: none;
 }
 
 /* Make LiveView wrapper divs transparent for layout */
