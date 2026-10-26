@@ -2,6 +2,8 @@
     /* Button. Public inputs: `--fl-button-color`, `-color-foreground`, `-text`.
      * Shared depth, elevation and press behavior come from `--fl-control-*`. */
     [data-element="button"][data-variant] {
+        --fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));
+
         display: inline-flex;
         position: relative;
         isolation: isolate;
@@ -25,24 +27,25 @@
             border-color var(--fl-duration-fast) var(--fl-ease-out),
             box-shadow var(--fl-duration-fast) var(--fl-ease-out),
             transform var(--fl-duration-fast) var(--fl-ease-out);
-
-        /* Tint the shared focus ring with the button color. */
-        --fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));
     }
 
-    /* Leading icon/loading. The published `--fl-icon-size` lets host icon sets
-     * follow the control size. */
-    [data-element="button"][data-variant]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    /* Leading icon/loading. */
+    [data-element="button"][data-variant] > :is([data-element="icon"], [data-element="loading"]) {
         flex-shrink: 0;
         --fl-icon-size: var(--fl-control-icon-md);
         width: var(--fl-icon-size);
         height: var(--fl-icon-size);
-        color: color-mix(in oklab, currentColor 70%, transparent);
         transition: color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="button"][data-variant]:hover
+    /* Add transparency to the icon beside the label
+     * except square (icon-only) buttons. */
+    [data-element="button"][data-variant]:not([data-square="true"])
+        > :is([data-element="icon"], [data-element="loading"]) {
+        color: color-mix(in oklab, currentColor 70%, transparent);
+    }
+
+    [data-element="button"][data-variant]:not([data-square="true"]):hover
         > :is([data-element="icon"], [data-element="loading"]) {
         color: currentColor;
     }
@@ -56,24 +59,14 @@
         border: 1px solid transparent;
         border-radius: calc(var(--fl-control-radius) - 1px);
         pointer-events: none;
-        -webkit-mask-image: linear-gradient(
-            to bottom,
-            #000 0%,
-            transparent 100%
-        );
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
         mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
         transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    /* Hover/active are a `currentColor` overlay inside the border, not a fill
-     * swap. The base fill stays opaque, so the alpha border keeps a stable
-     * backdrop (including at attached-group seams). The overlay is drawn on the
-     * border box and clipped to the padding box for bordered variants, so it
-     * follows the inner (and joined) radii without a corner gap and never tints
-     * the border. */
-    [data-element="button"][data-variant]:not(
-            [data-variant="link"]
-        )::after {
+    /* Clip Hover/active `currentColor` overlay inside the border to the
+     * padding box for bordered variants. */
+    [data-element="button"][data-variant]:not([data-variant="link"])::after {
         content: "";
         position: absolute;
         inset: -1px;
@@ -85,10 +78,7 @@
         transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    /* Bordered variants stay clipped, so the overlay reaches the fill but not
-     * the border when hovered. Borderless variants stay unclipped, so the
-     * overlay reaches the full fill (including the transparent 1px border
-     * area). */
+    /* Bordered variants stay clipped. */
     [data-element="button"][data-variant]:is(
             [data-variant="solid"],
             [data-variant="outline"],
@@ -99,15 +89,15 @@
         overflow: clip;
     }
 
-    [data-element="button"][data-variant]:not(
-            [data-variant="link"]
-        ):not([data-disabled]):not([data-loading]):hover::after {
+    [data-element="button"][data-variant]:not([data-variant="link"]):not([data-disabled]):not(
+            [data-loading]
+        ):hover::after {
         opacity: var(--fl-control-hover-opacity);
     }
 
-    [data-element="button"][data-variant]:not(
-            [data-variant="link"]
-        ):not([data-disabled]):not([data-loading]):active::after {
+    [data-element="button"][data-variant]:not([data-variant="link"]):not([data-disabled]):not(
+            [data-loading]
+        ):active::after {
         opacity: var(--fl-control-active-opacity);
     }
 
@@ -117,16 +107,12 @@
     }
 
     /* Press feedback: the button sinks. */
-    [data-element="button"][data-variant]:not(
-            [data-disabled]
-        ):not([data-loading]):active {
+    [data-element="button"][data-variant]:not([data-disabled]):not([data-loading]):active {
         transform: var(--fl-control-press, none);
         box-shadow: 0 0 0 0 #0000;
     }
 
-    [data-element="button"][data-variant="solid"]:not(
-            [data-disabled]
-        ):not([data-loading]):active::before {
+    [data-element="button"][data-variant="solid"]:not([data-disabled]):not([data-loading]):active::before {
         opacity: 0;
     }
 
@@ -169,24 +155,17 @@
         pointer-events: none;
     }
 
-    /* Loading is not disabled: the button keeps its opacity and accepts the
-     * pointer so it can show a progress cursor. Hover and press feedback are
-     * suppressed above because the action is already running. */
+    /* Loading is not disabled: the button keeps its opacity. */
     [data-element="button"][data-loading]:not([data-disabled]) {
         cursor: progress;
     }
 
-    /* Loading indicators are part of the busy state: hide any marked indicator
-     * until the button is loading. A display utility in the later utilities
-     * layer can keep one visible when an idle button needs it. */
+    /* Loading indicators are part of the busy state. */
     [data-element="button"]:not([data-loading]) > [data-loading-indicator] {
         display: none;
     }
 
-    /* Each color sets the public inputs. Neutral uses the inverted surface
-     * instead of the neutral hue. `--fl-button-text` is the role's regular
-     * text token (ghost/link); `--fl-button-soft-text` is the softer label for
-     * tinted and bordered variants. */
+    /* Each color sets the public inputs. */
     [data-element="button"][data-color="primary"] {
         --fl-button-color: var(--fl-color-primary);
         --fl-button-color-foreground: var(--fl-color-primary-foreground);
@@ -236,9 +215,7 @@
         --fl-button-soft-text: var(--fl-color-foreground);
     }
 
-    /* Solid: the color fills the button and a darker line of the same fill
-     * defines the edge. Hover/active come from the shared `::after` overlay so
-     * the fill stays opaque. */
+    /* Solid: the color fills the button with a darker edge line. */
     [data-element="button"][data-variant="solid"] {
         background: var(--fl-button-color, var(--fl-color-inverted));
         border-color: color-mix(
@@ -246,32 +223,21 @@
             var(--fl-button-color, var(--fl-color-inverted)),
             oklch(0% 0 0) var(--fl-border-strength-solid)
         );
-        color: var(
-            --fl-button-color-foreground,
-            var(--fl-color-inverted-foreground)
-        );
+        color: var(--fl-button-color-foreground, var(--fl-color-inverted-foreground));
     }
 
     /* Soft: a tinted control surface with no border. */
     [data-element="button"][data-variant="soft"],
     [data-element="button"][data-variant="subtle"] {
-        background: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) 10%,
-            var(--fl-color-control)
-        );
-        color: var(
-            --fl-button-soft-text,
-            var(--fl-button-color, var(--fl-color-inverted))
-        );
+        background: color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
+        color: var(--fl-button-soft-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     /* Subtle: ghost + outline, a tinted surface with a matching border. */
     [data-element="button"][data-variant="subtle"] {
         border-color: color-mix(
             in oklab,
-            var(--fl-button-color, var(--fl-color-inverted))
-                var(--fl-border-strength-soft),
+            var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
             var(--fl-color-control)
         );
     }
@@ -280,26 +246,18 @@
     [data-element="button"][data-variant="outline"] {
         border-color: color-mix(
             in oklab,
-            var(--fl-button-color, var(--fl-color-inverted))
-                var(--fl-border-strength),
+            var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
             var(--fl-color-control)
         );
         background: var(--fl-color-control);
-        color: var(
-            --fl-button-soft-text,
-            var(--fl-button-color, var(--fl-color-inverted))
-        );
+        color: var(--fl-button-soft-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     /* Ghost and link use the role's regular text token, so a colored ghost
-     * reads as strongly as the solid variant's background. Tinted and bordered
-     * variants keep the softer `--fl-button-soft-text` label. */
+     * reads as strongly as the solid variant's background. */
     [data-element="button"][data-variant="ghost"] {
         background: transparent;
-        color: var(
-            --fl-button-text,
-            var(--fl-button-color, var(--fl-color-inverted))
-        );
+        color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     /* Dashed: outline with a dashed border on the control surface. */
@@ -307,51 +265,34 @@
         border-style: dashed;
         border-color: color-mix(
             in oklab,
-            var(--fl-button-color, var(--fl-color-inverted))
-                var(--fl-border-strength),
+            var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
             var(--fl-color-control)
         );
         background: var(--fl-color-control);
-        color: var(
-            --fl-button-soft-text,
-            var(--fl-button-color, var(--fl-color-inverted))
-        );
+        color: var(--fl-button-soft-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     [data-element="button"][data-variant="link"] {
         height: auto;
         padding: 0;
         background: transparent;
-        color: var(
-            --fl-button-text,
-            var(--fl-button-color, var(--fl-color-inverted))
-        );
+        color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
         text-decoration: underline;
         text-underline-offset: 4px;
     }
 
     [data-element="button"][data-variant="link"]:hover {
-        color: color-mix(
-            in oklab,
-            var(--fl-button-text, var(--fl-color-inverted)) 75%,
-            transparent
-        );
+        color: color-mix(in oklab, var(--fl-button-text, var(--fl-color-inverted)) 75%, transparent);
         text-decoration-thickness: 2px;
     }
 
     /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
-    [data-element="button"][data-color="neutral"]:is(
-            [data-variant="soft"],
-            [data-variant="subtle"]
-        ) {
+    [data-element="button"][data-color="neutral"]:is([data-variant="soft"], [data-variant="subtle"]) {
         background: var(--fl-color-muted);
         color: var(--fl-color-foreground);
     }
 
-    [data-element="button"][data-color="neutral"]:is(
-            [data-variant="outline"],
-            [data-variant="dashed"]
-        ) {
+    [data-element="button"][data-color="neutral"]:is([data-variant="outline"], [data-variant="dashed"]) {
         border-color: var(--fl-color-border);
     }
 
@@ -395,128 +336,83 @@
         line-height: var(--fl-control-line-height-xl);
     }
 
-    [data-element="button"][data-size="xs"]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="button"][data-size="xs"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xs);
     }
 
-    [data-element="button"][data-size="sm"]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="button"][data-size="sm"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-sm);
     }
 
-    [data-element="button"][data-size="md"]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="button"][data-size="md"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-md);
     }
 
-    [data-element="button"][data-size="lg"]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="button"][data-size="lg"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-lg);
     }
 
-    [data-element="button"][data-size="xl"]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="button"][data-size="xl"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xl);
     }
 
-    /* Square: equal width and height for icon-only buttons. The height comes from
-     * the size scale, so the width follows it; inline padding and gap are dropped
-     * so the icon (or a visually hidden label) cannot widen the box. Link has no
-     * box of its own, so square does not apply there. */
-    [data-element="button"][data-square="true"]:not(
-            [data-variant="link"]
-        ) {
+    /* Square: equal width and height for icon-only buttons. */
+    [data-element="button"][data-square="true"]:not([data-variant="link"]) {
         aspect-ratio: 1;
         padding-inline: 0;
         gap: 0;
     }
 
-    /* Wide: fills the container. Block-level so stacked wide buttons do not sit
-     * on an inline baseline (which leaves a descender gap between them). Not for
-     * buttons inside a group, whose children share the row. */
+    /* Wide: fills the container. */
     [data-element="button"][data-wide="true"] {
         display: flex;
         width: 100%;
     }
 
-    /* Inset: pull the box over the padding it keeps for its hit area so the
-     * content lines up with surrounding content. Most useful for ghost and
-     * link, whose box is invisible. The margins are layout, not padding: the
-     * hit area keeps its size. Square buttons inset by the leftover space
-     * around their icon instead. */
+    /* Inset: pull the box over the padding it keeps for its hit area so
+     * the content lines up with surrounding content. */
     [data-element="button"][data-inset="true"][data-size="xs"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-xs) + 1px));
-        margin-block: calc(
-            -1 * ((var(--fl-control-height-xs) - var(--fl-control-line-height-xs)) / 2)
-        );
+        margin-block: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-line-height-xs)) / 2));
     }
 
     [data-element="button"][data-inset="true"][data-size="sm"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-sm) + 1px));
-        margin-block: calc(
-            -1 * ((var(--fl-control-height-sm) - var(--fl-control-line-height-sm)) / 2)
-        );
+        margin-block: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-line-height-sm)) / 2));
     }
 
     [data-element="button"][data-inset="true"][data-size="md"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-md) + 1px));
-        margin-block: calc(
-            -1 * ((var(--fl-control-height-md) - var(--fl-control-line-height-md)) / 2)
-        );
+        margin-block: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-line-height-md)) / 2));
     }
 
     [data-element="button"][data-inset="true"][data-size="lg"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-lg) + 1px));
-        margin-block: calc(
-            -1 * ((var(--fl-control-height-lg) - var(--fl-control-line-height-lg)) / 2)
-        );
+        margin-block: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-line-height-lg)) / 2));
     }
 
     [data-element="button"][data-inset="true"][data-size="xl"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-xl) + 1px));
-        margin-block: calc(
-            -1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2)
-        );
+        margin-block: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not(
-            [data-variant="link"]
-        )[data-size="xs"] {
-        margin: calc(
-            -1 * ((var(--fl-control-height-xs) - var(--fl-control-icon-xs)) / 2)
-        );
+    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="xs"] {
+        margin: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-icon-xs)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not(
-            [data-variant="link"]
-        )[data-size="sm"] {
-        margin: calc(
-            -1 * ((var(--fl-control-height-sm) - var(--fl-control-icon-sm)) / 2)
-        );
+    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="sm"] {
+        margin: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-icon-sm)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not(
-            [data-variant="link"]
-        )[data-size="md"] {
-        margin: calc(
-            -1 * ((var(--fl-control-height-md) - var(--fl-control-icon-md)) / 2)
-        );
+    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="md"] {
+        margin: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-icon-md)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not(
-            [data-variant="link"]
-        )[data-size="lg"] {
-        margin: calc(
-            -1 * ((var(--fl-control-height-lg) - var(--fl-control-icon-lg)) / 2)
-        );
+    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="lg"] {
+        margin: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-icon-lg)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not(
-            [data-variant="link"]
-        )[data-size="xl"] {
-        margin: calc(
-            -1 * ((var(--fl-control-height-xl) - var(--fl-control-icon-xl)) / 2)
-        );
+    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="xl"] {
+        margin: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-icon-xl)) / 2));
     }
 }

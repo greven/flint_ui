@@ -96,8 +96,7 @@
             animation: none;
         }
 
-        [data-element="loading_text"][data-variant="shimmer"]
-            [data-part="text"] {
+        [data-element="loading_text"][data-variant="shimmer"] [data-part="text"] {
             background: none;
             -webkit-text-fill-color: currentColor;
         }

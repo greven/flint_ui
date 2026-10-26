@@ -20,10 +20,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
   end
 
   @impl true
-  def playground_controls,
-    do: [:variant, :body, :spacing, :outline, :shadow, :inverted]
-
-  @impl true
   def usage do
     [
       %{
@@ -184,14 +180,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         composes with `outline`: keep the outline for an outline-only card, or
         set `outline={false}` for a bare container. Every other variant draws
         an outline and shadow by default.
-        """,
-        code: """
-        <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
-          <.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
-            <:title>{variant}</:title>
-            <p>Body</p>
-          </.card>
-        </div>
         """
       },
       %{
@@ -214,16 +202,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         radius. Divided bodies inherit the card surface so the lines are the
         only treatment. Bands stay a darker shade of the card surface in both
         schemes. The root `padded` setting still controls the section inset.
-        """,
-        code: """
-        <.card body="separated" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Product updates, weekly digests and security alerts.
-          </p>
-          <:footer>3 repositories</:footer>
-        </.card>
         """
       },
       %{
@@ -237,18 +215,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         surface, shadow and spacing. On a ghost card it is the only thing that
         draws the card: `variant="ghost"` with the outline is an outline-only
         card, and `outline={false}` leaves a bare container.
-        """,
-        code: """
-        <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-          <.card>
-            <:title>Outlined</:title>
-            <p>Body</p>
-          </.card>
-          <.card outline={false}>
-            <:title>No outline</:title>
-            <p>Body</p>
-          </.card>
-        </div>
         """
       },
       %{
@@ -259,18 +225,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         body: """
         Shadows are on by default for every variant. Set `shadow={false}` to
         remove one, or override the elevation itself with `--fl-card-shadow`.
-        """,
-        code: """
-        <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-          <.card>
-            <:title>With a shadow</:title>
-            <p>Body</p>
-          </.card>
-          <.card shadow={false}>
-            <:title>Without a shadow</:title>
-            <p>Body</p>
-          </.card>
-        </div>
         """
       },
       %{
@@ -282,18 +236,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         Set `inverted` to swap the neutral surface, text, border and divider
         colors. It composes with every variant; soft and muted remain opaque
         steps over the inverted surface.
-        """,
-        code: """
-        <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-          <.card inverted>
-            <:title>Inverted solid</:title>
-            <p>Body</p>
-          </.card>
-          <.card variant="muted" inverted>
-            <:title>Inverted muted</:title>
-            <p>Body</p>
-          </.card>
-        </div>
         """
       },
       %{
@@ -303,14 +245,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         covers: [:spacing],
         body: """
         `spacing` sets the internal spacing through `--fl-card-spacing`.
-        """,
-        code: """
-        <div class="flex w-full max-w-md flex-col gap-4">
-          <.card :for={spacing <- ~w(xs sm md lg xl)} spacing={spacing}>
-            <:title>{spacing}</:title>
-            <p>Body</p>
-          </.card>
-        </div>
         """
       },
       %{
@@ -321,19 +255,6 @@ defmodule FlintUIDocsWeb.Docs.Card do
         body: """
         `footer` holds the content at the start of the footer; `footer_actions`
         aligns the controls at the end. Both slots can be used independently.
-        """,
-        code: """
-        <.card class="w-full max-w-md">
-          <:title>Deployments</:title>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Your latest deployment is live.
-          </p>
-          <:footer>3 repositories</:footer>
-          <:footer_actions>
-            <.button size="sm">View logs</.button>
-            <.button variant="ghost" size="sm">Settings</.button>
-          </:footer_actions>
-        </.card>
         """
       }
     ]
@@ -346,212 +267,60 @@ defmodule FlintUIDocsWeb.Docs.Card do
         id: :sectioned,
         title: "Header, sections and footer",
         description:
-          "A divided card with a header, an implicit first section, an explicit section and a footer.",
-        code: """
-        <.card body="divided" class="w-full max-w-md">
-          <:title>Deployments</:title>
-          <:description>Manage your project's deployments.</:description>
-          <:header_actions>
-            <.button variant="ghost" size="sm">Edit</.button>
-          </:header_actions>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Your latest deployment is live.
-          </p>
-          <:section>
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">Last deployed 2 minutes ago.</p>
-          </:section>
-          <:footer>3 repositories</:footer>
-          <:footer_actions>
-            <.button variant="outline" size="sm">View logs</.button>
-          </:footer_actions>
-        </.card>
-        """
+          "A divided card with a header, an implicit first section, an explicit section and a footer."
       },
       %{
         id: :horizontal,
         title: "Horizontal sections",
-        description: "A divided row layout with content-sized header and sections.",
-        code: """
-        <.card body="divided" orientation="horizontal" class="w-full max-w-2xl">
-          <:title>Project tasks</:title>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">1887 completed</p>
-          <:section>
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">447 remaining</p>
-          </:section>
-          <:section>
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">76 in progress</p>
-          </:section>
-        </.card>
-        """
+        description: "A divided row layout with content-sized header and sections."
       },
       %{
         id: :collapsible,
         title: "Expanding card",
-        description: "A full-bleed body section wrapping a collapsible.",
-        code: """
-        <.card padded={false} class="w-full max-w-md">
-          <:section>
-            <.collapsible id="repos">
-              <:trigger :let={attrs}>
-                <button {attrs} class="group flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium">
-                  Starred repositories
-                  <.icon name="lucide-chevron-down" class="size-4 transition-transform group-aria-expanded:rotate-180" />
-                </button>
-              </:trigger>
-              <:content :let={attrs}>
-                <div {attrs}>
-                  <ul class="flex flex-col gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
-                    <li>flint_ui</li>
-                    <li>phoenix_live_view</li>
-                  </ul>
-                </div>
-              </:content>
-            </.collapsible>
-          </:section>
-        </.card>
-        """
+        description: "A full-bleed body section wrapping a collapsible."
       },
       %{
         id: :body_separated,
         title: "Separated bands",
-        description: "Darker header and footer bands around the body.",
-        code: """
-        <.card body="separated" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <:header_actions>
-            <.button variant="ghost" size="sm">Edit</.button>
-          </:header_actions>
-          <div class="space-y-2 text-sm">
-            <p>Product updates</p>
-            <p>Weekly digest</p>
-            <p>Security alerts</p>
-          </div>
-          <:footer>3 repositories</:footer>
-          <:footer_actions>
-            <.button variant="solid" size="sm">View logs</.button>
-          </:footer_actions>
-        </.card>
-        """
+        description: "Darker header and footer bands around the body."
       },
       %{
         id: :body_separated_muted,
         title: "Muted bands",
         description:
-          "The muted variant uses the full muted surface; bands stay a darker shade of it.",
-        code: """
-        <.card body="separated" variant="muted" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Product updates, weekly digests and security alerts.
-          </p>
-          <:footer>3 repositories</:footer>
-        </.card>
-        """
+          "The muted variant uses the full muted surface; bands stay a darker shade of it."
       },
       %{
         id: :body_separated_footer,
         title: "Footer-only band",
-        description: "Band the footer while the header stays on the card surface.",
-        code: """
-        <.card body="separated-footer" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Product updates, weekly digests and security alerts.
-          </p>
-          <:footer>3 repositories</:footer>
-          <:footer_actions>
-            <.button variant="solid" size="sm">View logs</.button>
-          </:footer_actions>
-        </.card>
-        """
+        description: "Band the footer while the header stays on the card surface."
       },
       %{
         id: :body_divided,
         title: "Divided regions",
-        description: "Hairlines separate the header, body and footer without a tint.",
-        code: """
-        <.card body="divided" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Product updates, weekly digests and security alerts.
-          </p>
-          <:footer>Last saved 2 minutes ago</:footer>
-          <:footer_actions>
-            <.button variant="ghost" size="sm">Settings</.button>
-          </:footer_actions>
-        </.card>
-        """
+        description: "Hairlines separate the header, body and footer without a tint."
       },
       %{
         id: :body_inset,
         title: "Raised inset body",
-        description: "On a soft or muted card the inset body panel is raised above the shell.",
-        code: """
-        <.card body="inset" variant="soft" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <div class="space-y-2 text-sm">
-            <p>Product updates</p>
-            <p>Weekly digest</p>
-            <p>Security alerts</p>
-          </div>
-        </.card>
-        """
+        description: "On a soft or muted card the inset body panel is raised above the shell."
       },
       %{
         id: :body_inset_well,
         title: "Inset body",
-        description: "A subtle well on a light solid card; raised on a dark card.",
-        code: """
-        <.card body="inset" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <div class="space-y-2 text-sm">
-            <p>Product updates</p>
-            <p>Weekly digest</p>
-            <p>Security alerts</p>
-          </div>
-        </.card>
-        """
+        description: "A subtle well on a light solid card; raised on a dark card."
       },
       %{
         id: :body_flush,
         title: "Flush body",
         description:
-          "The body panel reaches the card's outer edges while keeping its border and radius.",
-        code: """
-        <.card body="flush" variant="soft" class="w-full max-w-md">
-          <:title>Notifications</:title>
-          <:description>Choose what you hear about</:description>
-          <div class="divide-y divide-zinc-200 text-sm dark:divide-zinc-800">
-            <p class="py-2">Product updates</p>
-            <p class="py-2">Weekly digest</p>
-            <p class="py-2">Security alerts</p>
-          </div>
-        </.card>
-        """
+          "The body panel reaches the card's outer edges while keeping its border and radius."
       },
       %{
         id: :ghost,
         title: "Ghost card",
         description:
-          "The ghost variant drops the card's own surface and elevation. Keep the outline for an outline-only card, or remove it for a bare container.",
-        code: """
-        <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-          <.card variant="ghost">
-            <:title>Outline card</:title>
-            <p>Body</p>
-          </.card>
-          <.card variant="ghost" outline={false}>
-            <:title>Bare container</:title>
-            <p>Body</p>
-          </.card>
-        </div>
-        """
+          "The ghost variant drops the card's own surface and elevation. Keep the outline for an outline-only card, or remove it for a bare container."
       },
       %{
         id: :base_section,
@@ -575,6 +344,32 @@ defmodule FlintUIDocsWeb.Docs.Card do
           <p>Your latest deployment is live.</p>
         </FlintUI.card>
         """
+      }
+    ]
+  end
+
+  @impl true
+  def architecture do
+    [
+      %{
+        name: "root",
+        description:
+          "The card shell. On the styled layer it owns the surface, border, shadow, spacing and orientation."
+      },
+      %{
+        name: "header",
+        description:
+          "Optional header region, shown when a title, description, header actions or header slot is present."
+      },
+      %{
+        name: "body",
+        description:
+          "The default slot plus any :section regions. The body treatment controls how this region separates from the header and footer."
+      },
+      %{
+        name: "footer",
+        description:
+          "Optional footer region, shown when a footer or footer actions slot is present."
       }
     ]
   end
@@ -715,33 +510,41 @@ defmodule FlintUIDocsWeb.Docs.Card do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.card
-      variant={@props.variant}
-      body={@props.body}
-      orientation={@props.orientation}
-      spacing={@props.spacing}
-      outline={@props.outline}
-      shadow={@props.shadow}
-      inverted={@props.inverted}
+    <.preview
+      :let={props}
+      id={@id}
+      name={:card}
+      state={@state}
+      controls={[:variant, :body, :spacing, :outline, :shadow, :inverted]}
+      code={&main_code/1}
     >
-      <:title>Starred repositories</:title>
-      <:description>Updated just now</:description>
-      <:header_actions>
-        <Components.button variant="ghost" size="sm">Edit</Components.button>
-      </:header_actions>
-      <p>Reorder or remove the repositories you follow.</p>
-      <:footer>3 repositories</:footer>
-      <:footer_actions>
-        <Components.button variant="outline" size="sm">View logs</Components.button>
-      </:footer_actions>
-    </Components.card>
+      <Components.card
+        variant={props.variant}
+        body={props.body}
+        orientation={props.orientation}
+        spacing={props.spacing}
+        outline={props.outline}
+        shadow={props.shadow}
+        inverted={props.inverted}
+      >
+        <:title>Starred repositories</:title>
+        <:description>Updated just now</:description>
+        <:header_actions>
+          <Components.button variant="ghost" size="sm">Edit</Components.button>
+        </:header_actions>
+        <p>Reorder or remove the repositories you follow.</p>
+        <:footer>3 repositories</:footer>
+        <:footer_actions>
+          <Components.button variant="outline" size="sm">View logs</Components.button>
+        </:footer_actions>
+      </Components.card>
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     Snippet.tag(
       ".card",
       [
@@ -774,110 +577,432 @@ defmodule FlintUIDocsWeb.Docs.Card do
   end
 
   @impl true
-  def render_usage(%{block: :variant} = assigns) do
+  def render_section(%{kind: :usage, block: :variant} = assigns) do
     ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:variant)}>
+      <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
+        <Components.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
+          <:title>{variant}</:title>
+          <p>Body</p>
+        </Components.card>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :body} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body)}>
+      <Components.card body="separated" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">
+          Product updates, weekly digests and security alerts.
+        </p>
+        <:footer>3 repositories</:footer>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :outline} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:outline)}>
+      <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+        <Components.card>
+          <:title>Outlined</:title>
+          <p>Body</p>
+        </Components.card>
+        <Components.card outline={false}>
+          <:title>No outline</:title>
+          <p>Body</p>
+        </Components.card>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :shadow} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:shadow)}>
+      <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+        <Components.card>
+          <:title>With a shadow</:title>
+          <p>Body</p>
+        </Components.card>
+        <Components.card shadow={false}>
+          <:title>Without a shadow</:title>
+          <p>Body</p>
+        </Components.card>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :inverted} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:inverted)}>
+      <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+        <Components.card inverted>
+          <:title>Inverted solid</:title>
+          <p>Body</p>
+        </Components.card>
+        <Components.card variant="muted" inverted>
+          <:title>Inverted muted</:title>
+          <p>Body</p>
+        </Components.card>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :spacing} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:spacing)}>
+      <div class="flex w-full max-w-md flex-col gap-4">
+        <Components.card :for={spacing <- ~w(xs sm md lg xl)} spacing={spacing}>
+          <:title>{spacing}</:title>
+          <p>Body</p>
+        </Components.card>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :footer_actions} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:footer_actions)}>
+      <Components.card class="w-full max-w-md">
+        <:title>Deployments</:title>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">
+          Your latest deployment is live.
+        </p>
+        <:footer>3 repositories</:footer>
+        <:footer_actions>
+          <Components.button size="sm">View logs</Components.button>
+          <Components.button variant="ghost" size="sm">Settings</Components.button>
+        </:footer_actions>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :sectioned} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:sectioned)}>
+      <Components.card body="divided" class="w-full max-w-md">
+        <:title>Deployments</:title>
+        <:description>Manage your project's deployments.</:description>
+        <:header_actions>
+          <Components.button variant="ghost" size="sm">Edit</Components.button>
+        </:header_actions>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">
+          Your latest deployment is live.
+        </p>
+        <:section>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Last deployed 2 minutes ago.</p>
+        </:section>
+        <:footer>3 repositories</:footer>
+        <:footer_actions>
+          <Components.button variant="outline" size="sm">View logs</Components.button>
+        </:footer_actions>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :horizontal} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:horizontal)}>
+      <Components.card body="divided" orientation="horizontal" class="w-full max-w-2xl">
+        <:title>Project tasks</:title>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">1887 completed</p>
+        <:section>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">447 remaining</p>
+        </:section>
+        <:section>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">76 in progress</p>
+        </:section>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :collapsible} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:collapsible)}>
+      <Components.card padded={false} class="w-full max-w-md">
+        <:section>
+          <Components.collapsible id={"#{@id}-collapsible"}>
+            <:trigger :let={attrs}>
+              <button
+                {attrs}
+                class="group flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium"
+              >
+                Starred repositories
+                <Components.icon
+                  name="lucide-chevron-down"
+                  class="size-4 transition-transform group-aria-expanded:rotate-180"
+                />
+              </button>
+            </:trigger>
+            <:content :let={attrs}>
+              <div {attrs}>
+                <ul class="flex flex-col gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
+                  <li>flint_ui</li>
+                  <li>phoenix_live_view</li>
+                </ul>
+              </div>
+            </:content>
+          </Components.collapsible>
+        </:section>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_separated} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_separated)}>
+      <Components.card body="separated" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <:header_actions>
+          <Components.button variant="ghost" size="sm">Edit</Components.button>
+        </:header_actions>
+        <div class="space-y-2 text-sm">
+          <p>Product updates</p>
+          <p>Weekly digest</p>
+          <p>Security alerts</p>
+        </div>
+        <:footer>3 repositories</:footer>
+        <:footer_actions>
+          <Components.button variant="solid" size="sm">View logs</Components.button>
+        </:footer_actions>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_separated_muted} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_separated_muted)}>
+      <Components.card body="separated" variant="muted" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">
+          Product updates, weekly digests and security alerts.
+        </p>
+        <:footer>3 repositories</:footer>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_separated_footer} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_separated_footer)}>
+      <Components.card body="separated-footer" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">
+          Product updates, weekly digests and security alerts.
+        </p>
+        <:footer>3 repositories</:footer>
+        <:footer_actions>
+          <Components.button variant="solid" size="sm">View logs</Components.button>
+        </:footer_actions>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_divided} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_divided)}>
+      <Components.card body="divided" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">
+          Product updates, weekly digests and security alerts.
+        </p>
+        <:footer>Last saved 2 minutes ago</:footer>
+        <:footer_actions>
+          <Components.button variant="ghost" size="sm">Settings</Components.button>
+        </:footer_actions>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_inset} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_inset)}>
+      <Components.card body="inset" variant="soft" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <div class="space-y-2 text-sm">
+          <p>Product updates</p>
+          <p>Weekly digest</p>
+          <p>Security alerts</p>
+        </div>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_inset_well} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_inset_well)}>
+      <Components.card body="inset" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <div class="space-y-2 text-sm">
+          <p>Product updates</p>
+          <p>Weekly digest</p>
+          <p>Security alerts</p>
+        </div>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :body_flush} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:body_flush)}>
+      <Components.card body="flush" variant="soft" class="w-full max-w-md">
+        <:title>Notifications</:title>
+        <:description>Choose what you hear about</:description>
+        <div class="divide-y divide-zinc-200 text-sm dark:divide-zinc-800">
+          <p class="py-2">Product updates</p>
+          <p class="py-2">Weekly digest</p>
+          <p class="py-2">Security alerts</p>
+        </div>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :ghost} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:card} state={@state} code={code(:ghost)}>
+      <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+        <Components.card variant="ghost">
+          <:title>Outline card</:title>
+          <p>Body</p>
+        </Components.card>
+        <Components.card variant="ghost" outline={false}>
+          <:title>Bare container</:title>
+          <p>Body</p>
+        </Components.card>
+      </div>
+    </.preview>
+    """
+  end
+
+  defp code(:variant) do
+    ~S"""
     <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
-      <Components.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
+      <.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
         <:title>{variant}</:title>
         <p>Body</p>
-      </Components.card>
+      </.card>
     </div>
     """
   end
 
-  def render_usage(%{block: :body} = assigns) do
-    ~H"""
-    <Components.card body="separated" class="w-full max-w-md">
+  defp code(:body) do
+    ~S"""
+    <.card body="separated" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">
         Product updates, weekly digests and security alerts.
       </p>
       <:footer>3 repositories</:footer>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_usage(%{block: :outline} = assigns) do
-    ~H"""
+  defp code(:outline) do
+    ~S"""
     <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-      <Components.card>
+      <.card>
         <:title>Outlined</:title>
         <p>Body</p>
-      </Components.card>
-      <Components.card outline={false}>
+      </.card>
+      <.card outline={false}>
         <:title>No outline</:title>
         <p>Body</p>
-      </Components.card>
+      </.card>
     </div>
     """
   end
 
-  def render_usage(%{block: :shadow} = assigns) do
-    ~H"""
+  defp code(:shadow) do
+    ~S"""
     <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-      <Components.card>
+      <.card>
         <:title>With a shadow</:title>
         <p>Body</p>
-      </Components.card>
-      <Components.card shadow={false}>
+      </.card>
+      <.card shadow={false}>
         <:title>Without a shadow</:title>
         <p>Body</p>
-      </Components.card>
+      </.card>
     </div>
     """
   end
 
-  def render_usage(%{block: :inverted} = assigns) do
-    ~H"""
+  defp code(:inverted) do
+    ~S"""
     <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-      <Components.card inverted>
+      <.card inverted>
         <:title>Inverted solid</:title>
         <p>Body</p>
-      </Components.card>
-      <Components.card variant="muted" inverted>
+      </.card>
+      <.card variant="muted" inverted>
         <:title>Inverted muted</:title>
         <p>Body</p>
-      </Components.card>
+      </.card>
     </div>
     """
   end
 
-  def render_usage(%{block: :spacing} = assigns) do
-    ~H"""
+  defp code(:spacing) do
+    ~S"""
     <div class="flex w-full max-w-md flex-col gap-4">
-      <Components.card :for={spacing <- ~w(xs sm md lg xl)} spacing={spacing}>
+      <.card :for={spacing <- ~w(xs sm md lg xl)} spacing={spacing}>
         <:title>{spacing}</:title>
         <p>Body</p>
-      </Components.card>
+      </.card>
     </div>
     """
   end
 
-  def render_usage(%{block: :footer_actions} = assigns) do
-    ~H"""
-    <Components.card class="w-full max-w-md">
+  defp code(:footer_actions) do
+    ~S"""
+    <.card class="w-full max-w-md">
       <:title>Deployments</:title>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">
         Your latest deployment is live.
       </p>
       <:footer>3 repositories</:footer>
       <:footer_actions>
-        <Components.button size="sm">View logs</Components.button>
-        <Components.button variant="ghost" size="sm">Settings</Components.button>
+        <.button size="sm">View logs</.button>
+        <.button variant="ghost" size="sm">Settings</.button>
       </:footer_actions>
-    </Components.card>
+    </.card>
     """
   end
 
-  @impl true
-  def render_block(%{block: :sectioned} = assigns) do
-    ~H"""
-    <Components.card body="divided" class="w-full max-w-md">
+  defp code(:sectioned) do
+    ~S"""
+    <.card body="divided" class="w-full max-w-md">
       <:title>Deployments</:title>
       <:description>Manage your project's deployments.</:description>
       <:header_actions>
-        <Components.button variant="ghost" size="sm">Edit</Components.button>
+        <.button variant="ghost" size="sm">Edit</.button>
       </:header_actions>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">
         Your latest deployment is live.
@@ -887,15 +1012,15 @@ defmodule FlintUIDocsWeb.Docs.Card do
       </:section>
       <:footer>3 repositories</:footer>
       <:footer_actions>
-        <Components.button variant="outline" size="sm">View logs</Components.button>
+        <.button variant="outline" size="sm">View logs</.button>
       </:footer_actions>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :horizontal} = assigns) do
-    ~H"""
-    <Components.card body="divided" orientation="horizontal" class="w-full max-w-2xl">
+  defp code(:horizontal) do
+    ~S"""
+    <.card body="divided" orientation="horizontal" class="w-full max-w-2xl">
       <:title>Project tasks</:title>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">1887 completed</p>
       <:section>
@@ -904,25 +1029,19 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <:section>
         <p class="text-sm text-zinc-600 dark:text-zinc-400">76 in progress</p>
       </:section>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :collapsible} = assigns) do
-    ~H"""
-    <Components.card padded={false} class="w-full max-w-md">
+  defp code(:collapsible) do
+    ~S"""
+    <.card padded={false} class="w-full max-w-md">
       <:section>
-        <Components.collapsible id={"#{@id}-collapsible"}>
+        <.collapsible id="repos">
           <:trigger :let={attrs}>
-            <button
-              {attrs}
-              class="group flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium"
-            >
+            <button {attrs} class="group flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium">
               Starred repositories
-              <Components.icon
-                name="lucide-chevron-down"
-                class="size-4 transition-transform group-aria-expanded:rotate-180"
-              />
+              <.icon name="lucide-chevron-down" class="size-4 transition-transform group-aria-expanded:rotate-180" />
             </button>
           </:trigger>
           <:content :let={attrs}>
@@ -933,19 +1052,19 @@ defmodule FlintUIDocsWeb.Docs.Card do
               </ul>
             </div>
           </:content>
-        </Components.collapsible>
+        </.collapsible>
       </:section>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_separated} = assigns) do
-    ~H"""
-    <Components.card body="separated" class="w-full max-w-md">
+  defp code(:body_separated) do
+    ~S"""
+    <.card body="separated" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <:header_actions>
-        <Components.button variant="ghost" size="sm">Edit</Components.button>
+        <.button variant="ghost" size="sm">Edit</.button>
       </:header_actions>
       <div class="space-y-2 text-sm">
         <p>Product updates</p>
@@ -954,28 +1073,28 @@ defmodule FlintUIDocsWeb.Docs.Card do
       </div>
       <:footer>3 repositories</:footer>
       <:footer_actions>
-        <Components.button variant="solid" size="sm">View logs</Components.button>
+        <.button variant="solid" size="sm">View logs</.button>
       </:footer_actions>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_separated_muted} = assigns) do
-    ~H"""
-    <Components.card body="separated" variant="muted" class="w-full max-w-md">
+  defp code(:body_separated_muted) do
+    ~S"""
+    <.card body="separated" variant="muted" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">
         Product updates, weekly digests and security alerts.
       </p>
       <:footer>3 repositories</:footer>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_separated_footer} = assigns) do
-    ~H"""
-    <Components.card body="separated-footer" class="w-full max-w-md">
+  defp code(:body_separated_footer) do
+    ~S"""
+    <.card body="separated-footer" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">
@@ -983,15 +1102,15 @@ defmodule FlintUIDocsWeb.Docs.Card do
       </p>
       <:footer>3 repositories</:footer>
       <:footer_actions>
-        <Components.button variant="solid" size="sm">View logs</Components.button>
+        <.button variant="solid" size="sm">View logs</.button>
       </:footer_actions>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_divided} = assigns) do
-    ~H"""
-    <Components.card body="divided" class="w-full max-w-md">
+  defp code(:body_divided) do
+    ~S"""
+    <.card body="divided" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">
@@ -999,15 +1118,15 @@ defmodule FlintUIDocsWeb.Docs.Card do
       </p>
       <:footer>Last saved 2 minutes ago</:footer>
       <:footer_actions>
-        <Components.button variant="ghost" size="sm">Settings</Components.button>
+        <.button variant="ghost" size="sm">Settings</.button>
       </:footer_actions>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_inset} = assigns) do
-    ~H"""
-    <Components.card body="inset" variant="soft" class="w-full max-w-md">
+  defp code(:body_inset) do
+    ~S"""
+    <.card body="inset" variant="soft" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <div class="space-y-2 text-sm">
@@ -1015,13 +1134,13 @@ defmodule FlintUIDocsWeb.Docs.Card do
         <p>Weekly digest</p>
         <p>Security alerts</p>
       </div>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_inset_well} = assigns) do
-    ~H"""
-    <Components.card body="inset" class="w-full max-w-md">
+  defp code(:body_inset_well) do
+    ~S"""
+    <.card body="inset" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <div class="space-y-2 text-sm">
@@ -1029,13 +1148,13 @@ defmodule FlintUIDocsWeb.Docs.Card do
         <p>Weekly digest</p>
         <p>Security alerts</p>
       </div>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :body_flush} = assigns) do
-    ~H"""
-    <Components.card body="flush" variant="soft" class="w-full max-w-md">
+  defp code(:body_flush) do
+    ~S"""
+    <.card body="flush" variant="soft" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <div class="divide-y divide-zinc-200 text-sm dark:divide-zinc-800">
@@ -1043,21 +1162,21 @@ defmodule FlintUIDocsWeb.Docs.Card do
         <p class="py-2">Weekly digest</p>
         <p class="py-2">Security alerts</p>
       </div>
-    </Components.card>
+    </.card>
     """
   end
 
-  def render_block(%{block: :ghost} = assigns) do
-    ~H"""
+  defp code(:ghost) do
+    ~S"""
     <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-      <Components.card variant="ghost">
+      <.card variant="ghost">
         <:title>Outline card</:title>
         <p>Body</p>
-      </Components.card>
-      <Components.card variant="ghost" outline={false}>
+      </.card>
+      <.card variant="ghost" outline={false}>
         <:title>Bare container</:title>
         <p>Body</p>
-      </Components.card>
+      </.card>
     </div>
     """
   end

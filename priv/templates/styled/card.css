@@ -10,10 +10,7 @@
         border: 1px solid var(--fl-card-border, var(--fl-color-border));
         border-radius: var(--fl-radius-lg);
         background: var(--fl-card-surface, var(--fl-color-surface));
-        color: var(
-            --fl-card-surface-foreground,
-            var(--fl-color-surface-foreground)
-        );
+        color: var(--fl-card-surface-foreground, var(--fl-color-surface-foreground));
         box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));
         font-family: var(--fl-font-sans);
         overflow: hidden;
@@ -29,9 +26,7 @@
     /* Keep horizontal regions shrinkable so long content does not widen the row. */
     [data-element="card"][data-orientation="horizontal"]
         > :is([data-part="header"], [data-part="body"], [data-part="footer"]),
-    [data-element="card"][data-orientation="horizontal"]
-        [data-part="body"]
-        > [data-part="section"] {
+    [data-element="card"][data-orientation="horizontal"] [data-part="body"] > [data-part="section"] {
         min-width: 0;
     }
 
@@ -76,11 +71,7 @@
 
     [data-element="card"][data-inverted="true"] {
         --fl-card-surface-foreground: var(--fl-color-inverted-foreground);
-        --fl-card-border: color-mix(
-            in oklab,
-            var(--fl-color-inverted-foreground) 20%,
-            var(--fl-color-inverted)
-        );
+        --fl-card-border: color-mix(in oklab, var(--fl-color-inverted-foreground) 20%, var(--fl-color-inverted));
     }
 
     /* A ghost card has no surface to invert, so keep the page foreground and
@@ -96,25 +87,16 @@
 
     /* Inverted soft/muted stay opaque steps over the inverted surface. */
     [data-element="card"][data-inverted="true"][data-variant="soft"] {
-        --fl-card-surface: color-mix(
-            in oklab,
-            var(--fl-color-inverted-foreground) 4%,
-            var(--fl-color-inverted)
-        );
+        --fl-card-surface: color-mix(in oklab, var(--fl-color-inverted-foreground) 4%, var(--fl-color-inverted));
     }
 
     [data-element="card"][data-inverted="true"][data-variant="muted"] {
-        --fl-card-surface: color-mix(
-            in oklab,
-            var(--fl-color-inverted-foreground) 8%,
-            var(--fl-color-inverted)
-        );
+        --fl-card-surface: color-mix(in oklab, var(--fl-color-inverted-foreground) 8%, var(--fl-color-inverted));
     }
 
     /* Body treatments: seamless dissolves the body box, separated tints its outer
      * regions, divided draws lines on the card surface, inset/flush make a panel. */
-    [data-element="card"][data-body="seamless"][data-card]
-        > [data-part="body"] {
+    [data-element="card"][data-body="seamless"][data-card] > [data-part="body"] {
         display: contents;
         color: inherit;
     }
@@ -140,10 +122,7 @@
 
     /* Flush keeps a panel gap, but it matches the tighter header/footer inset. */
     [data-element="card"][data-body="flush"][data-card][data-orientation="vertical"] {
-        gap: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
+        gap: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
     }
 
     [data-element="card"][data-body="inset"][data-card] > [data-part="body"],
@@ -154,34 +133,20 @@
             color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
             color-mix(
                 in oklab,
-                var(
-                        --fl-card-surface-foreground,
-                        var(--fl-color-surface-foreground)
-                    )
-                    2.5%,
+                var(--fl-card-surface-foreground, var(--fl-color-surface-foreground)) 2.5%,
                 var(--fl-card-surface, var(--fl-color-surface))
             )
         );
-        box-shadow: light-dark(
-            inset 0 1px 2px rgb(0 0 0 / 0.05),
-            var(--fl-shadow-xs)
-        );
+        box-shadow: light-dark(inset 0 1px 2px rgb(0 0 0 / 0.05), var(--fl-shadow-xs));
     }
 
-    [data-element="card"]:is([data-variant="soft"], [data-variant="muted"]):is(
-            [data-body="inset"],
-            [data-body="flush"]
-        )
+    [data-element="card"]:is([data-variant="soft"], [data-variant="muted"]):is([data-body="inset"], [data-body="flush"])
         > [data-part="body"] {
         background: light-dark(
             var(--fl-color-surface),
             color-mix(
                 in oklab,
-                var(
-                        --fl-card-surface-foreground,
-                        var(--fl-color-surface-foreground)
-                    )
-                    2.5%,
+                var(--fl-card-surface-foreground, var(--fl-color-surface-foreground)) 2.5%,
                 var(--fl-card-surface, var(--fl-color-surface))
             )
         );
@@ -189,11 +154,7 @@
     }
 
     /* Inverted surfaces flip lightness, so their panels stay wells. */
-    [data-element="card"][data-inverted="true"]:is(
-            [data-body="inset"],
-            [data-body="flush"]
-        )
-        > [data-part="body"] {
+    [data-element="card"][data-inverted="true"]:is([data-body="inset"], [data-body="flush"]) > [data-part="body"] {
         background: light-dark(
             color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
             color-mix(
@@ -225,8 +186,7 @@
         margin-inline: var(--fl-spacing);
     }
 
-    [data-element="card"][data-body="inset"][data-orientation="horizontal"]
-        > [data-part="body"] {
+    [data-element="card"][data-body="inset"][data-orientation="horizontal"] > [data-part="body"] {
         margin-block: var(--fl-spacing);
     }
 
@@ -235,143 +195,93 @@
         border-radius: var(--fl-radius-lg);
     }
 
-    [data-element="card"][data-body="flush"][data-orientation="vertical"]
-        > [data-part="body"] {
+    [data-element="card"][data-body="flush"][data-orientation="vertical"] > [data-part="body"] {
         margin-inline: -1px;
     }
 
-    [data-element="card"][data-body="flush"][data-orientation="horizontal"]
-        > [data-part="body"] {
+    [data-element="card"][data-body="flush"][data-orientation="horizontal"] > [data-part="body"] {
         margin-block: -1px;
     }
 
-    [data-element="card"][data-body="flush"]:not(:has(> [data-part="footer"]))
-        > [data-part="body"] {
+    [data-element="card"][data-body="flush"]:not(:has(> [data-part="footer"])) > [data-part="body"] {
         margin-block-end: -1px;
     }
 
     /* Without a footer the panel owns the bottom edge: inset keeps its small
      * gap, flush reaches the edge. */
-    [data-element="card"][data-card][data-body="inset"]:not(
-            :has(> [data-part="footer"])
-        ) {
+    [data-element="card"][data-card][data-body="inset"]:not(:has(> [data-part="footer"])) {
         padding-block-end: var(--fl-spacing);
     }
 
-    [data-element="card"][data-card][data-body="flush"]:not(
-            :has(> [data-part="footer"])
-        ) {
+    [data-element="card"][data-card][data-body="flush"]:not(:has(> [data-part="footer"])) {
         padding-block-end: 0;
     }
 
     /* Separated bands are a darker shade of the card surface; the unbanded
      * region matches the body. */
-    [data-element="card"][data-body="separated"]
-        > :is([data-part="header"], [data-part="footer"]),
+    [data-element="card"][data-body="separated"] > :is([data-part="header"], [data-part="footer"]),
     [data-element="card"][data-body="separated-header"] > [data-part="header"],
     [data-element="card"][data-body="separated-footer"] > [data-part="footer"] {
         background: light-dark(
-            color-mix(
-                in oklab,
-                black 1.5%,
-                var(--fl-card-surface, var(--fl-color-surface))
-            ),
-            color-mix(
-                in oklab,
-                black 10%,
-                var(--fl-card-surface, var(--fl-color-surface))
-            )
+            color-mix(in oklab, black 1.5%, var(--fl-card-surface, var(--fl-color-surface))),
+            color-mix(in oklab, black 10%, var(--fl-card-surface, var(--fl-color-surface)))
         );
     }
 
     /* Inverted surfaces flip lightness, so swap the band strengths with them. */
     [data-element="card"][data-card][data-inverted="true"][data-body="separated"]
         > :is([data-part="header"], [data-part="footer"]),
-    [data-element="card"][data-card][data-inverted="true"][data-body="separated-header"]
-        > [data-part="header"],
-    [data-element="card"][data-card][data-inverted="true"][data-body="separated-footer"]
-        > [data-part="footer"] {
+    [data-element="card"][data-card][data-inverted="true"][data-body="separated-header"] > [data-part="header"],
+    [data-element="card"][data-card][data-inverted="true"][data-body="separated-footer"] > [data-part="footer"] {
         background: light-dark(
-            color-mix(
-                in oklab,
-                black 10%,
-                var(--fl-card-surface, var(--fl-color-inverted))
-            ),
-            color-mix(
-                in oklab,
-                black 1.5%,
-                var(--fl-card-surface, var(--fl-color-inverted))
-            )
+            color-mix(in oklab, black 10%, var(--fl-card-surface, var(--fl-color-inverted))),
+            color-mix(in oklab, black 1.5%, var(--fl-card-surface, var(--fl-color-inverted)))
         );
     }
 
     [data-element="card"][data-body="separated-header"] > [data-part="footer"],
     [data-element="card"][data-body="separated-footer"] > [data-part="header"] {
         background: var(--fl-card-surface, var(--fl-color-surface));
-        color: var(
-            --fl-card-surface-foreground,
-            var(--fl-color-surface-foreground)
-        );
+        color: var(--fl-card-surface-foreground, var(--fl-color-surface-foreground));
     }
 
     /* Outer regions cancel the card's block inset so the band (or unbanded
      * region) reaches the rounded edge, with a slightly tighter inset. */
-    [data-element="card"][data-card][data-orientation="vertical"]
-        > [data-part="header"] {
-        padding-block-start: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
-        margin-block-start: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
-        );
+    [data-element="card"][data-card][data-orientation="vertical"] > [data-part="header"] {
+        padding-block-start: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
+        margin-block-start: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
-    [data-element="card"][data-card][data-orientation="vertical"]
-        > [data-part="footer"] {
-        padding-block-end: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
-        margin-block-end: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
-        );
+    [data-element="card"][data-card][data-orientation="vertical"] > [data-part="footer"] {
+        padding-block-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
+        margin-block-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
     /* A band also needs the inset on its body-facing side, since separated roots
      * have no gap. Unbanded regions keep only their outer inset. */
     [data-element="card"][data-body="separated"][data-orientation="vertical"]
         > :is([data-part="header"], [data-part="footer"]),
-    [data-element="card"][data-body="separated-header"][data-orientation="vertical"]
-        > [data-part="header"],
-    [data-element="card"][data-body="separated-footer"][data-orientation="vertical"]
-        > [data-part="footer"] {
-        padding-block: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
+    [data-element="card"][data-body="separated-header"][data-orientation="vertical"] > [data-part="header"],
+    [data-element="card"][data-body="separated-footer"][data-orientation="vertical"] > [data-part="footer"] {
+        padding-block: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
     }
 
     /* Regions own the inline inset so dividers can run edge to edge. */
-    [data-element="card"][data-card]
-        :is([data-part="header"], [data-part="footer"], [data-part="section"]) {
+    [data-element="card"][data-card] :is([data-part="header"], [data-part="footer"], [data-part="section"]) {
         padding-inline: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
-    [data-element="card"][data-card]
-        [data-part="section"][data-padded="false"] {
+    [data-element="card"][data-card] [data-part="section"][data-padded="false"] {
         padding-inline: 0;
     }
 
     /* In a row, regions own the block inset (so dividers span the height) and
      * match the sections, so every column's content sits on the same line. */
-    [data-element="card"][data-card][data-orientation="horizontal"]
-        > :is([data-part="header"], [data-part="footer"]) {
+    [data-element="card"][data-card][data-orientation="horizontal"] > :is([data-part="header"], [data-part="footer"]) {
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
-    [data-element="card"][data-card][data-orientation="horizontal"]
-        [data-part="section"][data-padded="true"] {
+    [data-element="card"][data-card][data-orientation="horizontal"] [data-part="section"][data-padded="true"] {
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
@@ -383,10 +293,8 @@
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]:not(:first-child)
         > [data-part="section"]:first-child,
-    [data-element="card"][data-orientation="vertical"][data-body="divided"]
-        > [data-part="footer"]:not(:first-child) {
-        border-block-start: 1px solid
-            var(--fl-card-border, var(--fl-color-border));
+    [data-element="card"][data-orientation="vertical"][data-body="divided"] > [data-part="footer"]:not(:first-child) {
+        border-block-start: 1px solid var(--fl-card-border, var(--fl-color-border));
     }
 
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
@@ -395,18 +303,11 @@
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]:not(:first-child)
         > [data-part="section"][data-padded="true"]:first-child {
-        padding-block-start: var(
-            --fl-card-spacing,
-            calc(var(--fl-spacing) * 5)
-        );
+        padding-block-start: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
-    [data-element="card"][data-orientation="vertical"][data-body="divided"]
-        > [data-part="footer"]:not(:first-child) {
-        padding-block-start: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) -
-                var(--fl-spacing)
-        );
+    [data-element="card"][data-orientation="vertical"][data-body="divided"] > [data-part="footer"]:not(:first-child) {
+        padding-block-start: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
     }
 
     /* A first/last full-bleed section cancels the card's block inset so it sits
@@ -414,17 +315,13 @@
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:first-child
         > [data-part="section"][data-padded="false"]:first-child {
-        margin-block-start: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
-        );
+        margin-block-start: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:last-child
         > [data-part="section"][data-padded="false"]:last-child {
-        margin-block-end: calc(
-            var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1
-        );
+        margin-block-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
     [data-element="card"][data-orientation="horizontal"][data-body="divided"]
@@ -433,10 +330,8 @@
     [data-element="card"][data-orientation="horizontal"][data-body="divided"]
         > [data-part="body"]:not(:first-child)
         > [data-part="section"]:first-child,
-    [data-element="card"][data-orientation="horizontal"][data-body="divided"]
-        > [data-part="footer"]:not(:first-child) {
-        border-inline-start: 1px solid
-            var(--fl-card-border, var(--fl-color-border));
+    [data-element="card"][data-orientation="horizontal"][data-body="divided"] > [data-part="footer"]:not(:first-child) {
+        border-inline-start: 1px solid var(--fl-card-border, var(--fl-color-border));
     }
 
     [data-element="card"][data-card] [data-part="header"] {
@@ -459,13 +354,8 @@
         line-height: 1.375;
     }
 
-    [data-element="card"][data-inverted="true"]:not([data-variant="ghost"])
-        [data-part="description"] {
-        color: color-mix(
-            in oklab,
-            var(--fl-color-inverted-foreground) 75%,
-            transparent
-        );
+    [data-element="card"][data-inverted="true"]:not([data-variant="ghost"]) [data-part="description"] {
+        color: color-mix(in oklab, var(--fl-color-inverted-foreground) 75%, transparent);
     }
 
     [data-element="card"][data-card] [data-part="header-actions"] {
@@ -505,8 +395,7 @@
         align-items: flex-start;
     }
 
-    [data-element="card"][data-orientation="horizontal"]
-        [data-part="footer-actions"] {
+    [data-element="card"][data-orientation="horizontal"] [data-part="footer-actions"] {
         margin-inline-start: 0;
         margin-block-start: auto;
     }

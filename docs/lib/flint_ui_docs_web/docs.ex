@@ -11,17 +11,14 @@ defmodule FlintUIDocsWeb.Docs do
 
   Components declare (`Docs.Page` for the full contract):
 
-    * `controls/0` - interactive properties shown in the Docs playground
-    * `usage/0` - usage sections, one per attribute, tagged `:base` or `:styled`
-    * `examples/0` - example sections rendered in the Examples block
-    * `anatomy/0` - structured element tree for the Base tab
-    * `styling/0` - plain-CSS styling snippets for the base
-    * `css/0` - the styled layer's CSS contract
-    * `accessibility/0` - accessibility prose
-    * `render_playground/1` - the live playground render for the Styled tab
-    * `render_usage/1` - the render for a Styled usage subsection preview
-    * `render_block/1` - the render for a Styled example preview
-    * `source/3` - the dev-only source of a preview's render callback
+    * `title/0`, `subtitle/0`, `links/0` - the page header
+    * `controls/0` - interactive properties available to previews
+    * `styled_overview/0`, `base_overview/0` - optional prose
+    * `styled_features/0`, `base_features/0` - optional feature lists
+    * `usage/0`, `examples/0` - section metadata
+    * `anatomy/0`, `architecture/0`, `structure/0` - the Base tab
+    * `styling/0`, `css/0` - the CSS layer
+    * `render_main/1`, `render_section/1` - the live previews
   """
 
   use Phoenix.Component
@@ -51,51 +48,32 @@ defmodule FlintUIDocsWeb.Docs do
   }
 
   attr(:name, :atom, required: true)
-  attr(:layer, :atom, default: :base)
-  attr(:props, :map, default: %{})
   attr(:id, :string, required: true)
+  attr(:state, :map, default: %{})
 
-  def render_playground(assigns) do
-    module(assigns.name).render_playground(assigns)
+  def render_main(assigns) do
+    module(assigns.name).render_main(assigns)
   end
 
   attr(:name, :atom, required: true)
-  attr(:layer, :atom, default: :base)
-  attr(:props, :map, default: %{})
   attr(:id, :string, required: true)
-
-  def render_code(assigns) do
-    module(assigns.name).render_code(assigns)
-  end
-
-  attr(:name, :atom, required: true)
-  attr(:layer, :atom, default: :base)
+  attr(:kind, :atom, required: true)
   attr(:block, :atom, required: true)
-  attr(:props, :map, default: %{})
-  attr(:id, :string, required: true)
+  attr(:section, :map, required: true)
+  attr(:state, :map, default: %{})
 
-  def render_usage(assigns) do
-    module(assigns.name).render_usage(assigns)
-  end
-
-  attr(:name, :atom, required: true)
-  attr(:layer, :atom, default: :styled)
-  attr(:block, :atom, required: true)
-  attr(:props, :map, default: %{})
-  attr(:id, :string, required: true)
-
-  def render_block(assigns) do
-    module(assigns.name).render_block(assigns)
+  def render_section(assigns) do
+    module(assigns.name).render_section(assigns)
   end
 
   @doc """
   The dev-only source of a preview's render callback, or `nil`.
 
-  `kind` is `:playground`, `:usage`, or `:block`. See
-  `FlintUIDocsWeb.Docs.Source` for the `:block` and `:layer` options.
+  `callback` is `:main` or `:section`. See `FlintUIDocsWeb.Docs.Source` for the
+  `:kind`, `:block`, and `:layer` options.
   """
-  def source(name, kind, opts \\ []) do
-    Source.get(module(name), kind, opts)
+  def source(name, callback, opts \\ []) do
+    Source.get(module(name), callback, opts)
   end
 
   @doc """
@@ -103,9 +81,37 @@ defmodule FlintUIDocsWeb.Docs do
   """
   def modules, do: @modules
 
+  def title(name) do
+    case module(name) do
+      Default -> humanize(name)
+      module -> module.title()
+    end
+  end
+
+  def subtitle(name) do
+    case module(name) do
+      Default -> FlintUI.Docs.description(name)
+      module -> module.subtitle()
+    end
+  end
+
+  def links(name) do
+    case module(name) do
+      Default -> default_links(name)
+      module -> module.links()
+    end
+  end
+
   def controls(name), do: module(name).controls()
-  def playground_controls(name), do: module(name).playground_controls()
-  def defaults(name), do: module(name).defaults()
+
+  def defaults(name) do
+    Map.new(controls(name), fn control -> {control.key, control.default} end)
+  end
+
+  def styled_overview(name), do: module(name).styled_overview()
+  def base_overview(name), do: module(name).base_overview()
+  def styled_features(name), do: module(name).styled_features()
+  def base_features(name), do: module(name).base_features()
   def usage(name), do: module(name).usage()
   def base_usage(name), do: Enum.filter(usage(name), &(&1.layer == :base))
   def styled_usage(name), do: Enum.filter(usage(name), &(&1.layer == :styled))
@@ -115,8 +121,63 @@ defmodule FlintUIDocsWeb.Docs do
   def styling(name), do: module(name).styling()
   def css(name), do: module(name).css()
   def anatomy(name), do: module(name).anatomy()
+  def architecture(name), do: module(name).architecture()
   def accessibility(name), do: module(name).accessibility()
   def structure(name), do: module(name).structure()
+
+  @doc """
+  The repository URL for a component's source file.
+  """
+  def source_url(name) do
+    base =
+      Application.get_env(
+        :flint_ui_docs,
+        :source_url,
+        "https://github.com/greven/flint_ui/blob/main"
+      )
+
+    case component_source(name) do
+      nil -> base
+      path -> base <> "/" <> path
+    end
+  end
+
+  defp component_source(name) do
+    module = FlintUI.API.component_module(name)
+
+    if Code.ensure_loaded?(module) do
+      case module.module_info(:compile)[:source] do
+        nil -> nil
+        source -> relative_source(to_string(source))
+      end
+    end
+  rescue
+    _ -> nil
+  end
+
+  defp relative_source(path) do
+    case String.split(path, "/lib/flint_ui/", parts: 2) do
+      [_, rest] -> "lib/flint_ui/" <> rest
+      _ -> path
+    end
+  end
+
+  defp default_links(name) do
+    [
+      %{
+        label: "Source",
+        href: source_url(name),
+        icon: "lucide-github"
+      }
+    ]
+  end
+
+  defp humanize(name) do
+    name
+    |> Atom.to_string()
+    |> String.split("_")
+    |> Enum.map_join(" ", &String.capitalize/1)
+  end
 
   defp module(name), do: Map.get(@modules, name, Default)
 end

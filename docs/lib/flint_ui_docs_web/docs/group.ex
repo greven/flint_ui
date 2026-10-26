@@ -103,19 +103,6 @@ defmodule FlintUIDocsWeb.Docs.Group do
         into one block; `framed` wraps them in a padded, bordered shell. The
         theme is child-agnostic, so the same variant works for any controls and
         each child keeps its own button variant.
-        """,
-        code: """
-        <div class="flex flex-col items-start gap-4">
-          <.group variant="attached">
-            <.button variant="outline">Left</.button>
-            <.button variant="outline">Center</.button>
-            <.button variant="outline">Right</.button>
-          </.group>
-          <.group variant="framed">
-            <.toggle>Day</.toggle>
-            <.toggle>Week</.toggle>
-          </.group>
-        </div>
         """
       },
       %{
@@ -126,14 +113,6 @@ defmodule FlintUIDocsWeb.Docs.Group do
         body: """
         `size` sets the group spacing and cascades onto the child controls, so
         the whole unit stays aligned from one attribute.
-        """,
-        code: """
-        <div class="flex flex-col items-start gap-4">
-          <.group :for={size <- ~w(xs sm md lg xl)} size={size} variant="framed">
-            <.toggle>Details</.toggle>
-            <.toggle>History</.toggle>
-          </.group>
-        </div>
         """
       }
     ]
@@ -145,81 +124,28 @@ defmodule FlintUIDocsWeb.Docs.Group do
       %{
         id: :toolbar,
         title: "Formatting group",
-        description: "A framed group of icon toggles.",
-        code: """
-        <.group variant="framed">
-          <.toggle variant="solid" aria-label="Bold" pressed>
-            <.icon name="lucide-bold" />
-          </.toggle>
-          <.toggle variant="solid" aria-label="Italic">
-            <.icon name="lucide-italic" />
-          </.toggle>
-          <.toggle variant="solid" aria-label="Underline">
-            <.icon name="lucide-underline" />
-          </.toggle>
-        </.group>
-        """
+        description: "A framed group of icon toggles."
       },
       %{
         id: :with_icons,
         title: "With icons",
-        description: "Pair an icon with a label in each control.",
-        code: """
-        <.group variant="attached">
-          <.button variant="outline">
-            <.icon name="lucide-copy" /> Copy
-          </.button>
-          <.button variant="outline">
-            <.icon name="lucide-scissors" /> Cut
-          </.button>
-          <.button variant="outline">
-            <.icon name="lucide-clipboard-paste" /> Paste
-          </.button>
-        </.group>
-        """
+        description: "Pair an icon with a label in each control."
       },
       %{
         id: :icon_only,
         title: "Icon only",
-        description: "Give each icon-only control an accessible name with `aria-label`.",
-        code: """
-        <.group variant="attached">
-          <.button variant="outline" aria-label="Copy">
-            <.icon name="lucide-copy" />
-          </.button>
-          <.button variant="outline" aria-label="Cut">
-            <.icon name="lucide-scissors" />
-          </.button>
-          <.button variant="outline" aria-label="Paste">
-            <.icon name="lucide-clipboard-paste" />
-          </.button>
-        </.group>
-        """
+        description: "Give each icon-only control an accessible name with `aria-label`."
       },
       %{
         id: :button_group,
         title: "Button group",
-        description: "Buttons attached into a single control.",
-        code: """
-        <.group variant="attached">
-          <.button variant="outline">Left</.button>
-          <.button variant="outline">Center</.button>
-          <.button variant="outline">Right</.button>
-        </.group>
-        """
+        description: "Buttons attached into a single control."
       },
       %{
         id: :segmented,
         title: "Segmented control",
         description:
-          "Toggles attached into a single-select control; the selection is yours to own.",
-        code: """
-        <.group variant="attached">
-          <.toggle variant="subtle" pressed aria-label="Day">Day</.toggle>
-          <.toggle variant="subtle" aria-label="Week">Week</.toggle>
-          <.toggle variant="subtle" aria-label="Month">Month</.toggle>
-        </.group>
-        """
+          "Toggles attached into a single-select control; the selection is yours to own."
       },
       %{
         id: :base_list,
@@ -309,21 +235,29 @@ defmodule FlintUIDocsWeb.Docs.Group do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.group
-      orientation={@props.orientation}
-      variant={@props.variant}
-      size={@props.size}
+    <.preview
+      :let={props}
+      id={@id}
+      name={:group}
+      state={@state}
+      controls={[:orientation, :variant, :size]}
+      code={&main_code/1}
     >
-      <Components.button variant="outline">Copy</Components.button>
-      <Components.button variant="outline">Paste</Components.button>
-    </Components.group>
+      <Components.group
+        orientation={props.orientation}
+        variant={props.variant}
+        size={props.size}
+      >
+        <Components.button variant="outline">Copy</Components.button>
+        <Components.button variant="outline">Paste</Components.button>
+      </Components.group>
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     Snippet.tag(
       ".group",
       [
@@ -340,110 +274,218 @@ defmodule FlintUIDocsWeb.Docs.Group do
   end
 
   @impl true
-  def render_usage(%{block: :variant} = assigns) do
+  def render_section(%{kind: :usage, block: :variant} = assigns) do
     ~H"""
-    <div class="flex flex-col items-start gap-4">
+    <.preview id={@id} name={:group} state={@state} code={code(:variant)}>
+      <div class="flex flex-col items-start gap-4">
+        <Components.group variant="attached">
+          <Components.button variant="outline">Left</Components.button>
+          <Components.button variant="outline">Center</Components.button>
+          <Components.button variant="outline">Right</Components.button>
+        </Components.group>
+        <Components.group variant="attached">
+          <Components.button variant="dashed">Left</Components.button>
+          <Components.button variant="dashed">Center</Components.button>
+          <Components.button variant="dashed">Right</Components.button>
+        </Components.group>
+        <Components.group variant="attached">
+          <Components.button variant="ghost">Left</Components.button>
+          <Components.button variant="ghost">Center</Components.button>
+          <Components.button variant="ghost">Right</Components.button>
+        </Components.group>
+        <Components.group variant="framed">
+          <Components.toggle>Day</Components.toggle>
+          <Components.toggle>Week</Components.toggle>
+          <Components.toggle>Month</Components.toggle>
+        </Components.group>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :size} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:group} state={@state} code={code(:size)}>
+      <div class="flex flex-col items-start gap-4">
+        <Components.group :for={size <- ~w(xs sm md lg xl)} size={size} variant="framed">
+          <Components.toggle>Details</Components.toggle>
+          <Components.toggle>History</Components.toggle>
+        </Components.group>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :toolbar} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:group} state={@state} code={code(:toolbar)}>
+      <Components.group variant="framed">
+        <Components.toggle variant="solid" aria-label="Bold" pressed>
+          <Components.icon name="lucide-bold" />
+        </Components.toggle>
+        <Components.toggle variant="solid" aria-label="Italic">
+          <Components.icon name="lucide-italic" />
+        </Components.toggle>
+        <Components.toggle variant="solid" aria-label="Underline">
+          <Components.icon name="lucide-underline" />
+        </Components.toggle>
+      </Components.group>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :with_icons} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:group} state={@state} code={code(:with_icons)}>
+      <Components.group variant="attached">
+        <Components.button variant="outline">
+          <Components.icon name="lucide-copy" /> Copy
+        </Components.button>
+        <Components.button variant="outline">
+          <Components.icon name="lucide-scissors" /> Cut
+        </Components.button>
+        <Components.button variant="outline">
+          <Components.icon name="lucide-clipboard-paste" /> Paste
+        </Components.button>
+      </Components.group>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :icon_only} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:group} state={@state} code={code(:icon_only)}>
+      <Components.group variant="attached">
+        <Components.button variant="outline" aria-label="Copy">
+          <Components.icon name="lucide-copy" />
+        </Components.button>
+        <Components.button variant="outline" aria-label="Cut">
+          <Components.icon name="lucide-scissors" />
+        </Components.button>
+        <Components.button variant="outline" aria-label="Paste">
+          <Components.icon name="lucide-clipboard-paste" />
+        </Components.button>
+      </Components.group>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :button_group} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:group} state={@state} code={code(:button_group)}>
       <Components.group variant="attached">
         <Components.button variant="outline">Left</Components.button>
         <Components.button variant="outline">Center</Components.button>
         <Components.button variant="outline">Right</Components.button>
       </Components.group>
-      <Components.group variant="attached">
-        <Components.button variant="dashed">Left</Components.button>
-        <Components.button variant="dashed">Center</Components.button>
-        <Components.button variant="dashed">Right</Components.button>
-      </Components.group>
-      <Components.group variant="attached">
-        <Components.button variant="ghost">Left</Components.button>
-        <Components.button variant="ghost">Center</Components.button>
-        <Components.button variant="ghost">Right</Components.button>
-      </Components.group>
-      <Components.group variant="framed">
-        <Components.toggle>Day</Components.toggle>
-        <Components.toggle>Week</Components.toggle>
-        <Components.toggle>Month</Components.toggle>
-      </Components.group>
-    </div>
+    </.preview>
     """
   end
 
-  def render_usage(%{block: :size} = assigns) do
+  def render_section(%{kind: :example, block: :segmented} = assigns) do
     ~H"""
+    <.preview id={@id} name={:group} state={@state} code={code(:segmented)}>
+      <Components.group variant="attached">
+        <Components.toggle variant="subtle" pressed aria-label="Day">Day</Components.toggle>
+        <Components.toggle variant="subtle" aria-label="Week">Week</Components.toggle>
+        <Components.toggle variant="subtle" aria-label="Month">Month</Components.toggle>
+      </Components.group>
+    </.preview>
+    """
+  end
+
+  defp code(:variant) do
+    ~S"""
     <div class="flex flex-col items-start gap-4">
-      <Components.group :for={size <- ~w(xs sm md lg xl)} size={size} variant="framed">
-        <Components.toggle>Details</Components.toggle>
-        <Components.toggle>History</Components.toggle>
-      </Components.group>
+      <.group variant="attached">
+        <.button variant="outline">Left</.button>
+        <.button variant="outline">Center</.button>
+        <.button variant="outline">Right</.button>
+      </.group>
+      <.group variant="framed">
+        <.toggle>Day</.toggle>
+        <.toggle>Week</.toggle>
+      </.group>
     </div>
     """
   end
 
-  @impl true
-  def render_block(%{block: :toolbar} = assigns) do
-    ~H"""
-    <Components.group variant="framed">
-      <Components.toggle variant="solid" aria-label="Bold" pressed>
-        <Components.icon name="lucide-bold" />
-      </Components.toggle>
-      <Components.toggle variant="solid" aria-label="Italic">
-        <Components.icon name="lucide-italic" />
-      </Components.toggle>
-      <Components.toggle variant="solid" aria-label="Underline">
-        <Components.icon name="lucide-underline" />
-      </Components.toggle>
-    </Components.group>
+  defp code(:size) do
+    ~S"""
+    <div class="flex flex-col items-start gap-4">
+      <.group :for={size <- ~w(xs sm md lg xl)} size={size} variant="framed">
+        <.toggle>Details</.toggle>
+        <.toggle>History</.toggle>
+      </.group>
+    </div>
     """
   end
 
-  def render_block(%{block: :with_icons} = assigns) do
-    ~H"""
-    <Components.group variant="attached">
-      <Components.button variant="outline">
-        <Components.icon name="lucide-copy" /> Copy
-      </Components.button>
-      <Components.button variant="outline">
-        <Components.icon name="lucide-scissors" /> Cut
-      </Components.button>
-      <Components.button variant="outline">
-        <Components.icon name="lucide-clipboard-paste" /> Paste
-      </Components.button>
-    </Components.group>
+  defp code(:toolbar) do
+    ~S"""
+    <.group variant="framed">
+      <.toggle variant="solid" aria-label="Bold" pressed>
+        <.icon name="lucide-bold" />
+      </.toggle>
+      <.toggle variant="solid" aria-label="Italic">
+        <.icon name="lucide-italic" />
+      </.toggle>
+      <.toggle variant="solid" aria-label="Underline">
+        <.icon name="lucide-underline" />
+      </.toggle>
+    </.group>
     """
   end
 
-  def render_block(%{block: :icon_only} = assigns) do
-    ~H"""
-    <Components.group variant="attached">
-      <Components.button variant="outline" aria-label="Copy">
-        <Components.icon name="lucide-copy" />
-      </Components.button>
-      <Components.button variant="outline" aria-label="Cut">
-        <Components.icon name="lucide-scissors" />
-      </Components.button>
-      <Components.button variant="outline" aria-label="Paste">
-        <Components.icon name="lucide-clipboard-paste" />
-      </Components.button>
-    </Components.group>
+  defp code(:with_icons) do
+    ~S"""
+    <.group variant="attached">
+      <.button variant="outline">
+        <.icon name="lucide-copy" /> Copy
+      </.button>
+      <.button variant="outline">
+        <.icon name="lucide-scissors" /> Cut
+      </.button>
+      <.button variant="outline">
+        <.icon name="lucide-clipboard-paste" /> Paste
+      </.button>
+    </.group>
     """
   end
 
-  def render_block(%{block: :button_group} = assigns) do
-    ~H"""
-    <Components.group variant="attached">
-      <Components.button variant="outline">Left</Components.button>
-      <Components.button variant="outline">Center</Components.button>
-      <Components.button variant="outline">Right</Components.button>
-    </Components.group>
+  defp code(:icon_only) do
+    ~S"""
+    <.group variant="attached">
+      <.button variant="outline" aria-label="Copy">
+        <.icon name="lucide-copy" />
+      </.button>
+      <.button variant="outline" aria-label="Cut">
+        <.icon name="lucide-scissors" />
+      </.button>
+      <.button variant="outline" aria-label="Paste">
+        <.icon name="lucide-clipboard-paste" />
+      </.button>
+    </.group>
     """
   end
 
-  def render_block(%{block: :segmented} = assigns) do
-    ~H"""
-    <Components.group variant="attached">
-      <Components.toggle variant="subtle" pressed aria-label="Day">Day</Components.toggle>
-      <Components.toggle variant="subtle" aria-label="Week">Week</Components.toggle>
-      <Components.toggle variant="subtle" aria-label="Month">Month</Components.toggle>
-    </Components.group>
+  defp code(:button_group) do
+    ~S"""
+    <.group variant="attached">
+      <.button variant="outline">Left</.button>
+      <.button variant="outline">Center</.button>
+      <.button variant="outline">Right</.button>
+    </.group>
+    """
+  end
+
+  defp code(:segmented) do
+    ~S"""
+    <.group variant="attached">
+      <.toggle variant="subtle" pressed aria-label="Day">Day</.toggle>
+      <.toggle variant="subtle" aria-label="Week">Week</.toggle>
+      <.toggle variant="subtle" aria-label="Month">Month</.toggle>
+    </.group>
     """
   end
 

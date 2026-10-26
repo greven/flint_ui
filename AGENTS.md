@@ -92,19 +92,28 @@ Base documents the headless imported component; CSS gathers the styled layer's
 CSS contract. Legacy `?tab=styled` / `?tab=api` / `?tab=styles` links resolve to
 Styled or CSS as appropriate.
 
-- **Styled** — the generated component: `Usage` (the interactive styled
-  playground plus one subsection per styled attribute), a `Base behavior` block
-  linking to the Base tab instead of repeating base semantics, `Examples` (the
-  recipe cards), `Setup` (the install command and wrapper source),
-  and `API reference` (base attributes and styled props merged into one table
-  with Attr, Layer, Type, and Description columns; defaults and data hooks are
-  folded into each description, data first).
-- **Base** — the headless component: `Anatomy` (a structured tree of the rendered
-  markup: wrapper, inner parts, `data-*` hooks, and states), `Usage` (prose plus
-  code for each base attribute, with no live previews), `Examples` (prose plus
-  complete code), `Accessibility` (prose plus the `Keyboard` table), and `API
-  reference` (base `Attributes`, `Slots`, `Events`, `Data attributes`, and
-  runtime CSS variables).
+The page always follows the same layout.
+
+- **Styled** — the generated component: the main preview (`render_main/1`) with
+  per-preview controls, optional `Overview` (`styled_overview/0`), optional
+  `Features` (`styled_features/0`), `Usage` sections from `usage/0`, `Examples`
+  from `examples/0`, `Setup`, and `API Reference`. Styled usage and example
+  entries render through `render_section/1`. The API reference lists the styled
+  props plus the base root attributes in one table (Attr, Type, Description,
+  defaults folded into the description) and the slots; data attributes, events,
+  and runtime CSS variables stay on the Base tab with a link. `Setup` shows the
+  `mix flint.add <name>` command and explanatory text, not the generated wrapper
+  source.
+- **Base** — the headless component: optional `Overview` (`base_overview/0`,
+  which defaults to the styled overview), `Anatomy` (a structured tree of the
+  rendered markup: wrapper, inner parts, `data-*` hooks, and states), `Features`
+  (authored `base_features/0`, plus accessibility prose and the `Keyboard`
+  table), optional `Architecture` (`architecture/0`), optional `Structure`
+  (`structure/0`), `Usage` (prose plus code for each base attribute, with no live
+  previews), `Examples` (prose plus complete code), and `API reference` (base
+  `Attributes`, `Slots`, `Events`, `Data attributes` grouped per part, and
+  runtime CSS variables). Keyboard lives inside Features, not in a separate
+  section.
 - **CSS** — the styled layer contract: `Styling contract` prose, `Public CSS
   variables` (`FlintUI.Styled.Var`), `Selectors and state hooks`, `Theme` (token
   namespaces), and `Customization` recipes.
@@ -112,42 +121,46 @@ Styled or CSS as appropriate.
 Page content is authored per component in
 `docs/lib/flint_ui_docs_web/docs/<name>.ex` (behaviour
 `FlintUIDocsWeb.Docs.Page`), not in the template. Each module declares
-`controls/0` (the Styled playground), `usage/0`, `examples/0`, `anatomy/0`,
-`styling/0`, `css/0`, `structure/0`, `render_playground/1`, `render_code/1`,
-`render_usage/1`, and `render_block/1`. `accessibility/0` defaults to the
-`## Accessibility` section of the component's moduledoc (`FlintUI.Docs.section/2`);
-keyboard comes from the component's `keyboard/0`.
+`controls/0` (the control catalog), `title/0`, `subtitle/0`, `links/0`,
+`styled_overview/0`, `base_overview/0`, `styled_features/0`, `base_features/0`,
+`usage/0`, `examples/0`, `anatomy/0`, `architecture/0`, `structure/0`,
+`styling/0`, `css/0`, `render_main/1`, and `render_section/1`. `accessibility/0`
+defaults to the `## Accessibility` section of the component's moduledoc
+(`FlintUI.Docs.section/2`); keyboard comes from the component's `keyboard/0`.
 
 `usage/0` is the single source of truth for the per-attribute subsections: each
 public attribute has an entry tagged `layer: :base` or `layer: :styled` and a
 `covers` list, and each tab renders only its layer (`Docs.styled_usage/1`
 vs `Docs.base_usage/1`). A docs test enforces that every public base
-attribute and styled prop is covered. `render_usage/1` matches on the entry `id`.
-Styled entries always render their preview and code together; set
-`preview_only: true` (and omit `code`) when the demo is the whole point. Base usage
-and examples are always prose + code and never render a preview. `examples/0`
-entries may be tagged `layer: :base`; the Styled tab shows only styled examples and
-Base shows only base examples. `render_block/1` renders the Examples recipes.
-`anatomy/0` returns a
-`%{body, nodes}` tree rendered by `FlintUIDocsWeb.DocsComponents.anatomy/1`, with
-`structure/0` kept as a code-snippet fallback for components that have not been
-authored yet. The API tables are derived from the component metadata
-(`FlintUI.Docs.*`) plus the `FlintUI.Styled` entry props/slots.
+attribute and styled prop is covered. Styled entries omit `code`; the matching
+`render_section/1` clause owns both the demo and the teaching snippet. Set
+`preview_only: true` when the demo is the whole point. Base usage and examples
+are always prose + code and never render a preview, so their entries keep `code`
+or `codes`. `examples/0` entries may be tagged `layer: :base`; the Styled tab
+shows only styled examples and Base shows only base examples. `anatomy/0`
+returns a `%{body, nodes}` tree rendered by
+`FlintUIDocsWeb.DocsComponents.anatomy/1`, with `structure/0` kept as a
+code-snippet fallback for components that have not been authored yet. The API
+tables are derived from the component metadata (`FlintUI.Docs.*`) plus the
+`FlintUI.Styled` entry props/slots.
 
-Prose in `usage/0`/`styling/0` and the accessibility section is rendered by
-`FlintUIDocsWeb.Markdown`, a small safe Markdown subset (paragraphs, inline code,
-fenced/indented code). Do not add a full Markdown dependency. `styling/0` is no
-longer shown on the component page: `FlintUIDocsWeb.StylingLive` aggregates the
-per-component plain-CSS snippets on the Get Started **Styling** page.
+Prose in `usage/0`, `styling/0`, the overviews, and the accessibility section is
+rendered by `FlintUIDocsWeb.Markdown`, a small safe Markdown subset (paragraphs,
+inline code, fenced/indented code). Do not add a full Markdown dependency.
+`styling/0` is no longer shown on the component page:
+`FlintUIDocsWeb.StylingLive` aggregates the per-component plain-CSS snippets on
+the Get Started **Styling** page.
 
-The interactive preview card is `FlintUIDocsWeb.PreviewComponent`, a
-`LiveComponent` (in `docs/lib/flint_ui_docs_web/components/`) that owns the
-playground state and controls. `kind` is `:playground` (interactive; `layer`
-selects base vs styled), `:usage`, or `:block`; call it as
-`<PreviewComponent.preview ...>`. The demo is always visible, with optional
-controls and code stacked beneath it as one bordered card. The code panel is
-`FlintUIDocsWeb.CodeBlock`; in development it offers a Source toggle beside its
-copy button. Code snippets are highlighted server-side by
+The interactive preview card is `FlintUIDocsWeb.Preview`, a function component
+in `docs/lib/flint_ui_docs_web/components/`. A function component is required so
+the demo can be a slot; per-preview state (control props, active code flavor,
+source/code view) lives in `FlintUIDocsWeb.ComponentLive`, keyed by the preview
+id. Call it as `<.preview id={@id} name={:button} state={@state} ...>`. The demo
+is the inner block and receives the current props through `:let={props}`. The
+code is a `code` or `codes` attribute (a string, a flavor list, or a 1-arity
+function of the props) because a slot carries rendered content, not raw source.
+The code panel is `FlintUIDocsWeb.CodeBlock`; in development it offers a Source
+toggle beside its copy button. Code snippets are highlighted server-side by
 `FlintUIDocsWeb.Highlight` (Makeup), using Paraiso Light and Paraiso Dark via
 `light-dark()` so one stylesheet follows the site's color scheme.
 
@@ -173,36 +186,42 @@ demo. A test asserts no snippet contains a `...` placeholder; the rest is conven
   concise representative composition while the preview demonstrates a fuller matrix
   or adds demo-only context. Keep it honest about the API and complete enough to run.
 - `usage/0` entries document one attribute with minimal, literal markup; `examples/0`
-  show full composition. They are the source of truth for the code block, not for
-  the preview's markup.
-- Previews are authored in `render_playground/1`, `render_usage/1`, and
-  `render_block/1`. They may use docs-private composition, but should still prefer
-  FlintUI components over bespoke markup. When a component's theme does not own a
-  look, compose a generated component that does (`<.button variant=…>`, `<.icon>`).
+  show full composition. They are the source of truth for the section metadata, not
+  for the preview's markup.
+- Previews are authored in `render_main/1` and `render_section/1`. `render_main/1`
+  is the hero preview and declares its controls with `controls={[:variant, ...]}`.
+  `render_section/1` matches on `%{kind: :usage | :example, block: id}` and returns
+  one `<.preview>` for that section. Previews may use docs-private composition, but
+  should still prefer FlintUI components over bespoke markup. When a component's
+  theme does not own a look, compose a generated component that does
+  (`<.button variant=…>`, `<.icon>`).
+- The snippet belongs to the same `<.preview>` call as the demo. For static
+  snippets, pass `code={code(:variant)}` and put the matching `defp code(:variant)`
+  beside the render clauses. For the playground, pass `code={&main_code/1}` so the
+  snippet tracks the current props. Styled snippets do not live in
+  `usage/0`/`examples/0`.
 - Raw Tailwind is reserved for layout the design system does not own (containers,
   spacing, the `max-w-*` canvas). If the code block uses layout classes, show the
   exact classes there; preview-only layout can stay in the render callback.
-- Live playgrounds derive their snippet from `render_code/1`, so it tracks the
-  current props. It may show the essential composition rather than every extra the
-  playground canvas adds.
 - Playground controls are slim addon-style fields below the demo. `controls/0` is
-  the full set; `playground_controls/0` optionally returns the keys to show, so a
-  page can keep its demo panel short (the button page shows Variant, Color, and
-  Size). Hidden controls keep their defaults.
+  the full catalog; each preview picks the keys it shows with `controls={...}`, so a
+  page can keep its demo panel short (the button page shows Variant, Color, Size,
+  and Loading). Hidden controls keep their defaults.
 - Examples whose styling relies on Tailwind carry two code flavors — `Tailwind`
   (utilities) and `CSS` (the same example with semantic classes plus a companion
   stylesheet in `styles`). Declare them with
   `codes: [%{label, lang, code, styles?}]` on a `usage/0`/`examples/0` entry, or
-  return a flavor list from `render_code/1`; a single `code`/string still works.
-  The flavor switcher lives in the code block header.
+  return a flavor list from a `codes/1` helper beside the render clause; a single
+  `code`/string still works. The flavor switcher lives in the code block header.
 
 In development the code block also offers a **Source** toggle beside its copy
 button. It is generated automatically by `FlintUIDocsWeb.Docs.Source` from the
-matching `render_*` clause, so it always shows the markup that actually produced the
-preview and there is no third snippet to maintain. The toggle is enabled by
-`config :flint_ui_docs, dev_tools: true` (`docs/config/dev.exs`) and hidden in every
-other environment. Because that source is visible while developing, keep the render
-callbacks readable and free of dead experiments.
+matching `render_main/1` or `render_section/1` clause, so it always shows the
+markup that actually produced the preview and there is no third snippet to
+maintain. The toggle is enabled by `config :flint_ui_docs, dev_tools: true`
+(`docs/config/dev.exs`) and hidden in every other environment. Because that
+source is visible while developing, keep the render callbacks readable and free
+of dead experiments.
 
 An entry whose rendered demo is the whole point — a full color/variant matrix, for
 example — sets `preview_only: true` and omits `code`. The card then renders only the
@@ -525,8 +544,8 @@ in the same change:
    structurally).
 4. `docs/lib/flint_ui_docs_web/docs/foo.ex` - a
    `FlintUIDocsWeb.Docs.Page` with `controls/0`, `usage/0` (base/styled
-   entries), `examples/0`, `render_playground/1`, `render_usage/1`,
-   `render_block/1`, and `styling/0` with plain-CSS snippets for the base.
+   entries), `examples/0`, `render_main/1`, `render_section/1`, and `styling/0`
+   with plain-CSS snippets for the base.
 
 ## References
 

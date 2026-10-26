@@ -6,16 +6,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
-  @sizes [
-    {"Extra Small", "xs"},
-    {"Small", "sm"},
-    {"Medium", "md"},
-    {"Large", "lg"},
-    {"Extra Large", "xl"}
-  ]
-
-  defp sizes, do: @sizes
-
   @impl true
   def controls do
     [
@@ -29,7 +19,31 @@ defmodule FlintUIDocsWeb.Docs.Button do
   end
 
   @impl true
-  def playground_controls, do: [:variant, :color, :size, :loading]
+  def styled_overview do
+    """
+    Buttons are the primary action control. The generated component adds the
+    themed variants and sizes while keeping the headless behavior: native
+    buttons and links, loading state, and disabled semantics.
+    """
+  end
+
+  @impl true
+  def styled_features do
+    [
+      "Every variant composes with every semantic color role.",
+      "Sizes, depth, square icon buttons, and full-width layouts are all props.",
+      "The leading and trailing slots place icons without extra markup."
+    ]
+  end
+
+  @impl true
+  def base_features do
+    [
+      "Renders a native button, or an anchor when href, navigate, or patch is set.",
+      "The loading state sets aria-busy and data-loading without disabling the button.",
+      "Disabled links stay in the tab order and expose aria-disabled."
+    ]
+  end
 
   @impl true
   def usage do
@@ -109,13 +123,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         body: """
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.button :for={variant <- ~w(solid soft subtle outline dashed ghost link)} variant={variant}>
-            {variant}
-          </.button>
-        </div>
         """
       },
       %{
@@ -139,15 +146,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         body: """
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.button size="xs">Extra Small</.button>
-          <.button size="sm">Small</.button>
-          <.button size="md">Medium</.button>
-          <.button size="lg">Large</.button>
-          <.button size="xl">Extra Large</.button>
-        </div>
         """
       },
       %{
@@ -159,27 +157,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
         Set `square` for an icon-only button. The box stays square at every
         `size`, and inline padding is dropped so the icon fills it. The button
         still needs an accessible name, so pass `aria-label` or
-        `aria-labelledby` (the icon is not a label). `square` has no effect on
-        the `link` variant, which has no box of its own.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.button square variant="ghost" aria-label="More options">
-            <.icon name="lucide-ellipsis" />
-          </.button>
-          <.button square variant="dashed" aria-label="Add item">
-            <.icon name="lucide-plus" />
-          </.button>
-          <.button square variant="outline" aria-label="Edit">
-            <.icon name="lucide-pencil" />
-          </.button>
-          <.button square variant="solid" aria-label="Delete">
-            <.icon name="lucide-trash" />
-          </.button>
-          <.button square variant="solid" color="info" aria-label="Download">
-            <.icon name="lucide-download" />
-          </.button>
-        </div>
+        `aria-labelledby` (the icon is not a label). Because the icon is the
+        whole label there, it keeps the full-strength color instead of the
+        muted tint an icon beside text gets. `square` has no effect on the
+        `link` variant, which has no box of its own.
         """
       },
       %{
@@ -190,15 +171,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         body: """
         `size` scales the square box and the icon inside it, so an icon-only
         button lines up with a text button of the same size.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.button square size="xs" aria-label="Add item"><.icon name="lucide-plus" /></.button>
-          <.button square size="sm" aria-label="Add item"><.icon name="lucide-plus" /></.button>
-          <.button square size="md" aria-label="Add item"><.icon name="lucide-plus" /></.button>
-          <.button square size="lg" aria-label="Add item"><.icon name="lucide-plus" /></.button>
-          <.button square size="xl" aria-label="Add item"><.icon name="lucide-plus" /></.button>
-        </div>
         """
       },
       %{
@@ -211,9 +183,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         useful for a form's primary action or a mobile call to action. It is
         layout, not emphasis: combine it with any `variant` and `size`. Avoid it
         inside a `<.group>`, whose children share the row.
-        """,
-        code: """
-        <.button wide variant="solid">Continue</.button>
         """
       },
       %{
@@ -228,16 +197,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         the hit area itself keeps its size. Square icon buttons inset by the
         leftover space around the icon. Since this is an outer margin, avoid
         combining it with `wide` or using it inside a `<.group>`.
-        """,
-        code: """
-        <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
-          <span class="text-sm font-medium">Post successfully created.</span>
-          <div class="flex items-center gap-4">
-            <.button variant="ghost" size="sm" square inset aria-label="Dismiss">
-              <.icon name="lucide-x" />
-            </.button>
-          </div>
-        </div>
         """
       },
       %{
@@ -253,15 +212,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         shadows: solid, subtle, and outline always sit on
         `--fl-control-shadow`; set that variable to `0 0 #0000` to remove them.
         Pressing a button sinks it, fading the highlight as it nudges down.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.button variant="solid" color="info">With highlight</.button>
-          <.button variant="outline">With line</.button>
-          <.button variant="solid" color="info" depth={false}>No highlight</.button>
-          <.button variant="outline" depth={false}>No line</.button>
-          <.button variant="subtle">Shadow only</.button>
-        </div>
         """
       }
     ]
@@ -274,30 +224,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
         id: :icon,
         title: "With an icon",
         description:
-          "Use the `:leading` slot to place an icon before the content. A button sizes the `.icon` it wraps (following its own `size`) and mutes it to 70%, brightening on hover.",
-        code: """
-        <.button variant="solid">
-          <:leading><.icon name="lucide-plus" /></:leading>
-          New project
-        </.button>
-        """
+          "Use the `:leading` slot to place an icon before the content. A button sizes the `.icon` it wraps (following its own `size`) and mutes it to 70%, brightening on hover. A `square` button has no label beside the icon, so its icon stays at full strength."
       },
       %{
         id: :destructive_confirm,
         title: "Destructive with confirmation",
         description:
-          "Delete actions are worth a second look. A data-confirm attribute makes the browser prompt before the button's phx-click event is sent, and phx-value-id passes the targeted record along to your handler.",
-        code: """
-        <.button
-          variant="solid"
-          color="error"
-          phx-click="delete_item"
-          phx-value-id="67"
-          data-confirm="Delete item?"
-        >
-          <.icon name="lucide-trash" /> Delete project
-        </.button>
-        """
+          "Delete actions are worth a second look. A data-confirm attribute makes the browser prompt before the button's phx-click event is sent, and phx-value-id passes the targeted record along to your handler."
       },
       %{
         id: :loading,
@@ -305,46 +238,19 @@ defmodule FlintUIDocsWeb.Docs.Button do
         description:
           "Loading composes with every variant. A spinner and label work on any button; the dots variant of `.loading_text` lets the label itself carry the progress.
           Indicators marked `data-loading-indicator` are hidden until the button is loading, so no reveal classes are needed. Every loading button stays interactive and shows a progress cursor.
-          To block repeat activation entirely, a form submit for example, pass `disabled={@loading}` as well.",
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.button variant="solid" color="info" loading square>
-            <.loading />
-          </.button>
-          <.button variant="solid" loading>
-            <.loading variant="ring-dash" /> Save
-          </.button>
-          <.button variant="outline" loading>
-            <.loading_text text="Loading" variant="dots" />
-          </.button>
-          <.button variant="outline" loading disabled>
-            <.loading_text text="Loading" variant="blink" />
-          </.button>
-        </div>
-        """
+          To block repeat activation entirely, a form submit for example, pass `disabled={@loading}` as well."
       },
       %{
         id: :link,
         title: "Link button",
         description:
-          "Pass `href`, `navigate`, or `patch` to render an anchor. The `:trailing` slot places an icon after the content.",
-        code: """
-        <.button variant="outline" href="https://hexdocs.pm/phoenix_live_view" target="_blank" rel="noopener">
-          View docs
-          <:trailing><.icon name="lucide-arrow-up-right" /></:trailing>
-        </.button>
-        """
+          "Pass `href`, `navigate`, or `patch` to render an anchor. The `:trailing` slot places an icon after the content."
       },
       %{
         id: :sound,
         title: "Interface sounds",
         description:
-          "Add `data-sound` to play a synthesized cue on activation. The palette and the provider are covered in the Sounds guide; a button can also own a press and a release with `data-sound-press` / `data-sound-release`.",
-        code: """
-        <.button variant="outline" data-sound="tap">Tap</.button>
-        <.button variant="outline" data-sound="success">Success</.button>
-        <.button variant="outline" data-sound="error">Error</.button>
-        """
+          "Add `data-sound` to play a synthesized cue on activation. The palette and the provider are covered in the Sounds guide; a button can also own a press and a release with `data-sound-press` / `data-sound-release`."
       },
       %{
         id: :base_form,
@@ -445,23 +351,31 @@ defmodule FlintUIDocsWeb.Docs.Button do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.button
-      variant={@props.variant}
-      color={@props.color}
-      size={@props.size}
-      depth={@props.depth}
-      disabled={@props.disabled}
-      loading={@props.loading}
+    <.preview
+      :let={props}
+      id={@id}
+      name={:button}
+      state={@state}
+      controls={[:variant, :color, :size, :loading]}
+      code={&main_code/1}
     >
-      <.loading /> Unbound
-    </Components.button>
+      <Components.button
+        variant={props.variant}
+        color={props.color}
+        size={props.size}
+        depth={props.depth}
+        disabled={props.disabled}
+        loading={props.loading}
+      >
+        <Components.loading /> Unbound
+      </Components.button>
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     Snippet.tag(
       ".button",
       [
@@ -477,205 +391,368 @@ defmodule FlintUIDocsWeb.Docs.Button do
   end
 
   @impl true
-  def render_usage(%{block: :disabled, layer: :styled} = assigns) do
+  def render_section(%{kind: :usage, block: :variant} = assigns) do
     ~H"""
-    <Components.button disabled>Delete</Components.button>
-    """
-  end
-
-  def render_usage(%{block: :links, layer: :styled} = assigns) do
-    ~H"""
-    <div class="flex flex-col items-start gap-3">
-      <Components.button navigate="/settings">Settings</Components.button>
-      <Components.button href="https://example.com" target="_blank" rel="noopener" disabled>
-        Visit
-      </Components.button>
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :variant} = assigns) do
-    ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.button
-        :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
-        variant={variant}
-      >
-        {variant}
-      </Components.button>
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :color} = assigns) do
-    ~H"""
-    <div class="overflow-x-auto py-1">
-      <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
-        <div></div>
-        <span
+    <.preview id={@id} name={:button} state={@state} code={code(:variant)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button
           :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
-          class="text-center text-xs font-medium text-zinc-500"
+          variant={variant}
         >
           {variant}
-        </span>
-        <div
-          :for={color <- ~w(primary secondary neutral info success warning error)}
-          class="contents"
-        >
-          <span class="text-xs font-medium text-zinc-500">{color}</span>
-          <Components.button
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :color} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} preview_only>
+      <div class="overflow-x-auto py-1">
+        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
+          <div></div>
+          <span
             :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
-            variant={variant}
-            color={color}
+            class="text-center text-xs font-medium text-zinc-500"
           >
-            {String.capitalize(variant)}
+            {variant}
+          </span>
+          <div
+            :for={color <- ~w(primary secondary neutral info success warning error)}
+            class="contents"
+          >
+            <span class="text-xs font-medium text-zinc-500">{color}</span>
+            <Components.button
+              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+              variant={variant}
+              color={color}
+            >
+              {String.capitalize(variant)}
+            </Components.button>
+          </div>
+        </div>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :size} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:size)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :square} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:square)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button square variant="ghost" aria-label="More options">
+          <Components.icon name="lucide-ellipsis" />
+        </Components.button>
+        <Components.button square variant="dashed" aria-label="Add item">
+          <Components.icon name="lucide-plus" />
+        </Components.button>
+        <Components.button square variant="outline" aria-label="Edit">
+          <Components.icon name="lucide-pencil" />
+        </Components.button>
+        <Components.button square variant="solid" aria-label="Delete">
+          <Components.icon name="lucide-trash" />
+        </Components.button>
+        <Components.button square variant="solid" color="info" aria-label="Download">
+          <Components.icon name="lucide-download" />
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :square_sizes} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:square_sizes)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button
+          :for={{label, size} <- sizes()}
+          square
+          size={size}
+          aria-label={"Add item (#{label})"}
+        >
+          <Components.icon name="lucide-plus" />
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :wide} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:wide)}>
+      <Components.button wide variant="solid">Continue</Components.button>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :inset} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:inset)}>
+      <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
+        <span class="text-sm font-medium">Post successfully created.</span>
+        <div class="flex items-center gap-4">
+          <Components.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+            <Components.icon name="lucide-x" />
           </Components.button>
         </div>
       </div>
-    </div>
+    </.preview>
     """
   end
 
-  def render_usage(%{block: :size} = assigns) do
+  def render_section(%{kind: :usage, block: :depth} = assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
-    </div>
+    <.preview id={@id} name={:button} state={@state} code={code(:depth)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button variant="solid" color="info">With highlight</Components.button>
+        <Components.button variant="outline">With line</Components.button>
+        <Components.button variant="solid" color="info" depth={false}>
+          No highlight
+        </Components.button>
+        <Components.button variant="outline" depth={false}>No line</Components.button>
+        <Components.button variant="subtle">Shadow only</Components.button>
+      </div>
+    </.preview>
     """
   end
 
-  def render_usage(%{block: :square} = assigns) do
+  def render_section(%{kind: :example, block: :icon} = assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.button square variant="ghost" aria-label="More options">
-        <Components.icon name="lucide-ellipsis" />
+    <.preview id={@id} name={:button} state={@state} code={code(:icon)}>
+      <Components.button variant="solid">
+        <:leading><Components.icon name="lucide-plus" /></:leading>
+        New project
       </Components.button>
-      <Components.button square variant="dashed" aria-label="Add item">
-        <Components.icon name="lucide-plus" />
-      </Components.button>
-      <Components.button square variant="outline" aria-label="Edit">
-        <Components.icon name="lucide-pencil" />
-      </Components.button>
-      <Components.button square variant="solid" aria-label="Delete">
-        <Components.icon name="lucide-trash" />
-      </Components.button>
-      <Components.button square variant="solid" color="info" aria-label="Download">
-        <Components.icon name="lucide-download" />
-      </Components.button>
-    </div>
+    </.preview>
     """
   end
 
-  def render_usage(%{block: :square_sizes} = assigns) do
+  def render_section(%{kind: :example, block: :destructive_confirm} = assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
+    <.preview id={@id} name={:button} state={@state} code={code(:destructive_confirm)}>
       <Components.button
-        :for={{label, size} <- sizes()}
-        square
-        size={size}
-        aria-label={"Add item (#{label})"}
+        variant="solid"
+        color="error"
+        phx-click="delete_item"
+        phx-value-id="67"
+        data-confirm="Delete item?"
       >
-        <Components.icon name="lucide-plus" />
+        <Components.icon name="lucide-trash" /> Delete project
       </Components.button>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :loading} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:loading)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button variant="solid" color="info" loading square>
+          <Components.loading />
+        </Components.button>
+        <Components.button variant="solid" loading>
+          <Components.loading variant="ring-dash" /> Save
+        </Components.button>
+        <Components.button variant="outline" loading>
+          <Components.loading_text text="Loading" variant="dots" />
+        </Components.button>
+        <Components.button variant="outline" loading disabled>
+          <Components.loading_text text="Loading" variant="blink" />
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :sound} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:sound)}>
+      <div class="flex flex-wrap gap-2">
+        <Components.button variant="outline" data-sound="tap">Tap</Components.button>
+        <Components.button variant="outline" data-sound="success">Success</Components.button>
+        <Components.button variant="outline" data-sound="error">Error</Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :link} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:link)}>
+      <Components.button
+        variant="outline"
+        href={docs_url()}
+        target="_blank"
+        rel="noopener"
+      >
+        View docs
+        <:trailing><Components.icon name="lucide-arrow-up-right" /></:trailing>
+      </Components.button>
+    </.preview>
+    """
+  end
+
+  defp code(:variant) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.button :for={variant <- ~w(solid soft subtle outline dashed ghost link)} variant={variant}>
+        {variant}
+      </.button>
     </div>
     """
   end
 
-  def render_usage(%{block: :wide} = assigns) do
-    ~H"""
-    <Components.button wide variant="solid">Continue</Components.button>
+  defp code(:size) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.button size="xs">Extra Small</.button>
+      <.button size="sm">Small</.button>
+      <.button size="md">Medium</.button>
+      <.button size="lg">Large</.button>
+      <.button size="xl">Extra Large</.button>
+    </div>
     """
   end
 
-  def render_usage(%{block: :inset} = assigns) do
-    ~H"""
+  defp code(:square) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.button square variant="ghost" aria-label="More options">
+        <.icon name="lucide-ellipsis" />
+      </.button>
+      <.button square variant="dashed" aria-label="Add item">
+        <.icon name="lucide-plus" />
+      </.button>
+      <.button square variant="outline" aria-label="Edit">
+        <.icon name="lucide-pencil" />
+      </.button>
+      <.button square variant="solid" aria-label="Delete">
+        <.icon name="lucide-trash" />
+      </.button>
+      <.button square variant="solid" color="info" aria-label="Download">
+        <.icon name="lucide-download" />
+      </.button>
+    </div>
+    """
+  end
+
+  defp code(:square_sizes) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.button square size="xs" aria-label="Add item (Extra Small)"><.icon name="lucide-plus" /></.button>
+      <.button square size="sm" aria-label="Add item (Small)"><.icon name="lucide-plus" /></.button>
+      <.button square size="md" aria-label="Add item (Medium)"><.icon name="lucide-plus" /></.button>
+      <.button square size="lg" aria-label="Add item (Large)"><.icon name="lucide-plus" /></.button>
+      <.button square size="xl" aria-label="Add item (Extra Large)"><.icon name="lucide-plus" /></.button>
+    </div>
+    """
+  end
+
+  defp code(:wide) do
+    ~S"""
+    <.button wide variant="solid">Continue</.button>
+    """
+  end
+
+  defp code(:inset) do
+    ~S"""
     <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
       <span class="text-sm font-medium">Post successfully created.</span>
       <div class="flex items-center gap-4">
-        <Components.button variant="ghost" size="sm" square inset aria-label="Dismiss">
-          <Components.icon name="lucide-x" />
-        </Components.button>
+        <.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+          <.icon name="lucide-x" />
+        </.button>
       </div>
     </div>
     """
   end
 
-  def render_usage(%{block: :depth} = assigns) do
-    ~H"""
+  defp code(:depth) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" color="info">With highlight</Components.button>
-      <Components.button variant="outline">With line</Components.button>
-      <Components.button variant="solid" color="info" depth={false}>No highlight</Components.button>
-      <Components.button variant="outline" depth={false}>No line</Components.button>
-      <Components.button variant="subtle">Shadow only</Components.button>
+      <.button variant="solid" color="info">With highlight</.button>
+      <.button variant="outline">With line</.button>
+      <.button variant="solid" color="info" depth={false}>No highlight</.button>
+      <.button variant="outline" depth={false}>No line</.button>
+      <.button variant="subtle">Shadow only</.button>
     </div>
     """
   end
 
-  @impl true
-  def render_block(%{block: :icon} = assigns) do
-    ~H"""
-    <Components.button variant="solid">
-      <:leading><Components.icon name="lucide-plus" /></:leading>
+  defp code(:icon) do
+    ~S"""
+    <.button variant="solid">
+      <:leading><.icon name="lucide-plus" /></:leading>
       New project
-    </Components.button>
+    </.button>
     """
   end
 
-  def render_block(%{block: :destructive_confirm} = assigns) do
-    ~H"""
-    <Components.button
+  defp code(:destructive_confirm) do
+    ~S"""
+    <.button
       variant="solid"
       color="error"
       phx-click="delete_item"
       phx-value-id="67"
       data-confirm="Delete item?"
     >
-      <Components.icon name="lucide-trash" /> Delete project
-    </Components.button>
+      <.icon name="lucide-trash" /> Delete project
+    </.button>
     """
   end
 
-  def render_block(%{block: :loading} = assigns) do
-    ~H"""
+  defp code(:loading) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-3">
-      <Components.button variant="solid" color="info" loading square>
-        <Components.loading />
-      </Components.button>
-      <Components.button variant="solid" loading>
-        <Components.loading variant="ring-dash" /> Save
-      </Components.button>
-      <Components.button variant="outline" loading>
-        <Components.loading_text text="Loading" variant="dots" />
-      </Components.button>
-      <Components.button variant="outline" loading disabled>
-        <Components.loading_text text="Loading" variant="blink" />
-      </Components.button>
+      <.button variant="solid" color="info" loading square>
+        <.loading />
+      </.button>
+      <.button variant="solid" loading>
+        <.loading variant="ring-dash" /> Save
+      </.button>
+      <.button variant="outline" loading>
+        <.loading_text text="Loading" variant="dots" />
+      </.button>
+      <.button variant="outline" loading disabled>
+        <.loading_text text="Loading" variant="blink" />
+      </.button>
     </div>
     """
   end
 
-  def render_block(%{block: :sound} = assigns) do
-    ~H"""
+  defp code(:sound) do
+    ~S"""
     <div class="flex flex-wrap gap-2">
-      <Components.button variant="outline" data-sound="tap">Tap</Components.button>
-      <Components.button variant="outline" data-sound="success">Success</Components.button>
-      <Components.button variant="outline" data-sound="error">Error</Components.button>
+      <.button variant="outline" data-sound="tap">Tap</.button>
+      <.button variant="outline" data-sound="success">Success</.button>
+      <.button variant="outline" data-sound="error">Error</.button>
     </div>
     """
   end
 
-  def render_block(%{block: :link} = assigns) do
-    ~H"""
-    <Components.button
+  defp code(:link) do
+    ~S"""
+    <.button
       variant="outline"
-      href={docs_url()}
+      href="https://hexdocs.pm/phoenix_live_view"
       target="_blank"
       rel="noopener"
     >
       View docs
-      <:trailing><Components.icon name="lucide-arrow-up-right" /></:trailing>
-    </Components.button>
+      <:trailing><.icon name="lucide-arrow-up-right" /></:trailing>
+    </.button>
     """
   end
 
@@ -730,6 +807,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
       ]
     }
   end
+
+  defp sizes,
+    do: [
+      {"Extra Small", "xs"},
+      {"Small", "sm"},
+      {"Medium", "md"},
+      {"Large", "lg"},
+      {"Extra Large", "xl"}
+    ]
 
   defp docs_url, do: "https://hexdocs.pm/phoenix_live_view"
 end

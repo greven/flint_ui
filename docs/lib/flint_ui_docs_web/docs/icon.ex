@@ -84,11 +84,6 @@ defmodule FlintUIDocsWeb.Docs.Icon do
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets. The theme publishes the box as
         `--fl-icon-size`, which icon sets can follow.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.icon :for={size <- ~w(sm md lg)} name="lucide-house" size={size} />
-        </div>
         """
       }
     ]
@@ -100,36 +95,17 @@ defmodule FlintUIDocsWeb.Docs.Icon do
       %{
         id: :sizes,
         title: "Sizes",
-        description: "Icons scale with a `size-*` utility.",
-        code: """
-        <div class="flex items-end gap-6">
-          <.icon name="lucide-house" class="size-4" />
-          <.icon name="lucide-house" class="size-6" />
-          <.icon name="lucide-house" class="size-8" />
-        </div>
-        """
+        description: "Icons scale with a `size-*` utility."
       },
       %{
         id: :colors,
         title: "Colors",
-        description: "Inherit a color from `class`.",
-        code: """
-        <div class="flex items-center gap-6">
-          <.icon name="lucide-circle-check" class="size-6 text-green-600" />
-          <.icon name="lucide-circle-alert" class="size-6 text-amber-500" />
-          <.icon name="lucide-circle-x" class="size-6 text-red-600" />
-        </div>
-        """
+        description: "Inherit a color from `class`."
       },
       %{
         id: :in_button,
         title: "In a button",
-        description: "A button sizes and tints the icon it wraps.",
-        code: """
-        <.button variant="solid">
-          <.icon name="lucide-download" /> Download
-        </.button>
-        """
+        description: "A button sizes and tints the icon it wraps."
       },
       %{
         id: :base_decorative,
@@ -208,14 +184,22 @@ defmodule FlintUIDocsWeb.Docs.Icon do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.icon name={@props.name} label={blank_to_nil(@props.label)} size={@props.size} />
+    <.preview
+      :let={props}
+      id={@id}
+      name={:icon}
+      state={@state}
+      controls={[:name, :label, :size]}
+      code={&main_code/1}
+    >
+      <Components.icon name={props.name} label={blank_to_nil(props.label)} size={props.size} />
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     Snippet.component(
       ".icon",
       [
@@ -227,17 +211,60 @@ defmodule FlintUIDocsWeb.Docs.Icon do
   end
 
   @impl true
-  def render_usage(%{block: :size} = assigns) do
+  def render_section(%{kind: :usage, block: :size} = assigns) do
     ~H"""
+    <.preview id={@id} name={:icon} state={@state} code={code(:size)}>
+      <div class="flex items-center gap-6">
+        <Components.icon :for={size <- ~w(sm md lg)} name="lucide-house" size={size} />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :sizes} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:icon} state={@state} code={code(:sizes)}>
+      <div class="flex items-end gap-6">
+        <.icon name="lucide-house" class="size-4" />
+        <.icon name="lucide-house" class="size-6" />
+        <.icon name="lucide-house" class="size-8" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :colors} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:icon} state={@state} code={code(:colors)}>
+      <div class="flex items-center gap-6">
+        <.icon name="lucide-circle-check" class="size-6 text-green-600" />
+        <.icon name="lucide-circle-alert" class="size-6 text-amber-500" />
+        <.icon name="lucide-circle-x" class="size-6 text-red-600" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :in_button} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:icon} state={@state} code={code(:in_button)}>
+      <Components.button variant="solid">
+        <Components.icon name="lucide-download" /> Download
+      </Components.button>
+    </.preview>
+    """
+  end
+
+  defp code(:size) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <Components.icon :for={size <- ~w(sm md lg)} name="lucide-house" size={size} />
+      <.icon :for={size <- ~w(sm md lg)} name="lucide-house" size={size} />
     </div>
     """
   end
 
-  @impl true
-  def render_block(%{block: :sizes} = assigns) do
-    ~H"""
+  defp code(:sizes) do
+    ~S"""
     <div class="flex items-end gap-6">
       <.icon name="lucide-house" class="size-4" />
       <.icon name="lucide-house" class="size-6" />
@@ -246,8 +273,8 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     """
   end
 
-  def render_block(%{block: :colors} = assigns) do
-    ~H"""
+  defp code(:colors) do
+    ~S"""
     <div class="flex items-center gap-6">
       <.icon name="lucide-circle-check" class="size-6 text-green-600" />
       <.icon name="lucide-circle-alert" class="size-6 text-amber-500" />
@@ -256,11 +283,11 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     """
   end
 
-  def render_block(%{block: :in_button} = assigns) do
-    ~H"""
-    <Components.button variant="solid">
-      <Components.icon name="lucide-download" /> Download
-    </Components.button>
+  defp code(:in_button) do
+    ~S"""
+    <.button variant="solid">
+      <.icon name="lucide-download" /> Download
+    </.button>
     """
   end
 

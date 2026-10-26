@@ -326,6 +326,11 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "width: 100%;"
   end
 
+  test "square buttons keep their icon at full strength", %{css: css} do
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant\]:not\(\[data-square="true"\]\)\s*>\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
+  end
+
   test "inset buttons negate their padding", %{css: css} do
     for size <- ~w(xs sm md lg xl) do
       assert css =~
@@ -340,8 +345,8 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~
              ~r/\[data-element="button"\]\[data-loading\]:not\(\[data-disabled\]\) \{\s*cursor: progress;/
 
-    assert css =~ ":not([data-loading]):hover::after"
-    assert css =~ ":not([data-loading]):active"
+    assert css =~ ~r/:not\(\s*\[data-loading\]\s*\):hover::after/
+    assert css =~ ~r/:not\(\s*\[data-loading\]\s*\):active/
   end
 
   test "loading indicators are hidden until the button is loading", %{css: css} do

@@ -20,9 +20,6 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   end
 
   @impl true
-  def playground_controls, do: [:text, :variant, :color]
-
-  @impl true
   def structure do
     """
     <FlintUI.loading_text text="Loading" />
@@ -145,15 +142,6 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
         body: """
         The generated component accepts the same variants and maps them onto
         the `data-variant` hook the theme targets.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-6">
-          <.loading_text
-            :for={variant <- ~w(dots blink shimmer wave)}
-            text="Loading"
-            variant={variant}
-          />
-        </div>
         """
       },
       %{
@@ -165,15 +153,6 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
         `color` maps the copy onto a semantic role's text token. Leave it at
         the default `inherit` to follow the surrounding `currentColor`; the
         shimmer and wave animations derive their highlight from that color too.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-6">
-          <.loading_text text="Saving" />
-          <.loading_text text="Syncing" color="info" variant="dots" />
-          <.loading_text text="Thinking" color="success" variant="blink" />
-          <.loading_text text="Generating" color="warning" variant="shimmer" />
-          <.loading_text text="Uploading" color="error" variant="wave" />
-        </div>
         """
       },
       %{
@@ -184,13 +163,6 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
         body: """
         The styled wrapper forwards `dots` to the headless component, so the
         `dots` variant keeps its configurable ellipsis.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-6">
-          <.loading_text text="Loading" dots={1} />
-          <.loading_text text="Loading" dots={3} />
-          <.loading_text text="Loading" dots={5} />
-        </div>
         """
       },
       %{
@@ -201,14 +173,6 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
         body: """
         `duration` is forwarded to the base. Shorten it for active work and
         lengthen it for ambient background status.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-6">
-          <.loading_text text="Saving" variant="dots" duration={700} />
-          <.loading_text text="Thinking" variant="blink" duration={3000} />
-          <.loading_text text="Generating" variant="shimmer" duration={1000} />
-          <.loading_text text="Uploading" variant="wave" duration={500} />
-        </div>
         """
       }
     ]
@@ -220,49 +184,23 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
       %{
         id: :variants,
         title: "All variants",
-        description: "The text animations, side by side.",
-        code: """
-        <div class="flex flex-wrap items-center gap-6">
-          <.loading_text text="Saving" variant="dots" />
-          <.loading_text text="Thinking" variant="blink" />
-          <.loading_text text="Generating" variant="shimmer" />
-          <.loading_text text="Uploading" variant="wave" />
-        </div>
-        """
+        description: "The text animations, side by side."
       },
       %{
         id: :colors,
         title: "Semantic colors",
-        description: "The copy and its animation share the selected theme color.",
-        code: """
-        <div class="flex flex-wrap items-center gap-6">
-          <.loading_text text="Info" color="info" />
-          <.loading_text text="Success" color="success" />
-          <.loading_text text="Warning" color="warning" />
-          <.loading_text text="Error" color="error" />
-        </div>
-        """
+        description: "The copy and its animation share the selected theme color."
       },
       %{
         id: :inline,
         title: "Inline status",
-        description: "A compact status that sits in a sentence or helper row.",
-        code: """
-        <p class="text-sm text-zinc-600 dark:text-zinc-400">
-          <.loading_text text="Syncing 3 files" variant="dots" />
-        </p>
-        """
+        description: "A compact status that sits in a sentence or helper row."
       },
       %{
         id: :button,
         title: "Button",
         description:
-          "Use the text animation when the action label itself is the loading state. The theme hides any `[data-loading-indicator]` child until the button is loading.",
-        code: """
-        <.button variant="solid" loading>
-          <.loading_text text="Saving" variant="dots" />
-        </.button>
-        """
+          "Use the text animation when the action label itself is the loading state. The theme hides any `[data-loading-indicator]` child until the button is loading."
       },
       %{
         id: :base_variants,
@@ -478,20 +416,28 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.loading_text
-      text={@props.text}
-      variant={variant(@props)}
-      color={@props.color}
-      dots={dots(@props)}
-      duration={duration(@props)}
-    />
+    <.preview
+      :let={props}
+      id={@id}
+      name={:loading_text}
+      state={@state}
+      controls={[:text, :variant, :color]}
+      code={&main_code/1}
+    >
+      <Components.loading_text
+        text={props.text}
+        variant={variant(props)}
+        color={props.color}
+        dots={dots(props)}
+        duration={duration(props)}
+      />
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     variant = variant(props)
 
     Snippet.component(".loading_text", [
@@ -504,10 +450,110 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   end
 
   @impl true
-  def render_usage(%{block: :styled_variant} = assigns) do
+  def render_section(%{kind: :usage, block: :styled_variant} = assigns) do
     ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:styled_variant)}>
+      <div class="flex flex-wrap items-center gap-6">
+        <Components.loading_text
+          :for={variant <- ~w(dots blink shimmer wave)}
+          text="Loading"
+          variant={variant}
+        />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :color} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:color)}>
+      <div class="flex flex-wrap items-center gap-6">
+        <Components.loading_text text="Saving" />
+        <Components.loading_text text="Syncing" color="info" variant="dots" />
+        <Components.loading_text text="Thinking" color="success" variant="blink" />
+        <Components.loading_text text="Generating" color="warning" variant="shimmer" />
+        <Components.loading_text text="Uploading" color="error" variant="wave" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :styled_dots} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:styled_dots)}>
+      <div class="flex flex-wrap items-center gap-6">
+        <Components.loading_text text="Loading" dots={1} />
+        <Components.loading_text text="Loading" dots={3} />
+        <Components.loading_text text="Loading" dots={5} />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :styled_duration} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:styled_duration)}>
+      <div class="flex flex-wrap items-center gap-6">
+        <Components.loading_text text="Saving" variant="dots" duration={700} />
+        <Components.loading_text text="Thinking" variant="blink" duration={3000} />
+        <Components.loading_text text="Generating" variant="shimmer" duration={1000} />
+        <Components.loading_text text="Uploading" variant="wave" duration={500} />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :variants} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:variants)}>
+      <div class="flex flex-wrap items-center gap-6">
+        <Components.loading_text
+          :for={variant <- ~w(dots blink shimmer wave)}
+          text="Loading"
+          variant={variant}
+        />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :colors} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:colors)}>
+      <div class="flex flex-wrap items-center gap-6">
+        <Components.loading_text text="Info" color="info" />
+        <Components.loading_text text="Success" color="success" />
+        <Components.loading_text text="Warning" color="warning" />
+        <Components.loading_text text="Error" color="error" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :inline} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:inline)}>
+      <p class="text-sm text-zinc-600 dark:text-zinc-400">
+        <Components.loading_text text="Syncing 3 files" variant="dots" />
+      </p>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :button} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading_text} state={@state} code={code(:button)}>
+      <Components.button variant="solid" loading>
+        <Components.loading_text text="Saving" variant="dots" />
+      </Components.button>
+    </.preview>
+    """
+  end
+
+  defp code(:styled_variant) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-6">
-      <Components.loading_text
+      <.loading_text
         :for={variant <- ~w(dots blink shimmer wave)}
         text="Loading"
         variant={variant}
@@ -516,76 +562,74 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
     """
   end
 
-  def render_usage(%{block: :color} = assigns) do
-    ~H"""
+  defp code(:color) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-6">
-      <Components.loading_text text="Saving" />
-      <Components.loading_text text="Syncing" color="info" variant="dots" />
-      <Components.loading_text text="Thinking" color="success" variant="blink" />
-      <Components.loading_text text="Generating" color="warning" variant="shimmer" />
-      <Components.loading_text text="Uploading" color="error" variant="wave" />
+      <.loading_text text="Saving" />
+      <.loading_text text="Syncing" color="info" variant="dots" />
+      <.loading_text text="Thinking" color="success" variant="blink" />
+      <.loading_text text="Generating" color="warning" variant="shimmer" />
+      <.loading_text text="Uploading" color="error" variant="wave" />
     </div>
     """
   end
 
-  def render_usage(%{block: :styled_dots} = assigns) do
-    ~H"""
+  defp code(:styled_dots) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-6">
-      <Components.loading_text text="Loading" dots={1} />
-      <Components.loading_text text="Loading" dots={3} />
-      <Components.loading_text text="Loading" dots={5} />
+      <.loading_text text="Loading" dots={1} />
+      <.loading_text text="Loading" dots={3} />
+      <.loading_text text="Loading" dots={5} />
     </div>
     """
   end
 
-  def render_usage(%{block: :styled_duration} = assigns) do
-    ~H"""
+  defp code(:styled_duration) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-6">
-      <Components.loading_text text="Saving" variant="dots" duration={700} />
-      <Components.loading_text text="Thinking" variant="blink" duration={3000} />
-      <Components.loading_text text="Generating" variant="shimmer" duration={1000} />
-      <Components.loading_text text="Uploading" variant="wave" duration={500} />
+      <.loading_text text="Saving" variant="dots" duration={700} />
+      <.loading_text text="Thinking" variant="blink" duration={3000} />
+      <.loading_text text="Generating" variant="shimmer" duration={1000} />
+      <.loading_text text="Uploading" variant="wave" duration={500} />
     </div>
     """
   end
 
-  @impl true
-  def render_block(%{block: :variants} = assigns) do
-    ~H"""
+  defp code(:variants) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-6">
-      <Components.loading_text
-        :for={variant <- ~w(dots blink shimmer wave)}
-        text="Loading"
-        variant={variant}
-      />
+      <.loading_text text="Saving" variant="dots" />
+      <.loading_text text="Thinking" variant="blink" />
+      <.loading_text text="Generating" variant="shimmer" />
+      <.loading_text text="Uploading" variant="wave" />
     </div>
     """
   end
 
-  def render_block(%{block: :colors} = assigns) do
-    ~H"""
+  defp code(:colors) do
+    ~S"""
     <div class="flex flex-wrap items-center gap-6">
-      <Components.loading_text text="Info" color="info" />
-      <Components.loading_text text="Success" color="success" />
-      <Components.loading_text text="Warning" color="warning" />
-      <Components.loading_text text="Error" color="error" />
+      <.loading_text text="Info" color="info" />
+      <.loading_text text="Success" color="success" />
+      <.loading_text text="Warning" color="warning" />
+      <.loading_text text="Error" color="error" />
     </div>
     """
   end
 
-  def render_block(%{block: :inline} = assigns) do
-    ~H"""
+  defp code(:inline) do
+    ~S"""
     <p class="text-sm text-zinc-600 dark:text-zinc-400">
-      <Components.loading_text text="Syncing 3 files" variant="dots" />
+      <.loading_text text="Syncing 3 files" variant="dots" />
     </p>
     """
   end
 
-  def render_block(%{block: :button} = assigns) do
-    ~H"""
-    <Components.button variant="solid" loading>
-      <Components.loading_text text="Saving" variant="dots" />
-    </Components.button>
+  defp code(:button) do
+    ~S"""
+    <.button variant="solid" loading>
+      <.loading_text text="Saving" variant="dots" />
+    </.button>
     """
   end
 

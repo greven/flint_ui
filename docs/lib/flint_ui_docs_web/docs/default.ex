@@ -6,13 +6,10 @@ defmodule FlintUIDocsWeb.Docs.Default do
   use FlintUIDocsWeb.Docs.Page, component: :default
 
   @impl true
-  def controls, do: []
-
-  @impl true
   def accessibility, do: nil
 
   @impl true
-  def render_playground(assigns) do
+  def render_main(assigns) do
     assigns = assign(assigns, :name_label, to_string(assigns.name))
 
     ~H"""

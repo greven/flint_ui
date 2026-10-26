@@ -7,9 +7,9 @@ defmodule FlintUIDocsWeb.Docs.Source do
   a Source toggle showing the real `~H` body from the page module, so the two never
   have to be kept in sync by hand.
 
-  `:playground` maps to `render_playground/1`, `:usage` to `render_usage/1`, and
-  `:block` to `render_block/1`. The matching clause is selected by the literal
-  `block` (and, when given, `layer`) in its argument pattern.
+  `:main` maps to `render_main/1` and `:section` to `render_section/1`. The
+  matching clause is selected by the literal `kind`, `block`, and `layer` in its
+  argument pattern.
 
   Extraction is gated by the `:dev_tools` application environment flag. When it
   is off, `get/3` returns `nil` and the code block hides the Source toggle.
@@ -29,11 +29,11 @@ defmodule FlintUIDocsWeb.Docs.Source do
 
   Returns `{:ok, source}` or `:error`. Options:
 
+    * `:kind` - `:usage` or `:example`, matched only when the clause names it
     * `:block` - the usage/example id whose clause should be read
     * `:layer` - `:styled` or `:base`, matched only when the clause names it
   """
-  @spec extract(module(), :playground | :usage | :block, keyword()) ::
-          {:ok, source()} | :error
+  @spec extract(module(), :main | :section, keyword()) :: {:ok, source()} | :error
   def extract(module, kind, opts \\ []) do
     with function when is_atom(function) <- callback(kind),
          {:ok, {ast, path}} <- module_ast(module),
@@ -53,7 +53,7 @@ defmodule FlintUIDocsWeb.Docs.Source do
   @doc """
   Returns the extracted source when dev tools are enabled, otherwise `nil`.
   """
-  @spec get(module(), :playground | :usage | :block, keyword()) :: source() | nil
+  @spec get(module(), :main | :section, keyword()) :: source() | nil
   def get(module, kind, opts \\ []) do
     if enabled?() do
       case extract(module, kind, opts) do
@@ -66,9 +66,8 @@ defmodule FlintUIDocsWeb.Docs.Source do
   @doc "Whether the dev-only Source toggle is enabled for this build."
   def enabled?, do: Application.get_env(:flint_ui_docs, :dev_tools, false)
 
-  defp callback(:playground), do: :render_playground
-  defp callback(:usage), do: :render_usage
-  defp callback(:block), do: :render_block
+  defp callback(:main), do: :render_main
+  defp callback(:section), do: :render_section
   defp callback(_kind), do: nil
 
   defp module_ast(module) do
@@ -108,7 +107,10 @@ defmodule FlintUIDocsWeb.Docs.Source do
     clauses =
       ast
       |> collect_defs(function)
-      |> Enum.filter(fn {_line, head, _body} -> block_match?(head, Keyword.get(opts, :block)) end)
+      |> Enum.filter(fn {_line, head, _body} ->
+        value_match?(head, :kind, Keyword.get(opts, :kind)) and
+          value_match?(head, :block, Keyword.get(opts, :block))
+      end)
       |> prefer_layer(Keyword.get(opts, :layer))
 
     Enum.find_value(clauses, :error, fn {line, _head, body} ->
@@ -143,8 +145,8 @@ defmodule FlintUIDocsWeb.Docs.Source do
     end
   end
 
-  defp block_match?(_head, nil), do: true
-  defp block_match?(head, block), do: pattern_value(head, :block) == block
+  defp value_match?(_head, _key, nil), do: true
+  defp value_match?(head, key, value), do: pattern_value(head, key) == value
 
   defp pattern_value(head, key) do
     head

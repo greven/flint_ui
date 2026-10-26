@@ -1,159 +1,159 @@
 @layer components {
-  /* Loading. The base publishes the cycle length inline as
+    /* Loading. The base publishes the cycle length inline as
    * `animation-duration` (and the stagger as `animation-delay`), so the theme
    * only supplies the keyframes and timing function. Size comes from the
    * generated `data-size` contract. */
-  [data-element="loading"][data-size] {
-    display: inline-block;
-    color: currentColor;
-  }
+    [data-element="loading"][data-size] {
+        display: inline-block;
+        color: currentColor;
+    }
 
-  [data-element="loading"][data-size="sm"] {
-    width: 1rem;
-    height: 1rem;
-  }
+    [data-element="loading"][data-size="sm"] {
+        width: 1rem;
+        height: 1rem;
+    }
 
-  [data-element="loading"][data-size="md"] {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+    [data-element="loading"][data-size="md"] {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
 
-  [data-element="loading"][data-size="lg"] {
-    width: 2rem;
-    height: 2rem;
-  }
+    [data-element="loading"][data-size="lg"] {
+        width: 2rem;
+        height: 2rem;
+    }
 
-  /* Semantic roles read the role's text token, so the indicator stays legible on
+    /* Semantic roles read the role's text token, so the indicator stays legible on
    * the page. `inherit` (the default) has no rule and follows `currentColor`. */
-  [data-element="loading"][data-color="primary"] {
-    color: var(--fl-color-primary-text);
-  }
+    [data-element="loading"][data-color="primary"] {
+        color: var(--fl-color-primary-text);
+    }
 
-  [data-element="loading"][data-color="secondary"] {
-    color: var(--fl-color-secondary-text);
-  }
+    [data-element="loading"][data-color="secondary"] {
+        color: var(--fl-color-secondary-text);
+    }
 
-  [data-element="loading"][data-color="success"] {
-    color: var(--fl-color-success-text);
-  }
+    [data-element="loading"][data-color="success"] {
+        color: var(--fl-color-success-text);
+    }
 
-  [data-element="loading"][data-color="info"] {
-    color: var(--fl-color-info-text);
-  }
+    [data-element="loading"][data-color="info"] {
+        color: var(--fl-color-info-text);
+    }
 
-  [data-element="loading"][data-color="warning"] {
-    color: var(--fl-color-warning-text);
-  }
+    [data-element="loading"][data-color="warning"] {
+        color: var(--fl-color-warning-text);
+    }
 
-  [data-element="loading"][data-color="error"] {
-    color: var(--fl-color-error-text);
-  }
+    [data-element="loading"][data-color="error"] {
+        color: var(--fl-color-error-text);
+    }
 
-  [data-element="loading"][data-color="neutral"] {
-    color: var(--fl-color-neutral-text);
-  }
+    [data-element="loading"][data-color="neutral"] {
+        color: var(--fl-color-neutral-text);
+    }
 
-  [data-element="loading"][data-variant="ring"] [data-part="arc"],
-  [data-element="loading"][data-variant="ring-bg"] [data-part="arc"] {
-    animation: fl-loading-spin 600ms linear infinite;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
+    [data-element="loading"][data-variant="ring"] [data-part="arc"],
+    [data-element="loading"][data-variant="ring-bg"] [data-part="arc"] {
+        animation: fl-loading-spin 600ms linear infinite;
+        transform-box: fill-box;
+        transform-origin: center;
+    }
 
-  /* Two animations on the same part: the spin, then the dash morph. The base
+    /* Two animations on the same part: the spin, then the dash morph. The base
    * publishes `animation-duration` as the same ordered list. */
-  [data-element="loading"][data-variant="ring-dash"] [data-part="arc"] {
-    animation:
-      fl-loading-spin 1333ms linear infinite,
-      fl-loading-dash 1000ms linear infinite;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
+    [data-element="loading"][data-variant="ring-dash"] [data-part="arc"] {
+        animation:
+            fl-loading-spin 1333ms linear infinite,
+            fl-loading-dash 1000ms linear infinite;
+        transform-box: fill-box;
+        transform-origin: center;
+    }
 
-  [data-element="loading"][data-variant="dots-fade"] [data-part="dot"] {
-    animation: fl-loading-fade 600ms ease-in-out infinite;
-  }
+    [data-element="loading"][data-variant="dots-fade"] [data-part="dot"] {
+        animation: fl-loading-fade 600ms ease-in-out infinite;
+    }
 
-  [data-element="loading"][data-variant="dots-bounce"] [data-part="dot"] {
-    animation: fl-loading-bounce 600ms ease-in-out infinite;
-  }
+    [data-element="loading"][data-variant="dots-bounce"] [data-part="dot"] {
+        animation: fl-loading-bounce 600ms ease-in-out infinite;
+    }
 
-  [data-element="loading"][data-variant="bars-scale"] [data-part="bar"] {
-    animation: fl-loading-bar-scale 600ms linear infinite;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
+    [data-element="loading"][data-variant="bars-scale"] [data-part="bar"] {
+        animation: fl-loading-bar-scale 600ms linear infinite;
+        transform-box: fill-box;
+        transform-origin: center;
+    }
 
-  [data-element="loading"][data-variant="infinity"] [data-part="loop"] {
-    animation: fl-loading-infinity 2000ms linear infinite;
-  }
+    [data-element="loading"][data-variant="infinity"] [data-part="loop"] {
+        animation: fl-loading-infinity 2000ms linear infinite;
+    }
 }
 
 @keyframes fl-loading-spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes fl-loading-fade {
-  0%,
-  to {
-    opacity: 1;
-  }
+    0%,
+    to {
+        opacity: 1;
+    }
 
-  50% {
-    opacity: 0.25;
-  }
+    50% {
+        opacity: 0.25;
+    }
 }
 
 /* Morph the arc length while the offset crawls forward, then restart. */
 @keyframes fl-loading-dash {
-  0% {
-    stroke-dasharray: 0 150;
-    stroke-dashoffset: 0;
-  }
+    0% {
+        stroke-dasharray: 0 150;
+        stroke-dashoffset: 0;
+    }
 
-  50% {
-    stroke-dasharray: 42 150;
-    stroke-dashoffset: -16;
-  }
+    50% {
+        stroke-dasharray: 42 150;
+        stroke-dashoffset: -16;
+    }
 
-  100% {
-    stroke-dasharray: 42 150;
-    stroke-dashoffset: -59;
-  }
+    100% {
+        stroke-dasharray: 42 150;
+        stroke-dashoffset: -59;
+    }
 }
 
 @keyframes fl-loading-bounce {
-  0%,
-  to {
-    transform: translateY(0);
-  }
+    0%,
+    to {
+        transform: translateY(0);
+    }
 
-  50% {
-    transform: translateY(-5px);
-  }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 /* Pulse in the first two thirds, then rest, so the staggered bars read as a
  * wave. The cubic-bezier matches the reference timing. */
 @keyframes fl-loading-bar-scale {
-  0%,
-  66.66% {
-    transform: scaleY(1);
-    animation-timing-function: cubic-bezier(0.36, 0.61, 0.3, 0.98);
-  }
+    0%,
+    66.66% {
+        transform: scaleY(1);
+        animation-timing-function: cubic-bezier(0.36, 0.61, 0.3, 0.98);
+    }
 
-  33.33% {
-    transform: scaleY(1.8333);
-    animation-timing-function: cubic-bezier(0.36, 0.61, 0.3, 0.98);
-  }
+    33.33% {
+        transform: scaleY(1.8333);
+        animation-timing-function: cubic-bezier(0.36, 0.61, 0.3, 0.98);
+    }
 }
 
 /* Travel exactly one path length per cycle, so the dash pattern loops
  * seamlessly around the infinity path. */
 @keyframes fl-loading-infinity {
-  to {
-    stroke-dashoffset: 51.31778564453125;
-  }
+    to {
+        stroke-dashoffset: 51.31778564453125;
+    }
 }

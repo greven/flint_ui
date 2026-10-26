@@ -1,124 +1,66 @@
-defmodule FlintUIDocsWeb.PreviewComponent do
+defmodule FlintUIDocsWeb.Preview do
   @moduledoc """
-  Stacked component preview card: rendered demo, optional controls, code.
+  Preview card: rendered demo, optional controls, optional code block.
 
-  The demo is always visible. When controls are given they sit directly beneath
-  it, and the code block sits beneath those, all sharing one border. There is no
-  Preview/Code tab bar; the code is part of the card.
+  This is a function component rather than a LiveComponent so the demo can be a
+  slot. Per-preview state (control props, active code flavor, and source/code
+  view) belongs to `FlintUIDocsWeb.ComponentLive` and arrives through `state`.
 
-  The code block is a `FlintUIDocsWeb.CodeBlock`. In development it also gets a
-  Source toggle next to its copy button: the toggle swaps the public snippet for
-  the actual `~H` body of the preview's `render_*` callback, read automatically
-  by `FlintUIDocsWeb.Docs.Source`. The toggle is hidden in every other
-  environment.
+  `code` and `codes` accept a string, a list of code flavors, or a 1-arity
+  function that receives the current props. The demo slot receives the same
+  props:
 
-  Set `preview_only: true` for a card whose value is purely the rendered demo,
-  such as a full variant/color matrix. It renders the demo with no code section.
+      <.preview id="..." name={:button} state={@state} controls={[:variant]}
+        code={fn props -> ... end}>
+        <Components.button variant={props.variant}>Button</Components.button>
+      </.preview>
+
+  A slot cannot carry raw source text (slots are rendered content), which is why
+  the code is an attribute while the demo is the inner block.
   """
 
-  use FlintUIDocsWeb, :live_component
+  use FlintUIDocsWeb, :html
 
   alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Docs
 
   attr :id, :string, required: true
-  attr :kind, :atom, default: :playground
-  attr :layer, :atom, default: :base
-  attr :name, :atom, default: nil
-  attr :block, :atom, default: nil
+  attr :name, :atom, required: true
+  attr :layer, :atom, default: :styled
   attr :controls, :list, default: []
-  attr :defaults, :map, default: %{}
-  attr :code, :string, default: nil
-  attr :codes, :list, default: nil
+  attr :state, :map, default: %{}
+  attr :code, :any, default: nil
+  attr :codes, :any, default: nil
   attr :code_lang, :atom, default: :heex
-  attr :title, :string, default: nil
-  attr :description, :string, default: nil
   attr :preview_only, :boolean, default: false
   attr :class, :any, default: nil
+  slot :inner_block, required: true
 
   def preview(assigns) do
-    ~H"""
-    <.live_component
-      module={__MODULE__}
-      id={@id}
-      kind={@kind}
-      layer={@layer}
-      name={@name}
-      block={@block}
-      controls={@controls}
-      defaults={@defaults}
-      code={@code}
-      codes={@codes}
-      code_lang={@code_lang}
-      title={@title}
-      description={@description}
-      preview_only={@preview_only}
-      class={@class}
-    />
-    """
-  end
+    defaults = Docs.defaults(assigns.name)
 
-  @impl true
-  def update(assigns, socket) do
-    props =
-      if socket.assigns[:name] == assigns.name and socket.assigns[:layer] == assigns.layer do
-        socket.assigns[:props] || assigns.defaults
-      else
-        assigns.defaults
-      end
+    state =
+      Map.merge(%{props: %{}, code_index: 0, code_view: "code", source: nil}, assigns.state)
 
-    socket =
-      socket
-      |> assign(assigns)
-      |> assign(:props, props)
-      |> assign_new(:source, fn ->
-        if assigns[:preview_only], do: nil, else: preview_source(assigns)
-      end)
-      |> assign_new(:code_view, fn -> "code" end)
-      |> assign_new(:code_index, fn -> 0 end)
-
-    {:ok, socket}
-  end
-
-  @impl true
-  def handle_event("code_view", %{"view" => view}, socket) when view in ~w(code source) do
-    {:noreply, assign(socket, :code_view, view)}
-  end
-
-  def handle_event("code", %{"index" => index}, socket) do
-    {:noreply, assign(socket, :code_index, String.to_integer(index))}
-  end
-
-  def handle_event("set", params, socket) do
-    props =
-      Enum.reduce(socket.assigns.controls, socket.assigns.props, fn control, acc ->
-        case Map.fetch(params, Atom.to_string(control.key)) do
-          {:ok, value} -> Map.put(acc, control.key, coerce(control, value))
-          :error -> acc
-        end
-      end)
-
-    {:noreply, assign(socket, :props, props)}
-  end
-
-  @impl true
-  def render(assigns) do
-    flavors = resolve_flavors(assigns)
-    index = clamp_index(assigns[:code_index] || 0, flavors)
+    props = Map.merge(defaults, state.props)
+    controls = controls_for(assigns.name, assigns.layer, assigns.controls)
+    flavors = resolve_flavors(assigns, props)
+    index = clamp_index(state.code_index, flavors)
     active_flavor = flavors && Enum.at(flavors, index)
-    source = assigns[:source]
-
-    code_view =
-      if source && assigns[:code_view] == "source", do: "source", else: "code"
-
-    show_code? = active_flavor != nil and not assigns[:preview_only]
-    below? = assigns[:controls] != [] or show_code?
+    source = state.source
+    code_view = if source && state.code_view == "source", do: "source", else: "code"
+    show_code? = active_flavor != nil and not assigns.preview_only
+    below? = controls != [] or show_code?
 
     assigns =
       assign(assigns,
+        state: state,
+        props: props,
+        controls: controls,
         flavors: flavors,
         code_index: index,
         active_flavor: active_flavor,
+        source: source,
         code_view: code_view,
         show_code?: show_code?,
         below?: below?,
@@ -129,11 +71,6 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
     ~H"""
     <div id={@id} class={["mt-6", @class]}>
-      <div :if={@title || @description} class="flex flex-col gap-1">
-        <h4 :if={@title} class="text-sm font-semibold">{@title}</h4>
-        <p :if={@description} class="text-sm text-zinc-600 dark:text-zinc-400">{@description}</p>
-      </div>
-
       <div class="mt-3 rounded-lg shadow-lg/3">
         <div
           data-preview-canvas
@@ -142,31 +79,7 @@ defmodule FlintUIDocsWeb.PreviewComponent do
             if(@below?, do: "rounded-t-lg", else: "rounded-lg")
           ]}
         >
-          <%= case @kind do %>
-            <% :playground -> %>
-              <Docs.render_playground
-                name={@name}
-                layer={@layer}
-                props={@props}
-                id={"#{@id}-canvas"}
-              />
-            <% :usage -> %>
-              <Docs.render_usage
-                name={@name}
-                layer={@layer}
-                block={@block}
-                props={@props}
-                id={"#{@id}-canvas"}
-              />
-            <% :block -> %>
-              <Docs.render_block
-                name={@name}
-                layer={@layer}
-                block={@block}
-                props={@props}
-                id={"#{@id}-canvas"}
-              />
-          <% end %>
+          {render_slot(@inner_block, @props)}
         </div>
 
         <.controls
@@ -177,7 +90,6 @@ defmodule FlintUIDocsWeb.PreviewComponent do
           controls={@controls}
           props={@props}
           last={!@show_code?}
-          myself={@myself}
         />
 
         <div
@@ -197,8 +109,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
               <button
                 :for={{flavor, i} <- Enum.with_index(@flavors)}
                 type="button"
-                phx-click="code"
-                phx-target={@myself}
+                phx-click="preview_code"
+                phx-value-id={@id}
                 phx-value-index={i}
                 class={code_tab(i == @code_index)}
               >
@@ -210,8 +122,8 @@ defmodule FlintUIDocsWeb.PreviewComponent do
               <button
                 type="button"
                 id={"#{@id}-source-toggle"}
-                phx-click="code_view"
-                phx-target={@myself}
+                phx-click="preview_view"
+                phx-value-id={@id}
                 phx-value-view={if @code_view == "source", do: "code", else: "source"}
                 class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-100"
               >
@@ -245,12 +157,11 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   ## Controls
 
   attr :id, :string, required: true
-  attr :name, :atom, default: nil
-  attr :layer, :atom, default: :base
+  attr :name, :atom, required: true
+  attr :layer, :atom, default: :styled
   attr :controls, :list, required: true
   attr :props, :map, required: true
   attr :last, :boolean, default: true
-  attr :myself, :any, required: true
 
   defp controls(assigns) do
     ~H"""
@@ -265,10 +176,10 @@ defmodule FlintUIDocsWeb.PreviewComponent do
     >
       <form
         id={"#{@id}-controls"}
-        phx-change="set"
-        phx-target={@myself}
+        phx-change="preview_change"
         class="flex flex-wrap items-center gap-2.5"
       >
+        <input type="hidden" name="preview_id" value={@id} />
         <%= for control <- @controls do %>
           <%= case control_kind(control) do %>
             <% :select -> %>
@@ -321,6 +232,24 @@ defmodule FlintUIDocsWeb.PreviewComponent do
 
   ## Helpers
 
+  defp controls_for(name, layer, keys) do
+    name
+    |> Docs.controls()
+    |> Enum.filter(&(&1.key in keys))
+    |> Enum.map(&Map.put(&1, :layer, layer))
+  end
+
+  defp resolve_flavors(assigns, props) do
+    cond do
+      is_function(assigns.codes, 1) -> assigns.codes.(props) |> normalize_codes()
+      assigns.codes not in [nil, []] -> normalize_codes(assigns.codes)
+      is_function(assigns.code, 1) -> assigns.code.(props) |> normalize_codes()
+      is_binary(assigns.code) -> normalize_codes(assigns.code)
+      is_list(assigns.code) -> normalize_codes(assigns.code)
+      true -> nil
+    end
+  end
+
   defp display_code(_active_flavor, source, "source"), do: source.code
   defp display_code(active_flavor, _source, _view), do: active_flavor && active_flavor.code
 
@@ -332,28 +261,6 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   end
 
   defp code_caption(_source, _view), do: nil
-
-  defp resolve_flavors(assigns) do
-    cond do
-      is_list(assigns[:codes]) and assigns[:codes] != [] ->
-        normalize_codes(assigns[:codes])
-
-      is_binary(assigns[:code]) ->
-        [flavor(%{code: assigns[:code], lang: assigns[:code_lang] || :heex})]
-
-      assigns[:kind] == :playground ->
-        Docs.render_code(%{
-          name: assigns[:name],
-          layer: assigns[:layer],
-          props: assigns[:props],
-          id: assigns[:id]
-        })
-        |> normalize_codes()
-
-      true ->
-        nil
-    end
-  end
 
   defp normalize_codes(nil), do: nil
   defp normalize_codes(code) when is_binary(code), do: [flavor(%{code: code})]
@@ -371,13 +278,6 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   defp clamp_index(_index, nil), do: 0
   defp clamp_index(_index, []), do: 0
   defp clamp_index(index, flavors), do: min(max(index, 0), length(flavors) - 1)
-
-  defp preview_source(%{name: name, kind: kind} = assigns)
-       when is_atom(name) and kind in [:playground, :usage, :block] do
-    Docs.source(name, kind, block: assigns[:block], layer: assigns[:layer])
-  end
-
-  defp preview_source(_assigns), do: nil
 
   defp select_options(%{type: :boolean}, _name, _layer), do: ~w(true false)
 
@@ -420,16 +320,6 @@ defmodule FlintUIDocsWeb.PreviewComponent do
   end
 
   defp base_attr_values(_control, _name), do: []
-
-  defp coerce(%{type: :number, default: default}, value) do
-    case Integer.parse(to_string(value)) do
-      {int, _} -> int
-      :error -> default
-    end
-  end
-
-  defp coerce(%{type: :boolean}, value), do: value in [true, "true", "on", "1"]
-  defp coerce(_control, value), do: value
 
   # Booleans render as a `true`/`false` select, so a single branch covers both.
   defp control_kind(%{type: type}) when type in [:select, :boolean], do: :select

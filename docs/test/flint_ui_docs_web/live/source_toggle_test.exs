@@ -32,7 +32,7 @@ defmodule FlintUIDocsWeb.SourceToggleTest do
 
     view |> element("#playground-button-source-toggle") |> render_click()
 
-    assert has_element?(view, "#playground-button", "render_playground/1")
+    assert has_element?(view, "#playground-button", "render_main/1")
     assert has_element?(view, "#playground-button-code", "<Components.button")
     assert has_element?(view, "#playground-button-source-toggle", "Code")
     assert has_element?(view, "#playground-button-copy[phx-hook]")
@@ -59,7 +59,7 @@ defmodule FlintUIDocsWeb.SourceToggleTest do
 
     view |> element("#usage-group-variant-source-toggle") |> render_click()
 
-    assert has_element?(view, "#usage-group-variant", "render_usage/1")
+    assert has_element?(view, "#usage-group-variant", "render_section/1")
     assert has_element?(view, "#usage-group-variant-code", "ghost")
   end
 

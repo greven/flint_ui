@@ -5,8 +5,7 @@
         cursor: pointer;
     }
 
-    [data-element="collapsible"][data-collapsible]
-        [data-part="trigger"][data-disabled] {
+    [data-element="collapsible"][data-collapsible] [data-part="trigger"][data-disabled] {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -24,14 +23,12 @@
     border-radius: inherit;
 }
 
-[data-element="collapsible"][data-collapsible][data-animate]
-    [data-part="content"][data-state="open"] {
+[data-element="collapsible"][data-collapsible][data-animate] [data-part="content"][data-state="open"] {
     animation: fl-collapsible-expand var(--fl-collapsible-duration, var(--fl-duration-base))
         var(--fl-collapsible-easing, var(--fl-ease-in-out));
 }
 
-[data-element="collapsible"][data-collapsible][data-animate]
-    [data-part="content"][data-state="closed"] {
+[data-element="collapsible"][data-collapsible][data-animate] [data-part="content"][data-state="closed"] {
     animation: fl-collapsible-collapse var(--fl-collapsible-duration, var(--fl-duration-base))
         var(--fl-collapsible-easing, var(--fl-ease-in-out));
 }

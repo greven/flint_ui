@@ -2,6 +2,7 @@ defmodule FlintUIDocsWeb.DocsTest do
   use ExUnit.Case, async: true
 
   alias FlintUIDocsWeb.Docs
+  alias FlintUIDocsWeb.Docs.Source
 
   @ignored_attrs [:rest, :class, :flint_parts]
 
@@ -40,19 +41,6 @@ defmodule FlintUIDocsWeb.DocsTest do
     end
   end
 
-  test "playground control selections reference known controls" do
-    for {name, _module} <- Docs.modules(),
-        keys = Docs.playground_controls(name),
-        is_list(keys) do
-      known = Enum.map(Docs.controls(name), & &1.key)
-
-      for key <- keys do
-        assert key in known,
-               "expected #{name} playground control #{inspect(key)} to exist in controls/0"
-      end
-    end
-  end
-
   test "every component has a CSS contract" do
     for {name, _module} <- Docs.modules() do
       assert %{body: body, snippets: snippets} = Docs.css(name)
@@ -76,6 +64,33 @@ defmodule FlintUIDocsWeb.DocsTest do
     end
   end
 
+  test "every styled usage and example has a render_section clause" do
+    for {name, module} <- Docs.modules() do
+      assert {:ok, _} = Source.extract(module, :main, layer: :styled),
+             "expected #{name} to expose a render_main/1 source"
+
+      for entry <- Docs.styled_usage(name) do
+        assert {:ok, _} =
+                 Source.extract(module, :section,
+                   kind: :usage,
+                   block: entry.id,
+                   layer: :styled
+                 ),
+               "expected #{name} usage #{entry.id} to expose a render_section/1 source"
+      end
+
+      for entry <- Docs.styled_examples(name) do
+        assert {:ok, _} =
+                 Source.extract(module, :section,
+                   kind: :example,
+                   block: entry.id,
+                   layer: :styled
+                 ),
+               "expected #{name} example #{entry.id} to expose a render_section/1 source"
+      end
+    end
+  end
+
   defp public_attrs(name), do: [base: base_attrs(name), styled: styled_attrs(name)]
 
   defp base_attrs(name) do
@@ -93,8 +108,16 @@ defmodule FlintUIDocsWeb.DocsTest do
   end
 
   defp snippets(name) do
+    module = Docs.modules()[name]
+
     usage = entry_snippets("usage", Docs.usage(name))
     examples = entry_snippets("example", Docs.examples(name))
+
+    styled_sources =
+      for {label, opts} <- source_locations(name),
+          {:ok, source} <- [Source.extract(module, opts.callback, opts.opts)] do
+        {"#{label} source", source.code}
+      end
 
     structure =
       case Docs.structure(name) do
@@ -102,7 +125,26 @@ defmodule FlintUIDocsWeb.DocsTest do
         code -> [{"structure", code}]
       end
 
-    usage ++ examples ++ structure
+    usage ++ examples ++ styled_sources ++ structure
+  end
+
+  defp source_locations(name) do
+    main =
+      [{"main", %{callback: :main, opts: [layer: :styled]}}]
+
+    usage =
+      for entry <- Docs.styled_usage(name) do
+        {"usage #{entry.id}",
+         %{callback: :section, opts: [kind: :usage, block: entry.id, layer: :styled]}}
+      end
+
+    examples =
+      for entry <- Docs.styled_examples(name) do
+        {"example #{entry.id}",
+         %{callback: :section, opts: [kind: :example, block: entry.id, layer: :styled]}}
+      end
+
+    main ++ usage ++ examples
   end
 
   defp entry_snippets(label, entries) do

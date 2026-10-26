@@ -20,9 +20,6 @@ defmodule FlintUIDocsWeb.Docs.Loading do
   end
 
   @impl true
-  def playground_controls, do: [:variant, :color, :size]
-
-  @impl true
   def structure do
     """
     <FlintUI.loading class="size-4" />
@@ -163,14 +160,6 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         body: """
         The generated component accepts the same `variant` values and maps
         `size` onto the theme's icon-scale box.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading
-            :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)}
-            variant={variant}
-          />
-        </div>
         """
       },
       %{
@@ -184,16 +173,6 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         keeps a spinner inside a button or colored label in step with it. A
         custom color works the same way, because the shape paints with
         `currentColor`: set `style="color: …"` on the spinner.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading />
-          <.loading color="info" />
-          <.loading color="success" variant="ring-bg" />
-          <.loading color="warning" variant="ring-bg" />
-          <.loading color="error" variant="ring-dash" />
-          <.loading style="color: #6366f1" variant="ring-dash" />
-        </div>
         """
       },
       %{
@@ -205,14 +184,6 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         `duration` sets one animation cycle in milliseconds. It defaults to 600,
         2000 for `infinity`, or 1000 for `ring-dash`; the styled wrapper
         forwards it to the base.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading duration={300} />
-          <.loading duration={600} />
-          <.loading variant="ring-dash" duration={1000} />
-          <.loading variant="infinity" duration={2000} />
-        </div>
         """
       },
       %{
@@ -223,13 +194,6 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         body: """
         `weight` controls the ring stroke, infinity loop stroke, dot radius, or
         bar width. It defaults to 2, or 2.8 for `bars-scale`.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading variant="ring" weight={1} />
-          <.loading variant="ring" weight={2} />
-          <.loading variant="ring" weight={3} />
-        </div>
         """
       },
       %{
@@ -240,11 +204,6 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         body: """
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets.
-        """,
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading :for={size <- ~w(sm md lg)} variant="ring" size={size} />
-        </div>
         """
       }
     ]
@@ -256,38 +215,17 @@ defmodule FlintUIDocsWeb.Docs.Loading do
       %{
         id: :variants,
         title: "All variants",
-        description: "The built-in indicator shapes.",
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading variant="ring" class="size-6" />
-          <.loading variant="ring-bg" class="size-6" />
-          <.loading variant="ring-dash" class="size-6" />
-          <.loading variant="dots-fade" class="size-6" />
-          <.loading variant="dots-bounce" class="size-6" />
-          <.loading variant="bars-scale" class="size-6" />
-          <.loading variant="infinity" class="size-6" />
-        </div>
-        """
+        description: "The built-in indicator shapes."
       },
       %{
         id: :sizes,
         title: "Sizes",
-        description: "Size comes from the `class` you pass.",
-        code: """
-        <div class="flex items-center gap-6">
-          <.loading class="size-4" />
-          <.loading class="size-6" />
-          <.loading class="size-8" />
-        </div>
-        """
+        description: "Size comes from the `class` you pass."
       },
       %{
         id: :labeled,
         title: "Standalone status",
-        description: "Pass `label` to expose the spinner as a labeled image.",
-        code: """
-        <.loading label="Loading" class="size-6" />
-        """
+        description: "Pass `label` to expose the spinner as a labeled image."
       },
       %{
         id: :base_status,
@@ -453,20 +391,28 @@ defmodule FlintUIDocsWeb.Docs.Loading do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.loading
-      variant={variant(@props)}
-      color={@props.color}
-      size={@props.size}
-      duration={duration(@props)}
-      weight={weight(@props)}
-    />
+    <.preview
+      :let={props}
+      id={@id}
+      name={:loading}
+      state={@state}
+      controls={[:variant, :color, :size]}
+      code={&main_code/1}
+    >
+      <Components.loading
+        variant={variant(props)}
+        color={props.color}
+        size={props.size}
+        duration={duration(props)}
+        weight={weight(props)}
+      />
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     variant = variant(props)
 
     Snippet.component(
@@ -482,10 +428,103 @@ defmodule FlintUIDocsWeb.Docs.Loading do
   end
 
   @impl true
-  def render_usage(%{block: :styled_variant} = assigns) do
+  def render_section(%{kind: :usage, block: :styled_variant} = assigns) do
     ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:styled_variant)}>
+      <div class="flex items-center gap-6">
+        <Components.loading
+          :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)}
+          variant={variant}
+        />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :color} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:color)}>
+      <div class="flex items-center gap-6">
+        <Components.loading />
+        <Components.loading color="info" />
+        <Components.loading color="success" variant="ring-bg" />
+        <Components.loading color="warning" variant="ring-bg" />
+        <Components.loading color="error" variant="ring-dash" />
+        <Components.loading style="color: #6366f1" variant="ring-dash" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :styled_duration} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:styled_duration)}>
+      <div class="flex items-center gap-6">
+        <Components.loading duration={300} />
+        <Components.loading duration={600} />
+        <Components.loading variant="ring-dash" duration={1000} />
+        <Components.loading variant="infinity" duration={2000} />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :styled_weight} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:styled_weight)}>
+      <div class="flex items-center gap-6">
+        <Components.loading variant="ring" weight={1} />
+        <Components.loading variant="ring" weight={2} />
+        <Components.loading variant="ring" weight={3} />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :size} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:size)}>
+      <div class="flex items-center gap-6">
+        <Components.loading :for={size <- ~w(sm md lg)} variant="ring" size={size} />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :variants} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:variants)}>
+      <div class="flex items-center gap-6">
+        <.loading :for={v <- all_variants()} variant={v} class="size-6" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :sizes} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:sizes)}>
+      <div class="flex items-center gap-6">
+        <.loading class="size-4" />
+        <.loading class="size-6" />
+        <.loading class="size-8" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :labeled} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:loading} state={@state} code={code(:labeled)}>
+      <.loading label="Loading" class="size-6" />
+    </.preview>
+    """
+  end
+
+  defp code(:styled_variant) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <Components.loading
+      <.loading
         :for={variant <- ~w(ring ring-bg ring-dash dots-fade dots-bounce bars-scale infinity)}
         variant={variant}
       />
@@ -493,69 +532,64 @@ defmodule FlintUIDocsWeb.Docs.Loading do
     """
   end
 
-  def render_usage(%{block: :color} = assigns) do
-    ~H"""
+  defp code(:color) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <Components.loading />
-      <Components.loading color="info" />
-      <Components.loading color="success" variant="ring-bg" />
-      <Components.loading color="warning" variant="ring-bg" />
-      <Components.loading color="error" variant="ring-dash" />
-      <Components.loading style="color: #6366f1" variant="ring-dash" />
+      <.loading />
+      <.loading color="info" />
+      <.loading color="success" variant="ring-bg" />
+      <.loading color="warning" variant="ring-bg" />
+      <.loading color="error" variant="ring-dash" />
+      <.loading style="color: #6366f1" variant="ring-dash" />
     </div>
     """
   end
 
-  def render_usage(%{block: :weight} = assigns) do
-    ~H"""
+  defp code(:styled_duration) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <FlintUI.loading variant="ring" weight={1} class="size-6" />
-      <FlintUI.loading variant="ring" weight={2} class="size-6" />
-      <FlintUI.loading variant="ring" weight={3} class="size-6" />
+      <.loading duration={300} />
+      <.loading duration={600} />
+      <.loading variant="ring-dash" duration={1000} />
+      <.loading variant="infinity" duration={2000} />
     </div>
     """
   end
 
-  def render_usage(%{block: :styled_duration} = assigns) do
-    ~H"""
+  defp code(:styled_weight) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <Components.loading duration={300} />
-      <Components.loading duration={600} />
-      <Components.loading variant="ring-dash" duration={1000} />
-      <Components.loading variant="infinity" duration={2000} />
+      <.loading variant="ring" weight={1} />
+      <.loading variant="ring" weight={2} />
+      <.loading variant="ring" weight={3} />
     </div>
     """
   end
 
-  def render_usage(%{block: :styled_weight} = assigns) do
-    ~H"""
+  defp code(:size) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <Components.loading variant="ring" weight={1} />
-      <Components.loading variant="ring" weight={2} />
-      <Components.loading variant="ring" weight={3} />
+      <.loading :for={size <- ~w(sm md lg)} variant="ring" size={size} />
     </div>
     """
   end
 
-  def render_usage(%{block: :size} = assigns) do
-    ~H"""
+  defp code(:variants) do
+    ~S"""
     <div class="flex items-center gap-6">
-      <Components.loading :for={size <- ~w(sm md lg)} variant="ring" size={size} />
+      <.loading variant="ring" class="size-6" />
+      <.loading variant="ring-bg" class="size-6" />
+      <.loading variant="ring-dash" class="size-6" />
+      <.loading variant="dots-fade" class="size-6" />
+      <.loading variant="dots-bounce" class="size-6" />
+      <.loading variant="bars-scale" class="size-6" />
+      <.loading variant="infinity" class="size-6" />
     </div>
     """
   end
 
-  @impl true
-  def render_block(%{block: :variants} = assigns) do
-    ~H"""
-    <div class="flex items-center gap-6">
-      <.loading :for={v <- all_variants()} variant={v} class="size-6" />
-    </div>
-    """
-  end
-
-  def render_block(%{block: :sizes} = assigns) do
-    ~H"""
+  defp code(:sizes) do
+    ~S"""
     <div class="flex items-center gap-6">
       <.loading class="size-4" />
       <.loading class="size-6" />
@@ -564,8 +598,8 @@ defmodule FlintUIDocsWeb.Docs.Loading do
     """
   end
 
-  def render_block(%{block: :labeled} = assigns) do
-    ~H"""
+  defp code(:labeled) do
+    ~S"""
     <.loading label="Loading" class="size-6" />
     """
   end

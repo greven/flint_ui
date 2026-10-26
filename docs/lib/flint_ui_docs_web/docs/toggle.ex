@@ -99,13 +99,6 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         body: """
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.toggle :for={variant <- ~w(solid subtle outline ghost dashed)} variant={variant} pressed>
-            {variant}
-          </.toggle>
-        </div>
         """
       },
       %{
@@ -117,17 +110,6 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         The generated component adds a `color` attribute mapped onto the
         `data-color` hook the theme targets. `color` and `variant` compose
         freely: the same palette drives every variant.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.toggle
-            :for={color <- ~w(primary secondary success info warning error neutral)}
-            color={color}
-            pressed
-          >
-            {color}
-          </.toggle>
-        </div>
         """
       },
       %{
@@ -138,11 +120,6 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         body: """
         The generated component adds a `size` attribute mapped onto the
         `data-size` hook the theme targets.
-        """,
-        code: """
-        <div class="flex flex-wrap items-center gap-3">
-          <.toggle :for={size <- ~w(xs sm md lg xl)} size={size} pressed>{size}</.toggle>
-        </div>
         """
       }
     ]
@@ -155,40 +132,17 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         id: :icon,
         title: "Icon and label",
         description:
-          "Pair an icon with a text label. The toggle sizes and tints the `.icon` it wraps.",
-        code: """
-        <.toggle variant="solid">
-          <.icon name="lucide-bold" /> Bold
-        </.toggle>
-        """
+          "Pair an icon with a text label. The toggle sizes and tints the `.icon` it wraps."
       },
       %{
         id: :icon_only,
         title: "Icon only",
-        description: "An icon-only toggle needs an accessible name.",
-        code: """
-        <.toggle variant="solid" aria-label="Bold">
-          <.icon name="lucide-bold" />
-        </.toggle>
-        """
+        description: "An icon-only toggle needs an accessible name."
       },
       %{
         id: :group,
         title: "Formatting group",
-        description: "Several toggles arranged as a formatting group.",
-        code: """
-        <.group variant="framed">
-          <.toggle variant="solid" aria-label="Bold" pressed>
-            <.icon name="lucide-bold" />
-          </.toggle>
-          <.toggle variant="solid" aria-label="Italic">
-            <.icon name="lucide-italic" />
-          </.toggle>
-          <.toggle variant="solid" aria-label="Underline">
-            <.icon name="lucide-underline" />
-          </.toggle>
-        </.group>
-        """
+        description: "Several toggles arranged as a formatting group."
       },
       %{
         id: :base_icon_only,
@@ -264,22 +218,30 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   end
 
   @impl true
-  def render_playground(%{layer: :styled} = assigns) do
+  def render_main(assigns) do
     ~H"""
-    <Components.toggle
-      variant={@props.variant}
-      color={@props.color}
-      size={@props.size}
-      pressed={@props.pressed}
-      disabled={@props.disabled}
+    <.preview
+      :let={props}
+      id={@id}
+      name={:toggle}
+      state={@state}
+      controls={[:pressed, :disabled, :variant, :color, :size]}
+      code={&main_code/1}
     >
-      <.icon name="lucide-bold" /> Bold
-    </Components.toggle>
+      <Components.toggle
+        variant={props.variant}
+        color={props.color}
+        size={props.size}
+        pressed={props.pressed}
+        disabled={props.disabled}
+      >
+        <.icon name="lucide-bold" /> Bold
+      </Components.toggle>
+    </.preview>
     """
   end
 
-  @impl true
-  def render_code(%{layer: :styled, props: props}) do
+  defp main_code(props) do
     Snippet.tag(
       ".toggle",
       [
@@ -294,86 +256,161 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   end
 
   @impl true
-  def render_usage(%{block: :variant} = assigns) do
+  def render_section(%{kind: :usage, block: :variant} = assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.toggle
-        :for={variant <- ~w(solid subtle outline ghost dashed)}
-        variant={variant}
-        pressed
-      >
-        {variant}
-      </Components.toggle>
-    </div>
-    """
-  end
-
-  def render_usage(%{block: :color} = assigns) do
-    ~H"""
-    <div class="flex flex-col gap-3">
+    <.preview id={@id} name={:toggle} state={@state} code={code(:variant)}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.toggle
-          :for={color <- ~w(primary secondary success info warning error neutral)}
-          color={color}
+          :for={variant <- ~w(solid subtle outline ghost dashed)}
+          variant={variant}
           pressed
         >
-          {color}
+          {variant}
         </Components.toggle>
       </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :color} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:toggle} state={@state} code={code(:color)}>
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <Components.toggle
+            :for={color <- ~w(primary secondary success info warning error neutral)}
+            color={color}
+            pressed
+          >
+            {color}
+          </Components.toggle>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <Components.toggle
+            :for={color <- ~w(primary secondary success info warning error neutral)}
+            variant="outline"
+            color={color}
+            pressed
+          >
+            {color}
+          </Components.toggle>
+        </div>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :usage, block: :size} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:toggle} state={@state} code={code(:size)}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.toggle
-          :for={color <- ~w(primary secondary success info warning error neutral)}
-          variant="outline"
-          color={color}
-          pressed
-        >
-          {color}
+        <Components.toggle :for={size <- ~w(xs sm md lg xl)} size={size} pressed>
+          {size}
         </Components.toggle>
       </div>
-    </div>
+    </.preview>
     """
   end
 
-  def render_usage(%{block: :size} = assigns) do
+  def render_section(%{kind: :example, block: :icon} = assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
-      <Components.toggle :for={size <- ~w(xs sm md lg xl)} size={size} pressed>
-        {size}
+    <.preview id={@id} name={:toggle} state={@state} code={code(:icon)}>
+      <Components.toggle variant="solid">
+        <Components.icon name="lucide-bold" /> Bold
       </Components.toggle>
-    </div>
+    </.preview>
     """
   end
 
-  @impl true
-  def render_block(%{block: :icon} = assigns) do
+  def render_section(%{kind: :example, block: :icon_only} = assigns) do
     ~H"""
-    <Components.toggle variant="solid">
-      <Components.icon name="lucide-bold" /> Bold
-    </Components.toggle>
-    """
-  end
-
-  def render_block(%{block: :icon_only} = assigns) do
-    ~H"""
-    <Components.toggle variant="solid" aria-label="Bold">
-      <Components.icon name="lucide-bold" />
-    </Components.toggle>
-    """
-  end
-
-  def render_block(%{block: :group} = assigns) do
-    ~H"""
-    <Components.group variant="framed">
-      <Components.toggle variant="solid" aria-label="Bold" pressed>
+    <.preview id={@id} name={:toggle} state={@state} code={code(:icon_only)}>
+      <Components.toggle variant="solid" aria-label="Bold">
         <Components.icon name="lucide-bold" />
       </Components.toggle>
-      <Components.toggle variant="solid" aria-label="Italic">
-        <Components.icon name="lucide-italic" />
-      </Components.toggle>
-      <Components.toggle variant="solid" aria-label="Underline">
-        <Components.icon name="lucide-underline" />
-      </Components.toggle>
-    </Components.group>
+    </.preview>
+    """
+  end
+
+  def render_section(%{kind: :example, block: :group} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:toggle} state={@state} code={code(:group)}>
+      <Components.group variant="framed">
+        <Components.toggle variant="solid" aria-label="Bold" pressed>
+          <Components.icon name="lucide-bold" />
+        </Components.toggle>
+        <Components.toggle variant="solid" aria-label="Italic">
+          <Components.icon name="lucide-italic" />
+        </Components.toggle>
+        <Components.toggle variant="solid" aria-label="Underline">
+          <Components.icon name="lucide-underline" />
+        </Components.toggle>
+      </Components.group>
+    </.preview>
+    """
+  end
+
+  defp code(:variant) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.toggle :for={variant <- ~w(solid subtle outline ghost dashed)} variant={variant} pressed>
+        {variant}
+      </.toggle>
+    </div>
+    """
+  end
+
+  defp code(:color) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.toggle
+        :for={color <- ~w(primary secondary success info warning error neutral)}
+        color={color}
+        pressed
+      >
+        {color}
+      </.toggle>
+    </div>
+    """
+  end
+
+  defp code(:size) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.toggle :for={size <- ~w(xs sm md lg xl)} size={size} pressed>{size}</.toggle>
+    </div>
+    """
+  end
+
+  defp code(:icon) do
+    ~S"""
+    <.toggle variant="solid">
+      <.icon name="lucide-bold" /> Bold
+    </.toggle>
+    """
+  end
+
+  defp code(:icon_only) do
+    ~S"""
+    <.toggle variant="solid" aria-label="Bold">
+      <.icon name="lucide-bold" />
+    </.toggle>
+    """
+  end
+
+  defp code(:group) do
+    ~S"""
+    <.group variant="framed">
+      <.toggle variant="solid" aria-label="Bold" pressed>
+        <.icon name="lucide-bold" />
+      </.toggle>
+      <.toggle variant="solid" aria-label="Italic">
+        <.icon name="lucide-italic" />
+      </.toggle>
+      <.toggle variant="solid" aria-label="Underline">
+        <.icon name="lucide-underline" />
+      </.toggle>
+    </.group>
     """
   end
 

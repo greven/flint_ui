@@ -81,30 +81,30 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(view, "#api #attributes")
     assert has_element?(view, "#api #slots")
-    assert has_element?(view, "#api #events")
+    refute has_element?(view, "#api #events")
     assert has_element?(view, "#attributes code", "variant")
     assert has_element?(view, "#attributes code", "disabled")
-    assert has_element?(view, "#api code", "data-variant")
+    refute has_element?(view, "#api code", "data-variant")
     assert has_element?(view, "#api a[href='/components/button?tab=base#data-attributes']")
     refute has_element?(view, "#theme")
   end
 
-  test "the API table folds data attributes and defaults into descriptions", %{conn: conn} do
+  test "the API table folds defaults into descriptions and tooltips values", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#attributes thead th", "Attr")
-    assert has_element?(view, "#attributes thead th", "Layer")
     assert has_element?(view, "#attributes thead th", "Type")
     assert has_element?(view, "#attributes thead th", "Description")
+    refute has_element?(view, "#attributes thead th", "Layer")
     refute has_element?(view, "#attributes thead th", "Default")
 
-    assert has_element?(view, "#attributes tbody tr", "Data attribute:")
     assert has_element?(view, "#attributes tbody tr", "Default:")
-    assert has_element?(view, "#attributes tbody tr code", "data-variant")
-    assert has_element?(view, "#attributes tbody tr code", "subtle")
-    assert has_element?(view, "#attributes tbody tr code", "'button'")
-    assert has_element?(view, "#attributes tbody tr code", "'submit'")
-    assert has_element?(view, "#attributes tbody tr code", "'reset'")
+    refute has_element?(view, "#attributes tbody tr", "Data attribute:")
+    assert has_element?(view, "#attributes tbody tr code", "variant")
+    assert has_element?(view, "#attributes tbody tr", "subtle")
+    assert has_element?(view, "#attributes tbody tr", "button")
+    assert has_element?(view, "#attributes tbody tr", "submit")
+    assert has_element?(view, "#attributes tbody tr", "reset")
     assert has_element?(view, "#attributes tbody tr code", "boolean")
     refute has_element?(view, "#attributes tbody tr code", "'true'")
     refute has_element?(view, "#attributes tbody tr code", "string —")
