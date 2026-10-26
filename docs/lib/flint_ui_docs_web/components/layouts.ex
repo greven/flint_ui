@@ -38,7 +38,7 @@ defmodule FlintUIDocsWeb.Layouts do
       <%!-- One provider per document, mounted with the shared layout. --%>
       <FlintUI.sound_provider enabled={false} theme="default" />
 
-      <.site_header sections={@sections} section={@section} />
+      <.site_header sections={@sections} section={@section} page={@page} />
 
       <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6 lg:px-8">
         <.sidebar
@@ -114,25 +114,44 @@ defmodule FlintUIDocsWeb.Layouts do
 
   attr :sections, :list, required: true, doc: "the sections from `FlintUIDocsWeb.Nav.sections/0`"
   attr :section, :atom, default: nil, doc: "the active section id"
+  attr :page, :atom, default: nil, doc: "the active page id"
 
   def site_header(assigns) do
     ~H"""
     <div class="sticky top-0 z-20 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
       <header>
-        <div class="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <.link navigate={~p"/"} class="flex items-center gap-2">
+        <div class="mx-auto grid h-14 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
+          <.link navigate={~p"/"} class="flex items-center gap-2 justify-self-start">
             <span class="grid size-6 place-items-center rounded-md bg-zinc-900 text-xs font-bold text-white dark:bg-white dark:text-zinc-900">
               F
             </span>
             <span class="font-semibold tracking-tight">FlintUI</span>
           </.link>
 
-          <nav class="flex items-center gap-1">
+          <nav aria-label="Primary" class="justify-self-center">
+            <.link
+              navigate={~p"/themes"}
+              aria-current={if @page == :themes, do: "page", else: nil}
+              class={[
+                "rounded-md px-2 py-1.5 text-sm font-medium whitespace-nowrap transition-colors sm:px-3",
+                if(@page == :themes,
+                  do: "text-zinc-900 dark:text-white",
+                  else: "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                )
+              ]}
+            >
+              Themes
+            </.link>
+          </nav>
+
+          <nav class="flex items-center gap-1 justify-self-end">
             <a
               href="https://github.com/greven/flint_ui"
-              class="rounded-md px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              class="rounded-md px-2 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 sm:px-3 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              aria-label="FlintUI on GitHub"
             >
-              GitHub
+              <.icon name="lucide-github" class="size-4 sm:hidden" />
+              <span class="hidden sm:inline">GitHub</span>
             </a>
             <.theme_toggle />
           </nav>

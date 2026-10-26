@@ -18,6 +18,7 @@ defmodule FlintUIDocsWeb.Router do
     pipe_through(:browser)
 
     live("/", HomeLive, :index)
+    live("/themes", ThemesLive, :index)
 
     get("/getting-started", RedirectController, :getting_started)
     live("/getting-started/introduction", IntroductionLive, :index)

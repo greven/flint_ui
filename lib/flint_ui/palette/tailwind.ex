@@ -2,10 +2,10 @@ defmodule FlintUI.Palette.Tailwind do
   @moduledoc """
   The Tailwind CSS v4 default color palette, vendored as data.
 
-  FlintUI ships no raw palettes by default; this module is the source for
-  `mix flint.palette`, so a project can import Tailwind colors into its theme
-  tokens without a Tailwind dependency. Values are taken from
-  `tailwindcss` (MIT): `packages/tailwindcss/theme.css`.
+  FlintUI ships no raw palettes by default; this module is the source data for
+  the docs color tooling, so a project can use Tailwind colors without a
+  Tailwind dependency. Values are taken from `tailwindcss` (MIT):
+  `packages/tailwindcss/theme.css`.
   """
 
   @behaviour FlintUI.Palette

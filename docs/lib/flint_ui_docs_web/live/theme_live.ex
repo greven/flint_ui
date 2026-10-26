@@ -286,22 +286,24 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:custom)} lang={:css} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="Full palettes" id="palette">
+        <DocsComponents.section title="Full color scales" id="palette">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            The CSS overrides above are enough for most apps. If you want a
-            complete Tailwind-derived <code class="font-mono">50..950</code>
-            scale for every role — including the shade utilities — run the
-            optional generator. It writes <code class="font-mono">assets/css/flint-palette.css</code>
-            and imports it after <code class="font-mono">flint.css</code>:
-          </p>
-          <DocsComponents.code_block code={snippet(:palette_cli)} lang={:shell} />
-          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            The generated file is a starting point, not a configuration file.
-            Override anything you want in <code class="font-mono">app.css</code>
-            after the imports; <code class="font-mono">-soft-foreground</code>
-            continues to derive from the role fill.
+            The CSS overrides above are enough for most apps. For a complete
+            <code class="font-mono">50..950</code>
+            scale, map the role shades to
+            a palette you already have. With Tailwind, point them at the
+            <code class="font-mono">--color-*</code>
+            variables in <code class="font-mono">app.css</code>:
           </p>
           <DocsComponents.code_block code={snippet(:palette_css)} lang={:css} />
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Without Tailwind, paste the same shape with the literal colors. The
+            role scale is the only color contract — the source palette names
+            never become CSS variables. Override any token in <code class="font-mono">app.css</code>
+            after the theme import; <code class="font-mono">-soft-foreground</code>
+            continues to derive from the role fill. The docs app itself does
+            this in its <code class="font-mono">app.css</code>.
+          </p>
         </DocsComponents.section>
 
         <DocsComponents.section title="Tailwind (optional)" id="tailwind">
@@ -451,35 +453,21 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
   end
 
-  defp snippet(:palette_cli) do
-    """
-    # Built-in default mapping, or pick specific colors:
-    mix flint.palette
-    mix flint.palette --primary indigo --neutral zinc --error red
-
-    # Pin one role to a shade:
-    mix flint.palette --warning amber-400
-
-    # Emit a selectable preset instead of overriding :root:
-    mix flint.palette --primary indigo --theme ocean
-    """
-  end
-
   defp snippet(:palette_css) do
     """
-    /* assets/css/flint-palette.css — generated, imported after flint.css */
+    /* app.css, after the flint.css import */
     :root {
-      --fl-palette-indigo-600: oklch(51.1% 0.262 276.966);
+      --fl-color-primary-50: var(--color-red-50);
+      /* … 100 through 500 … */
+      --fl-color-primary-600: var(--color-red-600);
+      /* … 700 through 900 … */
+      --fl-color-primary-950: var(--color-red-950);
 
-      --fl-color-primary-600: var(--fl-palette-indigo-600);
       --fl-color-primary: light-dark(
         var(--fl-color-primary-600),
         var(--fl-color-primary-600)
       );
-      --fl-color-primary-foreground: light-dark(
-        oklch(100% 0 0),
-        oklch(100% 0 0)
-      );
+      --fl-color-primary-foreground: oklch(100% 0 0);
       --fl-color-primary-text: light-dark(
         var(--fl-color-primary-700),
         var(--fl-color-primary-500)

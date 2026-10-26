@@ -4,16 +4,16 @@ defmodule FlintUI.Palette.CSS do
 
   Given a mapping of semantic role to a `{palette_module, color_name}`, it emits:
 
-    * `--fl-palette-{color}-{shade}` — the raw palette, so an override can point
-      at a specific shade;
-    * `--fl-color-{role}-{shade}` — the role's scale, aliased onto the palette;
+    * `--fl-color-{role}-{shade}` — the role's scale, written directly from the
+      source palette;
     * `--fl-color-{role}` and `--fl-color-{role}-foreground` — the role alias and
       a contrast-picked label for a solid fill;
     * `--fl-color-{role}-text` — a shade safe to use as text on the page
       background (see `FlintUI.Palette.Contrast`).
 
-  Every role in the mapping overrides the default theme, because the block lands
-  after `flint.css` in the host stylesheet.
+  Source palette names never become CSS variables: the role scale is the only
+  color contract. Every role in the mapping overrides the default theme, because
+  the block lands after `flint.css` in the host stylesheet.
   """
 
   alias FlintUI.Palette
@@ -37,8 +37,6 @@ defmodule FlintUI.Palette.CSS do
       listed keep `:light_shade`/`:dark_shade`.
     * `:contrast` — the target ratio for computed label/text shades: `:aa`
       (default, 4.5), `:aaa` (7.0), or an explicit number.
-    * `:refs` — emit `var(--color-{color}-{shade})` instead of literal values,
-      for hosts whose Tailwind provides the palette.
   """
   def render(mapping, opts \\ []) do
     mapping =
@@ -50,15 +48,10 @@ defmodule FlintUI.Palette.CSS do
     dark = Keyword.get(opts, :dark_shade, 600)
     shades = Keyword.get(opts, :shades, %{})
     target = Contrast.target(Keyword.get(opts, :contrast))
-    refs? = Keyword.get(opts, :refs, false)
-
-    colors = mapping |> Enum.map(fn {_role, source, color} -> {source, color} end) |> Enum.uniq()
 
     [
       selector(opts),
       " {\n",
-      Enum.map_join(colors, "\n", &palette_block(&1, refs?)),
-      "\n\n",
       Enum.map_join(mapping, "\n", fn {role, source, color} ->
         {role_light, role_dark} = role_shades(shades, role, light, dark)
         role_block({role, source, color}, role_light, role_dark, target)
@@ -85,25 +78,12 @@ defmodule FlintUI.Palette.CSS do
     end
   end
 
-  defp palette_block({source, color}, refs?) do
-    shades = source.shades(color)
-
-    Enum.map_join(Palette.shade_keys(), "\n", fn shade ->
-      value =
-        if refs?,
-          do: "var(--color-#{color}-#{shade})",
-          else: Map.get(shades, shade, Map.get(shades, to_string(shade)))
-
-      "  --fl-palette-#{color}-#{shade}: #{value};"
-    end)
-  end
-
   defp role_block({role, source, color}, light, dark, target) do
     shades = source.shades(color)
 
     scale =
       Enum.map_join(Palette.shade_keys(), "\n", fn shade ->
-        "  --fl-color-#{role}-#{shade}: var(--fl-palette-#{color}-#{shade});"
+        "  --fl-color-#{role}-#{shade}: #{shade_value(shades, shade)};"
       end)
 
     text_light =

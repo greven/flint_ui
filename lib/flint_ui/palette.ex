@@ -7,9 +7,9 @@ defmodule FlintUI.Palette do
   (OpenColors, Radix, …) can implement the same behaviour and feed
   `FlintUI.Palette.CSS.render/2`.
 
-  FlintUI ships no raw palette variables in the default theme. Importing one
-  through `mix flint.palette` emits `--fl-palette-{color}-{shade}` variables plus
-  the semantic `--fl-color-{role}-{shade}` scales and role aliases.
+  FlintUI ships no raw palette variables in the default theme. A palette source
+  is mapped onto the semantic `--fl-color-{role}-{shade}` scales and role
+  aliases; the source's color names never become CSS variables.
   """
 
   @shade_keys [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]

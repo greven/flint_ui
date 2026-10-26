@@ -7,15 +7,194 @@
 @source "../../lib/flint_ui_docs_web";
 
 @import "./flint.css";
-@import "./flint-palette.css";
 
 @import "./highlight.css";
 
-/* FlintUI overrides live here, after the theme/palette imports. `flint.css` is
-   generated; anything below this point is site-owned. */
+/* FlintUI overrides live here, after the `flint.css` import. `flint.css` is
+   generated; anything below this point is site-owned.
+
+   The docs map FlintUI's semantic role scales onto the Tailwind palette the
+   docs app already ships, so the theme stays live if the Tailwind theme
+   changes. A non-Tailwind app can paste the same role tokens with literal
+   colors instead. */
 :root {
     /* Match FlintUI controls to the docs' Tailwind sans stack. */
     --fl-font-sans: var(--font-sans);
+
+    /* primary: Tailwind red */
+    --fl-color-primary-50: var(--color-red-50);
+    --fl-color-primary-100: var(--color-red-100);
+    --fl-color-primary-200: var(--color-red-200);
+    --fl-color-primary-300: var(--color-red-300);
+    --fl-color-primary-400: var(--color-red-400);
+    --fl-color-primary-500: var(--color-red-500);
+    --fl-color-primary-600: var(--color-red-600);
+    --fl-color-primary-700: var(--color-red-700);
+    --fl-color-primary-800: var(--color-red-800);
+    --fl-color-primary-900: var(--color-red-900);
+    --fl-color-primary-950: var(--color-red-950);
+    --fl-color-primary: light-dark(
+        var(--fl-color-primary-600),
+        var(--fl-color-primary-600)
+    );
+    --fl-color-primary-foreground: light-dark(
+        oklch(100% 0 0),
+        oklch(100% 0 0)
+    );
+    --fl-color-primary-text: light-dark(
+        var(--fl-color-primary-700),
+        var(--fl-color-primary-500)
+    );
+
+    /* secondary: Tailwind gray */
+    --fl-color-secondary-50: var(--color-gray-50);
+    --fl-color-secondary-100: var(--color-gray-100);
+    --fl-color-secondary-200: var(--color-gray-200);
+    --fl-color-secondary-300: var(--color-gray-300);
+    --fl-color-secondary-400: var(--color-gray-400);
+    --fl-color-secondary-500: var(--color-gray-500);
+    --fl-color-secondary-600: var(--color-gray-600);
+    --fl-color-secondary-700: var(--color-gray-700);
+    --fl-color-secondary-800: var(--color-gray-800);
+    --fl-color-secondary-900: var(--color-gray-900);
+    --fl-color-secondary-950: var(--color-gray-950);
+    --fl-color-secondary: light-dark(
+        var(--fl-color-secondary-600),
+        var(--fl-color-secondary-600)
+    );
+    --fl-color-secondary-foreground: light-dark(
+        var(--fl-color-secondary-50),
+        var(--fl-color-secondary-50)
+    );
+    --fl-color-secondary-text: light-dark(
+        var(--fl-color-secondary-600),
+        var(--fl-color-secondary-400)
+    );
+
+    /* neutral: Tailwind neutral */
+    --fl-color-neutral-50: var(--color-neutral-50);
+    --fl-color-neutral-100: var(--color-neutral-100);
+    --fl-color-neutral-200: var(--color-neutral-200);
+    --fl-color-neutral-300: var(--color-neutral-300);
+    --fl-color-neutral-400: var(--color-neutral-400);
+    --fl-color-neutral-500: var(--color-neutral-500);
+    --fl-color-neutral-600: var(--color-neutral-600);
+    --fl-color-neutral-700: var(--color-neutral-700);
+    --fl-color-neutral-800: var(--color-neutral-800);
+    --fl-color-neutral-900: var(--color-neutral-900);
+    --fl-color-neutral-950: var(--color-neutral-950);
+    --fl-color-neutral: light-dark(
+        var(--fl-color-neutral-600),
+        var(--fl-color-neutral-600)
+    );
+    --fl-color-neutral-foreground: light-dark(
+        var(--fl-color-neutral-50),
+        var(--fl-color-neutral-50)
+    );
+    --fl-color-neutral-text: light-dark(
+        var(--fl-color-neutral-600),
+        var(--fl-color-neutral-400)
+    );
+
+    /* success: Tailwind emerald */
+    --fl-color-success-50: var(--color-emerald-50);
+    --fl-color-success-100: var(--color-emerald-100);
+    --fl-color-success-200: var(--color-emerald-200);
+    --fl-color-success-300: var(--color-emerald-300);
+    --fl-color-success-400: var(--color-emerald-400);
+    --fl-color-success-500: var(--color-emerald-500);
+    --fl-color-success-600: var(--color-emerald-600);
+    --fl-color-success-700: var(--color-emerald-700);
+    --fl-color-success-800: var(--color-emerald-800);
+    --fl-color-success-900: var(--color-emerald-900);
+    --fl-color-success-950: var(--color-emerald-950);
+    --fl-color-success: light-dark(
+        var(--fl-color-success-700),
+        var(--fl-color-success-700)
+    );
+    --fl-color-success-foreground: light-dark(
+        var(--fl-color-success-50),
+        var(--fl-color-success-50)
+    );
+    --fl-color-success-text: light-dark(
+        var(--fl-color-success-800),
+        var(--fl-color-success-600)
+    );
+
+    /* info: Tailwind blue */
+    --fl-color-info-50: var(--color-blue-50);
+    --fl-color-info-100: var(--color-blue-100);
+    --fl-color-info-200: var(--color-blue-200);
+    --fl-color-info-300: var(--color-blue-300);
+    --fl-color-info-400: var(--color-blue-400);
+    --fl-color-info-500: var(--color-blue-500);
+    --fl-color-info-600: var(--color-blue-600);
+    --fl-color-info-700: var(--color-blue-700);
+    --fl-color-info-800: var(--color-blue-800);
+    --fl-color-info-900: var(--color-blue-900);
+    --fl-color-info-950: var(--color-blue-950);
+    --fl-color-info: light-dark(
+        var(--fl-color-info-600),
+        var(--fl-color-info-600)
+    );
+    --fl-color-info-foreground: light-dark(
+        var(--fl-color-info-50),
+        var(--fl-color-info-50)
+    );
+    --fl-color-info-text: light-dark(
+        var(--fl-color-info-700),
+        var(--fl-color-info-500)
+    );
+
+    /* warning: Tailwind amber */
+    --fl-color-warning-50: var(--color-amber-50);
+    --fl-color-warning-100: var(--color-amber-100);
+    --fl-color-warning-200: var(--color-amber-200);
+    --fl-color-warning-300: var(--color-amber-300);
+    --fl-color-warning-400: var(--color-amber-400);
+    --fl-color-warning-500: var(--color-amber-500);
+    --fl-color-warning-600: var(--color-amber-600);
+    --fl-color-warning-700: var(--color-amber-700);
+    --fl-color-warning-800: var(--color-amber-800);
+    --fl-color-warning-900: var(--color-amber-900);
+    --fl-color-warning-950: var(--color-amber-950);
+    --fl-color-warning: light-dark(
+        var(--fl-color-warning-400),
+        var(--fl-color-warning-400)
+    );
+    --fl-color-warning-foreground: light-dark(
+        var(--fl-color-warning-950),
+        var(--fl-color-warning-950)
+    );
+    --fl-color-warning-text: light-dark(
+        var(--fl-color-warning-700),
+        var(--fl-color-warning-400)
+    );
+
+    /* error: Tailwind red */
+    --fl-color-error-50: var(--color-red-50);
+    --fl-color-error-100: var(--color-red-100);
+    --fl-color-error-200: var(--color-red-200);
+    --fl-color-error-300: var(--color-red-300);
+    --fl-color-error-400: var(--color-red-400);
+    --fl-color-error-500: var(--color-red-500);
+    --fl-color-error-600: var(--color-red-600);
+    --fl-color-error-700: var(--color-red-700);
+    --fl-color-error-800: var(--color-red-800);
+    --fl-color-error-900: var(--color-red-900);
+    --fl-color-error-950: var(--color-red-950);
+    --fl-color-error: light-dark(
+        var(--fl-color-error-600),
+        var(--fl-color-error-600)
+    );
+    --fl-color-error-foreground: light-dark(
+        oklch(100% 0 0),
+        oklch(100% 0 0)
+    );
+    --fl-color-error-text: light-dark(
+        var(--fl-color-error-700),
+        var(--fl-color-error-500)
+    );
 }
 
 /* A live custom preset. Select "brand" in the theming guide's preset picker. */

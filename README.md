@@ -71,15 +71,26 @@ your app stylesheet:
 ```
 
 Tinted and outlined control labels derive from the role fill, so changing the
-fill updates them too. For a full Tailwind-derived `50..950` scale, run the
-optional generator:
+fill updates them too. For a full `50..950` scale, map the role shades to the
+palette you already have. With Tailwind, point them at the `--color-*` variables
+in `app.css`:
 
-```sh
-mix flint.palette --primary indigo --neutral zinc
+```css
+:root {
+  --fl-color-primary-50: var(--color-rose-50);
+  /* … 100 through 500 … */
+  --fl-color-primary-600: var(--color-rose-600);
+  /* … 700 through 900 … */
+  --fl-color-primary-950: var(--color-rose-950);
+  --fl-color-primary: light-dark(
+    var(--fl-color-primary-600),
+    var(--fl-color-primary-600)
+  );
+}
 ```
 
-It writes `assets/css/flint-palette.css` (imported after the theme). Override it
-in `app.css` afterwards, or skip the generator and theme entirely in CSS. Custom
+Without Tailwind, paste the literal scale into `app.css`. The role scale is the
+only color contract; source palette names never become CSS variables. Custom
 themes are `[data-theme="…"]` blocks in the same app stylesheet.
 
 ## Documentation

@@ -309,10 +309,6 @@
         var(--fl-color-error-400)
     );
 
-    /* Labels on tinted and outlined colored controls. They derive from the
-     * role fill, so overriding `--fl-color-{role}` updates the label too:
-     * light darkens the fill, dark lightens it (warning starts light, so it
-     * moves less). Generated palettes emit an explicit AA-checked light value. */
     --fl-color-primary-soft-foreground: light-dark(
         color-mix(in oklab, var(--fl-color-primary), oklch(0% 0 0) 15%),
         color-mix(in oklab, var(--fl-color-primary), oklch(1 0 0) 60%)

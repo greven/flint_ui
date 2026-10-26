@@ -4,14 +4,14 @@ defmodule FlintUI.Palette.CSSTest do
   alias FlintUI.Palette.CSS
   alias FlintUI.Palette.Tailwind
 
-  test "renders raw palette, role scale, alias, and foreground under :root" do
+  test "renders the role scale, alias, and foreground under :root" do
     css = CSS.render(primary: {Tailwind, :indigo})
 
     assert css =~ ":root {"
-    assert css =~ "--fl-palette-indigo-600: oklch(51.1% 0.262 276.966);"
-    assert css =~ "--fl-color-primary-600: var(--fl-palette-indigo-600);"
+    assert css =~ "--fl-color-primary-600: oklch(51.1% 0.262 276.966);"
     assert css =~ "--fl-color-primary: light-dark("
     assert css =~ "--fl-color-primary-foreground: light-dark("
+    refute css =~ "--fl-palette-"
   end
 
   test "uses a data-theme selector when a theme name is given" do
@@ -19,14 +19,12 @@ defmodule FlintUI.Palette.CSSTest do
     assert css =~ ~s([data-theme="brand"] {)
   end
 
-  test "refs mode points at the host's --color-* variables" do
-    css = CSS.render([primary: {Tailwind, :indigo}], refs: true)
-    assert css =~ "--fl-palette-indigo-600: var(--color-indigo-600);"
-  end
-
-  test "deduplicates a color shared by several roles" do
+  test "emits a color shared by several roles in each role scale" do
     css = CSS.render(primary: {Tailwind, :zinc}, neutral: {Tailwind, :zinc})
-    assert css |> String.split("--fl-palette-zinc-600:") |> length() == 2
+
+    assert css =~ "--fl-color-primary-600: oklch("
+    assert css =~ "--fl-color-neutral-600: oklch("
+    refute css =~ "--fl-palette-"
   end
 
   test "picks a dark foreground for a light alias shade" do

@@ -11,8 +11,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     {"mix flint.setup --tailwind", "Also map tokens onto Tailwind utilities."},
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
-    {"mix flint.theme", "Refresh the generated theme stylesheet from the library."},
-    {"mix flint.palette", "Optionally generate a full Tailwind-derived color palette."}
+    {"mix flint.theme", "Refresh the generated theme stylesheet from the library."}
   ]
 
   @impl true
@@ -65,11 +64,12 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           </p>
           <DocsComponents.code_block code={snippet(:brand)} lang={:css} />
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            For a full Tailwind-derived <code class="font-mono">50..950</code>
-            scale, run <code class="font-mono">mix flint.palette</code>. It writes
-            an optional <code class="font-mono">flint-palette.css</code>
-            you can
-            still override in <code class="font-mono">app.css</code>.
+            For a full <code class="font-mono">50..950</code>
+            scale, map the
+            role shades to the palette you already have. With Tailwind, point
+            them at the <code class="font-mono">--color-*</code>
+            variables in <code class="font-mono">app.css</code>; without Tailwind, paste the
+            literal scale. The role tokens stay the only color contract.
           </p>
         </DocsComponents.section>
 

@@ -8,10 +8,11 @@ defmodule FlintUIDocs.Theme do
   changes. The copy is derived at compile time and from `FlintUIDocs.ThemeWatcher`
   in dev.
 
-  The color palette is **not** generated at build time. It lives in
-  `docs/assets/css/flint-palette.css` as a checked-in CSS source, imported after
-  the theme. This mirrors the consumer contract: generated base theme, optional
-  palette CSS, and hand-written overrides in `app.css` after the imports.
+  The color theme is **not** generated at build time. The docs map FlintUI's
+  semantic role scales onto the site's Tailwind `--color-*` variables in
+  `app.css`, after the theme import. This mirrors the consumer contract:
+  generated base theme, then site-owned color tokens and overrides in the app
+  stylesheet.
   """
 
   @relative "assets/css/flint.css"

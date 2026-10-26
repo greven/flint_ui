@@ -11,6 +11,21 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "a[href='/components']")
   end
 
+  test "header links to the themes page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/")
+
+    assert has_element?(view, "header a[href='/themes']", "Themes")
+  end
+
+  test "themes page is a placeholder for the theme editor", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/themes")
+
+    assert has_element?(view, "h1", "Themes")
+    assert has_element?(view, "header a[href='/themes'][aria-current='page']", "Themes")
+    assert has_element?(view, "a[href='/guides/theming']", "Theming guide")
+    refute has_element?(view, "aside")
+  end
+
   test "introduction page explains the two layers", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/getting-started/introduction")
 
@@ -55,13 +70,17 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#surfaces")
     assert has_element?(view, "#light-dark")
     assert has_element?(view, "#custom")
+    assert has_element?(view, "#palette")
     assert has_element?(view, "#tailwind")
+    assert has_element?(view, "header a[href='/themes']", "Themes")
+    refute has_element?(view, "header a[href='/themes'][aria-current='page']")
 
     html = render(view)
     assert html =~ "--fl-color-primary"
     assert html =~ "--fl-color-surface-soft"
     assert html =~ "--fl-disabled-opacity"
     assert html =~ "data-theme"
+    refute html =~ "mix flint.palette"
   end
 
   test "installation page shows its section breadcrumb", %{conn: conn} do
