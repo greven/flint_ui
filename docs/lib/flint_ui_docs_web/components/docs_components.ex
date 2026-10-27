@@ -6,6 +6,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   use FlintUIDocsWeb, :html
 
   alias FlintUIDocsWeb.Highlight
+  alias FlintUIDocsWeb.Nav
 
   @doc false
 
@@ -20,7 +21,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="min-w-0">
           <h1 class="text-4xl font-semibold tracking-tight">{@title}</h1>
-          <p :if={@subtitle} class="mt-3 max-w-2xl text-zinc-600 dark:text-zinc-400">
+          <p :if={@subtitle} class="mt-4 max-w-2xl text-lgs text-zinc-600 dark:text-zinc-400">
             {@subtitle}
           </p>
         </div>
@@ -31,7 +32,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
             target="_blank"
             rel="noopener"
             class={[
-              "inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 transition-colors",
+              "inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2.5 py-1 transition-colors",
+              "text-xs font-medium text-zinc-600",
               "dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900",
               "hover:bg-zinc-50 hover:text-zinc-900 dark:hover:text-zinc-100"
             ]}
@@ -41,40 +43,35 @@ defmodule FlintUIDocsWeb.DocsComponents do
           </a>
         </div>
       </div>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <.badge>{to_string(@meta.type)}</.badge>
-        <.status_badge status={@meta.status} />
+      <div class="mt-4 flex flex-wrap gap-2 capitalize">
+        <.badge class={status_badge_class(@meta.status)}>{to_string(@meta.status)}</.badge>
+        <.badge>
+          <.icon name={Nav.type_icon(@meta.type)} class="size-3" /> {to_string(@meta.type)}
+        </.badge>
         <.badge>since {@meta.since}</.badge>
       </div>
     </header>
     """
   end
 
+  attr :class, :string,
+    default: "text-zinc-600 border-zinc-300 dark:border-zinc-800 dark:text-zinc-400"
+
   slot :inner_block, required: true
 
   defp badge(assigns) do
     ~H"""
-    <span class="rounded-full border border-zinc-200 px-2.5 py-0.5 text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
+    <span class={[
+      @class,
+      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-medium text-xs border"
+    ]}>
       {render_slot(@inner_block)}
     </span>
     """
   end
 
-  attr :status, :atom, required: true
-
-  defp status_badge(assigns) do
-    ~H"""
-    <span class={[
-      "rounded-full border px-2.5 py-0.5 text-xs",
-      status_badge_class(@status)
-    ]}>
-      {to_string(@status)}
-    </span>
-    """
-  end
-
   defp status_badge_class(:stable) do
-    "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300"
+    "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900 dark:bg-sky-950/50 dark:text-sky-300"
   end
 
   defp status_badge_class(:draft) do
@@ -82,7 +79,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp status_badge_class(_status) do
-    "border-zinc-200 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400"
+    "text-zinc-600 border-zinc-300 dark:border-zinc-800 dark:text-zinc-400"
   end
 
   @doc false

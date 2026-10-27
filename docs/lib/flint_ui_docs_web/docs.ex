@@ -47,20 +47,20 @@ defmodule FlintUIDocsWeb.Docs do
     toggle: Toggle
   }
 
-  attr(:name, :atom, required: true)
-  attr(:id, :string, required: true)
-  attr(:state, :map, default: %{})
+  attr :name, :atom, required: true
+  attr :id, :string, required: true
+  attr :state, :map, default: %{}
 
   def render_main(assigns) do
     module(assigns.name).render_main(assigns)
   end
 
-  attr(:name, :atom, required: true)
-  attr(:id, :string, required: true)
-  attr(:kind, :atom, required: true)
-  attr(:block, :atom, required: true)
-  attr(:section, :map, required: true)
-  attr(:state, :map, default: %{})
+  attr :name, :atom, required: true
+  attr :id, :string, required: true
+  attr :kind, :atom, required: true
+  attr :block, :atom, required: true
+  attr :section, :map, required: true
+  attr :state, :map, default: %{}
 
   def render_section(assigns) do
     module(assigns.name).render_section(assigns)

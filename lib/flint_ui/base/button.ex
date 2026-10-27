@@ -7,7 +7,6 @@ defmodule FlintUI.Base.Button do
       <.button>Save</.button>
       <.button type="submit">Save</.button>
       <.button phx-click="delete" disabled>Delete</.button>
-      <.button loading aria-label="Saving">Save</.button>
 
   While `loading`, the button sets `aria-busy` and is marked with `data-loading`,
   but it stays interactive so the pointer can still reach it. The styled layer
