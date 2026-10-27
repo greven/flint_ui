@@ -121,7 +121,7 @@ defmodule FlintUI.Base.Toggle do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :pressed, :boolean,
     default: false,

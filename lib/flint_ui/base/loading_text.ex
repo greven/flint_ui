@@ -137,7 +137,7 @@ defmodule FlintUI.Base.LoadingText do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :text, :string,
     required: true,

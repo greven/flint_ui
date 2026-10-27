@@ -147,7 +147,7 @@ defmodule FlintUI.Base.Loading do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :variant, :string,
     values: @variants,

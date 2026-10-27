@@ -136,7 +136,7 @@ defmodule FlintUI.Base.Button do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :type, :string,
     default: "button",

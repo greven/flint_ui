@@ -282,7 +282,7 @@ defmodule FlintUI.Base.Collapsible do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :id, :string, required: true, doc: "Unique component DOM id."
 

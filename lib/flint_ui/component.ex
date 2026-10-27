@@ -21,8 +21,16 @@ defmodule FlintUI.Component do
 
   The generated component wrapper calls this once per render and exposes the result to
   the template as the `@flint_parts` assign, so a part's attributes are spread with
-  `{@flint_parts[:part_name]}`. Because Phoenix drops undeclared assigns before
-  rendering, components must also declare `attr :flint_parts, :map, default: nil`.
+  `{@flint_parts[:part_name]}`.
+
+  Because components declare a `:global` attribute (usually `:rest`), Phoenix splits the
+  assigns it receives into declared ones and caller globals. An undeclared `:flint_parts`
+  would be swept into that global map and the part spread would raise, so every component
+  must declare it immediately before `render/1`:
+
+      attr :flint_parts, :map, default: nil, doc: false
+
+  Compilation fails when a component declares a `:global` attribute without it.
   """
   @callback build_attrs(assigns :: map()) :: map()
 
@@ -63,6 +71,42 @@ defmodule FlintUI.Component do
       alias FlintUI.Meta
 
       @behaviour FlintUI.Component
+
+      @before_compile FlintUI.Component
     end
+  end
+
+  @doc false
+  defmacro __before_compile__(env) do
+    components = Module.get_attribute(env.module, :__components__) || %{}
+
+    case components[:render] do
+      %{attrs: attrs, line: line} ->
+        names = Enum.map(attrs, & &1.name)
+
+        if Enum.any?(attrs, &(&1.type == :global)) and :flint_parts not in names do
+          raise CompileError,
+            file: env.file,
+            line: line,
+            description: """
+            #{inspect(env.module)} declares a :global attribute but not `:flint_parts`.
+
+            Phoenix splits the assigns a component receives, keeping only the attributes,
+            slots and reserved assigns it declares and sweeping everything else into the
+            global attribute. `FlintUI.API` sets the `:flint_parts` assign before calling
+            `render/1`, so without the declaration it lands in the global map and the
+            part spread in the template raises.
+
+            Declare it immediately before `render/1`:
+
+                attr :flint_parts, :map, default: nil, doc: false
+            """
+        end
+
+      _ ->
+        :ok
+    end
+
+    :ok
   end
 end

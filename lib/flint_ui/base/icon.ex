@@ -62,7 +62,7 @@ defmodule FlintUI.Base.Icon do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :name, :string,
     required: true,

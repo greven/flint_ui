@@ -96,7 +96,7 @@ defmodule FlintUI.Base.Group do
 
   @doc false
 
-  attr :flint_parts, :map, default: nil
+  attr :flint_parts, :map, default: nil, doc: false
 
   attr :as, :string, default: "div", doc: "The HTML element to render the group as."
 

@@ -122,7 +122,8 @@ defmodule FlintUI.API do
   defp component_attrs(attrs) do
     for %{name: name, type: type, required: required, opts: opts, doc: doc} <- attrs do
       opts = if required, do: [{:required, true} | opts], else: opts
-      opts = if doc, do: [{:doc, doc} | opts], else: opts
+      # `doc: false` must survive too, so internal attributes stay undocumented.
+      opts = if is_nil(doc), do: opts, else: [{:doc, doc} | opts]
       opts = Macro.escape(opts)
       quote do: attr(unquote(name), unquote(type), unquote(opts))
     end
@@ -137,7 +138,7 @@ defmodule FlintUI.API do
       inner =
         for %{name: sname, type: stype, required: srequired, opts: sopts, doc: sdoc} <- slot_attrs do
           sopts = if srequired, do: [{:required, true} | sopts], else: sopts
-          sopts = if sdoc, do: [{:doc, sdoc} | sopts], else: sopts
+          sopts = if is_nil(sdoc), do: sopts, else: [{:doc, sdoc} | sopts]
           sopts = Macro.escape(sopts)
           quote do: attr(unquote(sname), unquote(stype), unquote(sopts))
         end
