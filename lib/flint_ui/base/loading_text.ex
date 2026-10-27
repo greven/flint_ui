@@ -45,7 +45,7 @@ defmodule FlintUI.Base.LoadingText do
   def meta do
     %Meta{
       name: :loading_text,
-      type: :element,
+      type: :feedback,
       since: "0.1.0",
       status: :stable
     }

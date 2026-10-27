@@ -43,8 +43,23 @@ defmodule FlintUIDocsWeb.NavTest do
   test "breadcrumbs/2 includes the component type", %{} do
     assert Nav.breadcrumbs(:components, :button) == [
              %{label: "Components", path: "/components"},
-             %{label: "Element", path: "/components"}
+             %{label: "Action", path: "/components"}
            ]
+  end
+
+  test "every sidebar group declares a Lucide icon" do
+    for section <- Nav.sections(), group <- section.groups do
+      assert group.icon =~ ~r/^lucide-[a-z0-9-]+$/,
+             "expected #{inspect(group.label)} to declare a Lucide icon"
+    end
+  end
+
+  test "every component type has its own icon" do
+    types = FlintUI.Meta.types()
+    icons = Enum.map(types, &Nav.type_icon/1)
+
+    assert length(icons) == length(Enum.uniq(icons))
+    assert Enum.all?(icons, &(&1 =~ ~r/^lucide-/))
   end
 
   defp type_label(type) do

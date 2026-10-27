@@ -28,18 +28,6 @@ work for published versions.
 - Library: `mise exec -- mix format && mise exec -- mix compile --warnings-as-errors && mise exec -- mix test` (run from the repo root).
 - Docs: `mise exec -- mix precommit` (run from `docs/`; it runs `compile --warnings-as-errors`, `deps.unlock --unused`, `format`, `test`).
 
-### Tidewave in the docs dev server
-
-Tidewave is wired into the **docs** app only, for `MIX_ENV=dev`. Start the docs
-server before an opencode session so its MCP tools are available at
-`http://127.0.0.1:4000/tidewave/mcp` (configured in the root `opencode.json`):
-
-    cd docs && mise exec -- mix phx.server
-
-Use `tidewave_project_eval` and `tidewave_get_logs` for runtime behavior,
-rendered component output, and LiveView errors. Don't use runtime evaluation
-for work the test suite already covers.
-
 ## Conventions
 
 ### Dogfood FlintUI components in the docs
@@ -115,7 +103,7 @@ The page always follows the same layout.
   runtime CSS variables). Keyboard lives inside Features, not in a separate
   section.
 - **CSS** — the styled layer contract: `Styling contract` prose, `Public CSS
-  variables` (`FlintUI.Styled.Var`), `Selectors and state hooks`, `Theme` (token
+variables` (`FlintUI.Styled.Var`), `Selectors and state hooks`, `Theme` (token
   namespaces), and `Customization` recipes.
 
 Page content is authored per component in
@@ -263,36 +251,6 @@ When a FlintUI component supersedes a core function:
 This is mandatory, not cosmetic: `docs/lib/flint_ui_docs_web.ex` imports **both**
 `FlintUIDocsWeb.CoreComponents` and `FlintUIDocsWeb.FlintComponents`, so a FlintUI
 component that shares a name with a core one is a compile-time import conflict.
-
-### Translation helpers stay in the app
-
-`translate_error/1` and `translate_errors/2` are emitted by `phx.new` into each app's
-`MyAppWeb.CoreComponents` and are an i18n/changeset concern, not a UI concern. FlintUI
-does **not** own them. When FlintUI ships a form/field component it should accept
-already-translated error strings (or call `translate_error/1` only if the host defines
-it). Revisit in depth when inputs are implemented.
-
-### Password-manager opt-outs
-
-Password managers inject their fill icon and prompts from their own heuristics;
-`autocomplete="off"` alone does not stop them. `FlintUI.Autofill` holds the vendor
-opt-outs: `ignore_attributes/0` covers 1Password, LastPass, Bitwarden, Proton Pass,
-and Dashlane, and `ignore_class/0` covers Keeper. Use it on any input where autofill
-makes no sense, including the docs preview controls. When FlintUI's field/input
-component lands, expose the same behaviour as a prop (`autofill="off"` or similar)
-that spreads those attributes and adds the class, so consumers do not have to
-memorise vendor names.
-
-### Loading indicators advertise themselves
-
-A component that renders a loading indicator sets `data-loading-indicator` on its
-root (`FlintUI.Base.Loading` and `FlintUI.Base.LoadingText` both do). A parent that
-owns a busy state hides marked children until that state is on, so consumers do not
-have to add reveal classes. The rule belongs to the parent's stylesheet — currently
-`[data-element="button"]:not([data-loading]) > [data-loading-indicator]` in
-`button.css`. New loading components must include the marker; do not add their names
-to each parent's selector. A display utility in the `utilities` layer still wins when
-an indicator must stay visible while the parent is idle.
 
 ### Use the built-in `JSON` moduleElixir 1.18+ ships a `JSON` module that implements the interface `Phoenix.json_library/0`
 

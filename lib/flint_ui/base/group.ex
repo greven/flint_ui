@@ -41,7 +41,7 @@ defmodule FlintUI.Base.Group do
   def meta do
     %Meta{
       name: :group,
-      type: :element,
+      type: :action,
       since: "0.1.0",
       status: :draft
     }

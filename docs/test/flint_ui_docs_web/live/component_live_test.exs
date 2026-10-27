@@ -556,7 +556,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     breadcrumb = "nav[aria-label='Breadcrumb']"
     assert has_element?(view, "#{breadcrumb} a[href='/components']", "Components")
-    assert has_element?(view, "#{breadcrumb} span", "Element")
+    assert has_element?(view, "#{breadcrumb} span", "Action")
   end
 
   test "the components index has no breadcrumb", %{conn: conn} do

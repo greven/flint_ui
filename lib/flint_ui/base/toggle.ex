@@ -40,7 +40,7 @@ defmodule FlintUI.Base.Toggle do
   def meta do
     %Meta{
       name: :toggle,
-      type: :element,
+      type: :action,
       since: "0.1.0",
       status: :draft
     }

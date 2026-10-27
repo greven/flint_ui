@@ -49,7 +49,7 @@ defmodule FlintUI.Base.Loading do
   def meta do
     %Meta{
       name: :loading,
-      type: :element,
+      type: :feedback,
       since: "0.1.0",
       status: :stable
     }

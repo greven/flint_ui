@@ -10,7 +10,11 @@ defmodule FlintUIDocsWeb.Nav do
           optional(:name) => atom()
         }
 
-  @type group :: %{required(:label) => String.t(), required(:pages) => [page()]}
+  @type group :: %{
+          required(:label) => String.t(),
+          required(:icon) => String.t(),
+          required(:pages) => [page()]
+        }
 
   @type section :: %{
           required(:id) => atom(),
@@ -33,6 +37,7 @@ defmodule FlintUIDocsWeb.Nav do
     [
       %{
         label: "Overview",
+        icon: "lucide-book-open",
         pages: [
           %{id: :introduction, label: "Introduction", path: "/getting-started/introduction"},
           %{id: :installation, label: "Installation", path: "/getting-started/installation"},
@@ -46,10 +51,12 @@ defmodule FlintUIDocsWeb.Nav do
     [
       %{
         label: "Theming",
+        icon: "lucide-palette",
         pages: [%{id: :theming, label: "Theming", path: "/guides/theming"}]
       },
       %{
         label: "Interaction",
+        icon: "lucide-volume-2",
         pages: [%{id: :sound, label: "Sounds", path: "/guides/sound"}]
       }
     ]
@@ -60,6 +67,7 @@ defmodule FlintUIDocsWeb.Nav do
     |> Enum.map(fn {type, names} ->
       %{
         label: type_label(type),
+        icon: type_icon(type),
         pages:
           Enum.map(names, fn name ->
             %{id: name, name: name, label: humanize(name), path: "/components/#{name}"}
@@ -123,6 +131,26 @@ defmodule FlintUIDocsWeb.Nav do
     |> String.replace("_", " ")
     |> String.capitalize()
   end
+
+  # Icons are keyed by component type, never by the display label: a type the
+  # sidebar does not know about raises instead of silently sharing a default.
+  @type_icons %{
+    element: "lucide-blocks",
+    layout: "lucide-panel-left",
+    action: "lucide-pointer",
+    form: "lucide-square-pen",
+    feedback: "lucide-bell",
+    navigation: "lucide-compass",
+    overlay: "lucide-layers-2"
+  }
+
+  @doc """
+  Returns the Lucide icon for a `FlintUI.Meta` component type.
+
+  Adding a type to `FlintUI.Meta` means adding its icon here; `NavTest` asserts
+  every type is covered.
+  """
+  def type_icon(type), do: Map.fetch!(@type_icons, type)
 
   defp humanize(name) do
     name

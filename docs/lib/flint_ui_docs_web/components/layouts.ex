@@ -219,9 +219,12 @@ defmodule FlintUIDocsWeb.Layouts do
       "hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block"
     ]}>
       <div :for={group <- @section.groups} class="mb-6 last:mb-0">
-        <p class="text-xs font-semibold tracking-wider text-zinc-800 dark:text-zinc-100 uppercase">
-          {group.label}
-        </p>
+        <div class="flex items-center gap-2.5 text-zinc-800 dark:text-zinc-100">
+          <.icon name={group.icon} class="size-4" />
+          <p class="text-xs font-semibold tracking-wider uppercase">
+            {group.label}
+          </p>
+        </div>
         <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-zinc-200 dark:border-zinc-800">
           <.link
             :for={item <- group.pages}
