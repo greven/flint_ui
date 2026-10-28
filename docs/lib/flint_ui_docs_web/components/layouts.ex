@@ -259,19 +259,22 @@ defmodule FlintUIDocsWeb.Layouts do
   Renders the "On this page" outline for the current page's sections.
 
   The list is built in the browser from the `[data-toc]` headings rendered by
-  `DocsComponents.section/1` and `DocsComponents.subsection/1`. Scanning the
-  rendered page keeps the outline in step with the Styled/Base/CSS tabs without
-  duplicating each page's section structure here.
+  `DocsComponents.section/1` and `DocsComponents.subsection/1`.
+  Scanning the rendered page keeps the outline in step with the Styled/Base/CSS
+  tabs without duplicating each page's section structure here.
   """
+
+  attr :title, :string, default: "On this page"
+
   def toc(assigns) do
     ~H"""
     <aside
       id="on-this-page"
-      class="sticky top-24 hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 pl-6 xl:block"
+      class="sticky top-24 hidden h-[calc(100vh-6rem)] w-56 shrink-0 overflow-y-auto py-8 pl-6 xl:block"
     >
       <div class="-ml-1 flex items-center gap-2.5 text-zinc-800 dark:text-zinc-100">
-        <.icon name="lucide-menu" class="size-4" />
-        <p class="text-xs font-semibold tracking-wider uppercase">On this page</p>
+        <.icon name="lucide-menu" class="size-4 text-current/50" />
+        <p class="text-xs font-semibold tracking-wider uppercase">{@title}</p>
       </div>
 
       <nav
@@ -279,11 +282,11 @@ defmodule FlintUIDocsWeb.Layouts do
         phx-hook=".OnThisPage"
         phx-update="ignore"
         aria-label="On this page"
-        class="relative mt-3"
+        class="relative mt-6"
       >
         <ol
           data-toc-list
-          class="flex flex-col gap-px border-l border-zinc-200/75 text-sm dark:border-zinc-800/50"
+          class="flex flex-col gap-1.5 border-l border-zinc-200/75 text-sm dark:border-zinc-800/50"
         >
         </ol>
       </nav>
@@ -307,8 +310,6 @@ defmodule FlintUIDocsWeb.Layouts do
               const item = this.items.find((entry) => entry.link === link)
               if (!item) return
 
-              // Anchor jumps can land with the next heading only a few pixels
-              // away. Keep the item the reader picked until the scroll settles.
               this.clicked = item
               this.setActive(item)
               clearTimeout(this.clickedTimer)
@@ -388,7 +389,7 @@ defmodule FlintUIDocsWeb.Layouts do
                 if (!sublist) {
                   sublist = document.createElement("ol")
                   sublist.dataset.tocSublist = ""
-                  sublist.className = "flex flex-col gap-px"
+                  sublist.className = "flex flex-col gap-1"
                   currentSection.appendChild(sublist)
                 }
 
@@ -437,7 +438,7 @@ defmodule FlintUIDocsWeb.Layouts do
             link.className = [
               "-ml-px block border-l py-1 pr-2 transition-colors",
               entry.level === 2 ? "pl-3" : "pl-7 text-[13px]",
-              "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
+              "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-100",
             ].join(" ")
 
             return link
@@ -446,7 +447,7 @@ defmodule FlintUIDocsWeb.Layouts do
           updateActive() {
             if (this.items.length === 0 || this.clicked) return
 
-            const threshold = 96
+            const threshold = 120
             let current = this.items[0]
 
             for (const item of this.items) {
@@ -466,7 +467,7 @@ defmodule FlintUIDocsWeb.Layouts do
             if (!item) return
 
             if (this.active !== item) {
-              const inactive = ["border-transparent", "text-zinc-500", "dark:text-zinc-400"]
+              const inactive = ["border-transparent", "text-zinc-500", "dark:text-zinc-500"]
               const active = [
                 "border-zinc-900",
                 "text-zinc-900",

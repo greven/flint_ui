@@ -67,7 +67,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
           aria-labelledby="tab-styled"
           tabindex="0"
         >
-          <section id="main-preview" class="scroll-mt-20">
+          <section id="main-preview" class="scroll-mt-28">
             <Docs.render_main
               name={@active}
               id={"playground-#{@active}"}

@@ -50,9 +50,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         <.badge>
           <.icon name={Nav.type_icon(@meta.type)} class="size-3" /> {to_string(@meta.type)}
         </.badge>
-        <.badge>
-          <.icon name="lucide-calendar-days" class="size-3" />{@meta.since}
-        </.badge>
+        <.badge><.icon name="lucide-calendar-days" class="size-3" />Since {@meta.since}</.badge>
       </div>
     </header>
     """
@@ -148,7 +146,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def section(assigns) do
     ~H"""
-    <section id={@id} class={[@class, "scroll-mt-20"]}>
+    <section id={@id} class={[@class, "scroll-mt-28"]}>
       <h2 :if={@title} data-toc="section" class="text-lg font-semibold">{@title}</h2>
       {render_slot(@inner_block)}
     </section>
@@ -163,7 +161,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def subsection(assigns) do
     ~H"""
-    <div id={@id} class="mt-8 scroll-mt-20">
+    <div id={@id} class="mt-8 scroll-mt-28">
       <h3 data-toc="subsection" class="text-base font-semibold">{@title}</h3>
       {render_slot(@inner_block)}
     </div>

@@ -61,7 +61,7 @@ defmodule FlintUI.Base.Button do
     %Meta{
       name: :button,
       type: :action,
-      since: "0.1.0",
+      since: "0.1",
       status: :stable
     }
   end

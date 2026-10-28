@@ -50,7 +50,7 @@ defmodule FlintUI.Base.Loading do
     %Meta{
       name: :loading,
       type: :feedback,
-      since: "0.1.0",
+      since: "0.1",
       status: :stable
     }
   end

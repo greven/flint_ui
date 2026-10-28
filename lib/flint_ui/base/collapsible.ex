@@ -51,7 +51,7 @@ defmodule FlintUI.Base.Collapsible do
     %Meta{
       name: :collapsible,
       type: :action,
-      since: "0.1.0",
+      since: "0.1",
       status: :draft
     }
   end

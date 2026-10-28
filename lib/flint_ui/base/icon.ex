@@ -27,7 +27,7 @@ defmodule FlintUI.Base.Icon do
     %Meta{
       name: :icon,
       type: :element,
-      since: "0.1.0",
+      since: "0.1",
       status: :stable
     }
   end
