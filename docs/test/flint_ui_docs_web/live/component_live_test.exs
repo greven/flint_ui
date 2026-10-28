@@ -23,6 +23,18 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#section-components[href='/components']")
   end
 
+  test "the header badges carry status, type, and since icons", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "header .lucide-badge-check")
+    assert has_element?(view, "header .lucide-pointer")
+    assert has_element?(view, "header .lucide-calendar-days")
+
+    {:ok, view, _html} = live(conn, ~p"/components/toggle")
+
+    assert has_element?(view, "header .lucide-pencil-ruler")
+  end
+
   test "component page defaults to the styled tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 

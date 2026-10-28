@@ -44,11 +44,15 @@ defmodule FlintUIDocsWeb.DocsComponents do
         </div>
       </div>
       <div class="mt-4 flex flex-wrap gap-2 capitalize">
-        <.badge class={status_badge_class(@meta.status)}>{to_string(@meta.status)}</.badge>
+        <.badge class={status_badge_class(@meta.status)}>
+          <.icon name={status_icon(@meta.status)} class="size-3" /> {to_string(@meta.status)}
+        </.badge>
         <.badge>
           <.icon name={Nav.type_icon(@meta.type)} class="size-3" /> {to_string(@meta.type)}
         </.badge>
-        <.badge>since {@meta.since}</.badge>
+        <.badge>
+          <.icon name="lucide-calendar-days" class="size-3" />{@meta.since}
+        </.badge>
       </div>
     </header>
     """
@@ -81,6 +85,12 @@ defmodule FlintUIDocsWeb.DocsComponents do
   defp status_badge_class(_status) do
     "text-zinc-600 border-zinc-300 dark:border-zinc-800 dark:text-zinc-400"
   end
+
+  # Icons are keyed by the `FlintUI.Meta` status, never by the display label, so
+  # a new status raises instead of silently sharing a default.
+  defp status_icon(:stable), do: "lucide-badge-check"
+  defp status_icon(:draft), do: "lucide-pencil-ruler"
+  defp status_icon(:deprecated), do: "lucide-archive"
 
   @doc false
 

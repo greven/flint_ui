@@ -139,9 +139,9 @@ defmodule FlintUIDocsWeb.Nav do
     layout: "lucide-panel-left",
     action: "lucide-pointer",
     form: "lucide-square-pen",
-    feedback: "lucide-bell",
+    feedback: "lucide-messages-square",
     navigation: "lucide-compass",
-    overlay: "lucide-layers-2"
+    overlay: "lucide-app-window"
   }
 
   @doc """
