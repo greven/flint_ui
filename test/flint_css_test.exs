@@ -235,7 +235,7 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="card"][data-variant="soft"])
     assert css =~ ~s([data-element="card"][data-variant="ghost"])
     assert css =~ "--fl-card-surface: transparent;"
-    assert css =~ ~s([data-element="card"][data-inverted="true"][data-variant="ghost"])
+    assert css =~ ~s([data-element="card"][data-inverted][data-variant="ghost"])
     assert css =~ ~s([data-element="group"][data-variant="attached"])
     assert css =~ ~s([data-element="group"][data-variant="framed"])
     assert css =~ "--fl-color-primary:"
@@ -312,32 +312,32 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "var(--fl-control-press, none)"
 
     assert css =~
-             ~r/\[data-element="button"\]\[data-depth="false"\] \{\s*--fl-control-depth: 0;/
+             ~r/\[data-element="button"\]:not\(\[data-depth\]\)\[data-variant\] \{\s*--fl-control-depth: 0;/
 
     refute css =~
-             ~r/\[data-element="button"\]\[data-depth="true"\] \{\s*--fl-control-depth: 1;/
+             ~r/\[data-element="button"\]\[data-depth\] \{\s*--fl-control-depth: 1;/
   end
 
   test "square and wide buttons are boxed and full-width", %{css: css} do
-    assert css =~ ~s([data-element="button"][data-square="true"])
+    assert css =~ ~s([data-element="button"][data-square])
     assert css =~ "aspect-ratio: 1;"
     assert css =~ "padding-inline: 0;"
-    assert css =~ ~s([data-element="button"][data-wide="true"])
+    assert css =~ ~s([data-element="button"][data-wide])
     assert css =~ "width: 100%;"
   end
 
   test "square buttons keep their icon at full strength", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]\[data-variant\]:not\(\[data-square="true"\]\)\s*>\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
+             ~r/\[data-element="button"\]\[data-variant\]:not\(\[data-square\]\)\s*>\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
   end
 
   test "inset buttons negate their padding", %{css: css} do
     for size <- ~w(xs sm md lg xl) do
       assert css =~
-               ~r/\[data-element="button"\]\[data-inset="true"\]\[data-size="#{size}"\] \{\s*margin-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
+               ~r/\[data-element="button"\]\[data-inset\]\[data-size="#{size}"\] \{\s*margin-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
 
       assert css =~
-               ~r/\[data-inset="true"\]\[data-square="true"\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{\s*margin: calc\(/
+               ~r/\[data-inset\]\[data-square\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{\s*margin: calc\(/
     end
   end
 
@@ -370,14 +370,18 @@ defmodule FlintUI.FlintCSSTest do
       assert css =~ ~s([data-element="card"][data-spacing="#{spacing}"])
     end
 
-    assert css =~ ~s([data-element="card"][data-outline="true"])
-    assert css =~ ~s([data-element="card"][data-outline="false"])
-    assert css =~ ~s([data-element="card"][data-shadow="true"])
-    assert css =~ ~s([data-element="card"][data-shadow="false"])
-    assert css =~ ~s([data-element="card"][data-inverted="true"])
+    assert css =~ ~s|[data-element="card"]:not([data-outline])[data-card]|
+    assert css =~ ~s|[data-element="card"]:not([data-shadow])[data-card]|
+    assert css =~ ~s|[data-element="card"][data-inverted]|
     assert css =~ "background: var(--fl-card-surface, var(--fl-color-surface));"
     assert css =~ "border: 1px solid var(--fl-card-border, var(--fl-color-border));"
     assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));"
+  end
+
+  test "boolean styling hooks are presence/absence, never string values", %{css: css} do
+    for hook <- ~w(square wide depth inset outline shadow inverted padded) do
+      refute css =~ ~r/\[data-#{hook}="(true|false)"\]/
+    end
   end
 
   test "collapsible exposes timing inputs and runtime-only size hooks", %{css: css} do

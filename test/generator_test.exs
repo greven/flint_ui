@@ -26,16 +26,28 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@color}"
     assert source =~ "data-size={@size}"
-    assert source =~ "data-square={to_string(@square)}"
-    assert source =~ "data-wide={to_string(@wide)}"
-    assert source =~ "data-depth={to_string(@depth)}"
+    assert source =~ "data-square={@square}"
+    assert source =~ "data-wide={@wide}"
+    assert source =~ "data-depth={@depth}"
     assert source =~ "attr(:square, :boolean"
     assert source =~ "attr(:wide, :boolean"
     assert source =~ "attr(:depth, :boolean"
     assert source =~ "attr(:inset, :boolean"
-    assert source =~ "data-inset={to_string(@inset)}"
+    assert source =~ "data-inset={@inset}"
     assert source =~ "<FlintUI.button"
     assert source =~ "render_slot(@inner_block)"
+    refute source =~ "to_string(@"
+  end
+
+  test "boolean props are presence hooks, not string values" do
+    source = Generator.component_source(:button)
+
+    # `data-wide={@wide}` renders a bare attribute when true and omits it when
+    # false, so there is never a `data-wide="false"` in the markup.
+    for prop <- ~w(square wide depth inset) do
+      assert source =~ "data-#{prop}={@#{prop}}"
+      refute source =~ "data-#{prop}={to_string(@#{prop})}"
+    end
   end
 
   test "card forwards its action, section, and footer slots" do

@@ -28,10 +28,23 @@ defmodule FlintUI.ThemeContractTest do
         prop <- entry.props,
         value <- prop.values,
         value != prop.default do
-      selector = ~s([data-element="#{entry.name}"][#{Prop.attribute(prop)}="#{value}"])
+      selector = prop_selector(entry, prop, value)
 
       assert css =~ selector,
              "expected flint.css to style #{selector} (from #{entry.name}.#{prop.name})"
+    end
+  end
+
+  # Boolean hooks are presence/absence: true adds the attribute, false removes
+  # it, so there are no `="true"`/`="false"` selectors to match.
+  defp prop_selector(entry, prop, value) do
+    root = ~s([data-element="#{entry.name}"])
+    attribute = Prop.attribute(prop)
+
+    cond do
+      not Prop.boolean?(prop) -> ~s|#{root}[#{attribute}="#{value}"]|
+      value -> ~s|#{root}[#{attribute}]|
+      true -> ~s|#{root}:not([#{attribute}])|
     end
   end
 

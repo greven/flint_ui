@@ -52,45 +52,38 @@
         --fl-card-shadow: 0 0 #0000;
     }
 
-    /* Outline and shadow are independent boolean props; both default to on. */
-    [data-element="card"][data-outline="true"] {
-        border-color: var(--fl-card-border, var(--fl-color-border));
-    }
-
-    [data-element="card"][data-outline="false"] {
+    /* Outline and shadow are independent boolean props; both default to on.
+     * The base rule paints them, so their absence turns them off. */
+    [data-element="card"]:not([data-outline])[data-card] {
         border-color: transparent;
     }
 
-    [data-element="card"][data-shadow="true"] {
-        box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));
-    }
-
-    [data-element="card"][data-shadow="false"] {
+    [data-element="card"]:not([data-shadow])[data-card] {
         box-shadow: 0 0 #0000;
     }
 
-    [data-element="card"][data-inverted="true"] {
+    [data-element="card"][data-inverted] {
         --fl-card-surface-foreground: var(--fl-color-inverted-foreground);
         --fl-card-border: color-mix(in oklab, var(--fl-color-inverted-foreground) 20%, var(--fl-color-inverted));
     }
 
     /* A ghost card has no surface to invert, so keep the page foreground and
      * border; otherwise inverted would paint light text on a light page. */
-    [data-element="card"][data-inverted="true"][data-variant="ghost"] {
+    [data-element="card"][data-inverted][data-variant="ghost"] {
         --fl-card-surface-foreground: var(--fl-color-surface-foreground);
         --fl-card-border: var(--fl-color-border);
     }
 
-    [data-element="card"][data-inverted="true"][data-variant="solid"] {
+    [data-element="card"][data-inverted][data-variant="solid"] {
         --fl-card-surface: var(--fl-color-inverted);
     }
 
     /* Inverted soft/muted stay opaque steps over the inverted surface. */
-    [data-element="card"][data-inverted="true"][data-variant="soft"] {
+    [data-element="card"][data-inverted][data-variant="soft"] {
         --fl-card-surface: color-mix(in oklab, var(--fl-color-inverted-foreground) 4%, var(--fl-color-inverted));
     }
 
-    [data-element="card"][data-inverted="true"][data-variant="muted"] {
+    [data-element="card"][data-inverted][data-variant="muted"] {
         --fl-card-surface: color-mix(in oklab, var(--fl-color-inverted-foreground) 8%, var(--fl-color-inverted));
     }
 
@@ -154,7 +147,7 @@
     }
 
     /* Inverted surfaces flip lightness, so their panels stay wells. */
-    [data-element="card"][data-inverted="true"]:is([data-body="inset"], [data-body="flush"]) > [data-part="body"] {
+    [data-element="card"][data-inverted]:is([data-body="inset"], [data-body="flush"]) > [data-part="body"] {
         background: light-dark(
             color-mix(in oklab, var(--fl-color-foreground) 2.5%, transparent),
             color-mix(
@@ -229,10 +222,10 @@
     }
 
     /* Inverted surfaces flip lightness, so swap the band strengths with them. */
-    [data-element="card"][data-card][data-inverted="true"][data-body="separated"]
+    [data-element="card"][data-card][data-inverted][data-body="separated"]
         > :is([data-part="header"], [data-part="footer"]),
-    [data-element="card"][data-card][data-inverted="true"][data-body="separated-header"] > [data-part="header"],
-    [data-element="card"][data-card][data-inverted="true"][data-body="separated-footer"] > [data-part="footer"] {
+    [data-element="card"][data-card][data-inverted][data-body="separated-header"] > [data-part="header"],
+    [data-element="card"][data-card][data-inverted][data-body="separated-footer"] > [data-part="footer"] {
         background: light-dark(
             color-mix(in oklab, black 10%, var(--fl-card-surface, var(--fl-color-inverted))),
             color-mix(in oklab, black 1.5%, var(--fl-card-surface, var(--fl-color-inverted)))
@@ -271,7 +264,7 @@
         padding-inline: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
-    [data-element="card"][data-card] [data-part="section"][data-padded="false"] {
+    [data-element="card"][data-card] [data-part="section"]:not([data-padded]) {
         padding-inline: 0;
     }
 
@@ -281,7 +274,7 @@
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
-    [data-element="card"][data-card][data-orientation="horizontal"] [data-part="section"][data-padded="true"] {
+    [data-element="card"][data-card][data-orientation="horizontal"] [data-part="section"][data-padded] {
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
@@ -299,10 +292,10 @@
 
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]
-        > [data-part="section"][data-padded="true"]:not(:first-child),
+        > [data-part="section"][data-padded]:not(:first-child),
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]:not(:first-child)
-        > [data-part="section"][data-padded="true"]:first-child {
+        > [data-part="section"][data-padded]:first-child {
         padding-block-start: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
     }
 
@@ -314,13 +307,13 @@
      * flush against the rounded edge (or the panel edge). */
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:first-child
-        > [data-part="section"][data-padded="false"]:first-child {
+        > [data-part="section"]:not([data-padded]):first-child {
         margin-block-start: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
     [data-element="card"][data-orientation="vertical"][data-body="seamless"]
         > [data-part="body"]:last-child
-        > [data-part="section"][data-padded="false"]:last-child {
+        > [data-part="section"]:not([data-padded]):last-child {
         margin-block-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
@@ -354,7 +347,7 @@
         line-height: 1.375;
     }
 
-    [data-element="card"][data-inverted="true"]:not([data-variant="ghost"]) [data-part="description"] {
+    [data-element="card"][data-inverted]:not([data-variant="ghost"]) [data-part="description"] {
         color: color-mix(in oklab, var(--fl-color-inverted-foreground) 75%, transparent);
     }
 

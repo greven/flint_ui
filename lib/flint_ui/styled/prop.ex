@@ -43,8 +43,9 @@ defmodule FlintUI.Styled.Prop do
   @doc """
   Whether the prop is an on/off boolean (`values: [true, false]`).
 
-  Boolean props are declared as `:boolean` attributes and set their data hook to
-  the string `"true"`/`"false"` so both states have a selector.
+  Boolean props are declared as `:boolean` attributes. Their data hook is
+  present when the prop is `true` and absent when it is `false`, so read it with
+  `[data-hook]` or `:not([data-hook])` rather than a string value.
 
       iex> FlintUI.Styled.Prop.boolean?(%FlintUI.Styled.Prop{name: :depth, values: [true, false], default: true})
       true

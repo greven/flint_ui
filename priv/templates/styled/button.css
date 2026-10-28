@@ -40,12 +40,12 @@
 
     /* Add transparency to the icon beside the label
      * except square (icon-only) buttons. */
-    [data-element="button"][data-variant]:not([data-square="true"])
+    [data-element="button"][data-variant]:not([data-square])
         > :is([data-element="icon"], [data-element="loading"]) {
         color: color-mix(in oklab, currentColor 70%, transparent);
     }
 
-    [data-element="button"][data-variant]:not([data-square="true"]):not([data-disabled]):not(
+    [data-element="button"][data-variant]:not([data-square]):not([data-disabled]):not(
             [data-loading]
         ):hover
         > :is([data-element="icon"], [data-element="loading"]) {
@@ -146,8 +146,8 @@
             var(--fl-control-shadow, 0 0 #0000);
     }
 
-    /* `false` flattens the rim and inner line only; shadows are independent. */
-    [data-element="button"][data-depth="false"] {
+    /* Absent `data-depth` flattens the rim and inner line only; shadows are independent. */
+    [data-element="button"]:not([data-depth])[data-variant] {
         --fl-control-depth: 0;
     }
 
@@ -360,62 +360,62 @@
     }
 
     /* Square: equal width and height for icon-only buttons. */
-    [data-element="button"][data-square="true"]:not([data-variant="link"]) {
+    [data-element="button"][data-square]:not([data-variant="link"]) {
         aspect-ratio: 1;
         padding-inline: 0;
         gap: 0;
     }
 
     /* Wide: fills the container. */
-    [data-element="button"][data-wide="true"] {
+    [data-element="button"][data-wide] {
         display: flex;
         width: 100%;
     }
 
     /* Inset: pull the box over the padding it keeps for its hit area so
      * the content lines up with surrounding content. */
-    [data-element="button"][data-inset="true"][data-size="xs"] {
+    [data-element="button"][data-inset][data-size="xs"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-xs) + 1px));
         margin-block: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-line-height-xs)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-size="sm"] {
+    [data-element="button"][data-inset][data-size="sm"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-sm) + 1px));
         margin-block: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-line-height-sm)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-size="md"] {
+    [data-element="button"][data-inset][data-size="md"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-md) + 1px));
         margin-block: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-line-height-md)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-size="lg"] {
+    [data-element="button"][data-inset][data-size="lg"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-lg) + 1px));
         margin-block: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-line-height-lg)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-size="xl"] {
+    [data-element="button"][data-inset][data-size="xl"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-xl) + 1px));
         margin-block: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="xs"] {
+    [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="xs"] {
         margin: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-icon-xs)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="sm"] {
+    [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="sm"] {
         margin: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-icon-sm)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="md"] {
+    [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="md"] {
         margin: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-icon-md)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="lg"] {
+    [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="lg"] {
         margin: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-icon-lg)) / 2));
     }
 
-    [data-element="button"][data-inset="true"][data-square="true"]:not([data-variant="link"])[data-size="xl"] {
+    [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="xl"] {
         margin: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-icon-xl)) / 2));
     }
 }

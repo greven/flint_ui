@@ -71,10 +71,10 @@ defmodule FlintUIDocsWeb.Components do
       data-variant={@variant}
       data-color={@color}
       data-size={@size}
-      data-square={to_string(@square)}
-      data-wide={to_string(@wide)}
-      data-depth={to_string(@depth)}
-      data-inset={to_string(@inset)}
+      data-square={@square}
+      data-wide={@wide}
+      data-depth={@depth}
+      data-inset={@inset}
       class={@class}
       {@rest}
     >
@@ -345,9 +345,9 @@ defmodule FlintUIDocsWeb.Components do
       data-variant={@variant}
       data-body={@body}
       data-spacing={@spacing}
-      data-outline={to_string(@outline)}
-      data-shadow={to_string(@shadow)}
-      data-inverted={to_string(@inverted)}
+      data-outline={@outline}
+      data-shadow={@shadow}
+      data-inverted={@inverted}
       class={@class}
       {@rest}
     >

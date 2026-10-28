@@ -235,7 +235,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#playground-card [data-element='card'][data-variant='solid'][data-body='seamless'][data-orientation='vertical'][data-spacing='md'][data-outline='true']"
+             "#playground-card [data-element='card'][data-variant='solid'][data-body='seamless'][data-orientation='vertical'][data-spacing='md'][data-outline]"
            )
 
     assert has_element?(view, "#playground-card [data-part='title']", "Starred repositories")
@@ -320,17 +320,17 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#example-card-sectioned [data-element='card'][data-body='divided'] [data-part='section'][data-padded='true']"
+             "#example-card-sectioned [data-element='card'][data-body='divided'] [data-part='section'][data-padded]"
            )
 
     assert has_element?(
              view,
-             "#example-card-horizontal [data-element='card'][data-body='divided'] [data-part='section'][data-padded='true']"
+             "#example-card-horizontal [data-element='card'][data-body='divided'] [data-part='section'][data-padded]"
            )
 
     assert has_element?(
              view,
-             "#example-card-collapsible [data-part='section'][data-padded='false']"
+             "#example-card-collapsible [data-part='section']:not([data-padded])"
            )
   end
 
@@ -355,7 +355,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#playground-card [data-element='card'][data-shadow='true']"
+             "#playground-card [data-element='card'][data-shadow]"
            )
 
     view
@@ -364,7 +364,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#playground-card [data-element='card'][data-shadow='false']"
+             "#playground-card [data-element='card']:not([data-shadow])"
            )
   end
 

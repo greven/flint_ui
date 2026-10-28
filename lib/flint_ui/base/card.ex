@@ -136,7 +136,7 @@ defmodule FlintUI.Base.Card do
           name: "[data-padded]",
           value: "boolean",
           description:
-            "Whether the section carries the card inset, from the root `padded` attribute."
+            "Present when the section carries the card inset, from the root `padded` attribute."
         }
       ],
       footer: [
@@ -257,14 +257,14 @@ defmodule FlintUI.Base.Card do
         <div
           :if={present?(body_content)}
           data-part="section"
-          data-padded={to_string(@padded)}
+          data-padded={@padded}
         >
           {body_content}
         </div>
         <div
           :for={section <- @section}
           data-part="section"
-          data-padded={to_string(@padded)}
+          data-padded={@padded}
         >
           {render_slot(section)}
         </div>

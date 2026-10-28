@@ -500,7 +500,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
             margin-inline-start: auto;
           }
 
-          [data-part="section"][data-padded="false"] {
+          [data-part="section"]:not([data-padded]) {
             padding-inline: 0;
           }
           """

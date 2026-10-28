@@ -17,9 +17,9 @@ def <%= @name %>(assigns) do
     data-variant={@variant}
     data-body={@body}
     data-spacing={@spacing}
-    data-outline={to_string(@outline)}
-    data-shadow={to_string(@shadow)}
-    data-inverted={to_string(@inverted)}
+    data-outline={@outline}
+    data-shadow={@shadow}
+    data-inverted={@inverted}
     class={@class}
     {@rest}
   >

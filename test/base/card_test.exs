@@ -117,7 +117,7 @@ defmodule FlintUI.Base.CardTest do
     document = render_component(&TestComponent.bare/1, %{}) |> LazyHTML.from_fragment()
 
     section = LazyHTML.query(document, ~s([data-part="section"]))
-    assert LazyHTML.attribute(section, "data-padded") == ["true"]
+    assert LazyHTML.attribute(section, "data-padded") == [""]
     assert String.trim(LazyHTML.text(section)) == "Only section"
     assert parts(document, "header") == []
     assert parts(document, "footer") == []
@@ -137,9 +137,9 @@ defmodule FlintUI.Base.CardTest do
     sections = LazyHTML.query(document, ~s([data-part="section"]))
 
     assert Enum.map(sections, &LazyHTML.attribute(&1, "data-padded")) == [
-             ["true"],
-             ["true"],
-             ["true"]
+             [""],
+             [""],
+             [""]
            ]
 
     document =
@@ -147,7 +147,7 @@ defmodule FlintUI.Base.CardTest do
       |> LazyHTML.from_fragment()
 
     sections = LazyHTML.query(document, ~s([data-part="section"]))
-    assert Enum.map(sections, &LazyHTML.attribute(&1, "data-padded")) == [["false"], ["false"]]
+    assert Enum.map(sections, &LazyHTML.attribute(&1, "data-padded")) == [[], []]
   end
 
   test "merges repeated action slots into their regions" do

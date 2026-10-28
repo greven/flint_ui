@@ -48,9 +48,9 @@ defmodule FlintUI.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.8.5"},
-      {:phoenix_live_view, "~> 1.1.28"},
-      {:igniter, "~> 0.6", optional: true},
+      {:phoenix, "~> 1.8.16"},
+      {:phoenix_live_view, "~> 1.2.13"},
+      {:igniter, "~> 0.8", optional: true},
       {:lazy_html, ">= 0.1.0", only: :test},
       {:ex_doc, "~> 0.40", only: :dev}
     ]

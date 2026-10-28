@@ -87,8 +87,8 @@ defmodule FlintUI.Base.Collapsible do
         },
         %Meta.PartAttr{
           name: "[data-disabled]",
-          value: "true | false",
-          description: "Whether interactions are suppressed."
+          value: "boolean",
+          description: "Present when interactions are suppressed."
         },
         %Meta.PartAttr{
           name: "[data-open-event]",
@@ -115,7 +115,7 @@ defmodule FlintUI.Base.Collapsible do
       trigger: [
         %Meta.PartAttr{
           name: "disabled",
-          value: "true | false",
+          value: "boolean",
           description: "Whether interactions are suppressed."
         },
         %Meta.PartAttr{
@@ -130,8 +130,8 @@ defmodule FlintUI.Base.Collapsible do
         },
         %Meta.PartAttr{
           name: "[data-disabled]",
-          value: "true | false",
-          description: "Whether trigger interactions are suppressed."
+          value: "boolean",
+          description: "Present when trigger interactions are suppressed."
         },
         %Meta.PartAttr{
           name: "type",
@@ -178,8 +178,8 @@ defmodule FlintUI.Base.Collapsible do
         },
         %Meta.PartAttr{
           name: "[data-disabled]",
-          value: "true | false",
-          description: "Whether interactions are suppressed."
+          value: "boolean",
+          description: "Present when interactions are suppressed."
         }
       ]
     }
