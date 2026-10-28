@@ -80,6 +80,16 @@ Breaking changes are expected until the first release.
 | Page content and examples                 | `docs/lib/flint_ui_docs_web/docs/<name>.ex` |
 | Docs navigation and routes                | `docs/lib/flint_ui_docs_web/nav.ex`         |
 
+### Design notes
+
+`design/` holds contributor-only records of behavior decisions that are settled
+but not fully shipped. Check it before changing an area it covers; when an entry
+ships, move its contract into the moduledoc and docs page and delete the entry.
+
+| Area                                              | Design note         |
+| ------------------------------------------------- | ------------------- |
+| Pending/loading actions, activation guards, forms | `design/pending.md` |
+
 ## Component rules
 
 - **Accessibility first.** Prefer the native element that already carries the

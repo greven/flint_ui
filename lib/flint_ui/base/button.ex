@@ -8,16 +8,21 @@ defmodule FlintUI.Base.Button do
       <.button type="submit">Save</.button>
       <.button phx-click="delete" disabled>Delete</.button>
 
-  While `loading`, the button sets `aria-busy` and is marked with `data-loading`,
-  but it stays interactive so the pointer can still reach it. The styled layer
-  shows `cursor: progress`; guard repeated submissions in your own handler. To
-  block activation entirely, pass `disabled={@loading}` as well. FlintUI is
-  unstyled, so add an indicator yourself when you want one:
+  `loading` is a pending state, not a second disabled state. The control keeps
+  `aria-busy`, `aria-disabled`, and `data-loading`, stays focusable, and keeps
+  its accessible name, but activation is ignored. FlintUI is unstyled, so add
+  an indicator yourself when you want one:
 
-      <.button loading>
-        <.icon :if={@loading} name="lucide-loader-circle" class="size-4 animate-spin" />
+      <.button loading={@saving}>
+        <.icon :if={@saving} name="lucide-loader-circle" class="size-4 animate-spin" />
         Save
       </.button>
+
+  Announce progress in a status region outside the control; `aria-busy` can defer
+  announcements inside it:
+
+      <.button loading={@saving} phx-click="save">Save</.button>
+      <span role="status">{if @saving, do: "Saving…", else: ""}</span>
 
   Pass `href`, `navigate`, or `patch` to render a link instead of a button:
 
@@ -41,17 +46,33 @@ defmodule FlintUI.Base.Button do
   destination is removed, the link is marked with `aria-disabled="true"`, and it
   stays in the tab order so its state can be discovered. It cannot be activated.
 
-  While `loading` is set the button is marked with `aria-busy="true"` and
-  `data-loading`. It is not disabled, so it stays focusable and announces the
-  busy state; ignore repeat activations in the handler for the action it is
-  running. Passing `disabled={@loading}` blocks activation entirely, but the
-  button then leaves the focus order, so announce the progress separately when
-  the action is long-running.
+  `loading` is the pending state. It sets `aria-busy="true"`,
+  `aria-disabled="true"`, and `data-loading`, but leaves the native `disabled`
+  attribute off. The control stays focusable and keeps its accessible name, so
+  keyboard and screen-reader users do not lose their place. The bundled
+  `flint.js` ignores activation while pending; guard the handler as well, because
+  requests can bypass the button. The bundled `flint.js` swallows
+  clicks and form submits while the control is pending; always guard the handler
+  too, because the server is the authority. Do not pass `disabled={@loading}`:
+  that removes the control from the focus order. Do not combine it with
+  `phx-disable-with` either: LiveView renders the native `disabled` attribute
+  and replaces the button's content for the request, so focus and the pending
+  indicator are lost until the reply.
+
+  Announce progress in a status region outside the control. `aria-busy` tells
+  assistive technology to defer updates inside it, so text inside the button may
+  not be announced. A persistent `role="status"` region whose text changes is
+  the reliable pattern; reserve `aria-live="assertive"` for errors or urgent
+  messages, not routine progress. Keep the button's accessible name stable
+  rather than replacing it with `"Loading"`.
+
+  A pending link drops its `href`, `navigate`, or `patch` destination and stays
+  in the tab order, like a disabled link, while being announced as busy.
 
   ## Keyboard
 
-  - `Enter` - activates a button or a link.
-  - `Space` - activates a button. Has no effect on a link.
+  - `Enter` - activates a button or a link. Ignored while pending.
+  - `Space` - activates a button. Has no effect on a link. Ignored while pending.
   """
 
   use FlintUI.Component
@@ -89,12 +110,19 @@ defmodule FlintUI.Base.Button do
         %Meta.PartAttr{
           name: "[data-loading]",
           value: "boolean",
-          description: "Present when `loading` is set."
+          description:
+            "Present when `loading` is set. The control is pending: focusable, non-activatable, and announced."
         },
         %Meta.PartAttr{
           name: "aria-busy",
           value: ~s("true"),
           description: "Set to `\"true\"` while `loading` is set."
+        },
+        %Meta.PartAttr{
+          name: "aria-disabled",
+          value: ~s("true"),
+          description:
+            "Set while the control is pending, and on a disabled link. A pending control stays focusable."
         },
         %Meta.PartAttr{
           name: "type",
@@ -113,23 +141,31 @@ defmodule FlintUI.Base.Button do
   @impl true
   def keyboard do
     [
-      %Meta.Keyboard{keys: "Enter", description: "Activates an action button or a link."},
+      %Meta.Keyboard{
+        keys: "Enter",
+        description: "Activates an action button or a link. Ignored while pending."
+      },
       %Meta.Keyboard{
         keys: "Space",
-        description: "Activates an action button. Has no effect on a link."
+        description: "Activates an action button. Has no effect on a link. Ignored while pending."
       }
     ]
   end
 
   @impl true
   def build_attrs(assigns) do
+    disabled? = disabled?(assigns)
+    link? = link?(assigns)
+    pending? = assigns.loading
+
     %{
       root: %{
         "data-element" => "button",
         "data-part" => "root",
-        "data-disabled" => disabled?(assigns),
-        "data-loading" => assigns.loading,
-        "aria-busy" => assigns.loading && "true"
+        "data-disabled" => disabled?,
+        "data-loading" => pending?,
+        "aria-busy" => pending? && "true",
+        "aria-disabled" => (pending? || (link? && disabled?)) && "true"
       }
     }
   end
@@ -150,7 +186,7 @@ defmodule FlintUI.Base.Button do
   attr :loading, :boolean,
     default: false,
     doc:
-      "Whether the button is in a loading state. Sets `aria-busy` and `data-loading` without disabling the button."
+      "Whether the control is pending. Sets `aria-busy`, `aria-disabled`, and `data-loading` while keeping it focusable; activation is ignored."
 
   attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download
@@ -165,11 +201,11 @@ defmodule FlintUI.Base.Button do
   @impl true
   def render(assigns) do
     cond do
-      link?(assigns) && disabled?(assigns) ->
+      link?(assigns) && (disabled?(assigns) || assigns.loading) ->
         assigns = assign(assigns, :rest, drop_navigation(assigns.rest))
 
         ~H"""
-        <a {@rest} role="link" aria-disabled="true" tabindex="0" {@flint_parts[:root]}>
+        <a {@rest} role="link" tabindex="0" {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </a>
         """

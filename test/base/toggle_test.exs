@@ -104,7 +104,7 @@ defmodule FlintUI.Base.ToggleTest do
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :toggle, type: :element, status: :draft} =
+      assert %FlintUI.Meta{name: :toggle, type: :action, status: :draft} =
                FlintUI.Base.Toggle.meta()
 
       parts = FlintUI.Base.Toggle.parts_attrs()

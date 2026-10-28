@@ -285,7 +285,7 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="button"\]\[data-variant="link"\] \{[^}]*color: var\(\s*--fl-button-text,/
 
     assert css =~
-             ~r/\[data-element="button"\]\[data-variant="link"\]:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-color-inverted\)\) 75%,\s*transparent\s*\);/
+             ~r/\[data-element="button"\]\[data-variant="link"\][^{]*:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-color-inverted\)\) 75%,\s*transparent\s*\);/
 
     # Tinted and bordered variants use the soft label.
     assert css =~

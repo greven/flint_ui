@@ -97,8 +97,8 @@ defmodule FlintUI.Base.GroupTest do
     assert LazyHTML.tag(root(document)) == ["section"]
   end
 
-  test "declares its element type and documented parts" do
-    assert %FlintUI.Meta{name: :group, type: :element, status: :draft} = FlintUI.Base.Group.meta()
+  test "declares its type and documented parts" do
+    assert %FlintUI.Meta{name: :group, type: :action, status: :draft} = FlintUI.Base.Group.meta()
 
     parts = FlintUI.Base.Group.parts_attrs()
     assert parts.root |> Enum.any?(&(&1.name == "[data-element]"))

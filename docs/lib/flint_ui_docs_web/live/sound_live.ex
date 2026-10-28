@@ -470,7 +470,7 @@ defmodule FlintUIDocsWeb.SoundLive do
             <Components.button
               variant="solid"
               phx-click="save"
-              disabled={@saving}
+              loading={@saving}
               data-sound-press="press"
               data-sound-release="release"
               data-sound="tap"
@@ -597,7 +597,7 @@ defmodule FlintUIDocsWeb.SoundLive do
     """
     <.button
       phx-click="save"
-      disabled={@saving}
+      loading={@saving}
       data-sound-press="press"
       data-sound-release="release"
       data-sound="tap"

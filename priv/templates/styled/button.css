@@ -45,7 +45,9 @@
         color: color-mix(in oklab, currentColor 70%, transparent);
     }
 
-    [data-element="button"][data-variant]:not([data-square="true"]):hover
+    [data-element="button"][data-variant]:not([data-square="true"]):not([data-disabled]):not(
+            [data-loading]
+        ):hover
         > :is([data-element="icon"], [data-element="loading"]) {
         color: currentColor;
     }
@@ -155,7 +157,8 @@
         pointer-events: none;
     }
 
-    /* Loading is not disabled: the button keeps its opacity. */
+    /* Loading is pending, not disabled: keep the control legible and
+     * focusable. Only `[data-disabled]` dims and blocks the pointer. */
     [data-element="button"][data-loading]:not([data-disabled]) {
         cursor: progress;
     }
@@ -281,7 +284,7 @@
         text-underline-offset: 4px;
     }
 
-    [data-element="button"][data-variant="link"]:hover {
+    [data-element="button"][data-variant="link"]:not([data-disabled]):not([data-loading]):hover {
         color: color-mix(in oklab, var(--fl-button-text, var(--fl-color-inverted)) 75%, transparent);
         text-decoration-thickness: 2px;
     }

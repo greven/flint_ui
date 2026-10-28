@@ -203,7 +203,7 @@ defmodule FlintUI.Base.LoadingTest do
   end
 
   test "declares a documented contract" do
-    assert %FlintUI.Meta{name: :loading, type: :element} = FlintUI.Base.Loading.meta()
+    assert %FlintUI.Meta{name: :loading, type: :feedback} = FlintUI.Base.Loading.meta()
 
     parts = FlintUI.Base.Loading.parts_attrs()
 

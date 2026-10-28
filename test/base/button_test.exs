@@ -60,13 +60,25 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "aria-disabled") == []
     end
 
-    test "renders loading with aria-busy without disabling" do
+    test "renders loading as a focusable pending state without disabling" do
       html = render(loading: true)
 
       assert attr(html, "aria-busy") == ["true"]
+      assert attr(html, "aria-disabled") == ["true"]
       assert attr(html, "data-loading") == [""]
       assert attr(html, "data-disabled") == []
       assert attr(html, "disabled") == []
+      assert attr(html, "tabindex") == []
+    end
+
+    test "loading and disabled render a hard-disabled pending button" do
+      html = render(loading: true, disabled: true)
+
+      assert attr(html, "disabled") == [""]
+      assert attr(html, "data-disabled") == [""]
+      assert attr(html, "aria-busy") == ["true"]
+      assert attr(html, "aria-disabled") == ["true"]
+      assert attr(html, "data-loading") == [""]
     end
 
     test "passes through global attributes" do
@@ -114,20 +126,23 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "data-disabled") == [""]
     end
 
-    test "a loading link keeps its destination" do
+    test "a loading link drops its destination but stays discoverable" do
       html = render(href: "/foo", loading: true)
 
       assert tag(html) == ["a"]
-      assert attr(html, "href") == ["/foo"]
+      assert attr(html, "href") == []
+      assert attr(html, "role") == ["link"]
+      assert attr(html, "aria-disabled") == ["true"]
+      assert attr(html, "aria-busy") == ["true"]
+      assert attr(html, "tabindex") == ["0"]
       assert attr(html, "data-loading") == [""]
-      assert attr(html, "aria-disabled") == []
       assert attr(html, "data-disabled") == []
     end
   end
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :button, type: :element} = FlintUI.Base.Button.meta()
+      assert %FlintUI.Meta{name: :button, type: :action} = FlintUI.Base.Button.meta()
 
       parts = FlintUI.Base.Button.parts_attrs()
 
@@ -135,6 +150,7 @@ defmodule FlintUI.Base.ButtonTest do
                Enum.find(parts.root, &(&1.name == "[data-element]"))
 
       assert Enum.any?(parts.root, &(&1.name == "aria-busy"))
+      assert Enum.any?(parts.root, &(&1.name == "aria-disabled"))
     end
 
     test "documents keyboard interactions" do

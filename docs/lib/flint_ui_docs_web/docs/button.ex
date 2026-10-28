@@ -40,7 +40,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def base_features do
     [
       "Renders a native button, or an anchor when href, navigate, or patch is set.",
-      "The loading state sets aria-busy and data-loading without disabling the button.",
+      "The loading state is pending: aria-busy and aria-disabled without the native disabled attribute.",
       "Disabled links stay in the tab order and expose aria-disabled."
     ]
   end
@@ -67,22 +67,31 @@ defmodule FlintUIDocsWeb.Docs.Button do
         layer: :base,
         covers: [:loading],
         body: """
-        Set `loading` while an action is in progress. The button is marked with
-        `aria-busy="true"` and `data-loading` instead of being disabled, so it
-        stays focusable and the pointer can still reach it. The styled layer
-        shows a progress cursor, suppresses hover feedback, and hides
-        `[data-loading-indicator]` children such as `.loading` and
-        `.loading_text` until the button is loading. Guard repeat submissions in
-        your handler, or pass `disabled={@loading}` when the action must not be
-        activated again at all (a form submit, for example). A disabled button
-        leaves the focus order, and the styled layer dims it and drops the
-        progress cursor, so announce progress separately if it matters.
+        Set `loading` while an action is in progress. The button becomes pending:
+        it keeps `aria-busy="true"`, `aria-disabled="true"`, and `data-loading`,
+        stays focusable, and keeps its accessible name. The bundled `flint.js`
+        ignores activation while pending; always guard the handler too. The styled
+        layer shows a progress cursor, suppresses hover feedback, and hides
+        `[data-loading-indicator]` children such as `.loading` and `.loading_text`
+        until the button is loading. For a form submit, LiveView already locks the
+        form's buttons while the event is in flight; keep `loading` set for work
+        that continues after the reply. Do not combine `loading` with
+        `phx-disable-with`: during the request LiveView uses the native `disabled`
+        attribute and replaces the button's content, so focus and the pending
+        indicator are lost until the reply. Announce progress in a status region
+        outside the button, because `aria-busy` can defer announcements inside it.
+        Use `role="status"` (polite), not an assertive live region. A disabled
+        button is a different state: it uses the native `disabled` attribute,
+        leaves the focus order, and is dimmed by the styled layer.
         """,
         code: """
-        <FlintUI.button loading>
-          <FlintUI.loading class="hidden size-4 in-data-loading:inline-block" />
-          Save
-        </FlintUI.button>
+        <div class="flex items-center gap-3">
+          <FlintUI.button loading>
+            <FlintUI.loading class="hidden size-4 in-data-loading:inline-block" />
+            Save
+          </FlintUI.button>
+          <span role="status" class="sr-only">Saving…</span>
+        </div>
         """
       },
       %{
@@ -237,8 +246,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
         title: "Loading states",
         description:
           "Loading composes with every variant. A spinner and label work on any button; the dots variant of `.loading_text` lets the label itself carry the progress.
-          Indicators marked `data-loading-indicator` are hidden until the button is loading, so no reveal classes are needed. Every loading button stays interactive and shows a progress cursor.
-          To block repeat activation entirely, a form submit for example, pass `disabled={@loading}` as well."
+          Indicators marked `data-loading-indicator` are hidden until the button is loading, so no reveal classes are needed. A loading button is pending: it stays focusable, announces `aria-busy` and `aria-disabled`, and ignores activation.
+          Announce the change outside the button with `role=\"status\"`."
       },
       %{
         id: :link,
@@ -326,7 +335,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
         %{
           title: "Loading",
           code: """
-          [data-element="button"][data-loading] {
+          /* Pending is not disabled: keep the control legible and focusable. */
+          [data-element="button"][data-loading]:not([data-disabled]) {
             cursor: progress;
           }
           [data-element="button"][data-loading] .my-spinner {
@@ -567,9 +577,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <Components.button variant="outline" loading>
           <Components.loading_text text="Loading" variant="dots" />
         </Components.button>
-        <Components.button variant="outline" loading disabled>
-          <Components.loading_text text="Loading" variant="blink" />
-        </Components.button>
       </div>
     </.preview>
     """
@@ -724,9 +731,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
       </.button>
       <.button variant="outline" loading>
         <.loading_text text="Loading" variant="dots" />
-      </.button>
-      <.button variant="outline" loading disabled>
-        <.loading_text text="Loading" variant="blink" />
       </.button>
     </div>
     """
