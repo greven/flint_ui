@@ -47,6 +47,15 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert render(view) =~ "mix flint.add"
   end
 
+  test "pages render the on-this-page outline", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/getting-started/installation")
+
+    assert has_element?(view, "#on-this-page", "On this page")
+    assert has_element?(view, "#on-this-page .lucide-menu")
+    assert has_element?(view, "#on-this-page-nav[phx-hook]")
+    assert has_element?(view, "#install h2[data-toc='section']", "1. Add the dependency")
+  end
+
   test "styling page maps needs onto the available mechanisms", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/getting-started/styling")
 

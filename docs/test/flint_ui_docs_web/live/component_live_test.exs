@@ -571,6 +571,18 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#{breadcrumb} span", "Action")
   end
 
+  test "component sections and subsections feed the on-this-page outline", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#on-this-page", "On this page")
+    assert has_element?(view, "#overview h2[data-toc='section']", "Overview")
+    assert has_element?(view, "#usage-variant h3[data-toc='subsection']", "Variant")
+
+    {:ok, base, _html} = live(conn, ~p"/components/button?tab=base")
+
+    assert has_element?(base, "#accessibility h3[data-toc='subsection']", "Accessibility")
+  end
+
   test "the components index has no breadcrumb", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components")
 

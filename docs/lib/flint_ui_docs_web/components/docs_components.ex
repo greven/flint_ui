@@ -149,7 +149,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def section(assigns) do
     ~H"""
     <section id={@id} class={[@class, "scroll-mt-20"]}>
-      <h2 :if={@title} class="text-lg font-semibold">{@title}</h2>
+      <h2 :if={@title} data-toc="section" class="text-lg font-semibold">{@title}</h2>
       {render_slot(@inner_block)}
     </section>
     """
@@ -164,7 +164,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def subsection(assigns) do
     ~H"""
     <div id={@id} class="mt-8 scroll-mt-20">
-      <h3 class="text-base font-semibold">{@title}</h3>
+      <h3 data-toc="subsection" class="text-base font-semibold">{@title}</h3>
       {render_slot(@inner_block)}
     </div>
     """

@@ -210,10 +210,9 @@ defmodule FlintUIDocsWeb.ComponentLive do
             id="features"
           >
             <DocsComponents.features features={@base_features} />
-            <div :if={@accessibility} id="accessibility" class="mt-6 scroll-mt-20">
-              <h3 class="text-base font-semibold">Accessibility</h3>
+            <DocsComponents.subsection :if={@accessibility} title="Accessibility" id="accessibility">
               <Markdown.markdown content={@accessibility} />
-            </div>
+            </DocsComponents.subsection>
             <DocsComponents.subsection :if={@keyboard != []} title="Keyboard" id="keyboard">
               <DocsComponents.keyboard_table keyboard={@keyboard} />
             </DocsComponents.subsection>

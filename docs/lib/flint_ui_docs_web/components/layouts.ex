@@ -40,7 +40,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
       <.site_header sections={@sections} section={@section} page={@page} />
 
-      <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto flex max-w-360 gap-10 px-4 sm:px-6 lg:px-8">
         <.sidebar
           :if={@section}
           active={@active}
@@ -53,6 +53,8 @@ defmodule FlintUIDocsWeb.Layouts do
           <.breadcrumbs :if={@breadcrumbs != []} crumbs={@breadcrumbs} />
           {render_slot(@inner_block)}
         </main>
+
+        <.toc :if={@section} />
       </div>
 
       <.flash_group flash={@flash} />
@@ -120,7 +122,7 @@ defmodule FlintUIDocsWeb.Layouts do
     ~H"""
     <div class="sticky top-0 z-20 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
       <header>
-        <div class="mx-auto grid h-14 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
+        <div class="mx-auto grid h-14 max-w-360 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
           <.link navigate={~p"/"} class="flex items-center gap-2 justify-self-start">
             <span class="grid size-6 place-items-center rounded-md bg-zinc-900 text-xs font-bold text-white dark:bg-white dark:text-zinc-900">
               F
@@ -174,7 +176,7 @@ defmodule FlintUIDocsWeb.Layouts do
     <div class="border-t border-zinc-200 dark:border-zinc-800">
       <nav
         aria-label="Documentation sections"
-        class="mx-auto flex max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8"
+        class="mx-auto flex max-w-360 items-center gap-6 px-4 sm:px-6 lg:px-8"
       >
         <.link
           :for={section <- @sections}
@@ -252,6 +254,247 @@ defmodule FlintUIDocsWeb.Layouts do
     do: "border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
 
   defp sidebar_item_class(false), do: "border-transparent text-zinc-500 dark:text-zinc-400"
+
+  @doc """
+  Renders the "On this page" outline for the current page's sections.
+
+  The list is built in the browser from the `[data-toc]` headings rendered by
+  `DocsComponents.section/1` and `DocsComponents.subsection/1`. Scanning the
+  rendered page keeps the outline in step with the Styled/Base/CSS tabs without
+  duplicating each page's section structure here.
+  """
+  def toc(assigns) do
+    ~H"""
+    <aside
+      id="on-this-page"
+      class="sticky top-24 hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 pl-6 xl:block"
+    >
+      <div class="-ml-1 flex items-center gap-2.5 text-zinc-800 dark:text-zinc-100">
+        <.icon name="lucide-menu" class="size-4" />
+        <p class="text-xs font-semibold tracking-wider uppercase">On this page</p>
+      </div>
+
+      <nav
+        id="on-this-page-nav"
+        phx-hook=".OnThisPage"
+        phx-update="ignore"
+        aria-label="On this page"
+        class="relative mt-3"
+      >
+        <ol
+          data-toc-list
+          class="flex flex-col gap-px border-l border-zinc-200/75 text-sm dark:border-zinc-800/50"
+        >
+        </ol>
+      </nav>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".OnThisPage">
+        export default {
+          mounted() {
+            this.main = document.querySelector("main")
+            this.list = this.el.querySelector("[data-toc-list]")
+            this.items = []
+            this.active = null
+            this.clicked = null
+            this.clickedTimer = null
+            this.scrollFrame = null
+            this.buildFrame = null
+
+            this.onScroll = () => this.scheduleActive()
+            this.onClick = (event) => {
+              const link = event.target.closest("[data-toc-link]")
+              if (!link) return
+              const item = this.items.find((entry) => entry.link === link)
+              if (!item) return
+
+              // Anchor jumps can land with the next heading only a few pixels
+              // away. Keep the item the reader picked until the scroll settles.
+              this.clicked = item
+              this.setActive(item)
+              clearTimeout(this.clickedTimer)
+              this.clickedTimer = setTimeout(() => {
+                this.clicked = null
+              }, 800)
+            }
+
+            window.addEventListener("scroll", this.onScroll, {passive: true})
+            window.addEventListener("resize", this.onScroll, {passive: true})
+            this.list.addEventListener("click", this.onClick)
+
+            this.observer = new MutationObserver(() => this.scheduleBuild())
+            if (this.main) this.observer.observe(this.main, {childList: true, subtree: true})
+
+            this.build()
+          },
+
+          updated() {
+            this.scheduleBuild()
+          },
+
+          destroyed() {
+            window.removeEventListener("scroll", this.onScroll)
+            window.removeEventListener("resize", this.onScroll)
+            this.list.removeEventListener("click", this.onClick)
+            this.observer?.disconnect()
+            clearTimeout(this.clickedTimer)
+            if (this.scrollFrame) cancelAnimationFrame(this.scrollFrame)
+            if (this.buildFrame) cancelAnimationFrame(this.buildFrame)
+          },
+
+          scheduleActive() {
+            if (this.scrollFrame) return
+            this.scrollFrame = requestAnimationFrame(() => {
+              this.scrollFrame = null
+              this.updateActive()
+            })
+          },
+
+          scheduleBuild() {
+            if (this.buildFrame) cancelAnimationFrame(this.buildFrame)
+            this.buildFrame = requestAnimationFrame(() => {
+              this.buildFrame = null
+              this.build()
+            })
+          },
+
+          build() {
+            if (!this.main || !this.list) return
+
+            const entries = this.entries()
+            const signature = entries
+              .map((entry) => `${entry.level}:${entry.id}:${entry.label}`)
+              .join("|")
+
+            if (signature === this.signature) return
+
+            this.signature = signature
+            this.items = []
+            this.list.replaceChildren()
+            this.active = null
+
+            let currentSection = null
+
+            for (const entry of entries) {
+              const item = document.createElement("li")
+              const link = this.link(entry)
+              item.appendChild(link)
+
+              if (entry.level === 2) {
+                this.list.appendChild(item)
+                currentSection = item
+              } else if (currentSection) {
+                let sublist = currentSection.querySelector(":scope > [data-toc-sublist]")
+
+                if (!sublist) {
+                  sublist = document.createElement("ol")
+                  sublist.dataset.tocSublist = ""
+                  sublist.className = "flex flex-col gap-px"
+                  currentSection.appendChild(sublist)
+                }
+
+                sublist.appendChild(item)
+              } else {
+                this.list.appendChild(item)
+              }
+
+              this.items.push({element: entry.element, link})
+            }
+
+            this.updateActive()
+          },
+
+          entries() {
+            if (!this.main) return []
+
+            const seen = new Set()
+            const entries = []
+
+            for (const heading of this.main.querySelectorAll("[data-toc]")) {
+              const target = heading.closest("[id]")
+              if (!target || target === this.main || !this.main.contains(target)) continue
+              if (!target.id || seen.has(target.id)) continue
+
+              const label = (heading.textContent || "").trim()
+              if (!label) continue
+
+              seen.add(target.id)
+              entries.push({
+                id: target.id,
+                label,
+                level: heading.dataset.toc === "section" ? 2 : 3,
+                element: target,
+              })
+            }
+
+            return entries
+          },
+
+          link(entry) {
+            const link = document.createElement("a")
+            link.href = `#${entry.id}`
+            link.dataset.tocLink = ""
+            link.textContent = entry.label
+            link.className = [
+              "-ml-px block border-l py-1 pr-2 transition-colors",
+              entry.level === 2 ? "pl-3" : "pl-7 text-[13px]",
+              "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
+            ].join(" ")
+
+            return link
+          },
+
+          updateActive() {
+            if (this.items.length === 0 || this.clicked) return
+
+            const threshold = 96
+            let current = this.items[0]
+
+            for (const item of this.items) {
+              if (item.element.getBoundingClientRect().top <= threshold) current = item
+              else break
+            }
+
+            const atBottom =
+              window.innerHeight + window.scrollY >=
+              document.documentElement.scrollHeight - 2
+            if (atBottom) current = this.items[this.items.length - 1]
+
+            this.setActive(current)
+          },
+
+          setActive(item) {
+            if (!item) return
+
+            if (this.active !== item) {
+              const inactive = ["border-transparent", "text-zinc-500", "dark:text-zinc-400"]
+              const active = [
+                "border-zinc-900",
+                "text-zinc-900",
+                "dark:border-white",
+                "dark:text-white",
+                "font-medium",
+              ]
+
+              for (const entry of this.items) {
+                if (entry === item) {
+                  entry.link.classList.remove(...inactive)
+                  entry.link.classList.add(...active)
+                  entry.link.setAttribute("aria-current", "location")
+                } else {
+                  entry.link.classList.remove(...active)
+                  entry.link.classList.add(...inactive)
+                  entry.link.removeAttribute("aria-current")
+                }
+              }
+
+              this.active = item
+            }
+          },
+        }
+      </script>
+    </aside>
+    """
+  end
 
   @doc """
   Shows the flash group with standard titles and content.
