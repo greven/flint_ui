@@ -17,7 +17,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def component_header(assigns) do
     ~H"""
-    <header class="mb-24">
+    <header class="mb-16">
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="min-w-0">
           <h1 class="text-4xl font-semibold tracking-tight">{@title}</h1>

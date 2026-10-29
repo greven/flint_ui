@@ -27,7 +27,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "header .lucide-badge-check")
-    assert has_element?(view, "header .lucide-pointer")
+    assert has_element?(view, "header .lucide-mouse-pointer-click")
     assert has_element?(view, "header .lucide-calendar-days")
 
     {:ok, view, _html} = live(conn, ~p"/components/toggle")

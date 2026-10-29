@@ -299,6 +299,20 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="tabs"\]\[data-variant="outlined"\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]\[data-state="active"\] \{\s*color: var\(--fl-color-foreground\);/
   end
 
+  test "the outlined indicator hands over between tabs", %{css: css} do
+    # The outgoing bar shrinks and leaves over the fast duration; the incoming
+    # bar grows to the full tab width over the base duration, so the two bars
+    # do not cross-fade at the same weight.
+    assert css =~
+             ~r/\[data-part="tab"\]\[data-tabs-tab\]::after \{[^}]*transform: scaleX\(0\.6\);[^}]*transition:\s*background-color var\(--fl-duration-fast\)/
+
+    assert css =~
+             ~r/\[data-part="tab"\]\[data-tabs-tab\]\[data-state="active"\]::after \{\s*background: var\(--fl-tabs-color\);\s*transform: scaleX\(1\);\s*transition:\s*background-color var\(--fl-duration-base\)/
+
+    assert css =~ "transform: scaleY(0.6);"
+    assert css =~ "transform: scaleY(1);"
+  end
+
   test "tabs scope parts to their own root so nested instances stay independent" do
     # The docs put component examples inside a page-level tab panel, so a tabs
     # instance can nest. A descendant part selector would let the outer

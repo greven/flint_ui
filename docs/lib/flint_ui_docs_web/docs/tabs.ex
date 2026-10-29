@@ -541,7 +541,9 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
       container and layout are styled through `[data-part="tablist"]` and
       `[data-part="tab"]`. `--fl-tabs-color` drives the outlined indicator and
       focus ring; the outlined label always uses the foreground text color, so
-      `--fl-tabs-text` only affects segmented and minimal. A `scrollable` or
+      `--fl-tabs-text` only affects segmented and minimal. The outlined
+      indicator grows in while the outgoing one fades, and the segmented and
+      minimal surfaces cross-fade. A `scrollable` or
       `fadable` list scrolls horizontally; `fadable` masks the edge with more
       tabs. Growth and alignment are set with `data-grow` and `data-align`;
       overflow keeps intrinsic tab widths and wins over growth. `gap` sets

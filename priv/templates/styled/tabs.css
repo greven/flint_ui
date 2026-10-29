@@ -139,7 +139,9 @@
         height: var(--fl-icon-size);
     }
 
-    /* Outlined: a bottom (or inline-end) indicator on the active tab. */
+    /* Outlined: a bottom (or inline-end) indicator on the active tab. It grows
+     * in over the base duration and leaves over the fast one, so the two bars
+     * hand over instead of cross-fading at the same weight. */
     [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
         > [data-part="tablist"]
         > [data-part="tab"][data-tabs-tab]::after {
@@ -150,13 +152,20 @@
         height: 2px;
         border-radius: var(--fl-radius-full);
         background: transparent;
-        transition: background-color var(--fl-duration-fast) var(--fl-ease-out);
+        transform: scaleX(0.6);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
         > [data-part="tablist"]
         > [data-part="tab"][data-tabs-tab][data-state="active"]::after {
         background: var(--fl-tabs-color);
+        transform: scaleX(1);
+        transition:
+            background-color var(--fl-duration-base) var(--fl-ease-out),
+            transform var(--fl-duration-base) var(--fl-ease-out);
     }
 
     [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
@@ -169,13 +178,20 @@
         width: 2px;
         border-radius: var(--fl-radius-full);
         background: transparent;
-        transition: background-color var(--fl-duration-fast) var(--fl-ease-out);
+        transform: scaleY(0.6);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
         > [data-part="tablist"]
         > [data-part="tab"][data-tabs-tab][data-state="active"]::after {
         background: var(--fl-tabs-color);
+        transform: scaleY(1);
+        transition:
+            background-color var(--fl-duration-base) var(--fl-ease-out),
+            transform var(--fl-duration-base) var(--fl-ease-out);
     }
 
     /* Segmented: a muted track with the active tab raised on the surface. */
