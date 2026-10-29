@@ -137,7 +137,7 @@ defmodule FlintUIDocsWeb.Nav do
   @type_icons %{
     element: "lucide-blocks",
     layout: "lucide-panel-left",
-    action: "lucide-pointer",
+    action: "lucide-mouse-pointer-click",
     form: "lucide-square-pen",
     feedback: "lucide-messages-square",
     navigation: "lucide-compass",

@@ -760,6 +760,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           label="Billing period"
           variant="segmented"
           size="sm"
+          gap="sm"
           grow
         >
           <:tab :let={attrs} value="monthly" custom>
