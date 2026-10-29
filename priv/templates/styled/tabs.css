@@ -4,11 +4,10 @@
      * `data-tabs-tab`, so a custom trigger (a composed button or link) keeps
      * its own component styles.
      *
-     * Parts are selected by their structural position (root > tablist > tab,
-     * root > panel) rather than by descendant combinators. Tabs can nest, for
-     * example when a docs page puts component examples inside a page-level tab
-     * panel, and a descendant selector would let the outer instance style the
-     * inner one. */
+     * Parts are selected by their structural position
+     * (root > tablist > tab, root > panel) rather than by
+     * descendant combinators.
+     */
     [data-element="tabs"][data-tabs] {
         --fl-tabs-color: var(--fl-color-inverted);
         --fl-tabs-text: var(--fl-color-foreground);
@@ -36,19 +35,15 @@
         align-items: stretch;
     }
 
-    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"] > [data-part="tablist"] {
         border-bottom: 1px solid var(--fl-color-border);
     }
 
-    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"] > [data-part="tablist"] {
         border-inline-end: 1px solid var(--fl-color-border);
     }
 
-    [data-element="tabs"][data-tabs][data-orientation="vertical"]
-        > [data-part="tablist"]
-        > [data-part="tab"] {
+    [data-element="tabs"][data-tabs][data-orientation="vertical"] > [data-part="tablist"] > [data-part="tab"] {
         width: 100%;
     }
 
@@ -62,32 +57,25 @@
 
     /* Layout: shared width and horizontal alignment. Overflow overrides grow
      * later so a scrollable strip keeps its intrinsic tab widths. */
-    [data-element="tabs"][data-grow][data-orientation="horizontal"]
-        > [data-part="tablist"]
-        > [data-part="tab"] {
+    [data-element="tabs"][data-grow][data-orientation="horizontal"] > [data-part="tablist"] > [data-part="tab"] {
         flex: 1 1 0;
     }
 
-    [data-element="tabs"][data-align="center"][data-orientation="horizontal"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-align="center"][data-orientation="horizontal"] > [data-part="tablist"] {
         justify-content: center;
     }
 
-    [data-element="tabs"][data-align="end"][data-orientation="horizontal"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-align="end"][data-orientation="horizontal"] > [data-part="tablist"] {
         justify-content: flex-end;
     }
 
-    [data-element="tabs"][data-align="spaced"][data-orientation="horizontal"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-align="spaced"][data-orientation="horizontal"] > [data-part="tablist"] {
         justify-content: space-between;
     }
 
     /* Default triggers. Custom triggers carry `data-part="tab"` but not
      * `data-tabs-tab`, so none of this applies to them. */
-    [data-element="tabs"][data-tabs]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         position: relative;
         display: inline-flex;
         align-items: center;
@@ -123,9 +111,7 @@
         color: var(--fl-color-foreground);
     }
 
-    [data-element="tabs"][data-tabs]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+    [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab][data-state="active"] {
         color: var(--fl-tabs-text);
     }
 
@@ -137,9 +123,7 @@
         color: var(--fl-color-foreground);
     }
 
-    [data-element="tabs"][data-tabs]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab][data-disabled] {
+    [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab][data-disabled] {
         opacity: var(--fl-disabled-opacity, 0.5);
         cursor: not-allowed;
     }
@@ -203,9 +187,7 @@
         background: var(--fl-color-muted);
     }
 
-    [data-element="tabs"][data-variant="segmented"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-variant="segmented"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         border-radius: var(--fl-control-radius);
     }
 
@@ -223,9 +205,7 @@
         gap: var(--fl-spacing-xs);
     }
 
-    [data-element="tabs"][data-variant="minimal"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-variant="minimal"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         border-radius: var(--fl-radius-full);
     }
 
@@ -295,9 +275,7 @@
     }
 
     /* Sizes drive the default trigger metrics. */
-    [data-element="tabs"][data-size="xs"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-size="xs"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         height: var(--fl-control-height-xs);
         padding-inline: var(--fl-control-padding-x-xs);
         gap: var(--fl-control-gap-xs);
@@ -312,9 +290,7 @@
         --fl-icon-size: var(--fl-control-icon-xs);
     }
 
-    [data-element="tabs"][data-size="sm"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-size="sm"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         height: var(--fl-control-height-sm);
         padding-inline: var(--fl-control-padding-x-sm);
         gap: var(--fl-control-gap-sm);
@@ -329,9 +305,7 @@
         --fl-icon-size: var(--fl-control-icon-sm);
     }
 
-    [data-element="tabs"][data-size="lg"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-size="lg"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         height: var(--fl-control-height-lg);
         padding-inline: var(--fl-control-padding-x-lg);
         gap: var(--fl-control-gap-lg);
@@ -346,9 +320,7 @@
         --fl-icon-size: var(--fl-control-icon-lg);
     }
 
-    [data-element="tabs"][data-size="xl"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-size="xl"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         height: var(--fl-control-height-xl);
         padding-inline: var(--fl-control-padding-x-xl);
         gap: var(--fl-control-gap-xl);
@@ -364,18 +336,15 @@
     }
 
     /* Overflow: scrollable and fadable tab lists. */
-    [data-element="tabs"][data-tabs][data-scrollable][data-orientation="horizontal"]
-        > [data-part="tablist"],
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-tabs][data-scrollable][data-orientation="horizontal"] > [data-part="tablist"],
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"] {
         overflow-x: auto;
         overflow-y: hidden;
         scrollbar-width: thin;
         scroll-behavior: smooth;
     }
 
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"] {
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"] {
         scrollbar-width: none;
     }
 
@@ -413,11 +382,7 @@
 
     [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
         > [data-part="tablist"][data-fade-end] {
-        -webkit-mask-image: linear-gradient(
-            to right,
-            #000 calc(100% - var(--fl-spacing-xl)),
-            transparent
-        );
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
         mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
     }
 
@@ -440,17 +405,14 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-element="tabs"][data-tabs]
-            > [data-part="tablist"]
-            > [data-part="tab"][data-tabs-tab],
+        [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab],
         [data-element="tabs"][data-variant="outlined"]
             > [data-part="tablist"]
             > [data-part="tab"][data-tabs-tab]::after {
             transition: none;
         }
 
-        [data-element="tabs"][data-tabs]:is([data-scrollable], [data-fadable])
-            > [data-part="tablist"] {
+        [data-element="tabs"][data-tabs]:is([data-scrollable], [data-fadable]) > [data-part="tablist"] {
             scroll-behavior: auto;
         }
     }
