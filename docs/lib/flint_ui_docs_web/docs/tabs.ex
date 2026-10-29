@@ -13,7 +13,8 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
       %{key: :color, type: :select, default: "neutral", label: "Color"},
       %{key: :size, type: :select, default: "md", label: "Size"},
       %{key: :grow, type: :boolean, default: false, label: "Grow"},
-      %{key: :align, type: :select, default: "start", label: "Align"}
+      %{key: :align, type: :select, default: "start", label: "Align"},
+      %{key: :disabled, type: :boolean, default: false, label: "Disabled"}
     ]
   end
 
@@ -597,7 +598,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
       id={@id}
       name={:tabs}
       state={@state}
-      controls={[:variant, :color, :size, :grow, :align]}
+      controls={[:variant, :color, :size, :grow, :align, :disabled]}
       code={&main_code/1}
     >
       <div class="w-full max-w-md">
@@ -610,6 +611,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           size={props.size}
           grow={props.grow}
           align={props.align}
+          disabled={props.disabled}
         >
           <:tab value="overview">Overview</:tab>
           <:tab value="activity">Activity</:tab>
@@ -646,7 +648,8 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
         Snippet.flag("grow", props.grow),
-        Snippet.attr("align", props.align, "start")
+        Snippet.attr("align", props.align, "start"),
+        Snippet.flag("disabled", props.disabled)
       ],
       """
       <:tab value="overview">Overview</:tab>

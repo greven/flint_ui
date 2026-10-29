@@ -416,6 +416,22 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-toggle [data-element='toggle'][aria-pressed='true']")
   end
 
+  test "tabs playground can disable the whole list", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/tabs")
+
+    assert has_element?(view, "#playground-tabs [data-element='tabs']:not([data-disabled])")
+    assert has_element?(view, "#playground-tabs [role='tablist'] > [role='tab'][tabindex='0']")
+
+    view
+    |> element("#playground-tabs-controls")
+    |> render_change(%{"disabled" => "true"})
+
+    assert has_element?(view, "#playground-tabs [data-element='tabs'][data-disabled]")
+    refute has_element?(view, "#playground-tabs [role='tab']:not([aria-disabled='true'])")
+    refute has_element?(view, "#playground-tabs [role='tablist'] > [role='tab'][tabindex='0']")
+    assert has_element?(view, "#playground-tabs-code", "disabled")
+  end
+
   test "toggle click usage renders code only", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/toggle?tab=base")
 
