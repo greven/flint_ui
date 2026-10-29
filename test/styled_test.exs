@@ -14,6 +14,7 @@ defmodule FlintUI.StyledTest do
                :icon,
                :loading,
                :loading_text,
+               :tabs,
                :toggle
              ])
   end

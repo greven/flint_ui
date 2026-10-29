@@ -1,0 +1,457 @@
+@layer components {
+    /* Tabs. Public inputs: `--fl-tabs-color`, `--fl-tabs-text`, and
+     * `--fl-tabs-surface`. The styled layer keys default trigger visuals on
+     * `data-tabs-tab`, so a custom trigger (a composed button or link) keeps
+     * its own component styles.
+     *
+     * Parts are selected by their structural position (root > tablist > tab,
+     * root > panel) rather than by descendant combinators. Tabs can nest, for
+     * example when a docs page puts component examples inside a page-level tab
+     * panel, and a descendant selector would let the outer instance style the
+     * inner one. */
+    [data-element="tabs"][data-tabs] {
+        --fl-tabs-color: var(--fl-color-inverted);
+        --fl-tabs-text: var(--fl-color-foreground);
+        --fl-tabs-surface: var(--fl-color-control);
+        --fl-focus-ring-color: var(--fl-tabs-color);
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-spacing-md);
+        font-family: var(--fl-font-sans);
+    }
+
+    [data-element="tabs"][data-tabs][data-orientation="vertical"] {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    [data-element="tabs"][data-tabs] > [data-part="tablist"] {
+        display: flex;
+        gap: var(--fl-spacing-xs);
+    }
+
+    [data-element="tabs"][data-tabs][data-orientation="vertical"] > [data-part="tablist"] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
+        > [data-part="tablist"] {
+        border-bottom: 1px solid var(--fl-color-border);
+    }
+
+    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
+        > [data-part="tablist"] {
+        border-inline-end: 1px solid var(--fl-color-border);
+    }
+
+    [data-element="tabs"][data-tabs][data-orientation="vertical"]
+        > [data-part="tablist"]
+        > [data-part="tab"] {
+        width: 100%;
+    }
+
+    [data-element="tabs"][data-tabs] > [data-part="panel"] {
+        min-width: 0;
+    }
+
+    [data-element="tabs"][data-tabs][data-orientation="vertical"] > [data-part="panel"] {
+        flex: 1;
+    }
+
+    /* Layout: shared width and horizontal alignment. Overflow overrides grow
+     * later so a scrollable strip keeps its intrinsic tab widths. */
+    [data-element="tabs"][data-grow][data-orientation="horizontal"]
+        > [data-part="tablist"]
+        > [data-part="tab"] {
+        flex: 1 1 0;
+    }
+
+    [data-element="tabs"][data-align="center"][data-orientation="horizontal"]
+        > [data-part="tablist"] {
+        justify-content: center;
+    }
+
+    [data-element="tabs"][data-align="end"][data-orientation="horizontal"]
+        > [data-part="tablist"] {
+        justify-content: flex-end;
+    }
+
+    [data-element="tabs"][data-align="spaced"][data-orientation="horizontal"]
+        > [data-part="tablist"] {
+        justify-content: space-between;
+    }
+
+    /* Default triggers. Custom triggers carry `data-part="tab"` but not
+     * `data-tabs-tab`, so none of this applies to them. */
+    [data-element="tabs"][data-tabs]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--fl-control-gap-md);
+        height: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-md);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--fl-color-muted-foreground);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out),
+            box-shadow var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="tabs"][data-tabs][data-orientation="vertical"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        justify-content: flex-start;
+    }
+
+    [data-element="tabs"][data-tabs]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
+        color: var(--fl-color-foreground);
+    }
+
+    [data-element="tabs"][data-tabs]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+        color: var(--fl-tabs-text);
+    }
+
+    /* Outlined: only the indicator carries the accent. The label stays on the
+     * normal foreground text color, so a colored indicator does not tint it. */
+    [data-element="tabs"][data-variant="outlined"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+        color: var(--fl-color-foreground);
+    }
+
+    [data-element="tabs"][data-tabs]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+    }
+
+    /* Leading icons and loading indicators follow the tab size. */
+    [data-element="tabs"][data-tabs]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]
+        > :is([data-element="icon"], [data-element="loading"]) {
+        flex-shrink: 0;
+        --fl-icon-size: var(--fl-control-icon-md);
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+    }
+
+    /* Outlined: a bottom (or inline-end) indicator on the active tab. */
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        bottom: -1px;
+        height: 2px;
+        border-radius: var(--fl-radius-full);
+        background: transparent;
+        transition: background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-state="active"]::after {
+        background: var(--fl-tabs-color);
+    }
+
+    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]::after {
+        content: "";
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: -1px;
+        width: 2px;
+        border-radius: var(--fl-radius-full);
+        background: transparent;
+        transition: background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-state="active"]::after {
+        background: var(--fl-tabs-color);
+    }
+
+    /* Segmented: a muted track with the active tab raised on the surface. */
+    [data-element="tabs"][data-variant="segmented"] > [data-part="tablist"] {
+        gap: 2px;
+        padding: 2px;
+        border: 1px solid var(--fl-color-border);
+        border-radius: calc(var(--fl-control-radius) + 2px);
+        background: var(--fl-color-muted);
+    }
+
+    [data-element="tabs"][data-variant="segmented"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        border-radius: var(--fl-control-radius);
+    }
+
+    [data-element="tabs"][data-variant="segmented"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+        background: var(--fl-tabs-surface);
+        color: var(--fl-tabs-text);
+        box-shadow: var(--fl-shadow-xs);
+    }
+
+    /* Minimal: lightweight chrome, a fully rounded tab, and a muted active
+     * surface. */
+    [data-element="tabs"][data-variant="minimal"] > [data-part="tablist"] {
+        gap: var(--fl-spacing-xs);
+    }
+
+    [data-element="tabs"][data-variant="minimal"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        border-radius: var(--fl-radius-full);
+    }
+
+    [data-element="tabs"][data-variant="minimal"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
+        background: color-mix(in oklab, var(--fl-color-muted) 60%, transparent);
+        color: var(--fl-color-foreground);
+    }
+
+    [data-element="tabs"][data-variant="minimal"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+        background: var(--fl-color-muted);
+        color: var(--fl-tabs-text);
+    }
+
+    /* Explicit spacing overrides every variant baseline. Composed triggers
+     * (buttons, links) bring their own padding and border, so they usually need
+     * more room between them than bare labels do. */
+    [data-element="tabs"][data-gap="sm"] > [data-part="tablist"] {
+        gap: var(--fl-spacing-sm);
+    }
+
+    [data-element="tabs"][data-gap="md"] > [data-part="tablist"] {
+        gap: var(--fl-spacing-md);
+    }
+
+    [data-element="tabs"][data-gap="lg"] > [data-part="tablist"] {
+        gap: var(--fl-spacing-lg);
+    }
+
+    [data-element="tabs"][data-gap="xl"] > [data-part="tablist"] {
+        gap: var(--fl-spacing-xl);
+    }
+
+    /* Each color sets the public inputs. Neutral uses the foreground hierarchy
+     * and the inverted accent above. */
+    [data-element="tabs"][data-color="primary"] {
+        --fl-tabs-color: var(--fl-color-primary);
+        --fl-tabs-text: var(--fl-color-primary-text);
+    }
+
+    [data-element="tabs"][data-color="secondary"] {
+        --fl-tabs-color: var(--fl-color-secondary);
+        --fl-tabs-text: var(--fl-color-secondary-text);
+    }
+
+    [data-element="tabs"][data-color="success"] {
+        --fl-tabs-color: var(--fl-color-success);
+        --fl-tabs-text: var(--fl-color-success-text);
+    }
+
+    [data-element="tabs"][data-color="info"] {
+        --fl-tabs-color: var(--fl-color-info);
+        --fl-tabs-text: var(--fl-color-info-text);
+    }
+
+    [data-element="tabs"][data-color="warning"] {
+        --fl-tabs-color: var(--fl-color-warning);
+        --fl-tabs-text: var(--fl-color-warning-text);
+    }
+
+    [data-element="tabs"][data-color="error"] {
+        --fl-tabs-color: var(--fl-color-error);
+        --fl-tabs-text: var(--fl-color-error-text);
+    }
+
+    /* Sizes drive the default trigger metrics. */
+    [data-element="tabs"][data-size="xs"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        height: var(--fl-control-height-xs);
+        padding-inline: var(--fl-control-padding-x-xs);
+        gap: var(--fl-control-gap-xs);
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="tabs"][data-size="xs"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]
+        > :is([data-element="icon"], [data-element="loading"]) {
+        --fl-icon-size: var(--fl-control-icon-xs);
+    }
+
+    [data-element="tabs"][data-size="sm"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        height: var(--fl-control-height-sm);
+        padding-inline: var(--fl-control-padding-x-sm);
+        gap: var(--fl-control-gap-sm);
+        font-size: var(--fl-control-font-size-sm);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-element="tabs"][data-size="sm"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]
+        > :is([data-element="icon"], [data-element="loading"]) {
+        --fl-icon-size: var(--fl-control-icon-sm);
+    }
+
+    [data-element="tabs"][data-size="lg"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        height: var(--fl-control-height-lg);
+        padding-inline: var(--fl-control-padding-x-lg);
+        gap: var(--fl-control-gap-lg);
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="tabs"][data-size="lg"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]
+        > :is([data-element="icon"], [data-element="loading"]) {
+        --fl-icon-size: var(--fl-control-icon-lg);
+    }
+
+    [data-element="tabs"][data-size="xl"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab] {
+        height: var(--fl-control-height-xl);
+        padding-inline: var(--fl-control-padding-x-xl);
+        gap: var(--fl-control-gap-xl);
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    [data-element="tabs"][data-size="xl"]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]
+        > :is([data-element="icon"], [data-element="loading"]) {
+        --fl-icon-size: var(--fl-control-icon-xl);
+    }
+
+    /* Overflow: scrollable and fadable tab lists. */
+    [data-element="tabs"][data-tabs][data-scrollable][data-orientation="horizontal"]
+        > [data-part="tablist"],
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"] {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+    }
+
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"] {
+        scrollbar-width: none;
+    }
+
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"]::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* The scroll container must not squeeze the tabs to fit. */
+    [data-element="tabs"][data-tabs][data-scrollable][data-orientation="horizontal"]
+        > [data-part="tablist"]
+        > [data-part="tab"],
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"]
+        > [data-part="tab"] {
+        flex: 0 0 auto;
+    }
+
+    /* Keep the outlined indicator inside the scroll container, where it is not
+     * clipped by overflow. */
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"][data-scrollable]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]::after,
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"][data-fadable]
+        > [data-part="tablist"]
+        > [data-part="tab"][data-tabs-tab]::after {
+        bottom: 0;
+    }
+
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"][data-fade-start] {
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl));
+        mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl));
+    }
+
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"][data-fade-end] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            #000 calc(100% - var(--fl-spacing-xl)),
+            transparent
+        );
+        mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
+    }
+
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
+        > [data-part="tablist"][data-fade-start][data-fade-end] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            #000 var(--fl-spacing-xl),
+            #000 calc(100% - var(--fl-spacing-xl)),
+            transparent
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            #000 var(--fl-spacing-xl),
+            #000 calc(100% - var(--fl-spacing-xl)),
+            transparent
+        );
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="tabs"][data-tabs]
+            > [data-part="tablist"]
+            > [data-part="tab"][data-tabs-tab],
+        [data-element="tabs"][data-variant="outlined"]
+            > [data-part="tablist"]
+            > [data-part="tab"][data-tabs-tab]::after {
+            transition: none;
+        }
+
+        [data-element="tabs"][data-tabs]:is([data-scrollable], [data-fadable])
+            > [data-part="tablist"] {
+            scroll-behavior: auto;
+        }
+    }
+}

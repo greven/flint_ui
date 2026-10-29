@@ -202,10 +202,19 @@ defmodule FlintUI.Base.Button do
   def render(assigns) do
     cond do
       link?(assigns) && (disabled?(assigns) || assigns.loading) ->
-        assigns = assign(assigns, :rest, drop_navigation(assigns.rest))
+        rest = drop_navigation(assigns.rest)
+        role = Map.get(rest, :role) || Map.get(rest, "role") || "link"
+        tabindex = Map.get(rest, :tabindex) || Map.get(rest, "tabindex") || "0"
+
+        assigns =
+          assign(assigns,
+            rest: Map.drop(rest, [:role, "role", :tabindex, "tabindex"]),
+            link_role: role,
+            link_tabindex: tabindex
+          )
 
         ~H"""
-        <a {@rest} role="link" tabindex="0" {@flint_parts[:root]}>
+        <a {@rest} role={@link_role} tabindex={@link_tabindex} {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </a>
         """

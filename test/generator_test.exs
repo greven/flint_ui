@@ -86,6 +86,30 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "render_slot(@trigger, attrs)"
   end
 
+  test "tabs forwards custom triggers and panels" do
+    source = Generator.component_source(:tabs)
+
+    assert source =~ "attr(:custom, :boolean"
+    assert source =~ "values: ~w(outlined segmented minimal)"
+    assert source =~ "data-variant={@variant}"
+    assert source =~ "data-color={@color}"
+    assert source =~ "data-size={@size}"
+    assert source =~ "attr(:grow, :boolean"
+    assert source =~ "attr(:align, :string"
+    assert source =~ "values: ~w(start center end spaced)"
+    assert source =~ "data-grow={@grow}"
+    assert source =~ "data-align={@align}"
+
+    assert source =~
+             "include: ~w(id activation_mode change_event disabled fadable findable label loop orientation scrollable value)"
+
+    assert source =~ "<:tab"
+    assert source =~ ":let={attrs}"
+    assert source =~ "{render_slot(tab, attrs)}"
+    assert source =~ "<:panel"
+    assert source =~ "focusable={Map.get(panel, :focusable, true)}"
+  end
+
   test "button merges the base inner_block with its extra slots" do
     source = Generator.component_source(:button)
 

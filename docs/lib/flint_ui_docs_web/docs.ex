@@ -33,6 +33,7 @@ defmodule FlintUIDocsWeb.Docs do
     Loading,
     LoadingText,
     Source,
+    Tabs,
     Toggle
   }
 
@@ -44,6 +45,7 @@ defmodule FlintUIDocsWeb.Docs do
     icon: Icon,
     loading: Loading,
     loading_text: LoadingText,
+    tabs: Tabs,
     toggle: Toggle
   }
 

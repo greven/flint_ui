@@ -19,6 +19,7 @@ defmodule FlintUI do
   - `icon`
   - `loading`
   - `loading_text`
+  - `tabs`
   - `toggle`
 
   ## Sounds
@@ -40,6 +41,7 @@ defmodule FlintUI do
     {:icon, []},
     {:loading, []},
     {:loading_text, []},
+    {:tabs, [:select_tab]},
     {:toggle, []}
   ]
 

@@ -70,4 +70,28 @@ defmodule FlintUIApiTest do
 
     assert label != nil
   end
+
+  describe "drop_overridden_root_attrs/2" do
+    test "lets a caller attribute win and keeps the component's own attributes" do
+      parts = %{root: %{"data-element" => "button", "data-part" => "root", "data-busy" => true}}
+
+      assert FlintUI.API.drop_overridden_root_attrs(parts, %{"data-part" => "tab"}) == %{
+               root: %{"data-element" => "button", "data-busy" => true}
+             }
+    end
+
+    test "matches string parts to atom caller keys" do
+      parts = %{root: %{"data-element" => "button", "data-part" => "root"}}
+
+      assert FlintUI.API.drop_overridden_root_attrs(parts, %{:"data-part" => "trigger"}) == %{
+               root: %{"data-element" => "button"}
+             }
+    end
+
+    test "leaves the parts untouched without caller attributes" do
+      parts = %{root: %{"data-part" => "root"}}
+
+      assert FlintUI.API.drop_overridden_root_attrs(parts, nil) == parts
+    end
+  end
 end

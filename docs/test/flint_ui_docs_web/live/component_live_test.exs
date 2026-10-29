@@ -38,35 +38,59 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "component page defaults to the styled tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#tab-styled[aria-selected='true']")
-    assert has_element?(view, "#tab-base[aria-selected='false']")
-    assert has_element?(view, "#panel-styled")
+    assert has_element?(view, "#component-sections-tab-styled[aria-selected='true']")
+    assert has_element?(view, "#component-sections-tab-base[aria-selected='false']")
+    assert has_element?(view, "#component-sections-panel-styled")
     assert has_element?(view, "#playground-button [data-element='button']")
     assert has_element?(view, "#usage")
     assert has_element?(view, "#usage-variant")
     assert has_element?(view, "#setup")
     refute has_element?(view, "#usage-disabled")
-    refute has_element?(view, "#panel-base")
+    assert has_element?(view, "#component-sections-panel-base[hidden]")
+  end
+
+  test "the component sections are a FlintUI tab list", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#component-sections[data-element='tabs'][data-part='root']")
+    assert has_element?(view, "#component-sections[phx-hook='FlintUI.Tabs']")
+    assert has_element?(view, "#component-sections [role='tablist']")
+
+    assert has_element?(
+             view,
+             "#component-sections-tab-base[role='tab'][aria-selected='false'][aria-controls='component-sections-panel-base']"
+           )
+
+    # The triggers are composed button components rendered as patch links.
+    assert has_element?(
+             view,
+             "#component-sections-tab-base[data-tabs-trigger][data-element='button'][data-part='tab'][data-phx-link='patch']"
+           )
+
+    assert has_element?(
+             view,
+             "#component-sections-panel-base[role='tabpanel'][aria-labelledby='component-sections-tab-base']"
+           )
   end
 
   test "the base tab is deep-linkable", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
 
-    assert has_element?(view, "#tab-base[aria-selected='true']")
-    assert has_element?(view, "#panel-base")
+    assert has_element?(view, "#component-sections-tab-base[aria-selected='true']")
+    assert has_element?(view, "#component-sections-panel-base")
     assert has_element?(view, "#anatomy")
     assert has_element?(view, "#accessibility")
     assert has_element?(view, "#api")
     assert has_element?(view, "#data-attributes")
     assert has_element?(view, "#css-variables")
-    refute has_element?(view, "#panel-styled")
+    assert has_element?(view, "#component-sections-panel-styled[hidden]")
   end
 
   test "the css tab holds the styled contract", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=css")
 
-    assert has_element?(view, "#tab-css[aria-selected='true']")
-    assert has_element?(view, "#panel-css")
+    assert has_element?(view, "#component-sections-tab-css[aria-selected='true']")
+    assert has_element?(view, "#component-sections-panel-css")
     assert has_element?(view, "#styling-contract")
     assert has_element?(view, "#theme")
     assert has_element?(view, "#selectors")
@@ -79,13 +103,13 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "legacy tabs land on the styled tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=styled")
 
-    assert has_element?(view, "#tab-styled[aria-selected='true']")
-    assert has_element?(view, "#panel-styled")
+    assert has_element?(view, "#component-sections-tab-styled[aria-selected='true']")
+    assert has_element?(view, "#component-sections-panel-styled")
 
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=api")
 
-    assert has_element?(view, "#tab-styled[aria-selected='true']")
-    assert has_element?(view, "#panel-styled")
+    assert has_element?(view, "#component-sections-tab-styled[aria-selected='true']")
+    assert has_element?(view, "#component-sections-panel-styled")
   end
 
   test "the styled tab merges the generated component API", %{conn: conn} do
@@ -134,8 +158,8 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#data-attributes code", "data-part")
     refute has_element?(view, "#data-attributes code", "[data-element]")
     refute has_element?(view, "#data-attributes code", "[data-part]")
-    assert has_element?(view, "#panel-base #attributes code", "disabled")
-    refute has_element?(view, "#panel-base #attributes code", "variant")
+    assert has_element?(view, "#component-sections-panel-base #attributes code", "disabled")
+    refute has_element?(view, "#component-sections-panel-base #attributes code", "variant")
   end
 
   test "the anatomy labels parts and groups attributes by kind", %{conn: conn} do
@@ -473,12 +497,12 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(view, "#playground-button [data-variant='solid']")
 
-    view |> element("#tab-base") |> render_click()
+    view |> element("#component-sections-tab-base") |> render_click()
 
-    assert has_element?(view, "#panel-base")
+    assert has_element?(view, "#component-sections-panel-base")
     refute has_element?(view, "#playground-button [data-variant='solid']")
 
-    view |> element("#tab-styled") |> render_click()
+    view |> element("#component-sections-tab-styled") |> render_click()
 
     assert has_element?(view, "#playground-button [data-variant='outline']")
   end
@@ -596,16 +620,21 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "every component renders its styled, base, and css tabs", %{conn: conn} do
     for name <- FlintUI.components() do
       {:ok, docs, _html} = live(conn, ~p"/components/#{name}")
-      assert has_element?(docs, "#panel-styled")
+      assert has_element?(docs, "#component-sections-panel-styled")
+      refute has_element?(docs, "#component-sections-panel-styled[hidden]")
+      assert has_element?(docs, "#component-sections-panel-base[hidden]")
       assert has_element?(docs, "#playground-#{name} [data-element]")
 
       {:ok, base, _html} = live(conn, ~p"/components/#{name}?tab=base")
-      assert has_element?(base, "#panel-base")
+      assert has_element?(base, "#component-sections-panel-base")
+      refute has_element?(base, "#component-sections-panel-base[hidden]")
+      assert has_element?(base, "#component-sections-panel-styled[hidden]")
       assert has_element?(base, "#usage pre.highlight")
       refute has_element?(base, "#playground-#{name}")
 
       {:ok, css, _html} = live(conn, ~p"/components/#{name}?tab=css")
-      assert has_element?(css, "#panel-css")
+      assert has_element?(css, "#component-sections-panel-css")
+      refute has_element?(css, "#component-sections-panel-css[hidden]")
       assert has_element?(css, "#theme")
       assert has_element?(css, "#styling-contract")
     end

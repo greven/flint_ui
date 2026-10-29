@@ -31,6 +31,19 @@ defmodule FlintUI.Component do
       attr :flint_parts, :map, default: nil, doc: false
 
   Compilation fails when a component declares a `:global` attribute without it.
+
+  A caller attribute wins over the same attribute on the root part. That keeps a
+  composed component (one FlintUI component used as a part of another) from
+  rendering the attribute twice while it keeps its own `data-element`. A button
+  used as a collapsible trigger keeps `data-element="button"` and takes the
+  trigger's `data-part`:
+
+      <.collapsible id="details">
+        <:trigger :let={attrs}>
+          <.button {attrs}>Toggle</.button>
+        </:trigger>
+        <:content>Content</:content>
+      </.collapsible>
   """
   @callback build_attrs(assigns :: map()) :: map()
 

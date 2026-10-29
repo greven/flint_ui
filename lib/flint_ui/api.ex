@@ -81,6 +81,9 @@ defmodule FlintUI.API do
               other -> other
             end
 
+          parts =
+            unquote(__MODULE__).drop_overridden_root_attrs(parts, assigns[:rest])
+
           assigns =
             assigns
             |> Map.put(:flint_parts, parts)
@@ -117,6 +120,28 @@ defmodule FlintUI.API do
     # `"Base"` as a string: the stdlib `Base` module is used below.
     Module.concat([FlintUI, "Base", module_name])
   end
+
+  @doc false
+  # A caller attribute wins over a component's root part attributes, so a
+  # composed component can act as a part of another one without the same
+  # attribute being rendered twice. The composed component keeps its own
+  # identity attributes (`data-element`) unless the caller sets them.
+  def drop_overridden_root_attrs(parts, rest) when is_map(parts) and is_map(rest) do
+    case parts do
+      %{root: root} ->
+        names = rest |> Map.keys() |> MapSet.new(&to_string/1)
+
+        %{
+          parts
+          | root: Map.reject(root, fn {key, _value} -> MapSet.member?(names, to_string(key)) end)
+        }
+
+      _ ->
+        parts
+    end
+  end
+
+  def drop_overridden_root_attrs(parts, _rest), do: parts
 
   # Converts a list of attribute definitions into quoted code
   defp component_attrs(attrs) do

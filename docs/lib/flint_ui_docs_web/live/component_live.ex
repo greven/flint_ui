@@ -4,11 +4,12 @@ defmodule FlintUIDocsWeb.ComponentLive do
   use FlintUIDocsWeb, :live_view
 
   alias FlintUIDocsWeb.CodeBlock
+  alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs
   alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Markdown
 
-  @part_order [:root, :trigger, :content]
+  @part_order [:root, :tablist, :tab, :panel, :trigger, :content]
 
   @impl true
   def render(assigns) do
@@ -22,365 +23,365 @@ defmodule FlintUIDocsWeb.ComponentLive do
           links={@links}
         />
 
-        <div
-          role="tablist"
-          aria-label="Component sections"
-          class="mt-8 flex gap-1 border-b border-zinc-200 dark:border-zinc-800"
+        <Components.tabs
+          id="component-sections"
+          class="mt-8"
+          value={@tab}
+          label="Component sections"
+          variant="minimal"
+          gap="sm"
         >
-          <.link
-            patch={~p"/components/#{@active}"}
-            id="tab-styled"
-            role="tab"
-            aria-selected={to_string(@tab == "styled")}
-            aria-controls="panel-styled"
-            class={tab_class(@tab == "styled")}
-          >
-            Styled
-          </.link>
-          <.link
-            patch={~p"/components/#{@active}?tab=base"}
-            id="tab-base"
-            role="tab"
-            aria-selected={to_string(@tab == "base")}
-            aria-controls="panel-base"
-            class={tab_class(@tab == "base")}
-          >
-            Base
-          </.link>
-          <.link
-            patch={~p"/components/#{@active}?tab=css"}
-            id="tab-css"
-            role="tab"
-            aria-selected={to_string(@tab == "css")}
-            aria-controls="panel-css"
-            class={tab_class(@tab == "css")}
-          >
-            CSS
-          </.link>
-        </div>
-
-        <section
-          :if={@tab == "styled"}
-          class="flex flex-col gap-16"
-          id="panel-styled"
-          role="tabpanel"
-          aria-labelledby="tab-styled"
-          tabindex="0"
-        >
-          <section id="main-preview" class="scroll-mt-28">
-            <Docs.render_main
-              name={@active}
-              id={"playground-#{@active}"}
-              state={
-                preview_state(@previews, @active, "playground-#{@active}", :main, layer: :styled)
-              }
-            />
-          </section>
-
-          <DocsComponents.section :if={@styled_overview} title="Overview" id="overview">
-            <Markdown.markdown content={@styled_overview} />
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@styled_features != []} title="Features" id="features">
-            <DocsComponents.features features={@styled_features} />
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@styled_usage != []} title="Usage" id="usage">
-            <DocsComponents.subsection
-              :for={section <- @styled_usage}
-              title={section.title}
-              id={"usage-#{section.id}"}
+          <:tab :let={attrs} value="styled" custom>
+            <Components.button
+              {attrs}
+              variant={tab_variant(@tab, "styled")}
+              depth={tab_depth(@tab, "styled")}
+              patch={~p"/components/#{@active}"}
+              style="--fl-control-shadow: 0 0 #0000;"
+              size="xl"
             >
-              <Markdown.markdown :if={section[:body]} content={section.body} />
-              <Docs.render_section
-                name={@active}
-                kind={:usage}
-                block={section.id}
-                id={"usage-#{@active}-#{section.id}"}
-                section={section}
-                state={
-                  preview_state(
-                    @previews,
-                    @active,
-                    "usage-#{@active}-#{section.id}",
-                    :section,
-                    kind: :usage,
-                    block: section.id,
-                    layer: :styled
-                  )
-                }
-              />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@styled_examples != []} title="Examples" id="examples">
-            <DocsComponents.subsection
-              :for={example <- @styled_examples}
-              title={example.title}
-              id={"example-#{@active}-#{example.id}-section"}
+              <Components.icon name="lucide-component" /> Styled
+            </Components.button>
+          </:tab>
+          <:tab :let={attrs} value="base" custom>
+            <Components.button
+              {attrs}
+              patch={~p"/components/#{@active}?tab=base"}
+              variant={tab_variant(@tab, "base")}
+              depth={tab_depth(@tab, "base")}
+              style="--fl-control-shadow: 0 0 #0000;"
+              size="xl"
             >
-              <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                {example[:description]}
-              </p>
-              <Docs.render_section
-                name={@active}
-                kind={:example}
-                block={example.id}
-                id={"example-#{@active}-#{example.id}"}
-                section={example}
-                state={
-                  preview_state(
-                    @previews,
-                    @active,
-                    "example-#{@active}-#{example.id}",
-                    :section,
-                    kind: :example,
-                    block: example.id,
-                    layer: :styled
-                  )
-                }
-              />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
+              <Components.icon name="lucide-cpu" /> Base
+            </Components.button>
+          </:tab>
+          <:tab :let={attrs} value="css" custom>
+            <Components.button
+              {attrs}
+              patch={~p"/components/#{@active}?tab=css"}
+              variant={tab_variant(@tab, "css")}
+              depth={tab_depth(@tab, "css")}
+              style="--fl-control-shadow: 0 0 #0000;"
+              size="xl"
+            >
+              <Components.icon name="lucide-palette" /> CSS
+            </Components.button>
+          </:tab>
 
-          <DocsComponents.section title="API Reference" id="api">
-            <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-              The generated wrapper exposes these attributes and slots. Data attributes,
-              events, and runtime CSS variables are documented on the <.link
-                patch={"#{~p"/components/#{@active}?tab=base"}#data-attributes"}
-                class="underline"
-              >
+          <:panel value="styled">
+            <section :if={@tab == "styled"} class="flex flex-col gap-16">
+              <section id="main-preview" class="scroll-mt-28">
+                <Docs.render_main
+                  name={@active}
+                  id={"playground-#{@active}"}
+                  state={
+                    preview_state(@previews, @active, "playground-#{@active}", :main, layer: :styled)
+                  }
+                />
+              </section>
+
+              <DocsComponents.section :if={@styled_overview} title="Overview" id="overview">
+                <Markdown.markdown content={@styled_overview} />
+              </DocsComponents.section>
+
+              <DocsComponents.section :if={@styled_features != []} title="Features" id="features">
+                <DocsComponents.features features={@styled_features} />
+              </DocsComponents.section>
+
+              <DocsComponents.section :if={@styled_usage != []} title="Usage" id="usage">
+                <DocsComponents.subsection
+                  :for={section <- @styled_usage}
+                  title={section.title}
+                  id={"usage-#{section.id}"}
+                >
+                  <Markdown.markdown :if={section[:body]} content={section.body} />
+                  <Docs.render_section
+                    name={@active}
+                    kind={:usage}
+                    block={section.id}
+                    id={"usage-#{@active}-#{section.id}"}
+                    section={section}
+                    state={
+                      preview_state(
+                        @previews,
+                        @active,
+                        "usage-#{@active}-#{section.id}",
+                        :section,
+                        kind: :usage,
+                        block: section.id,
+                        layer: :styled
+                      )
+                    }
+                  />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
+
+              <DocsComponents.section :if={@styled_examples != []} title="Examples" id="examples">
+                <DocsComponents.subsection
+                  :for={example <- @styled_examples}
+                  title={example.title}
+                  id={"example-#{@active}-#{example.id}-section"}
+                >
+                  <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                    {example[:description]}
+                  </p>
+                  <Docs.render_section
+                    name={@active}
+                    kind={:example}
+                    block={example.id}
+                    id={"example-#{@active}-#{example.id}"}
+                    section={example}
+                    state={
+                      preview_state(
+                        @previews,
+                        @active,
+                        "example-#{@active}-#{example.id}",
+                        :section,
+                        kind: :example,
+                        block: example.id,
+                        layer: :styled
+                      )
+                    }
+                  />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
+
+              <DocsComponents.section title="API Reference" id="api">
+                <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+                  The generated wrapper exposes these attributes and slots. Data attributes,
+                  events, and runtime CSS variables are documented on the <.link
+                    patch={"#{~p"/components/#{@active}?tab=base"}#data-attributes"}
+                    class="underline"
+                  >
                 Base tab
               </.link>.
-            </p>
+                </p>
 
-            <DocsComponents.subsection title="Attributes" id="attributes">
-              <p :if={@styled_attributes == []} class="mt-2 text-sm text-zinc-400">
-                No attributes documented.
-              </p>
-              <DocsComponents.attributes_table
-                :if={@styled_attributes != []}
-                rows={@styled_attributes}
-              />
-            </DocsComponents.subsection>
+                <DocsComponents.subsection title="Attributes" id="attributes">
+                  <p :if={@styled_attributes == []} class="mt-2 text-sm text-zinc-400">
+                    No attributes documented.
+                  </p>
+                  <DocsComponents.attributes_table
+                    :if={@styled_attributes != []}
+                    rows={@styled_attributes}
+                  />
+                </DocsComponents.subsection>
 
-            <DocsComponents.subsection title="Slots" id="slots">
-              <p :if={@merged_slots == []} class="mt-2 text-sm text-zinc-400">
-                No slots documented.
-              </p>
-              <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
+                <DocsComponents.subsection title="Slots" id="slots">
+                  <p :if={@merged_slots == []} class="mt-2 text-sm text-zinc-400">
+                    No slots documented.
+                  </p>
+                  <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
 
-          <DocsComponents.section title="Setup" id="setup">
-            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Generate the styled wrapper into your app with:
-            </p>
-            <DocsComponents.code_block code={@install_command} lang={:shell} />
-            <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
-              The wrapper is intentionally thin: it declares the styled props, maps them
-              onto <code class="font-mono">data-*</code>
-              hooks, forwards <code class="font-mono">class</code>
-              and the base attributes, and delegates behavior to the headless component.
-              You own and can edit this code.
-            </p>
-          </DocsComponents.section>
-        </section>
+              <DocsComponents.section title="Setup" id="setup">
+                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  Generate the styled wrapper into your app with:
+                </p>
+                <DocsComponents.code_block code={@install_command} lang={:shell} />
+                <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+                  The wrapper is intentionally thin: it declares the styled props, maps them
+                  onto <code class="font-mono">data-*</code>
+                  hooks, forwards <code class="font-mono">class</code>
+                  and the base attributes, and delegates behavior to the headless component.
+                  You own and can edit this code.
+                </p>
+              </DocsComponents.section>
+            </section>
+          </:panel>
 
-        <section
-          :if={@tab == "base"}
-          id="panel-base"
-          role="tabpanel"
-          aria-labelledby="tab-base"
-          tabindex="0"
-        >
-          <DocsComponents.section :if={@base_overview} title="Overview" id="overview">
-            <Markdown.markdown content={@base_overview} />
-          </DocsComponents.section>
+          <:panel value="base">
+            <section :if={@tab == "base"}>
+              <DocsComponents.section :if={@base_overview} title="Overview" id="overview">
+                <Markdown.markdown content={@base_overview} />
+              </DocsComponents.section>
 
-          <DocsComponents.section :if={@anatomy || @structure} title="Anatomy" id="anatomy">
-            <Markdown.markdown :if={@anatomy && @anatomy[:body]} content={@anatomy[:body]} />
-            <DocsComponents.anatomy :if={@anatomy} nodes={@anatomy.nodes} />
-            <DocsComponents.code_block :if={!@anatomy && @structure} code={@structure} />
-          </DocsComponents.section>
+              <DocsComponents.section :if={@anatomy || @structure} title="Anatomy" id="anatomy">
+                <Markdown.markdown :if={@anatomy && @anatomy[:body]} content={@anatomy[:body]} />
+                <DocsComponents.anatomy :if={@anatomy} nodes={@anatomy.nodes} />
+                <DocsComponents.code_block :if={!@anatomy && @structure} code={@structure} />
+              </DocsComponents.section>
 
-          <DocsComponents.section
-            :if={@base_features != [] || @accessibility || @keyboard != []}
-            title="Features"
-            id="features"
-          >
-            <DocsComponents.features features={@base_features} />
-            <DocsComponents.subsection :if={@accessibility} title="Accessibility" id="accessibility">
-              <Markdown.markdown content={@accessibility} />
-            </DocsComponents.subsection>
-            <DocsComponents.subsection :if={@keyboard != []} title="Keyboard" id="keyboard">
-              <DocsComponents.keyboard_table keyboard={@keyboard} />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@architecture} title="Architecture" id="architecture">
-            <DocsComponents.architecture architecture={@architecture} />
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@structure} title="Structure" id="structure">
-            <DocsComponents.code_block code={@structure} />
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@base_usage != []} title="Usage" id="usage">
-            <DocsComponents.subsection
-              :for={section <- @base_usage}
-              title={section.title}
-              id={"usage-#{section.id}"}
-            >
-              <Markdown.markdown :if={section[:body]} content={section.body} />
-              <CodeBlock.code
-                :if={section[:code]}
-                id={"base-usage-#{@active}-#{section.id}-code"}
-                code={section[:code]}
-                class="mt-3 rounded-lg"
-              />
-              <CodeBlock.code
-                :for={{flavor, index} <- Enum.with_index(section[:codes] || [])}
-                id={"base-usage-#{@active}-#{section.id}-#{index}-code"}
-                code={flavor[:code]}
-                lang={flavor[:lang] || :heex}
-                class="mt-3 rounded-lg"
-              />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
-
-          <DocsComponents.section :if={@base_examples != []} title="Examples" id="examples">
-            <DocsComponents.subsection
-              :for={example <- @base_examples}
-              title={example.title}
-              id={"example-#{@active}-#{example.id}"}
-            >
-              <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                {example[:description]}
-              </p>
-              <CodeBlock.code
-                :if={example[:code]}
-                id={"base-example-#{@active}-#{example.id}-code"}
-                code={example[:code]}
-                class="mt-3 rounded-lg"
-              />
-              <CodeBlock.code
-                :for={{flavor, index} <- Enum.with_index(example[:codes] || [])}
-                id={"base-example-#{@active}-#{example.id}-#{index}-code"}
-                code={flavor[:code]}
-                lang={flavor[:lang] || :heex}
-                class="mt-3 rounded-lg"
-              />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
-
-          <DocsComponents.section title="API reference" id="api">
-            <DocsComponents.subsection title="Attributes" id="attributes">
-              <p :if={@base_attributes == []} class="mt-2 text-sm text-zinc-400">
-                No attributes documented.
-              </p>
-              <DocsComponents.attributes_table
-                :if={@base_attributes != []}
-                rows={@base_attributes}
-              />
-            </DocsComponents.subsection>
-
-            <DocsComponents.subsection title="Slots" id="slots">
-              <p :if={@slots == []} class="mt-2 text-sm text-zinc-400">No slots documented.</p>
-              <DocsComponents.slot_table :if={@slots != []} slots={@slots} />
-            </DocsComponents.subsection>
-
-            <DocsComponents.subsection title="Events" id="events">
-              <p :if={@events == []} class="mt-2 text-sm text-zinc-400">No events documented.</p>
-              <DocsComponents.events_table :if={@events != []} events={@events} />
-            </DocsComponents.subsection>
-
-            <DocsComponents.subsection title="Data attributes" id="data-attributes">
-              <p :if={@parts == []} class="mt-2 text-sm text-zinc-400">
-                No data attributes documented.
-              </p>
-              <DocsComponents.parts_tables :if={@parts != []} parts={@parts} />
-            </DocsComponents.subsection>
-
-            <DocsComponents.subsection title="CSS variables" id="css-variables">
-              <p :if={@css_vars == []} class="mt-2 text-sm text-zinc-400">
-                No runtime CSS variables documented.
-              </p>
-              <DocsComponents.css_vars_table :if={@css_vars != []} css_vars={@css_vars} />
-            </DocsComponents.subsection>
-          </DocsComponents.section>
-        </section>
-
-        <section
-          :if={@tab == "css"}
-          id="panel-css"
-          role="tabpanel"
-          aria-labelledby="tab-css"
-          tabindex="0"
-        >
-          <DocsComponents.section
-            :if={@css_contract}
-            title="Styling contract"
-            id="styling-contract"
-          >
-            <Markdown.markdown :if={@css_contract[:body]} content={@css_contract[:body]} />
-          </DocsComponents.section>
-
-          <DocsComponents.section title="Public CSS variables" id="css-variables">
-            <p :if={@style_vars == []} class="mt-2 text-sm text-zinc-400">
-              This component has no public CSS variables. Its appearance is
-              controlled by its props and the surrounding theme.
-            </p>
-            <DocsComponents.css_vars_table
-              :if={@style_vars != []}
-              css_vars={@style_vars}
-              show_default={true}
-            />
-          </DocsComponents.section>
-
-          <DocsComponents.section title="Selectors and state hooks" id="selectors">
-            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              The styled theme targets the component through these hooks. The headless
-              base sets the same <code class="font-mono">data-*</code>
-              attributes, so the selectors work without the generated wrapper too.
-            </p>
-            <DocsComponents.selectors_table selectors={@css_selectors} />
-          </DocsComponents.section>
-
-          <DocsComponents.section title="Theme tokens" id="theme">
-            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              This component reads these token namespaces:
-            </p>
-            <ul :if={@entry && @entry.tokens != []} class="mt-3 flex flex-wrap gap-2">
-              <li
-                :for={token <- @entry.tokens}
-                class="rounded-md bg-zinc-100 px-2 py-1 font-mono text-xs dark:bg-zinc-800"
+              <DocsComponents.section
+                :if={@base_features != [] || @accessibility || @keyboard != []}
+                title="Features"
+                id="features"
               >
-                --fl-{token}-*
-              </li>
-            </ul>
-            <p class="mt-3 text-sm text-zinc-500">
-              See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
-              for tokens and custom themes. For the headless base, see
-              <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>
-              and this component's Base tab.
-            </p>
-          </DocsComponents.section>
+                <DocsComponents.features features={@base_features} />
+                <DocsComponents.subsection
+                  :if={@accessibility}
+                  title="Accessibility"
+                  id="accessibility"
+                >
+                  <Markdown.markdown content={@accessibility} />
+                </DocsComponents.subsection>
+                <DocsComponents.subsection :if={@keyboard != []} title="Keyboard" id="keyboard">
+                  <DocsComponents.keyboard_table keyboard={@keyboard} />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
 
-          <DocsComponents.section
-            :if={@css_contract && @css_contract[:snippets] not in [nil, []]}
-            title="Customization"
-            id="customization"
-          >
-            <div :for={snippet <- @css_contract[:snippets]} class="mt-4">
-              <p class="text-sm font-medium">{snippet.title}</p>
-              <p :if={snippet[:body]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                {snippet[:body]}
-              </p>
-              <DocsComponents.code_block code={snippet.code} lang={snippet[:lang] || :css} />
-            </div>
-          </DocsComponents.section>
-        </section>
+              <DocsComponents.section :if={@architecture} title="Architecture" id="architecture">
+                <DocsComponents.architecture architecture={@architecture} />
+              </DocsComponents.section>
+
+              <DocsComponents.section :if={@structure} title="Structure" id="structure">
+                <DocsComponents.code_block code={@structure} />
+              </DocsComponents.section>
+
+              <DocsComponents.section :if={@base_usage != []} title="Usage" id="usage">
+                <DocsComponents.subsection
+                  :for={section <- @base_usage}
+                  title={section.title}
+                  id={"usage-#{section.id}"}
+                >
+                  <Markdown.markdown :if={section[:body]} content={section.body} />
+                  <CodeBlock.code
+                    :if={section[:code]}
+                    id={"base-usage-#{@active}-#{section.id}-code"}
+                    code={section[:code]}
+                    class="mt-3 rounded-lg"
+                  />
+                  <CodeBlock.code
+                    :for={{flavor, index} <- Enum.with_index(section[:codes] || [])}
+                    id={"base-usage-#{@active}-#{section.id}-#{index}-code"}
+                    code={flavor[:code]}
+                    lang={flavor[:lang] || :heex}
+                    class="mt-3 rounded-lg"
+                  />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
+
+              <DocsComponents.section :if={@base_examples != []} title="Examples" id="examples">
+                <DocsComponents.subsection
+                  :for={example <- @base_examples}
+                  title={example.title}
+                  id={"example-#{@active}-#{example.id}"}
+                >
+                  <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                    {example[:description]}
+                  </p>
+                  <CodeBlock.code
+                    :if={example[:code]}
+                    id={"base-example-#{@active}-#{example.id}-code"}
+                    code={example[:code]}
+                    class="mt-3 rounded-lg"
+                  />
+                  <CodeBlock.code
+                    :for={{flavor, index} <- Enum.with_index(example[:codes] || [])}
+                    id={"base-example-#{@active}-#{example.id}-#{index}-code"}
+                    code={flavor[:code]}
+                    lang={flavor[:lang] || :heex}
+                    class="mt-3 rounded-lg"
+                  />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
+
+              <DocsComponents.section title="API reference" id="api">
+                <DocsComponents.subsection title="Attributes" id="attributes">
+                  <p :if={@base_attributes == []} class="mt-2 text-sm text-zinc-400">
+                    No attributes documented.
+                  </p>
+                  <DocsComponents.attributes_table
+                    :if={@base_attributes != []}
+                    rows={@base_attributes}
+                  />
+                </DocsComponents.subsection>
+
+                <DocsComponents.subsection title="Slots" id="slots">
+                  <p :if={@slots == []} class="mt-2 text-sm text-zinc-400">No slots documented.</p>
+                  <DocsComponents.slot_table :if={@slots != []} slots={@slots} />
+                </DocsComponents.subsection>
+
+                <DocsComponents.subsection title="Events" id="events">
+                  <p :if={@events == []} class="mt-2 text-sm text-zinc-400">No events documented.</p>
+                  <DocsComponents.events_table :if={@events != []} events={@events} />
+                </DocsComponents.subsection>
+
+                <DocsComponents.subsection title="Data attributes" id="data-attributes">
+                  <p :if={@parts == []} class="mt-2 text-sm text-zinc-400">
+                    No data attributes documented.
+                  </p>
+                  <DocsComponents.parts_tables :if={@parts != []} parts={@parts} />
+                </DocsComponents.subsection>
+
+                <DocsComponents.subsection title="CSS variables" id="css-variables">
+                  <p :if={@css_vars == []} class="mt-2 text-sm text-zinc-400">
+                    No runtime CSS variables documented.
+                  </p>
+                  <DocsComponents.css_vars_table :if={@css_vars != []} css_vars={@css_vars} />
+                </DocsComponents.subsection>
+              </DocsComponents.section>
+            </section>
+          </:panel>
+
+          <:panel value="css">
+            <section :if={@tab == "css"}>
+              <DocsComponents.section
+                :if={@css_contract}
+                title="Styling contract"
+                id="styling-contract"
+              >
+                <Markdown.markdown :if={@css_contract[:body]} content={@css_contract[:body]} />
+              </DocsComponents.section>
+
+              <DocsComponents.section title="Public CSS variables" id="css-variables">
+                <p :if={@style_vars == []} class="mt-2 text-sm text-zinc-400">
+                  This component has no public CSS variables. Its appearance is
+                  controlled by its props and the surrounding theme.
+                </p>
+                <DocsComponents.css_vars_table
+                  :if={@style_vars != []}
+                  css_vars={@style_vars}
+                  show_default={true}
+                />
+              </DocsComponents.section>
+
+              <DocsComponents.section title="Selectors and state hooks" id="selectors">
+                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  The styled theme targets the component through these hooks. The headless
+                  base sets the same <code class="font-mono">data-*</code>
+                  attributes, so the selectors work without the generated wrapper too.
+                </p>
+                <DocsComponents.selectors_table selectors={@css_selectors} />
+              </DocsComponents.section>
+
+              <DocsComponents.section title="Theme tokens" id="theme">
+                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  This component reads these token namespaces:
+                </p>
+                <ul :if={@entry && @entry.tokens != []} class="mt-3 flex flex-wrap gap-2">
+                  <li
+                    :for={token <- @entry.tokens}
+                    class="rounded-md bg-zinc-100 px-2 py-1 font-mono text-xs dark:bg-zinc-800"
+                  >
+                    --fl-{token}-*
+                  </li>
+                </ul>
+                <p class="mt-3 text-sm text-zinc-500">
+                  See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
+                  for tokens and custom themes. For the headless base, see
+                  <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>
+                  and this component's Base tab.
+                </p>
+              </DocsComponents.section>
+
+              <DocsComponents.section
+                :if={@css_contract && @css_contract[:snippets] not in [nil, []]}
+                title="Customization"
+                id="customization"
+              >
+                <div :for={snippet <- @css_contract[:snippets]} class="mt-4">
+                  <p class="text-sm font-medium">{snippet.title}</p>
+                  <p :if={snippet[:body]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                    {snippet[:body]}
+                  </p>
+                  <DocsComponents.code_block code={snippet.code} lang={snippet[:lang] || :css} />
+                </div>
+              </DocsComponents.section>
+            </section>
+          </:panel>
+        </Components.tabs>
       </div>
     </Layouts.app>
     """
@@ -524,13 +525,8 @@ defmodule FlintUIDocsWeb.ComponentLive do
   defp normalize_tab("api"), do: "styled"
   defp normalize_tab(_), do: "styled"
 
-  defp tab_class(true) do
-    "-mb-px border-b-2 border-zinc-900 px-3 pb-2 text-sm font-medium text-zinc-900 dark:border-white dark:text-white"
-  end
-
-  defp tab_class(false) do
-    "-mb-px border-b-2 border-transparent px-3 pb-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-  end
+  defp tab_variant(tab, value), do: if(tab == value, do: "solid", else: "outline")
+  defp tab_depth(tab, value), do: if(tab == value, do: true, else: false)
 
   defp order_parts(parts) do
     Enum.sort_by(parts, fn {part, _} ->

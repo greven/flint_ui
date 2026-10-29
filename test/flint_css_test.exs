@@ -250,6 +250,64 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="icon"][data-size])
     assert css =~ "--fl-icon-size:"
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
+    assert css =~ ~s([data-element="tabs"][data-variant="segmented"])
+    assert css =~ ~s([data-element="tabs"][data-variant="minimal"])
+    assert css =~ ~s([data-element="tabs"][data-color="primary"])
+    assert css =~ ~s([data-element="tabs"][data-size="lg"])
+    assert css =~ ~s([data-element="tabs"][data-grow])
+    assert css =~ ~s([data-element="tabs"][data-align="center"])
+    assert css =~ ~s([data-element="tabs"][data-align="end"])
+    assert css =~ ~s([data-element="tabs"][data-align="spaced"])
+    assert css =~ ~s([data-element="tabs"][data-gap="sm"])
+    assert css =~ ~s([data-element="tabs"][data-gap="md"])
+    assert css =~ ~s([data-element="tabs"][data-gap="lg"])
+    assert css =~ ~s([data-element="tabs"][data-gap="xl"])
+    assert css =~ "[data-tabs-tab]"
+  end
+
+  test "tabs gap overrides the variant spacing", %{css: css} do
+    for value <- ~w(sm md lg xl) do
+      assert css =~
+               ~r/\[data-element="tabs"\]\[data-gap="#{value}"\]\s*>\s*\[data-part="tablist"\]\s*\{\s*gap: var\(--fl-spacing-#{value}\);/
+    end
+
+    # The variant baselines and the gap overrides tie on specificity, so the
+    # overrides must come later in the stylesheet to win.
+    gap = :binary.match(css, ~s([data-element="tabs"][data-gap="md"])) |> elem(0)
+    segmented = :binary.match(css, ~s([data-element="tabs"][data-variant="segmented"])) |> elem(0)
+    minimal = :binary.match(css, ~s([data-element="tabs"][data-variant="minimal"])) |> elem(0)
+
+    assert gap > segmented
+    assert gap > minimal
+  end
+
+  test "tabs scope default trigger visuals and expose three inputs", %{css: css} do
+    assert css =~ "[data-element=\"tabs\"][data-tabs]"
+
+    assert css =~
+             ~r/\[data-element="tabs"\]\[data-tabs\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]/
+
+    assert css =~ "--fl-tabs-color: var(--fl-color-inverted);"
+    assert css =~ "--fl-tabs-text: var(--fl-color-foreground);"
+    assert css =~ "--fl-tabs-surface: var(--fl-color-control);"
+    refute css =~ "--fl-tabs-radius"
+
+    assert css =~ ~s([data-element="tabs"][data-tabs][data-fadable])
+    assert css =~ "[data-fade-end]"
+
+    assert css =~
+             ~r/\[data-element="tabs"\]\[data-variant="outlined"\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]\[data-state="active"\] \{\s*color: var\(--fl-color-foreground\);/
+  end
+
+  test "tabs scope parts to their own root so nested instances stay independent" do
+    # The docs put component examples inside a page-level tab panel, so a tabs
+    # instance can nest. A descendant part selector would let the outer
+    # instance style the inner one.
+    css = File.read!(FlintUI.Generator.part_path("styled/tabs.css"))
+
+    refute css =~ ~r/\]\s+\[data-part=/
+    refute css =~ ~r/^\s*\[data-part=/m
+    assert css =~ ~r/>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]/
   end
 
   test "an attached group overlaps children onto an opaque control fill", %{css: css} do
