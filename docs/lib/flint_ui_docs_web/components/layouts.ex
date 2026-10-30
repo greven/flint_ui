@@ -286,7 +286,7 @@ defmodule FlintUIDocsWeb.Layouts do
       >
         <ol
           data-toc-list
-          class="flex flex-col gap-1.5 border-l border-default/75 text-sm"
+          class="flex flex-col gap-1.5 border-l border-default text-sm"
         >
         </ol>
       </nav>
@@ -438,7 +438,7 @@ defmodule FlintUIDocsWeb.Layouts do
             link.className = [
               "-ml-px block border-l py-1 pr-2 transition-colors",
               entry.level === 2 ? "pl-3" : "pl-7 text-[13px]",
-              "border-transparent text-muted hover:text-default",
+              "border-transparent hover:text-default",
             ].join(" ")
 
             return link

@@ -10,11 +10,8 @@
 :root {
     color-scheme: light dark;
 
-    --fl-font-sans:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --fl-font-mono:
-        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-        "Liberation Mono", "Courier New", monospace;
+    --fl-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --fl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     /* Type scale. */
     --fl-font-size-xs: 0.75rem;
@@ -57,14 +54,10 @@
     --fl-shadow-base: 0 1px 2px 0 light-dark(#0000000d, #0000004d);
     --fl-shadow-2xs: 0 1px rgb(0 0 0 / 5%);
     --fl-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 5%);
-    --fl-shadow-sm:
-        0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
-    --fl-shadow-md:
-        0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
-    --fl-shadow-lg:
-        0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
-    --fl-shadow-xl:
-        0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
+    --fl-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+    --fl-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
+    --fl-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+    --fl-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
     /* Motion. */
     --fl-duration-fast: 150ms;
@@ -223,179 +216,72 @@
      *   <role>-text     the role used as text on a neutral surface
      * Override `-content` or `-text` only when a custom fill no longer pairs
      * with the shade picked here. */
-    --fl-color-primary: light-dark(
-        var(--fl-color-primary-900),
-        var(--fl-color-primary-200)
-    );
-    --fl-color-primary-content: light-dark(
-        var(--fl-color-primary-50),
-        var(--fl-color-primary-950)
-    );
-    --fl-color-primary-text: light-dark(
-        var(--fl-color-primary-900),
-        var(--fl-color-primary-200)
-    );
+    --fl-color-primary: light-dark(var(--fl-color-primary-900), var(--fl-color-primary-200));
+    --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-950));
+    --fl-color-primary-text: light-dark(var(--fl-color-primary-900), var(--fl-color-primary-200));
 
-    --fl-color-secondary: light-dark(
-        var(--fl-color-secondary-100),
-        var(--fl-color-secondary-800)
-    );
-    --fl-color-secondary-content: light-dark(
-        var(--fl-color-secondary-950),
-        var(--fl-color-secondary-50)
-    );
-    --fl-color-secondary-text: light-dark(
-        var(--fl-color-secondary-500),
-        var(--fl-color-secondary-400)
-    );
+    --fl-color-secondary: light-dark(var(--fl-color-secondary-100), var(--fl-color-secondary-800));
+    --fl-color-secondary-content: light-dark(var(--fl-color-secondary-950), var(--fl-color-secondary-50));
+    --fl-color-secondary-text: light-dark(var(--fl-color-secondary-500), var(--fl-color-secondary-400));
 
-    --fl-color-neutral: light-dark(
-        var(--fl-color-neutral-900),
-        var(--fl-color-neutral-200)
-    );
-    --fl-color-neutral-content: light-dark(
-        var(--fl-color-neutral-50),
-        var(--fl-color-neutral-950)
-    );
-    --fl-color-neutral-text: light-dark(
-        var(--fl-color-neutral-900),
-        var(--fl-color-neutral-200)
-    );
+    --fl-color-neutral: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
+    --fl-color-neutral-content: light-dark(var(--fl-color-neutral-50), var(--fl-color-neutral-950));
+    --fl-color-neutral-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
 
-    --fl-color-success: light-dark(
-        var(--fl-color-success-500),
-        var(--fl-color-success-400)
-    );
-    --fl-color-success-content: light-dark(
-        var(--fl-color-success-950),
-        var(--fl-color-success-950)
-    );
-    --fl-color-success-text: light-dark(
-        var(--fl-color-success-700),
-        var(--fl-color-success-400)
-    );
+    --fl-color-success: light-dark(var(--fl-color-success-500), var(--fl-color-success-400));
+    --fl-color-success-content: light-dark(var(--fl-color-success-950), var(--fl-color-success-950));
+    --fl-color-success-text: light-dark(var(--fl-color-success-700), var(--fl-color-success-400));
 
-    --fl-color-info: light-dark(
-        var(--fl-color-info-500),
-        var(--fl-color-info-400)
-    );
-    --fl-color-info-content: light-dark(
-        var(--fl-color-info-950),
-        var(--fl-color-info-950)
-    );
-    --fl-color-info-text: light-dark(
-        var(--fl-color-info-700),
-        var(--fl-color-info-400)
-    );
+    --fl-color-info: light-dark(var(--fl-color-info-500), var(--fl-color-info-400));
+    --fl-color-info-content: light-dark(var(--fl-color-info-950), var(--fl-color-info-950));
+    --fl-color-info-text: light-dark(var(--fl-color-info-700), var(--fl-color-info-400));
 
-    --fl-color-warning: light-dark(
-        var(--fl-color-warning-500),
-        var(--fl-color-warning-400)
-    );
-    --fl-color-warning-content: light-dark(
-        var(--fl-color-warning-950),
-        var(--fl-color-warning-950)
-    );
-    --fl-color-warning-text: light-dark(
-        var(--fl-color-warning-700),
-        var(--fl-color-warning-400)
-    );
+    --fl-color-warning: light-dark(var(--fl-color-warning-500), var(--fl-color-warning-400));
+    --fl-color-warning-content: light-dark(var(--fl-color-warning-950), var(--fl-color-warning-950));
+    --fl-color-warning-text: light-dark(var(--fl-color-warning-700), var(--fl-color-warning-400));
 
-    --fl-color-error: light-dark(
-        var(--fl-color-error-700),
-        var(--fl-color-error-400)
-    );
-    --fl-color-error-content: light-dark(
-        var(--fl-color-error-50),
-        var(--fl-color-error-950)
-    );
-    --fl-color-error-text: light-dark(
-        var(--fl-color-error-700),
-        var(--fl-color-error-400)
-    );
-
-    /* Colored control borders derive from the role color. */
-    --fl-border-strength: 50%;
-    --fl-border-strength-soft: 25%;
-    /* Solid controls darken their fill by this amount for the border. */
-    --fl-border-strength-solid: 12%;
+    --fl-color-error: light-dark(var(--fl-color-error-700), var(--fl-color-error-400));
+    --fl-color-error-content: light-dark(var(--fl-color-error-50), var(--fl-color-error-950));
+    --fl-color-error-text: light-dark(var(--fl-color-error-700), var(--fl-color-error-400));
 
     /* Chrome text. `highlighted` is for headings and strong labels; `text` is
      * the default ink; `toned` is softened copy; `muted` is meta; `dimmed` is
      * for placeholders and decoration. `dimmed` is intentionally below AA. */
-    --fl-color-text-highlighted: light-dark(
-        var(--fl-color-neutral-900),
-        oklch(1 0 0)
-    );
-    --fl-color-text: light-dark(
-        var(--fl-color-neutral-700),
-        var(--fl-color-neutral-200)
-    );
-    --fl-color-text-toned: light-dark(
-        var(--fl-color-neutral-600),
-        var(--fl-color-neutral-300)
-    );
-    --fl-color-text-muted: light-dark(
-        var(--fl-color-neutral-500),
-        var(--fl-color-neutral-400)
-    );
-    --fl-color-text-dimmed: light-dark(
-        var(--fl-color-neutral-400),
-        var(--fl-color-neutral-500)
-    );
-    --fl-color-text-inverted: light-dark(
-        oklch(1 0 0),
-        var(--fl-color-neutral-800)
-    );
+    --fl-color-text-highlighted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
+    --fl-color-text: light-dark(var(--fl-color-neutral-700), var(--fl-color-neutral-200));
+    --fl-color-text-toned: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-300));
+    --fl-color-text-muted: light-dark(var(--fl-color-neutral-500), var(--fl-color-neutral-400));
+    --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
+    --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
 
     /* Chrome surfaces. The neutral ramp is the theme ladder: page (950),
      * control (half a step), surface (900), soft (half a step), muted (800).
      * Swapping `--fl-color-neutral-*` retints all of them together. */
-    --fl-color-background: light-dark(
-        oklch(1 0 0),
-        var(--fl-color-neutral-950)
-    );
+    --fl-color-background: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
-    --fl-color-muted: light-dark(
-        var(--fl-color-neutral-100),
-        var(--fl-color-neutral-800)
-    );
-    --fl-color-surface-soft: color-mix(
-        in oklab,
-        var(--fl-color-muted) 50%,
-        var(--fl-color-surface)
-    );
+    --fl-color-muted: light-dark(var(--fl-color-neutral-100), var(--fl-color-neutral-800));
+    --fl-color-surface-soft: color-mix(in oklab, var(--fl-color-muted) 50%, var(--fl-color-surface));
 
     /* Opaque fill for bordered controls, halfway between the page and the
      * surface so attached-group seams stay single over a stable backdrop. */
     --fl-color-control: light-dark(
         var(--fl-color-surface),
-        color-mix(
-            in oklab,
-            var(--fl-color-background) 50%,
-            var(--fl-color-surface) 50%
-        )
+        color-mix(in oklab, var(--fl-color-background) 50%, var(--fl-color-surface) 50%)
     );
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
 
     /* Chrome borders. `border` is the default edge; `muted` recedes and
      * `accented` is the stronger edge for inputs and hover targets. */
-    --fl-color-border: light-dark(
-        var(--fl-color-neutral-200),
-        oklch(1 0 0 / 8%)
-    );
-    --fl-color-border-muted: light-dark(
-        var(--fl-color-neutral-200),
-        oklch(1 0 0 / 5%)
-    );
-    --fl-color-border-accented: light-dark(
-        var(--fl-color-neutral-300),
-        oklch(1 0 0 / 12%)
-    );
-    --fl-color-ring: light-dark(
-        var(--fl-color-neutral-400),
-        var(--fl-color-neutral-500)
-    );
+    --fl-color-border: light-dark(var(--fl-color-neutral-200), oklch(1 0 0 / 8%));
+    --fl-color-border-muted: light-dark(var(--fl-color-neutral-200), oklch(1 0 0 / 5%));
+    --fl-color-border-accented: light-dark(var(--fl-color-neutral-300), oklch(1 0 0 / 12%));
+    --fl-color-ring: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
+
+    /* Colored control borders derive from the role color. */
+    --fl-border-strength: 50%;
+    --fl-border-strength-soft: 30%;
+    /* Solid controls darken their fill by this amount for the border. */
+    --fl-border-strength-solid: 12%;
 
     /* Disabled controls dim with this opacity instead of swapping fills. */
     --fl-disabled-opacity: 0.5;
