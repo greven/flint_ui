@@ -14,7 +14,7 @@ defmodule FlintUIDocsWeb.ThemesLive do
     <Layouts.app flash={@flash} page={:themes}>
       <div class="mx-auto max-w-2xl py-10">
         <h1 class="text-3xl font-semibold tracking-tight">Themes</h1>
-        <p class="mt-3 text-soft">
+        <p class="mt-3 text-default">
           A visual theme editor is on the way. For now, the
           <.link navigate={~p"/guides/theming"} class="underline">Theming guide</.link>
           covers tokens, presets, and full color scales.

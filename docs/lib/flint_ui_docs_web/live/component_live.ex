@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   title={example.title}
                   id={"example-#{@active}-#{example.id}-section"}
                 >
-                  <p :if={example[:description]} class="mt-1 text-sm text-soft">
+                  <p :if={example[:description]} class="mt-1 text-sm text-toned">
                     {example[:description]}
                   </p>
                   <Docs.render_section
@@ -147,7 +147,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="API Reference" id="api">
-                <p class="mt-3 text-sm text-soft">
+                <p class="mt-3 text-sm text-toned">
                   The generated wrapper exposes these attributes and slots. Data attributes,
                   events, and runtime CSS variables are documented on the <.link
                     patch={"#{~p"/components/#{@active}?tab=base"}#data-attributes"}
@@ -176,11 +176,11 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Setup" id="setup">
-                <p class="mt-2 text-sm text-soft">
+                <p class="mt-2 text-sm text-toned">
                   Generate the styled wrapper into your app with:
                 </p>
                 <DocsComponents.code_block code={@install_command} lang={:shell} />
-                <p class="mt-4 text-sm text-soft">
+                <p class="mt-4 text-sm text-toned">
                   The wrapper is intentionally thin: it declares the styled props, maps them
                   onto <code class="font-mono">data-*</code>
                   hooks, forwards <code class="font-mono">class</code>
@@ -258,7 +258,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   title={example.title}
                   id={"example-#{@active}-#{example.id}"}
                 >
-                  <p :if={example[:description]} class="mt-1 text-sm text-soft">
+                  <p :if={example[:description]} class="mt-1 text-sm text-toned">
                     {example[:description]}
                   </p>
                   <CodeBlock.code
@@ -342,7 +342,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Selectors and state hooks" id="selectors">
-                <p class="mt-2 text-sm text-soft">
+                <p class="mt-2 text-sm text-toned">
                   The styled theme targets the component through these hooks. The headless
                   base sets the same <code class="font-mono">data-*</code>
                   attributes, so the selectors work without the generated wrapper too.
@@ -351,7 +351,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Theme tokens" id="theme">
-                <p class="mt-2 text-sm text-soft">
+                <p class="mt-2 text-sm text-toned">
                   This component reads these token namespaces:
                 </p>
                 <ul :if={@entry && @entry.tokens != []} class="mt-3 flex flex-wrap gap-2">
@@ -377,7 +377,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               >
                 <div :for={snippet <- @css_contract[:snippets]} class="mt-4">
                   <p class="text-sm font-medium">{snippet.title}</p>
-                  <p :if={snippet[:body]} class="mt-1 text-sm text-soft">
+                  <p :if={snippet[:body]} class="mt-1 text-sm text-toned">
                     {snippet[:body]}
                   </p>
                   <DocsComponents.code_block code={snippet.code} lang={snippet[:lang] || :css} />

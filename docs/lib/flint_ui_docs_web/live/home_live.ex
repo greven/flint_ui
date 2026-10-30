@@ -36,7 +36,7 @@ defmodule FlintUIDocsWeb.HomeLive do
           <h1 class="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
             Accessible, unstyled UI for Phoenix LiveView
           </h1>
-          <p class="mt-4 max-w-2xl text-lg text-soft">
+          <p class="mt-4 max-w-2xl text-lg text-default">
             Headless components you import, plus a styled layer you generate into your
             own app. Theming is plain CSS, so Tailwind is optional.
           </p>
@@ -63,7 +63,7 @@ defmodule FlintUIDocsWeb.HomeLive do
             class="group rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-surface-soft"
           >
             <span class="font-medium">{section.title}</span>
-            <p class="mt-1 text-sm text-soft">{section.description}</p>
+            <p class="mt-1 text-sm text-toned">{section.description}</p>
           </.link>
         </section>
       </div>

@@ -129,8 +129,9 @@ defmodule FlintUI.Generator do
     """
     @theme inline {
       /* Chrome text */
+      --text-color-highlighted: var(--fl-color-text-highlighted);
       --text-color-default: var(--fl-color-text);
-      --text-color-soft: var(--fl-color-text-soft);
+      --text-color-toned: var(--fl-color-text-toned);
       --text-color-muted: var(--fl-color-text-muted);
       --text-color-dimmed: var(--fl-color-text-dimmed);
       --text-color-inverted: var(--fl-color-text-inverted);

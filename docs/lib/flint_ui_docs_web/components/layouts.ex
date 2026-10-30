@@ -89,7 +89,7 @@ defmodule FlintUIDocsWeb.Layouts do
           <.icon
             :if={index > 0}
             name="lucide-chevron-right"
-            class="size-4 shrink-0 translate-y-px text-soft"
+            class="size-4 shrink-0 translate-y-px text-toned"
           />
           <.link
             :if={index < length(@crumbs) - 1}
@@ -138,7 +138,7 @@ defmodule FlintUIDocsWeb.Layouts do
                 "rounded-md px-2 py-1.5 text-sm font-medium whitespace-nowrap transition-colors sm:px-3",
                 if(@page == :themes,
                   do: "text-default",
-                  else: "text-soft hover:bg-muted"
+                  else: "text-toned hover:bg-muted"
                 )
               ]}
             >
@@ -149,7 +149,7 @@ defmodule FlintUIDocsWeb.Layouts do
           <nav class="flex items-center gap-1 justify-self-end">
             <a
               href="https://github.com/greven/flint_ui"
-              class="rounded-md px-2 py-1.5 text-sm text-soft transition-colors hover:bg-muted sm:px-3"
+              class="rounded-md px-2 py-1.5 text-sm text-toned transition-colors hover:bg-muted sm:px-3"
               aria-label="FlintUI on GitHub"
             >
               <.icon name="lucide-github" class="size-4 sm:hidden" />

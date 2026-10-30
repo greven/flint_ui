@@ -624,17 +624,17 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           <:tab value="activity">Activity</:tab>
           <:tab value="members">Members</:tab>
           <:panel value="overview">
-            <p class="text-sm text-soft">
+            <p class="text-sm text-toned">
               Snapshot of the workspace with health, ownership, and recent updates.
             </p>
           </:panel>
           <:panel value="activity">
-            <p class="text-sm text-soft">
+            <p class="text-sm text-toned">
               Timeline of edits, comments, and merges across the team.
             </p>
           </:panel>
           <:panel value="members">
-            <p class="text-sm text-soft">
+            <p class="text-sm text-toned">
               Roster of teammates, roles, and pending invitations.
             </p>
           </:panel>
@@ -790,13 +790,13 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           </:tab>
           <:tab value="lifetime">Lifetime</:tab>
           <:panel value="monthly">
-            <p class="text-sm text-soft">Billed every month.</p>
+            <p class="text-sm text-toned">Billed every month.</p>
           </:panel>
           <:panel value="yearly">
-            <p class="text-sm text-soft">Billed once a year.</p>
+            <p class="text-sm text-toned">Billed once a year.</p>
           </:panel>
           <:panel value="lifetime">
-            <p class="text-sm text-soft">Billed once.</p>
+            <p class="text-sm text-toned">Billed once.</p>
           </:panel>
         </Components.tabs>
       </div>
@@ -825,7 +825,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
             :for={month <- ~w(January February March April May June)}
             value={String.downcase(month)}
           >
-            <p class="text-sm text-soft">{month} view</p>
+            <p class="text-sm text-toned">{month} view</p>
           </:panel>
         </Components.tabs>
       </div>

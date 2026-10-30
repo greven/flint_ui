@@ -129,6 +129,12 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   raw color is used exactly as the fill and its labels derive from it, but it
   does not participate in presets or the role contract. Prefer a role or a
   theme override for app-wide color.
+- **Text tiers have jobs.** `text` is the default ink, `text-highlighted` is for
+  headings and strong labels, `text-toned` is for secondary copy and
+  descriptions, `text-muted` is meta and labels, and `text-dimmed` is
+  placeholders and decoration. `text-dimmed` is below AA on purpose; never use
+  it for readable content or interactive labels. On muted fills, prefer
+  `text-toned` over `text-muted`.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.

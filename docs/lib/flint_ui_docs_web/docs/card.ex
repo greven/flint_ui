@@ -596,7 +596,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <Components.card body="separated" class="w-full max-w-md">
         <:title>Notifications</:title>
         <:description>Choose what you hear about</:description>
-        <p class="text-sm text-soft">
+        <p class="text-sm text-toned">
           Product updates, weekly digests and security alerts.
         </p>
         <:footer>3 repositories</:footer>
@@ -674,7 +674,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <.preview id={@id} name={:card} state={@state} code={code(:footer_actions)}>
       <Components.card class="w-full max-w-md">
         <:title>Deployments</:title>
-        <p class="text-sm text-soft">
+        <p class="text-sm text-toned">
           Your latest deployment is live.
         </p>
         <:footer>3 repositories</:footer>
@@ -696,11 +696,11 @@ defmodule FlintUIDocsWeb.Docs.Card do
         <:header_actions>
           <Components.button variant="ghost" size="sm">Edit</Components.button>
         </:header_actions>
-        <p class="text-sm text-soft">
+        <p class="text-sm text-toned">
           Your latest deployment is live.
         </p>
         <:section>
-          <p class="text-sm text-soft">Last deployed 2 minutes ago.</p>
+          <p class="text-sm text-toned">Last deployed 2 minutes ago.</p>
         </:section>
         <:footer>3 repositories</:footer>
         <:footer_actions>
@@ -716,12 +716,12 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <.preview id={@id} name={:card} state={@state} code={code(:horizontal)}>
       <Components.card body="divided" orientation="horizontal" class="w-full max-w-2xl">
         <:title>Project tasks</:title>
-        <p class="text-sm text-soft">1887 completed</p>
+        <p class="text-sm text-toned">1887 completed</p>
         <:section>
-          <p class="text-sm text-soft">447 remaining</p>
+          <p class="text-sm text-toned">447 remaining</p>
         </:section>
         <:section>
-          <p class="text-sm text-soft">76 in progress</p>
+          <p class="text-sm text-toned">76 in progress</p>
         </:section>
       </Components.card>
     </.preview>
@@ -790,7 +790,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <Components.card body="separated" variant="muted" class="w-full max-w-md">
         <:title>Notifications</:title>
         <:description>Choose what you hear about</:description>
-        <p class="text-sm text-soft">
+        <p class="text-sm text-toned">
           Product updates, weekly digests and security alerts.
         </p>
         <:footer>3 repositories</:footer>
@@ -805,7 +805,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <Components.card body="separated-footer" class="w-full max-w-md">
         <:title>Notifications</:title>
         <:description>Choose what you hear about</:description>
-        <p class="text-sm text-soft">
+        <p class="text-sm text-toned">
           Product updates, weekly digests and security alerts.
         </p>
         <:footer>3 repositories</:footer>
@@ -823,7 +823,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <Components.card body="divided" class="w-full max-w-md">
         <:title>Notifications</:title>
         <:description>Choose what you hear about</:description>
-        <p class="text-sm text-soft">
+        <p class="text-sm text-toned">
           Product updates, weekly digests and security alerts.
         </p>
         <:footer>Last saved 2 minutes ago</:footer>
@@ -916,7 +916,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <.card body="separated" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         Product updates, weekly digests and security alerts.
       </p>
       <:footer>3 repositories</:footer>
@@ -984,7 +984,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     ~S"""
     <.card class="w-full max-w-md">
       <:title>Deployments</:title>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         Your latest deployment is live.
       </p>
       <:footer>3 repositories</:footer>
@@ -1004,11 +1004,11 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <:header_actions>
         <.button variant="ghost" size="sm">Edit</.button>
       </:header_actions>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         Your latest deployment is live.
       </p>
       <:section>
-        <p class="text-sm text-soft">Last deployed 2 minutes ago.</p>
+        <p class="text-sm text-toned">Last deployed 2 minutes ago.</p>
       </:section>
       <:footer>3 repositories</:footer>
       <:footer_actions>
@@ -1022,12 +1022,12 @@ defmodule FlintUIDocsWeb.Docs.Card do
     ~S"""
     <.card body="divided" orientation="horizontal" class="w-full max-w-2xl">
       <:title>Project tasks</:title>
-      <p class="text-sm text-soft">1887 completed</p>
+      <p class="text-sm text-toned">1887 completed</p>
       <:section>
-        <p class="text-sm text-soft">447 remaining</p>
+        <p class="text-sm text-toned">447 remaining</p>
       </:section>
       <:section>
-        <p class="text-sm text-soft">76 in progress</p>
+        <p class="text-sm text-toned">76 in progress</p>
       </:section>
     </.card>
     """
@@ -1084,7 +1084,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <.card body="separated" variant="muted" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         Product updates, weekly digests and security alerts.
       </p>
       <:footer>3 repositories</:footer>
@@ -1097,7 +1097,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <.card body="separated-footer" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         Product updates, weekly digests and security alerts.
       </p>
       <:footer>3 repositories</:footer>
@@ -1113,7 +1113,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <.card body="divided" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         Product updates, weekly digests and security alerts.
       </p>
       <:footer>Last saved 2 minutes ago</:footer>

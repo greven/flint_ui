@@ -25,7 +25,7 @@ defmodule FlintUIDocsWeb.StylingLive do
     <Layouts.app flash={@flash} section={:getting_started} page={:styling}>
       <div class="max-w-3xl">
         <h1 class="text-3xl font-semibold tracking-tight">Styling</h1>
-        <p class="mt-3 text-soft">
+        <p class="mt-3 text-default">
           FlintUI has two layers: headless base components that ship behavior and
           <code class="font-mono">data-*</code>
           hooks, and a generated styled layer that is plain CSS you own. Both accept the
@@ -34,7 +34,7 @@ defmodule FlintUIDocsWeb.StylingLive do
         </p>
 
         <DocsComponents.section title="Where a change belongs" id="scope">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             Start from the narrowest place that solves the problem. Reaching further than
             you need is how a design system turns into a pile of one-off overrides.
           </p>
@@ -50,65 +50,65 @@ defmodule FlintUIDocsWeb.StylingLive do
               <tbody class="divide-y divide-default">
                 <tr class="align-top">
                   <td class="py-3 pr-6">Change the look across the app</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     Theme token or preset
                   </td>
-                  <td class="py-3 text-soft">Every component</td>
+                  <td class="py-3 text-toned">Every component</td>
                 </tr>
                 <tr class="align-top">
                   <td class="py-3 pr-6">Change one value on one instance</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     <code class="font-mono">style</code> with a custom property or declaration
                   </td>
-                  <td class="py-3 text-soft">That element</td>
+                  <td class="py-3 text-toned">That element</td>
                 </tr>
                 <tr class="align-top">
                   <td class="py-3 pr-6">Change several properties on one instance</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     <code class="font-mono">class</code> with utilities or a CSS rule
                   </td>
-                  <td class="py-3 text-soft">That element</td>
+                  <td class="py-3 text-toned">That element</td>
                 </tr>
                 <tr class="align-top">
                   <td class="py-3 pr-6">Style a part of a component</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     <code class="font-mono">class</code>
                     on the root plus <code class="font-mono">[data-part]</code>
                   </td>
-                  <td class="py-3 text-soft">That component</td>
+                  <td class="py-3 text-toned">That component</td>
                 </tr>
                 <tr class="align-top">
                   <td class="py-3 pr-6">Style a built-in state</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     <code class="font-mono">data-*</code>
                     selector (<code class="font-mono">data-disabled</code>, <code class="font-mono">data-state</code>, …)
                   </td>
-                  <td class="py-3 text-soft">That state</td>
+                  <td class="py-3 text-toned">That state</td>
                 </tr>
                 <tr class="align-top">
                   <td class="py-3 pr-6">Pick a mode the component models</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     Component attribute (<code class="font-mono">variant</code>, <code class="font-mono">color</code>, <code class="font-mono">size</code>, …)
                   </td>
-                  <td class="py-3 text-soft">That component</td>
+                  <td class="py-3 text-toned">That component</td>
                 </tr>
                 <tr class="align-top">
                   <td class="py-3 pr-6">Change a component permanently</td>
-                  <td class="py-3 pr-6 text-soft">
+                  <td class="py-3 pr-6 text-toned">
                     The generated wrapper or your app CSS
                   </td>
-                  <td class="py-3 text-soft">Your app</td>
+                  <td class="py-3 text-toned">Your app</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p class="mt-4 text-sm text-soft">
+          <p class="mt-4 text-sm text-default">
             Theme-wide changes are plain CSS in your app stylesheet, after the
             <code class="font-mono">flint.css</code>
             import. See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
             for the token list, presets, and how to override them.
           </p>
-          <p class="mt-3 text-sm text-soft">
+          <p class="mt-3 text-sm text-default">
             Attributes such as <code class="font-mono">variant</code>, <code class="font-mono">color</code>, and
             <code class="font-mono">size</code>
             belong to the <strong>generated styled components</strong>. The headless base
@@ -119,13 +119,13 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="Root class" id="class">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             Every component forwards <code class="font-mono">class</code>
             and the rest of your attributes onto its root element and marks itself with <code class="font-mono">data-element</code>. Style the root, or any part it
             exposes, with a plain selector.
           </p>
           <DocsComponents.code_block code={snippet(:class)} />
-          <p class="mt-3 text-sm text-soft">
+          <p class="mt-3 text-sm text-default">
             The theme ships in <code class="font-mono">@layer components</code>, so a
             utility class or an unlayered rule of your own wins over it without <code class="font-mono">!important</code>. An inline
             <code class="font-mono">style</code>
@@ -135,7 +135,7 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="One-off values" id="style">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             Every component accepts <code class="font-mono">style</code>: it is a global
             HTML attribute, and the wrappers forward the rest of your attributes to the
             root. Use it for a single value on a single element, normally one of the
@@ -151,12 +151,12 @@ defmodule FlintUIDocsWeb.StylingLive do
             </Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:style)} />
-          <p class="mt-3 text-sm text-soft">
+          <p class="mt-3 text-sm text-default">
             Inline styles cannot express <code class="font-mono">:hover</code>,
             pseudo-elements, or another part. A class can, and a utility library's
             arbitrary variants can too, as described in <a href="#utilities" class="underline">Utility CSS</a>.
           </p>
-          <p class="mt-4 text-sm text-soft">
+          <p class="mt-4 text-sm text-default">
             If you use Tailwind or another utility library, you can often skip
             <code class="font-mono">style</code>
             entirely. Utilities are emitted in a later cascade layer than the theme, so
@@ -171,7 +171,7 @@ defmodule FlintUIDocsWeb.StylingLive do
             </Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:tailwind_one_off)} />
-          <p class="mt-4 text-sm text-soft">
+          <p class="mt-4 text-sm text-default">
             Component variables (<code class="font-mono">--fl-button-*</code>, <code class="font-mono">--fl-card-*</code>, …) are the supported per-instance
             inputs. Each component's <strong>CSS</strong>
             tab lists its public variables and what derives from them. Set them inline for
@@ -179,7 +179,7 @@ defmodule FlintUIDocsWeb.StylingLive do
           </p>
           <DocsComponents.code_block code={snippet(:vars_heex)} />
           <DocsComponents.code_block code={snippet(:vars_css)} lang={:css} />
-          <p class="mt-4 text-sm text-soft">
+          <p class="mt-4 text-sm text-default">
             For a color, the generated wrappers offer a shortcut:
             <code class="font-mono">color="#7c3aed"</code>
             sets the fill and derives the content and text inputs for you. Keep the
@@ -188,14 +188,14 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="Parts" id="parts">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             A component marks its root with <code class="font-mono">data-element</code>
             and each internal part with <code class="font-mono">data-part</code>. Put a
             class on the root, then select the part. The hooks are the same in both
             layers.
           </p>
           <DocsComponents.code_block code={snippet(:parts)} />
-          <p class="mt-3 text-sm text-soft">
+          <p class="mt-3 text-sm text-default">
             Slot content is your own markup, so wrap it when you need a handle inside a
             slot. Slots only accept the attributes a component declares for them, not
             global ones.
@@ -203,7 +203,7 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="State" id="state">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             State such as disabled, loading, open, or pressed is reflected as
             <code class="font-mono">data-*</code>
             attributes (and the matching ARIA attributes), so you can style it without
@@ -214,7 +214,7 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="Utility CSS" id="utilities">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             Tailwind is optional, and FlintUI is not coupled to it. Utilities are just
             classes on the root, and Tailwind emits them in
             <code class="font-mono">@layer utilities</code>
@@ -224,17 +224,17 @@ defmodule FlintUIDocsWeb.StylingLive do
             atomic classes, or any unlayered stylesheet behave the same way.
           </p>
           <DocsComponents.code_block code={snippet(:utilities)} />
-          <p class="mt-4 text-sm text-soft">
+          <p class="mt-4 text-sm text-default">
             Arbitrary variants reach parts and states, so most one-off styling never
             needs a stylesheet at all:
           </p>
           <DocsComponents.code_block code={snippet(:variants)} />
-          <p class="mt-4 text-sm text-soft">
+          <p class="mt-4 text-sm text-default">
             Utilities only change the properties they name. The component's derived
             states still follow its color input: the focus ring is tinted from <code class="font-mono">--fl-button-color</code>, so a utility-only retint
             leaves the ring at the component color. Set the variable (or a semantic <code class="font-mono">color</code>) when the whole control should re-tint.
           </p>
-          <p class="mt-3 text-sm text-soft">
+          <p class="mt-3 text-sm text-default">
             To use FlintUI tokens as utilities too — <code class="font-mono">bg-primary</code>, <code class="font-mono">border-default</code>, … — map them once with <code class="font-mono">mix flint.setup --tailwind</code>. The
             <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
             guide covers the bridge.
@@ -242,7 +242,7 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="Attributes first" id="attributes">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             When a component already models a change, use the attribute. <code class="font-mono">variant</code>, <code class="font-mono">color</code>, <code class="font-mono">size</code>, and
             boolean modes such as <code class="font-mono">outline</code>
             or <code class="font-mono">depth</code>
@@ -250,7 +250,7 @@ defmodule FlintUIDocsWeb.StylingLive do
             schemes.
           </p>
           <DocsComponents.code_block code={snippet(:attributes)} />
-          <p class="mt-3 text-sm text-soft">
+          <p class="mt-3 text-sm text-default">
             Attributes describe structure or a mode; they are not a styling language.
             There is no <code class="font-mono">radius</code>
             or <code class="font-mono">border</code>
@@ -268,7 +268,7 @@ defmodule FlintUIDocsWeb.StylingLive do
         </DocsComponents.section>
 
         <DocsComponents.section title="By component" id="components">
-          <p class="text-sm text-soft">
+          <p class="text-sm text-default">
             These are the plain-CSS recipes for the headless components. Each block
             targets the hooks the component exposes; the styled layer uses the same
             markup, so the rules apply to it too.

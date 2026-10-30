@@ -320,12 +320,18 @@
     /* Solid controls darken their fill by this amount for the border. */
     --fl-border-strength-solid: 12%;
 
-    /* Chrome text. `.text` is the body ink; each step below it is softer. */
+    /* Chrome text. `highlighted` is for headings and strong labels; `text` is
+     * the default ink; `toned` is softened copy; `muted` is meta; `dimmed` is
+     * for placeholders and decoration. `dimmed` is intentionally below AA. */
+    --fl-color-text-highlighted: light-dark(
+        var(--fl-color-neutral-900),
+        oklch(1 0 0)
+    );
     --fl-color-text: light-dark(
         var(--fl-color-neutral-700),
         var(--fl-color-neutral-200)
     );
-    --fl-color-text-soft: light-dark(
+    --fl-color-text-toned: light-dark(
         var(--fl-color-neutral-600),
         var(--fl-color-neutral-300)
     );

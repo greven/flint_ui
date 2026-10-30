@@ -535,7 +535,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   def render_section(%{kind: :example, block: :inline} = assigns) do
     ~H"""
     <.preview id={@id} name={:loading_text} state={@state} code={code(:inline)}>
-      <p class="text-sm text-soft">
+      <p class="text-sm text-toned">
         <Components.loading_text text="Syncing 3 files" variant="dots" />
       </p>
     </.preview>
@@ -621,7 +621,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
 
   defp code(:inline) do
     ~S"""
-    <p class="text-sm text-soft">
+    <p class="text-sm text-toned">
       <.loading_text text="Syncing 3 files" variant="dots" />
     </p>
     """

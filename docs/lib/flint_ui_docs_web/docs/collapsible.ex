@@ -487,7 +487,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           </:trigger>
           <:content :let={attrs}>
             <div {attrs}>
-              <p class="px-4 pb-4 text-sm text-soft">
+              <p class="px-4 pb-4 text-sm text-toned">
                 Accessible, unstyled components for Phoenix LiveView.
               </p>
             </div>
@@ -508,7 +508,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           </:trigger>
           <:content :let={attrs}>
             <div {attrs}>
-              <p class="px-4 pb-4 text-sm text-soft">
+              <p class="px-4 pb-4 text-sm text-toned">
                 A theme ships, but styling is always yours to change.
               </p>
             </div>
@@ -535,7 +535,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           </:trigger>
           <:content :let={attrs}>
             <div {attrs}>
-              <p class="px-2 py-3 text-sm text-soft">
+              <p class="px-2 py-3 text-sm text-toned">
                 Released under the MIT License.
               </p>
             </div>
@@ -679,7 +679,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <p class="px-4 pb-4 text-sm text-soft">
+                <p class="px-4 pb-4 text-sm text-toned">
                   Accessible, unstyled components for Phoenix LiveView.
                 </p>
               </div>
@@ -694,7 +694,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <p class="px-4 pb-4 text-sm text-soft">
+                <p class="px-4 pb-4 text-sm text-toned">
                   A theme ships, but styling is always yours to change.
                 </p>
               </div>
@@ -792,7 +792,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <p class="px-2 py-3 text-sm text-soft">
+                <p class="px-2 py-3 text-sm text-toned">
                   Released under the MIT License.
                 </p>
               </div>

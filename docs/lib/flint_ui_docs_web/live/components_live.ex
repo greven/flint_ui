@@ -9,7 +9,7 @@ defmodule FlintUIDocsWeb.ComponentsLive do
     <Layouts.app flash={@flash} section={:components}>
       <div class="max-w-5xl">
         <h1 class="text-3xl font-semibold tracking-tight">Components</h1>
-        <p class="mt-3 text-soft">
+        <p class="mt-3 text-default">
           Accessible components for Phoenix LiveView, with a headless base and a
           generated styled layer you own.
         </p>
@@ -28,7 +28,7 @@ defmodule FlintUIDocsWeb.ComponentsLive do
                   {to_string(component.meta.status)}
                 </span>
               </div>
-              <p class="mt-2 text-sm text-soft">
+              <p class="mt-2 text-sm text-toned">
                 {component.description || "Accessible, unstyled component."}
               </p>
               <span class="mt-4 text-sm font-medium text-muted group-hover:text-default">

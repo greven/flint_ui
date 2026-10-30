@@ -71,9 +71,13 @@ your app stylesheet:
 ```
 
 Each role has three jobs: the bare role is the fill, `-content` is the label on
-that fill, and `-text` is the role as text on a neutral surface. For a full
-`50..950` scale, map the role shades to the palette you already have. With
-Tailwind, point them at the `--color-*` variables in `app.css`:
+that fill, and `-text` is the role as text on a neutral surface. Text follows the
+same tiered idea: `text-highlighted` for headings, `text` for body, `text-toned`
+for secondary copy, `text-muted` for meta, and `text-dimmed` for placeholders.
+`text-dimmed` is below AA by design; do not use it for readable content.
+
+For a full `50..950` scale, map the role shades to the palette you already
+have. With Tailwind, point them at the `--color-*` variables in `app.css`:
 
 ```css
 :root {

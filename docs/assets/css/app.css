@@ -15,8 +15,9 @@
    to its own token, so `text-muted`, `bg-muted`, and `border-muted` differ.
    This needs Tailwind 4.1+. */
 @theme inline {
+    --text-color-highlighted: var(--fl-color-text-highlighted);
     --text-color-default: var(--fl-color-text);
-    --text-color-soft: var(--fl-color-text-soft);
+    --text-color-toned: var(--fl-color-text-toned);
     --text-color-muted: var(--fl-color-text-muted);
     --text-color-dimmed: var(--fl-color-text-dimmed);
     --text-color-inverted: var(--fl-color-text-inverted);
@@ -101,6 +102,16 @@
     --background-color-error: var(--fl-color-error);
     --border-color-error: var(--fl-color-error);
     --ring-color-error: var(--fl-color-error);
+}
+
+/* Headings use the strongest text tier; body copy stays on `text-default`. */
+@layer base {
+    h1,
+    h2,
+    h3,
+    h4 {
+        color: var(--fl-color-text-highlighted);
+    }
 }
 
 /* FlintUI overrides live here, after the `flint.css` import. `flint.css` is

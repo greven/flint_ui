@@ -33,7 +33,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
             rel="noopener"
             class={[
               "inline-flex items-center gap-1.5 rounded-md border border-default px-2.5 py-1 transition-colors",
-              "text-xs font-medium text-soft",
+              "text-xs font-medium text-toned",
               "hover:bg-surface-soft hover:text-default"
             ]}
           >
@@ -55,7 +55,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     """
   end
 
-  attr :class, :string, default: "text-soft border-accented"
+  attr :class, :string, default: "text-toned border-accented"
 
   slot :inner_block, required: true
 
@@ -79,7 +79,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp status_badge_class(_status) do
-    "text-soft border-accented"
+    "text-toned border-accented"
   end
 
   # Icons are keyed by the `FlintUI.Meta` status, never by the display label, so
@@ -102,7 +102,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         />
         <div>
           <p :if={feature_title(feature)} class="text-sm font-medium">{feature_title(feature)}</p>
-          <p :if={feature_body(feature)} class="text-sm text-soft">
+          <p :if={feature_body(feature)} class="text-sm text-toned">
             {feature_body(feature)}
           </p>
         </div>
@@ -129,7 +129,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
             {part.name}
           </code>
         </dt>
-        <dd class="text-sm text-soft">{part.description}</dd>
+        <dd class="text-sm text-toned">{part.description}</dd>
       </div>
     </dl>
     """
@@ -228,10 +228,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
               <code class={code_class()}>{row.name}</code>
               <.required_badge :if={row[:required]} />
             </td>
-            <td class="py-4 pr-6 leading-6 text-soft">
+            <td class="py-4 pr-6 leading-6 text-toned">
               <.type_cell item={row} />
             </td>
-            <td class="py-4 leading-6 text-soft">
+            <td class="py-4 leading-6 text-toned">
               <.attribute_description doc={row[:doc]} default={row[:default]} />
             </td>
           </tr>
@@ -254,7 +254,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   @tone_zinc %{
     rail: "border-l-border-accented",
     part: "bg-muted text-default ring-default",
-    selector: "bg-surface-soft text-soft ring-default"
+    selector: "bg-surface-soft text-toned ring-default"
   }
 
   @tone_blue %{
@@ -495,7 +495,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp anatomy_attr_class(:html) do
-    "text-soft ring-default"
+    "text-toned ring-default"
   end
 
   @doc false
@@ -518,7 +518,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
               <code class={code_class()}>{slot.name}</code>
               <.required_badge :if={slot.required} />
             </td>
-            <td class="py-4 leading-6 text-soft">
+            <td class="py-4 leading-6 text-toned">
               <p>{slot.doc}</p>
               <p :if={Map.get(slot, :attrs, []) != []} class="mt-1 text-xs text-muted">
                 Attributes: {Enum.map_join(Map.get(slot, :attrs, []), ", ", & &1.name)}
@@ -552,7 +552,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
               <.source_badge source={event.source} />
               <.required_badge :if={event.required} />
             </td>
-            <td class="py-4 leading-6 text-soft">{event.doc}</td>
+            <td class="py-4 leading-6 text-toned">{event.doc}</td>
           </tr>
         </tbody>
       </table>
@@ -584,7 +584,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp source_badge_class(_source) do
-    "bg-surface-soft text-soft ring-default"
+    "bg-surface-soft text-toned ring-default"
   end
 
   @doc false
@@ -656,7 +656,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
             <td :if={@show_default} class="py-4 pr-6 leading-6">
               <code class={code_class()}>{css_var_default(css_var)}</code>
             </td>
-            <td class="py-4 leading-6 text-soft">
+            <td class="py-4 leading-6 text-toned">
               {css_var_description(css_var)}
             </td>
           </tr>
@@ -698,7 +698,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
                 {selector.selector}
               </code>
             </td>
-            <td class="py-4 leading-6 text-soft">
+            <td class="py-4 leading-6 text-toned">
               {selector.description}
             </td>
           </tr>
@@ -729,7 +729,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
                 {kbd.keys}
               </code>
             </td>
-            <td class="py-4 leading-6 text-soft">{kbd.description}</td>
+            <td class="py-4 leading-6 text-toned">{kbd.description}</td>
           </tr>
         </tbody>
       </table>

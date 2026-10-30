@@ -27,8 +27,9 @@ defmodule FlintUI.FlintCSSTest do
 
   test "defines the text, surface, and border ladders", %{css: css} do
     for token <- ~w(
+          text-highlighted
           text
-          text-soft
+          text-toned
           text-muted
           text-dimmed
           text-inverted
@@ -90,10 +91,13 @@ defmodule FlintUI.FlintCSSTest do
 
   test "text tiers are softened neutrals that clear AA where used", %{css: css} do
     assert css =~
+             ~r/--fl-color-text-highlighted: light-dark\(\s*var\(--fl-color-neutral-900\),\s*oklch\(1 0 0\)\s*\)/
+
+    assert css =~
              ~r/--fl-color-text: light-dark\(\s*var\(--fl-color-neutral-700\),\s*var\(--fl-color-neutral-200\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-text-soft: light-dark\(\s*var\(--fl-color-neutral-600\),\s*var\(--fl-color-neutral-300\)\s*\)/
+             ~r/--fl-color-text-toned: light-dark\(\s*var\(--fl-color-neutral-600\),\s*var\(--fl-color-neutral-300\)\s*\)/
 
     assert css =~
              ~r/--fl-color-text-inverted: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-color-neutral-800\)\s*\)/
@@ -119,6 +123,19 @@ defmodule FlintUI.FlintCSSTest do
         surface <- surfaces do
       assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
     end
+
+    # Highlighted is the strongest tier in both schemes.
+    assert FlintUI.Palette.Contrast.ratio(neutral.(900), white) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(white, neutral.(950)) >= 4.5
+
+    # `muted` clears AA on the page and surface-soft, but not on a muted fill.
+    assert FlintUI.Palette.Contrast.ratio(neutral.(500), white) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(50)) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(100)) < 4.5
+
+    # `dimmed` is intentionally below AA: placeholders and decoration only.
+    assert FlintUI.Palette.Contrast.ratio(neutral.(400), white) < 4.5
+    assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(950)) < 4.5
 
     # Solid neutral keeps a high-contrast label in both schemes.
     assert FlintUI.Palette.Contrast.ratio(white, neutral.(900)) >= 4.5

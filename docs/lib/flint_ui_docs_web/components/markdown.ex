@@ -21,7 +21,7 @@ defmodule FlintUIDocsWeb.Markdown do
     assigns = assign(assigns, :blocks, parse(assigns.content))
 
     ~H"""
-    <div class="flex flex-col gap-3 text-sm leading-relaxed text-soft">
+    <div class="flex flex-col gap-3 text-sm leading-relaxed text-default">
       <%= for block <- @blocks do %>
         <%= case block do %>
           <% {:code, code, lang} -> %>
