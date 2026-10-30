@@ -54,11 +54,14 @@ defmodule FlintUI.FlintCSSTest do
     refute css =~ "--fl-color-surface-muted"
     refute css =~ "--fl-color-surface-foreground"
     assert css =~ "--fl-disabled-opacity: 0.5;"
+
+    assert css =~
+             ~r/--fl-color-border-muted: light-dark\(\s*oklch\(0 0 0 \/ 5%\),\s*oklch\(1 0 0 \/ 5%\)\s*\)/
   end
 
   test "border weight is a theme knob instead of a token per role", %{css: css} do
     assert css =~ "--fl-border-strength: 50%;"
-    assert css =~ "--fl-border-strength-soft: 25%;"
+    assert css =~ "--fl-border-strength-soft: 30%;"
     assert css =~ "--fl-border-strength-solid: 12%;"
 
     for role <- ~w(primary secondary neutral success info warning error) do

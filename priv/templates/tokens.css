@@ -270,10 +270,11 @@
     );
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
 
-    /* Chrome borders. `border` is the default edge; `muted` recedes and
-     * `accented` is the stronger edge for inputs and hover targets. */
+    /* Chrome borders. `muted` is the quiet edge for dividers and muted
+     * surfaces, `border` is the default edge, and `accented` is the stronger
+     * edge for inputs and hover targets. */
     --fl-color-border: light-dark(var(--fl-color-neutral-200), oklch(1 0 0 / 8%));
-    --fl-color-border-muted: light-dark(var(--fl-color-neutral-200), oklch(1 0 0 / 5%));
+    --fl-color-border-muted: light-dark(oklch(0 0 0 / 5%), oklch(1 0 0 / 5%));
     --fl-color-border-accented: light-dark(var(--fl-color-neutral-300), oklch(1 0 0 / 12%));
     --fl-color-ring: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
 
