@@ -284,7 +284,7 @@
 
     /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
     [data-element="button"][data-color="neutral"]:is([data-variant="soft"], [data-variant="subtle"]) {
-        background: var(--fl-color-muted);
+        background: var(--fl-color-surface-accented);
         color: var(--fl-color-text);
     }
 

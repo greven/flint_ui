@@ -49,7 +49,7 @@ defmodule FlintUIDocsWeb.HomeLive do
             </.link>
             <.link
               navigate="/components"
-              class="rounded-md border border-default px-4 py-2 text-sm font-medium text-default transition-colors hover:bg-surface-soft"
+              class="rounded-md border border-default px-4 py-2 text-sm font-medium text-default transition-colors hover:bg-muted"
             >
               Browse components
             </.link>
@@ -60,7 +60,7 @@ defmodule FlintUIDocsWeb.HomeLive do
           <.link
             :for={section <- @sections}
             navigate={section.path}
-            class="group rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-surface-soft"
+            class="group rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-muted"
           >
             <span class="font-medium">{section.title}</span>
             <p class="mt-1 text-sm text-toned">{section.description}</p>

@@ -452,10 +452,10 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             <:content :let={attrs}>
               <div {attrs}>
                 <ul class="flex flex-col gap-2 border-t border-default px-4 py-3">
-                  <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">
+                  <li class="rounded-md bg-accented px-3 py-2 font-mono text-xs">
                     @elixir-lang/elixir
                   </li>
-                  <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">
+                  <li class="rounded-md bg-accented px-3 py-2 font-mono text-xs">
                     @phoenixframework/phoenix
                   </li>
                 </ul>
@@ -582,8 +582,8 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
               <:content :let={attrs}>
                 <div {attrs}>
                   <ul class="flex flex-col gap-2 border-t border-default px-4 py-3">
-                    <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">@elixir-lang/elixir</li>
-                    <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">@phoenixframework/phoenix</li>
+                    <li class="rounded-md bg-accented px-3 py-2 font-mono text-xs">@elixir-lang/elixir</li>
+                    <li class="rounded-md bg-accented px-3 py-2 font-mono text-xs">@phoenixframework/phoenix</li>
                   </ul>
                 </div>
               </:content>
@@ -654,7 +654,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
         .repo {
           padding: 0.5rem 0.75rem;
           border-radius: var(--fl-radius-md);
-          background: var(--fl-color-muted);
+          background: var(--fl-color-surface-accented);
           font-family: ui-monospace, monospace;
           font-size: 0.75rem;
         }

@@ -311,7 +311,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#example-card-body_separated_muted [data-element='card'][data-body='separated'][data-variant='muted']"
+             "#example-card-body_separated_accented [data-element='card'][data-body='separated'][data-variant='accented']"
            )
 
     assert has_element?(

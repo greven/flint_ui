@@ -194,13 +194,13 @@
             transform var(--fl-duration-base) var(--fl-ease-out);
     }
 
-    /* Segmented: a muted track with the active tab raised on the surface. */
+    /* Segmented: an accented track with the active tab raised on the surface. */
     [data-element="tabs"][data-variant="segmented"] > [data-part="tablist"] {
         gap: 2px;
         padding: 2px;
         border: 1px solid var(--fl-color-border);
         border-radius: calc(var(--fl-control-radius) + 2px);
-        background: var(--fl-color-muted);
+        background: var(--fl-color-surface-accented);
     }
 
     [data-element="tabs"][data-variant="segmented"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
@@ -215,7 +215,7 @@
         box-shadow: var(--fl-shadow-xs);
     }
 
-    /* Minimal: lightweight chrome, a fully rounded tab, and a muted active
+    /* Minimal: lightweight chrome, a fully rounded tab, and an accented active
      * surface. */
     [data-element="tabs"][data-variant="minimal"] > [data-part="tablist"] {
         gap: var(--fl-spacing-xs);
@@ -228,14 +228,14 @@
     [data-element="tabs"][data-variant="minimal"]
         > [data-part="tablist"]
         > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
-        background: color-mix(in oklab, var(--fl-color-muted) 60%, transparent);
+        background: color-mix(in oklab, var(--fl-color-surface-accented) 60%, transparent);
         color: var(--fl-color-text);
     }
 
     [data-element="tabs"][data-variant="minimal"]
         > [data-part="tablist"]
         > [data-part="tab"][data-tabs-tab][data-state="active"] {
-        background: var(--fl-color-muted);
+        background: var(--fl-color-surface-accented);
         color: var(--fl-tabs-text);
     }
 

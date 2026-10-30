@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Markdown do
     |> safe_to_string()
     |> then(fn escaped ->
       Regex.replace(~r/`([^`]+)`/, escaped, fn _whole, code ->
-        ~s(<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">#{code}</code>)
+        ~s(<code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">#{code}</code>)
       end)
     end)
     |> raw()

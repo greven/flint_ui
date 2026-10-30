@@ -169,7 +169,7 @@ defmodule FlintUIDocsWeb.SoundLive do
           cues, then attach the name that fits. Sounds are off until you turn them on:
         </p>
 
-        <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-default bg-surface-soft p-3">
+        <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-default bg-muted p-3">
           <button
             type="button"
             data-sound-enable
@@ -210,7 +210,7 @@ defmodule FlintUIDocsWeb.SoundLive do
               :for={cue <- family.cues}
               type="button"
               data-sound={cue.name}
-              class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2.5 text-left transition-colors hover:border-accented hover:bg-surface-soft"
+              class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2.5 text-left transition-colors hover:border-accented hover:bg-muted"
             >
               <span class="min-w-0">
                 <span class="text-sm font-medium">{cue.name}</span>

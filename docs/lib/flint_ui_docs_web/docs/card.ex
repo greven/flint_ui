@@ -174,9 +174,9 @@ defmodule FlintUIDocsWeb.Docs.Card do
         The generated component adds a `variant` attribute mapped onto the
         `data-variant` hook the theme targets. Variants are neutral surface
         treatments with no color: `solid` (the default) uses the base surface,
-        `soft` is a half-step off it, and `muted` is the full de-emphasized
-        step. In light the steps darken; in dark they lighten, following the
-        surface scale. `ghost` has no surface or elevation of its own, so it
+        `soft` is a half-step off it, and `accented` is the full toned step.
+        In light the steps darken; in dark they lighten, following the surface
+        scale. `ghost` has no surface or elevation of its own, so it
         composes with `outline`: keep the outline for an outline-only card, or
         set `outline={false}` for a bare container. Every other variant draws
         an outline and shadow by default.
@@ -193,10 +193,10 @@ defmodule FlintUIDocsWeb.Docs.Card do
         is the default and keeps one surface. `separated` uses darker header and
         footer bands; `separated-header` and `separated-footer` band only one
         edge while the other stays on the card surface. The body and unbanded
-        edge both use the selected variant's surface, so soft and muted cards
+        edge both use the selected variant's surface, so soft and accented cards
         carry through. `divided` draws lines at the body boundaries, and `inset`
         or `flush` mount the body in a bordered panel. In light, a solid card's
-        panel is a subtle well while soft and muted cards use a raised panel; in
+        panel is a subtle well while soft and accented cards use a raised panel; in
         dark the panel is a raised surface above the card. Inverted cards keep a
         well. `flush` drops the horizontal inset but keeps the border and
         radius. Divided bodies inherit the card surface so the lines are the
@@ -211,7 +211,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
         covers: [:outline],
         body: """
         `outline` is on by default for every variant, including `ghost`. On
-        solid, soft and muted cards it removes the border while keeping the
+        solid, soft and accented cards it removes the border while keeping the
         surface, shadow and spacing. On a ghost card it is the only thing that
         draws the card: `variant="ghost"` with the outline is an outline-only
         card, and `outline={false}` leaves a bare container.
@@ -234,7 +234,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
         covers: [:inverted],
         body: """
         Set `inverted` to swap the neutral surface, text, border and divider
-        colors. It composes with every variant; soft and muted remain opaque
+        colors. It composes with every variant; soft and accented remain opaque
         steps over the inverted surface.
         """
       },
@@ -285,10 +285,10 @@ defmodule FlintUIDocsWeb.Docs.Card do
         description: "Darker header and footer bands around the body."
       },
       %{
-        id: :body_separated_muted,
-        title: "Muted bands",
+        id: :body_separated_accented,
+        title: "Accented bands",
         description:
-          "The muted variant uses the full muted surface; bands stay a darker shade of it."
+          "The accented variant uses the full toned surface; bands stay a darker shade of it."
       },
       %{
         id: :body_separated_footer,
@@ -303,7 +303,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       %{
         id: :body_inset,
         title: "Raised inset body",
-        description: "On a soft or muted card the inset body panel is raised above the shell."
+        description: "On a soft or accented card the inset body panel is raised above the shell."
       },
       %{
         id: :body_inset_well,
@@ -581,7 +581,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     ~H"""
     <.preview id={@id} name={:card} state={@state} code={code(:variant)}>
       <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
-        <Components.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
+        <Components.card :for={variant <- ~w(solid soft accented ghost)} variant={variant}>
           <:title>{variant}</:title>
           <p>Body</p>
         </Components.card>
@@ -647,8 +647,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
           <:title>Inverted solid</:title>
           <p>Body</p>
         </Components.card>
-        <Components.card variant="muted" inverted>
-          <:title>Inverted muted</:title>
+        <Components.card variant="accented" inverted>
+          <:title>Inverted accented</:title>
           <p>Body</p>
         </Components.card>
       </div>
@@ -784,10 +784,10 @@ defmodule FlintUIDocsWeb.Docs.Card do
     """
   end
 
-  def render_section(%{kind: :example, block: :body_separated_muted} = assigns) do
+  def render_section(%{kind: :example, block: :body_separated_accented} = assigns) do
     ~H"""
-    <.preview id={@id} name={:card} state={@state} code={code(:body_separated_muted)}>
-      <Components.card body="separated" variant="muted" class="w-full max-w-md">
+    <.preview id={@id} name={:card} state={@state} code={code(:body_separated_accented)}>
+      <Components.card body="separated" variant="accented" class="w-full max-w-md">
         <:title>Notifications</:title>
         <:description>Choose what you hear about</:description>
         <p class="text-sm text-toned">
@@ -903,7 +903,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
   defp code(:variant) do
     ~S"""
     <div class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
-      <.card :for={variant <- ~w(solid soft muted ghost)} variant={variant}>
+      <.card :for={variant <- ~w(solid soft accented ghost)} variant={variant}>
         <:title>{variant}</:title>
         <p>Body</p>
       </.card>
@@ -961,8 +961,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
         <:title>Inverted solid</:title>
         <p>Body</p>
       </.card>
-      <.card variant="muted" inverted>
-        <:title>Inverted muted</:title>
+      <.card variant="accented" inverted>
+        <:title>Inverted accented</:title>
         <p>Body</p>
       </.card>
     </div>
@@ -1079,9 +1079,9 @@ defmodule FlintUIDocsWeb.Docs.Card do
     """
   end
 
-  defp code(:body_separated_muted) do
+  defp code(:body_separated_accented) do
     ~S"""
-    <.card body="separated" variant="muted" class="w-full max-w-md">
+    <.card body="separated" variant="accented" class="w-full max-w-md">
       <:title>Notifications</:title>
       <:description>Choose what you hear about</:description>
       <p class="text-sm text-toned">
@@ -1194,7 +1194,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       adjust it. `ghost` removes the surface and elevation entirely, leaving the
       outline and spacing as the card's only treatment. Separated bodies use the card surface with darker bands; divided
       bodies inherit the card surface; inset and flush render a panel that is a
-      subtle well on light solid cards and raised in dark or on soft and muted
+      subtle well on light solid cards and raised in dark or on soft and accented
       cards. Inverted cards keep a well. The public inputs are
       `--fl-card-spacing`, `--fl-card-surface`, `--fl-card-text`,
       `--fl-card-border`, and `--fl-card-shadow`; dividers, bands, and panels

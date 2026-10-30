@@ -43,7 +43,7 @@ defmodule FlintUI.Styled.Card do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "soft", "muted", "ghost"],
+          values: ["solid", "soft", "accented", "ghost"],
           default: "solid",
           doc:
             "The neutral surface treatment of the card. `ghost` drops the card's own surface and elevation, composing with `outline` for an outline-only card or a bare container."

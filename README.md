@@ -76,6 +76,12 @@ same tiered idea: `text-highlighted` for headings, `text` for body, `text-toned`
 for secondary copy, `text-muted` for meta, and `text-dimmed` for placeholders.
 `text-dimmed` is below AA by design; do not use it for readable content.
 
+Neutral chrome uses the same three-level idea: `surface` is the panel,
+`surface-muted` is the half step, and `surface-accented` is the full toned fill.
+`muted` always means the faint step and `accented` always means the strong one,
+so `bg-muted` / `bg-accented` and `border-muted` / `border-accented` read the
+same way.
+
 For a full `50..950` scale, map the role shades to the palette you already
 have. With Tailwind, point them at the `--color-*` variables in `app.css`:
 

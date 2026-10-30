@@ -34,7 +34,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
             class={[
               "inline-flex items-center gap-1.5 rounded-md border border-default px-2.5 py-1 transition-colors",
               "text-xs font-medium text-toned",
-              "hover:bg-surface-soft hover:text-default"
+              "hover:bg-muted hover:text-default"
             ]}
           >
             <FlintUI.icon :if={link[:icon]} name={link.icon} class="size-3.5" />
@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <dl class="mt-4 space-y-3">
       <div :for={part <- @architecture} class="grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-4">
         <dt>
-          <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">
+          <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
             {part.name}
           </code>
         </dt>
@@ -253,8 +253,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   @tone_zinc %{
     rail: "border-l-border-accented",
-    part: "bg-muted text-default ring-default",
-    selector: "bg-surface-soft text-toned ring-default"
+    part: "bg-accented text-default ring-default",
+    selector: "bg-muted text-toned ring-default"
   }
 
   @tone_blue %{
@@ -584,7 +584,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp source_badge_class(_source) do
-    "bg-surface-soft text-toned ring-default"
+    "bg-muted text-toned ring-default"
   end
 
   @doc false
@@ -694,7 +694,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         <tbody class="divide-y divide-default">
           <tr :for={selector <- @selectors} class="align-top">
             <td class="py-4 pr-6 leading-6">
-              <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">
+              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
                 {selector.selector}
               </code>
             </td>
@@ -725,7 +725,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         <tbody class="divide-y divide-default">
           <tr :for={kbd <- @keyboard} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
-              <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">
+              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
                 {kbd.keys}
               </code>
             </td>
@@ -794,7 +794,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp code_class do
-    "rounded bg-muted px-1 py-0.5 font-mono text-xs text-default"
+    "rounded bg-accented px-1 py-0.5 font-mono text-xs text-default"
   end
 
   defp default_label(value), do: inspect(value)

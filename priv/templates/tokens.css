@@ -254,13 +254,13 @@
     --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
     --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
 
-    /* Chrome surfaces. The neutral ramp is the theme ladder: page (950),
-     * control (half a step), surface (900), soft (half a step), muted (800).
-     * Swapping `--fl-color-neutral-*` retints all of them together. */
+    /* Chrome surfaces. One neutral ladder off the page: `surface` is the
+     * panel, `surface-muted` is the half step, and `surface-accented` is the
+     * full toned fill. Swapping `--fl-color-neutral-*` retints them together. */
     --fl-color-background: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
-    --fl-color-muted: light-dark(var(--fl-color-neutral-100), var(--fl-color-neutral-800));
-    --fl-color-surface-soft: color-mix(in oklab, var(--fl-color-muted) 50%, var(--fl-color-surface));
+    --fl-color-surface-accented: light-dark(var(--fl-color-neutral-100), var(--fl-color-neutral-800));
+    --fl-color-surface-muted: color-mix(in oklab, var(--fl-color-surface-accented) 50%, var(--fl-color-surface));
 
     /* Opaque fill for bordered controls, halfway between the page and the
      * surface so attached-group seams stay single over a stable backdrop. */

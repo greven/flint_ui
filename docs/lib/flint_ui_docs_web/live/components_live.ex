@@ -20,7 +20,7 @@ defmodule FlintUIDocsWeb.ComponentsLive do
             <.link
               :for={component <- group.components}
               navigate={~p"/components/#{component.name}"}
-              class="group flex flex-col rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-surface-soft"
+              class="group flex flex-col rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-muted"
             >
               <div class="flex items-center justify-between gap-3">
                 <span class="font-medium">{component.label}</span>

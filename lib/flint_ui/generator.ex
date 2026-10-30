@@ -139,9 +139,9 @@ defmodule FlintUI.Generator do
       /* Chrome surfaces */
       --background-color-default: var(--fl-color-background);
       --background-color-surface: var(--fl-color-surface);
-      --background-color-surface-soft: var(--fl-color-surface-soft);
+      --background-color-muted: var(--fl-color-surface-muted);
+      --background-color-accented: var(--fl-color-surface-accented);
       --background-color-control: var(--fl-color-control);
-      --background-color-muted: var(--fl-color-muted);
       --background-color-inverted: var(--fl-color-inverted);
       --background-color-foreground: var(--fl-color-text);
       --color-inverted: var(--fl-color-inverted);

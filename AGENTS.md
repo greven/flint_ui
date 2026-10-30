@@ -133,8 +133,12 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   headings and strong labels, `text-toned` is for secondary copy and
   descriptions, `text-muted` is meta and labels, and `text-dimmed` is
   placeholders and decoration. `text-dimmed` is below AA on purpose; never use
-  it for readable content or interactive labels. On muted fills, prefer
+  it for readable content or interactive labels. On the full toned fill, prefer
   `text-toned` over `text-muted`.
+- **Chrome ladders share three levels.** `muted` is the faint step, the bare
+  token is the default, and `accented` is the strong step:
+  `surface-muted` / `surface` / `surface-accented`, and `border-muted` /
+  `border` / `border-accented`. Never use `muted` for a strong fill.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.

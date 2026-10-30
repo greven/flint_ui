@@ -192,7 +192,7 @@
             [data-variant="ghost"],
             [data-variant="dashed"]
         )[data-state="on"] {
-        background: var(--fl-color-muted);
+        background: var(--fl-color-surface-accented);
         color: var(--fl-color-text);
     }
 

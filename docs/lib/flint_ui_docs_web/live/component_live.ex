@@ -357,7 +357,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 <ul :if={@entry && @entry.tokens != []} class="mt-3 flex flex-wrap gap-2">
                   <li
                     :for={token <- @entry.tokens}
-                    class="rounded-md bg-muted px-2 py-1 font-mono text-xs"
+                    class="rounded-md bg-accented px-2 py-1 font-mono text-xs"
                   >
                     --fl-{token}-*
                   </li>

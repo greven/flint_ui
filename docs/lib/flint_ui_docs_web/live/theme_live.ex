@@ -36,7 +36,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </p>
           <DocsComponents.code_block code={snippet(:how)} lang={:css} />
 
-          <div class="mt-4 rounded-lg border border-default bg-surface-soft p-4">
+          <div class="mt-4 rounded-lg border border-default bg-muted p-4">
             <p class="text-sm font-medium text-default">
               The theme applies to the styled layer, not the base components.
             </p>
@@ -81,7 +81,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <ul class="mt-2 flex flex-wrap gap-2">
               <li
                 :for={token <- tokens}
-                class="rounded-md bg-muted px-2 py-1 font-mono text-xs"
+                class="rounded-md bg-accented px-2 py-1 font-mono text-xs"
               >
                 {token}
               </li>
@@ -93,13 +93,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <p class="mt-3 text-sm text-default">
             Surfaces are one opaque neutral ladder. <code class="font-mono">solid</code>
             is the surface step, <code class="font-mono">soft</code>
-            is a half-step toward <code class="font-mono">muted</code>, and
-            <code class="font-mono">muted</code>
-            is the full de-emphasized step. The dark default is
-            <code class="font-mono">neutral-950</code>
+            is a half-step toward <code class="font-mono">accented</code>, and
+            <code class="font-mono">accented</code>
+            is the full toned step. The dark default is <code class="font-mono">neutral-950</code>
             (page) → <code class="font-mono">neutral-900</code>
             (surface) → <code class="font-mono">neutral-800</code>
-            (muted), with <code class="font-mono">control</code>
+            (accented), with <code class="font-mono">control</code>
             half a step above the page. Bordered controls paint <code class="font-mono">control</code>, an opaque fill just off the
             page, so attached-group seams stay single while the neutral borders can
             stay semi-transparent. Disabled controls dim with
@@ -107,7 +106,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
             instead of swapping in dedicated fills.
           </p>
           <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Components.card :for={variant <- ~w(solid soft muted)} variant={variant}>
+            <Components.card :for={variant <- ~w(solid soft accented)} variant={variant}>
               <:title>{variant}</:title>
               <p class="text-sm text-toned">Body</p>
             </Components.card>
@@ -157,16 +156,16 @@ defmodule FlintUIDocsWeb.ThemeLive do
               <p class="mt-1 text-sm">The quick brown fox</p>
             </div>
           </div>
-          <div class="mt-4 rounded-lg border border-default bg-surface-soft p-4 text-sm text-default">
+          <div class="mt-4 rounded-lg border border-default bg-muted p-4 text-sm text-default">
             <p class="font-medium">Dimmed is below AA by design</p>
             <p class="mt-1">
               <code class="font-mono">text-dimmed</code>
               is 2.6:1 on white and 4.2:1 on the dark page. Use it for placeholders,
               disabled labels, and decoration — never for body copy or interactive
               labels. <code class="font-mono">text-muted</code>
-              clears AA on the page and <code class="font-mono">surface-soft</code>; on a
-              <code class="font-mono">muted</code>
-              fill in light it is 4.34:1, so use <code class="font-mono">text-toned</code>
+              clears AA on the page and <code class="font-mono">surface-muted</code>; on
+              <code class="font-mono">surface-accented</code>
+              in light it is 4.34:1, so use <code class="font-mono">text-toned</code>
               there.
             </p>
           </div>
@@ -377,13 +376,13 @@ defmodule FlintUIDocsWeb.ThemeLive do
     :root {
       --fl-color-background: light-dark(white, var(--fl-color-neutral-950));
       --fl-color-surface: light-dark(white, var(--fl-color-neutral-900));
-      --fl-color-muted: light-dark(
+      --fl-color-surface-accented: light-dark(
         var(--fl-color-neutral-100),
         var(--fl-color-neutral-800)
       );
-      --fl-color-surface-soft: color-mix(
+      --fl-color-surface-muted: color-mix(
         in oklab,
-        var(--fl-color-muted) 50%,
+        var(--fl-color-surface-accented) 50%,
         var(--fl-color-surface)
       );
 

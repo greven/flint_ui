@@ -343,7 +343,7 @@ defmodule FlintUIDocsWeb.Preview do
   end
 
   defp addon_label do
-    "flex shrink-0 items-center border-r border-default bg-surface-soft px-2 text-xs font-medium whitespace-nowrap text-muted"
+    "flex shrink-0 items-center border-r border-default bg-muted px-2 text-xs font-medium whitespace-nowrap text-muted"
   end
 
   defp input_class do

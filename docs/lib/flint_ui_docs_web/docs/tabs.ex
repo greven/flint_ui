@@ -505,7 +505,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
             gap: 0.25rem;
             padding: 0.25rem;
             border-radius: var(--fl-radius-md);
-            background: var(--fl-color-muted);
+            background: var(--fl-color-surface-accented);
           }
 
           [data-element="tabs"] [data-part="tab"][data-state="active"] {
@@ -572,7 +572,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
             padding: var(--fl-spacing-xs);
             border: 0;
             border-radius: var(--fl-radius-md);
-            background: var(--fl-color-muted);
+            background: var(--fl-color-surface-accented);
           }
 
           .trip-tabs [data-part="tab"][data-state="active"] {

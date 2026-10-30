@@ -31,17 +31,17 @@
     }
 
     /* Variants are neutral surface steps: `soft` is the half-step toward
-     * elevated/muted, `muted` the full step. Light steps darker, dark lighter. */
+     * `accented`, the full toned step. Light steps darker, dark lighter. */
     [data-element="card"][data-variant="solid"] {
         --fl-card-surface: var(--fl-color-surface);
     }
 
     [data-element="card"][data-variant="soft"] {
-        --fl-card-surface: var(--fl-color-surface-soft);
+        --fl-card-surface: var(--fl-color-surface-muted);
     }
 
-    [data-element="card"][data-variant="muted"] {
-        --fl-card-surface: var(--fl-color-muted);
+    [data-element="card"][data-variant="accented"] {
+        --fl-card-surface: var(--fl-color-surface-accented);
     }
 
     /* Ghost keeps no surface or elevation of its own: with `outline` on it reads
@@ -77,12 +77,12 @@
         --fl-card-surface: var(--fl-color-inverted);
     }
 
-    /* Inverted soft/muted stay opaque steps over the inverted surface. */
+    /* Inverted soft/accented stay opaque steps over the inverted surface. */
     [data-element="card"][data-inverted][data-variant="soft"] {
         --fl-card-surface: color-mix(in oklab, var(--fl-color-text-inverted) 4%, var(--fl-color-inverted));
     }
 
-    [data-element="card"][data-inverted][data-variant="muted"] {
+    [data-element="card"][data-inverted][data-variant="accented"] {
         --fl-card-surface: color-mix(in oklab, var(--fl-color-text-inverted) 8%, var(--fl-color-inverted));
     }
 
@@ -132,7 +132,7 @@
         box-shadow: light-dark(inset 0 1px 2px rgb(0 0 0 / 0.05), var(--fl-shadow-xs));
     }
 
-    [data-element="card"]:is([data-variant="soft"], [data-variant="muted"]):is([data-body="inset"], [data-body="flush"])
+    [data-element="card"]:is([data-variant="soft"], [data-variant="accented"]):is([data-body="inset"], [data-body="flush"])
         > [data-part="body"] {
         background: light-dark(
             var(--fl-color-surface),

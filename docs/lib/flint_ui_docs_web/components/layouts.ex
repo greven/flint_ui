@@ -138,7 +138,7 @@ defmodule FlintUIDocsWeb.Layouts do
                 "rounded-md px-2 py-1.5 text-sm font-medium whitespace-nowrap transition-colors sm:px-3",
                 if(@page == :themes,
                   do: "text-default",
-                  else: "text-toned hover:bg-muted"
+                  else: "text-toned hover:bg-accented"
                 )
               ]}
             >
@@ -149,7 +149,7 @@ defmodule FlintUIDocsWeb.Layouts do
           <nav class="flex items-center gap-1 justify-self-end">
             <a
               href="https://github.com/greven/flint_ui"
-              class="rounded-md px-2 py-1.5 text-sm text-toned transition-colors hover:bg-muted sm:px-3"
+              class="rounded-md px-2 py-1.5 text-sm text-toned transition-colors hover:bg-accented sm:px-3"
               aria-label="FlintUI on GitHub"
             >
               <.icon name="lucide-github" class="size-4 sm:hidden" />
@@ -552,7 +552,7 @@ defmodule FlintUIDocsWeb.Layouts do
           ]
         }
         type="button"
-        class="rounded p-1 text-muted transition-colors hover:bg-muted"
+        class="rounded p-1 text-muted transition-colors hover:bg-accented"
         phx-click={JS.dispatch("phx:set-scheme")}
         data-phx-scheme={scheme}
         aria-label={"Use #{scheme} scheme"}
@@ -578,7 +578,7 @@ defmodule FlintUIDocsWeb.Layouts do
       <button
         :for={preset <- @themes}
         type="button"
-        class="rounded-md border border-default px-2.5 py-1 text-xs font-medium text-default transition-colors hover:bg-muted"
+        class="rounded-md border border-default px-2.5 py-1 text-xs font-medium text-default transition-colors hover:bg-accented"
         phx-click={JS.dispatch("phx:set-preset")}
         data-phx-preset={preset}
       >

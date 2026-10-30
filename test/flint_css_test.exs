@@ -35,9 +35,9 @@ defmodule FlintUI.FlintCSSTest do
           text-inverted
           background
           surface
-          surface-soft
+          surface-muted
+          surface-accented
           control
-          muted
           inverted
           border
           border-muted
@@ -51,8 +51,9 @@ defmodule FlintUI.FlintCSSTest do
     refute css =~ "--fl-color-accent"
     refute css =~ "--fl-color-input"
     refute css =~ "--fl-color-elevated"
-    refute css =~ "--fl-color-surface-muted"
+    refute css =~ "--fl-color-surface-soft"
     refute css =~ "--fl-color-surface-foreground"
+    refute css =~ "--fl-color-muted:"
     assert css =~ "--fl-disabled-opacity: 0.5;"
 
     assert css =~
@@ -78,9 +79,9 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="button"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
   end
 
-  test "surface steps are opaque and move toward the muted step", %{css: css} do
+  test "surface steps are opaque and move toward the accented step", %{css: css} do
     assert css =~
-             ~r/--fl-color-surface-soft: color-mix\(\s*in oklab,\s*var\(--fl-color-muted\) 50%,\s*var\(--fl-color-surface\)\s*\)/
+             ~r/--fl-color-surface-muted: color-mix\(\s*in oklab,\s*var\(--fl-color-surface-accented\) 50%,\s*var\(--fl-color-surface\)\s*\)/
 
     assert css =~
              "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));"
@@ -89,7 +90,7 @@ defmodule FlintUI.FlintCSSTest do
              ~r/--fl-color-control: light-dark\(\s*var\(--fl-color-surface\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-background\) 50%,\s*var\(--fl-color-surface\) 50%\s*\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-muted: light-dark\(\s*var\(--fl-color-neutral-100\),\s*var\(--fl-color-neutral-800\)\s*\)/
+             ~r/--fl-color-surface-accented: light-dark\(\s*var\(--fl-color-neutral-100\),\s*var\(--fl-color-neutral-800\)\s*\)/
   end
 
   test "text tiers are softened neutrals that clear AA where used", %{css: css} do
@@ -112,16 +113,16 @@ defmodule FlintUI.FlintCSSTest do
 
     white = "oklch(100% 0 none)"
     light_control = white
-    light_muted = neutral.(100)
+    light_accented = neutral.(100)
     dark_control = FlintUI.Palette.Contrast.mix(neutral.(950), neutral.(900), 0.50)
     dark_surface = neutral.(900)
-    dark_muted = neutral.(800)
+    dark_accented = neutral.(800)
 
     for {fg, surfaces} <- [
-          {neutral.(700), [light_control, light_muted]},
-          {neutral.(200), [dark_control, dark_surface, dark_muted]},
-          {neutral.(600), [light_control, light_muted]},
-          {neutral.(300), [dark_control, dark_surface, dark_muted]}
+          {neutral.(700), [light_control, light_accented]},
+          {neutral.(200), [dark_control, dark_surface, dark_accented]},
+          {neutral.(600), [light_control, light_accented]},
+          {neutral.(300), [dark_control, dark_surface, dark_accented]}
         ],
         surface <- surfaces do
       assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
@@ -131,7 +132,7 @@ defmodule FlintUI.FlintCSSTest do
     assert FlintUI.Palette.Contrast.ratio(neutral.(900), white) >= 4.5
     assert FlintUI.Palette.Contrast.ratio(white, neutral.(950)) >= 4.5
 
-    # `muted` clears AA on the page and surface-soft, but not on a muted fill.
+    # `text-muted` clears AA on the page and surface-muted, but not on surface-accented.
     assert FlintUI.Palette.Contrast.ratio(neutral.(500), white) >= 4.5
     assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(50)) >= 4.5
     assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(100)) < 4.5
@@ -270,6 +271,7 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s{:is([data-element="icon"], [data-element="loading"])}
     assert css =~ ~s([data-element="card"][data-card])
     assert css =~ ~s([data-element="card"][data-variant="soft"])
+    assert css =~ ~s([data-element="card"][data-variant="accented"])
     assert css =~ ~s([data-element="card"][data-variant="ghost"])
     assert css =~ "--fl-card-surface: transparent;"
     assert css =~ ~s([data-element="card"][data-inverted][data-variant="ghost"])
