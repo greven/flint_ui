@@ -37,6 +37,15 @@ defmodule FlintUI.Palette.ContrastTest do
     assert Contrast.ratio("#fff", "#000") == nil
   end
 
+  test "mixing a near-gray stays parseable" do
+    fill = "oklch(21.3% 0.005 355)"
+
+    mixed = Contrast.mix(fill, Contrast.light_background(), 0.15)
+
+    refute mixed =~ "e-"
+    assert is_float(Contrast.ratio(fill, mixed))
+  end
+
   test "accepts leading-dot components (minified oklch)" do
     assert_in_delta Contrast.luminance("oklch(62.7% .194 149.214)"),
                     Contrast.luminance("oklch(62.7% 0.194 149.214)"),

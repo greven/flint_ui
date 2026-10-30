@@ -67,8 +67,18 @@ defmodule FlintUI.Styled do
       entry.target in [nil, ""] ->
         {:error, {:missing_target, entry.name}}
 
+      custom_color_without_vars?(entry) ->
+        {:error, {:missing_color_vars, entry.name}}
+
       true ->
         :ok
+    end
+  end
+
+  defp custom_color_without_vars?(entry) do
+    case Entry.prop(entry, :color) do
+      %{allow_custom: true} -> entry.color_vars == []
+      _ -> false
     end
   end
 end

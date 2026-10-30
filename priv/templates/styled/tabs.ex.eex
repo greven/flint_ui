@@ -10,11 +10,12 @@ from `FlintUI.tabs`.
 <%= @slots %>
 
 def <%= @name %>(assigns) do
+<%= @color %>
   ~H"""
   <FlintUI.tabs
     data-tabs
     data-variant={@variant}
-    data-color={@color}
+    data-color={@data_color}
     data-size={@size}
     data-grow={@grow}
     data-align={@align}

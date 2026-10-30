@@ -9,6 +9,13 @@ defmodule FlintUI.Styled.Entry do
   its theme stylesheet part (`:css`, relative to `priv/templates`). The docs and
   the generator both read from here.
 
+  `:color_vars` maps the semantic outputs of a raw `color` value onto the
+  component's public CSS variables: `:fill` (the exact color), `:on_fill` (the
+  label on a solid fill), `:on_page` (the color as text on the page), and
+  `:on_tint` (the color as text on a tinted surface). A value may be the atom
+  `:color` for components that use the `color` property directly instead of a
+  custom variable. Entries without a customizable `color` prop leave this empty.
+
   The generator merges `:slots` with the base component's own slots when it
   renders the wrapper's `slot/2` declarations.
   """
@@ -22,7 +29,8 @@ defmodule FlintUI.Styled.Entry do
           tokens: [atom()],
           props: [FlintUI.Styled.Prop.t()],
           slots: [FlintUI.Styled.Slot.t()],
-          vars: [FlintUI.Styled.Var.t()]
+          vars: [FlintUI.Styled.Var.t()],
+          color_vars: keyword()
         }
 
   @enforce_keys [:name, :base, :target]
@@ -34,7 +42,8 @@ defmodule FlintUI.Styled.Entry do
             tokens: [],
             props: [],
             slots: [],
-            vars: []
+            vars: [],
+            color_vars: []
 
   @doc """
   Returns the extra attribute with the given name, or `nil`.

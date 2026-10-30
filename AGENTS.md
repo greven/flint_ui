@@ -124,7 +124,10 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   the fill), `-text` (the role as text), and `-soft-foreground` (tinted/outlined
   label). Palette tooling picks them for AA; retinting a role by overriding its
   fill means setting the derived tokens too. `color` accepts semantic roles
-  only; arbitrary colors are a CSS-level override.
+  first; a raw color is a per-instance escape hatch for data-driven accents. A
+  raw color is used exactly as the fill and its labels derive from it, but it
+  does not participate in presets or the role contract. Prefer a role or a
+  theme override for app-wide color.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.

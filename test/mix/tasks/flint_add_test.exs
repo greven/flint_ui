@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Flint.AddTest do
     assert source =~ "use Phoenix.Component"
     assert source =~ "def button(assigns)"
     assert source =~ "data-variant={@variant}"
-    assert source =~ "data-color={@color}"
+    assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "<FlintUI.button"
   end

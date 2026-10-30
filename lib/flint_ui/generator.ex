@@ -23,7 +23,8 @@ defmodule FlintUI.Generator do
       assigns: [
         name: to_string(entry.name),
         attrs: attr_block(entry),
-        slots: slot_block(entry)
+        slots: slot_block(entry),
+        color: color_block(entry)
       ]
     )
   end
@@ -239,14 +240,41 @@ defmodule FlintUI.Generator do
   end
 
   defp prop_attr(prop) do
-    if FlintUI.Styled.Prop.boolean?(prop) do
-      "attr(:#{prop.name}, :boolean, " <>
-        "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
-    else
-      values = "~w(#{Enum.join(prop.values, " ")})"
+    cond do
+      FlintUI.Styled.Prop.boolean?(prop) ->
+        "attr(:#{prop.name}, :boolean, " <>
+          "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
 
-      "attr(:#{prop.name}, :string, values: #{values}, " <>
-        "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
+      prop.allow_custom ->
+        doc = "#{prop.doc} Semantic roles: #{Enum.join(prop.values, ", ")}."
+
+        "attr(:#{prop.name}, :string, " <>
+          "default: #{inspect(prop.default)}, doc: #{inspect(doc)})"
+
+      true ->
+        values = "~w(#{Enum.join(prop.values, " ")})"
+
+        "attr(:#{prop.name}, :string, values: #{values}, " <>
+          "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
+    end
+  end
+
+  # A free-form `color` prop needs the wrapper to resolve roles vs raw values
+  # before rendering. The call is emitted literally so the generated wrapper
+  # keeps no dependency on the registry at runtime.
+  defp color_block(entry) do
+    with %{allow_custom: true} = prop <- FlintUI.Styled.Entry.prop(entry, :color),
+         [_ | _] = vars <- entry.color_vars do
+      """
+        assigns =
+          FlintUI.Styled.Color.apply(
+            assigns,
+            ~w(#{Enum.join(prop.values, " ")}),
+            #{inspect(vars)}
+          )
+      """
+    else
+      _ -> ""
     end
   end
 

@@ -109,7 +109,10 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         body: """
         The generated component adds a `color` attribute mapped onto the
         `data-color` hook the theme targets. `color` and `variant` compose
-        freely: the same palette drives every variant.
+        freely: the same palette drives every variant. It also accepts a raw CSS
+        color such as `#1D72FE`; the fill is exact and the label is derived for
+        contrast. Raw colors are a per-instance escape hatch, not a theme
+        contract.
         """
       },
       %{

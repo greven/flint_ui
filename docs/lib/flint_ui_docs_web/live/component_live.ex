@@ -40,7 +40,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               style="--fl-control-shadow: 0 0 #0000;"
               size="xl"
             >
-              <Components.icon name="lucide-component" /> Styled
+              <Components.icon name="lucide-box" /> Styled
             </Components.button>
           </:tab>
           <:tab :let={attrs} value="base" custom>
@@ -52,7 +52,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               style="--fl-control-shadow: 0 0 #0000;"
               size="xl"
             >
-              <Components.icon name="lucide-cpu" /> Base
+              <Components.icon name="lucide-code-xml" /> Base
             </Components.button>
           </:tab>
           <:tab :let={attrs} value="css" custom>

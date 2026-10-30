@@ -306,7 +306,10 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
         state, and `size` sets the default trigger metrics. On `outlined`, only
         the indicator (and focus ring) carries the color; the active label stays
         on the foreground text color. On `segmented` and `minimal`, the active
-        label is tinted too.
+        label is tinted too. `color` also accepts a raw CSS color such as
+        `#1D72FE`; the indicator uses it exactly and the active label derives a
+        readable shade. Raw colors are a per-instance escape hatch, not a theme
+        contract.
         """
       },
       %{

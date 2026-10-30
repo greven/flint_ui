@@ -168,11 +168,11 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         layer: :styled,
         covers: [:color],
         body: """
-        `color` maps the indicator onto a semantic role's text token. Leave it at
-        the default `inherit` to follow the surrounding `currentColor`, which
-        keeps a spinner inside a button or colored label in step with it. A
-        custom color works the same way, because the shape paints with
-        `currentColor`: set `style="color: …"` on the spinner.
+        `color` maps the indicator onto a semantic role's text token, or accepts
+        a raw CSS color such as `#1D72FE` and derives a readable shade of it.
+        Leave it at the default `inherit` to follow the surrounding
+        `currentColor`, which keeps a spinner inside a button or colored label
+        in step with it.
         """
       },
       %{
@@ -450,7 +450,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         <Components.loading color="success" variant="ring-bg" />
         <Components.loading color="warning" variant="ring-bg" />
         <Components.loading color="error" variant="ring-dash" />
-        <Components.loading style="color: #6366f1" variant="ring-dash" />
+        <Components.loading color="#6366f1" variant="ring-dash" />
       </div>
     </.preview>
     """
@@ -540,7 +540,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
       <.loading color="success" variant="ring-bg" />
       <.loading color="warning" variant="ring-bg" />
       <.loading color="error" variant="ring-dash" />
-      <.loading style="color: #6366f1" variant="ring-dash" />
+      <.loading color="#6366f1" variant="ring-dash" />
     </div>
     """
   end

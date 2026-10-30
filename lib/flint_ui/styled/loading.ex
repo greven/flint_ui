@@ -12,6 +12,7 @@ defmodule FlintUI.Styled.Loading do
       css: "styled/loading.css",
       tokens: [:color],
       slots: [],
+      color_vars: [on_page: :color],
       props: [
         Prop.new(
           name: :variant,
@@ -40,8 +41,9 @@ defmodule FlintUI.Styled.Loading do
             "neutral"
           ],
           default: "inherit",
+          allow_custom: true,
           doc:
-            "The theme color of the indicator. `inherit` follows the surrounding `currentColor`."
+            "The theme color of the indicator, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`."
         ),
         Prop.new(
           name: :size,

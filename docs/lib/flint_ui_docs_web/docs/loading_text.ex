@@ -150,9 +150,11 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
         layer: :styled,
         covers: [:color],
         body: """
-        `color` maps the copy onto a semantic role's text token. Leave it at
-        the default `inherit` to follow the surrounding `currentColor`; the
-        shimmer and wave animations derive their highlight from that color too.
+        `color` maps the copy onto a semantic role's text token, or accepts a
+        raw CSS color such as `#1D72FE` and derives a readable shade of it.
+        Leave it at the default `inherit` to follow the surrounding
+        `currentColor`; the shimmer and wave animations derive their highlight
+        from that color too.
         """
       },
       %{

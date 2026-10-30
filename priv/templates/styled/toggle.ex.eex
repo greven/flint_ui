@@ -10,11 +10,12 @@ from `FlintUI.toggle`.
 <%= @slots %>
 
 def <%= @name %>(assigns) do
+<%= @color %>
   ~H"""
   <FlintUI.toggle
     data-toggle
     data-variant={@variant}
-    data-color={@color}
+    data-color={@data_color}
     data-size={@size}
     class={@class}
     {@rest}

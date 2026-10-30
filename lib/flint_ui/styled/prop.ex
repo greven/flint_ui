@@ -4,17 +4,24 @@ defmodule FlintUI.Styled.Prop do
 
   Props are layered on top of the headless base component's own attributes; a
   prop never changes behavior, only how a variant resolves to classes.
+
+  A prop can opt into a free-form value with `allow_custom: true`. The generated
+  wrapper then omits `values:` from its `attr/3` declaration, so the prop accepts
+  any string. `values` still lists the documented presets and keeps driving the
+  theme contract; the wrapper is responsible for validating the extra values
+  (see `FlintUI.Styled.Color` for `:color`).
   """
 
   @type t :: %__MODULE__{
           name: atom(),
           values: [term()],
           default: term(),
-          doc: String.t() | nil
+          doc: String.t() | nil,
+          allow_custom: boolean()
         }
 
   @enforce_keys [:name, :values, :default]
-  defstruct [:name, :values, :default, :doc]
+  defstruct [:name, :values, :default, :doc, allow_custom: false]
 
   @doc """
   Builds a prop, raising when `:default` is not one of `:values`.

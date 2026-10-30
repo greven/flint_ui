@@ -179,6 +179,12 @@ defmodule FlintUIDocsWeb.StylingLive do
           </p>
           <DocsComponents.code_block code={snippet(:vars_heex)} />
           <DocsComponents.code_block code={snippet(:vars_css)} lang={:css} />
+          <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+            For a color, the generated wrappers offer a shortcut:
+            <code class="font-mono">color="#7c3aed"</code>
+            sets the fill and derives the foreground and text inputs for you. Keep the
+            variables for the cases that are not a single color.
+          </p>
         </DocsComponents.section>
 
         <DocsComponents.section title="Parts" id="parts">
@@ -248,10 +254,17 @@ defmodule FlintUIDocsWeb.StylingLive do
             Attributes describe structure or a mode; they are not a styling language.
             There is no <code class="font-mono">radius</code>
             or <code class="font-mono">border</code>
-            prop, and <code class="font-mono">color</code>
-            only accepts semantic roles. An arbitrary color is a CSS-level override: set
-            the component variable inline or in a class, or change the theme.
+            prop. <code class="font-mono">color</code>
+            accepts a semantic role, or a raw CSS color for a one-off accent or a value
+            that comes from data; the component derives its label and text colors from
+            it. Raw colors do not follow presets, so use a role (or a theme override)
+            when the color is part of the system.
           </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <Components.button color="#1D72FE" variant="solid">Raw color</Components.button>
+            <Components.toggle color="#1D72FE" pressed>Bold</Components.toggle>
+          </div>
+          <DocsComponents.code_block code={snippet(:raw_color)} />
         </DocsComponents.section>
 
         <DocsComponents.section title="By component" id="components">
@@ -385,6 +398,13 @@ defmodule FlintUIDocsWeb.StylingLive do
       <:title>Deployments</:title>
       <p>Last deploy 2 minutes ago.</p>
     </.card>
+    """
+  end
+
+  defp snippet(:raw_color) do
+    """
+    <.button color="#1D72FE" variant="solid">Deploy</.button>
+    <.toggle color="#1D72FE" pressed>Bold</.toggle>
     """
   end
 

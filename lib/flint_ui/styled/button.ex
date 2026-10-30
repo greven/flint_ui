@@ -39,6 +39,12 @@ defmodule FlintUI.Styled.Button do
             "The label color for tinted and bordered variants (soft, subtle, outline, dashed); it maps to the role's `-soft-foreground` token."
         )
       ],
+      color_vars: [
+        fill: "--fl-button-color",
+        on_fill: "--fl-button-color-foreground",
+        on_page: "--fl-button-text",
+        on_tint: "--fl-button-soft-text"
+      ],
       props: [
         Prop.new(
           name: :variant,
@@ -50,7 +56,9 @@ defmodule FlintUI.Styled.Button do
           name: :color,
           values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
           default: "neutral",
-          doc: "The theme color the variant is built from."
+          allow_custom: true,
+          doc:
+            "The theme color the variant is built from, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :size,

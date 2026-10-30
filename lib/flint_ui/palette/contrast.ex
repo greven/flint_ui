@@ -84,9 +84,14 @@ defmodule FlintUI.Palette.Contrast do
       hue = :math.atan2(y, x) * 180 / :math.pi()
       hue = if hue < 0, do: hue + 360, else: hue
 
-      "oklch(#{l * 100}% #{chroma} #{hue})"
+      "oklch(#{number(l * 100)}% #{number(chroma)} #{number(hue)})"
     end
   end
+
+  # `to_string/1` switches to scientific notation for small chromas
+  # (`7.65e-4`), which the oklch parser above cannot read. Keep the mixed
+  # result in plain decimal form so it can be scored and used as CSS.
+  defp number(value), do: :erlang.float_to_binary(value, [:compact, decimals: 6])
 
   defp oklab(value) when is_binary(value) do
     case Regex.run(@pattern, value) do

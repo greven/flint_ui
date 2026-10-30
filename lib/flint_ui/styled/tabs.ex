@@ -30,6 +30,10 @@ defmodule FlintUI.Styled.Tabs do
           doc: "The active tab surface for the segmented and minimal variants."
         )
       ],
+      color_vars: [
+        fill: "--fl-tabs-color",
+        on_page: "--fl-tabs-text"
+      ],
       props: [
         Prop.new(
           name: :variant,
@@ -41,7 +45,9 @@ defmodule FlintUI.Styled.Tabs do
           name: :color,
           values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
           default: "neutral",
-          doc: "The theme color the active state is built from."
+          allow_custom: true,
+          doc:
+            "The theme color the active state is built from, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :size,

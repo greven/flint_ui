@@ -32,6 +32,11 @@ defmodule FlintUI.Styled.Toggle do
           doc: "The label color for text-carrying variants."
         )
       ],
+      color_vars: [
+        fill: "--fl-toggle-color",
+        on_fill: "--fl-toggle-color-foreground",
+        on_tint: "--fl-toggle-text"
+      ],
       props: [
         Prop.new(
           name: :variant,
@@ -43,7 +48,9 @@ defmodule FlintUI.Styled.Toggle do
           name: :color,
           values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
           default: "neutral",
-          doc: "The theme color the variant is built from."
+          allow_custom: true,
+          doc:
+            "The theme color the variant is built from, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :size,

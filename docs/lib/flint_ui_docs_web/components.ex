@@ -22,9 +22,9 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:color, :string,
-    values: ~w(primary secondary success info warning error neutral),
     default: "neutral",
-    doc: "The theme color the variant is built from."
+    doc:
+      "The theme color the variant is built from, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: primary, secondary, success, info, warning, error, neutral."
   )
 
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The control size.")
@@ -65,11 +65,21 @@ defmodule FlintUIDocsWeb.Components do
   slot(:trailing, doc: "Optional content rendered after the button's content.")
 
   def button(assigns) do
+    assigns =
+      FlintUI.Styled.Color.apply(
+        assigns,
+        ~w(primary secondary success info warning error neutral),
+        fill: "--fl-button-color",
+        on_fill: "--fl-button-color-foreground",
+        on_page: "--fl-button-text",
+        on_tint: "--fl-button-soft-text"
+      )
+
     ~H"""
     <FlintUI.button
       data-button
       data-variant={@variant}
-      data-color={@color}
+      data-color={@data_color}
       data-size={@size}
       data-square={@square}
       data-wide={@wide}
@@ -156,9 +166,9 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:color, :string,
-    values: ~w(inherit primary secondary success info warning error neutral),
     default: "inherit",
-    doc: "The theme color of the indicator. `inherit` follows the surrounding `currentColor`."
+    doc:
+      "The theme color of the indicator, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`. Semantic roles: inherit, primary, secondary, success, info, warning, error, neutral."
   )
 
   attr(:size, :string, values: ~w(sm md lg), default: "md", doc: "The indicator size.")
@@ -170,11 +180,18 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   def loading(assigns) do
+    assigns =
+      FlintUI.Styled.Color.apply(
+        assigns,
+        ~w(inherit primary secondary success info warning error neutral),
+        on_page: :color
+      )
+
     ~H"""
     <FlintUI.loading
       data-loading
       variant={@variant}
-      data-color={@color}
+      data-color={@data_color}
       data-size={@size}
       class={@class}
       {@rest}
@@ -197,9 +214,9 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:color, :string,
-    values: ~w(inherit primary secondary success info warning error neutral),
     default: "inherit",
-    doc: "The theme color of the text. `inherit` follows the surrounding `currentColor`."
+    doc:
+      "The theme color of the text, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`. Semantic roles: inherit, primary, secondary, success, info, warning, error, neutral."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -210,11 +227,18 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   def loading_text(assigns) do
+    assigns =
+      FlintUI.Styled.Color.apply(
+        assigns,
+        ~w(inherit primary secondary success info warning error neutral),
+        on_page: :color
+      )
+
     ~H"""
     <FlintUI.loading_text
       data-loading_text
       variant={@variant}
-      data-color={@color}
+      data-color={@data_color}
       class={@class}
       {@rest}
     />
@@ -236,9 +260,9 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:color, :string,
-    values: ~w(primary secondary success info warning error neutral),
     default: "neutral",
-    doc: "The theme color the variant is built from."
+    doc:
+      "The theme color the variant is built from, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: primary, secondary, success, info, warning, error, neutral."
   )
 
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The control size.")
@@ -254,11 +278,20 @@ defmodule FlintUIDocsWeb.Components do
   slot(:trailing, doc: "Optional content rendered after the toggle's content.")
 
   def toggle(assigns) do
+    assigns =
+      FlintUI.Styled.Color.apply(
+        assigns,
+        ~w(primary secondary success info warning error neutral),
+        fill: "--fl-toggle-color",
+        on_fill: "--fl-toggle-color-foreground",
+        on_tint: "--fl-toggle-text"
+      )
+
     ~H"""
     <FlintUI.toggle
       data-toggle
       data-variant={@variant}
-      data-color={@color}
+      data-color={@data_color}
       data-size={@size}
       class={@class}
       {@rest}
@@ -423,9 +456,9 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:color, :string,
-    values: ~w(primary secondary success info warning error neutral),
     default: "neutral",
-    doc: "The theme color the active state is built from."
+    doc:
+      "The theme color the active state is built from, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: primary, secondary, success, info, warning, error, neutral."
   )
 
   attr(:size, :string,
@@ -501,11 +534,19 @@ defmodule FlintUIDocsWeb.Components do
   end
 
   def tabs(assigns) do
+    assigns =
+      FlintUI.Styled.Color.apply(
+        assigns,
+        ~w(primary secondary success info warning error neutral),
+        fill: "--fl-tabs-color",
+        on_page: "--fl-tabs-text"
+      )
+
     ~H"""
     <FlintUI.tabs
       data-tabs
       data-variant={@variant}
-      data-color={@color}
+      data-color={@data_color}
       data-size={@size}
       data-grow={@grow}
       data-align={@align}

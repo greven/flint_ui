@@ -10,11 +10,12 @@ wrapper maps the `variant` and `color` attributes onto the `data-variant` and
 <%= @slots %>
 
 def <%= @name %>(assigns) do
+<%= @color %>
   ~H"""
   <FlintUI.loading_text
     data-loading_text
     variant={@variant}
-    data-color={@color}
+    data-color={@data_color}
     class={@class}
     {@rest}
   />

@@ -30,7 +30,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   @impl true
   def styled_features do
     [
-      "Every variant composes with every semantic color role.",
+      "Every variant composes with every semantic color role, or a raw color for a one-off accent.",
       "Sizes, depth, square icon buttons, and full-width layouts are all props.",
       "The leading and trailing slots place icons without extra markup."
     ]
@@ -145,6 +145,30 @@ defmodule FlintUIDocsWeb.Docs.Button do
         `data-color` hook the theme targets. `color` and `variant` compose
         freely: every variant is available in every role. Each row below is a
         color role, each column a variant.
+        """
+      },
+      %{
+        id: :raw_color,
+        title: "Raw colors",
+        layer: :styled,
+        covers: [],
+        body: """
+        `color` also accepts a raw CSS color for a one-off accent or a value
+        that comes from data. The fill is used exactly; the label on a solid
+        fill and the text-carrying variants derive readable colors from it. The
+        best available contrast is used, so a mid-tone fill can still fall below
+        AA when neither black nor white clears it. Raw colors are an escape
+        hatch: they do not follow `data-theme` presets or the semantic role
+        contract, and they emit inline custom properties. Prefer a role for
+        app-wide theming, and pass `style` to override the derived values.
+        """,
+        code: """
+        <div class="flex flex-wrap items-center gap-3">
+          <.button color="#1D72FE" variant="solid">Deploy</.button>
+          <.button color="#1D72FE" variant="outline">Preview</.button>
+          <.button color="#1D72FE" variant="ghost">Details</.button>
+          <.button color="#FFE066">Warm</.button>
+        </div>
         """
       },
       %{
@@ -447,6 +471,19 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{kind: :usage, block: :raw_color} = assigns) do
+    ~H"""
+    <.preview id={@id} name={:button} state={@state} code={code(:raw_color)}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button color="#1D72FE" variant="solid">Deploy</Components.button>
+        <Components.button color="#1D72FE" variant="outline">Preview</Components.button>
+        <Components.button color="#1D72FE" variant="ghost">Details</Components.button>
+        <Components.button color="#FFE066">Warm</Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
   def render_section(%{kind: :usage, block: :size} = assigns) do
     ~H"""
     <.preview id={@id} name={:button} state={@state} code={code(:size)}>
@@ -607,6 +644,17 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <:trailing><Components.icon name="lucide-arrow-up-right" /></:trailing>
       </Components.button>
     </.preview>
+    """
+  end
+
+  defp code(:raw_color) do
+    ~S"""
+    <div class="flex flex-wrap items-center gap-3">
+      <.button color="#1D72FE" variant="solid">Deploy</.button>
+      <.button color="#1D72FE" variant="outline">Preview</.button>
+      <.button color="#1D72FE" variant="ghost">Details</.button>
+      <.button color="#FFE066">Warm</.button>
+    </div>
     """
   end
 
@@ -774,7 +822,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
       `--fl-button-text`, the role's regular `-text` token. Tinted and bordered
       variants read `--fl-button-soft-text`, the role's `-soft-foreground`
       label, so they read lighter in dark; solid uses
-      `--fl-button-color-foreground`.
+      `--fl-button-color-foreground`. A raw `color` value sets all four inputs
+      inline from that one color, so an explicit `style` override still wins.
       """,
       snippets: [
         %{

@@ -24,7 +24,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "attr(:variant, :string"
     assert source =~ "values: ~w(solid soft subtle outline dashed ghost link)"
     assert source =~ "data-variant={@variant}"
-    assert source =~ "data-color={@color}"
+    assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "data-square={@square}"
     assert source =~ "data-wide={@wide}"
@@ -37,6 +37,17 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "<FlintUI.button"
     assert source =~ "render_slot(@inner_block)"
     refute source =~ "to_string(@"
+  end
+
+  test "free-form color props omit the enum and resolve at runtime" do
+    for name <- [:button, :toggle, :tabs, :loading, :loading_text] do
+      source = Generator.component_source(name)
+
+      assert source =~ "attr(:color, :string, default:"
+      refute source =~ "attr(:color, :string, values:"
+      assert source =~ "FlintUI.Styled.Color.apply"
+      assert source =~ "data-color={@data_color}"
+    end
   end
 
   test "boolean props are presence hooks, not string values" do
@@ -92,7 +103,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "attr(:custom, :boolean"
     assert source =~ "values: ~w(outlined segmented minimal)"
     assert source =~ "data-variant={@variant}"
-    assert source =~ "data-color={@color}"
+    assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "attr(:grow, :boolean"
     assert source =~ "attr(:align, :string"

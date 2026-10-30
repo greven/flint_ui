@@ -12,6 +12,7 @@ defmodule FlintUI.Styled.LoadingText do
       css: "styled/loading_text.css",
       tokens: [:color],
       slots: [],
+      color_vars: [on_page: :color],
       props: [
         Prop.new(
           name: :variant,
@@ -32,7 +33,9 @@ defmodule FlintUI.Styled.LoadingText do
             "neutral"
           ],
           default: "inherit",
-          doc: "The theme color of the text. `inherit` follows the surrounding `currentColor`."
+          allow_custom: true,
+          doc:
+            "The theme color of the text, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`."
         )
       ]
     }

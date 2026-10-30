@@ -73,6 +73,18 @@ defmodule FlintUI.StyledTest do
     assert size.default == "md"
   end
 
+  test "raw color props declare the public inputs they populate" do
+    for name <- [:button, :toggle, :tabs, :loading, :loading_text] do
+      entry = Styled.get(name)
+      color = Entry.prop(entry, :color)
+
+      assert color.allow_custom, "expected #{name}.color to allow raw colors"
+      assert entry.color_vars != [], "expected #{name} to map its color inputs"
+    end
+
+    assert Entry.prop(Styled.get(:card), :color) == nil
+  end
+
   test "props map to the data attribute hooks a wrapper sets" do
     entry = Styled.get(:button)
 
