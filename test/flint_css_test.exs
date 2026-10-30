@@ -13,26 +13,45 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-font-sans:"
   end
 
-  test "defines a 50..950 scale and an alias per semantic role", %{css: css} do
+  test "defines a 50..950 scale and three jobs per semantic role", %{css: css} do
     for role <- ~w(primary secondary neutral success info warning error) do
       assert css =~ "--fl-color-#{role}-50:"
       assert css =~ "--fl-color-#{role}-950:"
       assert css =~ "--fl-color-#{role}: light-dark("
-      assert css =~ "--fl-color-#{role}-foreground: light-dark("
+      assert css =~ "--fl-color-#{role}-content: light-dark("
       assert css =~ "--fl-color-#{role}-text: light-dark("
+      refute css =~ "--fl-color-#{role}-foreground"
+      refute css =~ "--fl-color-#{role}-soft-foreground"
     end
   end
 
-  test "defines semantic surface, text, border, and disabled tokens", %{css: css} do
-    assert css =~ "--fl-color-elevated:"
-    assert css =~ "--fl-color-dimmed:"
-    assert css =~ "--fl-color-inverted:"
-    assert css =~ "--fl-color-border:"
-    assert css =~ "--fl-color-border-muted:"
-    assert css =~ "--fl-color-border-accented:"
-    assert css =~ "--fl-color-disabled:"
-    assert css =~ "--fl-color-disabled-foreground:"
-    assert css =~ "--fl-color-disabled-border:"
+  test "defines the text, surface, and border ladders", %{css: css} do
+    for token <- ~w(
+          text
+          text-soft
+          text-muted
+          text-dimmed
+          text-inverted
+          background
+          surface
+          surface-soft
+          control
+          muted
+          inverted
+          border
+          border-muted
+          border-accented
+          ring
+        ) do
+      assert css =~ "--fl-color-#{token}:"
+    end
+
+    refute css =~ "--fl-color-disabled"
+    refute css =~ "--fl-color-accent"
+    refute css =~ "--fl-color-input"
+    refute css =~ "--fl-color-elevated"
+    refute css =~ "--fl-color-surface-muted"
+    refute css =~ "--fl-color-surface-foreground"
     assert css =~ "--fl-disabled-opacity: 0.5;"
   end
 
@@ -55,13 +74,9 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="button"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
   end
 
-  test "surface steps are opaque and move toward the elevated step", %{css: css} do
+  test "surface steps are opaque and move toward the muted step", %{css: css} do
     assert css =~
-             ~r/--fl-color-surface-soft: color-mix\(\s*in oklab,\s*var\(--fl-color-elevated\) 50%,\s*var\(--fl-color-surface\)\s*\)/
-
-    assert css =~ "--fl-color-surface-muted: var(--fl-color-muted);"
-    assert css =~ "--fl-color-disabled: var(--fl-color-surface-muted);"
-    assert css =~ "--fl-color-disabled-foreground: var(--fl-color-dimmed);"
+             ~r/--fl-color-surface-soft: color-mix\(\s*in oklab,\s*var\(--fl-color-muted\) 50%,\s*var\(--fl-color-surface\)\s*\)/
 
     assert css =~
              "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));"
@@ -73,17 +88,15 @@ defmodule FlintUI.FlintCSSTest do
              ~r/--fl-color-muted: light-dark\(\s*var\(--fl-color-neutral-100\),\s*var\(--fl-color-neutral-800\)\s*\)/
   end
 
-  test "foreground tiers are softened neutrals that clear AA where used", %{css: css} do
+  test "text tiers are softened neutrals that clear AA where used", %{css: css} do
     assert css =~
-             ~r/--fl-color-foreground: light-dark\(\s*var\(--fl-color-neutral-700\),\s*var\(--fl-color-neutral-200\)\s*\)/
+             ~r/--fl-color-text: light-dark\(\s*var\(--fl-color-neutral-700\),\s*var\(--fl-color-neutral-200\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-foreground-soft: light-dark\(\s*var\(--fl-color-neutral-600\),\s*var\(--fl-color-neutral-300\)\s*\)/
-
-    assert css =~ "--fl-color-surface-foreground: var(--fl-color-foreground);"
+             ~r/--fl-color-text-soft: light-dark\(\s*var\(--fl-color-neutral-600\),\s*var\(--fl-color-neutral-300\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-inverted-foreground: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-color-neutral-800\)\s*\)/
+             ~r/--fl-color-text-inverted: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-color-neutral-800\)\s*\)/
 
     neutral = fn shade ->
       [_, value] = Regex.run(~r/--fl-color-neutral-#{shade}: ([^;]+);/, css)
@@ -112,27 +125,23 @@ defmodule FlintUI.FlintCSSTest do
     assert FlintUI.Palette.Contrast.ratio(neutral.(800), white) >= 4.5
   end
 
-  test "colored soft foregrounds derive from the role fill", %{css: css} do
+  test "role content and text map to the three jobs", %{css: css} do
     for role <- ~w(primary secondary success info warning error) do
-      assert css =~ "--fl-color-#{role}-soft-foreground: light-dark("
+      assert css =~ "--fl-button-color-content: var(--fl-color-#{role}-content);"
       assert css =~ "--fl-button-text: var(--fl-color-#{role}-text);"
-      assert css =~ "--fl-button-soft-text: var(--fl-color-#{role}-soft-foreground);"
-      assert css =~ "--fl-toggle-text: var(--fl-color-#{role}-soft-foreground);"
+      assert css =~ "--fl-toggle-color-content: var(--fl-color-#{role}-content);"
+      assert css =~ "--fl-toggle-text: var(--fl-color-#{role}-text);"
     end
 
-    assert css =~
-             ~r/--fl-color-primary-soft-foreground: light-dark\(\s*color-mix\(in oklab, var\(--fl-color-primary\), oklch\(0% 0 0\) 15%\),\s*color-mix\(in oklab, var\(--fl-color-primary\), oklch\(1 0 0\) 60%\)\s*\)/
+    refute css =~ "-soft-foreground"
 
-    assert css =~
-             ~r/--fl-color-warning-soft-foreground: light-dark\(\s*color-mix\(in oklab, var\(--fl-color-warning\), oklch\(0% 0 0\) 45%\),\s*color-mix\(in oklab, var\(--fl-color-warning\), oklch\(1 0 0\) 30%\)\s*\)/
-
-    # Neutral colored text keeps the page ink instead of a role tint.
-    assert css =~ "--fl-button-text: var(--fl-color-foreground);"
-    assert css =~ "--fl-button-soft-text: var(--fl-color-foreground);"
-    assert css =~ "--fl-toggle-text: var(--fl-color-foreground);"
+    # Neutral colored text keeps the page ink and the inverted label.
+    assert css =~ "--fl-button-text: var(--fl-color-text);"
+    assert css =~ "--fl-button-color-content: var(--fl-color-text-inverted);"
+    assert css =~ "--fl-toggle-text: var(--fl-color-text);"
   end
 
-  test "derived colored soft foregrounds clear AA in both schemes", %{css: css} do
+  test "role text clears AA on control and tinted surfaces", %{css: css} do
     alias FlintUI.Palette.{Contrast, Tailwind}
 
     neutral = fn shade ->
@@ -141,43 +150,42 @@ defmodule FlintUI.FlintCSSTest do
     end
 
     white = "oklch(100% 0 none)"
-    black = "oklch(0% 0 none)"
     dark_control = Contrast.mix(neutral.(950), neutral.(900), 0.50)
-    light_muted = neutral.(100)
 
+    # The docs palette: fill shade, AA text shade in light, AA text shade in dark.
     roles = [
-      {"primary", :red, 600, 0.85, 0.4},
-      {"secondary", :gray, 600, 0.85, 0.4},
-      {"success", :emerald, 700, 0.85, 0.4},
-      {"info", :blue, 600, 0.85, 0.4},
-      {"warning", :amber, 400, 0.55, 0.7},
-      {"error", :red, 600, 0.85, 0.4}
+      {"primary", :red, 600, 700, 500},
+      {"secondary", :gray, 600, 600, 400},
+      {"success", :emerald, 700, 800, 600},
+      {"info", :blue, 600, 700, 500},
+      {"warning", :amber, 400, 700, 400},
+      {"error", :red, 600, 700, 500}
     ]
 
-    for {role, color, shade, light_fill_weight, dark_fill_weight} <- roles do
-      fill = Tailwind.shades(color) |> Map.fetch!(shade)
-      light_soft = Contrast.mix(fill, black, light_fill_weight)
-      dark_soft = Contrast.mix(fill, white, dark_fill_weight)
+    for {role, color, fill_shade, light_text_shade, dark_text_shade} <- roles do
+      shades = Tailwind.shades(color)
+      fill = Map.fetch!(shades, fill_shade)
+      light_text = Map.fetch!(shades, light_text_shade)
+      dark_text = Map.fetch!(shades, dark_text_shade)
 
       for {surface, background} <- [
             {"light control", white},
-            {"light muted", light_muted},
             {"light tint", Contrast.mix(fill, white, 0.10)}
           ] do
-        ratio = Contrast.ratio(light_soft, background)
+        ratio = Contrast.ratio(light_text, background)
 
         assert ratio >= 4.5,
-               "#{role} light soft foreground on #{surface}: #{Float.round(ratio, 2)}"
+               "#{role} light text on #{surface}: #{Float.round(ratio, 2)}"
       end
 
       for {surface, background} <- [
             {"dark control", dark_control},
             {"dark tint", Contrast.mix(fill, dark_control, 0.10)}
           ] do
-        ratio = Contrast.ratio(dark_soft, background)
+        ratio = Contrast.ratio(dark_text, background)
 
         assert ratio >= 4.5,
-               "#{role} dark soft foreground on #{surface}: #{Float.round(ratio, 2)}"
+               "#{role} dark text on #{surface}: #{Float.round(ratio, 2)}"
       end
     end
   end
@@ -297,7 +305,7 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="tabs"\]\[data-tabs\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]/
 
     assert css =~ "--fl-tabs-color: var(--fl-color-inverted);"
-    assert css =~ "--fl-tabs-text: var(--fl-color-foreground);"
+    assert css =~ "--fl-tabs-text: var(--fl-color-text);"
     assert css =~ "--fl-tabs-surface: var(--fl-color-control);"
     refute css =~ "--fl-tabs-radius"
 
@@ -305,7 +313,7 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "[data-fade-end]"
 
     assert css =~
-             ~r/\[data-element="tabs"\]\[data-variant="outlined"\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]\[data-state="active"\] \{\s*color: var\(--fl-color-foreground\);/
+             ~r/\[data-element="tabs"\]\[data-variant="outlined"\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]\[data-state="active"\] \{\s*color: var\(--fl-color-text\);/
   end
 
   test "the outlined indicator hands over between tabs", %{css: css} do
@@ -356,24 +364,19 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-control-active-opacity: 0.07;"
   end
 
-  test "ghost and link buttons use the role's regular text token", %{css: css} do
-    # Ghost/link read `--fl-button-text` (the role `-text` token) instead of the
-    # softer `--fl-button-soft-text` used on tinted and bordered surfaces.
+  test "every colored button variant uses the role text token", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]\[data-variant="ghost"\] \{\s*background: transparent;\s*color: var\(\s*--fl-button-text,/
+             ~r/\[data-element="button"\]\[data-variant="soft"\],\s*\[data-element="button"\]\[data-variant="subtle"\] \{[^}]*color: var\(--fl-button-text/
 
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="link"\] \{[^}]*color: var\(\s*--fl-button-text,/
+    for variant <- ~w(outline dashed ghost link) do
+      assert css =~
+               ~r/\[data-element="button"\]\[data-variant="#{variant}"\] \{[^}]*color: var\(--fl-button-text/
+    end
 
     assert css =~
              ~r/\[data-element="button"\]\[data-variant="link"\][^{]*:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-color-inverted\)\) 75%,\s*transparent\s*\);/
 
-    # Tinted and bordered variants use the soft label.
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="soft"\],\s*\[data-element="button"\]\[data-variant="subtle"\] \{[^}]*--fl-button-soft-text/
-
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="dashed"\] \{[^}]*--fl-button-soft-text/
+    refute css =~ "--fl-button-soft-text"
   end
 
   test "button and toggle expose only public color inputs", %{css: css} do

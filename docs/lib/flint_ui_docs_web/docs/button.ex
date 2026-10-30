@@ -448,7 +448,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           <div></div>
           <span
             :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
-            class="text-center text-xs font-medium text-zinc-500"
+            class="text-center text-xs font-medium text-muted"
           >
             {variant}
           </span>
@@ -456,7 +456,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
             :for={color <- ~w(primary secondary neutral info success warning error)}
             class="contents"
           >
-            <span class="text-xs font-medium text-zinc-500">{color}</span>
+            <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
               :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
               variant={variant}
@@ -546,7 +546,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{kind: :usage, block: :inset} = assigns) do
     ~H"""
     <.preview id={@id} name={:button} state={@state} code={code(:inset)}>
-      <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
+      <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
         <span class="text-sm font-medium">Post successfully created.</span>
         <div class="flex items-center gap-4">
           <Components.button variant="ghost" size="sm" square inset aria-label="Dismiss">
@@ -722,7 +722,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   defp code(:inset) do
     ~S"""
-    <div class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
+    <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
       <span class="text-sm font-medium">Post successfully created.</span>
       <div class="flex items-center gap-4">
         <.button variant="ghost" size="sm" square inset aria-label="Dismiss">
@@ -814,16 +814,14 @@ defmodule FlintUIDocsWeb.Docs.Button do
       body: """
       The generated button maps its props onto data hooks and lets the theme do
       the rest. The public inputs are `--fl-button-color`,
-      `--fl-button-color-foreground`, `--fl-button-text`, and
-      `--fl-button-soft-text`; borders, tinted surfaces, and focus all derive
-      from them and the theme tokens. Solid buttons mix the fill with black by
-      `--fl-border-strength-solid` (12% by default) for the border, so retinting
-      the fill retints the edge too. Ghost and link read
-      `--fl-button-text`, the role's regular `-text` token. Tinted and bordered
-      variants read `--fl-button-soft-text`, the role's `-soft-foreground`
-      label, so they read lighter in dark; solid uses
-      `--fl-button-color-foreground`. A raw `color` value sets all four inputs
-      inline from that one color, so an explicit `style` override still wins.
+      `--fl-button-color-content`, and `--fl-button-text`; borders, tinted
+      surfaces, and focus all derive from them and the theme tokens. Solid
+      buttons mix the fill with black by `--fl-border-strength-solid` (12% by
+      default) for the border, so retinting the fill retints the edge too. Ghost,
+      link, tinted, and bordered variants read `--fl-button-text`, the role's
+      regular `-text` token; solid uses `--fl-button-color-content`. A raw
+      `color` value sets all three inputs inline from that one color, so an
+      explicit `style` override still wins.
       """,
       snippets: [
         %{
@@ -832,9 +830,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
           code: """
           .danger-action {
             --fl-button-color: var(--fl-color-error);
-            --fl-button-color-foreground: var(--fl-color-error-foreground);
+            --fl-button-color-content: var(--fl-color-error-content);
             --fl-button-text: var(--fl-color-error-text);
-            --fl-button-soft-text: var(--fl-color-error-soft-foreground);
           }
           """
         },

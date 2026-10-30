@@ -217,12 +217,17 @@
     --fl-color-error-900: oklch(0.396 0.141 25.723);
     --fl-color-error-950: oklch(0.258 0.092 26.042);
 
-    /* Color aliases */
+    /* Semantic roles. Each role has three jobs:
+     *   <role>          the fill (solid background, tint source)
+     *   <role>-content  the label on that fill
+     *   <role>-text     the role used as text on a neutral surface
+     * Override `-content` or `-text` only when a custom fill no longer pairs
+     * with the shade picked here. */
     --fl-color-primary: light-dark(
         var(--fl-color-primary-900),
         var(--fl-color-primary-200)
     );
-    --fl-color-primary-foreground: light-dark(
+    --fl-color-primary-content: light-dark(
         var(--fl-color-primary-50),
         var(--fl-color-primary-950)
     );
@@ -235,7 +240,7 @@
         var(--fl-color-secondary-100),
         var(--fl-color-secondary-800)
     );
-    --fl-color-secondary-foreground: light-dark(
+    --fl-color-secondary-content: light-dark(
         var(--fl-color-secondary-950),
         var(--fl-color-secondary-50)
     );
@@ -248,7 +253,7 @@
         var(--fl-color-neutral-900),
         var(--fl-color-neutral-200)
     );
-    --fl-color-neutral-foreground: light-dark(
+    --fl-color-neutral-content: light-dark(
         var(--fl-color-neutral-50),
         var(--fl-color-neutral-950)
     );
@@ -261,7 +266,7 @@
         var(--fl-color-success-500),
         var(--fl-color-success-400)
     );
-    --fl-color-success-foreground: light-dark(
+    --fl-color-success-content: light-dark(
         var(--fl-color-success-950),
         var(--fl-color-success-950)
     );
@@ -274,7 +279,7 @@
         var(--fl-color-info-500),
         var(--fl-color-info-400)
     );
-    --fl-color-info-foreground: light-dark(
+    --fl-color-info-content: light-dark(
         var(--fl-color-info-950),
         var(--fl-color-info-950)
     );
@@ -287,7 +292,7 @@
         var(--fl-color-warning-500),
         var(--fl-color-warning-400)
     );
-    --fl-color-warning-foreground: light-dark(
+    --fl-color-warning-content: light-dark(
         var(--fl-color-warning-950),
         var(--fl-color-warning-950)
     );
@@ -300,7 +305,7 @@
         var(--fl-color-error-700),
         var(--fl-color-error-400)
     );
-    --fl-color-error-foreground: light-dark(
+    --fl-color-error-content: light-dark(
         var(--fl-color-error-50),
         var(--fl-color-error-950)
     );
@@ -309,53 +314,51 @@
         var(--fl-color-error-400)
     );
 
-    --fl-color-primary-soft-foreground: light-dark(
-        color-mix(in oklab, var(--fl-color-primary), oklch(0% 0 0) 15%),
-        color-mix(in oklab, var(--fl-color-primary), oklch(1 0 0) 60%)
-    );
-    --fl-color-secondary-soft-foreground: light-dark(
-        color-mix(in oklab, var(--fl-color-secondary), oklch(0% 0 0) 15%),
-        color-mix(in oklab, var(--fl-color-secondary), oklch(1 0 0) 60%)
-    );
-    --fl-color-success-soft-foreground: light-dark(
-        color-mix(in oklab, var(--fl-color-success), oklch(0% 0 0) 15%),
-        color-mix(in oklab, var(--fl-color-success), oklch(1 0 0) 60%)
-    );
-    --fl-color-info-soft-foreground: light-dark(
-        color-mix(in oklab, var(--fl-color-info), oklch(0% 0 0) 15%),
-        color-mix(in oklab, var(--fl-color-info), oklch(1 0 0) 60%)
-    );
-    --fl-color-warning-soft-foreground: light-dark(
-        color-mix(in oklab, var(--fl-color-warning), oklch(0% 0 0) 45%),
-        color-mix(in oklab, var(--fl-color-warning), oklch(1 0 0) 30%)
-    );
-    --fl-color-error-soft-foreground: light-dark(
-        color-mix(in oklab, var(--fl-color-error), oklch(0% 0 0) 15%),
-        color-mix(in oklab, var(--fl-color-error), oklch(1 0 0) 60%)
-    );
-
     /* Colored control borders derive from the role color. */
     --fl-border-strength: 50%;
     --fl-border-strength-soft: 25%;
     /* Solid controls darken their fill by this amount for the border. */
     --fl-border-strength-solid: 12%;
 
-    /* Surfaces and text. The neutral ramp is the theme ladder: page (950),
+    /* Chrome text. `.text` is the body ink; each step below it is softer. */
+    --fl-color-text: light-dark(
+        var(--fl-color-neutral-700),
+        var(--fl-color-neutral-200)
+    );
+    --fl-color-text-soft: light-dark(
+        var(--fl-color-neutral-600),
+        var(--fl-color-neutral-300)
+    );
+    --fl-color-text-muted: light-dark(
+        var(--fl-color-neutral-500),
+        var(--fl-color-neutral-400)
+    );
+    --fl-color-text-dimmed: light-dark(
+        var(--fl-color-neutral-400),
+        var(--fl-color-neutral-500)
+    );
+    --fl-color-text-inverted: light-dark(
+        oklch(1 0 0),
+        var(--fl-color-neutral-800)
+    );
+
+    /* Chrome surfaces. The neutral ramp is the theme ladder: page (950),
      * control (half a step), surface (900), soft (half a step), muted (800).
      * Swapping `--fl-color-neutral-*` retints all of them together. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
         var(--fl-color-neutral-950)
     );
-    --fl-color-foreground: light-dark(
-        var(--fl-color-neutral-700),
-        var(--fl-color-neutral-200)
-    );
-    --fl-color-foreground-soft: light-dark(
-        var(--fl-color-neutral-600),
-        var(--fl-color-neutral-300)
-    );
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
+    --fl-color-muted: light-dark(
+        var(--fl-color-neutral-100),
+        var(--fl-color-neutral-800)
+    );
+    --fl-color-surface-soft: color-mix(
+        in oklab,
+        var(--fl-color-muted) 50%,
+        var(--fl-color-surface)
+    );
 
     /* Opaque fill for bordered controls, halfway between the page and the
      * surface so attached-group seams stay single over a stable backdrop. */
@@ -367,75 +370,29 @@
             var(--fl-color-surface) 50%
         )
     );
-    --fl-color-muted: light-dark(
-        var(--fl-color-neutral-100),
-        var(--fl-color-neutral-800)
-    );
-    --fl-color-muted-foreground: light-dark(
-        var(--fl-color-neutral-500),
-        var(--fl-color-neutral-400)
-    );
-    --fl-color-elevated: var(--fl-color-muted);
-    --fl-color-surface-soft: color-mix(
-        in oklab,
-        var(--fl-color-elevated) 50%,
-        var(--fl-color-surface)
-    );
-    --fl-color-surface-muted: var(--fl-color-muted);
-    --fl-color-surface-foreground: var(--fl-color-foreground);
-    --fl-color-disabled: var(--fl-color-surface-muted);
-    --fl-color-disabled-foreground: var(--fl-color-dimmed);
-    --fl-color-disabled-border: var(--fl-color-border-muted);
-    --fl-disabled-opacity: 0.5;
-
-    --fl-color-dimmed: light-dark(
-        var(--fl-color-neutral-400),
-        var(--fl-color-neutral-500)
-    );
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
-    --fl-color-inverted-foreground: light-dark(
-        oklch(1 0 0),
-        var(--fl-color-neutral-800)
-    );
 
-    --fl-color-accent: light-dark(
-        var(--fl-color-neutral-200),
-        color-mix(
-            in oklab,
-            var(--fl-color-neutral-700) 50%,
-            var(--fl-color-neutral-800) 50%
-        )
-    );
-
-    --fl-color-accent-foreground: light-dark(
-        var(--fl-color-neutral-900),
-        var(--fl-color-neutral-50)
-    );
-
+    /* Chrome borders. `border` is the default edge; `muted` recedes and
+     * `accented` is the stronger edge for inputs and hover targets. */
     --fl-color-border: light-dark(
         var(--fl-color-neutral-200),
         oklch(1 0 0 / 8%)
     );
-
     --fl-color-border-muted: light-dark(
         var(--fl-color-neutral-200),
         oklch(1 0 0 / 5%)
     );
-
     --fl-color-border-accented: light-dark(
         var(--fl-color-neutral-300),
         oklch(1 0 0 / 12%)
     );
-
-    --fl-color-input: light-dark(
-        var(--fl-color-neutral-200),
-        oklch(1 0 0 / 12%)
-    );
-
     --fl-color-ring: light-dark(
         var(--fl-color-neutral-400),
         var(--fl-color-neutral-500)
     );
+
+    /* Disabled controls dim with this opacity instead of swapping fills. */
+    --fl-disabled-opacity: 0.5;
 
     --fl-focus-ring-width: 2px;
     --fl-focus-ring-offset: 2px;

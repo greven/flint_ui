@@ -4,13 +4,13 @@ defmodule FlintUI.Palette.CSSTest do
   alias FlintUI.Palette.CSS
   alias FlintUI.Palette.Tailwind
 
-  test "renders the role scale, alias, and foreground under :root" do
+  test "renders the role scale, alias, and content under :root" do
     css = CSS.render(primary: {Tailwind, :indigo})
 
     assert css =~ ":root {"
     assert css =~ "--fl-color-primary-600: oklch(51.1% 0.262 276.966);"
     assert css =~ "--fl-color-primary: light-dark("
-    assert css =~ "--fl-color-primary-foreground: light-dark("
+    assert css =~ "--fl-color-primary-content: light-dark("
     refute css =~ "--fl-palette-"
   end
 
@@ -27,23 +27,23 @@ defmodule FlintUI.Palette.CSSTest do
     refute css =~ "--fl-palette-"
   end
 
-  test "picks a dark foreground for a light alias shade" do
+  test "picks a dark content for a light alias shade" do
     css = CSS.render([primary: {Tailwind, :yellow}], light_shade: 300, dark_shade: 300)
 
     assert css =~ "var(--fl-color-primary-950),\n    var(--fl-color-primary-950)"
   end
 
-  test "picks a light foreground for a dark alias shade" do
+  test "picks a light content for a dark alias shade" do
     css = CSS.render([primary: {Tailwind, :blue}], light_shade: 900, dark_shade: 900)
 
     assert css =~ "var(--fl-color-primary-50),\n    var(--fl-color-primary-50)"
   end
 
-  test "picks the higher-contrast foreground for a mid-tone fill" do
+  test "picks the higher-contrast content for a mid-tone fill" do
     # green-600 reads better against green-950 than green-50.
     css = CSS.render([success: {Tailwind, :green}], light_shade: 600, dark_shade: 600)
 
-    assert css =~ "--fl-color-success-foreground: light-dark(\n    var(--fl-color-success-950)"
+    assert css =~ "--fl-color-success-content: light-dark(\n    var(--fl-color-success-950)"
   end
 
   test "falls back to pure white/black when the ramp extremes miss AA" do
@@ -51,14 +51,14 @@ defmodule FlintUI.Palette.CSSTest do
     # keeps the vivid red-600 fill instead of darkening it.
     css = CSS.render([error: {Tailwind, :red}], light_shade: 600, dark_shade: 600)
 
-    assert css =~ "--fl-color-error-foreground: light-dark(\n    oklch(100% 0 0),"
+    assert css =~ "--fl-color-error-content: light-dark(\n    oklch(100% 0 0),"
   end
 
   test "a pinned shade gives a light label" do
     css = CSS.render([success: {Tailwind, :green}], shades: %{success: {700, 400}})
 
     assert css =~ "--fl-color-success: light-dark(\n    var(--fl-color-success-700),"
-    assert css =~ "--fl-color-success-foreground: light-dark(\n    var(--fl-color-success-50),"
+    assert css =~ "--fl-color-success-content: light-dark(\n    var(--fl-color-success-50),"
   end
 
   test "the :contrast option raises the target to AAA" do
@@ -83,7 +83,7 @@ defmodule FlintUI.Palette.CSSTest do
              "--fl-color-warning-text: light-dark(\n    var(--fl-color-warning-700),\n    var(--fl-color-warning-400)"
   end
 
-  test ":shades pins one role's alias and contrast-picks its foreground" do
+  test ":shades pins one role's alias and contrast-picks its content" do
     css =
       CSS.render(
         [primary: {Tailwind, :indigo}, warning: {Tailwind, :amber}],
@@ -95,7 +95,7 @@ defmodule FlintUI.Palette.CSSTest do
              "--fl-color-warning: light-dark(\n    var(--fl-color-warning-400),\n    var(--fl-color-warning-400)"
 
     assert css =~
-             "--fl-color-warning-foreground: light-dark(\n    var(--fl-color-warning-950),\n    var(--fl-color-warning-950)"
+             "--fl-color-warning-content: light-dark(\n    var(--fl-color-warning-950),\n    var(--fl-color-warning-950)"
 
     # primary is untouched and keeps the global 600 anchor in both schemes.
     assert css =~
@@ -112,6 +112,6 @@ defmodule FlintUI.Palette.CSSTest do
              "--fl-color-error: light-dark(\n    var(--fl-color-error-600),\n    var(--fl-color-error-600)"
 
     assert css =~
-             "--fl-color-error-foreground: light-dark(\n    oklch(100% 0 0),\n    oklch(100% 0 0)"
+             "--fl-color-error-content: light-dark(\n    oklch(100% 0 0),\n    oklch(100% 0 0)"
   end
 end

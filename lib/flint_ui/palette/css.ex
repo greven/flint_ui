@@ -6,8 +6,8 @@ defmodule FlintUI.Palette.CSS do
 
     * `--fl-color-{role}-{shade}` — the role's scale, written directly from the
       source palette;
-    * `--fl-color-{role}` and `--fl-color-{role}-foreground` — the role alias and
-      a contrast-picked label for a solid fill;
+    * `--fl-color-{role}` and `--fl-color-{role}-content` — the role fill and a
+      contrast-picked label on that fill;
     * `--fl-color-{role}-text` — a shade safe to use as text on the page
       background (see `FlintUI.Palette.Contrast`).
 
@@ -107,9 +107,9 @@ defmodule FlintUI.Palette.CSS do
         var(--fl-color-#{role}-#{light}),
         var(--fl-color-#{role}-#{dark})
       );
-      --fl-color-#{role}-foreground: light-dark(
-        #{foreground_value(role, shades, light, target)},
-        #{foreground_value(role, shades, dark, target)}
+      --fl-color-#{role}-content: light-dark(
+        #{content_value(role, shades, light, target)},
+        #{content_value(role, shades, dark, target)}
       );
       --fl-color-#{role}-text: light-dark(
         var(--fl-color-#{role}-#{text_light}),
@@ -126,14 +126,14 @@ defmodule FlintUI.Palette.CSS do
   # better than the off-white `50` and keeps the fill vivid instead of darkening
   # it. If even pure white/black misses the target (e.g. AAA on a mid-tone), the
   # best-contrast option is used.
-  @foreground_shades [50, 950]
+  @content_shades [50, 950]
   @extreme_values ["oklch(100% 0 0)", "oklch(0% 0 0)"]
 
-  defp foreground_value(role, shades, shade, target) do
+  defp content_value(role, shades, shade, target) do
     base = shade_value(shades, shade)
 
     {key, ratio} =
-      @foreground_shades
+      @content_shades
       |> Enum.map(fn candidate ->
         {candidate, Contrast.ratio(base, shade_value(shades, candidate)) || 0.0}
       end)

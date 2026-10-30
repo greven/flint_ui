@@ -8,9 +8,8 @@ defmodule FlintUI.Styled.ColorTest do
 
   @vars [
     fill: "--fl-button-color",
-    on_fill: "--fl-button-color-foreground",
-    on_page: "--fl-button-text",
-    on_tint: "--fl-button-soft-text"
+    on_fill: "--fl-button-color-content",
+    on_text: "--fl-button-text"
   ]
 
   @colors ~w(#1D72FE #FFE066 #111827 #22C55E #F43F5E)
@@ -42,9 +41,8 @@ defmodule FlintUI.Styled.ColorTest do
 
       assert assigns.data_color == nil
       assert assigns.rest.style =~ "--fl-button-color: #1D72FE"
-      assert assigns.rest.style =~ "--fl-button-color-foreground"
+      assert assigns.rest.style =~ "--fl-button-color-content"
       assert assigns.rest.style =~ "--fl-button-text"
-      assert assigns.rest.style =~ "--fl-button-soft-text"
       refute assigns.rest.style =~ "data-color"
     end
 
@@ -53,14 +51,14 @@ defmodule FlintUI.Styled.ColorTest do
         StyledColor.apply(
           %{
             color: "#1D72FE",
-            rest: %{style: "--fl-button-color-foreground: white"},
+            rest: %{style: "--fl-button-color-content: white"},
             __changed__: %{}
           },
           @roles,
           @vars
         )
 
-      assert String.ends_with?(assigns.rest.style, "; --fl-button-color-foreground: white")
+      assert String.ends_with?(assigns.rest.style, "; --fl-button-color-content: white")
     end
 
     test "marks the derived assigns as changed on updates" do
@@ -96,7 +94,7 @@ defmodule FlintUI.Styled.ColorTest do
 
     test "maps a semantic output onto the `color` property when requested" do
       {:ok, color} = Color.parse("#1D72FE")
-      style = StyledColor.style("#1D72FE", color, on_page: :color)
+      style = StyledColor.style("#1D72FE", color, on_text: :color)
 
       assert style =~ "color: light-dark("
       refute style =~ "--fl-"
@@ -106,22 +104,18 @@ defmodule FlintUI.Styled.ColorTest do
       {:ok, color} = Color.parse("#111827")
       derived = StyledColor.derive("#111827", color)
 
-      assert derived.on_page |> elem(0) == "#111827"
+      assert derived.on_text |> elem(0) == "#111827"
     end
 
-    test "text and tinted labels clear AA in both schemes" do
+    test "the single text derivation clears AA on the tinted surface" do
       for value <- @colors do
         {:ok, color} = Color.parse(value)
         derived = StyledColor.derive(value, color)
 
-        {light_page, dark_page} = derived.on_page
-        {light_tint, dark_tint} = derived.on_tint
+        {light_text, dark_text} = derived.on_text
 
-        assert ratio(light_page, Contrast.light_background()) >= 4.5
-        assert ratio(dark_page, Contrast.dark_background()) >= 4.5
-
-        assert ratio(light_tint, tint(color, Contrast.light_background())) >= 4.5
-        assert ratio(dark_tint, tint(color, Contrast.dark_background())) >= 4.5
+        assert ratio(light_text, tint(color, Contrast.light_background())) >= 4.5
+        assert ratio(dark_text, tint(color, Contrast.dark_background())) >= 4.5
       end
     end
   end

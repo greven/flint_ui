@@ -14,7 +14,7 @@ if Code.ensure_loaded?(Igniter) do
     ## Options
 
       * `--tailwind` - also map the FlintUI tokens onto Tailwind utilities
-        (`bg-primary`, `border-border`, …) in `assets/css/app.css`.
+        (`bg-primary`, `border-default`, …) in `assets/css/app.css`.
       * `--sound` - also register the optional sound bundle
         (`flint-sound.js`) and its `FlintUI.Sound` hook. This only registers the
         hook; mount `<FlintUI.sound_provider enabled={false} theme="default" />`

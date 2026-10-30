@@ -99,8 +99,26 @@ defmodule FlintUI.Generator do
   @color_roles ~w(primary secondary neutral success info warning error)
   @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
 
-  @doc "The `@theme` mapping that exposes FlintUI tokens as Tailwind utilities."
+  @doc """
+  The `@theme` mapping that exposes FlintUI tokens as Tailwind utilities.
+
+  Colors are mapped per utility family, so `text-muted`, `bg-muted`, and
+  `border-muted` resolve to the text, surface, and border tokens respectively
+  instead of sharing one value. This needs Tailwind 4.1 or newer.
+  """
   def tailwind_bridge_source do
+    roles =
+      Enum.map_join(@color_roles, "\n", fn role ->
+        """
+            --color-#{role}: var(--fl-color-#{role});
+            --text-color-#{role}: var(--fl-color-#{role}-text);
+            --text-color-#{role}-content: var(--fl-color-#{role}-content);
+            --background-color-#{role}: var(--fl-color-#{role});
+            --border-color-#{role}: var(--fl-color-#{role});
+            --ring-color-#{role}: var(--fl-color-#{role});\
+        """
+      end)
+
     scales =
       Enum.map_join(@color_roles, "\n", fn role ->
         Enum.map_join(@color_shades, "\n", fn shade ->
@@ -110,44 +128,42 @@ defmodule FlintUI.Generator do
 
     """
     @theme inline {
-      --color-background: var(--fl-color-background);
-      --color-foreground: var(--fl-color-foreground);
-      --color-foreground-soft: var(--fl-color-foreground-soft);
-      --color-surface: var(--fl-color-surface);
-      --color-surface-soft: var(--fl-color-surface-soft);
-      --color-surface-muted: var(--fl-color-surface-muted);
-      --color-surface-foreground: var(--fl-color-surface-foreground);
-      --color-control: var(--fl-color-control);
-      --color-primary: var(--fl-color-primary);
-      --color-primary-foreground: var(--fl-color-primary-foreground);
-      --color-secondary: var(--fl-color-secondary);
-      --color-secondary-foreground: var(--fl-color-secondary-foreground);
-      --color-neutral: var(--fl-color-neutral);
-      --color-neutral-foreground: var(--fl-color-neutral-foreground);
-      --color-success: var(--fl-color-success);
-      --color-success-foreground: var(--fl-color-success-foreground);
-      --color-info: var(--fl-color-info);
-      --color-info-foreground: var(--fl-color-info-foreground);
-      --color-warning: var(--fl-color-warning);
-      --color-warning-foreground: var(--fl-color-warning-foreground);
-      --color-error: var(--fl-color-error);
-      --color-error-foreground: var(--fl-color-error-foreground);
-      --color-muted: var(--fl-color-muted);
-      --color-muted-foreground: var(--fl-color-muted-foreground);
-      --color-accent: var(--fl-color-accent);
-      --color-accent-foreground: var(--fl-color-accent-foreground);
-      --color-elevated: var(--fl-color-elevated);
-      --color-dimmed: var(--fl-color-dimmed);
-      --color-disabled: var(--fl-color-disabled);
-      --color-disabled-foreground: var(--fl-color-disabled-foreground);
-      --color-disabled-border: var(--fl-color-disabled-border);
+      /* Chrome text */
+      --text-color-default: var(--fl-color-text);
+      --text-color-soft: var(--fl-color-text-soft);
+      --text-color-muted: var(--fl-color-text-muted);
+      --text-color-dimmed: var(--fl-color-text-dimmed);
+      --text-color-inverted: var(--fl-color-text-inverted);
+
+      /* Chrome surfaces */
+      --background-color-default: var(--fl-color-background);
+      --background-color-surface: var(--fl-color-surface);
+      --background-color-surface-soft: var(--fl-color-surface-soft);
+      --background-color-control: var(--fl-color-control);
+      --background-color-muted: var(--fl-color-muted);
+      --background-color-inverted: var(--fl-color-inverted);
+      --background-color-foreground: var(--fl-color-text);
       --color-inverted: var(--fl-color-inverted);
-      --color-inverted-foreground: var(--fl-color-inverted-foreground);
-      --color-border: var(--fl-color-border);
-      --color-border-muted: var(--fl-color-border-muted);
-      --color-border-accented: var(--fl-color-border-accented);
-      --color-input: var(--fl-color-input);
-      --color-ring: var(--fl-color-ring);
+
+      /* Chrome borders and focus */
+      --border-color-default: var(--fl-color-border);
+      --border-color-muted: var(--fl-color-border-muted);
+      --border-color-accented: var(--fl-color-border-accented);
+      --border-color-inverted: var(--fl-color-inverted);
+      --divide-color-default: var(--fl-color-border);
+      --divide-color-muted: var(--fl-color-border-muted);
+      --divide-color-accented: var(--fl-color-border-accented);
+      --ring-color-default: var(--fl-color-ring);
+      --ring-color-muted: var(--fl-color-border-muted);
+      --ring-color-accented: var(--fl-color-border-accented);
+      --ring-color-inverted: var(--fl-color-inverted);
+      --outline-color-default: var(--fl-color-border);
+      --outline-color-muted: var(--fl-color-border-muted);
+      --outline-color-accented: var(--fl-color-border-accented);
+      --outline-color-inverted: var(--fl-color-inverted);
+
+      /* Semantic roles: fill, role text, and the label on the fill */
+    #{roles}
 
       /* Semantic color scales */
     #{scales}

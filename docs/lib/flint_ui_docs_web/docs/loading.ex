@@ -24,7 +24,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
     """
     <FlintUI.loading class="size-4" />
 
-    <FlintUI.loading variant="ring-bg" class="size-6 text-zinc-500" />
+    <FlintUI.loading variant="ring-bg" class="size-6 text-muted" />
 
     <FlintUI.loading variant="ring-dash" class="size-4" />
 
@@ -96,7 +96,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         code: """
         <div class="flex items-center gap-6">
           <FlintUI.loading class="size-4" />
-          <FlintUI.loading class="size-6 text-zinc-500" />
+          <FlintUI.loading class="size-6 text-muted" />
         </div>
         """
       },
@@ -628,7 +628,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
           body: "Set the color on the spinner or its parent.",
           code: """
           .muted-spinner {
-            color: var(--fl-color-muted-foreground);
+            color: var(--fl-color-text-muted);
           }
           """
         }

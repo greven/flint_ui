@@ -9,7 +9,7 @@ defmodule FlintUIDocsWeb.ComponentsLive do
     <Layouts.app flash={@flash} section={:components}>
       <div class="max-w-5xl">
         <h1 class="text-3xl font-semibold tracking-tight">Components</h1>
-        <p class="mt-3 text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-soft">
           Accessible components for Phoenix LiveView, with a headless base and a
           generated styled layer you own.
         </p>
@@ -20,18 +20,18 @@ defmodule FlintUIDocsWeb.ComponentsLive do
             <.link
               :for={component <- group.components}
               navigate={~p"/components/#{component.name}"}
-              class="group flex flex-col rounded-lg border border-zinc-200 p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-700 dark:hover:bg-zinc-900"
+              class="group flex flex-col rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-surface-soft"
             >
               <div class="flex items-center justify-between gap-3">
                 <span class="font-medium">{component.label}</span>
-                <span class="rounded-full border border-zinc-200 px-2 py-0.5 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+                <span class="rounded-full border border-default px-2 py-0.5 text-xs text-muted">
                   {to_string(component.meta.status)}
                 </span>
               </div>
-              <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <p class="mt-2 text-sm text-soft">
                 {component.description || "Accessible, unstyled component."}
               </p>
-              <span class="mt-4 text-sm font-medium text-zinc-500 group-hover:text-zinc-900 dark:text-zinc-400 dark:group-hover:text-zinc-100">
+              <span class="mt-4 text-sm font-medium text-muted group-hover:text-default">
                 View docs
               </span>
             </.link>

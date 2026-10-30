@@ -61,8 +61,8 @@ your app stylesheet:
 
 :root {
   --fl-color-primary: oklch(0.55 0.24 275);
-  --fl-color-primary-foreground: oklch(1 0 0);
-  /* Ghost and link use the role's AA text shade. */
+  --fl-color-primary-content: oklch(1 0 0);
+  /* Tinted, outlined, ghost, and link use the role's AA text shade. */
   --fl-color-primary-text: light-dark(
     oklch(0.491 0.27 292.581),
     oklch(0.702 0.183 293.541)
@@ -70,10 +70,10 @@ your app stylesheet:
 }
 ```
 
-Tinted and outlined control labels derive from the role fill, so changing the
-fill updates them too. For a full `50..950` scale, map the role shades to the
-palette you already have. With Tailwind, point them at the `--color-*` variables
-in `app.css`:
+Each role has three jobs: the bare role is the fill, `-content` is the label on
+that fill, and `-text` is the role as text on a neutral surface. For a full
+`50..950` scale, map the role shades to the palette you already have. With
+Tailwind, point them at the `--color-*` variables in `app.css`:
 
 ```css
 :root {
@@ -92,6 +92,10 @@ in `app.css`:
 Without Tailwind, paste the literal scale into `app.css`. The role scale is the
 only color contract; source palette names never become CSS variables. Custom
 themes are `[data-theme="…"]` blocks in the same app stylesheet.
+
+`mix flint.setup --tailwind` writes a bridge that maps each utility family to its
+own token (`text-default`, `bg-surface`, `border-default`, `text-primary` vs
+`bg-primary`). That mapping needs Tailwind 4.1 or newer.
 
 ## Documentation
 

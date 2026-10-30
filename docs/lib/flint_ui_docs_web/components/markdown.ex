@@ -21,7 +21,7 @@ defmodule FlintUIDocsWeb.Markdown do
     assigns = assign(assigns, :blocks, parse(assigns.content))
 
     ~H"""
-    <div class="flex flex-col gap-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+    <div class="flex flex-col gap-3 text-sm leading-relaxed text-soft">
       <%= for block <- @blocks do %>
         <%= case block do %>
           <% {:code, code, lang} -> %>
@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Markdown do
     |> safe_to_string()
     |> then(fn escaped ->
       Regex.replace(~r/`([^`]+)`/, escaped, fn _whole, code ->
-        ~s(<code class="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">#{code}</code>)
+        ~s(<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">#{code}</code>)
       end)
     end)
     |> raw()

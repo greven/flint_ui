@@ -75,7 +75,8 @@ defmodule FlintUI.Styled.Color do
 
   @doc false
   # The derived values for a raw color. Text values are `{light, dark}` pairs;
-  # the label on a fill is a single scheme-independent color.
+  # the label on a fill is a single scheme-independent color. The role text is
+  # scored against the tinted surface, the stricter background in both schemes.
   def derive(source, color) do
     target = Contrast.aa()
     light = Contrast.light_background()
@@ -84,11 +85,7 @@ defmodule FlintUI.Styled.Color do
     %{
       fill: source,
       on_fill: on_fill(color),
-      on_page: {
-        readable(source, color, light, target),
-        readable(source, color, dark, target)
-      },
-      on_tint: {
+      on_text: {
         readable(source, color, tint(color, light), target),
         readable(source, color, tint(color, dark), target)
       }
@@ -116,8 +113,8 @@ defmodule FlintUI.Styled.Color do
     end
   end
 
-  # The text carries the color over the page, so score it against the tint the
-  # tinted variants paint, not the page itself.
+  # The text carries the color over both the page and tinted surfaces, so score
+  # it against the tint the tinted variants paint, the stricter background.
   defp tint(color, background), do: Contrast.mix(color.css, background, 0.15)
 
   defp minimal_percent(fill, endpoint, background, target) do

@@ -10,9 +10,97 @@
 
 @import "./highlight.css";
 
-/* Expose the page token as a utility so the docs shell dogfoods it. */
+/* Expose FlintUI's semantic colors as Tailwind utilities so the docs shell and
+   examples dogfood the same tokens as the components. Each utility family maps
+   to its own token, so `text-muted`, `bg-muted`, and `border-muted` differ.
+   This needs Tailwind 4.1+. */
 @theme inline {
-    --color-background: var(--fl-color-background);
+    --text-color-default: var(--fl-color-text);
+    --text-color-soft: var(--fl-color-text-soft);
+    --text-color-muted: var(--fl-color-text-muted);
+    --text-color-dimmed: var(--fl-color-text-dimmed);
+    --text-color-inverted: var(--fl-color-text-inverted);
+
+    --background-color-default: var(--fl-color-background);
+    --background-color-surface: var(--fl-color-surface);
+    --background-color-surface-soft: var(--fl-color-surface-soft);
+    --background-color-control: var(--fl-color-control);
+    --background-color-muted: var(--fl-color-muted);
+    --background-color-inverted: var(--fl-color-inverted);
+    --background-color-foreground: var(--fl-color-text);
+    --color-inverted: var(--fl-color-inverted);
+
+    --border-color-default: var(--fl-color-border);
+    --border-color-muted: var(--fl-color-border-muted);
+    --border-color-accented: var(--fl-color-border-accented);
+    --border-color-inverted: var(--fl-color-inverted);
+    --divide-color-default: var(--fl-color-border);
+    --divide-color-muted: var(--fl-color-border-muted);
+    --divide-color-accented: var(--fl-color-border-accented);
+    --ring-color-default: var(--fl-color-ring);
+    --ring-color-muted: var(--fl-color-border-muted);
+    --ring-color-accented: var(--fl-color-border-accented);
+    --ring-color-inverted: var(--fl-color-inverted);
+    --outline-color-default: var(--fl-color-border);
+    --outline-color-muted: var(--fl-color-border-muted);
+    --outline-color-accented: var(--fl-color-border-accented);
+    --outline-color-inverted: var(--fl-color-inverted);
+
+    /* primary: Tailwind red */
+    --color-primary: var(--fl-color-primary);
+    --text-color-primary: var(--fl-color-primary-text);
+    --text-color-primary-content: var(--fl-color-primary-content);
+    --background-color-primary: var(--fl-color-primary);
+    --border-color-primary: var(--fl-color-primary);
+    --ring-color-primary: var(--fl-color-primary);
+
+    /* secondary: Tailwind gray */
+    --color-secondary: var(--fl-color-secondary);
+    --text-color-secondary: var(--fl-color-secondary-text);
+    --text-color-secondary-content: var(--fl-color-secondary-content);
+    --background-color-secondary: var(--fl-color-secondary);
+    --border-color-secondary: var(--fl-color-secondary);
+    --ring-color-secondary: var(--fl-color-secondary);
+
+    /* neutral: Tailwind neutral */
+    --color-neutral: var(--fl-color-neutral);
+    --text-color-neutral: var(--fl-color-neutral-text);
+    --text-color-neutral-content: var(--fl-color-neutral-content);
+    --background-color-neutral: var(--fl-color-neutral);
+    --border-color-neutral: var(--fl-color-neutral);
+    --ring-color-neutral: var(--fl-color-neutral);
+
+    /* success: Tailwind emerald */
+    --color-success: var(--fl-color-success);
+    --text-color-success: var(--fl-color-success-text);
+    --text-color-success-content: var(--fl-color-success-content);
+    --background-color-success: var(--fl-color-success);
+    --border-color-success: var(--fl-color-success);
+    --ring-color-success: var(--fl-color-success);
+
+    /* info: Tailwind blue */
+    --color-info: var(--fl-color-info);
+    --text-color-info: var(--fl-color-info-text);
+    --text-color-info-content: var(--fl-color-info-content);
+    --background-color-info: var(--fl-color-info);
+    --border-color-info: var(--fl-color-info);
+    --ring-color-info: var(--fl-color-info);
+
+    /* warning: Tailwind amber */
+    --color-warning: var(--fl-color-warning);
+    --text-color-warning: var(--fl-color-warning-text);
+    --text-color-warning-content: var(--fl-color-warning-content);
+    --background-color-warning: var(--fl-color-warning);
+    --border-color-warning: var(--fl-color-warning);
+    --ring-color-warning: var(--fl-color-warning);
+
+    /* error: Tailwind red */
+    --color-error: var(--fl-color-error);
+    --text-color-error: var(--fl-color-error-text);
+    --text-color-error-content: var(--fl-color-error-content);
+    --background-color-error: var(--fl-color-error);
+    --border-color-error: var(--fl-color-error);
+    --ring-color-error: var(--fl-color-error);
 }
 
 /* FlintUI overrides live here, after the `flint.css` import. `flint.css` is
@@ -42,7 +130,7 @@
         var(--fl-color-primary-600),
         var(--fl-color-primary-600)
     );
-    --fl-color-primary-foreground: light-dark(
+    --fl-color-primary-content: light-dark(
         oklch(100% 0 0),
         oklch(100% 0 0)
     );
@@ -67,7 +155,7 @@
         var(--fl-color-secondary-600),
         var(--fl-color-secondary-600)
     );
-    --fl-color-secondary-foreground: light-dark(
+    --fl-color-secondary-content: light-dark(
         var(--fl-color-secondary-50),
         var(--fl-color-secondary-50)
     );
@@ -92,7 +180,7 @@
         var(--fl-color-neutral-600),
         var(--fl-color-neutral-600)
     );
-    --fl-color-neutral-foreground: light-dark(
+    --fl-color-neutral-content: light-dark(
         var(--fl-color-neutral-50),
         var(--fl-color-neutral-50)
     );
@@ -117,7 +205,7 @@
         var(--fl-color-success-700),
         var(--fl-color-success-700)
     );
-    --fl-color-success-foreground: light-dark(
+    --fl-color-success-content: light-dark(
         var(--fl-color-success-50),
         var(--fl-color-success-50)
     );
@@ -142,7 +230,7 @@
         var(--fl-color-info-600),
         var(--fl-color-info-600)
     );
-    --fl-color-info-foreground: light-dark(
+    --fl-color-info-content: light-dark(
         var(--fl-color-info-50),
         var(--fl-color-info-50)
     );
@@ -167,7 +255,7 @@
         var(--fl-color-warning-400),
         var(--fl-color-warning-400)
     );
-    --fl-color-warning-foreground: light-dark(
+    --fl-color-warning-content: light-dark(
         var(--fl-color-warning-950),
         var(--fl-color-warning-950)
     );
@@ -192,7 +280,7 @@
         var(--fl-color-error-600),
         var(--fl-color-error-600)
     );
-    --fl-color-error-foreground: light-dark(
+    --fl-color-error-content: light-dark(
         oklch(100% 0 0),
         oklch(100% 0 0)
     );
@@ -205,7 +293,7 @@
 /* A live custom preset. Select "brand" in the theming guide's preset picker. */
 [data-theme="brand"] {
     --fl-color-primary: oklch(0.55 0.24 275);
-    --fl-color-primary-foreground: oklch(1 0 0);
+    --fl-color-primary-content: oklch(1 0 0);
     /* Ghost and link read the role's AA text shade, so retint it with the fill. */
     --fl-color-primary-text: light-dark(
         oklch(0.491 0.27 292.581),

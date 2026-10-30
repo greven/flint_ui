@@ -11,10 +11,10 @@ defmodule FlintUI.Styled.Entry do
 
   `:color_vars` maps the semantic outputs of a raw `color` value onto the
   component's public CSS variables: `:fill` (the exact color), `:on_fill` (the
-  label on a solid fill), `:on_page` (the color as text on the page), and
-  `:on_tint` (the color as text on a tinted surface). A value may be the atom
-  `:color` for components that use the `color` property directly instead of a
-  custom variable. Entries without a customizable `color` prop leave this empty.
+  label on a solid fill), and `:on_text` (the color as text on the page and on
+  tinted surfaces). A value may be the atom `:color` for components that use the
+  `color` property directly instead of a custom variable. Entries without a
+  customizable `color` prop leave this empty.
 
   The generator merges `:slots` with the base component's own slots when it
   renders the wrapper's `slot/2` declarations.

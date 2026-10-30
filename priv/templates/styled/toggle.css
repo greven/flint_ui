@@ -1,6 +1,6 @@
 @layer components {
-    /* Toggle. Public inputs: `--fl-toggle-color`, `-color-foreground`, `-text`;
-   * surfaces, borders and focus follow from them plus the theme tokens. */
+    /* Toggle. Public inputs: `--fl-toggle-color`, `-color-content`, `-text`;
+     * surfaces, borders and focus follow from them plus the theme tokens. */
     [data-element="toggle"][data-variant] {
         display: inline-flex;
         position: relative;
@@ -16,7 +16,7 @@
         line-height: var(--fl-control-line-height-md);
         cursor: pointer;
         background: transparent;
-        color: var(--fl-color-foreground);
+        color: var(--fl-color-text);
         transition:
             background-color var(--fl-duration-fast) var(--fl-ease-out),
             color var(--fl-duration-fast) var(--fl-ease-out),
@@ -91,49 +91,49 @@
     /* Each color sets the three public inputs; neutral uses the inverted surface. */
     [data-element="toggle"][data-color="primary"] {
         --fl-toggle-color: var(--fl-color-primary);
-        --fl-toggle-color-foreground: var(--fl-color-primary-foreground);
-        --fl-toggle-text: var(--fl-color-primary-soft-foreground);
+        --fl-toggle-color-content: var(--fl-color-primary-content);
+        --fl-toggle-text: var(--fl-color-primary-text);
     }
 
     [data-element="toggle"][data-color="secondary"] {
         --fl-toggle-color: var(--fl-color-secondary);
-        --fl-toggle-color-foreground: var(--fl-color-secondary-foreground);
-        --fl-toggle-text: var(--fl-color-secondary-soft-foreground);
+        --fl-toggle-color-content: var(--fl-color-secondary-content);
+        --fl-toggle-text: var(--fl-color-secondary-text);
     }
 
     [data-element="toggle"][data-color="success"] {
         --fl-toggle-color: var(--fl-color-success);
-        --fl-toggle-color-foreground: var(--fl-color-success-foreground);
-        --fl-toggle-text: var(--fl-color-success-soft-foreground);
+        --fl-toggle-color-content: var(--fl-color-success-content);
+        --fl-toggle-text: var(--fl-color-success-text);
     }
 
     [data-element="toggle"][data-color="info"] {
         --fl-toggle-color: var(--fl-color-info);
-        --fl-toggle-color-foreground: var(--fl-color-info-foreground);
-        --fl-toggle-text: var(--fl-color-info-soft-foreground);
+        --fl-toggle-color-content: var(--fl-color-info-content);
+        --fl-toggle-text: var(--fl-color-info-text);
     }
 
     [data-element="toggle"][data-color="warning"] {
         --fl-toggle-color: var(--fl-color-warning);
-        --fl-toggle-color-foreground: var(--fl-color-warning-foreground);
-        --fl-toggle-text: var(--fl-color-warning-soft-foreground);
+        --fl-toggle-color-content: var(--fl-color-warning-content);
+        --fl-toggle-text: var(--fl-color-warning-text);
     }
 
     [data-element="toggle"][data-color="error"] {
         --fl-toggle-color: var(--fl-color-error);
-        --fl-toggle-color-foreground: var(--fl-color-error-foreground);
-        --fl-toggle-text: var(--fl-color-error-soft-foreground);
+        --fl-toggle-color-content: var(--fl-color-error-content);
+        --fl-toggle-text: var(--fl-color-error-text);
     }
 
     [data-element="toggle"][data-color="neutral"] {
         --fl-toggle-color: var(--fl-color-inverted);
-        --fl-toggle-color-foreground: var(--fl-color-inverted-foreground);
-        --fl-toggle-text: var(--fl-color-foreground);
+        --fl-toggle-color-content: var(--fl-color-text-inverted);
+        --fl-toggle-text: var(--fl-color-text);
     }
 
     [data-element="toggle"][data-variant="solid"][data-state="on"] {
         background: var(--fl-toggle-color, var(--fl-color-inverted));
-        color: var(--fl-toggle-color-foreground, var(--fl-color-inverted-foreground));
+        color: var(--fl-toggle-color-content, var(--fl-color-text-inverted));
     }
 
     /* Subtle: ghost + outline, a tinted control surface with a matching border. */
@@ -193,7 +193,7 @@
             [data-variant="dashed"]
         )[data-state="on"] {
         background: var(--fl-color-muted);
-        color: var(--fl-color-foreground);
+        color: var(--fl-color-text);
     }
 
     [data-element="toggle"][data-color="neutral"]:is([data-variant="outline"], [data-variant="dashed"]) {

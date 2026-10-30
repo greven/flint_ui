@@ -4,15 +4,7 @@
     --fl-radius: 0.5rem;
 
     --fl-color-primary: oklch(0.66 0.14 290);
-    --fl-color-primary-foreground: oklch(0.98 0.012 290);
-    --fl-color-accent: light-dark(
-        oklch(0.94 0.03 290),
-        oklch(0.32 0.045 290)
-    );
-    --fl-color-accent-foreground: light-dark(
-        oklch(0.38 0.06 290),
-        oklch(0.92 0.03 290)
-    );
+    --fl-color-primary-content: oklch(0.98 0.012 290);
     --fl-color-border: light-dark(
         oklch(0.85 0.028 300),
         oklch(1 0 0 / 8%)

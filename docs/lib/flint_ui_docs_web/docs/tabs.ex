@@ -305,7 +305,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
         `variant` chooses the container treatment, `color` tints the active
         state, and `size` sets the default trigger metrics. On `outlined`, only
         the indicator (and focus ring) carries the color; the active label stays
-        on the foreground text color. On `segmented` and `minimal`, the active
+        on the default text color. On `segmented` and `minimal`, the active
         label is tinted too. `color` also accepts a raw CSS color such as
         `#1D72FE`; the indicator uses it exactly and the active label derives a
         readable shade. Raw colors are a per-instance escape hatch, not a theme
@@ -493,7 +493,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           title: "Active tab",
           code: """
           [data-element="tabs"] [data-part="tab"][data-state="active"] {
-            color: var(--fl-color-foreground);
+            color: var(--fl-color-text);
           }
           """
         },
@@ -543,7 +543,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
       `--fl-tabs-color`, `--fl-tabs-text`, and `--fl-tabs-surface`; the tablist
       container and layout are styled through `[data-part="tablist"]` and
       `[data-part="tab"]`. `--fl-tabs-color` drives the outlined indicator and
-      focus ring; the outlined label always uses the foreground text color, so
+      focus ring; the outlined label always uses the default text color, so
       `--fl-tabs-text` only affects segmented and minimal. The outlined
       indicator grows in while the outgoing one fades, and the segmented and
       minimal surfaces cross-fade. A `scrollable` or
@@ -624,17 +624,17 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           <:tab value="activity">Activity</:tab>
           <:tab value="members">Members</:tab>
           <:panel value="overview">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+            <p class="text-sm text-soft">
               Snapshot of the workspace with health, ownership, and recent updates.
             </p>
           </:panel>
           <:panel value="activity">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+            <p class="text-sm text-soft">
               Timeline of edits, comments, and merges across the team.
             </p>
           </:panel>
           <:panel value="members">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+            <p class="text-sm text-soft">
               Roster of teammates, roles, and pending invitations.
             </p>
           </:panel>
@@ -685,7 +685,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           {attrs}
           variant="ghost"
           size="sm"
-          class="aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-xs dark:aria-selected:bg-zinc-900 dark:aria-selected:text-zinc-100"
+          class="aria-selected:bg-surface aria-selected:text-default aria-selected:shadow-xs"
         >
           {String.capitalize(period)}
         </Components.button>
@@ -741,11 +741,11 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
     <.preview id={@id} name={:tabs} state={@state} code={code(:gap)}>
       <div class="flex w-full max-w-md flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Auto spacing</p>
+          <p class="text-xs font-medium text-muted">Auto spacing</p>
           <.gap_tabs id={"#{@id}-gap-auto"} label="Billing period" gap="auto" />
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+          <p class="text-xs font-medium text-muted">
             <code>gap="md"</code>
           </p>
           <.gap_tabs id={"#{@id}-gap-md"} label="Billing period, spaced" gap="md" />
@@ -773,7 +773,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
               {attrs}
               variant="ghost"
               size="sm"
-              class="aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-xs dark:aria-selected:bg-zinc-900 dark:aria-selected:text-zinc-100"
+              class="aria-selected:bg-surface aria-selected:text-default aria-selected:shadow-xs"
             >
               Monthly
             </Components.button>
@@ -783,20 +783,20 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
               {attrs}
               variant="ghost"
               size="sm"
-              class="aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-xs dark:aria-selected:bg-zinc-900 dark:aria-selected:text-zinc-100"
+              class="aria-selected:bg-surface aria-selected:text-default aria-selected:shadow-xs"
             >
               Yearly
             </Components.button>
           </:tab>
           <:tab value="lifetime">Lifetime</:tab>
           <:panel value="monthly">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">Billed every month.</p>
+            <p class="text-sm text-soft">Billed every month.</p>
           </:panel>
           <:panel value="yearly">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">Billed once a year.</p>
+            <p class="text-sm text-soft">Billed once a year.</p>
           </:panel>
           <:panel value="lifetime">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">Billed once.</p>
+            <p class="text-sm text-soft">Billed once.</p>
           </:panel>
         </Components.tabs>
       </div>
@@ -825,7 +825,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
             :for={month <- ~w(January February March April May June)}
             value={String.downcase(month)}
           >
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">{month} view</p>
+            <p class="text-sm text-soft">{month} view</p>
           </:panel>
         </Components.tabs>
       </div>
@@ -847,7 +847,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           {attrs}
           variant="ghost"
           size="sm"
-          class="aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-xs dark:aria-selected:bg-zinc-900 dark:aria-selected:text-zinc-100"
+          class="aria-selected:bg-surface aria-selected:text-default aria-selected:shadow-xs"
         >
           {String.capitalize(period)}
         </.button>
@@ -923,7 +923,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           {attrs}
           variant="ghost"
           size="sm"
-          class="aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-xs dark:aria-selected:bg-zinc-900 dark:aria-selected:text-zinc-100"
+          class="aria-selected:bg-surface aria-selected:text-default aria-selected:shadow-xs"
         >
           Monthly
         </.button>
@@ -933,7 +933,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           {attrs}
           variant="ghost"
           size="sm"
-          class="aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-xs dark:aria-selected:bg-zinc-900 dark:aria-selected:text-zinc-100"
+          class="aria-selected:bg-surface aria-selected:text-default aria-selected:shadow-xs"
         >
           Yearly
         </.button>

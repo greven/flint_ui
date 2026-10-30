@@ -13,7 +13,7 @@ defmodule FlintUIDocsWeb.Docs.Default do
     assigns = assign(assigns, :name_label, to_string(assigns.name))
 
     ~H"""
-    <p class="text-sm text-zinc-500">No example yet for <code>{@name_label}</code>.</p>
+    <p class="text-sm text-muted">No example yet for <code>{@name_label}</code>.</p>
     """
   end
 end

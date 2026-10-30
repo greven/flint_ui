@@ -20,7 +20,7 @@ defmodule FlintUI.Styled.Tabs do
         ),
         Var.new(
           name: "--fl-tabs-text",
-          default: "var(--fl-color-foreground)",
+          default: "var(--fl-color-text)",
           doc:
             "The active label color for the segmented and minimal variants. The outlined variant always keeps the label on the foreground text color."
         ),
@@ -32,7 +32,7 @@ defmodule FlintUI.Styled.Tabs do
       ],
       color_vars: [
         fill: "--fl-tabs-color",
-        on_page: "--fl-tabs-text"
+        on_text: "--fl-tabs-text"
       ],
       props: [
         Prop.new(

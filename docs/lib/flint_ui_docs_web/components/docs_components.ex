@@ -21,7 +21,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="min-w-0">
           <h1 class="text-4xl font-semibold tracking-tight">{@title}</h1>
-          <p :if={@subtitle} class="mt-4 max-w-2xl text-lgs text-zinc-600 dark:text-zinc-400">
+          <p :if={@subtitle} class="mt-4 max-w-2xl text-lg text-muted">
             {@subtitle}
           </p>
         </div>
@@ -32,10 +32,9 @@ defmodule FlintUIDocsWeb.DocsComponents do
             target="_blank"
             rel="noopener"
             class={[
-              "inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2.5 py-1 transition-colors",
-              "text-xs font-medium text-zinc-600",
-              "dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900",
-              "hover:bg-zinc-50 hover:text-zinc-900 dark:hover:text-zinc-100"
+              "inline-flex items-center gap-1.5 rounded-md border border-default px-2.5 py-1 transition-colors",
+              "text-xs font-medium text-soft",
+              "hover:bg-surface-soft hover:text-default"
             ]}
           >
             <FlintUI.icon :if={link[:icon]} name={link.icon} class="size-3.5" />
@@ -56,8 +55,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     """
   end
 
-  attr :class, :string,
-    default: "text-zinc-600 border-zinc-300 dark:border-zinc-800 dark:text-zinc-400"
+  attr :class, :string, default: "text-soft border-accented"
 
   slot :inner_block, required: true
 
@@ -81,7 +79,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp status_badge_class(_status) do
-    "text-zinc-600 border-zinc-300 dark:border-zinc-800 dark:text-zinc-400"
+    "text-soft border-accented"
   end
 
   # Icons are keyed by the `FlintUI.Meta` status, never by the display label, so
@@ -104,7 +102,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         />
         <div>
           <p :if={feature_title(feature)} class="text-sm font-medium">{feature_title(feature)}</p>
-          <p :if={feature_body(feature)} class="text-sm text-zinc-600 dark:text-zinc-400">
+          <p :if={feature_body(feature)} class="text-sm text-soft">
             {feature_body(feature)}
           </p>
         </div>
@@ -127,11 +125,11 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <dl class="mt-4 space-y-3">
       <div :for={part <- @architecture} class="grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-4">
         <dt>
-          <code class="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+          <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">
             {part.name}
           </code>
         </dt>
-        <dd class="text-sm text-zinc-600 dark:text-zinc-400">{part.description}</dd>
+        <dd class="text-sm text-soft">{part.description}</dd>
       </div>
     </dl>
     """
@@ -176,8 +174,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def code_block(assigns) do
     ~H"""
     <pre class={[
-      "highlight mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-black/3 p-4 text-xs leading-relaxed",
-      "dark:border-zinc-800 dark:bg-white/3"
+      "highlight mt-3 overflow-x-auto rounded-lg border border-default bg-foreground/3 p-4 text-xs leading-relaxed"
     ]}><code>{Highlight.highlight(@code, @lang)}</code></pre>
     """
   end
@@ -199,11 +196,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def content_placeholder(assigns) do
     ~H"""
     <div class={[
-      "grid place-items-center text-sm text-zinc-400",
+      "grid place-items-center text-sm text-muted",
       @rounded && "rounded-md",
-      @border && "border border-dashed border-zinc-300 dark:border-zinc-700",
-      "bg-[repeating-linear-gradient(45deg,var(--color-zinc-200)_0,var(--color-zinc-200)_1px,transparent_1px,transparent_8px)]",
-      "dark:bg-[repeating-linear-gradient(45deg,var(--color-zinc-900)_0,var(--color-zinc-900)_1px,transparent_1px,transparent_8px)]",
+      @border && "border border-dashed border-accented",
+      "bg-[repeating-linear-gradient(45deg,var(--fl-color-border)_0,var(--fl-color-border)_1px,transparent_1px,transparent_8px)]",
       @class
     ]}>
       {render_slot(@inner_block)}
@@ -219,23 +215,23 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div class="mt-4 overflow-x-auto">
       <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Attr</th>
             <th class="py-3 pr-6 font-medium">Type</th>
             <th class="py-3 font-medium">Description</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tbody class="divide-y divide-default">
           <tr :for={row <- @rows} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
               <code class={code_class()}>{row.name}</code>
               <.required_badge :if={row[:required]} />
             </td>
-            <td class="py-4 pr-6 leading-6 text-zinc-600 dark:text-zinc-400">
+            <td class="py-4 pr-6 leading-6 text-soft">
               <.type_cell item={row} />
             </td>
-            <td class="py-4 leading-6 text-zinc-600 dark:text-zinc-400">
+            <td class="py-4 leading-6 text-soft">
               <.attribute_description doc={row[:doc]} default={row[:default]} />
             </td>
           </tr>
@@ -256,11 +252,9 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   @tone_zinc %{
-    rail: "border-l-zinc-300 dark:border-l-zinc-700",
-    part:
-      "bg-zinc-100 text-zinc-700 ring-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700",
-    selector:
-      "bg-zinc-50 text-zinc-600 ring-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:ring-zinc-800"
+    rail: "border-l-border-accented",
+    part: "bg-muted text-default ring-default",
+    selector: "bg-surface-soft text-soft ring-default"
   }
 
   @tone_blue %{
@@ -330,7 +324,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
       </ul>
 
       <div class="mt-6 flex flex-wrap items-center gap-1.5" data-anatomy-legend>
-        <span class="mr-1 text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
+        <span class="mr-1 text-[10px] font-semibold tracking-wider text-muted uppercase">
           Legend
         </span>
         <span class={["rounded-md px-1.5 py-0.5 font-mono text-[11px] ring-1 ring-inset", @legend.tag]}>
@@ -413,7 +407,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         </code>
       </div>
 
-      <p :if={@node[:note]} class="mt-1 text-xs text-zinc-500">{@node[:note]}</p>
+      <p :if={@node[:note]} class="mt-1 text-xs text-muted">{@node[:note]}</p>
 
       <div :if={@groups != []} class="mt-2 grid gap-1">
         <div
@@ -421,7 +415,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
           class="flex flex-wrap items-start gap-x-2 gap-y-1"
           data-anatomy-group={kind}
         >
-          <span class="w-12 shrink-0 pt-0.5 text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
+          <span class="w-12 shrink-0 pt-0.5 text-[10px] font-semibold tracking-wider text-muted uppercase">
             {anatomy_group_label(kind)}
           </span>
           <div class="flex min-w-0 flex-1 flex-wrap gap-1.5">
@@ -489,7 +483,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   defp anatomy_group_label(:html), do: "HTML"
 
   defp anatomy_tag_class do
-    "bg-zinc-900 text-zinc-100 ring-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 dark:ring-zinc-100"
+    "bg-inverted text-inverted ring-inverted"
   end
 
   defp anatomy_attr_class(:data) do
@@ -501,7 +495,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp anatomy_attr_class(:html) do
-    "text-zinc-600 ring-zinc-200 dark:text-zinc-400 dark:ring-zinc-800"
+    "text-soft ring-default"
   end
 
   @doc false
@@ -512,21 +506,21 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div class="mt-4 overflow-x-auto">
       <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Slot</th>
             <th class="py-3 font-medium">Description</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tbody class="divide-y divide-default">
           <tr :for={slot <- @slots} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
               <code class={code_class()}>{slot.name}</code>
               <.required_badge :if={slot.required} />
             </td>
-            <td class="py-4 leading-6 text-zinc-600 dark:text-zinc-400">
+            <td class="py-4 leading-6 text-soft">
               <p>{slot.doc}</p>
-              <p :if={Map.get(slot, :attrs, []) != []} class="mt-1 text-xs text-zinc-500">
+              <p :if={Map.get(slot, :attrs, []) != []} class="mt-1 text-xs text-muted">
                 Attributes: {Enum.map_join(Map.get(slot, :attrs, []), ", ", & &1.name)}
               </p>
             </td>
@@ -545,20 +539,20 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div class="mt-4 overflow-x-auto">
       <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Event</th>
             <th class="py-3 font-medium">Description</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tbody class="divide-y divide-default">
           <tr :for={event <- @events} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
               <code class={code_class()}>{event.name}</code>
               <.source_badge source={event.source} />
               <.required_badge :if={event.required} />
             </td>
-            <td class="py-4 leading-6 text-zinc-600 dark:text-zinc-400">{event.doc}</td>
+            <td class="py-4 leading-6 text-soft">{event.doc}</td>
           </tr>
         </tbody>
       </table>
@@ -590,7 +584,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp source_badge_class(_source) do
-    "bg-zinc-50 text-zinc-600 ring-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:ring-zinc-800"
+    "bg-surface-soft text-soft ring-default"
   end
 
   @doc false
@@ -600,20 +594,20 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def parts_tables(assigns) do
     ~H"""
     <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
-      <p class="text-xs font-semibold tracking-wider text-zinc-400 uppercase">{part}</p>
+      <p class="text-xs font-semibold tracking-wider text-muted uppercase">{part}</p>
       <div class="mt-2 overflow-x-auto">
         <table class="w-full min-w-xl text-left text-sm">
-          <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+          <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
             <tr>
               <th class="py-3 pr-6 font-medium">Attribute</th>
               <th class="py-3 font-medium">Value</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+          <tbody class="divide-y divide-default">
             <tr :for={part_attr <- part_attrs} class="align-top">
               <td class="py-4 pr-6 leading-6">
                 <code class={code_class()}>{part_attr_label(part_attr.name)}</code>
-                <p :if={part_attr.description} class="mt-1 text-xs text-zinc-500">
+                <p :if={part_attr.description} class="mt-1 text-xs text-muted">
                   {part_attr.description}
                 </p>
               </td>
@@ -647,14 +641,14 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div class="mt-4 overflow-x-auto">
       <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Variable</th>
             <th :if={@show_default} class="py-3 pr-6 font-medium">Default</th>
             <th class="py-3 font-medium">Description</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tbody class="divide-y divide-default">
           <tr :for={css_var <- @css_vars} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
               <code class={code_class()}>{css_var.name}</code>
@@ -662,7 +656,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
             <td :if={@show_default} class="py-4 pr-6 leading-6">
               <code class={code_class()}>{css_var_default(css_var)}</code>
             </td>
-            <td class="py-4 leading-6 text-zinc-600 dark:text-zinc-400">
+            <td class="py-4 leading-6 text-soft">
               {css_var_description(css_var)}
             </td>
           </tr>
@@ -691,20 +685,20 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div class="mt-4 overflow-x-auto">
       <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Selector</th>
             <th class="py-3 font-medium">Description</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tbody class="divide-y divide-default">
           <tr :for={selector <- @selectors} class="align-top">
             <td class="py-4 pr-6 leading-6">
-              <code class="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+              <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">
                 {selector.selector}
               </code>
             </td>
-            <td class="py-4 leading-6 text-zinc-600 dark:text-zinc-400">
+            <td class="py-4 leading-6 text-soft">
               {selector.description}
             </td>
           </tr>
@@ -722,20 +716,20 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div class="mt-4 overflow-x-auto">
       <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-zinc-200 text-xs tracking-wider text-zinc-400 uppercase dark:border-zinc-800">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Keys</th>
             <th class="py-3 font-medium">Description</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <tbody class="divide-y divide-default">
           <tr :for={kbd <- @keyboard} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
-              <code class="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+              <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-default">
                 {kbd.keys}
               </code>
             </td>
-            <td class="py-4 leading-6 text-zinc-600 dark:text-zinc-400">{kbd.description}</td>
+            <td class="py-4 leading-6 text-soft">{kbd.description}</td>
           </tr>
         </tbody>
       </table>
@@ -774,7 +768,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
       <code class={code_class()}>{@type}</code>
       <span
         role="tooltip"
-        class="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 hidden w-max max-w-64 rounded-md bg-zinc-900 px-2 py-1.5 text-xs whitespace-normal text-white shadow-lg group-focus-within:block group-hover:block dark:bg-zinc-100 dark:text-zinc-900"
+        class="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 hidden w-max max-w-64 rounded-md bg-inverted px-2 py-1.5 text-xs whitespace-normal text-inverted shadow-lg group-focus-within:block group-hover:block"
       >
         {Enum.map_join(@values, " | ", &to_string/1)}
       </span>
@@ -800,7 +794,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp code_class do
-    "rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
+    "rounded bg-muted px-1 py-0.5 font-mono text-xs text-default"
   end
 
   defp default_label(value), do: inspect(value)

@@ -75,7 +75,7 @@ defmodule FlintUIDocsWeb.Preview do
         <div
           data-preview-canvas
           class={[
-            "grid min-h-24 place-items-center border border-solid border-zinc-200 bg-black/1 p-6 dark:border-zinc-800 dark:bg-white/1",
+            "grid min-h-24 place-items-center border border-solid border-default bg-foreground/1 p-6",
             if(@below?, do: "rounded-t-lg", else: "rounded-lg")
           ]}
         >
@@ -95,7 +95,7 @@ defmodule FlintUIDocsWeb.Preview do
         <div
           :if={@show_code?}
           data-preview-code
-          class="overflow-hidden rounded-b-lg border-x border-b border-zinc-200 dark:border-zinc-800"
+          class="overflow-hidden rounded-b-lg border-x border-b border-default"
         >
           <CodeBlock.code
             id={"#{@id}-code"}
@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.Preview do
                 phx-click="preview_view"
                 phx-value-id={@id}
                 phx-value-view={if @code_view == "source", do: "code", else: "source"}
-                class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-100"
+                class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
               >
                 <.icon
                   name={if @code_view == "source", do: "lucide-code", else: "lucide-file-code"}
@@ -138,7 +138,7 @@ defmodule FlintUIDocsWeb.Preview do
 
           <div
             :if={@code_view == "code" && @active_flavor[:styles]}
-            class="border-t border-zinc-200 dark:border-zinc-800"
+            class="border-t border-default"
           >
             <CodeBlock.code
               id={"#{@id}-styles"}
@@ -168,7 +168,7 @@ defmodule FlintUIDocsWeb.Preview do
     <div
       data-preview-controls
       class={[
-        "overflow-x-auto border-x border-b border-zinc-200 bg-black/2 px-3 py-2.5 dark:border-zinc-800 dark:bg-white/2",
+        "overflow-x-auto border-x border-b border-default bg-foreground/2 px-3 py-2.5",
         "bg-[repeating-linear-gradient(135deg,rgba(0,0,0,0.03)_0,rgba(0,0,0,0.03)_1px,transparent_1px,transparent_6px)]",
         "dark:bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.03)_0,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_6px)]",
         @last && "rounded-b-lg"
@@ -197,7 +197,7 @@ defmodule FlintUIDocsWeb.Preview do
                   </select>
                   <.icon
                     name="lucide-chevron-down"
-                    class="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-zinc-400"
+                    class="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-muted"
                   />
                 </span>
               </label>
@@ -328,29 +328,29 @@ defmodule FlintUIDocsWeb.Preview do
   ## CSS classes
 
   defp code_tab(true) do
-    "rounded bg-zinc-900/5 px-2 py-1 text-xs font-medium text-zinc-900 dark:bg-white/10 dark:text-zinc-100"
+    "rounded bg-foreground/5 px-2 py-1 text-xs font-medium text-default"
   end
 
   defp code_tab(false) do
-    "rounded px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-zinc-100"
+    "rounded px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
   end
 
   defp addon_shell(width) do
     [
-      "flex min-w-0 items-stretch overflow-hidden rounded-md border border-zinc-200 bg-white text-left transition-colors focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-300 focus-within:ring-inset focus-visible:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:focus-within:border-zinc-700 dark:focus-within:ring-zinc-700",
+      "flex min-w-0 items-stretch overflow-hidden rounded-md border border-default bg-surface text-left transition-colors focus-within:border-accented focus-within:ring-2 focus-within:ring-accented focus-within:ring-inset focus-visible:outline-none",
       width
     ]
   end
 
   defp addon_label do
-    "flex shrink-0 items-center border-r border-zinc-200 bg-zinc-50 px-2 text-xs font-medium whitespace-nowrap text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
+    "flex shrink-0 items-center border-r border-default bg-surface-soft px-2 text-xs font-medium whitespace-nowrap text-muted"
   end
 
   defp input_class do
-    "keeper-ignore min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
+    "keeper-ignore min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-sm text-default outline-none"
   end
 
   defp select_class do
-    "w-full appearance-none bg-transparent py-1.5 pr-7 pl-2.5 text-sm text-zinc-900 outline-none dark:text-zinc-100"
+    "w-full appearance-none bg-transparent py-1.5 pr-7 pl-2.5 text-sm text-default outline-none"
   end
 end

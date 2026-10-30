@@ -24,8 +24,8 @@ defmodule FlintUI.Styled.Card do
           doc: "The card's background surface; `variant` selects it."
         ),
         Var.new(
-          name: "--fl-card-surface-foreground",
-          default: "var(--fl-color-surface-foreground)",
+          name: "--fl-card-text",
+          default: "var(--fl-color-text)",
           doc: "The text color on the card surface."
         ),
         Var.new(

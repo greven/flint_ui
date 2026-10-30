@@ -22,8 +22,8 @@ defmodule FlintUI.Styled.Toggle do
           doc: "The pressed fill and the source for tinted surfaces and focus."
         ),
         Var.new(
-          name: "--fl-toggle-color-foreground",
-          default: "var(--fl-color-inverted-foreground)",
+          name: "--fl-toggle-color-content",
+          default: "var(--fl-color-text-inverted)",
           doc: "The label color on the pressed solid fill."
         ),
         Var.new(
@@ -34,8 +34,8 @@ defmodule FlintUI.Styled.Toggle do
       ],
       color_vars: [
         fill: "--fl-toggle-color",
-        on_fill: "--fl-toggle-color-foreground",
-        on_tint: "--fl-toggle-text"
+        on_fill: "--fl-toggle-color-content",
+        on_text: "--fl-toggle-text"
       ],
       props: [
         Prop.new(

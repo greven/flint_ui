@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   title={example.title}
                   id={"example-#{@active}-#{example.id}-section"}
                 >
-                  <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <p :if={example[:description]} class="mt-1 text-sm text-soft">
                     {example[:description]}
                   </p>
                   <Docs.render_section
@@ -147,7 +147,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="API Reference" id="api">
-                <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="mt-3 text-sm text-soft">
                   The generated wrapper exposes these attributes and slots. Data attributes,
                   events, and runtime CSS variables are documented on the <.link
                     patch={"#{~p"/components/#{@active}?tab=base"}#data-attributes"}
@@ -158,7 +158,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 </p>
 
                 <DocsComponents.subsection title="Attributes" id="attributes">
-                  <p :if={@styled_attributes == []} class="mt-2 text-sm text-zinc-400">
+                  <p :if={@styled_attributes == []} class="mt-2 text-sm text-muted">
                     No attributes documented.
                   </p>
                   <DocsComponents.attributes_table
@@ -168,7 +168,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 </DocsComponents.subsection>
 
                 <DocsComponents.subsection title="Slots" id="slots">
-                  <p :if={@merged_slots == []} class="mt-2 text-sm text-zinc-400">
+                  <p :if={@merged_slots == []} class="mt-2 text-sm text-muted">
                     No slots documented.
                   </p>
                   <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
@@ -176,11 +176,11 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Setup" id="setup">
-                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="mt-2 text-sm text-soft">
                   Generate the styled wrapper into your app with:
                 </p>
                 <DocsComponents.code_block code={@install_command} lang={:shell} />
-                <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="mt-4 text-sm text-soft">
                   The wrapper is intentionally thin: it declares the styled props, maps them
                   onto <code class="font-mono">data-*</code>
                   hooks, forwards <code class="font-mono">class</code>
@@ -258,7 +258,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   title={example.title}
                   id={"example-#{@active}-#{example.id}"}
                 >
-                  <p :if={example[:description]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <p :if={example[:description]} class="mt-1 text-sm text-soft">
                     {example[:description]}
                   </p>
                   <CodeBlock.code
@@ -279,7 +279,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
               <DocsComponents.section title="API reference" id="api">
                 <DocsComponents.subsection title="Attributes" id="attributes">
-                  <p :if={@base_attributes == []} class="mt-2 text-sm text-zinc-400">
+                  <p :if={@base_attributes == []} class="mt-2 text-sm text-muted">
                     No attributes documented.
                   </p>
                   <DocsComponents.attributes_table
@@ -289,24 +289,28 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 </DocsComponents.subsection>
 
                 <DocsComponents.subsection title="Slots" id="slots">
-                  <p :if={@slots == []} class="mt-2 text-sm text-zinc-400">No slots documented.</p>
+                  <p :if={@slots == []} class="mt-2 text-sm text-muted">
+                    No slots documented.
+                  </p>
                   <DocsComponents.slot_table :if={@slots != []} slots={@slots} />
                 </DocsComponents.subsection>
 
                 <DocsComponents.subsection title="Events" id="events">
-                  <p :if={@events == []} class="mt-2 text-sm text-zinc-400">No events documented.</p>
+                  <p :if={@events == []} class="mt-2 text-sm text-muted">
+                    No events documented.
+                  </p>
                   <DocsComponents.events_table :if={@events != []} events={@events} />
                 </DocsComponents.subsection>
 
                 <DocsComponents.subsection title="Data attributes" id="data-attributes">
-                  <p :if={@parts == []} class="mt-2 text-sm text-zinc-400">
+                  <p :if={@parts == []} class="mt-2 text-sm text-muted">
                     No data attributes documented.
                   </p>
                   <DocsComponents.parts_tables :if={@parts != []} parts={@parts} />
                 </DocsComponents.subsection>
 
                 <DocsComponents.subsection title="CSS variables" id="css-variables">
-                  <p :if={@css_vars == []} class="mt-2 text-sm text-zinc-400">
+                  <p :if={@css_vars == []} class="mt-2 text-sm text-muted">
                     No runtime CSS variables documented.
                   </p>
                   <DocsComponents.css_vars_table :if={@css_vars != []} css_vars={@css_vars} />
@@ -326,7 +330,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Public CSS variables" id="css-variables">
-                <p :if={@style_vars == []} class="mt-2 text-sm text-zinc-400">
+                <p :if={@style_vars == []} class="mt-2 text-sm text-muted">
                   This component has no public CSS variables. Its appearance is
                   controlled by its props and the surrounding theme.
                 </p>
@@ -338,7 +342,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Selectors and state hooks" id="selectors">
-                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="mt-2 text-sm text-soft">
                   The styled theme targets the component through these hooks. The headless
                   base sets the same <code class="font-mono">data-*</code>
                   attributes, so the selectors work without the generated wrapper too.
@@ -347,18 +351,18 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </DocsComponents.section>
 
               <DocsComponents.section title="Theme tokens" id="theme">
-                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="mt-2 text-sm text-soft">
                   This component reads these token namespaces:
                 </p>
                 <ul :if={@entry && @entry.tokens != []} class="mt-3 flex flex-wrap gap-2">
                   <li
                     :for={token <- @entry.tokens}
-                    class="rounded-md bg-zinc-100 px-2 py-1 font-mono text-xs dark:bg-zinc-800"
+                    class="rounded-md bg-muted px-2 py-1 font-mono text-xs"
                   >
                     --fl-{token}-*
                   </li>
                 </ul>
-                <p class="mt-3 text-sm text-zinc-500">
+                <p class="mt-3 text-sm text-muted">
                   See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
                   for tokens and custom themes. For the headless base, see
                   <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>
@@ -373,7 +377,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               >
                 <div :for={snippet <- @css_contract[:snippets]} class="mt-4">
                   <p class="text-sm font-medium">{snippet.title}</p>
-                  <p :if={snippet[:body]} class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <p :if={snippet[:body]} class="mt-1 text-sm text-soft">
                     {snippet[:body]}
                   </p>
                   <DocsComponents.code_block code={snippet.code} lang={snippet[:lang] || :css} />

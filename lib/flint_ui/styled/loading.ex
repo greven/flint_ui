@@ -12,7 +12,7 @@ defmodule FlintUI.Styled.Loading do
       css: "styled/loading.css",
       tokens: [:color],
       slots: [],
-      color_vars: [on_page: :color],
+      color_vars: [on_text: :color],
       props: [
         Prop.new(
           name: :variant,

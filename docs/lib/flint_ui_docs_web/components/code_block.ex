@@ -36,12 +36,12 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
     ~H"""
     <div class={[
-      "relative overflow-hidden bg-black/3 dark:bg-white/3",
+      "relative overflow-hidden bg-foreground/3",
       @class || "rounded-lg"
     ]}>
       <div
         :if={@header?}
-        class="flex items-center justify-between gap-3 border-b border-zinc-200 px-3 py-1.5 dark:border-white/10"
+        class="flex items-center justify-between gap-3 border-b border-default px-3 py-1.5"
       >
         <div class="flex min-w-0 items-center gap-1">
           <div :if={@tabs != []} class="flex min-w-0 items-center gap-1">
@@ -49,7 +49,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
           </div>
           <span
             :if={@caption}
-            class="truncate px-1 font-mono text-xs text-zinc-400 dark:text-zinc-600"
+            class="truncate px-1 font-mono text-xs text-muted"
             title={@caption}
           >
             {@caption}
@@ -65,7 +65,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
         :if={!@header?}
         id={@copy_id}
         target={@id}
-        class="absolute top-2 right-2 border border-zinc-200 px-2 py-1 dark:border-white/10"
+        class="absolute top-2 right-2 border border-default px-2 py-1"
       />
 
       <pre class={[
@@ -109,7 +109,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
       data-copy={@target}
       aria-label="Copy code"
       class={[
-        "group inline-flex items-center gap-1.5 rounded-md text-xs text-zinc-500 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-100",
+        "group inline-flex items-center gap-1.5 rounded-md text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default",
         @class
       ]}
     >

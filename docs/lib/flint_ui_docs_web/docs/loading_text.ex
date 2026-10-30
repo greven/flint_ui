@@ -129,7 +129,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
         """,
         code: """
         <div class="flex flex-wrap items-center gap-6">
-          <FlintUI.loading_text text="Saving" class="text-sm text-zinc-500" />
+          <FlintUI.loading_text text="Saving" class="text-sm text-muted" />
           <FlintUI.loading_text text="Saving" class="text-lg font-medium" />
         </div>
         """
@@ -535,7 +535,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   def render_section(%{kind: :example, block: :inline} = assigns) do
     ~H"""
     <.preview id={@id} name={:loading_text} state={@state} code={code(:inline)}>
-      <p class="text-sm text-zinc-600 dark:text-zinc-400">
+      <p class="text-sm text-soft">
         <Components.loading_text text="Syncing 3 files" variant="dots" />
       </p>
     </.preview>
@@ -621,7 +621,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
 
   defp code(:inline) do
     ~S"""
-    <p class="text-sm text-zinc-600 dark:text-zinc-400">
+    <p class="text-sm text-soft">
       <.loading_text text="Syncing 3 files" variant="dots" />
     </p>
     """

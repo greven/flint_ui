@@ -22,28 +22,21 @@ defmodule FlintUI.Styled.Button do
           doc: "The solid fill and the source for tinted surfaces and focus."
         ),
         Var.new(
-          name: "--fl-button-color-foreground",
-          default: "var(--fl-color-inverted-foreground)",
+          name: "--fl-button-color-content",
+          default: "var(--fl-color-text-inverted)",
           doc: "The label color on the solid fill."
         ),
         Var.new(
           name: "--fl-button-text",
           default: "var(--fl-button-color)",
           doc:
-            "The label color for ghost and link variants; it maps to the role's regular `-text` token."
-        ),
-        Var.new(
-          name: "--fl-button-soft-text",
-          default: "var(--fl-button-color)",
-          doc:
-            "The label color for tinted and bordered variants (soft, subtle, outline, dashed); it maps to the role's `-soft-foreground` token."
+            "The label color on tinted, bordered, ghost, and link variants; it maps to the role's `-text` token."
         )
       ],
       color_vars: [
         fill: "--fl-button-color",
-        on_fill: "--fl-button-color-foreground",
-        on_page: "--fl-button-text",
-        on_tint: "--fl-button-soft-text"
+        on_fill: "--fl-button-color-content",
+        on_text: "--fl-button-text"
       ],
       props: [
         Prop.new(

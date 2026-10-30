@@ -79,12 +79,12 @@ defmodule FlintUIDocsWeb.SoundLive do
     <Layouts.app flash={@flash} section={:guides} page={:sound}>
       <div class="max-w-3xl">
         <h1 class="text-3xl font-semibold tracking-tight">Sounds</h1>
-        <p class="mt-3 text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-soft">
           FlintUI can give interaction a voice: short cues synthesized in the browser with the
           Web Audio API. There are no audio files, no network requests, and nothing plays until
           you ask for it.
         </p>
-        <p class="mt-2 text-zinc-600 dark:text-zinc-400">
+        <p class="mt-2 text-soft">
           The palette is adapted from
           <a
             href="https://github.com/eakbulut/foley"
@@ -99,7 +99,7 @@ defmodule FlintUIDocsWeb.SoundLive do
       </div>
 
       <DocsComponents.section title="Setup" id="setup" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           Sounds are a second, optional bundle. Apps that never use them never download it:
           the core <code class="font-mono">flint.js</code>
           stays small, and <code class="font-mono">flint-sound.js</code>
@@ -108,14 +108,14 @@ defmodule FlintUIDocsWeb.SoundLive do
 
         <DocsComponents.code_block code="mix flint.setup --sound" lang={:bash} />
 
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           If you install by hand, add both bundles to <code class="font-mono">assets/js/app.js</code>
           and merge their hooks:
         </p>
 
         <DocsComponents.code_block code={snippet(:js_setup)} lang={:javascript} />
 
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           That registers the hook; it does not mount it, and nothing plays until you do. If you
           manage <code class="font-mono">app.js</code>
           yourself, pass <code class="font-mono">--no-js</code>
@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="Where the provider goes" id="provider" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           Mount the provider <strong>once per document</strong>, in the shared layout. In a
           default Phoenix app that is
           <code class="font-mono">lib/my_app_web/components/layouts.ex</code>
@@ -152,7 +152,7 @@ defmodule FlintUIDocsWeb.SoundLive do
         </div>
 
         <DocsComponents.code_block code={snippet(:provider)} />
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           The <code class="font-mono">enabled</code>
           assign is yours. Flip it from the server, or
           let a button dispatch <code class="font-mono">fl:sound:toggle</code>; the provider
@@ -164,19 +164,19 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="A sound language" id="catalog" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           Cues are grouped by the job they do, not by their timbre. Pick a family, audition the
           cues, then attach the name that fits. Sounds are off until you turn them on:
         </p>
 
-        <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-900/40">
+        <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-default bg-surface-soft p-3">
           <button
             type="button"
             data-sound-enable
             aria-pressed="false"
             aria-label="Toggle interface sounds"
             phx-click={JS.dispatch("fl:sound:toggle")}
-            class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 transition-colors aria-pressed:border-zinc-900 aria-pressed:bg-zinc-900 aria-pressed:text-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:aria-pressed:border-zinc-100 dark:aria-pressed:bg-zinc-100 dark:aria-pressed:text-zinc-900"
+            class="inline-flex items-center gap-2 rounded-lg border border-accented bg-surface px-3 py-1.5 text-sm font-medium text-default transition-colors aria-pressed:border-inverted aria-pressed:bg-inverted aria-pressed:text-inverted"
           >
             <span data-sound-icon="on" class="inline-flex items-center gap-2">
               <.icon name="lucide-volume-2" class="size-4" /> Sound on
@@ -187,14 +187,14 @@ defmodule FlintUIDocsWeb.SoundLive do
           </button>
 
           <div class="flex flex-wrap items-center gap-1.5" aria-label="Sound theme">
-            <span class="text-xs font-medium tracking-wide text-zinc-400 uppercase">Theme</span>
+            <span class="text-xs font-medium tracking-wide text-muted uppercase">Theme</span>
             <button
               :for={theme <- @themes}
               type="button"
               data-sound-theme-option={theme}
               aria-pressed={to_string(theme == "default")}
               phx-click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
-              class="rounded-full border border-zinc-300 px-2.5 py-1 text-xs font-medium text-zinc-600 transition-colors aria-pressed:border-zinc-900 aria-pressed:bg-zinc-900 aria-pressed:text-white dark:border-zinc-700 dark:text-zinc-300 dark:aria-pressed:border-zinc-100 dark:aria-pressed:bg-zinc-100 dark:aria-pressed:text-zinc-900"
+              class="rounded-full border border-accented px-2.5 py-1 text-xs font-medium text-soft transition-colors aria-pressed:border-inverted aria-pressed:bg-inverted aria-pressed:text-inverted"
             >
               {String.capitalize(theme)}
             </button>
@@ -203,24 +203,24 @@ defmodule FlintUIDocsWeb.SoundLive do
 
         <div :for={family <- @families} class="mt-8">
           <h3 class="text-sm font-semibold tracking-tight">{family.name}</h3>
-          <p class="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{family.description}</p>
+          <p class="mt-0.5 text-sm text-muted">{family.description}</p>
 
           <div class="mt-3 grid gap-2 sm:grid-cols-2">
             <button
               :for={cue <- family.cues}
               type="button"
               data-sound={cue.name}
-              class="group flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-left transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-zinc-700 dark:hover:bg-zinc-900"
+              class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2.5 text-left transition-colors hover:border-accented hover:bg-surface-soft"
             >
               <span class="min-w-0">
                 <span class="text-sm font-medium">{cue.name}</span>
-                <span class="mt-0.5 block truncate text-xs text-zinc-500 dark:text-zinc-400">
+                <span class="mt-0.5 block truncate text-xs text-muted">
                   {cue.description}
                 </span>
               </span>
               <.icon
                 name="lucide-play"
-                class="size-3.5 shrink-0 text-zinc-300 transition-colors group-hover:text-zinc-600 dark:text-zinc-600 dark:group-hover:text-zinc-300"
+                class="size-3.5 shrink-0 text-soft transition-colors group-hover:text-soft"
               />
             </button>
           </div>
@@ -228,15 +228,15 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="Hear it where it lives" id="in-place" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           The attributes compose: a control can own a press and a release, a toggle picks its cue
           from the resulting state, and an element can sound when it enters or leaves the DOM.
         </p>
 
         <div class="mt-4 grid gap-3">
-          <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+          <div class="rounded-xl border border-default p-4">
             <p class="text-sm font-medium">Two-part press</p>
-            <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            <p class="mt-1 text-sm text-muted">
               Down and up are different cues, so a click feels like a mechanism. Hold the button —
               the release waits for you. Keyboard activation falls back to <code class="font-mono">data-sound</code>.
             </p>
@@ -254,9 +254,9 @@ defmodule FlintUIDocsWeb.SoundLive do
           </div>
 
           <div class="grid gap-3 sm:grid-cols-2">
-            <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div class="rounded-xl border border-default p-4">
               <p class="text-sm font-medium">Toggle</p>
-              <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              <p class="mt-1 text-sm text-muted">
                 Reads the resulting state, so on and off are siblings rather than twins.
               </p>
               <div class="mt-3">
@@ -265,9 +265,9 @@ defmodule FlintUIDocsWeb.SoundLive do
               <DocsComponents.code_block code={snippet(:toggle)} />
             </div>
 
-            <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div class="rounded-xl border border-default p-4">
               <p class="text-sm font-medium">Collapsible</p>
-              <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              <p class="mt-1 text-sm text-muted">
                 State changes pick between two cues.
               </p>
               <div class="mt-3">
@@ -282,7 +282,7 @@ defmodule FlintUIDocsWeb.SoundLive do
                     </button>
                   </:trigger>
                   <:content :let={attrs}>
-                    <p {attrs} class="pt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                    <p {attrs} class="pt-2 text-sm text-muted">
                       Content that arrives with a lift and leaves with a settle.
                     </p>
                   </:content>
@@ -293,9 +293,9 @@ defmodule FlintUIDocsWeb.SoundLive do
           </div>
 
           <div class="grid gap-3 sm:grid-cols-2">
-            <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div class="rounded-xl border border-default p-4">
               <p class="text-sm font-medium">Toast</p>
-              <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              <p class="mt-1 text-sm text-muted">
                 <code class="font-mono">enter</code> and <code class="font-mono">exit</code> watch
                 the DOM, so any toast library can opt in with an attribute.
               </p>
@@ -316,16 +316,16 @@ defmodule FlintUIDocsWeb.SoundLive do
                 :if={@toast}
                 data-sound-enter="bubble"
                 data-sound-exit="whoosh"
-                class="mt-3 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+                class="mt-3 rounded-lg border border-default bg-surface px-3 py-2 text-sm shadow-sm"
               >
                 {@toast}
               </div>
               <DocsComponents.code_block code={snippet(:toast)} />
             </div>
 
-            <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div class="rounded-xl border border-default p-4">
               <p class="text-sm font-medium">Typing</p>
-              <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              <p class="mt-1 text-sm text-muted">
                 Per-key cue with a little pitch drift; <code class="font-mono">Enter</code> gets
                 its own arrival.
               </p>
@@ -334,7 +334,7 @@ defmodule FlintUIDocsWeb.SoundLive do
                 data-sound-type="thock"
                 placeholder="Type a few words…"
                 {FlintUI.Autofill.ignore_attributes()}
-                class="keeper-ignore mt-3 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                class="keeper-ignore mt-3 w-full rounded-lg border border-accented bg-surface px-3 py-2 text-sm"
               />
               <DocsComponents.code_block code={snippet(:type)} />
             </div>
@@ -343,7 +343,7 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="The four dials" id="dials" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           Every cue is data. Four perceptual macros reshape it per play, and the same four are
           available as attributes. Move a slider to hear the cue change:
         </p>
@@ -351,13 +351,13 @@ defmodule FlintUIDocsWeb.SoundLive do
         <div
           id="sound-dials"
           phx-hook=".SoundDials"
-          class="mt-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800"
+          class="mt-4 rounded-xl border border-default p-4"
         >
           <div class="grid gap-4 sm:grid-cols-2">
             <label :for={dial <- @dials} class="block">
               <span class="flex items-baseline justify-between text-sm">
                 <span class="font-medium">{dial.label}</span>
-                <span class="text-xs text-zinc-500">{dial.hint}</span>
+                <span class="text-xs text-muted">{dial.hint}</span>
               </span>
               <input
                 id={"sound-dial-#{dial.key}"}
@@ -367,7 +367,7 @@ defmodule FlintUIDocsWeb.SoundLive do
                 max={dial.max}
                 step={dial.step}
                 value={dial.value}
-                class="mt-2 w-full accent-zinc-900 dark:accent-zinc-100"
+                class="mt-2 w-full accent-inverted"
               />
             </label>
           </div>
@@ -376,7 +376,7 @@ defmodule FlintUIDocsWeb.SoundLive do
             type="button"
             data-sound="tap"
             data-sound-dial-demo
-            class="mt-4 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium dark:border-zinc-700"
+            class="mt-4 rounded-lg border border-accented px-3 py-1.5 text-sm font-medium"
           >
             Play this cue
           </button>
@@ -415,7 +415,7 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="Attributes" id="attributes" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           Every trigger is opt-in. An empty value uses the default cue; set a name to override it.
           Add the macros (<code class="font-mono">data-sound-pitch</code>, <code class="font-mono">-length</code>, <code class="font-mono">-air</code>, <code class="font-mono">-space</code>, <code class="font-mono">-volume</code>, <code class="font-mono">-pan</code>) to any trigger to tune that play.
         </p>
@@ -423,18 +423,18 @@ defmodule FlintUIDocsWeb.SoundLive do
         <div class="mt-4 overflow-x-auto">
           <table class="w-full text-left text-sm">
             <thead>
-              <tr class="border-b border-zinc-200 text-xs tracking-wide text-zinc-400 uppercase dark:border-zinc-800">
+              <tr class="border-b border-default text-xs tracking-wide text-muted uppercase">
                 <th class="py-2 pr-4 font-medium">Attribute</th>
                 <th class="py-2 pr-4 font-medium">Fires on</th>
                 <th class="py-2 font-medium">Default</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/60">
+            <tbody class="divide-y divide-muted">
               <tr :for={{attr, fires, cue} <- @sound_attrs}>
                 <td class="py-2 pr-4 align-top">
                   <code class="font-mono text-xs">{attr}</code>
                 </td>
-                <td class="py-2 pr-4 align-top text-zinc-600 dark:text-zinc-400">{fires}</td>
+                <td class="py-2 pr-4 align-top text-soft">{fires}</td>
                 <td class="py-2 align-top">
                   <code class="font-mono text-xs">{cue}</code>
                 </td>
@@ -443,7 +443,7 @@ defmodule FlintUIDocsWeb.SoundLive do
           </table>
         </div>
 
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           A press/release pair suppresses the click cue for that same pointer interaction, so a
           pointer gets one gesture's worth of sound while keyboard activation still gets the click
           cue. Cues are opt-out per element with <code class="font-mono">data-sound="none"</code>.
@@ -451,16 +451,16 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="From the server" id="server" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           Results often arrive after the click. The gesture itself still gets the two-part press,
           the pending state announces itself when it appears — even when LiveView updates the
           element in place rather than inserting it — and the verdict comes back from the
           LiveView:
         </p>
 
-        <div class="mt-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+        <div class="mt-4 rounded-xl border border-default p-4">
           <p class="text-sm font-medium">A save round trip</p>
-          <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p class="mt-1 text-sm text-muted">
             Down-stroke, spring, wait, verdict. The button owns the press pair, the
             <code class="font-mono">Saving…</code>
             state sounds as it appears, and the server pushes the success with the same four
@@ -479,13 +479,13 @@ defmodule FlintUIDocsWeb.SoundLive do
             </Components.button>
 
             <span role="status" aria-live="polite" class="text-sm">
-              <span :if={not @saving and not @saved} class="text-zinc-500 dark:text-zinc-400">
+              <span :if={not @saving and not @saved} class="text-muted">
                 Autosave off
               </span>
               <span
                 :if={@saving}
                 data-sound-enter="loading"
-                class="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400"
+                class="flex items-center gap-1.5 text-muted"
               >
                 <%!-- <.icon name="lucide-loader-circle" class="size-4 animate-spin" /> Saving… --%>
                 <.loading class="size-4" /> Save Saving…
@@ -501,7 +501,7 @@ defmodule FlintUIDocsWeb.SoundLive do
           <DocsComponents.code_block code={snippet(:save)} />
         </div>
 
-        <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-4 text-sm text-soft">
           The cue is pushed from the LiveView with the same four dials, so each result can be
           tuned per event:
         </p>
@@ -509,13 +509,13 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="Bring your own" id="custom" class="mt-10">
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           A cue is a list of tone, noise, and cluster layers. Register or replace one at runtime;
           no build step and no assets:
         </p>
         <DocsComponents.code_block code={snippet(:register)} lang={:javascript} />
 
-        <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        <p class="mt-3 text-sm text-soft">
           For reference and further listening, Foley's
           <a
             href="https://usefoley.dev/"
@@ -532,7 +532,7 @@ defmodule FlintUIDocsWeb.SoundLive do
       </DocsComponents.section>
 
       <DocsComponents.section title="Accessibility" id="accessibility" class="mt-10">
-        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-zinc-600 dark:text-zinc-400">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-soft">
           <li>Sounds are off by default and persist the user's choice.</li>
           <li>
             A cue is never the only feedback: every interaction it marks still changes visually,

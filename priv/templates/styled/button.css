@@ -1,5 +1,5 @@
 @layer components {
-    /* Button. Public inputs: `--fl-button-color`, `-color-foreground`, `-text`.
+    /* Button. Public inputs: `--fl-button-color`, `-color-content`, `-text`.
      * Shared depth, elevation and press behavior come from `--fl-control-*`. */
     [data-element="button"][data-variant] {
         --fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));
@@ -171,51 +171,44 @@
     /* Each color sets the public inputs. */
     [data-element="button"][data-color="primary"] {
         --fl-button-color: var(--fl-color-primary);
-        --fl-button-color-foreground: var(--fl-color-primary-foreground);
+        --fl-button-color-content: var(--fl-color-primary-content);
         --fl-button-text: var(--fl-color-primary-text);
-        --fl-button-soft-text: var(--fl-color-primary-soft-foreground);
     }
 
     [data-element="button"][data-color="success"] {
         --fl-button-color: var(--fl-color-success);
-        --fl-button-color-foreground: var(--fl-color-success-foreground);
+        --fl-button-color-content: var(--fl-color-success-content);
         --fl-button-text: var(--fl-color-success-text);
-        --fl-button-soft-text: var(--fl-color-success-soft-foreground);
     }
 
     [data-element="button"][data-color="info"] {
         --fl-button-color: var(--fl-color-info);
-        --fl-button-color-foreground: var(--fl-color-info-foreground);
+        --fl-button-color-content: var(--fl-color-info-content);
         --fl-button-text: var(--fl-color-info-text);
-        --fl-button-soft-text: var(--fl-color-info-soft-foreground);
     }
 
     [data-element="button"][data-color="warning"] {
         --fl-button-color: var(--fl-color-warning);
-        --fl-button-color-foreground: var(--fl-color-warning-foreground);
+        --fl-button-color-content: var(--fl-color-warning-content);
         --fl-button-text: var(--fl-color-warning-text);
-        --fl-button-soft-text: var(--fl-color-warning-soft-foreground);
     }
 
     [data-element="button"][data-color="error"] {
         --fl-button-color: var(--fl-color-error);
-        --fl-button-color-foreground: var(--fl-color-error-foreground);
+        --fl-button-color-content: var(--fl-color-error-content);
         --fl-button-text: var(--fl-color-error-text);
-        --fl-button-soft-text: var(--fl-color-error-soft-foreground);
     }
 
     [data-element="button"][data-color="secondary"] {
         --fl-button-color: var(--fl-color-secondary);
-        --fl-button-color-foreground: var(--fl-color-secondary-foreground);
+        --fl-button-color-content: var(--fl-color-secondary-content);
         --fl-button-text: var(--fl-color-secondary-text);
-        --fl-button-soft-text: var(--fl-color-secondary-soft-foreground);
     }
 
     [data-element="button"][data-color="neutral"] {
         --fl-button-color: var(--fl-color-inverted);
-        --fl-button-color-foreground: var(--fl-color-inverted-foreground);
-        --fl-button-text: var(--fl-color-foreground);
-        --fl-button-soft-text: var(--fl-color-foreground);
+        --fl-button-color-content: var(--fl-color-text-inverted);
+        --fl-button-text: var(--fl-color-text);
     }
 
     /* Solid: the color fills the button with a darker edge line. */
@@ -226,14 +219,14 @@
             var(--fl-button-color, var(--fl-color-inverted)),
             oklch(0% 0 0) var(--fl-border-strength-solid)
         );
-        color: var(--fl-button-color-foreground, var(--fl-color-inverted-foreground));
+        color: var(--fl-button-color-content, var(--fl-color-text-inverted));
     }
 
     /* Soft: a tinted control surface with no border. */
     [data-element="button"][data-variant="soft"],
     [data-element="button"][data-variant="subtle"] {
         background: color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
-        color: var(--fl-button-soft-text, var(--fl-button-color, var(--fl-color-inverted)));
+        color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     /* Subtle: ghost + outline, a tinted surface with a matching border. */
@@ -253,11 +246,11 @@
             var(--fl-color-control)
         );
         background: var(--fl-color-control);
-        color: var(--fl-button-soft-text, var(--fl-button-color, var(--fl-color-inverted)));
+        color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
-    /* Ghost and link use the role's regular text token, so a colored ghost
-     * reads as strongly as the solid variant's background. */
+    /* Colored labels use the role's regular text token on every variant, so a
+     * tinted or bordered label reads as strongly as the fill. */
     [data-element="button"][data-variant="ghost"] {
         background: transparent;
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
@@ -272,7 +265,7 @@
             var(--fl-color-control)
         );
         background: var(--fl-color-control);
-        color: var(--fl-button-soft-text, var(--fl-button-color, var(--fl-color-inverted)));
+        color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     [data-element="button"][data-variant="link"] {
@@ -292,7 +285,7 @@
     /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
     [data-element="button"][data-color="neutral"]:is([data-variant="soft"], [data-variant="subtle"]) {
         background: var(--fl-color-muted);
-        color: var(--fl-color-foreground);
+        color: var(--fl-color-text);
     }
 
     [data-element="button"][data-color="neutral"]:is([data-variant="outline"], [data-variant="dashed"]) {

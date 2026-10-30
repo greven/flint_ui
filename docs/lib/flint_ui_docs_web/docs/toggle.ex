@@ -203,7 +203,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           code: """
           [data-element="toggle"][data-state="on"] {
             background: var(--fl-color-primary);
-            color: var(--fl-color-primary-foreground);
+            color: var(--fl-color-primary-content);
           }
           """
         },
@@ -423,11 +423,11 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       body: """
       The styled toggle maps `variant`, `color`, and `size` onto data hooks and
       leaves the pressed state to `data-state`. The public inputs are
-      `--fl-toggle-color`, `--fl-toggle-color-foreground`, and
+      `--fl-toggle-color`, `--fl-toggle-color-content`, and
       `--fl-toggle-text`; surfaces, borders, and focus derive from them.
-      `--fl-toggle-text` resolves to the role's `-soft-foreground` label, so
-      tinted and outlined colored toggles read lighter in dark; solid uses
-      `--fl-toggle-color-foreground`.
+      `--fl-toggle-text` resolves to the role's `-text` token, so tinted and
+      outlined colored toggles read consistently in both schemes; solid uses
+      `--fl-toggle-color-content`.
       """,
       snippets: [
         %{
@@ -436,8 +436,8 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           code: """
           .danger-toggle {
             --fl-toggle-color: var(--fl-color-error);
-            --fl-toggle-color-foreground: var(--fl-color-error-foreground);
-            --fl-toggle-text: var(--fl-color-error-soft-foreground);
+            --fl-toggle-color-content: var(--fl-color-error-content);
+            --fl-toggle-text: var(--fl-color-error-text);
           }
           """
         }

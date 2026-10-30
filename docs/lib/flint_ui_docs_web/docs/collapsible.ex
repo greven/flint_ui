@@ -451,11 +451,11 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <ul class="flex flex-col gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
-                  <li class="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs dark:bg-zinc-900">
+                <ul class="flex flex-col gap-2 border-t border-default px-4 py-3">
+                  <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">
                     @elixir-lang/elixir
                   </li>
-                  <li class="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs dark:bg-zinc-900">
+                  <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">
                     @phoenixframework/phoenix
                   </li>
                 </ul>
@@ -471,7 +471,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
   def render_section(%{kind: :example, block: :faq} = assigns) do
     ~H"""
     <.preview id={@id} name={:collapsible} state={@state} codes={codes(:faq)}>
-      <div class="w-full max-w-74 divide-y divide-zinc-200 rounded-lg border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+      <div class="w-full max-w-74 divide-y divide-default rounded-lg border border-default">
         <Components.collapsible id={"#{@id}-faq-1"} open>
           <:trigger :let={attrs}>
             <button
@@ -487,7 +487,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           </:trigger>
           <:content :let={attrs}>
             <div {attrs}>
-              <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+              <p class="px-4 pb-4 text-sm text-soft">
                 Accessible, unstyled components for Phoenix LiveView.
               </p>
             </div>
@@ -508,7 +508,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           </:trigger>
           <:content :let={attrs}>
             <div {attrs}>
-              <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+              <p class="px-4 pb-4 text-sm text-soft">
                 A theme ships, but styling is always yours to change.
               </p>
             </div>
@@ -535,7 +535,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           </:trigger>
           <:content :let={attrs}>
             <div {attrs}>
-              <p class="px-2 py-3 text-sm text-zinc-600 dark:text-zinc-400">
+              <p class="px-2 py-3 text-sm text-soft">
                 Released under the MIT License.
               </p>
             </div>
@@ -581,9 +581,9 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
               </:trigger>
               <:content :let={attrs}>
                 <div {attrs}>
-                  <ul class="flex flex-col gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
-                    <li class="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs dark:bg-zinc-900">@elixir-lang/elixir</li>
-                    <li class="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs dark:bg-zinc-900">@phoenixframework/phoenix</li>
+                  <ul class="flex flex-col gap-2 border-t border-default px-4 py-3">
+                    <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">@elixir-lang/elixir</li>
+                    <li class="rounded-md bg-muted px-3 py-2 font-mono text-xs">@phoenixframework/phoenix</li>
                   </ul>
                 </div>
               </:content>
@@ -669,7 +669,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
         label: "Tailwind",
         lang: :heex,
         code: ~S"""
-        <div class="w-full max-w-74 divide-y divide-zinc-200 rounded-lg border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+        <div class="w-full max-w-74 divide-y divide-default rounded-lg border border-default">
           <.collapsible id="faq-1" open>
             <:trigger :let={attrs}>
               <button {attrs} class="group flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium">
@@ -679,7 +679,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="px-4 pb-4 text-sm text-soft">
                   Accessible, unstyled components for Phoenix LiveView.
                 </p>
               </div>
@@ -694,7 +694,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <p class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="px-4 pb-4 text-sm text-soft">
                   A theme ships, but styling is always yours to change.
                 </p>
               </div>
@@ -771,7 +771,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
 
         .faq__answer {
           padding: 0 1rem 1rem;
-          color: var(--fl-color-muted-foreground);
+          color: var(--fl-color-text-muted);
           font-size: 0.875rem;
         }
         """
@@ -792,7 +792,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
             </:trigger>
             <:content :let={attrs}>
               <div {attrs}>
-                <p class="px-2 py-3 text-sm text-zinc-600 dark:text-zinc-400">
+                <p class="px-2 py-3 text-sm text-soft">
                   Released under the MIT License.
                 </p>
               </div>
@@ -837,7 +837,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
 
         .license {
           padding: 0.75rem 1rem;
-          color: var(--fl-color-muted-foreground);
+          color: var(--fl-color-text-muted);
           font-size: 0.875rem;
         }
         """

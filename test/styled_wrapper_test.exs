@@ -51,15 +51,14 @@ defmodule FlintUI.StyledWrapperTest do
     style = html |> attr("style") |> List.first()
 
     assert style =~ "--fl-button-color: #1D72FE"
-    assert style =~ "--fl-button-color-foreground: oklch(0% 0 0)"
+    assert style =~ "--fl-button-color-content: oklch(0% 0 0)"
     assert style =~ "--fl-button-text: light-dark("
-    assert style =~ "--fl-button-soft-text: light-dark("
   end
 
   test "an explicit style wins over the derived inputs", %{wrapper: wrapper} do
-    html = render(wrapper, "#1D72FE", "--fl-button-color-foreground: white")
+    html = render(wrapper, "#1D72FE", "--fl-button-color-content: white")
     style = html |> attr("style") |> List.first()
 
-    assert String.ends_with?(style, "; --fl-button-color-foreground: white")
+    assert String.ends_with?(style, "; --fl-button-color-content: white")
   end
 end

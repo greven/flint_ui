@@ -34,7 +34,7 @@ defmodule FlintUIDocsWeb.Layouts do
       |> assign(:breadcrumbs, breadcrumb_trail(assigns))
 
     ~H"""
-    <div class="min-h-screen bg-background text-zinc-900 antialiased dark:text-zinc-100">
+    <div class="min-h-screen bg-default text-default antialiased">
       <%!-- One provider per document, mounted with the shared layout. --%>
       <FlintUI.sound_provider enabled={false} theme="default" />
 
@@ -89,18 +89,18 @@ defmodule FlintUIDocsWeb.Layouts do
           <.icon
             :if={index > 0}
             name="lucide-chevron-right"
-            class="size-4 shrink-0 translate-y-px text-zinc-300 dark:text-zinc-600"
+            class="size-4 shrink-0 translate-y-px text-soft"
           />
           <.link
             :if={index < length(@crumbs) - 1}
             navigate={crumb.path}
-            class="text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            class="text-muted transition-colors hover:text-default"
           >
             {crumb.label}
           </.link>
           <span
             :if={index == length(@crumbs) - 1}
-            class="font-medium text-zinc-900 dark:text-white"
+            class="font-medium text-default"
           >
             {crumb.label}
           </span>
@@ -120,11 +120,11 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def site_header(assigns) do
     ~H"""
-    <div class="sticky top-0 z-20 border-b border-zinc-200 bg-background/85 backdrop-blur dark:border-zinc-800">
+    <div class="sticky top-0 z-20 border-b border-default bg-default/85 backdrop-blur">
       <header>
         <div class="mx-auto grid h-14 max-w-360 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
           <.link navigate={~p"/"} class="flex items-center gap-2 justify-self-start">
-            <span class="grid size-6 place-items-center rounded-md bg-zinc-900 text-xs font-bold text-white dark:bg-white dark:text-zinc-900">
+            <span class="grid size-6 place-items-center rounded-md bg-inverted text-xs font-bold text-inverted">
               F
             </span>
             <span class="font-semibold tracking-tight">FlintUI</span>
@@ -137,8 +137,8 @@ defmodule FlintUIDocsWeb.Layouts do
               class={[
                 "rounded-md px-2 py-1.5 text-sm font-medium whitespace-nowrap transition-colors sm:px-3",
                 if(@page == :themes,
-                  do: "text-zinc-900 dark:text-white",
-                  else: "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                  do: "text-default",
+                  else: "text-soft hover:bg-muted"
                 )
               ]}
             >
@@ -149,7 +149,7 @@ defmodule FlintUIDocsWeb.Layouts do
           <nav class="flex items-center gap-1 justify-self-end">
             <a
               href="https://github.com/greven/flint_ui"
-              class="rounded-md px-2 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 sm:px-3 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              class="rounded-md px-2 py-1.5 text-sm text-soft transition-colors hover:bg-muted sm:px-3"
               aria-label="FlintUI on GitHub"
             >
               <.icon name="lucide-github" class="size-4 sm:hidden" />
@@ -173,7 +173,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def section_nav(assigns) do
     ~H"""
-    <div class="border-t border-zinc-200 dark:border-zinc-800">
+    <div class="border-t border-default">
       <nav
         aria-label="Documentation sections"
         class="mx-auto flex max-w-360 items-center gap-6 px-4 sm:px-6 lg:px-8"
@@ -200,11 +200,11 @@ defmodule FlintUIDocsWeb.Layouts do
   end
 
   defp section_class(true) do
-    "border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
+    "border-inverted text-default"
   end
 
   defp section_class(false) do
-    "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    "border-transparent text-muted hover:text-default"
   end
 
   @doc false
@@ -221,23 +221,23 @@ defmodule FlintUIDocsWeb.Layouts do
       "hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block"
     ]}>
       <div :for={group <- @section.groups} class="mb-6 last:mb-0">
-        <div class="flex items-center gap-2.5 text-zinc-800 dark:text-zinc-100">
+        <div class="flex items-center gap-2.5 text-default">
           <.icon name={group.icon} class="size-4" />
           <p class="text-xs font-semibold tracking-wider uppercase">
             {group.label}
           </p>
         </div>
-        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-zinc-200 dark:border-zinc-800">
+        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-default">
           <.link
             :for={item <- group.pages}
             navigate={item.path}
             aria-current={if page_active?(item, @active, @page), do: "page", else: nil}
             class={[
-              "group -ml-px pr-2 pl-1.5 border-l transition-colors hover:text-zinc-800 dark:hover:text-zinc-100",
+              "group -ml-px pr-2 pl-1.5 border-l transition-colors hover:text-default",
               sidebar_item_class(page_active?(item, @active, @page))
             ]}
           >
-            <div class="px-2 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-zinc-400/5 dark:group-hover:bg-zinc-50/5">
+            <div class="px-2 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-foreground/5">
               {item.label}
             </div>
           </.link>
@@ -251,9 +251,9 @@ defmodule FlintUIDocsWeb.Layouts do
   defp page_active?(item, _active, page), do: page == item.id
 
   defp sidebar_item_class(true),
-    do: "border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
+    do: "border-inverted text-default"
 
-  defp sidebar_item_class(false), do: "border-transparent text-zinc-500 dark:text-zinc-400"
+  defp sidebar_item_class(false), do: "border-transparent text-muted"
 
   @doc """
   Renders the "On this page" outline for the current page's sections.
@@ -272,7 +272,7 @@ defmodule FlintUIDocsWeb.Layouts do
       id="on-this-page"
       class="sticky top-24 hidden h-[calc(100vh-6rem)] w-56 shrink-0 overflow-y-auto py-8 pl-6 xl:block"
     >
-      <div class="-ml-1 flex items-center gap-2.5 text-zinc-800 dark:text-zinc-100">
+      <div class="-ml-1 flex items-center gap-2.5 text-default">
         <.icon name="lucide-menu" class="size-4 text-current/50" />
         <p class="text-xs font-semibold tracking-wider uppercase">{@title}</p>
       </div>
@@ -286,7 +286,7 @@ defmodule FlintUIDocsWeb.Layouts do
       >
         <ol
           data-toc-list
-          class="flex flex-col gap-1.5 border-l border-zinc-200/75 text-sm dark:border-zinc-800/50"
+          class="flex flex-col gap-1.5 border-l border-default/75 text-sm"
         >
         </ol>
       </nav>
@@ -438,7 +438,7 @@ defmodule FlintUIDocsWeb.Layouts do
             link.className = [
               "-ml-px block border-l py-1 pr-2 transition-colors",
               entry.level === 2 ? "pl-3" : "pl-7 text-[13px]",
-              "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-100",
+              "border-transparent text-muted hover:text-default",
             ].join(" ")
 
             return link
@@ -467,14 +467,8 @@ defmodule FlintUIDocsWeb.Layouts do
             if (!item) return
 
             if (this.active !== item) {
-              const inactive = ["border-transparent", "text-zinc-500", "dark:text-zinc-500"]
-              const active = [
-                "border-zinc-900",
-                "text-zinc-900",
-                "dark:border-white",
-                "dark:text-white",
-                "font-medium",
-              ]
+              const inactive = ["border-transparent", "text-muted"]
+              const active = ["border-inverted", "text-default", "font-medium"]
 
               for (const entry of this.items) {
                 if (entry === item) {
@@ -558,7 +552,7 @@ defmodule FlintUIDocsWeb.Layouts do
           ]
         }
         type="button"
-        class="rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        class="rounded p-1 text-muted transition-colors hover:bg-muted"
         phx-click={JS.dispatch("phx:set-scheme")}
         data-phx-scheme={scheme}
         aria-label={"Use #{scheme} scheme"}
@@ -584,7 +578,7 @@ defmodule FlintUIDocsWeb.Layouts do
       <button
         :for={preset <- @themes}
         type="button"
-        class="rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        class="rounded-md border border-default px-2.5 py-1 text-xs font-medium text-default transition-colors hover:bg-muted"
         phx-click={JS.dispatch("phx:set-preset")}
         data-phx-preset={preset}
       >

@@ -156,5 +156,10 @@ defmodule Mix.Tasks.Flint.SetupTest do
     source = content(igniter, "assets/css/app.css")
     assert source =~ "@theme inline {"
     assert source =~ "--color-primary: var(--fl-color-primary);"
+    assert source =~ "--text-color-default: var(--fl-color-text);"
+    assert source =~ "--background-color-surface: var(--fl-color-surface);"
+    assert source =~ "--border-color-default: var(--fl-color-border);"
+    assert source =~ "--text-color-primary: var(--fl-color-primary-text);"
+    refute source =~ "--color-border:"
   end
 end

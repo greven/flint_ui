@@ -70,9 +70,8 @@ defmodule FlintUIDocsWeb.Components do
         assigns,
         ~w(primary secondary success info warning error neutral),
         fill: "--fl-button-color",
-        on_fill: "--fl-button-color-foreground",
-        on_page: "--fl-button-text",
-        on_tint: "--fl-button-soft-text"
+        on_fill: "--fl-button-color-content",
+        on_text: "--fl-button-text"
       )
 
     ~H"""
@@ -184,7 +183,7 @@ defmodule FlintUIDocsWeb.Components do
       FlintUI.Styled.Color.apply(
         assigns,
         ~w(inherit primary secondary success info warning error neutral),
-        on_page: :color
+        on_text: :color
       )
 
     ~H"""
@@ -231,7 +230,7 @@ defmodule FlintUIDocsWeb.Components do
       FlintUI.Styled.Color.apply(
         assigns,
         ~w(inherit primary secondary success info warning error neutral),
-        on_page: :color
+        on_text: :color
       )
 
     ~H"""
@@ -283,8 +282,8 @@ defmodule FlintUIDocsWeb.Components do
         assigns,
         ~w(primary secondary success info warning error neutral),
         fill: "--fl-toggle-color",
-        on_fill: "--fl-toggle-color-foreground",
-        on_tint: "--fl-toggle-text"
+        on_fill: "--fl-toggle-color-content",
+        on_text: "--fl-toggle-text"
       )
 
     ~H"""
@@ -539,7 +538,7 @@ defmodule FlintUIDocsWeb.Components do
         assigns,
         ~w(primary secondary success info warning error neutral),
         fill: "--fl-tabs-color",
-        on_page: "--fl-tabs-text"
+        on_text: "--fl-tabs-text"
       )
 
     ~H"""
