@@ -132,7 +132,10 @@
         box-shadow: light-dark(inset 0 1px 2px rgb(0 0 0 / 0.05), var(--fl-shadow-xs));
     }
 
-    [data-element="card"]:is([data-variant="soft"], [data-variant="accented"]):is([data-body="inset"], [data-body="flush"])
+    [data-element="card"]:is([data-variant="soft"], [data-variant="accented"]):is(
+            [data-body="inset"],
+            [data-body="flush"]
+        )
         > [data-part="body"] {
         background: light-dark(
             var(--fl-color-surface),

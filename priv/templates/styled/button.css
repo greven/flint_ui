@@ -40,14 +40,11 @@
 
     /* Add transparency to the icon beside the label
      * except square (icon-only) buttons. */
-    [data-element="button"][data-variant]:not([data-square])
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="button"][data-variant]:not([data-square]) > :is([data-element="icon"], [data-element="loading"]) {
         color: color-mix(in oklab, currentColor 70%, transparent);
     }
 
-    [data-element="button"][data-variant]:not([data-square]):not([data-disabled]):not(
-            [data-loading]
-        ):hover
+    [data-element="button"][data-variant]:not([data-square]):not([data-disabled]):not([data-loading]):hover
         > :is([data-element="icon"], [data-element="loading"]) {
         color: currentColor;
     }
