@@ -10,6 +10,11 @@
 
 @import "./highlight.css";
 
+/* Expose the page token as a utility so the docs shell dogfoods it. */
+@theme inline {
+    --color-background: var(--fl-color-background);
+}
+
 /* FlintUI overrides live here, after the `flint.css` import. `flint.css` is
    generated; anything below this point is site-owned.
 

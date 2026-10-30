@@ -62,7 +62,15 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-color-surface-muted: var(--fl-color-muted);"
     assert css =~ "--fl-color-disabled: var(--fl-color-surface-muted);"
     assert css =~ "--fl-color-disabled-foreground: var(--fl-color-dimmed);"
-    assert css =~ "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));"
+
+    assert css =~
+             "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));"
+
+    assert css =~
+             ~r/--fl-color-control: light-dark\(\s*var\(--fl-color-surface\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-background\) 50%,\s*var\(--fl-color-surface\) 50%\s*\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-muted: light-dark\(\s*var\(--fl-color-neutral-100\),\s*var\(--fl-color-neutral-800\)\s*\)/
   end
 
   test "foreground tiers are softened neutrals that clear AA where used", %{css: css} do
@@ -85,14 +93,15 @@ defmodule FlintUI.FlintCSSTest do
     white = "oklch(100% 0 none)"
     light_control = white
     light_muted = neutral.(100)
-    dark_control = FlintUI.Palette.Contrast.mix(neutral.(950), neutral.(800), 0.75)
-    dark_muted = FlintUI.Palette.Contrast.mix(neutral.(800), neutral.(700), 0.80)
+    dark_control = FlintUI.Palette.Contrast.mix(neutral.(950), neutral.(900), 0.50)
+    dark_surface = neutral.(900)
+    dark_muted = neutral.(800)
 
     for {fg, surfaces} <- [
           {neutral.(700), [light_control, light_muted]},
-          {neutral.(200), [dark_control, dark_muted]},
+          {neutral.(200), [dark_control, dark_surface, dark_muted]},
           {neutral.(600), [light_control, light_muted]},
-          {neutral.(300), [dark_control, dark_muted]}
+          {neutral.(300), [dark_control, dark_surface, dark_muted]}
         ],
         surface <- surfaces do
       assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
@@ -133,7 +142,7 @@ defmodule FlintUI.FlintCSSTest do
 
     white = "oklch(100% 0 none)"
     black = "oklch(0% 0 none)"
-    dark_control = Contrast.mix(neutral.(950), neutral.(800), 0.75)
+    dark_control = Contrast.mix(neutral.(950), neutral.(900), 0.50)
     light_muted = neutral.(100)
 
     roles = [

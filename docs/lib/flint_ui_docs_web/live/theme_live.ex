@@ -91,14 +91,17 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
         <DocsComponents.section title="Surfaces" id="surfaces">
           <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-            Surfaces are one opaque neutral scale. <code class="font-mono">solid</code>
-            is the base, <code class="font-mono">soft</code>
+            Surfaces are one opaque neutral ladder. <code class="font-mono">solid</code>
+            is the surface step, <code class="font-mono">soft</code>
             is a half-step toward the elevated step, and <code class="font-mono">muted</code>
-            is the full de-emphasized step. The scale moves toward <code class="font-mono">elevated</code>: light steps darker, dark steps
-            lighter. Bordered controls paint <code class="font-mono">control</code>,
-            an opaque fill just off the page, so attached-group seams stay single
-            while the neutral borders can stay semi-transparent.
-            <code class="font-mono">disabled</code>
+            is the full de-emphasized step. The dark default is
+            <code class="font-mono">neutral-950</code>
+            (page) → <code class="font-mono">neutral-900</code>
+            (surface) → <code class="font-mono">neutral-800</code>
+            (muted), with <code class="font-mono">control</code>
+            half a step above the page. Bordered controls paint <code class="font-mono">control</code>, an opaque fill just off the
+            page, so attached-group seams stay single while the neutral borders can
+            stay semi-transparent. <code class="font-mono">disabled</code>
             aliases the muted fill with a dimmed label; colored controls keep their
             hue and dim with <code class="font-mono">--fl-disabled-opacity</code>.
           </p>
@@ -304,6 +307,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
             continues to derive from the role fill. The docs app itself does
             this in its <code class="font-mono">app.css</code>.
           </p>
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            Neutral is the page and surface ladder, so remapping it is the quickest
+            way to change the whole chrome. The page, controls, surfaces, borders
+            and default text follow; the role scales stay independent:
+          </p>
+          <DocsComponents.code_block code={snippet(:neutral_palette)} lang={:css} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Tailwind (optional)" id="tailwind">
@@ -341,15 +350,19 @@ defmodule FlintUIDocsWeb.ThemeLive do
         var(--fl-color-elevated) 50%,
         var(--fl-color-surface)
       );
+      --fl-color-muted: light-dark(
+        var(--fl-color-neutral-100),
+        var(--fl-color-neutral-800)
+      );
       --fl-color-surface-muted: var(--fl-color-muted);
 
-      /* Opaque fill for bordered controls (a subtle step off the page). */
+      /* Opaque fill for bordered controls (half a step off the page). */
       --fl-color-control: light-dark(
         white,
         color-mix(
           in oklab,
-          var(--fl-color-background) 75%,
-          var(--fl-color-surface) 25%
+          var(--fl-color-background) 50%,
+          var(--fl-color-surface) 50%
         )
       );
 
@@ -449,6 +462,17 @@ defmodule FlintUIDocsWeb.ThemeLive do
     /* Shadows are independent of depth. Remove them per theme or instance: */
     .my-shadowless-button {
       --fl-control-shadow: 0 0 #0000;
+    }
+    """
+  end
+
+  defp snippet(:neutral_palette) do
+    """
+    /* app.css, after the flint.css import */
+    :root {
+      --fl-color-neutral-50: var(--color-slate-50);
+      /* … 100 through 900 … */
+      --fl-color-neutral-950: var(--color-slate-950);
     }
     """
   end

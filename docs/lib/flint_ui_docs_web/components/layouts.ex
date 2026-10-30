@@ -34,7 +34,7 @@ defmodule FlintUIDocsWeb.Layouts do
       |> assign(:breadcrumbs, breadcrumb_trail(assigns))
 
     ~H"""
-    <div class="min-h-screen bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
+    <div class="min-h-screen bg-background text-zinc-900 antialiased dark:text-zinc-100">
       <%!-- One provider per document, mounted with the shared layout. --%>
       <FlintUI.sound_provider enabled={false} theme="default" />
 
@@ -120,7 +120,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def site_header(assigns) do
     ~H"""
-    <div class="sticky top-0 z-20 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
+    <div class="sticky top-0 z-20 border-b border-zinc-200 bg-background/85 backdrop-blur dark:border-zinc-800">
       <header>
         <div class="mx-auto grid h-14 max-w-360 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
           <.link navigate={~p"/"} class="flex items-center gap-2 justify-self-start">

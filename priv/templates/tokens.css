@@ -340,7 +340,9 @@
     /* Solid controls darken their fill by this amount for the border. */
     --fl-border-strength-solid: 12%;
 
-    /* Surfaces and text. */
+    /* Surfaces and text. The neutral ramp is the theme ladder: page (950),
+     * control (half a step), surface (900), soft (half a step), muted (800).
+     * Swapping `--fl-color-neutral-*` retints all of them together. */
     --fl-color-background: light-dark(
         oklch(1 0 0),
         var(--fl-color-neutral-950)
@@ -353,23 +355,21 @@
         var(--fl-color-neutral-600),
         var(--fl-color-neutral-300)
     );
-    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
+    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
 
+    /* Opaque fill for bordered controls, halfway between the page and the
+     * surface so attached-group seams stay single over a stable backdrop. */
     --fl-color-control: light-dark(
         var(--fl-color-surface),
         color-mix(
             in oklab,
-            var(--fl-color-background) 75%,
-            var(--fl-color-surface) 25%
+            var(--fl-color-background) 50%,
+            var(--fl-color-surface) 50%
         )
     );
     --fl-color-muted: light-dark(
         var(--fl-color-neutral-100),
-        color-mix(
-            in oklab,
-            var(--fl-color-neutral-800) 80%,
-            var(--fl-color-neutral-700) 20%
-        )
+        var(--fl-color-neutral-800)
     );
     --fl-color-muted-foreground: light-dark(
         var(--fl-color-neutral-500),
