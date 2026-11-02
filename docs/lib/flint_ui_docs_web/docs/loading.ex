@@ -23,8 +23,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
           %{key: :duration, type: :number, default: nil, label: "Duration (ms, blank = default)"},
           %{key: :weight, type: :number, default: nil, label: "Weight (blank = default)"},
           %{key: :size, type: :select, default: "md", label: "Size"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -32,7 +31,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.loading
         variant={variant(props)}
         color={props.color}

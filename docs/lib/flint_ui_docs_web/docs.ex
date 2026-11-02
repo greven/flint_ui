@@ -133,8 +133,8 @@ defmodule FlintUIDocsWeb.Docs do
   @doc """
   Renders one authored section through its page module.
 
-  A page may define only the clauses it needs. A missing clause returns `nil`
-  so the framework can render the section's prose and code automatically.
+  A page may define only the clauses it needs. A missing clause returns `nil`,
+  so the framework renders an empty section.
   """
   def render_section(name, assigns) do
     module = page(name)
@@ -160,12 +160,12 @@ defmodule FlintUIDocsWeb.Docs do
   end
 
   def preview_id(name, section) do
-    case section do
-      %{preview_id: id} when is_binary(id) -> id
-      %{section: :usage, id: id} when not is_nil(id) -> "usage-#{name}-#{id}"
-      %{section: :examples, id: id} when not is_nil(id) -> "example-#{name}-#{id}"
-      %{section: section, id: nil} -> "#{section}-#{name}"
-      %{section: section, id: id} -> "#{section}-#{name}-#{id}"
+    case {section[:preview_id], section.section, Map.get(section, :id)} do
+      {id, _section, _id} when is_binary(id) -> id
+      {_preview_id, :usage, id} when not is_nil(id) -> "usage-#{name}-#{id}"
+      {_preview_id, :examples, id} when not is_nil(id) -> "example-#{name}-#{id}"
+      {_preview_id, section, nil} -> "#{section}-#{name}"
+      {_preview_id, section, id} -> "#{section}-#{name}-#{id}"
     end
   end
 
@@ -174,10 +174,14 @@ defmodule FlintUIDocsWeb.Docs do
     "base-" <> section_anchor(name, Map.delete(section, :tab))
   end
 
-  def section_anchor(_name, %{id: nil, section: section}), do: to_string(section)
-  def section_anchor(_name, %{section: :usage, id: id}), do: "usage-#{id}"
-  def section_anchor(name, %{section: :examples, id: id}), do: "example-#{name}-#{id}-section"
-  def section_anchor(_name, %{section: section, id: id}), do: "#{section}-#{id}"
+  def section_anchor(name, section) do
+    case {section.section, Map.get(section, :id)} do
+      {section, nil} -> to_string(section)
+      {:usage, id} -> "usage-#{id}"
+      {:examples, id} -> "example-#{name}-#{id}-section"
+      {section, id} -> "#{section}-#{id}"
+    end
+  end
 
   @doc """
   The Base tab groups, resolved from the page's `base_docs/0`.

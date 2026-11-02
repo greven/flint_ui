@@ -6,11 +6,12 @@ defmodule FlintUIDocsWeb.DocsTest do
 
   @ignored_attrs [:rest, :class, :flint_parts]
 
-  test "no component doc snippet uses a placeholder" do
-    for {name, _module} <- Docs.modules(),
-        {section, code} <- snippets(name) do
-      refute String.contains?(code, "..."),
-             "expected no `...` placeholder in the #{section} snippet of #{name}"
+  test "no component doc source uses a placeholder" do
+    for {name, module} <- Docs.modules(),
+        section <- Docs.sections(name),
+        {:ok, source} <- [Source.extract(module, section.section, section[:id])] do
+      refute String.contains?(source.code, "..."),
+             "expected no `...` placeholder in the #{section.section} section of #{name}"
     end
   end
 
@@ -66,8 +67,6 @@ defmodule FlintUIDocsWeb.DocsTest do
       assert section_tab(section) in [:styled, :base, :css]
       assert is_nil(section[:id]) or is_atom(section[:id])
       assert is_nil(section[:title]) or is_binary(section[:title])
-      assert is_nil(section[:description]) or is_binary(section[:description])
-      assert is_nil(section[:body]) or is_binary(section[:body])
     end
   end
 
@@ -128,7 +127,7 @@ defmodule FlintUIDocsWeb.DocsTest do
     assert is_nil(group.title)
   end
 
-  test "a section without a render clause returns nil for automatic rendering" do
+  test "a section without a render clause returns nil for an empty section" do
     assert Docs.render_section(:button, %{section: :usage, id: :variant}) == nil
   end
 
@@ -162,47 +161,4 @@ defmodule FlintUIDocsWeb.DocsTest do
   end
 
   defp section_tab(section), do: Map.get(section, :tab, :styled)
-
-  defp snippets(name) do
-    module = Docs.page(name)
-
-    authored =
-      for section <- Docs.sections(name),
-          snippet <- section_codes(section) do
-        {"#{section.section} #{inspect(section[:id])}", snippet}
-      end
-
-    sources =
-      for section <- Docs.sections(name),
-          {:ok, source} <- [Source.extract(module, section.section, section[:id])] do
-        {"#{section.section} #{inspect(section[:id])} source", source.code}
-      end
-
-    authored ++ sources
-  end
-
-  defp section_codes(section) do
-    defaults = Map.new(section[:controls] || [], &{&1.key, &1.default})
-
-    single =
-      case section[:code] do
-        code when is_binary(code) -> [code]
-        code when is_function(code, 1) -> [code.(defaults)]
-        _ -> []
-      end
-
-    multi =
-      for flavor <- section[:codes] || [],
-          snippet <- [flavor[:code], flavor[:styles]],
-          is_binary(snippet),
-          do: snippet
-
-    snippets =
-      for snippet <- section[:snippets] || [],
-          code <- [snippet[:code]],
-          is_binary(code),
-          do: code
-
-    single ++ multi ++ snippets
-  end
 end

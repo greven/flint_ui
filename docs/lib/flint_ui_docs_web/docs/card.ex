@@ -23,8 +23,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
           %{key: :outline, type: :boolean, default: true, label: "Outline"},
           %{key: :shadow, type: :boolean, default: true, label: "Shadow"},
           %{key: :inverted, type: :boolean, default: false, label: "Inverted"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -32,7 +31,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.card
         variant={props.variant}
         body={props.body}

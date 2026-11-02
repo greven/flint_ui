@@ -22,8 +22,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
           %{key: :grow, type: :boolean, default: false, label: "Grow"},
           %{key: :align, type: :select, default: "start", label: "Align"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -31,7 +30,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <div class="w-full max-w-md">
         <Components.tabs
           id={"#{@preview_id}-tabs"}

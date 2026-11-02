@@ -2,9 +2,10 @@ defmodule FlintUIDocsWeb.Docs.Page do
   @moduledoc """
   Behaviour for a single component's docs page content.
 
-  A page module owns the title, subtitle, base-docs selection, and the authored
-  sections for its component. The framework generates the API reference, the
-  setup section, and the CSS tab's tables from the component and styled entry.
+  A page module owns the title, subtitle, base-docs selection, the section
+  outline, and the rendered content for its component. The framework generates
+  the API reference, the setup section, and the CSS tab's tables from the
+  component and styled entry.
 
   ## Page shape
 
@@ -17,25 +18,20 @@ defmodule FlintUIDocsWeb.Docs.Page do
     * **CSS**: authored `tab: :css` sections around the generated CSS variables,
       selectors, and theme-token tables.
 
-  ## Sections
+  ## Section outline
 
-  Sections are plain maps returned by `sections/0`. A section has a `:section`
-  key (the top-level group, e.g. `:main`, `:usage`, `:examples`), an optional
-  `:id` (the subsection within the group), and optional content keys:
+  `sections/0` is the outline: it defines the order, tabs, group keys, anchors,
+  headings, and preview controls. It does not contain content. A section has a
+  `:section` key (the top-level group, e.g. `:usage`, `:examples`), an optional
+  `:id` (the subsection within the group), and optional metadata:
 
       %{
         tab: :styled,
         section: :usage,
         id: :basic,
         title: "Usage",
-        description: "A short line under the heading.",
-        body: "Markdown prose above the example.",
-        code: "the teaching snippet",
-        codes: [%{label: "Tailwind", code: "..."}],
-        controls: [%{key: :variant, type: :select, default: "outline", label: "Variant"}],
-        features: ["A feature bullet"],
-        snippets: [%{title: "Retint", body: "...", code: "..."}],
-        preview_only: false
+        group_title: nil,
+        controls: [%{key: :color, type: :select, default: "neutral", label: "Color"}]
       }
 
   Sections with the same `{tab, section}` stack in declaration order. The first
@@ -45,30 +41,42 @@ defmodule FlintUIDocsWeb.Docs.Page do
   used as a title. Set `:group_title` on the first section only when the `h2`
   should differ from that section's own `:title`.
 
+  `:controls` stays in the outline because the LiveView needs the control schema
+  before it renders a preview and when it coerces change events. Everything else
+  belongs in `render_section/1`.
+
   ## Rendering a section
 
-  `render_section/1` is a plain function clause. Match on the `:section` and
-  `:id` you declared:
+  `render_section/1` is a plain function clause and owns all content: prose,
+  previews, code, feature lists, and snippets. Match on the `:section` and `:id`
+  you declared:
 
       def render_section(%{section: :usage, id: :variant} = assigns) do
         ~H\"\"\"
-        <.preview {assigns}>
+        <Markdown.prose content="Use the `variant` attr to change the emphasis." />
+        <.preview {assigns} code={~s(<.button variant="solid">Save</.button>)}>
           <Components.button variant="solid">Save</Components.button>
         </.preview>
         \"\"\"
       end
 
-  `assigns` already carries the section metadata plus `:name`, `:tab`,
-  `:preview_id`, and `:state`. Pass the whole map to `<.preview {assigns}>` and
-  the preview inherits its id, component name, controls, code, source, and
-  state. Explicit props still override it.
+  `assigns` carries the outline metadata plus `:name`, `:tab`, `:preview_id`, and
+  `:state`. Pass the whole map to `<.preview {assigns}>` and the preview inherits
+  its id, component name, controls, source, and state. Explicit attributes
+  override it; pass `code`, `codes`, and `preview_only` on the preview call.
+  Use `<DocsComponents.features>` and `<DocsComponents.snippets>` for structured
+  blocks that used to live in the section map.
 
   Keep the `render_section/1` clauses together; Elixir warns when clauses of the
-  same function are separated by other definitions.
+  same function are separated by other definitions. A section without a clause
+  renders an empty section, so heading-only sections need no no-op clause.
 
-  When a section has no `render_section/1` clause, the framework renders its
-  `body`, `features`, and `code`/`codes`/`snippets` automatically. That covers
-  prose-only and code-only sections without a render callback.
+  ## Prose
+
+  `<Markdown.prose content="..." />` renders CommonMark/GFM prose with links,
+  emphasis, lists, tables, autolinks, and highlighted code. Raw HTML is not
+  passed through. When prose needs live components or route-checked `~p` links,
+  use the component's inner block; it is rendered as HEEx, not Markdown.
 
   ## Base docs
 
@@ -89,9 +97,9 @@ defmodule FlintUIDocsWeb.Docs.Page do
   ## Previews
 
   Every preview is a `<.preview>` call. The demo is the inner block; the
-  teaching snippet comes from the section's `code` (or `codes`) and stays in one
-  place with the section. `code` also accepts a 1-arity function of the current
-  props, which keeps the playground snippet in step with its controls.
+  teaching snippet comes from the preview's `code` (or `codes`). Pass `code` as
+  a string or as a 1-arity function of the current props, which keeps the
+  playground snippet in step with its controls.
   """
 
   @type section :: %{
@@ -99,17 +107,10 @@ defmodule FlintUIDocsWeb.Docs.Page do
           optional(:tab) => :styled | :base | :css,
           optional(:id) => atom() | nil,
           optional(:title) => String.t() | nil,
-          optional(:description) => String.t() | nil,
-          optional(:body) => String.t() | nil,
-          optional(:code) => String.t() | (map() -> String.t()) | nil,
-          optional(:codes) => [map()] | nil,
-          optional(:controls) => [map()] | nil,
-          optional(:features) => [String.t() | map()] | nil,
-          optional(:snippets) => [map()] | nil,
-          optional(:preview_only) => boolean(),
           optional(:group_title) => String.t() | nil,
-          optional(:position) => :before | :after,
-          optional(:preview_id) => String.t()
+          optional(:controls) => [map()] | nil,
+          optional(:preview_id) => String.t() | nil,
+          optional(:position) => :before | :after
         }
 
   @callback component() :: atom()
@@ -130,6 +131,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
 
       use FlintUI
       import FlintUIDocsWeb.Preview
+      import FlintUIDocsWeb.Markdown, only: [prose: 1]
 
       @component unquote(component)
 
@@ -150,7 +152,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
       @doc "The component metadata shown in the page header."
       def meta, do: FlintUI.Docs.meta(@component)
 
-      @doc "Authored sections. See `FlintUIDocsWeb.Docs.Page`."
+      @doc "The section outline. See `FlintUIDocsWeb.Docs.Page`."
       def sections, do: []
 
       @doc "Renders one authored section. Match on `:section` and `:id`."

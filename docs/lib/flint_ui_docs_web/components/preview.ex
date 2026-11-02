@@ -17,9 +17,15 @@ defmodule FlintUIDocsWeb.Preview do
         \"\"\"
       end
 
-  The preview inherits `:preview_id`, `:name`, `:controls`, `:state`, `:code`,
-  `:codes`, `:source`, and `:tab` from that map. Explicit attributes override
-  them, which is how a section renders more than one preview:
+  The preview inherits `:preview_id`, `:name`, `:controls`, `:state`, `:source`,
+  and `:tab` from that map. `:code`, `:codes`, and `:preview_only` are section
+  content, so pass them explicitly:
+
+      <.preview {assigns} code={~s(<.button>Save</.button>)}>
+        <Components.button>Save</Components.button>
+      </.preview>
+
+  A section can render more than one preview by overriding the inherited id:
 
       <.preview {assigns} preview_id={@preview_id <> "-grid"} preview_only>
 

@@ -125,55 +125,37 @@
     /* Match FlintUI controls to the docs' Tailwind sans stack. */
     --fl-font-sans: var(--font-sans);
 
-    /* primary: Tailwind red */
-    --fl-color-primary-50: var(--color-red-50);
-    --fl-color-primary-100: var(--color-red-100);
-    --fl-color-primary-200: var(--color-red-200);
-    --fl-color-primary-300: var(--color-red-300);
-    --fl-color-primary-400: var(--color-red-400);
-    --fl-color-primary-500: var(--color-red-500);
-    --fl-color-primary-600: var(--color-red-600);
-    --fl-color-primary-700: var(--color-red-700);
-    --fl-color-primary-800: var(--color-red-800);
-    --fl-color-primary-900: var(--color-red-900);
-    --fl-color-primary-950: var(--color-red-950);
-    --fl-color-primary: light-dark(
-        var(--fl-color-primary-600),
-        var(--fl-color-primary-600)
-    );
-    --fl-color-primary-content: light-dark(
-        oklch(100% 0 0),
-        oklch(100% 0 0)
-    );
-    --fl-color-primary-text: light-dark(
-        var(--fl-color-primary-700),
-        var(--fl-color-primary-500)
-    );
+    /* primary: Tailwind cyan */
+    --fl-color-primary-50: var(--color-cyan-50);
+    --fl-color-primary-100: var(--color-cyan-100);
+    --fl-color-primary-200: var(--color-cyan-200);
+    --fl-color-primary-300: var(--color-cyan-300);
+    --fl-color-primary-400: var(--color-cyan-400);
+    --fl-color-primary-500: var(--color-cyan-500);
+    --fl-color-primary-600: var(--color-cyan-600);
+    --fl-color-primary-700: var(--color-cyan-700);
+    --fl-color-primary-800: var(--color-cyan-800);
+    --fl-color-primary-900: var(--color-cyan-900);
+    --fl-color-primary-950: var(--color-cyan-950);
+    --fl-color-primary: light-dark(var(--fl-color-primary-600), var(--fl-color-primary-600));
+    --fl-color-primary-content: light-dark(oklch(100% 0 0), oklch(100% 0 0));
+    --fl-color-primary-text: light-dark(var(--fl-color-primary-700), var(--fl-color-primary-500));
 
-    /* secondary: Tailwind gray */
-    --fl-color-secondary-50: var(--color-gray-50);
-    --fl-color-secondary-100: var(--color-gray-100);
-    --fl-color-secondary-200: var(--color-gray-200);
-    --fl-color-secondary-300: var(--color-gray-300);
-    --fl-color-secondary-400: var(--color-gray-400);
-    --fl-color-secondary-500: var(--color-gray-500);
-    --fl-color-secondary-600: var(--color-gray-600);
-    --fl-color-secondary-700: var(--color-gray-700);
-    --fl-color-secondary-800: var(--color-gray-800);
-    --fl-color-secondary-900: var(--color-gray-900);
-    --fl-color-secondary-950: var(--color-gray-950);
-    --fl-color-secondary: light-dark(
-        var(--fl-color-secondary-600),
-        var(--fl-color-secondary-600)
-    );
-    --fl-color-secondary-content: light-dark(
-        var(--fl-color-secondary-50),
-        var(--fl-color-secondary-50)
-    );
-    --fl-color-secondary-text: light-dark(
-        var(--fl-color-secondary-600),
-        var(--fl-color-secondary-400)
-    );
+    /* secondary: Tailwind indigo */
+    --fl-color-secondary-50: var(--color-indigo-50);
+    --fl-color-secondary-100: var(--color-indigo-100);
+    --fl-color-secondary-200: var(--color-indigo-200);
+    --fl-color-secondary-300: var(--color-indigo-300);
+    --fl-color-secondary-400: var(--color-indigo-400);
+    --fl-color-secondary-500: var(--color-indigo-500);
+    --fl-color-secondary-600: var(--color-indigo-600);
+    --fl-color-secondary-700: var(--color-indigo-700);
+    --fl-color-secondary-800: var(--color-indigo-800);
+    --fl-color-secondary-900: var(--color-indigo-900);
+    --fl-color-secondary-950: var(--color-indigo-950);
+    --fl-color-secondary: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-600));
+    --fl-color-secondary-content: light-dark(var(--fl-color-secondary-50), var(--fl-color-secondary-50));
+    --fl-color-secondary-text: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-400));
 
     /* neutral: Tailwind neutral */
     --fl-color-neutral-50: var(--color-neutral-50);
@@ -187,18 +169,9 @@
     --fl-color-neutral-800: var(--color-neutral-800);
     --fl-color-neutral-900: var(--color-neutral-900);
     --fl-color-neutral-950: var(--color-neutral-950);
-    --fl-color-neutral: light-dark(
-        var(--fl-color-neutral-600),
-        var(--fl-color-neutral-600)
-    );
-    --fl-color-neutral-content: light-dark(
-        var(--fl-color-neutral-50),
-        var(--fl-color-neutral-50)
-    );
-    --fl-color-neutral-text: light-dark(
-        var(--fl-color-neutral-600),
-        var(--fl-color-neutral-400)
-    );
+    --fl-color-neutral: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-600));
+    --fl-color-neutral-content: light-dark(var(--fl-color-neutral-50), var(--fl-color-neutral-50));
+    --fl-color-neutral-text: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-400));
 
     /* success: Tailwind emerald */
     --fl-color-success-50: var(--color-emerald-50);
@@ -212,18 +185,9 @@
     --fl-color-success-800: var(--color-emerald-800);
     --fl-color-success-900: var(--color-emerald-900);
     --fl-color-success-950: var(--color-emerald-950);
-    --fl-color-success: light-dark(
-        var(--fl-color-success-700),
-        var(--fl-color-success-700)
-    );
-    --fl-color-success-content: light-dark(
-        var(--fl-color-success-50),
-        var(--fl-color-success-50)
-    );
-    --fl-color-success-text: light-dark(
-        var(--fl-color-success-800),
-        var(--fl-color-success-600)
-    );
+    --fl-color-success: light-dark(var(--fl-color-success-700), var(--fl-color-success-700));
+    --fl-color-success-content: light-dark(var(--fl-color-success-50), var(--fl-color-success-50));
+    --fl-color-success-text: light-dark(var(--fl-color-success-800), var(--fl-color-success-600));
 
     /* info: Tailwind blue */
     --fl-color-info-50: var(--color-blue-50);
@@ -237,18 +201,9 @@
     --fl-color-info-800: var(--color-blue-800);
     --fl-color-info-900: var(--color-blue-900);
     --fl-color-info-950: var(--color-blue-950);
-    --fl-color-info: light-dark(
-        var(--fl-color-info-600),
-        var(--fl-color-info-600)
-    );
-    --fl-color-info-content: light-dark(
-        var(--fl-color-info-50),
-        var(--fl-color-info-50)
-    );
-    --fl-color-info-text: light-dark(
-        var(--fl-color-info-700),
-        var(--fl-color-info-500)
-    );
+    --fl-color-info: light-dark(var(--fl-color-info-600), var(--fl-color-info-600));
+    --fl-color-info-content: light-dark(var(--fl-color-info-50), var(--fl-color-info-50));
+    --fl-color-info-text: light-dark(var(--fl-color-info-700), var(--fl-color-info-500));
 
     /* warning: Tailwind amber */
     --fl-color-warning-50: var(--color-amber-50);
@@ -262,18 +217,9 @@
     --fl-color-warning-800: var(--color-amber-800);
     --fl-color-warning-900: var(--color-amber-900);
     --fl-color-warning-950: var(--color-amber-950);
-    --fl-color-warning: light-dark(
-        var(--fl-color-warning-400),
-        var(--fl-color-warning-400)
-    );
-    --fl-color-warning-content: light-dark(
-        var(--fl-color-warning-950),
-        var(--fl-color-warning-950)
-    );
-    --fl-color-warning-text: light-dark(
-        var(--fl-color-warning-700),
-        var(--fl-color-warning-400)
-    );
+    --fl-color-warning: light-dark(var(--fl-color-warning-400), var(--fl-color-warning-400));
+    --fl-color-warning-content: light-dark(var(--fl-color-warning-950), var(--fl-color-warning-950));
+    --fl-color-warning-text: light-dark(var(--fl-color-warning-700), var(--fl-color-warning-400));
 
     /* error: Tailwind red */
     --fl-color-error-50: var(--color-red-50);
@@ -287,18 +233,9 @@
     --fl-color-error-800: var(--color-red-800);
     --fl-color-error-900: var(--color-red-900);
     --fl-color-error-950: var(--color-red-950);
-    --fl-color-error: light-dark(
-        var(--fl-color-error-600),
-        var(--fl-color-error-600)
-    );
-    --fl-color-error-content: light-dark(
-        oklch(100% 0 0),
-        oklch(100% 0 0)
-    );
-    --fl-color-error-text: light-dark(
-        var(--fl-color-error-700),
-        var(--fl-color-error-500)
-    );
+    --fl-color-error: light-dark(var(--fl-color-error-600), var(--fl-color-error-600));
+    --fl-color-error-content: light-dark(oklch(100% 0 0), oklch(100% 0 0));
+    --fl-color-error-text: light-dark(var(--fl-color-error-700), var(--fl-color-error-500));
 }
 
 /* A live custom preset. Select "brand" in the theming guide's preset picker. */
@@ -306,10 +243,7 @@
     --fl-color-primary: oklch(0.55 0.24 275);
     --fl-color-primary-content: oklch(1 0 0);
     /* Ghost and link read the role's AA text shade, so retint it with the fill. */
-    --fl-color-primary-text: light-dark(
-        oklch(0.491 0.27 292.581),
-        oklch(0.702 0.183 293.541)
-    );
+    --fl-color-primary-text: light-dark(oklch(0.491 0.27 292.581), oklch(0.702 0.183 293.541));
     --fl-radius: 0.375rem;
 }
 
@@ -332,9 +266,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
-        &:where(
-            :not([data-color-scheme="light"], [data-color-scheme="light"] *)
-        ) {
+        &:where(:not([data-color-scheme="light"], [data-color-scheme="light"] *)) {
             @slot;
         }
     }
@@ -363,4 +295,132 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 /* Code panels provide their own subtle surface; keep .highlight transparent. */
 .highlight {
     background-color: transparent;
+}
+
+/* Authored prose rendered by `FlintUIDocsWeb.Markdown.prose/1`. */
+@layer components {
+    .docs-prose {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        color: var(--fl-color-text-toned);
+        line-height: 1.75;
+    }
+
+    .docs-prose a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+        transition: color 150ms;
+    }
+
+    .docs-prose a:hover {
+        color: var(--fl-color-text);
+    }
+
+    .docs-prose strong {
+        color: var(--fl-color-text-highlighted);
+        font-weight: 600;
+    }
+
+    .docs-prose em {
+        font-style: italic;
+    }
+
+    .docs-prose del {
+        text-decoration: line-through;
+    }
+
+    .docs-prose ul,
+    .docs-prose ol {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+        padding-left: 1.25rem;
+    }
+
+    .docs-prose ul {
+        list-style: disc;
+    }
+
+    .docs-prose ol {
+        list-style: decimal;
+    }
+
+    .docs-prose li > ul,
+    .docs-prose li > ol {
+        margin-top: 0.375rem;
+    }
+
+    .docs-prose code {
+        border-radius: 0.25rem;
+        background-color: var(--fl-color-surface-accented);
+        padding: 0.125rem 0.25rem;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-mono);
+        font-size: 0.75rem;
+    }
+
+    .docs-prose pre {
+        overflow-x: auto;
+        border: 1px solid var(--fl-color-border);
+        border-radius: 0.5rem;
+        background-color: color-mix(in oklab, var(--fl-color-text) 3%, var(--fl-color-surface));
+        padding: 1rem;
+        font-size: 0.75rem;
+        line-height: 1.625;
+    }
+
+    .docs-prose pre code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+    }
+
+    .docs-prose blockquote {
+        border-left: 2px solid var(--fl-color-border-accented);
+        padding-left: 1rem;
+        color: var(--fl-color-text-muted);
+    }
+
+    .docs-prose table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        text-align: left;
+    }
+
+    .docs-prose th {
+        border-bottom: 1px solid var(--fl-color-border);
+        padding: 0.5rem 0.75rem 0.5rem 0;
+        color: var(--fl-color-text-muted);
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .docs-prose td {
+        border-bottom: 1px solid var(--fl-color-border-muted);
+        padding: 0.5rem 0.75rem 0.5rem 0;
+        vertical-align: top;
+    }
+
+    .docs-prose hr {
+        border: 0;
+        border-top: 1px solid var(--fl-color-border);
+    }
+
+    .docs-prose input[type="checkbox"] {
+        margin-right: 0.375rem;
+    }
+
+    .docs-prose p {
+        margin-bottom: 1em;
+    }
+
+    .docs-prose p:not(:first-child) {
+        margin-top: 1em;
+    }
 }

@@ -6,6 +6,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   use FlintUIDocsWeb, :html
 
   alias FlintUIDocsWeb.Highlight
+  alias FlintUIDocsWeb.Markdown
   alias FlintUIDocsWeb.Nav
 
   @doc false
@@ -115,6 +116,26 @@ defmodule FlintUIDocsWeb.DocsComponents do
   defp feature_title(feature), do: Map.get(feature, :title)
   defp feature_body(feature) when is_binary(feature), do: feature
   defp feature_body(feature), do: Map.get(feature, :body)
+
+  @doc false
+
+  attr :snippets, :list, required: true
+
+  def snippets(assigns) do
+    ~H"""
+    <div :if={@snippets != []} class="mt-4 space-y-4">
+      <div :for={snippet <- @snippets}>
+        <p :if={snippet[:title]} class="text-sm font-medium">{snippet.title}</p>
+        <Markdown.prose
+          :if={snippet[:body]}
+          content={snippet.body}
+          class="mt-1 text-sm"
+        />
+        <.code_block code={snippet.code} lang={snippet[:lang] || :css} />
+      </div>
+    </div>
+    """
+  end
 
   @doc false
 

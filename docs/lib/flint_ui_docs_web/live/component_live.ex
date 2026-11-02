@@ -3,7 +3,6 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
   use FlintUIDocsWeb, :live_view
 
-  alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs
   alias FlintUIDocsWeb.DocsComponents
@@ -128,14 +127,14 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 title={group.title}
                 id={group.id}
               >
-                <Markdown.markdown :if={group[:body]} content={group.body} />
+                <Markdown.prose :if={group[:body]} content={group.body} />
 
                 <%= if group[:system] == :api do %>
                   <.base_api {assigns} />
                 <% end %>
 
                 <%= if group[:system] == :anatomy do %>
-                  <Markdown.markdown
+                  <Markdown.prose
                     :if={@anatomy && @anatomy[:body]}
                     content={@anatomy[:body]}
                   />
@@ -256,136 +255,30 @@ defmodule FlintUIDocsWeb.ComponentLive do
     rendered =
       Docs.render_section(assigns.name, section_assigns(assigns.name, section, preview_id, state))
 
-    assigns =
-      assign(assigns,
-        section: section,
-        preview_id: preview_id,
-        rendered: rendered,
-        anchor: anchor,
-        title: title
-      )
+    assigns = assign(assigns, rendered: rendered, anchor: anchor, title: title)
 
     ~H"""
     <DocsComponents.subsection :if={@subsection? && @title} title={@title} id={@anchor}>
-      <.doc_section_content
-        section={@section}
-        rendered={@rendered}
-        preview_id={@preview_id}
-      />
+      <.doc_section_content rendered={@rendered} />
     </DocsComponents.subsection>
 
     <div :if={@subsection? && !@title} id={@anchor} class="mt-8 scroll-mt-28">
-      <.doc_section_content
-        section={@section}
-        rendered={@rendered}
-        preview_id={@preview_id}
-      />
+      <.doc_section_content rendered={@rendered} />
     </div>
 
-    <.doc_section_content
-      :if={!@subsection?}
-      section={@section}
-      rendered={@rendered}
-      preview_id={@preview_id}
-    />
+    <.doc_section_content :if={!@subsection?} rendered={@rendered} />
     """
   end
 
-  attr :section, :map, required: true
   attr :rendered, :any, required: true
-  attr :preview_id, :string, required: true
 
   defp doc_section_content(assigns) do
     ~H"""
-    <div class="text-toned text-pretty">
-      <p :if={@section[:description]} class="my-5 leading-7">
-        {@section[:description]}
-      </p>
-      <Markdown.markdown
-        :if={@section[:body]}
-        content={@section[:body]}
-        class="my-5 leading-7"
-      />
-      <DocsComponents.features
-        :if={@section[:features] not in [nil, []]}
-        features={@section[:features]}
-      />
-      <%= if @rendered do %>
-        {@rendered}
-      <% else %>
-        <.auto_content section={@section} preview_id={@preview_id} />
-      <% end %>
+    <div :if={@rendered} class="text-toned text-pretty">
+      {@rendered}
     </div>
     """
   end
-
-  attr :section, :map, required: true
-  attr :preview_id, :string, required: true
-
-  defp auto_content(assigns) do
-    snippet_list = assigns.section[:snippets] || []
-    codes = auto_codes(assigns.section)
-
-    assigns = assign(assigns, snippets: snippet_list, codes: codes)
-
-    ~H"""
-    <div :if={@snippets != []} class="mt-4 space-y-4">
-      <div :for={snippet <- @snippets}>
-        <p class="text-sm font-medium">{snippet.title}</p>
-        <p :if={snippet[:body]} class="mt-1 text-sm text-toned">{snippet[:body]}</p>
-        <DocsComponents.code_block code={snippet.code} lang={snippet[:lang] || :css} />
-      </div>
-    </div>
-
-    <CodeBlock.code
-      :for={{code, index} <- Enum.with_index(@codes)}
-      :if={@snippets == []}
-      id={"#{@preview_id}-#{index}-code"}
-      code={code.code}
-      lang={code.lang}
-      caption={code[:label]}
-      class="mt-3"
-    />
-    """
-  end
-
-  defp auto_codes(section) do
-    controls = section[:controls] || []
-
-    cond do
-      section[:preview_only] -> []
-      section[:codes] not in [nil, []] -> normalize_auto_codes(section[:codes], controls)
-      section[:code] != nil -> normalize_auto_codes(section[:code], controls)
-      true -> []
-    end
-  end
-
-  defp normalize_auto_codes(codes, _controls) when is_list(codes) do
-    Enum.flat_map(codes, fn
-      %{} = code ->
-        main = %{code: code[:code], lang: code[:lang] || :heex, label: code[:label]}
-
-        if code[:styles] do
-          [main, %{code: code.styles, lang: :css, label: "app.css"}]
-        else
-          [main]
-        end
-
-      code when is_binary(code) ->
-        [%{code: code, lang: :heex, label: nil}]
-    end)
-  end
-
-  defp normalize_auto_codes(code, controls) when is_function(code, 1) do
-    defaults = Map.new(controls, &{&1.key, &1.default})
-    [%{code: code.(defaults), lang: :heex, label: nil}]
-  end
-
-  defp normalize_auto_codes(code, _controls) when is_binary(code) do
-    [%{code: code, lang: :heex, label: nil}]
-  end
-
-  defp normalize_auto_codes(_code, _controls), do: []
 
   defp section_assigns(name, section, preview_id, state) do
     %{
@@ -394,14 +287,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
       section: section.section,
       id: section[:id],
       title: section[:title],
-      description: section[:description],
-      body: section[:body],
-      code: section[:code],
-      codes: section[:codes],
       controls: section[:controls] || [],
-      features: section[:features],
-      snippets: section[:snippets],
-      preview_only: section[:preview_only] || false,
       preview_id: preview_id,
       state: state,
       source: Docs.source(name, section.section, section[:id])

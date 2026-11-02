@@ -19,8 +19,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
           %{key: :orientation, type: :select, default: "horizontal", label: "Orientation"},
           %{key: :variant, type: :select, default: "attached", label: "Variant"},
           %{key: :size, type: :select, default: "md", label: "Size"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -28,7 +27,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.group
         orientation={props.orientation}
         variant={props.variant}

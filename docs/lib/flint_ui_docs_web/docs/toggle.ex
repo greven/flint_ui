@@ -21,8 +21,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           %{key: :variant, type: :select, default: "solid", label: "Variant"},
           %{key: :color, type: :select, default: "neutral", label: "Color"},
           %{key: :size, type: :select, default: "md", label: "Size"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -30,7 +29,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.toggle
         variant={props.variant}
         color={props.color}

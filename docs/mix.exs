@@ -62,6 +62,7 @@ defmodule FlintUIDocs.MixProject do
       {:makeup_eex, "~> 2.0"},
       {:makeup_html, "~> 1.0"},
       {:makeup_css, "~> 0.2"},
+      {:mdex, "~> 0.14"},
       {:lucide,
        github: "lucide-icons/lucide",
        tag: "1.54.0",

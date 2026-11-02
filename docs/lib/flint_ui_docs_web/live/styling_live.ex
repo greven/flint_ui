@@ -278,7 +278,7 @@ defmodule FlintUIDocsWeb.StylingLive do
             title={humanize(name)}
             id={to_string(name)}
           >
-            <Markdown.markdown :if={styling[:body]} content={styling[:body]} />
+            <Markdown.prose :if={styling[:body]} content={styling[:body]} />
             <div :for={snippet <- styling.snippets} class="mt-4">
               <p class="text-sm font-medium">{snippet.title}</p>
               <DocsComponents.code_block code={snippet.code} lang={:css} />

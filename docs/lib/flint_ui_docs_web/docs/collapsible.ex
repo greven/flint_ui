@@ -20,8 +20,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           %{key: :open, type: :boolean, default: false, label: "Open"},
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
           %{key: :hidden_until_found, type: :boolean, default: false, label: "Hidden until found"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -29,7 +28,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <div class="w-full max-w-74 self-start">
         <Components.collapsible
           id={"#{@preview_id}-styled"}

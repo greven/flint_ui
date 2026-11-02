@@ -193,20 +193,21 @@ A page module implements `FlintUIDocsWeb.Docs.Page`:
   section keys (`:intro`, `:examples`, `:accessibility`, `:keyboard`,
   `:anatomy`, `:api`). Put base prose in the base component's `@moduledoc`, not
   in the docs module.
-- `sections/0` declares authored sections as maps. Sections with the same
-  `{tab, section}` stack in declaration order: the first section's `title`
-  becomes the `h2`, and the rest render as `h3` subsections with their own
-  titles. `tab: :css` sections add to the CSS tab. Each section carries its
-  title, description, body, and `code`/`codes` in one place.
-- `render_section/1` renders a section that needs a live preview. Match on
-  `:section` and `:id`, then forward the assigns to the preview:
-  `<.preview {assigns}>...</.preview>`.
+- `sections/0` declares the section outline as maps: `tab`, `section`, `id`,
+  `title`/`group_title`, and preview `controls`. It contains no content.
+  Sections with the same `{tab, section}` stack in declaration order: the first
+  section's `title` becomes the `h2`, and the rest render as `h3` subsections
+  with their own titles. `tab: :css` sections add to the CSS tab.
+- `render_section/1` owns all section content: prose, previews, code, features,
+  and snippets. Match on `:section` and `:id`, then forward the assigns to the
+  preview: `<.preview {assigns} code={...}>...</.preview>`. Use
+  `<Markdown.prose content="..." />` for prose; it renders CommonMark/GFM with
+  links, emphasis, lists, tables, and highlighted code.
 
-A section without a `render_section/1` clause renders its body and code
-automatically. The docs test fails when a public base attribute or styled prop
-has no doc, so document new API on the component or prop itself. Dogfood
-FlintUI components in the docs; only deliberate unstyled demonstrations may
-keep raw HTML.
+A section without a `render_section/1` clause renders an empty section. The docs
+test fails when a public base attribute or styled prop has no doc, so document
+new API on the component or prop itself. Dogfood FlintUI components in the docs;
+only deliberate unstyled demonstrations may keep raw HTML.
 
 ### Definition of done
 

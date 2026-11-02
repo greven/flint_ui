@@ -23,8 +23,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
           %{key: :color, type: :select, default: "inherit", label: "Color"},
           %{key: :dots, type: :number, default: 3, label: "Dots"},
           %{key: :duration, type: :number, default: nil, label: "Duration (ms, blank = default)"}
-        ],
-        code: &main_code/1
+        ]
       }
     ]
   end
@@ -32,7 +31,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   @impl true
   def render_section(%{section: :main} = assigns) do
     ~H"""
-    <.preview :let={props} {assigns}>
+    <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.loading_text
         text={props.text}
         variant={variant(props)}

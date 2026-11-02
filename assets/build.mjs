@@ -6,11 +6,13 @@ const args = process.argv.slice(2);
 const watch = args.includes("--watch");
 const deploy = args.includes("--deploy");
 
-// Clear our own build outputs, but keep the theme stylesheet written by the
-// `:flint_theme` Mix compiler, which shares priv/static and must not be removed.
-if (existsSync("../priv/static")) {
+// Clear stale build outputs
+const keep = new Set(["flint.css", "flint.js", "flint-sound.js"]);
+
+// Nothing to clear while watching: the watcher overwrites its own outputs.
+if (!watch && existsSync("../priv/static")) {
   for (const entry of readdirSync("../priv/static")) {
-    if (entry !== "flint.css") {
+    if (!keep.has(entry)) {
       rmSync(`../priv/static/${entry}`, { recursive: true, force: true });
     }
   }
