@@ -85,6 +85,14 @@ defmodule FlintUI.StyledTest do
     assert Entry.prop(Styled.get(:card), :color) == nil
   end
 
+  test "content attributes stay out of the data hooks" do
+    entry = Styled.get(:button)
+
+    assert Enum.map(entry.content_attrs, & &1.name) == [:icon, :text]
+    refute Map.has_key?(Entry.hooks(entry), :icon)
+    refute Map.has_key?(Entry.hooks(entry), :text)
+  end
+
   test "props map to the data attribute hooks a wrapper sets" do
     entry = Styled.get(:button)
 

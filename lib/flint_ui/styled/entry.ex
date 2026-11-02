@@ -9,6 +9,10 @@ defmodule FlintUI.Styled.Entry do
   its theme stylesheet part (`:css`, relative to `priv/templates`). The docs and
   the generator both read from here.
 
+  `:content_attrs` are ordinary attributes the wrapper reads while rendering
+  content, such as a text fallback or an icon name. Unlike `:props`, they do not
+  map to a `data-*` hook and are not forwarded to the base.
+
   `:color_vars` maps the semantic outputs of a raw `color` value onto the
   component's public CSS variables: `:fill` (the exact color), `:on_fill` (the
   label on a solid fill), and `:on_text` (the color as text on the page and on
@@ -28,6 +32,7 @@ defmodule FlintUI.Styled.Entry do
           css: String.t() | nil,
           tokens: [atom()],
           props: [FlintUI.Styled.Prop.t()],
+          content_attrs: [FlintUI.Styled.Attr.t()],
           slots: [FlintUI.Styled.Slot.t()],
           vars: [FlintUI.Styled.Var.t()],
           color_vars: keyword()
@@ -41,6 +46,7 @@ defmodule FlintUI.Styled.Entry do
             css: nil,
             tokens: [],
             props: [],
+            content_attrs: [],
             slots: [],
             vars: [],
             color_vars: []

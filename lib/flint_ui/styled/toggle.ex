@@ -15,28 +15,6 @@ defmodule FlintUI.Styled.Toggle do
         Slot.new(name: :leading, doc: "Optional content rendered before the toggle's content."),
         Slot.new(name: :trailing, doc: "Optional content rendered after the toggle's content.")
       ],
-      vars: [
-        Var.new(
-          name: "--fl-toggle-color",
-          default: "var(--fl-color-inverted)",
-          doc: "The pressed fill and the source for tinted surfaces and focus."
-        ),
-        Var.new(
-          name: "--fl-toggle-color-content",
-          default: "var(--fl-color-text-inverted)",
-          doc: "The label color on the pressed solid fill."
-        ),
-        Var.new(
-          name: "--fl-toggle-text",
-          default: "var(--fl-toggle-color)",
-          doc: "The label color for text-carrying variants."
-        )
-      ],
-      color_vars: [
-        fill: "--fl-toggle-color",
-        on_fill: "--fl-toggle-color-content",
-        on_text: "--fl-toggle-text"
-      ],
       props: [
         Prop.new(
           name: :variant,
@@ -58,6 +36,28 @@ defmodule FlintUI.Styled.Toggle do
           default: "md",
           doc: "The control size."
         )
+      ],
+      vars: [
+        Var.new(
+          name: "--fl-toggle-color",
+          default: "var(--fl-color-inverted)",
+          doc: "The pressed fill and the source for tinted surfaces and focus."
+        ),
+        Var.new(
+          name: "--fl-toggle-color-content",
+          default: "var(--fl-color-text-inverted)",
+          doc: "The label color on the pressed solid fill."
+        ),
+        Var.new(
+          name: "--fl-toggle-text",
+          default: "var(--fl-toggle-color)",
+          doc: "The label color for text-carrying variants."
+        )
+      ],
+      color_vars: [
+        fill: "--fl-toggle-color",
+        on_fill: "--fl-toggle-color-content",
+        on_text: "--fl-toggle-text"
       ]
     }
   end

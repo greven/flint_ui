@@ -297,30 +297,25 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s([data-element="tabs"][data-align="center"])
     assert css =~ ~s([data-element="tabs"][data-align="end"])
     assert css =~ ~s([data-element="tabs"][data-align="spaced"])
-    assert css =~ ~s([data-element="tabs"][data-gap="sm"])
-    assert css =~ ~s([data-element="tabs"][data-gap="md"])
-    assert css =~ ~s([data-element="tabs"][data-gap="lg"])
-    assert css =~ ~s([data-element="tabs"][data-gap="xl"])
     assert css =~ "[data-tabs-tab]"
   end
 
-  test "tabs gap overrides the variant spacing", %{css: css} do
-    for value <- ~w(sm md lg xl) do
-      assert css =~
-               ~r/\[data-element="tabs"\]\[data-gap="#{value}"\]\s*>\s*\[data-part="tablist"\]\s*\{\s*gap: var\(--fl-spacing-#{value}\);/
-    end
+  test "tabs expose the tab and content gaps as public inputs", %{css: css} do
+    assert css =~
+             ~r/\[data-element="tabs"\]\[data-tabs\]\s*>\s*\[data-part="tablist"\]\s*\{\s*display: flex;\s*gap: var\(--fl-tabs-gap, var\(--fl-spacing-xs\)\);/
 
-    # The variant baselines and the gap overrides tie on specificity, so the
-    # overrides must come later in the stylesheet to win.
-    gap = :binary.match(css, ~s([data-element="tabs"][data-gap="md"])) |> elem(0)
-    segmented = :binary.match(css, ~s([data-element="tabs"][data-variant="segmented"])) |> elem(0)
-    minimal = :binary.match(css, ~s([data-element="tabs"][data-variant="minimal"])) |> elem(0)
+    assert css =~
+             ~r/\[data-element="tabs"\]\[data-tabs\]\s*\{[^}]*gap: var\(--fl-tabs-content-gap, var\(--fl-spacing-md\)\);/
 
-    assert gap > segmented
-    assert gap > minimal
+    # The segmented variant keeps its 2px track by writing the input, so a
+    # consumer can still override it.
+    assert css =~
+             ~r/\[data-element="tabs"\]\[data-variant="segmented"\]\s*>\s*\[data-part="tablist"\]\s*\{\s*--fl-tabs-gap: 2px;/
+
+    refute css =~ ~s([data-element="tabs"][data-gap])
   end
 
-  test "tabs scope default trigger visuals and expose three inputs", %{css: css} do
+  test "tabs scope default trigger visuals and expose five inputs", %{css: css} do
     assert css =~ "[data-element=\"tabs\"][data-tabs]"
 
     assert css =~
@@ -329,6 +324,8 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-tabs-color: var(--fl-color-inverted);"
     assert css =~ "--fl-tabs-text: var(--fl-color-text);"
     assert css =~ "--fl-tabs-surface: var(--fl-color-control);"
+    assert css =~ "--fl-tabs-gap"
+    assert css =~ "--fl-tabs-content-gap"
     refute css =~ "--fl-tabs-radius"
 
     assert css =~ ~s([data-element="tabs"][data-tabs][data-fadable])

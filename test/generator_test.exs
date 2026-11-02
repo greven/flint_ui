@@ -124,13 +124,24 @@ defmodule FlintUI.GeneratorTest do
   test "button merges the base inner_block with its extra slots" do
     source = Generator.component_source(:button)
 
-    assert source =~ ~s{slot(:inner_block, required: true, doc: "The content of the button.")}
+    assert source =~ ~s{slot(:inner_block, doc: "The content of the button.")}
 
     assert source =~
              ~s{slot(:leading, doc: "Optional content rendered before the button's content.")}
 
     assert source =~
              ~s{slot(:trailing, doc: "Optional content rendered after the button's content.")}
+  end
+
+  test "button declares content attributes separately from its data hooks" do
+    source = Generator.component_source(:button)
+
+    assert source =~ "attr(:icon, :string, default: nil"
+    assert source =~ "attr(:text, :string, default: nil"
+    assert source =~ ~s(<FlintUI.icon :if={@icon} name={@icon} />)
+    assert source =~ "{render_slot(@inner_block) || @text}"
+    refute source =~ "data-text"
+    refute source =~ "data-icon={@icon}"
   end
 
   test "assembles the theme from tokens, base rules, then each component part" do

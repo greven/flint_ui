@@ -17,50 +17,29 @@ defmodule FlintUIDocsWeb.SourceToggleTest do
     :ok
   end
 
-  test "code blocks expose the dev-only source toggle", %{conn: conn} do
+  test "the first section preview exposes the dev-only source toggle", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#playground-button-source-toggle", "Source")
-    assert has_element?(view, "#usage-button-variant-source-toggle")
-    assert has_element?(view, "#example-button-icon-source-toggle")
+    assert has_element?(view, "##{preview_id()}-source-toggle", "Source")
   end
 
   test "the source toggle swaps the code block to the render source", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
+    id = preview_id()
 
-    assert has_element?(view, "#playground-button-code", "<.button")
+    assert has_element?(view, "##{id}-code", "<.button")
 
-    view |> element("#playground-button-source-toggle") |> render_click()
+    view |> element("##{id}-source-toggle") |> render_click()
 
-    assert has_element?(view, "#playground-button", "render_main/1")
-    assert has_element?(view, "#playground-button-code", "<Components.button")
-    assert has_element?(view, "#playground-button-source-toggle", "Code")
-    assert has_element?(view, "#playground-button-copy[phx-hook]")
+    assert has_element?(view, "##{id}", "render_section/1")
+    assert has_element?(view, "##{id}-code", "<Components.button")
+    assert has_element?(view, "##{id}-source-toggle", "Code")
+    assert has_element?(view, "##{id}-copy[phx-hook]")
 
-    view |> element("#playground-button-source-toggle") |> render_click()
+    view |> element("##{id}-source-toggle") |> render_click()
 
-    assert has_element?(view, "#playground-button-code", "<.button")
-    assert has_element?(view, "#playground-button-source-toggle", "Source")
-  end
-
-  test "preview-only cards have no code block", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    assert has_element?(view, "#usage-button-color [data-element='button']")
-    refute has_element?(view, "#usage-button-color-code")
-    refute has_element?(view, "#usage-button-color-source-toggle")
-  end
-
-  test "the source toggle reveals the full render composition", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/group")
-
-    assert has_element?(view, "#usage-group-variant-code", "flex flex-col")
-    refute has_element?(view, "#usage-group-variant-code", "ghost")
-
-    view |> element("#usage-group-variant-source-toggle") |> render_click()
-
-    assert has_element?(view, "#usage-group-variant", "render_section/1")
-    assert has_element?(view, "#usage-group-variant-code", "ghost")
+    assert has_element?(view, "##{id}-code", "<.button")
+    assert has_element?(view, "##{id}-source-toggle", "Source")
   end
 
   test "the source toggle is hidden when dev tools are off", %{conn: conn} do
@@ -68,7 +47,11 @@ defmodule FlintUIDocsWeb.SourceToggleTest do
 
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    refute has_element?(view, "#playground-button-source-toggle")
-    refute has_element?(view, "#usage-button-variant-source-toggle")
+    refute has_element?(view, "##{preview_id()}-source-toggle")
+  end
+
+  defp preview_id do
+    first = hd(FlintUIDocsWeb.Docs.sections(:button, :styled))
+    FlintUIDocsWeb.Docs.preview_id(:button, first)
   end
 end

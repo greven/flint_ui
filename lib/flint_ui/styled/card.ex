@@ -12,34 +12,6 @@ defmodule FlintUI.Styled.Card do
       css: "styled/card.css",
       tokens: [:color, :radius, :font, :shadow, :spacing],
       slots: [],
-      vars: [
-        Var.new(
-          name: "--fl-card-spacing",
-          default: "calc(var(--fl-spacing) * 5)",
-          doc: "The inline inset and gap between regions; the `spacing` prop sets it."
-        ),
-        Var.new(
-          name: "--fl-card-surface",
-          default: "var(--fl-color-surface)",
-          doc: "The card's background surface; `variant` selects it."
-        ),
-        Var.new(
-          name: "--fl-card-text",
-          default: "var(--fl-color-text)",
-          doc: "The text color on the card surface."
-        ),
-        Var.new(
-          name: "--fl-card-border",
-          default: "var(--fl-color-border)",
-          doc: "The outline color and the source for dividers and panel borders."
-        ),
-        Var.new(
-          name: "--fl-card-shadow",
-          default: "var(--fl-shadow-base)",
-          doc:
-            "The outer elevation; set it to `0 0 #0000` to remove the shadow. The ghost variant already clears it."
-        )
-      ],
       props: [
         Prop.new(
           name: :variant,
@@ -85,6 +57,34 @@ defmodule FlintUI.Styled.Card do
           values: [true, false],
           default: false,
           doc: "Inverts the card's surface, text, border and divider colors."
+        )
+      ],
+      vars: [
+        Var.new(
+          name: "--fl-card-spacing",
+          default: "calc(var(--fl-spacing) * 5)",
+          doc: "The inline inset and gap between regions; the `spacing` prop sets it."
+        ),
+        Var.new(
+          name: "--fl-card-surface",
+          default: "var(--fl-color-surface)",
+          doc: "The card's background surface; `variant` selects it."
+        ),
+        Var.new(
+          name: "--fl-card-text",
+          default: "var(--fl-color-text)",
+          doc: "The text color on the card surface."
+        ),
+        Var.new(
+          name: "--fl-card-border",
+          default: "var(--fl-color-border)",
+          doc: "The outline color and the source for dividers and panel borders."
+        ),
+        Var.new(
+          name: "--fl-card-shadow",
+          default: "var(--fl-shadow-base)",
+          doc:
+            "The outer elevation; set it to `0 0 #0000` to remove the shadow. The ghost variant already clears it."
         )
       ]
     }

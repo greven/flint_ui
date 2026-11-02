@@ -3,6 +3,8 @@ defmodule FlintUIDocsWeb.ComponentsLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUIDocsWeb.DocsComponents
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -15,7 +17,12 @@ defmodule FlintUIDocsWeb.ComponentsLive do
         </p>
 
         <section :for={group <- @groups} id={"components-#{group.type}"} class="mt-10 first:mt-8">
-          <h2 data-toc="section" class="text-xl font-semibold tracking-tight">{group.label}</h2>
+          <h2 data-toc="section" class="text-xl font-semibold tracking-tight">
+            <DocsComponents.heading_link
+              title={group.label}
+              id={"components-#{group.type}"}
+            />
+          </h2>
           <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <.link
               :for={component <- group.components}

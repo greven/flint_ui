@@ -267,7 +267,7 @@ defmodule FlintUIDocsWeb.StylingLive do
           <DocsComponents.code_block code={snippet(:raw_color)} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="By component" id="components">
+        <DocsComponents.section :if={@pages != []} title="By component" id="components">
           <p class="text-sm text-default">
             These are the plain-CSS recipes for the headless components. Each block
             targets the hooks the component exposes; the styled layer uses the same

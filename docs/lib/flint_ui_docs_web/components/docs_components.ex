@@ -137,6 +137,29 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   @doc false
 
+  attr :title, :string, required: true
+  attr :id, :string, default: nil
+
+  def heading_link(assigns) do
+    ~H"""
+    <a
+      :if={@id}
+      href={"##{@id}"}
+      class="group inline-flex items-center gap-2 rounded-sm decoration-1 underline-offset-4 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accented"
+    >
+      {@title}
+      <FlintUI.icon
+        name="lucide-link"
+        class="size-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+      />
+    </a>
+
+    <span :if={!@id}>{@title}</span>
+    """
+  end
+
+  @doc false
+
   attr :id, :string, default: nil
   attr :class, :string, default: nil
   attr :title, :string, default: nil
@@ -145,7 +168,9 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def section(assigns) do
     ~H"""
     <section id={@id} class={[@class, "scroll-mt-28"]}>
-      <h2 :if={@title} data-toc="section" class="text-lg font-semibold">{@title}</h2>
+      <h2 :if={@title} data-toc="section" class="mt-12 mb-6 font-semibold text-2xl text-highlighted">
+        <.heading_link title={@title} id={@id} />
+      </h2>
       {render_slot(@inner_block)}
     </section>
     """
@@ -160,9 +185,25 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def subsection(assigns) do
     ~H"""
     <div id={@id} class="mt-8 scroll-mt-28">
-      <h3 data-toc="subsection" class="text-base font-semibold">{@title}</h3>
+      <h3 data-toc="subsection" class="mt-8 mb-3 font-semibold text-xl text-highlighted">
+        <.heading_link title={@title} id={@id} />
+      </h3>
       {render_slot(@inner_block)}
     </div>
+    """
+  end
+
+  @doc false
+
+  attr :as, :string, default: "p"
+  attr :class, :string, default: nil
+  slot :inner_block
+
+  def content_paragraph(assigns) do
+    ~H"""
+    <.dynamic_tag tag_name={@as} class={["text-toned", @class]}>
+      {render_slot(@inner_block)}
+    </.dynamic_tag>
     """
   end
 
@@ -232,7 +273,11 @@ defmodule FlintUIDocsWeb.DocsComponents do
               <.type_cell item={row} />
             </td>
             <td class="py-4 leading-6 text-toned">
-              <.attribute_description doc={row[:doc]} default={row[:default]} />
+              <.attribute_description
+                doc={row[:doc]}
+                values={row[:values] || []}
+                default={row[:default]}
+              />
             </td>
           </tr>
         </tbody>
@@ -740,18 +785,32 @@ defmodule FlintUIDocsWeb.DocsComponents do
   @doc false
 
   attr :doc, :string, default: nil
+  attr :values, :list, default: []
   attr :default, :any, default: nil
 
   def attribute_description(assigns) do
+    assigns = assign(assigns, :values, visible_values(assigns.values))
+
     ~H"""
     <div class="space-y-1">
       <p :if={@doc}>{@doc}</p>
+      <p :if={@values != []} class="text-xs">
+        Values: <code class={code_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code>
+      </p>
       <p :if={@default != nil} class="text-xs">
         Default: <code class={code_class()}>{default_label(@default)}</code>
       </p>
     </div>
     """
   end
+
+  # A boolean `values: [true, false]` is not a choice worth spelling out; the
+  # Type column already communicates it.
+  defp visible_values([true, false]), do: []
+  defp visible_values(values) when is_list(values), do: values
+  defp visible_values(_values), do: []
+
+  defp value_label(value), do: to_string(value)
 
   @doc false
 

@@ -196,7 +196,7 @@ defmodule FlintUI.Base.Button do
     doc:
       "Additional HTML attributes. Pass `href`, `navigate`, or `patch` to render a link instead of a button."
 
-  slot :inner_block, required: true, doc: "The content of the button."
+  slot :inner_block, doc: "The content of the button."
 
   @impl true
   def render(assigns) do

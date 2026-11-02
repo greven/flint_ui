@@ -2,7 +2,7 @@ defmodule FlintUIDocsWeb.Docs.Snippet do
   @moduledoc """
   Small helpers for rendering a component's HEEx source from playground props.
 
-  Example modules use these in their `main_code/1` helpers so the generated
+  Example modules use these in their code helpers so the generated
   snippet in the code block stays in step with the live props without hand-built
   string concatenation. Attributes equal to their default (or blank) are
   omitted, so the snippet only shows what the current props actually set.

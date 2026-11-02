@@ -27,6 +27,24 @@ defmodule FlintUITest do
     end
   end
 
+  describe "Docs.doc_sections/1" do
+    test "splits the moduledoc into an intro and slugged sections" do
+      doc = FlintUI.Docs.doc_sections(:button)
+
+      assert doc.intro =~ "Renders a button"
+      assert Enum.any?(doc.sections, &(&1.key == :accessibility))
+      assert Enum.any?(doc.sections, &(&1.key == :keyboard))
+      assert Enum.all?(doc.sections, &(is_binary(&1.title) and is_binary(&1.body)))
+    end
+
+    test "slugifies multi-word headings" do
+      doc = FlintUI.Docs.doc_sections(:tabs)
+
+      assert Enum.any?(doc.sections, &(&1.key == :custom_triggers))
+      assert Enum.any?(doc.sections, &(&1.key == :find_in_page))
+    end
+  end
+
   describe "Docs.section/2" do
     test "extracts a moduledoc section, stripped of shared indentation" do
       assert FlintUI.Docs.section(:button, "Accessibility") =~

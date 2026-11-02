@@ -225,6 +225,7 @@ defmodule FlintUI.Generator do
 
   defp attr_block(entry) do
     attrs = FlintUI.Docs.attrs(entry.name)
+    content_lines = Enum.map(entry.content_attrs, &content_attr/1)
     prop_lines = Enum.map(entry.props, &prop_attr/1)
 
     common = [
@@ -232,7 +233,7 @@ defmodule FlintUI.Generator do
       rest_attr(attrs)
     ]
 
-    Enum.join(prop_lines ++ common, "\n")
+    Enum.join(content_lines ++ prop_lines ++ common, "\n")
   end
 
   # Whitelist the base's declared attributes, plus any attributes the base
@@ -254,6 +255,11 @@ defmodule FlintUI.Generator do
       nil -> nil
       attr -> Keyword.get(attr.opts, :include)
     end
+  end
+
+  defp content_attr(attr) do
+    opts = [default: attr.default, doc: attr.doc]
+    "attr(:#{attr.name}, #{inspect(attr.type)}, #{Enum.map_join(opts, ", ", &opt/1)})"
   end
 
   defp prop_attr(prop) do

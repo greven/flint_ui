@@ -14,153 +14,195 @@ defmodule FlintUIDocsWeb.DocsTest do
     end
   end
 
-  test "every public attribute is covered by a usage entry" do
+  test "every public attribute and styled prop has a doc" do
     for {name, _module} <- Docs.modules() do
-      for {layer, attrs} <- public_attrs(name) do
-        covered =
-          name
-          |> Docs.usage()
-          |> Enum.filter(&(&1.layer == layer))
-          |> Enum.flat_map(&Map.get(&1, :covers, []))
+      for attr <- base_attrs(name) do
+        assert is_binary(attr.doc) and attr.doc != "",
+               "expected #{name} attribute #{inspect(attr.name)} to have a doc"
+      end
 
-        for attr <- attrs do
-          assert attr in covered,
-                 "expected #{name} #{layer} attribute #{inspect(attr)} to have a usage entry"
-        end
+      for prop <- styled_props(name) do
+        assert is_binary(prop.doc) and prop.doc != "",
+               "expected #{name} styled prop #{inspect(prop.name)} to have a doc"
+      end
+
+      for attr <- styled_content_attrs(name) do
+        assert is_binary(attr.doc) and attr.doc != "",
+               "expected #{name} styled content attribute #{inspect(attr.name)} to have a doc"
       end
     end
   end
 
-  test "every component has styled and base examples" do
+  test "every component page has a title, subtitle, and meta" do
     for {name, _module} <- Docs.modules() do
-      assert Docs.styled_examples(name) != [],
-             "expected #{name} to have at least one styled example"
-
-      assert Docs.base_examples(name) != [],
-             "expected #{name} to have at least one base example"
+      assert is_binary(Docs.title(name)) and Docs.title(name) != ""
+      assert is_binary(Docs.subtitle(name)) and Docs.subtitle(name) != ""
+      assert %FlintUI.Meta{} = Docs.meta(name)
     end
   end
 
-  test "every component has a CSS contract" do
-    for {name, _module} <- Docs.modules() do
-      assert %{body: body, snippets: snippets} = Docs.css(name)
-      assert is_binary(body) and body != ""
-      assert is_list(snippets) and snippets != []
-    end
-  end
-
-  test "every base example is tagged as base and every styled example is tagged as styled" do
-    for {name, _module} <- Docs.modules() do
-      for example <- Docs.examples(name) do
-        assert example[:layer] in [nil, :base, :styled],
-               "expected #{name}.#{example.id} to have a valid layer"
-
-        if example[:layer] == :base do
-          assert Docs.base_examples(name) |> Enum.any?(&(&1.id == example.id))
-        else
-          assert Docs.styled_examples(name) |> Enum.any?(&(&1.id == example.id))
-        end
-      end
-    end
-  end
-
-  test "every styled usage and example has a render_section clause" do
+  test "every component has a styled section with a render clause" do
     for {name, module} <- Docs.modules() do
-      assert {:ok, _} = Source.extract(module, :main, layer: :styled),
-             "expected #{name} to expose a render_main/1 source"
+      assert [first | _rest] = Docs.sections(name, :styled)
 
-      for entry <- Docs.styled_usage(name) do
-        assert {:ok, _} =
-                 Source.extract(module, :section,
-                   kind: :usage,
-                   block: entry.id,
-                   layer: :styled
-                 ),
-               "expected #{name} usage #{entry.id} to expose a render_section/1 source"
-      end
-
-      for entry <- Docs.styled_examples(name) do
-        assert {:ok, _} =
-                 Source.extract(module, :section,
-                   kind: :example,
-                   block: entry.id,
-                   layer: :styled
-                 ),
-               "expected #{name} example #{entry.id} to expose a render_section/1 source"
-      end
+      assert {:ok, _} = Source.extract(module, first.section, first[:id]),
+             "expected #{name} to expose a render_section/1 clause for " <>
+               inspect({first.section, first[:id]})
     end
   end
 
-  defp public_attrs(name), do: [base: base_attrs(name), styled: styled_attrs(name)]
+  test "section keys are unique per tab" do
+    for {name, _module} <- Docs.modules() do
+      keys = Enum.map(Docs.sections(name), &{section_tab(&1), &1.section, &1[:id]})
+
+      assert keys == Enum.uniq(keys),
+             "expected #{name} to declare each {tab, section, id} once, got #{inspect(keys)}"
+    end
+  end
+
+  test "sections carry valid metadata" do
+    for {name, _module} <- Docs.modules(), section <- Docs.sections(name) do
+      assert is_atom(section.section)
+      assert section_tab(section) in [:styled, :base, :css]
+      assert is_nil(section[:id]) or is_atom(section[:id])
+      assert is_nil(section[:title]) or is_binary(section[:title])
+      assert is_nil(section[:description]) or is_binary(section[:description])
+      assert is_nil(section[:body]) or is_binary(section[:body])
+    end
+  end
+
+  test "every component's base docs resolve and include the API reference" do
+    for {name, _module} <- Docs.modules() do
+      groups = Docs.base_groups(name)
+
+      assert Enum.any?(groups, &(&1.section == :api)),
+             "expected #{name} base docs to include :api"
+
+      assert Enum.all?(groups, &(is_binary(&1.title) and &1.title != "")),
+             "expected #{name} base docs to have titles"
+    end
+  end
+
+  test "section anchors and preview ids keep their documented shape" do
+    assert Docs.preview_id(:button, %{section: :usage, id: :basic}) ==
+             "usage-button-basic"
+
+    assert Docs.section_anchor(:button, %{section: :usage, id: :basic}) == "usage-basic"
+
+    assert Docs.preview_id(:button, %{section: :usage, id: :variant}) ==
+             "usage-button-variant"
+
+    assert Docs.section_anchor(:button, %{section: :usage, id: :variant}) == "usage-variant"
+
+    assert Docs.preview_id(:button, %{section: :examples, id: :icon}) ==
+             "example-button-icon"
+
+    assert Docs.section_anchor(:button, %{section: :examples, id: :icon}) ==
+             "example-button-icon-section"
+  end
+
+  test "the first section supplies the group heading" do
+    [group] =
+      Docs.group_sections(
+        [
+          %{tab: :styled, section: :usage, id: :basic, title: "Usage"},
+          %{tab: :styled, section: :usage, id: :variant, title: "Variant"}
+        ],
+        :styled
+      )
+
+    assert group.title == "Usage"
+    assert Enum.map(group.sections, & &1.id) == [:basic, :variant]
+  end
+
+  test "a group without a first-section title has no heading" do
+    [group] =
+      Docs.group_sections(
+        [
+          %{tab: :styled, section: :usage, id: :basic},
+          %{tab: :styled, section: :usage, id: :variant, title: "Variant"}
+        ],
+        :styled
+      )
+
+    assert is_nil(group.title)
+  end
+
+  test "a section without a render clause returns nil for automatic rendering" do
+    assert Docs.render_section(:button, %{section: :usage, id: :variant}) == nil
+  end
+
+  test "every declared control has a default" do
+    for {name, _module} <- Docs.modules() do
+      for control <- Docs.controls(name) do
+        assert is_atom(control.key)
+        assert Map.has_key?(control, :default)
+      end
+    end
+  end
 
   defp base_attrs(name) do
     name
     |> FlintUI.Docs.attrs()
-    |> Enum.map(& &1.name)
-    |> Enum.reject(&(&1 in @ignored_attrs))
+    |> Enum.reject(&(&1.name in @ignored_attrs))
   end
 
-  defp styled_attrs(name) do
+  defp styled_props(name) do
     case FlintUI.Styled.get(name) do
       nil -> []
-      entry -> Enum.map(entry.props, & &1.name)
+      entry -> entry.props
     end
   end
+
+  defp styled_content_attrs(name) do
+    case FlintUI.Styled.get(name) do
+      nil -> []
+      entry -> entry.content_attrs
+    end
+  end
+
+  defp section_tab(section), do: Map.get(section, :tab, :styled)
 
   defp snippets(name) do
-    module = Docs.modules()[name]
+    module = Docs.page(name)
 
-    usage = entry_snippets("usage", Docs.usage(name))
-    examples = entry_snippets("example", Docs.examples(name))
-
-    styled_sources =
-      for {label, opts} <- source_locations(name),
-          {:ok, source} <- [Source.extract(module, opts.callback, opts.opts)] do
-        {"#{label} source", source.code}
+    authored =
+      for section <- Docs.sections(name),
+          snippet <- section_codes(section) do
+        {"#{section.section} #{inspect(section[:id])}", snippet}
       end
 
-    structure =
-      case Docs.structure(name) do
-        nil -> []
-        code -> [{"structure", code}]
+    sources =
+      for section <- Docs.sections(name),
+          {:ok, source} <- [Source.extract(module, section.section, section[:id])] do
+        {"#{section.section} #{inspect(section[:id])} source", source.code}
       end
 
-    usage ++ examples ++ styled_sources ++ structure
+    authored ++ sources
   end
 
-  defp source_locations(name) do
-    main =
-      [{"main", %{callback: :main, opts: [layer: :styled]}}]
+  defp section_codes(section) do
+    defaults = Map.new(section[:controls] || [], &{&1.key, &1.default})
 
-    usage =
-      for entry <- Docs.styled_usage(name) do
-        {"usage #{entry.id}",
-         %{callback: :section, opts: [kind: :usage, block: entry.id, layer: :styled]}}
+    single =
+      case section[:code] do
+        code when is_binary(code) -> [code]
+        code when is_function(code, 1) -> [code.(defaults)]
+        _ -> []
       end
-
-    examples =
-      for entry <- Docs.styled_examples(name) do
-        {"example #{entry.id}",
-         %{callback: :section, opts: [kind: :example, block: entry.id, layer: :styled]}}
-      end
-
-    main ++ usage ++ examples
-  end
-
-  defp entry_snippets(label, entries) do
-    for entry <- entries, snippet <- entry_codes(entry) do
-      {"#{label} #{entry.id}", snippet}
-    end
-  end
-
-  defp entry_codes(entry) do
-    single = if entry[:code], do: [entry.code], else: []
 
     multi =
-      for flavor <- entry[:codes] || [], snippet <- [flavor[:code], flavor[:styles]], snippet do
-        snippet
-      end
+      for flavor <- section[:codes] || [],
+          snippet <- [flavor[:code], flavor[:styles]],
+          is_binary(snippet),
+          do: snippet
 
-    single ++ multi
+    snippets =
+      for snippet <- section[:snippets] || [],
+          code <- [snippet[:code]],
+          is_binary(code),
+          do: code
+
+    single ++ multi ++ snippets
   end
 end

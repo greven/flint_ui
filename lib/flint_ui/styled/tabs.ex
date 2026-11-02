@@ -28,6 +28,18 @@ defmodule FlintUI.Styled.Tabs do
           name: "--fl-tabs-surface",
           default: "var(--fl-color-control)",
           doc: "The active tab surface for the segmented and minimal variants."
+        ),
+        Var.new(
+          name: "--fl-tabs-gap",
+          default: "var(--fl-spacing-xs)",
+          doc:
+            "The distance between triggers. Raise it for composed triggers such as buttons, which bring their own padding and border. The segmented variant defaults it to `2px`."
+        ),
+        Var.new(
+          name: "--fl-tabs-content-gap",
+          default: "var(--fl-spacing-md)",
+          doc:
+            "The distance between the tab list and the panels. Set it to `0` to remove the gap."
         )
       ],
       color_vars: [
@@ -68,13 +80,6 @@ defmodule FlintUI.Styled.Tabs do
           default: "start",
           doc:
             "Where the tabs sit in a horizontal tab list. `spaced` uses space-between. Ignored when `grow` fills the row."
-        ),
-        Prop.new(
-          name: :gap,
-          values: ["auto", "sm", "md", "lg", "xl"],
-          default: "auto",
-          doc:
-            "The distance between triggers. `auto` follows the variant; raise it for composed triggers such as buttons, which bring their own padding and border."
         )
       ]
     }

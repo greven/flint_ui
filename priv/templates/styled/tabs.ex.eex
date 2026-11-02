@@ -19,7 +19,6 @@ def <%= @name %>(assigns) do
     data-size={@size}
     data-grow={@grow}
     data-align={@align}
-    data-gap={@gap}
     class={@class}
     {@rest}
   >

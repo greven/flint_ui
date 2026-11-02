@@ -11,6 +11,11 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     for {type, components} <- FlintUI.Docs.grouped_components() do
       assert has_element?(view, "#components-#{type}", FlintUIDocsWeb.Nav.type_label(type))
 
+      assert has_element?(
+               view,
+               "#components-#{type} h2 a[href='#components-#{type}']"
+             )
+
       for name <- components do
         assert has_element?(view, "#components-#{type} a[href='/components/#{name}']")
       end
@@ -41,11 +46,11 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#component-sections-tab-styled[aria-selected='true']")
     assert has_element?(view, "#component-sections-tab-base[aria-selected='false']")
     assert has_element?(view, "#component-sections-panel-styled")
+    assert has_element?(view, "#main-preview")
     assert has_element?(view, "#playground-button [data-element='button']")
-    assert has_element?(view, "#usage")
-    assert has_element?(view, "#usage-variant")
+    assert has_element?(view, "#api")
     assert has_element?(view, "#setup")
-    refute has_element?(view, "#usage-disabled")
+    assert has_element?(view, "#usage")
     assert has_element?(view, "#component-sections-panel-base[hidden]")
   end
 
@@ -61,7 +66,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
              "#component-sections-tab-base[role='tab'][aria-selected='false'][aria-controls='component-sections-panel-base']"
            )
 
-    # The triggers are composed button components rendered as patch links.
     assert has_element?(
              view,
              "#component-sections-tab-base[data-tabs-trigger][data-element='button'][data-part='tab'][data-phx-link='patch']"
@@ -73,30 +77,43 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
            )
   end
 
-  test "the base tab is deep-linkable", %{conn: conn} do
+  test "the base tab renders the selected moduledoc sections", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
 
     assert has_element?(view, "#component-sections-tab-base[aria-selected='true']")
     assert has_element?(view, "#component-sections-panel-base")
-    assert has_element?(view, "#anatomy")
-    assert has_element?(view, "#accessibility")
+    assert has_element?(view, "#overview h2[data-toc='section']", "Overview")
+    assert has_element?(view, "#examples h2[data-toc='section']", "Examples")
+    assert has_element?(view, "#accessibility h2[data-toc='section']", "Accessibility")
+    assert has_element?(view, "#keyboard h2[data-toc='section']", "Keyboard")
     assert has_element?(view, "#api")
     assert has_element?(view, "#data-attributes")
     assert has_element?(view, "#css-variables")
     assert has_element?(view, "#component-sections-panel-styled[hidden]")
   end
 
-  test "the css tab holds the styled contract", %{conn: conn} do
+  test "section headings link to their anchors", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#api h2 a[href='#api']", "API Reference")
+    assert has_element?(view, "#api #attributes h3 a[href='#attributes']", "Attributes")
+
+    {:ok, base, _html} = live(conn, ~p"/components/button?tab=base")
+
+    assert has_element?(base, "#accessibility h2 a[href='#accessibility']", "Accessibility")
+    assert has_element?(base, "#keyboard h2 a[href='#keyboard']", "Keyboard")
+  end
+
+  test "the css tab holds the styled contract tables", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=css")
 
     assert has_element?(view, "#component-sections-tab-css[aria-selected='true']")
     assert has_element?(view, "#component-sections-panel-css")
-    assert has_element?(view, "#styling-contract")
-    assert has_element?(view, "#theme")
-    assert has_element?(view, "#selectors")
     assert has_element?(view, "#css-variables")
+    assert has_element?(view, "#selectors")
+    assert has_element?(view, "#theme")
     assert has_element?(view, "#css-variables code", "--fl-collapsible-duration")
-    assert has_element?(view, "#customization")
+    refute has_element?(view, "#styling-contract")
     refute has_element?(view, "#setup")
   end
 
@@ -125,6 +142,21 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#theme")
   end
 
+  test "the styled API documents text and icon", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#attributes code", "text")
+    assert has_element?(view, "#attributes code", "icon")
+  end
+
+  test "text and icon shortcuts render in the usage preview", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#usage-button-text_and_icon [data-element='button'] .lucide-save")
+    assert has_element?(view, "#usage-button-text_and_icon [aria-label='Search']")
+    assert has_element?(view, "#usage-button-text_and_icon", "Save now")
+  end
+
   test "the API table folds defaults into descriptions and tooltips values", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
@@ -135,6 +167,8 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#attributes thead th", "Default")
 
     assert has_element?(view, "#attributes tbody tr", "Default:")
+    assert has_element?(view, "#attributes tbody tr", "Values:")
+    refute has_element?(view, "#attributes tbody tr", "true, false")
     refute has_element?(view, "#attributes tbody tr", "Data attribute:")
     assert has_element?(view, "#attributes tbody tr code", "variant")
     assert has_element?(view, "#attributes tbody tr", "subtle")
@@ -149,10 +183,9 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the base tab documents base-specific content", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
 
-    assert has_element?(view, "#usage-disabled")
-    refute has_element?(view, "#usage-variant")
-    assert has_element?(view, "#anatomy")
     assert has_element?(view, "#examples")
+    assert has_element?(view, "#accessibility")
+    assert has_element?(view, "#keyboard")
     assert has_element?(view, "#data-attributes")
     assert has_element?(view, "#data-attributes code", "data-element")
     assert has_element?(view, "#data-attributes code", "data-part")
@@ -162,26 +195,15 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#component-sections-panel-base #attributes code", "variant")
   end
 
-  test "the anatomy labels parts and groups attributes by kind", %{conn: conn} do
+  test "base moduledoc examples render code", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
 
-    assert has_element?(view, "#anatomy [data-anatomy-legend]")
-    assert has_element?(view, "#anatomy [data-anatomy-part='root']")
-    assert has_element?(view, "#anatomy [data-anatomy-group='data']", "data-disabled")
-    assert has_element?(view, "#anatomy [data-anatomy-group='aria']", "aria-busy")
-    assert has_element?(view, "#anatomy [data-anatomy-group='html']", "type")
+    assert has_element?(view, "#examples pre.highlight")
+    assert has_element?(view, "#keyboard code", "Enter")
+    assert has_element?(view, "#keyboard code", "Space")
   end
 
-  test "the anatomy renders every part of a multi-part component", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/card?tab=base")
-
-    for part <-
-          ~w(root header title description header-actions header-content body section footer footer-content footer-actions) do
-      assert has_element?(view, "#anatomy [data-anatomy-part='#{part}']")
-    end
-  end
-
-  test "collapsible previews wire the hook and disable the trigger", %{conn: conn} do
+  test "collapsible playground wires the hook and disables the trigger", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible")
 
     assert has_element?(view, "#playground-collapsible [data-element='collapsible']")
@@ -192,66 +214,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     |> render_change(%{"disabled" => "true"})
 
     assert has_element?(view, "#playground-collapsible [data-part='trigger'][disabled]")
-
-    {:ok, base, _html} = live(conn, ~p"/components/collapsible?tab=base")
-
-    assert has_element?(base, "#usage-open pre.highlight")
-    refute has_element?(base, "#usage-open [data-element='collapsible']")
-  end
-
-  test "collapsible usage previews render the styled component with a placeholder", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/collapsible")
-
-    assert has_element?(view, "#usage-collapsible-reveal [data-collapsible]")
-    assert has_element?(view, "#usage-collapsible-reveal [data-variant='outline']")
-    assert has_element?(view, "#usage-collapsible-reveal .border-dashed")
-  end
-
-  test "reveal transition preview customizes the timing", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/collapsible")
-
-    assert has_element?(view, "#usage-collapsible-reveal [data-element='collapsible'][style]")
-    assert has_element?(view, "#usage-collapsible-reveal-code", "--fl-collapsible-duration")
-    assert has_element?(view, "#usage-collapsible-reveal-code", "cubic-bezier")
-  end
-
-  test "collapsible base usage renders code without a preview", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=base")
-
-    assert has_element?(view, "#usage-open pre.highlight")
-    refute has_element?(view, "#usage-open [data-element='collapsible']")
-  end
-
-  test "server event usage entries render code only", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=base")
-
-    assert has_element?(view, "#usage-toggle_event pre.highlight", "toggle_event")
-    refute has_element?(view, "#usage-toggle_event button[phx-value-tab]")
-    refute has_element?(view, "#usage-toggle_event [data-part='trigger']")
-  end
-
-  test "example code offers Tailwind and CSS flavors", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/collapsible")
-
-    assert has_element?(view, "#example-collapsible-repos code", "max-w-74")
-
-    view
-    |> element("#example-collapsible-repos button[phx-value-index='1']")
-    |> render_click()
-
-    assert has_element?(view, "#example-collapsible-repos code", "repo-card")
-    assert has_element?(view, "#example-collapsible-repos-styles", ".repo-list")
-  end
-
-  test "find in page example keeps a stable, top-aligned width", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/collapsible")
-
-    assert has_element?(view, "#example-collapsible-find_in_page .self-start")
-
-    assert has_element?(
-             view,
-             "#example-collapsible-find_in_page [data-element='collapsible'].flex"
-           )
   end
 
   test "card page renders the generated card", %{conn: conn} do
@@ -265,97 +227,16 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-card [data-part='title']", "Starred repositories")
   end
 
-  test "card omits empty header and footer regions", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/card")
-
-    refute has_element?(view, "#example-card-collapsible [data-part='header']")
-    refute has_element?(view, "#example-card-collapsible [data-part='footer']")
-
-    assert has_element?(view, "#playground-card [data-part='header']")
-    assert has_element?(view, "#playground-card [data-part='header-actions']")
-    assert has_element?(view, "#playground-card [data-part='footer-actions']")
-  end
-
   test "card body control changes the body treatment", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
 
-    assert has_element?(
-             view,
-             "#playground-card [data-element='card'][data-body='seamless']"
-           )
+    assert has_element?(view, "#playground-card [data-element='card'][data-body='seamless']")
 
     view
     |> element("#playground-card-controls")
     |> render_change(%{"body" => "inset"})
 
-    assert has_element?(
-             view,
-             "#playground-card [data-element='card'][data-body='inset']"
-           )
-  end
-
-  test "card body examples render each treatment", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/card")
-
-    for body <- ~w(separated divided inset flush) do
-      assert has_element?(
-               view,
-               "#example-card-body_#{body} [data-element='card'][data-body='#{body}']"
-             )
-    end
-
-    assert has_element?(
-             view,
-             "#example-card-body_separated_footer [data-element='card'][data-body='separated-footer']"
-           )
-
-    assert has_element?(
-             view,
-             "#example-card-body_separated_accented [data-element='card'][data-body='separated'][data-variant='accented']"
-           )
-
-    assert has_element?(
-             view,
-             "#example-card-body_inset_well [data-element='card'][data-body='inset'][data-variant='solid']"
-           )
-  end
-
-  test "card orientation stays out of the playground and renders in the example", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/card")
-
-    refute has_element?(
-             view,
-             "#playground-card-controls select[name='orientation']"
-           )
-
-    assert has_element?(
-             view,
-             "#playground-card [data-element='card'][data-orientation='vertical']"
-           )
-
-    assert has_element?(
-             view,
-             "#example-card-horizontal [data-element='card'][data-orientation='horizontal']"
-           )
-  end
-
-  test "card examples expose divided and padded body hooks", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/card")
-
-    assert has_element?(
-             view,
-             "#example-card-sectioned [data-element='card'][data-body='divided'] [data-part='section'][data-padded]"
-           )
-
-    assert has_element?(
-             view,
-             "#example-card-horizontal [data-element='card'][data-body='divided'] [data-part='section'][data-padded]"
-           )
-
-    assert has_element?(
-             view,
-             "#example-card-collapsible [data-part='section']:not([data-padded])"
-           )
+    assert has_element?(view, "#playground-card [data-element='card'][data-body='inset']")
   end
 
   test "boolean controls render as true/false selects", %{conn: conn} do
@@ -377,19 +258,13 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "card shadow control toggles the default", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
 
-    assert has_element?(
-             view,
-             "#playground-card [data-element='card'][data-shadow]"
-           )
+    assert has_element?(view, "#playground-card [data-element='card'][data-shadow]")
 
     view
     |> element("#playground-card-controls")
     |> render_change(%{"shadow" => "false"})
 
-    assert has_element?(
-             view,
-             "#playground-card [data-element='card']:not([data-shadow])"
-           )
+    assert has_element?(view, "#playground-card [data-element='card']:not([data-shadow])")
   end
 
   test "icon page renders a FlintUI icon", %{conn: conn} do
@@ -432,14 +307,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#playground-tabs-code", "disabled")
   end
 
-  test "toggle click usage renders code only", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/toggle?tab=base")
-
-    assert has_element?(view, "#usage-on_click pre.highlight", "on_click")
-    refute has_element?(view, "#usage-on_click button[phx-value-tab]")
-    refute has_element?(view, "#usage-on_click [data-element='toggle']")
-  end
-
   test "collapsible page documents keyboard interactions on the base tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=base")
 
@@ -448,16 +315,15 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#keyboard code", "Space")
   end
 
-  test "the playground only shows its selected controls", %{conn: conn} do
+  test "the playground shows the main section controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#playground-button-controls select[name='variant']")
     assert has_element?(view, "#playground-button-controls select[name='color']")
     assert has_element?(view, "#playground-button-controls select[name='size']")
-
-    refute has_element?(view, "#playground-button-controls select[name='disabled']")
+    assert has_element?(view, "#playground-button-controls select[name='disabled']")
     assert has_element?(view, "#playground-button-controls select[name='loading']")
-    refute has_element?(view, "#playground-button-controls select[name='depth']")
+    assert has_element?(view, "#playground-button-controls select[name='depth']")
   end
 
   test "preview controls opt out of password-manager autofill", %{conn: conn} do
@@ -470,22 +336,14 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, selector)
   end
 
-  test "the loading playground hides the duration and weight controls", %{conn: conn} do
+  test "the loading playground exposes its controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
 
     assert has_element?(view, "#playground-loading-controls select[name='variant']")
     assert has_element?(view, "#playground-loading-controls select[name='color']")
     assert has_element?(view, "#playground-loading-controls select[name='size']")
-
-    refute has_element?(view, "#playground-loading-controls input[name='duration']")
-    refute has_element?(view, "#playground-loading-controls input[name='weight']")
-  end
-
-  test "the styled controls offer variant and size selects", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    assert has_element?(view, "#playground-button-controls select[name='variant']")
-    assert has_element?(view, "#playground-button-controls select[name='size']")
+    assert has_element?(view, "#playground-loading-controls input[name='duration']")
+    assert has_element?(view, "#playground-loading-controls input[name='weight']")
   end
 
   test "the preview canvas is solid and glues its controls", %{conn: conn} do
@@ -497,11 +355,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#playground-button [data-preview-controls].rounded-b-lg")
     refute has_element?(view, "#playground-button [data-preview-controls].mt-3")
     assert has_element?(view, "#playground-button [data-preview-code].rounded-b-lg")
-
-    assert has_element?(view, "#usage-button-variant [data-preview-canvas].rounded-t-lg")
-
-    assert has_element?(view, "#usage-button-color [data-preview-canvas].rounded-lg")
-    refute has_element?(view, "#usage-button-color [data-preview-code]")
   end
 
   test "switching tabs resets the playground to its defaults", %{conn: conn} do
@@ -563,46 +416,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#setup pre.highlight code span")
   end
 
-  test "code-only sections use the shared code block", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
-
-    assert has_element?(view, "pre.highlight code#base-usage-button-disabled-code")
-    assert has_element?(view, "#base-usage-button-disabled-code-copy[phx-hook]")
-  end
-
-  test "usage subsections show their preview and code together", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    assert has_element?(view, "#usage-button-variant [data-element='button']")
-    assert has_element?(view, "#usage-button-variant-code span")
-    refute has_element?(view, "#usage-button-variant button[phx-value-tab]")
-  end
-
-  test "example cards show their preview and code together", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    assert has_element?(view, "#example-button-icon [data-element='button']")
-    assert has_element?(view, "#example-button-icon-code span")
-    refute has_element?(view, "#example-button-icon button[phx-value-tab]")
-  end
-
-  test "the destructive confirm example renders and its event is tolerated", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    assert has_element?(
-             view,
-             "#example-button-destructive_confirm [data-element='button'][data-confirm='Delete item?'][phx-value-id='67']"
-           )
-
-    # The confirm dialog is client-side, so the click lands here directly; the
-    # docs swallow the event instead of crashing on an unknown one.
-    view
-    |> element("#example-button-destructive_confirm [data-element='button']")
-    |> render_click()
-
-    assert has_element?(view, "#example-button-destructive_confirm [data-element='button']")
-  end
-
   test "the component page shows a section and type breadcrumb", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
@@ -615,12 +428,12 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#on-this-page", "On this page")
-    assert has_element?(view, "#overview h2[data-toc='section']", "Overview")
-    assert has_element?(view, "#usage-variant h3[data-toc='subsection']", "Variant")
+    assert has_element?(view, "#api h2[data-toc='section']", "API Reference")
+    assert has_element?(view, "#api #attributes h3[data-toc='subsection']", "Attributes")
 
     {:ok, base, _html} = live(conn, ~p"/components/button?tab=base")
 
-    assert has_element?(base, "#accessibility h3[data-toc='subsection']", "Accessibility")
+    assert has_element?(base, "#accessibility h2[data-toc='section']", "Accessibility")
   end
 
   test "the components index has no breadcrumb", %{conn: conn} do
@@ -639,20 +452,24 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
       assert has_element?(docs, "#component-sections-panel-styled")
       refute has_element?(docs, "#component-sections-panel-styled[hidden]")
       assert has_element?(docs, "#component-sections-panel-base[hidden]")
+      assert has_element?(docs, "#main-preview")
       assert has_element?(docs, "#playground-#{name} [data-element]")
+      assert has_element?(docs, "#api")
+      assert has_element?(docs, "#setup")
 
       {:ok, base, _html} = live(conn, ~p"/components/#{name}?tab=base")
       assert has_element?(base, "#component-sections-panel-base")
       refute has_element?(base, "#component-sections-panel-base[hidden]")
       assert has_element?(base, "#component-sections-panel-styled[hidden]")
-      assert has_element?(base, "#usage pre.highlight")
+      assert has_element?(base, "#accessibility")
+      assert has_element?(base, "#api")
       refute has_element?(base, "#playground-#{name}")
 
       {:ok, css, _html} = live(conn, ~p"/components/#{name}?tab=css")
       assert has_element?(css, "#component-sections-panel-css")
       refute has_element?(css, "#component-sections-panel-css[hidden]")
       assert has_element?(css, "#theme")
-      assert has_element?(css, "#styling-contract")
+      assert has_element?(css, "#css-variables")
     end
   end
 end

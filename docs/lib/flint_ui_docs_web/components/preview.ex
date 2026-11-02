@@ -6,17 +6,26 @@ defmodule FlintUIDocsWeb.Preview do
   slot. Per-preview state (control props, active code flavor, and source/code
   view) belongs to `FlintUIDocsWeb.ComponentLive` and arrives through `state`.
 
+  A section render receives its context through `assigns`, so the shortest call
+  is to forward the whole map:
+
+      def render_section(%{section: :examples, id: :icon} = assigns) do
+        ~H\"\"\"
+        <.preview {assigns}>
+          <Components.button>Save</Components.button>
+        </.preview>
+        \"\"\"
+      end
+
+  The preview inherits `:preview_id`, `:name`, `:controls`, `:state`, `:code`,
+  `:codes`, `:source`, and `:tab` from that map. Explicit attributes override
+  them, which is how a section renders more than one preview:
+
+      <.preview {assigns} preview_id={@preview_id <> "-grid"} preview_only>
+
   `code` and `codes` accept a string, a list of code flavors, or a 1-arity
   function that receives the current props. The demo slot receives the same
-  props:
-
-      <.preview id="..." name={:button} state={@state} controls={[:variant]}
-        code={fn props -> ... end}>
-        <Components.button variant={props.variant}>Button</Components.button>
-      </.preview>
-
-  A slot cannot carry raw source text (slots are rendered content), which is why
-  the code is an attribute while the demo is the inner block.
+  props.
   """
 
   use FlintUIDocsWeb, :html
@@ -24,26 +33,35 @@ defmodule FlintUIDocsWeb.Preview do
   alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Docs
 
-  attr :id, :string, required: true
-  attr :name, :atom, required: true
-  attr :layer, :atom, default: :styled
+  attr :preview_id, :any, default: nil
+  attr :id, :any, default: nil
+  attr :name, :atom, default: nil
+  attr :section, :atom, default: nil
+  attr :tab, :atom, default: nil
   attr :controls, :list, default: []
   attr :state, :map, default: %{}
   attr :code, :any, default: nil
   attr :codes, :any, default: nil
+  attr :source, :any, default: nil
   attr :code_lang, :atom, default: :heex
   attr :preview_only, :boolean, default: false
   attr :class, :any, default: nil
   slot :inner_block, required: true
 
   def preview(assigns) do
-    defaults = Docs.defaults(assigns.name)
+    name = assigns[:name]
+    preview_id = assigns[:preview_id] || assigns[:id]
+    layer = if assigns[:tab] == :base, do: :base, else: :styled
+    controls = controls_for(name, layer, assigns[:controls] || [])
 
     state =
-      Map.merge(%{props: %{}, code_index: 0, code_view: "code", source: nil}, assigns.state)
+      Map.merge(
+        %{props: %{}, code_index: 0, code_view: "code", source: assigns[:source]},
+        assigns[:state] || %{}
+      )
 
+    defaults = Map.new(controls, &{&1.key, &1.default})
     props = Map.merge(defaults, state.props)
-    controls = controls_for(assigns.name, assigns.layer, assigns.controls)
     flavors = resolve_flavors(assigns, props)
     index = clamp_index(state.code_index, flavors)
     active_flavor = flavors && Enum.at(flavors, index)
@@ -54,6 +72,9 @@ defmodule FlintUIDocsWeb.Preview do
 
     assigns =
       assign(assigns,
+        preview_id: to_string(preview_id),
+        name: name,
+        layer: layer,
         state: state,
         props: props,
         controls: controls,
@@ -70,8 +91,8 @@ defmodule FlintUIDocsWeb.Preview do
       )
 
     ~H"""
-    <div id={@id} class={["mt-6", @class]}>
-      <div class="mt-3 rounded-lg shadow-lg/3">
+    <div id={@preview_id} class={@class}>
+      <div class="rounded-lg shadow-lg/3">
         <div
           data-preview-canvas
           class={[
@@ -84,7 +105,7 @@ defmodule FlintUIDocsWeb.Preview do
 
         <.controls
           :if={@controls != []}
-          id={@id}
+          id={@preview_id}
           name={@name}
           layer={@layer}
           controls={@controls}
@@ -98,8 +119,8 @@ defmodule FlintUIDocsWeb.Preview do
           class="overflow-hidden rounded-b-lg border-x border-b border-default"
         >
           <CodeBlock.code
-            id={"#{@id}-code"}
-            copy_id={"#{@id}-copy"}
+            id={"#{@preview_id}-code"}
+            copy_id={"#{@preview_id}-copy"}
             code={@display_code}
             lang={@display_lang}
             caption={@code_caption}
@@ -110,7 +131,7 @@ defmodule FlintUIDocsWeb.Preview do
                 :for={{flavor, i} <- Enum.with_index(@flavors)}
                 type="button"
                 phx-click="preview_code"
-                phx-value-id={@id}
+                phx-value-id={@preview_id}
                 phx-value-index={i}
                 class={code_tab(i == @code_index)}
               >
@@ -121,9 +142,9 @@ defmodule FlintUIDocsWeb.Preview do
             <:actions :if={@source}>
               <button
                 type="button"
-                id={"#{@id}-source-toggle"}
+                id={"#{@preview_id}-source-toggle"}
                 phx-click="preview_view"
-                phx-value-id={@id}
+                phx-value-id={@preview_id}
                 phx-value-view={if @code_view == "source", do: "code", else: "source"}
                 class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
               >
@@ -141,7 +162,7 @@ defmodule FlintUIDocsWeb.Preview do
             class="border-t border-default"
           >
             <CodeBlock.code
-              id={"#{@id}-styles"}
+              id={"#{@preview_id}-styles"}
               code={@active_flavor.styles}
               lang={:css}
               caption="app.css"
@@ -157,7 +178,7 @@ defmodule FlintUIDocsWeb.Preview do
   ## Controls
 
   attr :id, :string, required: true
-  attr :name, :atom, required: true
+  attr :name, :atom, default: nil
   attr :layer, :atom, default: :styled
   attr :controls, :list, required: true
   attr :props, :map, required: true
@@ -232,20 +253,24 @@ defmodule FlintUIDocsWeb.Preview do
 
   ## Helpers
 
-  defp controls_for(name, layer, keys) do
-    name
-    |> Docs.controls()
-    |> Enum.filter(&(&1.key in keys))
-    |> Enum.map(&Map.put(&1, :layer, layer))
+  defp controls_for(name, layer, controls) when is_list(controls) do
+    if Enum.all?(controls, &is_atom/1) do
+      name
+      |> Docs.controls()
+      |> Enum.filter(&(&1.key in controls))
+      |> Enum.map(&Map.put(&1, :layer, layer))
+    else
+      Enum.map(controls, &Map.put(&1, :layer, layer))
+    end
   end
 
   defp resolve_flavors(assigns, props) do
     cond do
-      is_function(assigns.codes, 1) -> assigns.codes.(props) |> normalize_codes()
-      assigns.codes not in [nil, []] -> normalize_codes(assigns.codes)
-      is_function(assigns.code, 1) -> assigns.code.(props) |> normalize_codes()
-      is_binary(assigns.code) -> normalize_codes(assigns.code)
-      is_list(assigns.code) -> normalize_codes(assigns.code)
+      is_function(assigns[:codes], 1) -> assigns[:codes].(props) |> normalize_codes()
+      assigns[:codes] not in [nil, []] -> normalize_codes(assigns[:codes])
+      is_function(assigns[:code], 1) -> assigns[:code].(props) |> normalize_codes()
+      is_binary(assigns[:code]) -> normalize_codes(assigns[:code])
+      is_list(assigns[:code]) -> normalize_codes(assigns[:code])
       true -> nil
     end
   end

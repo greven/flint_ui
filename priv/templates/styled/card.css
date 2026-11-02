@@ -38,6 +38,7 @@
 
     [data-element="card"][data-variant="soft"] {
         --fl-card-surface: var(--fl-color-surface-muted);
+        --fl-card-border: var(--fl-color-border-muted);
     }
 
     [data-element="card"][data-variant="accented"] {

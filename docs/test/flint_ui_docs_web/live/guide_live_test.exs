@@ -60,14 +60,13 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     {:ok, view, _html} = live(conn, ~p"/getting-started/styling")
 
     assert has_element?(view, "#scope")
+    assert has_element?(view, "#scope h2 a[href='#scope']", "Where a change belongs")
     assert has_element?(view, "#class")
     assert has_element?(view, "#style")
     assert has_element?(view, "#parts")
     assert has_element?(view, "#state")
     assert has_element?(view, "#utilities")
     assert has_element?(view, "#attributes")
-    assert has_element?(view, "#components")
-    assert has_element?(view, "#button")
     assert has_element?(view, "#section-getting-started[aria-current='page']")
   end
 

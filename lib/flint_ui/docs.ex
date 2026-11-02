@@ -46,6 +46,28 @@ defmodule FlintUI.Docs do
   end
 
   @doc """
+  Returns the intro and `##`-level sections of a component's moduledoc.
+
+  The intro is the text before the first `##` heading; each section carries its
+  title, a slug key (`"Link triggers"` becomes `:link_triggers`), and its
+  Markdown body. `###` headings stay inside the section body, so a section can
+  still use subheadings.
+
+  Returns `%{intro: nil | String.t(), sections: [map()]}`.
+  """
+  def doc_sections(component) when is_atom(component) do
+    case Code.fetch_docs(component_module(component)) do
+      {:docs_v1, _, _, _, %{"en" => doc}, _, _} -> parse_doc(doc)
+      _ -> %{intro: nil, sections: []}
+    end
+  end
+
+  @doc """
+  Returns the text before the first `##` heading of a component's moduledoc.
+  """
+  def intro(component) when is_atom(component), do: doc_sections(component).intro
+
+  @doc """
   Returns the body of a `##`-level section from a component's moduledoc.
 
   The shared leading indentation is stripped so the result is ready to render
@@ -58,6 +80,69 @@ defmodule FlintUI.Docs do
       _ -> nil
     end
   end
+
+  defp parse_doc(doc) do
+    lines = String.split(doc, "\n")
+    headings = headings_with_indices(lines)
+
+    intro =
+      case headings do
+        [] -> dedent_and_trim(lines)
+        [{index, _title} | _rest] -> lines |> Enum.take(index) |> dedent_and_trim()
+      end
+
+    sections =
+      headings
+      |> Enum.with_index()
+      |> Enum.map(fn {{index, title}, position} ->
+        next =
+          case Enum.at(headings, position + 1) do
+            nil -> length(lines)
+            {next_index, _title} -> next_index
+          end
+
+        body =
+          lines
+          |> Enum.slice((index + 1)..(next - 1)//1)
+          |> dedent_and_trim()
+          |> blank_to_nil()
+
+        %{key: slug(title), title: title, body: body}
+      end)
+
+    %{intro: blank_to_nil(intro), sections: sections}
+  end
+
+  defp headings_with_indices(lines) do
+    lines
+    |> Enum.with_index()
+    |> Enum.flat_map(fn {line, index} ->
+      trimmed = String.trim_leading(line)
+
+      if String.starts_with?(trimmed, "## ") and not String.starts_with?(trimmed, "### ") do
+        [{index, trimmed |> String.replace_prefix("## ", "") |> String.trim()}]
+      else
+        []
+      end
+    end)
+  end
+
+  defp dedent_and_trim(lines) do
+    lines
+    |> dedent()
+    |> trim_blank_lines()
+  end
+
+  defp slug(title) do
+    title
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9]+/, "_")
+    |> String.trim("_")
+    |> String.to_atom()
+  end
+
+  defp blank_to_nil(""), do: nil
+  defp blank_to_nil(value), do: value
 
   defp extract_section(doc, title) do
     lines = String.split(doc, "\n")

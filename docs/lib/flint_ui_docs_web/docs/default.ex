@@ -6,10 +6,10 @@ defmodule FlintUIDocsWeb.Docs.Default do
   use FlintUIDocsWeb.Docs.Page, component: :default
 
   @impl true
-  def accessibility, do: nil
+  def base_docs, do: :all
 
   @impl true
-  def render_main(assigns) do
+  def render_section(%{section: :usage} = assigns) do
     assigns = assign(assigns, :name_label, to_string(assigns.name))
 
     ~H"""

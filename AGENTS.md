@@ -185,9 +185,26 @@ per-component radius token.
 ### Update docs
 
 Read `docs/AGENTS.md` first. Page content is authored per component in
-`docs/lib/flint_ui_docs_web/docs/<name>.ex`, not in the LiveView template. A
-docs test fails unless every public base attribute and styled prop is covered by
-`usage/0`, so new API is not done until its docs page covers it. Dogfood
+`docs/lib/flint_ui_docs_web/docs/<name>.ex`, not in the LiveView template.
+
+A page module implements `FlintUIDocsWeb.Docs.Page`:
+
+- `base_docs/0` selects the Base tab: `:all`, or an ordered list of moduledoc
+  section keys (`:intro`, `:examples`, `:accessibility`, `:keyboard`,
+  `:anatomy`, `:api`). Put base prose in the base component's `@moduledoc`, not
+  in the docs module.
+- `sections/0` declares authored sections as maps. Sections with the same
+  `{tab, section}` stack in declaration order: the first section's `title`
+  becomes the `h2`, and the rest render as `h3` subsections with their own
+  titles. `tab: :css` sections add to the CSS tab. Each section carries its
+  title, description, body, and `code`/`codes` in one place.
+- `render_section/1` renders a section that needs a live preview. Match on
+  `:section` and `:id`, then forward the assigns to the preview:
+  `<.preview {assigns}>...</.preview>`.
+
+A section without a `render_section/1` clause renders its body and code
+automatically. The docs test fails when a public base attribute or styled prop
+has no doc, so document new API on the component or prop itself. Dogfood
 FlintUI components in the docs; only deliberate unstyled demonstrations may
 keep raw HTML.
 

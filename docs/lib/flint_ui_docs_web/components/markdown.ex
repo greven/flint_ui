@@ -15,19 +15,24 @@ defmodule FlintUIDocsWeb.Markdown do
 
   import Phoenix.HTML, only: [html_escape: 1, raw: 1, safe_to_string: 1]
 
-  attr(:content, :string, required: true)
+  attr :content, :string, required: true
+  attr :class, :string, default: nil
 
   def markdown(assigns) do
     assigns = assign(assigns, :blocks, parse(assigns.content))
 
     ~H"""
-    <div class="flex flex-col gap-3 text-sm leading-relaxed text-default">
+    <div class={["flex flex-col gap-3", @class]}>
       <%= for block <- @blocks do %>
         <%= case block do %>
           <% {:code, code, lang} -> %>
             <DocsComponents.code_block code={code} lang={lang} />
           <% {:p, text} -> %>
-            <p>{text}</p>
+            <DocsComponents.content_paragraph>{text}</DocsComponents.content_paragraph>
+          <% {:ul, items} -> %>
+            <ul class="list-disc space-y-1.5 pl-5">
+              <li :for={item <- items}>{item}</li>
+            </ul>
         <% end %>
       <% end %>
     </div>
@@ -61,6 +66,10 @@ defmodule FlintUIDocsWeb.Markdown do
       blank?(line) ->
         collect(rest, acc)
 
+      list_item?(line) ->
+        {items, remaining} = take_list([line | rest], [])
+        collect(remaining, [{:ul, Enum.map(items, &inline/1)} | acc])
+
       true ->
         {paragraph, remaining} = take_paragraph([line | rest], [])
         collect(remaining, [{:p, inline(paragraph)} | acc])
@@ -79,6 +88,39 @@ defmodule FlintUIDocsWeb.Markdown do
     if indented?(line),
       do: take_indented(rest, [line | acc]),
       else: {Enum.reverse(acc), [line | rest]}
+  end
+
+  defp take_list([], acc), do: {Enum.reverse(acc), []}
+
+  defp take_list([line | rest], acc) do
+    cond do
+      list_item?(line) ->
+        item = line |> String.trim_leading() |> strip_list_marker()
+        take_list(rest, [item | acc])
+
+      blank?(line) ->
+        {Enum.reverse(acc), rest}
+
+      indented?(line) and acc != [] ->
+        [previous | tail] = acc
+        take_list(rest, [previous <> " " <> String.trim(line) | tail])
+
+      true ->
+        {Enum.reverse(acc), [line | rest]}
+    end
+  end
+
+  defp strip_list_marker(line) do
+    cond do
+      String.starts_with?(line, "- ") -> String.trim_leading(line, "- ")
+      String.starts_with?(line, "* ") -> String.trim_leading(line, "* ")
+      true -> line
+    end
+  end
+
+  defp list_item?(line) do
+    trimmed = String.trim_leading(line)
+    String.starts_with?(trimmed, "- ") or String.starts_with?(trimmed, "* ")
   end
 
   defp take_paragraph([], acc), do: {text(acc), []}

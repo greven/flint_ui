@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Button do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop, Slot, Var}
+  alias FlintUI.Styled.{Attr, Entry, Prop, Slot, Var}
 
   def entry do
     %Entry{
@@ -14,29 +14,6 @@ defmodule FlintUI.Styled.Button do
       slots: [
         Slot.new(name: :leading, doc: "Optional content rendered before the button's content."),
         Slot.new(name: :trailing, doc: "Optional content rendered after the button's content.")
-      ],
-      vars: [
-        Var.new(
-          name: "--fl-button-color",
-          default: "var(--fl-color-inverted)",
-          doc: "The solid fill and the source for tinted surfaces and focus."
-        ),
-        Var.new(
-          name: "--fl-button-color-content",
-          default: "var(--fl-color-text-inverted)",
-          doc: "The label color on the solid fill."
-        ),
-        Var.new(
-          name: "--fl-button-text",
-          default: "var(--fl-button-color)",
-          doc:
-            "The label color on tinted, bordered, ghost, and link variants; it maps to the role's `-text` token."
-        )
-      ],
-      color_vars: [
-        fill: "--fl-button-color",
-        on_fill: "--fl-button-color-content",
-        on_text: "--fl-button-text"
       ],
       props: [
         Prop.new(
@@ -86,6 +63,43 @@ defmodule FlintUI.Styled.Button do
           doc:
             "Whether to negate the button's invisible padding so its content aligns with surrounding content. Most useful on ghost and link variants; the hit area is unchanged."
         )
+      ],
+      content_attrs: [
+        Attr.new(
+          name: :icon,
+          type: :string,
+          doc:
+            "An icon CSS class rendered before the button's content. The icon is decorative; use `aria-label` when the button has no text."
+        ),
+        Attr.new(
+          name: :text,
+          type: :string,
+          doc:
+            "A text label rendered when the default slot is not given. The default slot wins when both are set."
+        )
+      ],
+      vars: [
+        Var.new(
+          name: "--fl-button-color",
+          default: "var(--fl-color-inverted)",
+          doc: "The solid fill and the source for tinted surfaces and focus."
+        ),
+        Var.new(
+          name: "--fl-button-color-content",
+          default: "var(--fl-color-text-inverted)",
+          doc: "The label color on the solid fill."
+        ),
+        Var.new(
+          name: "--fl-button-text",
+          default: "var(--fl-button-color)",
+          doc:
+            "The label color on tinted, bordered, ghost, and link variants; it maps to the role's `-text` token."
+        )
+      ],
+      color_vars: [
+        fill: "--fl-button-color",
+        on_fill: "--fl-button-color-content",
+        on_text: "--fl-button-text"
       ]
     }
   end
