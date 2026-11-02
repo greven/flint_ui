@@ -189,7 +189,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def section(assigns) do
     ~H"""
     <section id={@id} class={[@class, "scroll-mt-28"]}>
-      <h2 :if={@title} data-toc="section" class="mt-12 mb-6 font-semibold text-2xl text-highlighted">
+      <h2 :if={@title} data-toc="section" class="mt-12 mb-6 font-semibold text-3xl text-highlighted">
         <.heading_link title={@title} id={@id} />
       </h2>
       {render_slot(@inner_block)}

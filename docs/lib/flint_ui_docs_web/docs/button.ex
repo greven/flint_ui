@@ -37,8 +37,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :basic_text} = assigns) do
     ~H"""
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
-    <.preview {assigns} code={~s(<.button text="Shortcut" />)}>
-      <Components.button text="Shortcut" />
+    <.preview {assigns} code={~s(<.button text="Shortcut" icon="lucide-square-slash" />)}>
+      <Components.button text="Shortcut" icon="lucide-square-slash" />
     </.preview>
     """
   end
@@ -46,13 +46,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :color} = assigns) do
     ~H"""
     <.prose content="Use the `color` attr to change the color of the button. The `color` and `variant` attributes compose freely." />
-    <.preview :let={props} {assigns} code={&color_code/1}>
+    <.preview :let={props} {assigns} code={&code_color/1}>
       <Components.button variant="solid" color={props.color}>Unbound</Components.button>
     </.preview>
     """
   end
 
-  defp color_code(props) do
+  defp code_color(props) do
     Snippet.tag(
       ".button",
       [Snippet.attr("color", props.color, "neutral"), Snippet.attr("variant", "solid")],
