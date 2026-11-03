@@ -1,7 +1,8 @@
 @layer components {
-    /* Toggle. Public inputs: `--fl-toggle-color`, `-color-content`, `-text`;
-     * surfaces and borders follow from them, focus comes from the shared theme
-     * tokens. */
+    /* Toggle. Public inputs: `--fl-toggle-color`, `-color-content`, `-text`.
+     * The unpressed toggle is a neutral control; the pressed state applies the
+     * matching button variant. Shared depth, elevation and press behavior come
+     * from `--fl-control-*`. */
     [data-element="toggle"][data-variant] {
         display: inline-flex;
         position: relative;
@@ -9,27 +10,63 @@
         align-items: center;
         justify-content: center;
         gap: var(--fl-spacing-sm);
-        border: 1px solid transparent;
+        border: 1px solid var(--fl-color-border);
         border-radius: var(--fl-control-radius);
+        background: var(--fl-color-control);
+        color: var(--fl-color-text);
         font-family: var(--fl-font-sans);
         font-size: var(--fl-control-font-size-md);
         font-weight: var(--fl-font-weight-medium);
         line-height: var(--fl-control-line-height-md);
+        white-space: nowrap;
         cursor: pointer;
-        background: transparent;
-        color: var(--fl-color-text);
+        box-shadow: var(--fl-control-shadow, 0 0 #0000);
         transition:
             background-color var(--fl-duration-fast) var(--fl-ease-out),
             color var(--fl-duration-fast) var(--fl-ease-out),
-            border-color var(--fl-duration-fast) var(--fl-ease-out);
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            box-shadow var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Icon child: sized by the toggle, never shrinks, and drawn at 70% of the
+     * label color until hover. */
+    [data-element="toggle"][data-variant] > [data-element="icon"] {
+        flex-shrink: 0;
+        --fl-icon-size: var(--fl-control-icon-md);
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+        color: color-mix(in oklab, currentColor 70%, transparent);
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="toggle"][data-variant]:not([data-disabled]):hover > [data-element="icon"] {
+        color: currentColor;
+    }
+
+    /* The depth rim light, matching the button. Only the pressed solid fill
+     * colors it, so a flat control never draws a stray highlight. */
+    [data-element="toggle"][data-variant]::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border: 1px solid transparent;
+        border-radius: calc(var(--fl-control-radius) - 1px);
+        pointer-events: none;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+        transition:
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            opacity var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     /* Hover/active are a `currentColor` overlay inside the border, not a fill
-   * swap. The variant fill stays opaque, so the alpha border keeps a stable
-   * backdrop (including at attached-group seams). The overlay is drawn on the
-   * border box and clipped to the padding box for bordered variants, so it
-   * follows the inner (and joined) radii without a corner gap and never tints
-   * the border. */
+     * swap. The variant fill stays opaque, so the alpha border keeps a stable
+     * backdrop (including at attached-group seams). The overlay is drawn on the
+     * border box and clipped to the padding box for bordered variants, so it
+     * follows the inner (and joined) radii without a corner gap and never tints
+     * the border. */
     [data-element="toggle"][data-variant]::after {
         content: "";
         position: absolute;
@@ -42,8 +79,9 @@
         transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    /* Borderless variants stay unclipped, so the overlay reaches the full fill. */
+    /* Bordered variants stay clipped; ghost is borderless. */
     [data-element="toggle"][data-variant]:is(
+            [data-variant="solid"],
             [data-variant="outline"],
             [data-variant="dashed"],
             [data-variant="subtle"]
@@ -60,24 +98,22 @@
         opacity: var(--fl-control-active-opacity);
     }
 
-    [data-element="toggle"][data-variant="solid"] {
+    /* The pressed solid fill needs a stronger overlay than a neutral surface. */
+    [data-element="toggle"][data-variant="solid"][data-state="on"] {
         --fl-control-hover-opacity: 0.15;
         --fl-control-active-opacity: 0.22;
     }
 
-    /* Icon child: sized by the toggle, never shrinks, and drawn at 70% of the
-   * label color until hover. */
-    [data-element="toggle"][data-variant] > [data-element="icon"] {
-        flex-shrink: 0;
-        --fl-icon-size: var(--fl-control-icon-md);
-        width: var(--fl-icon-size);
-        height: var(--fl-icon-size);
-        color: color-mix(in oklab, currentColor 70%, transparent);
-        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    /* Press feedback: the toggle sinks. */
+    [data-element="toggle"][data-variant]:not([data-disabled]):active {
+        transform: var(--fl-control-press, none);
+        box-shadow: 0 0 0 0 #0000;
     }
 
-    [data-element="toggle"][data-variant]:hover > [data-element="icon"] {
-        color: currentColor;
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="toggle"][data-variant] {
+            --fl-control-press: none;
+        }
     }
 
     [data-element="toggle"][data-disabled] {
@@ -129,37 +165,82 @@
         --fl-toggle-text: var(--fl-color-text);
     }
 
+    /* Off states. The variant only changes how the pressed state is emphasized,
+     * so an unpressed toggle stays on the neutral chrome ladder. Subtle is the
+     * one exception: it is the toned chip the pressed state steps up from. */
+    [data-element="toggle"][data-variant="subtle"] {
+        background: var(--fl-color-surface-accented);
+        border-color: var(--fl-color-border-muted);
+    }
+
+    [data-element="toggle"][data-variant="dashed"] {
+        border-style: dashed;
+        box-shadow: 0 0 #0000;
+    }
+
+    [data-element="toggle"][data-variant="ghost"] {
+        background: transparent;
+        border-color: transparent;
+        box-shadow: 0 0 #0000;
+    }
+
+    /* Depth: the outline wears the same inner line and elevation as the button,
+     * and the pressed solid fill wears the same top rim light. */
+    [data-element="toggle"][data-variant="outline"] {
+        box-shadow:
+            inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
+            var(--fl-control-shadow, 0 0 #0000);
+    }
+
+    [data-element="toggle"][data-variant="solid"][data-state="on"]::before {
+        border-color: rgb(255 255 255 / calc(12% * var(--fl-control-depth, 1)));
+    }
+
+    [data-element="toggle"][data-variant="solid"][data-state="on"]:not([data-disabled]):active::before {
+        opacity: 0;
+    }
+
+    /* Absent `data-depth` flattens the rim and inner line only; shadows are independent. */
+    [data-element="toggle"]:not([data-depth])[data-variant] {
+        --fl-control-depth: 0;
+    }
+
+    /* Pressed states mirror the button variants. */
     [data-element="toggle"][data-variant="solid"][data-state="on"] {
         background: var(--fl-toggle-color, var(--fl-color-inverted));
+        border-color: color-mix(
+            in oklab,
+            var(--fl-toggle-color, var(--fl-color-inverted)),
+            oklch(0% 0 0) var(--fl-border-strength-solid)
+        );
         color: var(--fl-toggle-color-content, var(--fl-color-text-inverted));
     }
 
-    /* Subtle: ghost + outline, a tinted control surface with a matching border. */
-    [data-element="toggle"][data-variant="subtle"] {
-        background: var(--fl-color-control);
+    [data-element="toggle"][data-variant="subtle"][data-state="on"] {
+        background: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
         border-color: color-mix(
             in oklab,
             var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
             var(--fl-color-control)
         );
-    }
-
-    [data-element="toggle"][data-variant="subtle"][data-state="on"] {
-        background: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
-    [data-element="toggle"][data-variant="outline"] {
-        background: var(--fl-color-control);
+    [data-element="toggle"][data-variant="outline"][data-state="on"] {
         border-color: color-mix(
             in oklab,
             var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
             var(--fl-color-control)
         );
+        color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
-    [data-element="toggle"][data-variant="outline"][data-state="on"] {
-        background: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
+    [data-element="toggle"][data-variant="dashed"][data-state="on"] {
+        border-color: color-mix(
+            in oklab,
+            var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
+            var(--fl-color-control)
+        );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
@@ -168,42 +249,8 @@
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
-    [data-element="toggle"][data-variant="dashed"] {
-        background: var(--fl-color-control);
-        border-style: dashed;
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
-        );
-    }
-
-    [data-element="toggle"][data-variant="dashed"][data-state="on"] {
-        background: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
-        color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
-    }
-
-    /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
-    [data-element="toggle"][data-color="neutral"]:is(
-            [data-variant="subtle"],
-            [data-variant="outline"],
-            [data-variant="ghost"],
-            [data-variant="dashed"]
-        )[data-state="on"] {
-        background: var(--fl-color-surface-accented);
-        color: var(--fl-color-text);
-    }
-
-    [data-element="toggle"][data-color="neutral"]:is([data-variant="outline"], [data-variant="dashed"]) {
-        border-color: var(--fl-color-border);
-    }
-
-    [data-element="toggle"][data-color="neutral"][data-variant="subtle"] {
-        border-color: var(--fl-color-border-muted);
-    }
-
     /* Sizes share the control metrics, so a toggle lines up with a button of the
-   * same size. */
+     * same size. */
     [data-element="toggle"][data-size="xs"] {
         height: var(--fl-control-height-xs);
         padding-inline: var(--fl-control-padding-x-xs);

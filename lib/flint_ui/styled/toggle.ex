@@ -35,6 +35,13 @@ defmodule FlintUI.Styled.Toggle do
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The control size."
+        ),
+        Prop.new(
+          name: :depth,
+          values: [true, false],
+          default: true,
+          doc:
+            "Whether solid and outline toggles show their highlight/inner line. Shadows are always on for solid, subtle, and outline; remove them with `--fl-control-shadow`."
         )
       ],
       vars: [

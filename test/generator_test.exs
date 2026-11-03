@@ -40,6 +40,17 @@ defmodule FlintUI.GeneratorTest do
     refute source =~ "to_string(@"
   end
 
+  test "toggle maps its variant, size, and depth props" do
+    source = Generator.component_source(:toggle)
+
+    assert source =~ "values: ~w(solid subtle outline ghost dashed)"
+    assert source =~ "data-variant={@variant}"
+    assert source =~ "data-color={@data_color}"
+    assert source =~ "data-size={@size}"
+    assert source =~ "data-depth={@depth}"
+    assert source =~ "attr(:depth, :boolean"
+  end
+
   test "free-form color props omit the enum and resolve at runtime" do
     for name <- [:badge, :button, :toggle, :tabs, :loading, :loading_text] do
       source = Generator.component_source(name)

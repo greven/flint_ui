@@ -137,7 +137,7 @@
 
     [data-element="button"][data-variant="outline"] {
         box-shadow:
-            inset 0 -1px 0 rgb(0 0 0 / calc(5% * var(--fl-control-depth, 1))),
+            inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
             var(--fl-control-shadow, 0 0 #0000);
     }
 

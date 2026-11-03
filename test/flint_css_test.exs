@@ -7,7 +7,8 @@ defmodule FlintUI.FlintCSSTest do
 
   test "defines prefixed tokens with automatic light/dark", %{css: css} do
     assert css =~ "color-scheme: light dark;"
-    assert css =~ "--fl-color-primary: light-dark("
+    assert css =~ "--fl-color-primary: var(--fl-color-primary-500);"
+    assert css =~ "--fl-color-primary-content: light-dark("
     assert css =~ "--fl-radius:"
     assert css =~ "--fl-radius-md:"
     assert css =~ "--fl-font-sans:"
@@ -17,7 +18,7 @@ defmodule FlintUI.FlintCSSTest do
     for role <- ~w(primary secondary neutral success info warning error) do
       assert css =~ "--fl-color-#{role}-50:"
       assert css =~ "--fl-color-#{role}-950:"
-      assert css =~ "--fl-color-#{role}: light-dark("
+      assert css =~ "--fl-color-#{role}:"
       assert css =~ "--fl-color-#{role}-content: light-dark("
       assert css =~ "--fl-color-#{role}-text: light-dark("
       refute css =~ "--fl-color-#{role}-foreground"
@@ -396,6 +397,34 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="button"\]\[data-variant="link"\][^{]*:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-color-inverted\)\) 75%,\s*transparent\s*\);/
 
     refute css =~ "--fl-button-soft-text"
+  end
+
+  test "toggle variants mirror the button's depth and pressed treatments", %{css: css} do
+    # Solid pressed darkens its fill for the border and wears the top rim light.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="on"\] \{[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-toggle-color, var\(--fl-color-inverted\)\),\s*oklch\(0% 0 0\) var\(--fl-border-strength-solid\)/
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="on"\]::before \{\s*border-color: rgb\(255 255 255 \/ calc\(12% \* var\(--fl-control-depth, 1\)\)\);/
+
+    # Outline carries the button's inner line and elevation.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="outline"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(5% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
+
+    # Subtle is a toned neutral chip when off and a tinted surface when on,
+    # rather than a lighter outline.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-accented\);\s*border-color: var\(--fl-color-border-muted\);/
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(/
+
+    # Both controls expose the depth flattening hook.
+    assert css =~
+             ~r/\[data-element="toggle"\]:not\(\[data-depth\]\)\[data-variant\] \{\s*--fl-control-depth: 0;/
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
   end
 
   test "button and toggle expose only public color inputs", %{css: css} do
