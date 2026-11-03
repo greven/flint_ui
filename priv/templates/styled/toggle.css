@@ -122,47 +122,61 @@
         pointer-events: none;
     }
 
-    /* Each color sets the three public inputs; neutral uses the inverted surface. */
+    /* Each color sets the public inputs; neutral uses the inverted surface. */
     [data-element="toggle"][data-color="primary"] {
         --fl-toggle-color: var(--fl-color-primary);
         --fl-toggle-color-content: var(--fl-color-primary-content);
         --fl-toggle-text: var(--fl-color-primary-text);
+        --fl-toggle-soft: var(--fl-color-primary-soft);
+        --fl-toggle-soft-border: var(--fl-color-primary-soft-border);
     }
 
     [data-element="toggle"][data-color="secondary"] {
         --fl-toggle-color: var(--fl-color-secondary);
         --fl-toggle-color-content: var(--fl-color-secondary-content);
         --fl-toggle-text: var(--fl-color-secondary-text);
+        --fl-toggle-soft: var(--fl-color-secondary-soft);
+        --fl-toggle-soft-border: var(--fl-color-secondary-soft-border);
     }
 
     [data-element="toggle"][data-color="success"] {
         --fl-toggle-color: var(--fl-color-success);
         --fl-toggle-color-content: var(--fl-color-success-content);
         --fl-toggle-text: var(--fl-color-success-text);
+        --fl-toggle-soft: var(--fl-color-success-soft);
+        --fl-toggle-soft-border: var(--fl-color-success-soft-border);
     }
 
     [data-element="toggle"][data-color="info"] {
         --fl-toggle-color: var(--fl-color-info);
         --fl-toggle-color-content: var(--fl-color-info-content);
         --fl-toggle-text: var(--fl-color-info-text);
+        --fl-toggle-soft: var(--fl-color-info-soft);
+        --fl-toggle-soft-border: var(--fl-color-info-soft-border);
     }
 
     [data-element="toggle"][data-color="warning"] {
         --fl-toggle-color: var(--fl-color-warning);
         --fl-toggle-color-content: var(--fl-color-warning-content);
         --fl-toggle-text: var(--fl-color-warning-text);
+        --fl-toggle-soft: var(--fl-color-warning-soft);
+        --fl-toggle-soft-border: var(--fl-color-warning-soft-border);
     }
 
     [data-element="toggle"][data-color="error"] {
         --fl-toggle-color: var(--fl-color-error);
         --fl-toggle-color-content: var(--fl-color-error-content);
         --fl-toggle-text: var(--fl-color-error-text);
+        --fl-toggle-soft: var(--fl-color-error-soft);
+        --fl-toggle-soft-border: var(--fl-color-error-soft-border);
     }
 
     [data-element="toggle"][data-color="neutral"] {
         --fl-toggle-color: var(--fl-color-inverted);
         --fl-toggle-color-content: var(--fl-color-text-inverted);
         --fl-toggle-text: var(--fl-color-text);
+        --fl-toggle-soft: var(--fl-color-neutral-soft);
+        --fl-toggle-soft-border: var(--fl-color-neutral-soft-border);
     }
 
     /* Off states. The variant only changes how the pressed state is emphasized,
@@ -217,29 +231,41 @@
     }
 
     [data-element="toggle"][data-variant="subtle"][data-state="on"] {
-        background: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-            var(--fl-color-control)
+        background: var(
+            --fl-toggle-soft,
+            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control))
+        );
+        border-color: var(
+            --fl-toggle-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
+                var(--fl-color-control)
+            )
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
     [data-element="toggle"][data-variant="outline"][data-state="on"] {
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-toggle-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-color-control)
+            )
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
     [data-element="toggle"][data-variant="dashed"][data-state="on"] {
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-toggle-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-color-control)
+            )
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }

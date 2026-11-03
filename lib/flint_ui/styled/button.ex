@@ -100,6 +100,19 @@ defmodule FlintUI.Styled.Button do
           default: "var(--fl-button-color)",
           doc:
             "The label color on tinted, bordered, ghost, and link variants; it maps to the role's `-text` token."
+        ),
+        Var.new(
+          name: "--fl-button-soft",
+          default: "color-mix(in oklab, var(--fl-button-color) 10%, var(--fl-color-control))",
+          doc:
+            "The tinted surface behind soft and subtle buttons; roles map it to the role's `-soft` token."
+        ),
+        Var.new(
+          name: "--fl-button-soft-border",
+          default:
+            "color-mix(in oklab, var(--fl-button-color) var(--fl-border-strength), var(--fl-color-control))",
+          doc:
+            "The matching border for subtle, outline, and dashed buttons; roles map it to the role's `-soft-border` token."
         )
       ],
       color_vars: [

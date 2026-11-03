@@ -59,6 +59,19 @@ defmodule FlintUI.Styled.Toggle do
           name: "--fl-toggle-text",
           default: "var(--fl-toggle-color)",
           doc: "The label color for text-carrying variants."
+        ),
+        Var.new(
+          name: "--fl-toggle-soft",
+          default: "color-mix(in oklab, var(--fl-toggle-color) 10%, var(--fl-color-control))",
+          doc:
+            "The tinted surface behind pressed soft and subtle toggles; roles map it to the role's `-soft` token."
+        ),
+        Var.new(
+          name: "--fl-toggle-soft-border",
+          default:
+            "color-mix(in oklab, var(--fl-toggle-color) var(--fl-border-strength), var(--fl-color-control))",
+          doc:
+            "The matching border for pressed subtle, outline, and dashed toggles; roles map it to the role's `-soft-border` token."
         )
       ],
       color_vars: [

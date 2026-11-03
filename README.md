@@ -70,15 +70,19 @@ your app stylesheet:
 }
 ```
 
-Each role has three jobs: the bare role is the fill, `-content` is the label on
-that fill, and `-text` is the role as text on a neutral surface. Non-neutral
-fills start at the `600` step; when a solid control cannot carry a light label
-there, the fill steps to `700` so the label stays near-white. Warning is the
-exception: amber stays at `600` with a dark label so it does not turn brown.
-Both labels are contrast-picked against the resolved fill. Text follows the
-same tiered idea: `text-highlighted` for headings, `text` for body, `text-toned`
-for secondary copy, `text-muted` for meta, and `text-dimmed` for placeholders.
-`text-dimmed` is below AA by design; do not use it for readable content.
+Each role has three core jobs: the bare role is the fill, `-content` is the
+label on that fill, and `-text` is the role as text on a neutral surface. It
+also owns `-soft` and `-soft-border` for tinted and bordered variants. Those
+blend adjacent scale steps rather than following a percentage of the fill, so a
+light role and a dark one stay equally visible without matching the solid fill's
+opacity. Non-neutral fills start at the `600` step;
+when a solid control cannot carry a light label there, the fill steps to `700`
+so the label stays near-white. Warning is the exception: amber stays at `600`
+with a dark label so it does not turn brown. Both labels are contrast-picked
+against the resolved fill. Text follows the same tiered idea: `text-highlighted`
+for headings, `text` for body, `text-toned` for secondary copy, `text-muted` for
+meta, and `text-dimmed` for placeholders. `text-dimmed` is below AA by design;
+do not use it for readable content.
 
 Neutral chrome uses the same three-level idea: `surface` is the panel,
 `surface-muted` is the half step, and `surface-accented` is the full toned fill.

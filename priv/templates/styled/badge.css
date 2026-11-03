@@ -33,55 +33,71 @@
         --fl-badge-color: var(--fl-color-primary);
         --fl-badge-color-content: var(--fl-color-primary-content);
         --fl-badge-text: var(--fl-color-primary-text);
+        --fl-badge-soft: var(--fl-color-primary-soft);
+        --fl-badge-soft-border: var(--fl-color-primary-soft-border);
     }
 
     [data-element="badge"][data-color="success"] {
         --fl-badge-color: var(--fl-color-success);
         --fl-badge-color-content: var(--fl-color-success-content);
         --fl-badge-text: var(--fl-color-success-text);
+        --fl-badge-soft: var(--fl-color-success-soft);
+        --fl-badge-soft-border: var(--fl-color-success-soft-border);
     }
 
     [data-element="badge"][data-color="info"] {
         --fl-badge-color: var(--fl-color-info);
         --fl-badge-color-content: var(--fl-color-info-content);
         --fl-badge-text: var(--fl-color-info-text);
+        --fl-badge-soft: var(--fl-color-info-soft);
+        --fl-badge-soft-border: var(--fl-color-info-soft-border);
     }
 
     [data-element="badge"][data-color="warning"] {
         --fl-badge-color: var(--fl-color-warning);
         --fl-badge-color-content: var(--fl-color-warning-content);
         --fl-badge-text: var(--fl-color-warning-text);
+        --fl-badge-soft: var(--fl-color-warning-soft);
+        --fl-badge-soft-border: var(--fl-color-warning-soft-border);
     }
 
     [data-element="badge"][data-color="error"] {
         --fl-badge-color: var(--fl-color-error);
         --fl-badge-color-content: var(--fl-color-error-content);
         --fl-badge-text: var(--fl-color-error-text);
+        --fl-badge-soft: var(--fl-color-error-soft);
+        --fl-badge-soft-border: var(--fl-color-error-soft-border);
     }
 
     [data-element="badge"][data-color="secondary"] {
         --fl-badge-color: var(--fl-color-secondary);
         --fl-badge-color-content: var(--fl-color-secondary-content);
         --fl-badge-text: var(--fl-color-secondary-text);
+        --fl-badge-soft: var(--fl-color-secondary-soft);
+        --fl-badge-soft-border: var(--fl-color-secondary-soft-border);
     }
 
     [data-element="badge"][data-color="neutral"] {
         --fl-badge-color: var(--fl-color-inverted);
         --fl-badge-color-content: var(--fl-color-text-inverted);
         --fl-badge-text: var(--fl-color-text);
+        --fl-badge-soft: var(--fl-color-neutral-soft);
+        --fl-badge-soft-border: var(--fl-color-neutral-soft-border);
     }
 
     /* Subtle is the default: a tinted label with a matching border. */
     [data-element="badge"][data-variant="subtle"] {
-        background: color-mix(
-            in oklab,
-            var(--fl-badge-color, var(--fl-color-inverted)) 10%,
-            var(--fl-color-control)
+        background: var(
+            --fl-badge-soft,
+            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-control))
         );
-        border-color: color-mix(
-            in oklab,
-            var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
+                var(--fl-color-control)
+            )
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
@@ -99,10 +115,9 @@
 
     /* Soft: a tinted label with no border. */
     [data-element="badge"][data-variant="soft"] {
-        background: color-mix(
-            in oklab,
-            var(--fl-badge-color, var(--fl-color-inverted)) 10%,
-            var(--fl-color-control)
+        background: var(
+            --fl-badge-soft,
+            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-control))
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
@@ -110,10 +125,13 @@
     /* Outline: a colored border and label over the control surface. */
     [data-element="badge"][data-variant="outline"] {
         background: var(--fl-color-control);
-        border-color: color-mix(
-            in oklab,
-            var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-color-control)
+            )
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
@@ -122,10 +140,13 @@
     [data-element="badge"][data-variant="dashed"] {
         background: var(--fl-color-control);
         border-style: dashed;
-        border-color: color-mix(
-            in oklab,
-            var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-color-control)
+            )
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
@@ -151,23 +172,6 @@
     [data-element="badge"][data-variant="ghost"] {
         background: transparent;
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
-    }
-
-    /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
-    [data-element="badge"][data-color="neutral"]:is(
-            [data-variant="soft"],
-            [data-variant="subtle"]
-        ) {
-        background: var(--fl-color-surface-accented);
-        color: var(--fl-color-text);
-    }
-
-    [data-element="badge"][data-color="neutral"]:is([data-variant="outline"], [data-variant="dashed"]) {
-        border-color: var(--fl-color-border);
-    }
-
-    [data-element="badge"][data-color="neutral"][data-variant="subtle"] {
-        border-color: var(--fl-color-border-muted);
     }
 
     /* Sizes use the badge height scale; text stays on the shared control

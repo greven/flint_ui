@@ -7,11 +7,12 @@ defmodule FlintUI.ThemeContrastTest do
   @shades ~w(50 100 200 300 400 500 600 700 800 900 950)
 
   # Fills use 600 when it supports a light label, stepping to 700 when it does
-  # not. Warning keeps 600 with a dark label so amber stays yellow instead of
-  # turning brown, and neutral is the inverted surface.
+  # not. Warning keeps a light fill with a dark label so amber stays yellow,
+  # and neutral is the inverted surface.
   @expected_fill_shades %{
     "neutral" => {"900", "200"},
-    "success" => {"700", "700"}
+    "success" => {"700", "700"},
+    "warning" => {"500", "500"}
   }
 
   @light_label_roles ~w(primary secondary success info error)
@@ -54,28 +55,52 @@ defmodule FlintUI.ThemeContrastTest do
     end
   end
 
-  test "every shipped role text clears AA on the tinted control surface", %{
+  test "every shipped role text clears AA on its soft surface", %{
     css: css,
     scales: scales
   } do
     for role <- @roles do
-      {fill_light, fill_dark} = resolve(css, scales, role)
+      {soft_light, soft_dark} = resolve(css, scales, "#{role}-soft")
       {text_light, text_dark} = resolve(css, scales, "#{role}-text")
 
-      for {scheme, fill, text} <- [
-            {:light, fill_light, text_light},
-            {:dark, fill_dark, text_dark}
+      for {scheme, soft, text} <- [
+            {:light, soft_light, text_light},
+            {:dark, soft_dark, text_dark}
           ] do
-        background = Contrast.mix(fill, control_surface(scales, scheme), 0.15)
-        ratio = Contrast.ratio(text, background) || 0.0
+        ratio = Contrast.ratio(text, soft) || 0.0
 
         assert ratio >= Contrast.aa(),
-               "#{role}/#{scheme} text #{text} on #{background} is #{ratio}:1, below AA"
+               "#{role}/#{scheme} text #{text} on #{soft} is #{ratio}:1, below AA"
       end
     end
   end
 
-  test "non-neutral fills use 600 or step to 700, and neutral stays inverted", %{
+  test "soft surfaces stay visible and their border reads against them", %{
+    css: css,
+    scales: scales
+  } do
+    for role <- @roles do
+      {soft_light, soft_dark} = resolve(css, scales, "#{role}-soft")
+      {border_light, border_dark} = resolve(css, scales, "#{role}-soft-border")
+
+      for {scheme, soft, border} <- [
+            {:light, soft_light, border_light},
+            {:dark, soft_dark, border_dark}
+          ] do
+        control = control_surface(scales, scheme)
+        soft_ratio = Contrast.ratio(soft, control) || 0.0
+        border_ratio = Contrast.ratio(border, soft) || 0.0
+
+        assert soft_ratio >= 1.1,
+               "#{role}/#{scheme} soft #{soft} is too close to #{control}"
+
+        assert border_ratio >= 1.1,
+               "#{role}/#{scheme} border #{border} is too close to #{soft}"
+      end
+    end
+  end
+
+  test "role fills use their accessibility step, and neutral stays inverted", %{
     css: css,
     scales: scales
   } do
@@ -84,8 +109,8 @@ defmodule FlintUI.ThemeContrastTest do
       {light, dark} = Map.get(@expected_fill_shades, role, {"600", "600"})
 
       expected = {
-        resolve_value("var(--fl-color-#{role}-#{light})", scales),
-        resolve_value("var(--fl-color-#{role}-#{dark})", scales)
+        eval_color("var(--fl-color-#{role}-#{light})", scales, :light),
+        eval_color("var(--fl-color-#{role}-#{dark})", scales, :dark)
       }
 
       assert {fill_light, fill_dark} == expected,
@@ -135,19 +160,39 @@ defmodule FlintUI.ThemeContrastTest do
 
     case Regex.run(~r/^light-dark\((.*)\)$/s, value) do
       [_, inner] ->
-        [light, dark] = String.split(inner, ",", parts: 2)
-        {resolve_value(light, scales), resolve_value(dark, scales)}
+        [light, dark] = split_top_level(inner)
+        {eval_color(light, scales, :light), eval_color(dark, scales, :dark)}
 
       nil ->
-        resolved = resolve_value(value, scales)
+        resolved = eval_color(value, scales, :light)
         {resolved, resolved}
     end
   end
 
-  defp resolve_value(value, scales) do
+  # Splits on commas that are not nested inside a function call. `light-dark()`
+  # branches contain `color-mix()` arguments, so a plain split is not enough.
+  defp split_top_level(value) do
+    value
+    |> String.graphemes()
+    |> Enum.reduce({[], [], 0}, fn
+      "(", {parts, current, depth} -> {parts, ["(" | current], depth + 1}
+      ")", {parts, current, depth} -> {parts, [")" | current], depth - 1}
+      ",", {parts, current, 0} -> {[Enum.reverse(current) | parts], [], 0}
+      char, {parts, current, depth} -> {parts, [char | current], depth}
+    end)
+    |> then(fn {parts, current, _depth} -> Enum.reverse([Enum.reverse(current) | parts]) end)
+    |> Enum.map(&(&1 |> Enum.join() |> String.trim()))
+  end
+
+  # Evaluates the small color expression subset the tokens use: scale vars,
+  # oklch literals, the control surface, and a two-stop color-mix.
+  defp eval_color(value, scales, scheme) do
     value = String.trim(value)
 
     cond do
+      value == "var(--fl-color-control)" ->
+        control_surface(scales, scheme)
+
       String.starts_with?(value, "var(--fl-color-") ->
         inner =
           value
@@ -156,6 +201,18 @@ defmodule FlintUI.ThemeContrastTest do
 
         [role, shade] = String.split(inner, "-", parts: 2)
         Map.fetch!(Map.fetch!(scales, role), shade)
+
+      String.starts_with?(value, "color-mix(") ->
+        [_, first, percent, second] =
+          Regex.run(~r/^color-mix\(in oklab,\s*(.+)\s+(\d+)%,\s*(.+)\)$/s, value)
+
+        weight = String.to_integer(percent) / 100
+
+        Contrast.mix(
+          eval_color(first, scales, scheme),
+          eval_color(second, scales, scheme),
+          weight
+        )
 
       String.starts_with?(value, "oklch(") ->
         value

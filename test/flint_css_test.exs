@@ -21,6 +21,8 @@ defmodule FlintUI.FlintCSSTest do
       assert css =~ "--fl-color-#{role}:"
       assert css =~ "--fl-color-#{role}-content: light-dark("
       assert css =~ "--fl-color-#{role}-text: light-dark("
+      assert css =~ "--fl-color-#{role}-soft: light-dark("
+      assert css =~ "--fl-color-#{role}-soft-border: light-dark("
       refute css =~ "--fl-color-#{role}-foreground"
       refute css =~ "--fl-color-#{role}-soft-foreground"
     end
@@ -417,7 +419,7 @@ defmodule FlintUI.FlintCSSTest do
              ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-accented\);\s*border-color: var\(--fl-color-border-muted\);/
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(/
+             ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: var\(\s*--fl-toggle-soft,/
 
     # Both controls expose the depth flattening hook.
     assert css =~

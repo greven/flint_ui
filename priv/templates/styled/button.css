@@ -168,42 +168,56 @@
         --fl-button-color: var(--fl-color-primary);
         --fl-button-color-content: var(--fl-color-primary-content);
         --fl-button-text: var(--fl-color-primary-text);
+        --fl-button-soft: var(--fl-color-primary-soft);
+        --fl-button-soft-border: var(--fl-color-primary-soft-border);
     }
 
     [data-element="button"][data-color="success"] {
         --fl-button-color: var(--fl-color-success);
         --fl-button-color-content: var(--fl-color-success-content);
         --fl-button-text: var(--fl-color-success-text);
+        --fl-button-soft: var(--fl-color-success-soft);
+        --fl-button-soft-border: var(--fl-color-success-soft-border);
     }
 
     [data-element="button"][data-color="info"] {
         --fl-button-color: var(--fl-color-info);
         --fl-button-color-content: var(--fl-color-info-content);
         --fl-button-text: var(--fl-color-info-text);
+        --fl-button-soft: var(--fl-color-info-soft);
+        --fl-button-soft-border: var(--fl-color-info-soft-border);
     }
 
     [data-element="button"][data-color="warning"] {
         --fl-button-color: var(--fl-color-warning);
         --fl-button-color-content: var(--fl-color-warning-content);
         --fl-button-text: var(--fl-color-warning-text);
+        --fl-button-soft: var(--fl-color-warning-soft);
+        --fl-button-soft-border: var(--fl-color-warning-soft-border);
     }
 
     [data-element="button"][data-color="error"] {
         --fl-button-color: var(--fl-color-error);
         --fl-button-color-content: var(--fl-color-error-content);
         --fl-button-text: var(--fl-color-error-text);
+        --fl-button-soft: var(--fl-color-error-soft);
+        --fl-button-soft-border: var(--fl-color-error-soft-border);
     }
 
     [data-element="button"][data-color="secondary"] {
         --fl-button-color: var(--fl-color-secondary);
         --fl-button-color-content: var(--fl-color-secondary-content);
         --fl-button-text: var(--fl-color-secondary-text);
+        --fl-button-soft: var(--fl-color-secondary-soft);
+        --fl-button-soft-border: var(--fl-color-secondary-soft-border);
     }
 
     [data-element="button"][data-color="neutral"] {
         --fl-button-color: var(--fl-color-inverted);
         --fl-button-color-content: var(--fl-color-text-inverted);
         --fl-button-text: var(--fl-color-text);
+        --fl-button-soft: var(--fl-color-neutral-soft);
+        --fl-button-soft-border: var(--fl-color-neutral-soft-border);
     }
 
     /* Solid: the color fills the button with a darker edge line. */
@@ -217,28 +231,38 @@
         color: var(--fl-button-color-content, var(--fl-color-text-inverted));
     }
 
-    /* Soft: a tinted control surface with no border. */
+    /* Soft: a tinted control surface with no border. Roles use the scale-step
+     * tint; a raw custom color falls back to a fill mix. */
     [data-element="button"][data-variant="soft"],
     [data-element="button"][data-variant="subtle"] {
-        background: color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-control));
+        background: var(
+            --fl-button-soft,
+            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-control))
+        );
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
     /* Subtle: ghost + outline, a tinted surface with a matching border. */
     [data-element="button"][data-variant="subtle"] {
-        border-color: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-button-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
+                var(--fl-color-control)
+            )
         );
     }
 
     /* Outline: a colored border and label over the control surface. */
     [data-element="button"][data-variant="outline"] {
-        border-color: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-button-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-color-control)
+            )
         );
         background: var(--fl-color-control);
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
@@ -254,10 +278,13 @@
     /* Dashed: outline with a dashed border on the control surface. */
     [data-element="button"][data-variant="dashed"] {
         border-style: dashed;
-        border-color: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
-            var(--fl-color-control)
+        border-color: var(
+            --fl-button-soft-border,
+            color-mix(
+                in oklab,
+                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-color-control)
+            )
         );
         background: var(--fl-color-control);
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
@@ -275,20 +302,6 @@
     [data-element="button"][data-variant="link"]:not([data-disabled]):not([data-loading]):hover {
         color: color-mix(in oklab, var(--fl-button-text, var(--fl-color-inverted)) 75%, transparent);
         text-decoration-thickness: 2px;
-    }
-
-    /* Neutral surfaces use the shared neutral hierarchy, not an inverted tint. */
-    [data-element="button"][data-color="neutral"]:is([data-variant="soft"], [data-variant="subtle"]) {
-        background: var(--fl-color-surface-accented);
-        color: var(--fl-color-text);
-    }
-
-    [data-element="button"][data-color="neutral"]:is([data-variant="outline"], [data-variant="dashed"]) {
-        border-color: var(--fl-color-border);
-    }
-
-    [data-element="button"][data-color="neutral"][data-variant="subtle"] {
-        border-color: var(--fl-color-border-muted);
     }
 
     [data-element="button"][data-size="xs"] {

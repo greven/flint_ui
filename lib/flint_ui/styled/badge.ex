@@ -91,6 +91,19 @@ defmodule FlintUI.Styled.Badge do
           default: "var(--fl-badge-color)",
           doc:
             "The label color on tinted, bordered, ghost, and link variants; it maps to the role's `-text` token."
+        ),
+        Var.new(
+          name: "--fl-badge-soft",
+          default: "color-mix(in oklab, var(--fl-badge-color) 10%, var(--fl-color-control))",
+          doc:
+            "The tinted surface behind soft and subtle badges; roles map it to the role's `-soft` token."
+        ),
+        Var.new(
+          name: "--fl-badge-soft-border",
+          default:
+            "color-mix(in oklab, var(--fl-badge-color) var(--fl-border-strength), var(--fl-color-control))",
+          doc:
+            "The matching border for subtle, outline, and dashed badges; roles map it to the role's `-soft-border` token."
         )
       ],
       color_vars: [

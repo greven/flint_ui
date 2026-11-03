@@ -250,14 +250,16 @@ defmodule FlintUIDocsWeb.ThemeLive do
             when that is what a near-white solid label needs; warning is the
             exception and stays at <code class="font-mono">600</code>
             with a dark label so amber does not turn brown. Labels are always
-            contrast-picked against the resolved fill. Each role has three jobs:
-            <code class="font-mono">-primary</code>
+            contrast-picked against the resolved fill. Each role has three core
+            jobs: <code class="font-mono">-primary</code>
             is the fill, <code class="font-mono">-primary-content</code>
             is the label on that
             fill, and <code class="font-mono">-primary-text</code>
-            is the role as
-            text on a neutral surface. Override the role in your app stylesheet
-            after the theme import:
+            is the role as text on a neutral surface. It also owns
+            <code class="font-mono">-primary-soft</code>
+            and <code class="font-mono">-primary-soft-border</code>
+            for tinted and bordered variants. Override the role in your app
+            stylesheet after the theme import:
           </p>
           <DocsComponents.code_block code={snippet(:brand_css)} lang={:css} />
           <p class="mt-3 text-sm text-default">
@@ -394,8 +396,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
             and <code class="font-mono">-text</code>
             picks assume the shipped scales, so re-check them when you replace a
             scale: their shade refs follow the new scale, but the chosen shade
-            may no longer be the accessible one. The docs app does exactly that
-            for its cyan primary in <code class="font-mono">app.css</code>.
+            may no longer be the accessible one. The <code class="font-mono">-soft</code>
+            and <code class="font-mono">-soft-border</code>
+            pair blends adjacent scale steps, so it follows a remapped scale
+            automatically. The docs app re-checks its cyan primary in <code class="font-mono">app.css</code>.
           </p>
           <p class="mt-3 text-sm text-default">
             Neutral is the page and surface ladder, so remapping it is the quickest
@@ -506,7 +510,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
     --fl-color-primary-600: oklch(0.439 0 0);
     --fl-color-primary-950: oklch(0.145 0 0);
 
-    /* ... and three jobs: fill, label on the fill, and text on the page.
+    /* ... and three core jobs: fill, label on the fill, and text on the page.
      * Fills default to 600; the labels are contrast-picked against them. */
     --fl-color-primary: var(--fl-color-primary-600);
     --fl-color-primary-content: light-dark(
@@ -516,6 +520,17 @@ defmodule FlintUIDocsWeb.ThemeLive do
     --fl-color-primary-text: light-dark(
       var(--fl-color-primary-600),
       var(--fl-color-primary-400)
+    );
+
+    /* The tint pair blends scale steps, so light and dark roles stay equally
+     * visible without matching the solid fill's opacity. */
+    --fl-color-primary-soft: light-dark(
+      color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-200)),
+      color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))
+    );
+    --fl-color-primary-soft-border: light-dark(
+      color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),
+      color-mix(in oklab, var(--fl-color-primary-700) 70%, var(--fl-color-control))
     );
     """
   end

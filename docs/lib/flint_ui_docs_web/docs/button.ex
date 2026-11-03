@@ -49,7 +49,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     </.preview>
 
     <.prose content="Each `color` and `variant` compose freely: every variant is available in every role.
-      Each row below is a color role, each column a variant.." />
+      Each row below is a color role, each column a variant." />
 
     <.preview id={@id} name={:button} state={@state} preview_only>
       <div class="overflow-x-auto py-1">
@@ -62,7 +62,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
             {variant}
           </span>
           <div
-            :for={color <- ~w(primary secondary neutral info success warning error)}
+            :for={color <- ~w(neutral info success warning error)}
             class="contents"
           >
             <span class="text-xs font-medium text-muted">{color}</span>
@@ -77,6 +77,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
         </div>
       </div>
     </.preview>
+
+    <.prose content="You can also override **Primary** and **Secondary** colors in your stylesheet." />
     """
   end
 

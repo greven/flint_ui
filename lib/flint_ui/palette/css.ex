@@ -102,6 +102,8 @@ defmodule FlintUI.Palette.CSS do
         target
       )
 
+    {soft_dark, border_dark} = soft_shades(role)
+
     footer = """
       --fl-color-#{role}: light-dark(
         var(--fl-color-#{role}-#{light}),
@@ -115,9 +117,25 @@ defmodule FlintUI.Palette.CSS do
         var(--fl-color-#{role}-#{text_light}),
         var(--fl-color-#{role}-#{text_dark})
       );
+      --fl-color-#{role}-soft: light-dark(
+        color-mix(in oklab, var(--fl-color-#{role}-100) 50%, var(--fl-color-#{role}-200)),
+        color-mix(in oklab, var(--fl-color-#{role}-#{soft_dark}) 70%, var(--fl-color-control))
+      );
+      --fl-color-#{role}-soft-border: light-dark(
+        color-mix(in oklab, var(--fl-color-#{role}-200) 50%, var(--fl-color-#{role}-300)),
+        color-mix(in oklab, var(--fl-color-#{role}-#{border_dark}) 70%, var(--fl-color-control))
+      );
     """
 
     scale <> "\n\n" <> String.trim_trailing(footer)
+  end
+
+  # The tint pair blends the scale's light steps with the control surface. This
+  # keeps a light role and a dark one at a comparable visual weight instead of
+  # letting the fill's own lightness decide it. Neutral is chrome: its dark
+  # steps stay one step lighter than the colored roles.
+  defp soft_shades(role) do
+    if role == :neutral, do: {800, 700}, else: {950, 800}
   end
 
   # The label on a solid fill. Prefer the ramp's tinted extreme (near-white `50`
