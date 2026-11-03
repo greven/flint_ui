@@ -89,6 +89,72 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </div>
         </DocsComponents.section>
 
+        <DocsComponents.section title="Focus" id="focus">
+          <p class="mt-3 text-sm text-default">
+            Focus is one shared outline. Switch the geometry with
+            <code class="font-mono">data-focus</code>
+            on <code class="font-mono">&lt;html&gt;</code>
+            or any container, then tune the color and opacity once for every
+            component. The default <code class="font-mono">ring</code>
+            sits at the component edge; <code class="font-mono">outline</code>
+            keeps a gap, and <code class="font-mono">inset</code>
+            draws inside the edge for dense or clipped layouts.
+          </p>
+          <p class="mt-3 text-sm text-default">
+            The <code class="font-mono">ring</code>
+            preset also colors the border of bordered interactive controls with <code class="font-mono">--fl-focus-border-color</code>,
+            pairing the translucent ring with a full-color edge.
+            <code class="font-mono">outline</code>
+            and <code class="font-mono">inset</code>
+            leave the border unchanged. Structural borders such as card bands
+            and tab-list rules stay neutral. Invalid inputs will use
+            <code class="font-mono">--fl-focus-color-error</code>
+            for both the border and the ring.
+          </p>
+          <div class="mt-4 overflow-x-auto">
+            <table class="w-full min-w-lg text-left text-sm">
+              <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+                <tr>
+                  <th class="py-3 pr-6 font-medium">Preset</th>
+                  <th class="py-3 pr-6 font-medium">Width</th>
+                  <th class="py-3 pr-6 font-medium">Offset</th>
+                  <th class="py-3 font-medium">Look</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-default">
+                <tr>
+                  <td class="py-3 pr-6"><code class="font-mono">ring</code></td>
+                  <td class="py-3 pr-6 text-toned">3px</td>
+                  <td class="py-3 pr-6 text-toned">0</td>
+                  <td class="py-3 text-toned">Default; sits against the edge</td>
+                </tr>
+                <tr>
+                  <td class="py-3 pr-6"><code class="font-mono">outline</code></td>
+                  <td class="py-3 pr-6 text-toned">2px</td>
+                  <td class="py-3 pr-6 text-toned">2px</td>
+                  <td class="py-3 text-toned">Gap between control and ring</td>
+                </tr>
+                <tr>
+                  <td class="py-3 pr-6"><code class="font-mono">inset</code></td>
+                  <td class="py-3 pr-6 text-toned">2px</td>
+                  <td class="py-3 pr-6 text-toned">-2px</td>
+                  <td class="py-3 text-toned">Inside the edge; dense layouts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <div data-focus="ring"><Components.button variant="outline">Ring</Components.button></div>
+            <div data-focus="outline">
+              <Components.button variant="outline">Outline</Components.button>
+            </div>
+            <div data-focus="inset">
+              <Components.button variant="outline">Inset</Components.button>
+            </div>
+          </div>
+          <DocsComponents.code_block code={snippet(:focus)} lang={:css} />
+        </DocsComponents.section>
+
         <DocsComponents.section title="Surfaces" id="surfaces">
           <p class="mt-3 text-sm text-default">
             Surfaces are one opaque neutral ladder. <code class="font-mono">solid</code>
@@ -464,6 +530,22 @@ defmodule FlintUIDocsWeb.ThemeLive do
         oklch(0.491 0.27 292.581),
         oklch(0.702 0.183 293.541)
       );
+    }
+    """
+  end
+
+  defp snippet(:focus) do
+    """
+    /* Pick a geometry once for the whole document, or any subtree. */
+    <html data-focus="ring">      /* default: edge ring */
+    <html data-focus="outline">   /* 2px gap */
+    <html data-focus="inset">     /* inside the edge */
+
+    :root {
+      --fl-focus-ring-color: var(--fl-color-primary);
+      --fl-focus-ring-alpha: 50%;
+      --fl-focus-border-color: var(--fl-focus-ring-color);
+      --fl-focus-color-error: var(--fl-color-error);
     }
     """
   end

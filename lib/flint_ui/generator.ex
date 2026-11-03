@@ -31,6 +31,7 @@ defmodule FlintUI.Generator do
 
   @tokens_part "tokens.css"
   @base_part "base.css"
+  @focus_part "focus.css"
   @aggregate "priv/static/flint.css"
 
   @doc "Absolute path to a theme part, relative to `priv/templates`."
@@ -43,13 +44,13 @@ defmodule FlintUI.Generator do
 
   Tokens come first (they are unlayered), then the shared base rules, then each
   registered theme preset, then each registered component's stylesheet in
-  registry order.
+  registry order, and finally the shared focus layer.
   """
   def part_paths do
     theme_parts = Enum.map(Theme.themes(), & &1.css)
     component_parts = Enum.map(Styled.entries(), & &1.css)
 
-    [@tokens_part, @base_part | theme_parts ++ component_parts]
+    [@tokens_part, @base_part | theme_parts ++ component_parts ++ [@focus_part]]
     |> Enum.map(&part_path/1)
   end
 

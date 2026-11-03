@@ -3,8 +3,6 @@
      * Badges are labels, not controls: they use the shared badge height scale
      * and never add elevation, depth rims, or press feedback. */
     [data-element="badge"][data-variant] {
-        --fl-focus-ring-color: var(--fl-badge-color, var(--fl-color-inverted));
-
         box-sizing: border-box;
         display: inline-flex;
         align-items: center;

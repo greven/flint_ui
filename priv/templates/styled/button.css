@@ -2,8 +2,6 @@
     /* Button. Public inputs: `--fl-button-color`, `-color-content`, `-text`.
      * Shared depth, elevation and press behavior come from `--fl-control-*`. */
     [data-element="button"][data-variant] {
-        --fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));
-
         display: inline-flex;
         position: relative;
         isolation: isolate;

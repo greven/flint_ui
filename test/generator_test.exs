@@ -65,7 +65,9 @@ defmodule FlintUI.GeneratorTest do
   test "card forwards its action, section, and footer slots" do
     source = Generator.component_source(:card)
 
-    assert source =~ "include: ~w(as orientation padded title_id)"
+    assert source =~
+             "include: ~w(as orientation padded title_id href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"
+
     assert source =~ "attr(:body, :string"
     assert source =~ "values: ~w(solid soft accented ghost)"
 
@@ -165,11 +167,19 @@ defmodule FlintUI.GeneratorTest do
     [first, second | _] = Generator.part_paths()
     assert first =~ "tokens.css"
     assert second =~ "base.css"
+    assert List.last(Generator.part_paths()) =~ "focus.css"
 
     css = Generator.theme_source()
     assert css =~ "--fl-color-primary:"
     assert css =~ "--fl-focus-ring-color:"
-    assert css =~ "outline: var(--fl-focus-ring-width) solid var(--fl-focus-ring-color);"
+    assert css =~ "--fl-focus-ring-alpha:"
+    assert css =~ "--fl-focus-border-color:"
+    assert css =~ "outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)"
+    assert css =~ "@layer focus {"
+    assert css =~ "border-color: var(--fl-focus-border-color, revert-layer);"
+    assert css =~ ~s([data-focus="ring"])
+    assert css =~ ~s([data-focus="outline"])
+    assert css =~ ~s([data-focus="inset"])
 
     for theme <- FlintUI.Theme.themes() do
       assert css =~ ~s([data-theme="#{theme.name}"]),

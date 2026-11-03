@@ -23,6 +23,18 @@ defmodule FlintUI.Base.Card do
         </:footer_actions>
       </FlintUI.card>
 
+  Pass `href`, `navigate`, or `patch` to render the root as a link:
+
+      <FlintUI.card href={~p"/repositories/flint_ui"} title_id="repo-title">
+        <:title>flint_ui</:title>
+        <:description>Updated 2 minutes ago</:description>
+        <p>Open the repository</p>
+      </FlintUI.card>
+
+  A linked card is a single anchor, so do not put buttons or links inside it.
+  Use a regular card with a separate link or action when the card needs nested
+  controls.
+
   The default slot is shorthand for the first body section. Additional sections
   use the repeatable `:section` slot. All body sections share the card's
   `padded` setting; set `padded={false}` on the card for full-bleed content.
@@ -44,6 +56,11 @@ defmodule FlintUI.Base.Card do
   with `as` (for example `"section"`, `"article"` or `"li"`) when a landmark or
   list semantics are appropriate, and give it an accessible name with
   `aria-labelledby` pointing at `title_id`.
+
+  A linked card renders a native `<a>` and uses `title_id` for
+  `aria-labelledby`, so set a title when the card is a link. A link card is one
+  anchor: nested buttons and links are invalid. Keep the card non-linked when it
+  contains actions, or move those actions outside the card.
 
   `orientation` is a layout hook for the styled theme. It does not add
   `aria-orientation`; set that yourself only if you give the card a role that
@@ -80,6 +97,11 @@ defmodule FlintUI.Base.Card do
           name: "[data-orientation]",
           value: ~s("vertical" | "horizontal"),
           description: "The layout direction, for styling."
+        },
+        %Meta.PartAttr{
+          name: "[data-link]",
+          value: "boolean",
+          description: "Present when `href`, `navigate`, or `patch` renders the root as a link."
         }
       ],
       header: [
@@ -165,11 +187,16 @@ defmodule FlintUI.Base.Card do
 
   @impl true
   def build_attrs(assigns) do
+    link? = !!link?(assigns)
+    rest = Map.get(assigns, :rest, %{})
+
     %{
       root: %{
         "data-element" => "card",
         "data-part" => "root",
-        "data-orientation" => assigns.orientation
+        "data-orientation" => assigns.orientation,
+        "data-link" => link?,
+        "aria-labelledby" => link? && assigns.title_id && !aria_label?(rest) && assigns.title_id
       },
       header: %{"data-part" => "header"},
       title: %{"data-part" => "title", "id" => assigns.title_id},
@@ -187,11 +214,14 @@ defmodule FlintUI.Base.Card do
 
   attr :flint_parts, :map, default: nil, doc: false
 
-  attr :as, :string, default: "div", doc: "The HTML element to render the card root as."
+  attr :as, :string,
+    default: "div",
+    doc:
+      "The HTML element to render the card root as. Ignored when `href`, `navigate`, or `patch` renders a link."
 
   attr :title_id, :string,
     default: nil,
-    doc: "The DOM id for the title element, for use with `aria-labelledby`."
+    doc: "The DOM id for the title element. A linked card also uses it for `aria-labelledby`."
 
   attr :orientation, :string,
     default: "vertical",
@@ -202,7 +232,11 @@ defmodule FlintUI.Base.Card do
     default: true,
     doc: "Adds the card inset to every body section. Set false for full-bleed content."
 
-  attr :rest, :global, doc: "Additional HTML attributes."
+  attr :rest, :global,
+    include: ~w(href navigate patch replace method csrf_token target rel download
+                hreflang referrerpolicy),
+    doc:
+      "Additional HTML attributes. Pass `href`, `navigate`, or `patch` to render the card root as a link."
 
   slot :title, doc: "The card title. Rendered in the header."
 
@@ -227,55 +261,81 @@ defmodule FlintUI.Base.Card do
 
   @impl true
   def render(assigns) do
+    if link?(assigns) do
+      ~H"""
+      <.link {@rest} {@flint_parts[:root]}>
+        {card_content(assigns)}
+      </.link>
+      """
+    else
+      ~H"""
+      <.dynamic_tag tag_name={@as} {@rest} {@flint_parts[:root]}>
+        {card_content(assigns)}
+      </.dynamic_tag>
+      """
+    end
+  end
+
+  defp card_content(assigns) do
     ~H"""
-    <.dynamic_tag tag_name={@as} {@rest} {@flint_parts[:root]}>
-      <% title = render_slot(@title) %>
-      <% description = render_slot(@description) %>
-      <% header_actions = render_slot(@header_actions) %>
-      <% header_content = render_slot(@header) %>
-      <% body_content = render_slot(@inner_block) %>
-      <% footer_content = render_slot(@footer) %>
-      <% footer_actions = render_slot(@footer_actions) %>
-      <% title? = present?(title) %>
-      <% description? = present?(description) %>
-      <% header_actions? = present?(header_actions) %>
-      <% header_content? = present?(header_content) %>
-      <% body? = present?(body_content) or @section != [] %>
-      <% footer_content? = present?(footer_content) %>
-      <% footer_actions? = present?(footer_actions) %>
-      <% footer? = footer_content? || footer_actions? %>
+    <% title = render_slot(@title) %>
+    <% description = render_slot(@description) %>
+    <% header_actions = render_slot(@header_actions) %>
+    <% header_content = render_slot(@header) %>
+    <% body_content = render_slot(@inner_block) %>
+    <% footer_content = render_slot(@footer) %>
+    <% footer_actions = render_slot(@footer_actions) %>
+    <% title? = present?(title) %>
+    <% description? = present?(description) %>
+    <% header_actions? = present?(header_actions) %>
+    <% header_content? = present?(header_content) %>
+    <% body? = present?(body_content) or @section != [] %>
+    <% footer_content? = present?(footer_content) %>
+    <% footer_actions? = present?(footer_actions) %>
+    <% footer? = footer_content? || footer_actions? %>
+    <div
+      :if={title? || description? || header_actions? || header_content?}
+      {@flint_parts[:header]}
+    >
+      <div :if={title?} {@flint_parts[:title]}>{title}</div>
+      <div :if={description?} {@flint_parts[:description]}>{description}</div>
+      <div :if={header_actions?} {@flint_parts[:header_actions]}>{header_actions}</div>
+      <div :if={header_content?} {@flint_parts[:header_content]}>{header_content}</div>
+    </div>
+    <div :if={body?} {@flint_parts[:body]}>
       <div
-        :if={title? || description? || header_actions? || header_content?}
-        {@flint_parts[:header]}
+        :if={present?(body_content)}
+        data-part="section"
+        data-padded={@padded}
       >
-        <div :if={title?} {@flint_parts[:title]}>{title}</div>
-        <div :if={description?} {@flint_parts[:description]}>{description}</div>
-        <div :if={header_actions?} {@flint_parts[:header_actions]}>{header_actions}</div>
-        <div :if={header_content?} {@flint_parts[:header_content]}>{header_content}</div>
+        {body_content}
       </div>
-      <div :if={body?} {@flint_parts[:body]}>
-        <div
-          :if={present?(body_content)}
-          data-part="section"
-          data-padded={@padded}
-        >
-          {body_content}
-        </div>
-        <div
-          :for={section <- @section}
-          data-part="section"
-          data-padded={@padded}
-        >
-          {render_slot(section)}
-        </div>
+      <div
+        :for={section <- @section}
+        data-part="section"
+        data-padded={@padded}
+      >
+        {render_slot(section)}
       </div>
-      <div :if={footer?} {@flint_parts[:footer]}>
-        <div :if={footer_content?} {@flint_parts[:footer_content]}>{footer_content}</div>
-        <div :if={footer_actions?} {@flint_parts[:footer_actions]}>{footer_actions}</div>
-      </div>
-    </.dynamic_tag>
+    </div>
+    <div :if={footer?} {@flint_parts[:footer]}>
+      <div :if={footer_content?} {@flint_parts[:footer_content]}>{footer_content}</div>
+      <div :if={footer_actions?} {@flint_parts[:footer_actions]}>{footer_actions}</div>
+    </div>
     """
   end
+
+  defp link?(assigns) do
+    rest = Map.get(assigns, :rest, %{})
+    rest[:href] || rest[:navigate] || rest[:patch]
+  end
+
+  defp aria_label?(rest) when is_map(rest) do
+    Map.has_key?(rest, :"aria-label") or Map.has_key?(rest, :aria_label) or
+      Map.has_key?(rest, "aria-label") or Map.has_key?(rest, "aria_label")
+  end
+
+  defp aria_label?(_rest), do: false
 
   # A generated wrapper forwards every optional slot, so an unfilled one still
   # arrives as a one-entry list whose `render_slot/1` is a blank `%Rendered{}`

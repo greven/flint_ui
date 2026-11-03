@@ -106,6 +106,11 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 - **DOM contract.** Set `data-element` on the root only; parts carry
   `data-part`. A part that is another FlintUI component keeps its own
   `data-element`.
+- **Bordered controls share focus.** Add a bordered interactive control's
+  focused root to `priv/templates/focus.css`. The border reads
+  `var(--fl-focus-border-color, revert-layer)`, so the border color only applies
+  to the `ring` preset and other presets leave the component border untouched.
+  Structural borders (card bands, panels, tab lists) stay neutral.
 - **Group is child-agnostic.** `group.css` targets direct children, so any
   control can be joined. The only child names are in the `size` cascade; a new
   control opts in there. Group is not a complete toolbar (no roving focus or

@@ -230,9 +230,15 @@ defmodule FlintUIDocsWeb.StylingLive do
           </p>
           <DocsComponents.code_block code={snippet(:variants)} />
           <p class="mt-4 text-sm text-default">
-            Utilities only change the properties they name. The component's derived
-            states still follow its color input: the focus ring is tinted from <code class="font-mono">--fl-button-color</code>, so a utility-only retint
-            leaves the ring at the component color. Set the variable (or a semantic <code class="font-mono">color</code>) when the whole control should re-tint.
+            Utilities only change the properties they name. Component state follows
+            the theme: focus is one shared ring, and the <code class="font-mono">ring</code>
+            preset also colors the border, driven by <code class="font-mono">--fl-focus-ring-color</code>, <code class="font-mono">--fl-focus-border-color</code>, and the other
+            <code class="font-mono">--fl-focus-ring-*</code>
+            tokens, so retinting it once updates every component. Set the token
+            on <code class="font-mono">:root</code>, or use <code class="font-mono">data-focus</code>
+            to switch the whole app between the <code class="font-mono">ring</code>, <code class="font-mono">outline</code>, and
+            <code class="font-mono">inset</code>
+            presets.
           </p>
           <p class="mt-3 text-sm text-default">
             To use FlintUI tokens as utilities too — <code class="font-mono">bg-primary</code>, <code class="font-mono">border-default</code>, … — map them once with <code class="font-mono">mix flint.setup --tailwind</code>. The

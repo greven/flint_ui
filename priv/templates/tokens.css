@@ -223,11 +223,11 @@
      *   <role>-text     the role used as text on a neutral surface
      * Override `-content` or `-text` only when a custom fill no longer pairs
      * with the shade picked here. */
-    --fl-color-primary: light-dark(var(--fl-color-primary-900), var(--fl-color-primary-200));
+    --fl-color-primary: var(--fl-color-primary-500);
     --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-950));
     --fl-color-primary-text: light-dark(var(--fl-color-primary-900), var(--fl-color-primary-200));
 
-    --fl-color-secondary: light-dark(var(--fl-color-secondary-100), var(--fl-color-secondary-800));
+    --fl-color-secondary: var(--fl-color-secondary-500);
     --fl-color-secondary-content: light-dark(var(--fl-color-secondary-950), var(--fl-color-secondary-50));
     --fl-color-secondary-text: light-dark(var(--fl-color-secondary-500), var(--fl-color-secondary-400));
 
@@ -294,9 +294,39 @@
     /* Disabled controls dim with this opacity instead of swapping fills. */
     --fl-disabled-opacity: 0.5;
 
+    --fl-focus-ring-width: 3px;
+    --fl-focus-ring-offset: 0;
+    --fl-focus-ring-style: solid;
+    --fl-focus-ring-color: var(--fl-color-primary);
+    --fl-focus-ring-alpha: 25%;
+    /* Bordered controls pair the translucent ring with a full-color border. */
+    --fl-focus-border-color: var(--fl-focus-ring-color);
+    /* Invalid controls override both focus colors with this. */
+    --fl-focus-color-error: var(--fl-color-error);
+}
+
+/* Focus presets. `ring` is the default: a ring drawn at the component edge.
+ * `outline` keeps a gap, and `inset` draws inside the edge for dense or clipped
+ * layouts. Set `data-focus` on <html> or any container to switch the subtree. */
+[data-focus="ring"] {
+    --fl-focus-ring-width: 3px;
+    --fl-focus-ring-offset: 0;
+    --fl-focus-ring-alpha: 25%;
+    --fl-focus-border-color: var(--fl-focus-ring-color);
+}
+
+[data-focus="outline"] {
     --fl-focus-ring-width: 2px;
     --fl-focus-ring-offset: 2px;
-    --fl-focus-ring-color: var(--fl-color-ring);
+    --fl-focus-ring-alpha: 100%;
+    --fl-focus-border-color: initial;
+}
+
+[data-focus="inset"] {
+    --fl-focus-ring-width: 2px;
+    --fl-focus-ring-offset: -2px;
+    --fl-focus-ring-alpha: 100%;
+    --fl-focus-border-color: initial;
 }
 
 /* Force a scheme for the whole document. */

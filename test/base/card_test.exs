@@ -66,6 +66,51 @@ defmodule FlintUI.Base.CardTest do
       """
     end
 
+    def link(assigns) do
+      ~H"""
+      <.card href="/repositories" title_id="card-link-title">
+        <:title>Repositories</:title>
+        <p>Body</p>
+      </.card>
+      """
+    end
+
+    def navigate(assigns) do
+      ~H"""
+      <.card navigate="/repositories">
+        <:title>Repositories</:title>
+        <p>Body</p>
+      </.card>
+      """
+    end
+
+    def patch(assigns) do
+      ~H"""
+      <.card patch="/repositories?tab=all">
+        <:title>Repositories</:title>
+        <p>Body</p>
+      </.card>
+      """
+    end
+
+    def link_as_section(assigns) do
+      ~H"""
+      <.card as="section" href="/repositories">
+        <:title>Repositories</:title>
+        <p>Body</p>
+      </.card>
+      """
+    end
+
+    def link_with_label(assigns) do
+      ~H"""
+      <.card href="/repositories" title_id="card-link-title" aria-label="Repositories">
+        <:title>Repositories</:title>
+        <p>Body</p>
+      </.card>
+      """
+    end
+
     def actions_only(assigns) do
       ~H"""
       <.card>
@@ -188,6 +233,57 @@ defmodule FlintUI.Base.CardTest do
     assert document |> LazyHTML.query(~s([data-part="root"])) |> LazyHTML.tag() == ["section"]
   end
 
+  test "renders a link root when href is given" do
+    document = render_component(&TestComponent.link/1, %{}) |> LazyHTML.from_fragment()
+    root = LazyHTML.query(document, ~s([data-part="root"]))
+
+    assert LazyHTML.tag(root) == ["a"]
+    assert LazyHTML.attribute(root, "href") == ["/repositories"]
+    assert LazyHTML.attribute(root, "data-link") == [""]
+    assert LazyHTML.attribute(root, "aria-labelledby") == ["card-link-title"]
+  end
+
+  test "renders navigate and patch links" do
+    navigate = render_component(&TestComponent.navigate/1, %{}) |> LazyHTML.from_fragment()
+    navigate_root = LazyHTML.query(navigate, ~s([data-part="root"]))
+
+    assert LazyHTML.tag(navigate_root) == ["a"]
+    assert LazyHTML.attribute(navigate_root, "href") == ["/repositories"]
+    assert LazyHTML.attribute(navigate_root, "data-phx-link") == ["redirect"]
+
+    patch = render_component(&TestComponent.patch/1, %{}) |> LazyHTML.from_fragment()
+    patch_root = LazyHTML.query(patch, ~s([data-part="root"]))
+
+    assert LazyHTML.tag(patch_root) == ["a"]
+    assert LazyHTML.attribute(patch_root, "data-phx-link") == ["patch"]
+    assert LazyHTML.attribute(patch_root, "data-link") == [""]
+  end
+
+  test "link mode ignores as" do
+    document =
+      render_component(&TestComponent.link_as_section/1, %{})
+      |> LazyHTML.from_fragment()
+
+    root = LazyHTML.query(document, ~s([data-part="root"]))
+    assert LazyHTML.tag(root) == ["a"]
+  end
+
+  test "an explicit aria-label wins over the title name" do
+    document =
+      render_component(&TestComponent.link_with_label/1, %{})
+      |> LazyHTML.from_fragment()
+
+    root = LazyHTML.query(document, ~s([data-part="root"]))
+    assert LazyHTML.attribute(root, "aria-labelledby") == []
+    assert LazyHTML.attribute(root, "aria-label") == ["Repositories"]
+  end
+
+  test "only linked cards carry the link hook" do
+    document = html()
+
+    assert attr(document, ~s([data-part="root"]), "data-link") == []
+  end
+
   test "gives the title an id for aria-labelledby" do
     document = render_component(&TestComponent.titled/1, %{}) |> LazyHTML.from_fragment()
 
@@ -205,6 +301,7 @@ defmodule FlintUI.Base.CardTest do
     parts = FlintUI.Base.Card.parts_attrs()
     assert parts.root |> Enum.any?(&(&1.name == "[data-element]"))
     assert parts.root |> Enum.any?(&(&1.name == "[data-orientation]"))
+    assert parts.root |> Enum.any?(&(&1.name == "[data-link]"))
     assert parts.body |> Enum.any?(&(&1.name == "[data-part]"))
     assert parts.section |> Enum.any?(&(&1.name == "[data-padded]"))
     refute parts.section |> Enum.any?(&(&1.name == "[data-divider]"))

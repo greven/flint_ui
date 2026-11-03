@@ -128,7 +128,7 @@ defmodule FlintUIDocsWeb.DocsTest do
   end
 
   test "a section without a render clause returns nil for an empty section" do
-    assert Docs.render_section(:button, %{section: :usage, id: :variant}) == nil
+    assert Docs.render_section(:card, %{section: :usage, id: :missing}) == nil
   end
 
   test "every declared control has a default" do

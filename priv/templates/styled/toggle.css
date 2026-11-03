@@ -1,6 +1,7 @@
 @layer components {
     /* Toggle. Public inputs: `--fl-toggle-color`, `-color-content`, `-text`;
-     * surfaces, borders and focus follow from them plus the theme tokens. */
+     * surfaces and borders follow from them, focus comes from the shared theme
+     * tokens. */
     [data-element="toggle"][data-variant] {
         display: inline-flex;
         position: relative;
@@ -21,9 +22,6 @@
             background-color var(--fl-duration-fast) var(--fl-ease-out),
             color var(--fl-duration-fast) var(--fl-ease-out),
             border-color var(--fl-duration-fast) var(--fl-ease-out);
-
-        /* Tint the shared focus ring with the toggle color. */
-        --fl-focus-ring-color: var(--fl-toggle-color, var(--fl-color-inverted));
     }
 
     /* Hover/active are a `currentColor` overlay inside the border, not a fill

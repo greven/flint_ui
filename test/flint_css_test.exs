@@ -406,10 +406,10 @@ defmodule FlintUI.FlintCSSTest do
 
     assert css =~ "--fl-button-color: var(--fl-color-primary);"
     assert css =~ "--fl-toggle-color: var(--fl-color-primary);"
-    assert css =~ "--fl-focus-ring-color: var(--fl-button-color, var(--fl-color-inverted));"
-
-    assert css =~
-             "--fl-focus-ring-color: var(--fl-toggle-color, var(--fl-color-inverted));"
+    assert css =~ "--fl-focus-ring-color: var(--fl-color-primary);"
+    refute css =~ "--fl-focus-ring-color: var(--fl-button-color"
+    refute css =~ "--fl-focus-ring-color: var(--fl-toggle-color"
+    refute css =~ "--fl-focus-ring-color: var(--fl-tabs-color"
 
     assert css =~ "var(--fl-control-shadow, 0 0 #0000)"
     assert css =~ "var(--fl-control-press, none)"
@@ -419,6 +419,24 @@ defmodule FlintUI.FlintCSSTest do
 
     refute css =~
              ~r/\[data-element="button"\]\[data-depth\] \{\s*--fl-control-depth: 1;/
+  end
+
+  test "focus pairs a full-color border with the shared ring", %{css: css} do
+    assert css =~ "--fl-focus-border-color: var(--fl-focus-ring-color);"
+    assert css =~ "--fl-focus-color-error: var(--fl-color-error);"
+    assert css =~ "--fl-focus-border-color: initial;"
+    assert css =~ "border-color: var(--fl-focus-border-color, revert-layer);"
+
+    assert css =~
+             ~s|[data-element="button"][data-variant]:focus-visible:not([data-disabled])|
+
+    assert css =~
+             ~s|[data-element="toggle"][data-variant]:focus-visible:not([data-disabled])|
+
+    assert css =~ ~s([data-element="badge"][data-part][data-variant]:focus-visible)
+
+    assert css =~
+             ~s([data-element="card"][data-card][data-link][data-outline]:focus-visible)
   end
 
   test "square and wide buttons are boxed and full-width", %{css: css} do
@@ -476,6 +494,7 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ ~s|[data-element="card"]:not([data-outline])[data-card]|
     assert css =~ ~s|[data-element="card"]:not([data-shadow])[data-card]|
     assert css =~ ~s|[data-element="card"][data-inverted]|
+    assert css =~ ~s|[data-element="card"][data-card][data-link]|
     assert css =~ "background: var(--fl-card-surface, var(--fl-color-surface));"
     assert css =~ "border: 1px solid var(--fl-card-border, var(--fl-color-border));"
     assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));"

@@ -16,6 +16,42 @@
         overflow: hidden;
     }
 
+    /* A linked card is one anchor. Hover and keyboard focus make the whole
+     * surface read as the target without replacing its elevation. */
+    [data-element="card"][data-card][data-link] {
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            box-shadow var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="card"][data-card][data-link]:is(:hover, :focus-visible) {
+        background-color: color-mix(
+            in oklab,
+            var(--fl-card-text, var(--fl-color-text)) calc(var(--fl-control-hover-opacity) * 100%),
+            var(--fl-card-surface, var(--fl-color-surface))
+        );
+    }
+
+    [data-element="card"][data-card][data-link][data-outline]:hover {
+        border-color: var(--fl-color-border-accented);
+    }
+
+    [data-element="card"][data-card][data-link][data-shadow]:not([data-variant="ghost"]):is(
+            :hover,
+            :focus-visible
+        ) {
+        box-shadow: var(--fl-shadow-md);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="card"][data-card][data-link] {
+            transition: none;
+        }
+    }
+
     [data-element="card"][data-card][data-orientation="horizontal"] {
         flex-direction: row;
         align-items: stretch;

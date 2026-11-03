@@ -24,7 +24,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
           %{key: :shadow, type: :boolean, default: true, label: "Shadow"},
           %{key: :inverted, type: :boolean, default: false, label: "Inverted"}
         ]
-      }
+      },
+      %{tab: :styled, section: :usage, id: :link, title: "Link"}
     ]
   end
 
@@ -54,6 +55,30 @@ defmodule FlintUIDocsWeb.Docs.Card do
       </Components.card>
     </.preview>
     """
+  end
+
+  def render_section(%{section: :usage, id: :link} = assigns) do
+    ~H"""
+    <.prose content="Pass `href`, `navigate`, or `patch` to render the card root as a link. A linked card is one anchor, so keep buttons and links out of it. Set `title_id` so the root can use the title as its accessible name." />
+    <.preview {assigns} code={link_code()}>
+      <Components.card href="/components" title_id="card-link-title" class="max-w-sm">
+        <:title>Browse components</:title>
+        <:description>See every FlintUI component</:description>
+        <p>Open the component index.</p>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  defp link_code do
+    """
+    <.card href="/components" title_id="card-link-title">
+      <:title>Browse components</:title>
+      <:description>See every FlintUI component</:description>
+      <p>Open the component index.</p>
+    </.card>
+    """
+    |> String.trim()
   end
 
   defp main_code(props) do
