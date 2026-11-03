@@ -97,7 +97,7 @@ defmodule FlintUIDocsWeb.Preview do
       )
 
     ~H"""
-    <div id={@preview_id} class={@class}>
+    <div id={@preview_id} class={@class} data-preview>
       <div class="rounded-lg shadow-lg/3">
         <div
           data-preview-canvas

@@ -169,29 +169,29 @@
     --fl-color-neutral-900: oklch(0.205 0 0);
     --fl-color-neutral-950: oklch(0.145 0 0);
 
-    --fl-color-success-50: oklch(0.979 0.021 166.113);
-    --fl-color-success-100: oklch(0.95 0.052 163.051);
-    --fl-color-success-200: oklch(0.905 0.093 164.15);
-    --fl-color-success-300: oklch(0.845 0.143 164.978);
-    --fl-color-success-400: oklch(0.765 0.177 163.223);
-    --fl-color-success-500: oklch(0.696 0.17 162.48);
-    --fl-color-success-600: oklch(0.596 0.145 163.225);
-    --fl-color-success-700: oklch(0.508 0.118 165.612);
-    --fl-color-success-800: oklch(0.432 0.095 166.913);
-    --fl-color-success-900: oklch(0.378 0.077 168.94);
-    --fl-color-success-950: oklch(0.262 0.051 172.552);
+    --fl-color-success-50: oklch(0.982 0.018 155.826);
+    --fl-color-success-100: oklch(0.962 0.044 156.743);
+    --fl-color-success-200: oklch(0.925 0.084 155.995);
+    --fl-color-success-300: oklch(0.871 0.15 154.449);
+    --fl-color-success-400: oklch(0.792 0.209 151.711);
+    --fl-color-success-500: oklch(0.723 0.219 149.579);
+    --fl-color-success-600: oklch(0.627 0.194 149.214);
+    --fl-color-success-700: oklch(0.527 0.154 150.069);
+    --fl-color-success-800: oklch(0.448 0.119 151.328);
+    --fl-color-success-900: oklch(0.393 0.095 152.535);
+    --fl-color-success-950: oklch(0.266 0.065 152.934);
 
-    --fl-color-info-50: oklch(0.977 0.013 236.62);
-    --fl-color-info-100: oklch(0.951 0.026 236.824);
-    --fl-color-info-200: oklch(0.901 0.058 230.902);
-    --fl-color-info-300: oklch(0.828 0.111 230.318);
-    --fl-color-info-400: oklch(0.746 0.16 232.661);
-    --fl-color-info-500: oklch(0.685 0.169 237.323);
-    --fl-color-info-600: oklch(0.588 0.158 241.966);
-    --fl-color-info-700: oklch(0.5 0.134 242.749);
-    --fl-color-info-800: oklch(0.443 0.11 240.79);
-    --fl-color-info-900: oklch(0.391 0.09 240.876);
-    --fl-color-info-950: oklch(0.293 0.066 243.157);
+    --fl-color-info-50: oklch(0.97 0.014 254.604);
+    --fl-color-info-100: oklch(0.932 0.032 255.585);
+    --fl-color-info-200: oklch(0.882 0.059 254.128);
+    --fl-color-info-300: oklch(0.809 0.105 251.813);
+    --fl-color-info-400: oklch(0.707 0.165 254.624);
+    --fl-color-info-500: oklch(0.623 0.214 259.815);
+    --fl-color-info-600: oklch(0.546 0.245 262.881);
+    --fl-color-info-700: oklch(0.488 0.243 264.376);
+    --fl-color-info-800: oklch(0.424 0.199 265.638);
+    --fl-color-info-900: oklch(0.379 0.146 265.522);
+    --fl-color-info-950: oklch(0.282 0.091 267.935);
 
     --fl-color-warning-50: oklch(0.987 0.026 102.212);
     --fl-color-warning-100: oklch(0.973 0.071 103.193);
@@ -221,34 +221,33 @@
      *   <role>          the fill (solid background, tint source)
      *   <role>-content  the label on that fill
      *   <role>-text     the role used as text on a neutral surface
-     * Override `-content` or `-text` only when a custom fill no longer pairs
-     * with the shade picked here. */
-    --fl-color-primary: var(--fl-color-primary-500);
-    --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-950));
-    --fl-color-primary-text: light-dark(var(--fl-color-primary-900), var(--fl-color-primary-200));
+   */
+    --fl-color-primary: var(--fl-color-primary-600);
+    --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));
+    --fl-color-primary-text: light-dark(var(--fl-color-primary-600), var(--fl-color-primary-400));
 
-    --fl-color-secondary: var(--fl-color-secondary-500);
-    --fl-color-secondary-content: light-dark(var(--fl-color-secondary-950), var(--fl-color-secondary-50));
-    --fl-color-secondary-text: light-dark(var(--fl-color-secondary-500), var(--fl-color-secondary-400));
+    --fl-color-secondary: var(--fl-color-secondary-600);
+    --fl-color-secondary-content: light-dark(var(--fl-color-secondary-50), var(--fl-color-secondary-50));
+    --fl-color-secondary-text: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-400));
 
     --fl-color-neutral: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
     --fl-color-neutral-content: light-dark(var(--fl-color-neutral-50), var(--fl-color-neutral-950));
     --fl-color-neutral-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
 
-    --fl-color-success: light-dark(var(--fl-color-success-500), var(--fl-color-success-400));
-    --fl-color-success-content: light-dark(var(--fl-color-success-950), var(--fl-color-success-950));
-    --fl-color-success-text: light-dark(var(--fl-color-success-700), var(--fl-color-success-400));
+    --fl-color-success: var(--fl-color-success-700);
+    --fl-color-success-content: light-dark(var(--fl-color-success-50), var(--fl-color-success-50));
+    --fl-color-success-text: light-dark(var(--fl-color-success-800), var(--fl-color-success-600));
 
-    --fl-color-info: light-dark(var(--fl-color-info-500), var(--fl-color-info-400));
-    --fl-color-info-content: light-dark(var(--fl-color-info-950), var(--fl-color-info-950));
+    --fl-color-info: var(--fl-color-info-600);
+    --fl-color-info-content: light-dark(var(--fl-color-info-50), var(--fl-color-info-50));
     --fl-color-info-text: light-dark(var(--fl-color-info-700), var(--fl-color-info-400));
 
-    --fl-color-warning: light-dark(var(--fl-color-warning-500), var(--fl-color-warning-400));
+    --fl-color-warning: var(--fl-color-warning-600);
     --fl-color-warning-content: light-dark(var(--fl-color-warning-950), var(--fl-color-warning-950));
-    --fl-color-warning-text: light-dark(var(--fl-color-warning-700), var(--fl-color-warning-400));
+    --fl-color-warning-text: light-dark(var(--fl-color-warning-800), var(--fl-color-warning-600));
 
-    --fl-color-error: light-dark(var(--fl-color-error-700), var(--fl-color-error-400));
-    --fl-color-error-content: light-dark(var(--fl-color-error-50), var(--fl-color-error-950));
+    --fl-color-error: var(--fl-color-error-600);
+    --fl-color-error-content: light-dark(oklch(100% 0 0), oklch(100% 0 0));
     --fl-color-error-text: light-dark(var(--fl-color-error-700), var(--fl-color-error-400));
 
     /* Chrome text. `highlighted` is for headings and strong labels; `text` is

@@ -24,7 +24,7 @@ defmodule FlintUI.Styled.Button do
         ),
         Prop.new(
           name: :color,
-          values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
+          values: ["primary", "secondary", "info", "success", "warning", "error", "neutral"],
           default: "neutral",
           allow_custom: true,
           doc:

@@ -71,7 +71,11 @@ your app stylesheet:
 ```
 
 Each role has three jobs: the bare role is the fill, `-content` is the label on
-that fill, and `-text` is the role as text on a neutral surface. Text follows the
+that fill, and `-text` is the role as text on a neutral surface. Non-neutral
+fills start at the `600` step; when a solid control cannot carry a light label
+there, the fill steps to `700` so the label stays near-white. Warning is the
+exception: amber stays at `600` with a dark label so it does not turn brown.
+Both labels are contrast-picked against the resolved fill. Text follows the
 same tiered idea: `text-highlighted` for headings, `text` for body, `text-toned`
 for secondary copy, `text-muted` for meta, and `text-dimmed` for placeholders.
 `text-dimmed` is below AA by design; do not use it for readable content.
@@ -100,8 +104,10 @@ have. With Tailwind, point them at the `--color-*` variables in `app.css`:
 ```
 
 Without Tailwind, paste the literal scale into `app.css`. The role scale is the
-only color contract; source palette names never become CSS variables. Custom
-themes are `[data-theme="…"]` blocks in the same app stylesheet.
+only color contract; source palette names never become CSS variables. Re-check
+`-content` and `-text` after remapping a scale: their shade refs follow the new
+scale, but the shipped picks assume the default scales. Custom themes are
+`[data-theme="…"]` blocks in the same app stylesheet.
 
 `mix flint.setup --tailwind` writes a bridge that maps each utility family to its
 own token (`text-default`, `bg-surface`, `border-default`, `text-primary` vs

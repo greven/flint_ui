@@ -6,7 +6,8 @@ defmodule FlintUI.Palette.Contrast do
   from a palette scale instead of hardcoding them: the solid "on-fill" label is
   the shade with the highest contrast against the fill, and the "as text" alias
   is the shade nearest the brand shade that still meets the AA ratio against the
-  surface it sits on (the page, or the tinted subtle surface).
+  surface it sits on (the white or dark control surface, or the tinted subtle
+  surface derived from it).
 
   Colors are converted oklch → oklab → linear sRGB and scored with the WCAG 2.1
   relative-luminance formula.
@@ -16,10 +17,12 @@ defmodule FlintUI.Palette.Contrast do
   @aa 4.5
   @aaa 7.0
 
-  # Reference page backgrounds: light mode is white, dark mode is ≈ neutral-950
-  # (what `--fl-color-background` resolves to in the default theme).
+  # Reference surfaces for role text: light is the white surface; dark is
+  # `--fl-color-control` (halfway between neutral-950 and neutral-900), the
+  # lightest dark backdrop a role text token sits on in outline/soft. Scoring
+  # against the darker page would overstate contrast.
   @light_background "oklch(100% 0 none)"
-  @dark_background "oklch(14.5% 0 none)"
+  @dark_background "oklch(17.5% 0 none)"
 
   @pattern ~r/^\s*oklch\(\s*([0-9.]+)(%?)\s+([0-9.]+|none)(?:\s+([0-9.]+|none))?\s*\)\s*$/
 
@@ -37,10 +40,15 @@ defmodule FlintUI.Palette.Contrast do
   def target(:aaa), do: @aaa
   def target(ratio) when is_number(ratio), do: ratio * 1.0
 
-  @doc "The light-mode page background the text alias is scored against."
+  @doc "The light-mode surface the text alias is scored against."
   def light_background, do: @light_background
 
-  @doc "The dark-mode page background the text alias is scored against."
+  @doc """
+  The dark-mode surface the text alias is scored against.
+
+  This is the dark control surface (`--fl-color-control`), not the darker page:
+  outline, soft, and subtle place role text over that lighter backdrop.
+  """
   def dark_background, do: @dark_background
 
   @doc """

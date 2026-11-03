@@ -152,9 +152,10 @@ defmodule FlintUI.Palette.CSS do
     end
   end
 
-  # The text-carrying variants paint the color over the page (the `subtle`
-  # surface, 10%, deepening to 15% on hover), so the alias is scored against the
-  # darkest of those tints — pure white would overstate the contrast.
+  # The text-carrying variants paint the color over the control surface (the
+  # `subtle` background, 10%, deepening to 15% on hover), so the alias is scored
+  # against the strongest fill tint over that surface. The hover overlay itself
+  # is not modeled; `-text` is guaranteed AA on the resting background.
   @text_tint 0.15
 
   defp text_background(shades, shade, page) do

@@ -244,7 +244,13 @@ defmodule FlintUIDocsWeb.ThemeLive do
             scale. Components read the role fill
             (<code class="font-mono">--fl-color-primary</code>), which resolves a
             shade per scheme, so the same button looks right in light and dark
-            without a second override. Each role has three jobs:
+            without a second override. Non-neutral fills start at the
+            <code class="font-mono">600</code>
+            step and step to <code class="font-mono">700</code>
+            when that is what a near-white solid label needs; warning is the
+            exception and stays at <code class="font-mono">600</code>
+            with a dark label so amber does not turn brown. Labels are always
+            contrast-picked against the resolved fill. Each role has three jobs:
             <code class="font-mono">-primary</code>
             is the fill, <code class="font-mono">-primary-content</code>
             is the label on that
@@ -384,10 +390,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
             Without Tailwind, paste the same shape with the literal colors. The
             role scale is the only color contract — the source palette names
             never become CSS variables. Override any token in <code class="font-mono">app.css</code>
-            after the theme import; the contrast-picked <code class="font-mono">-content</code>
+            after the theme import. The default <code class="font-mono">-content</code>
             and <code class="font-mono">-text</code>
-            shades follow the role fill. The docs app
-            itself does this in its <code class="font-mono">app.css</code>.
+            picks assume the shipped scales, so re-check them when you replace a
+            scale: their shade refs follow the new scale, but the chosen shade
+            may no longer be the accessible one. The docs app does exactly that
+            for its cyan primary in <code class="font-mono">app.css</code>.
           </p>
           <p class="mt-3 text-sm text-default">
             Neutral is the page and surface ladder, so remapping it is the quickest
@@ -420,18 +428,15 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     :root {
       color-scheme: light dark;
-      --fl-color-primary-500: oklch(0.556 0 0);
-      --fl-color-primary: light-dark(
-        var(--fl-color-primary-900),
-        var(--fl-color-primary-200)
-      );
+      --fl-color-primary-600: oklch(0.439 0 0);
+      --fl-color-primary: var(--fl-color-primary-600);
       --fl-color-primary-content: light-dark(
         var(--fl-color-primary-50),
-        var(--fl-color-primary-950)
+        var(--fl-color-primary-50)
       );
       --fl-color-primary-text: light-dark(
-        var(--fl-color-primary-900),
-        var(--fl-color-primary-200)
+        var(--fl-color-primary-600),
+        var(--fl-color-primary-400)
       );
     }
     """
@@ -501,17 +506,15 @@ defmodule FlintUIDocsWeb.ThemeLive do
     --fl-color-primary-600: oklch(0.439 0 0);
     --fl-color-primary-950: oklch(0.145 0 0);
 
-    /* ... and three jobs: fill, label on the fill, and text on the page. */
-    --fl-color-primary: light-dark(
-      var(--fl-color-primary-600),
-      var(--fl-color-primary-400)
-    );
+    /* ... and three jobs: fill, label on the fill, and text on the page.
+     * Fills default to 600; the labels are contrast-picked against them. */
+    --fl-color-primary: var(--fl-color-primary-600);
     --fl-color-primary-content: light-dark(
       var(--fl-color-primary-50),
-      var(--fl-color-primary-950)
+      var(--fl-color-primary-50)
     );
     --fl-color-primary-text: light-dark(
-      var(--fl-color-primary-700),
+      var(--fl-color-primary-600),
       var(--fl-color-primary-400)
     );
     """
@@ -600,7 +603,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
       --fl-color-primary-content: oklch(100% 0 0);
       --fl-color-primary-text: light-dark(
         var(--fl-color-primary-700),
-        var(--fl-color-primary-500)
+        var(--fl-color-primary-400)
       );
     }
     """

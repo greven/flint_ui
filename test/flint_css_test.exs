@@ -7,7 +7,7 @@ defmodule FlintUI.FlintCSSTest do
 
   test "defines prefixed tokens with automatic light/dark", %{css: css} do
     assert css =~ "color-scheme: light dark;"
-    assert css =~ "--fl-color-primary: var(--fl-color-primary-500);"
+    assert css =~ "--fl-color-primary: var(--fl-color-primary-600);"
     assert css =~ "--fl-color-primary-content: light-dark("
     assert css =~ "--fl-radius:"
     assert css =~ "--fl-radius-md:"
@@ -409,7 +409,7 @@ defmodule FlintUI.FlintCSSTest do
 
     # Outline carries the button's inner line and elevation.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="outline"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(5% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
+             ~r/\[data-element="toggle"\]\[data-variant="outline"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
 
     # Subtle is a toned neutral chip when off and a tinted surface when on,
     # rather than a lighter outline.
