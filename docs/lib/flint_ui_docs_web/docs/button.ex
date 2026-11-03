@@ -20,6 +20,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
         id: :color,
         title: "Color",
         controls: [%{key: :color, type: :select, default: "neutral", label: "Color"}]
+      },
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :variant,
+        title: "Variant",
+        controls: [%{key: :variant, type: :select, default: "outline", label: "Variant"}]
       }
     ]
   end
@@ -45,9 +52,18 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :color} = assigns) do
     ~H"""
-    <.prose content="Use the `color` attr to change the color of the button. The `color` and `variant` attributes compose freely." />
+    <.prose content="Use the `color` attr to change the color of the button." />
     <.preview :let={props} {assigns} code={&code_color/1}>
       <Components.button variant="solid" color={props.color}>Unbound</Components.button>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :variant} = assigns) do
+    ~H"""
+    <.prose content="Use the `variant` attr to change the visual style of the button. Default variant is outline." />
+    <.preview :let={props} {assigns} code={&code_variant/1}>
+      <Components.button variant={props.variant}>Unbound</Components.button>
     </.preview>
     """
   end
@@ -56,6 +72,14 @@ defmodule FlintUIDocsWeb.Docs.Button do
     Snippet.tag(
       ".button",
       [Snippet.attr("color", props.color, "neutral"), Snippet.attr("variant", "solid")],
+      "Unbound"
+    )
+  end
+
+  defp code_variant(props) do
+    Snippet.tag(
+      ".button",
+      [Snippet.attr("variant", props.variant, "outline")],
       "Unbound"
     )
   end
