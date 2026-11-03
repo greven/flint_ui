@@ -114,6 +114,31 @@ defmodule FlintUIDocsWeb.DocsTest do
     assert Enum.map(group.sections, & &1.id) == [:basic, :variant]
   end
 
+  test "a group_title names the group and makes every section a subsection" do
+    [group] =
+      Docs.group_sections(
+        [
+          %{
+            tab: :styled,
+            section: :examples,
+            id: :custom_color,
+            title: "Custom Color",
+            group_title: "Examples"
+          },
+          %{
+            tab: :styled,
+            section: :examples,
+            id: :destructive_confirmation,
+            title: "Destructive Confirmation"
+          }
+        ],
+        :styled
+      )
+
+    assert group.title == "Examples"
+    assert Enum.map(group.sections, & &1.id) == [:custom_color, :destructive_confirmation]
+  end
+
   test "a group without a first-section title has no heading" do
     [group] =
       Docs.group_sections(

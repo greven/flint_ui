@@ -227,6 +227,9 @@ defmodule FlintUIDocsWeb.ComponentLive do
   attr :previews, :map, required: true
 
   defp doc_group(assigns) do
+    first = List.first(assigns.group.sections)
+    assigns = assign(assigns, subsections?: not is_nil(first[:group_title]))
+
     ~H"""
     <DocsComponents.section title={@group.title} id={@group.id}>
       <.doc_section
@@ -234,7 +237,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
         section={section}
         name={@name}
         previews={@previews}
-        subsection?={index > 0}
+        subsection?={index > 0 || @subsections?}
       />
     </DocsComponents.section>
     """

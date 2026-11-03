@@ -45,7 +45,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
         controls: [%{key: :radius, type: :select, default: "md", label: "Radius"}]
       },
       %{tab: :styled, section: :usage, id: :type, title: "Type"},
-      %{tab: :styled, section: :examples, id: :custom_color, title: "Custom Color"},
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :custom_color,
+        title: "Custom Color",
+        group_title: "Examples"
+      },
       %{
         tab: :styled,
         section: :examples,
@@ -138,20 +144,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
             </Components.button>
           </div>
         </div>
-      </div>
-    </.preview>
-
-    <.prose content="You can customize the `color` of a button using raw CSS color for a one-off accent or a value that comes from data. The
-            best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it. Raw colors are
-            an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide
-            theming, and pass `style` to override the derived values." />
-
-    <.preview id={"#{@id}-raw"} code={&code_raw/1}>
-      <div class="flex flex-wrap items-center gap-3">
-        <Components.button color="#009966" icon="lucide-coins">Common</Components.button>
-        <Components.button color="#165DFC" icon="lucide-pickaxe">Rare</Components.button>
-        <Components.button color="#7007E7" icon="lucide-shield">Epic</Components.button>
-        <Components.button color="#FE9A00" icon="lucide-swords">Legendary</Components.button>
       </div>
     </.preview>
     """
@@ -250,6 +242,24 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Use the `radius` attr to change the corner radius, from `xs` to `xl`, or `full` for a pill shape. Default radius is md." />
     <.preview :let={props} {assigns} code={&code_radius/1}>
       <Components.button radius={props.radius}>Button</Components.button>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :examples, id: :custom_color} = assigns) do
+    ~H"""
+    <.prose content="You can customize the `color` of a button using raw CSS color for a one-off accent or a value that comes from data. The
+            best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it. Raw colors are
+            an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide
+            theming, and pass `style` to override the derived values." />
+
+    <.preview id={"#{@id}-raw"} code={&code_raw/1}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button color="#009966" icon="lucide-coins">Common</Components.button>
+        <Components.button color="#165DFC" icon="lucide-pickaxe">Rare</Components.button>
+        <Components.button color="#7007E7" icon="lucide-shield">Epic</Components.button>
+        <Components.button color="#FE9A00" icon="lucide-swords">Legendary</Components.button>
+      </div>
     </.preview>
     """
   end

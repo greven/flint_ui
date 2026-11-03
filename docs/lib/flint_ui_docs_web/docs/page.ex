@@ -35,11 +35,12 @@ defmodule FlintUIDocsWeb.Docs.Page do
       }
 
   Sections with the same `{tab, section}` stack in declaration order. The first
-  section's `:title` (or `:group_title`) becomes the top-level `h2`; the
-  remaining sections render as `h3` subsections with their own `:title`. A
+  section's `:title` becomes the top-level `h2`, and every later section renders
+  as an `h3` subsection with its own `:title`. Set `:group_title` on the first
+  section when the group needs a heading of its own: the `h2` uses
+  `:group_title` and every section, including the first, renders as an `h3`. A
   section without a `:title` renders no heading. The section key itself is never
-  used as a title. Set `:group_title` on the first section only when the `h2`
-  should differ from that section's own `:title`.
+  used as a title.
 
   `:controls` stays in the outline because the LiveView needs the control schema
   before it renders a preview and when it coerces change events. Everything else
