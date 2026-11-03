@@ -26,6 +26,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
+    assert source =~ "data-radius={@radius}"
     assert source =~ "data-square={@square}"
     assert source =~ "data-wide={@wide}"
     assert source =~ "data-depth={@depth}"
@@ -40,7 +41,7 @@ defmodule FlintUI.GeneratorTest do
   end
 
   test "free-form color props omit the enum and resolve at runtime" do
-    for name <- [:button, :toggle, :tabs, :loading, :loading_text] do
+    for name <- [:badge, :button, :toggle, :tabs, :loading, :loading_text] do
       source = Generator.component_source(name)
 
       assert source =~ "attr(:color, :string, default:"
@@ -142,6 +143,22 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "{render_slot(@inner_block) || @text}"
     refute source =~ "data-text"
     refute source =~ "data-icon={@icon}"
+  end
+
+  test "badge maps its label props and forwards the polymorphic root" do
+    source = Generator.component_source(:badge)
+
+    assert source =~ "def badge(assigns) do"
+    assert source =~ "data-badge"
+    assert source =~ "attr(:variant, :string"
+    assert source =~ "values: ~w(solid soft subtle outline dashed ghost link dot)"
+    assert source =~ "default: \"subtle\""
+    assert source =~ "data-radius={@radius}"
+    assert source =~ "data-uppercase={@uppercase}"
+    assert source =~ "attr(:uppercase, :boolean"
+
+    assert source =~
+             "include: ~w(as href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"
   end
 
   test "assembles the theme from tokens, base rules, then each component part" do

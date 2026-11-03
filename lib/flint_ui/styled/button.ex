@@ -37,6 +37,12 @@ defmodule FlintUI.Styled.Button do
           doc: "The control size."
         ),
         Prop.new(
+          name: :radius,
+          values: ["xs", "sm", "md", "lg", "xl"],
+          default: "md",
+          doc: "The corner radius, from the shared radius scale."
+        ),
+        Prop.new(
           name: :square,
           values: [true, false],
           default: false,

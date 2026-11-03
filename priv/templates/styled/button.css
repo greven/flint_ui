@@ -329,6 +329,23 @@
         line-height: var(--fl-control-line-height-xl);
     }
 
+    /* Radius overrides use the shared scale. */
+    [data-element="button"][data-radius="xs"] {
+        --fl-control-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="button"][data-radius="sm"] {
+        --fl-control-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="button"][data-radius="lg"] {
+        --fl-control-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="button"][data-radius="xl"] {
+        --fl-control-radius: var(--fl-radius-xl);
+    }
+
     [data-element="button"][data-size="xs"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xs);
     }

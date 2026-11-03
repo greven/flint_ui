@@ -7,6 +7,7 @@ defmodule FlintUI.StyledTest do
   test "names/0 covers every component that ships a styled entry" do
     assert Enum.sort(Styled.names()) ==
              Enum.sort([
+               :badge,
                :button,
                :card,
                :collapsible,
@@ -73,8 +74,24 @@ defmodule FlintUI.StyledTest do
     assert size.default == "md"
   end
 
+  test "badge defaults to the subtle treatment" do
+    entry = Styled.get(:badge)
+
+    variant = Entry.prop(entry, :variant)
+    assert variant.default == "subtle"
+    assert "dot" in variant.values
+
+    radius = Entry.prop(entry, :radius)
+    assert radius.values == ["xs", "sm", "md", "lg", "xl"]
+    assert radius.default == "md"
+
+    uppercase = Entry.prop(entry, :uppercase)
+    assert Prop.boolean?(uppercase)
+    assert uppercase.default == false
+  end
+
   test "raw color props declare the public inputs they populate" do
-    for name <- [:button, :toggle, :tabs, :loading, :loading_text] do
+    for name <- [:badge, :button, :toggle, :tabs, :loading, :loading_text] do
       entry = Styled.get(name)
       color = Entry.prop(entry, :color)
 
@@ -100,6 +117,7 @@ defmodule FlintUI.StyledTest do
              variant: "data-variant",
              color: "data-color",
              size: "data-size",
+             radius: "data-radius",
              square: "data-square",
              wide: "data-wide",
              depth: "data-depth",

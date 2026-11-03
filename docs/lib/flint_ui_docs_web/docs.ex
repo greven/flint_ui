@@ -13,6 +13,7 @@ defmodule FlintUIDocsWeb.Docs do
   use Phoenix.Component
 
   alias FlintUIDocsWeb.Docs.{
+    Badge,
     Button,
     Card,
     Collapsible,
@@ -27,6 +28,7 @@ defmodule FlintUIDocsWeb.Docs do
   }
 
   @modules %{
+    badge: Badge,
     button: Button,
     card: Card,
     collapsible: Collapsible,

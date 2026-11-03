@@ -14,6 +14,7 @@ defmodule FlintUI.Styled do
   alias FlintUI.Styled.Entry
 
   @modules [
+    FlintUI.Styled.Badge,
     FlintUI.Styled.Button,
     FlintUI.Styled.Card,
     FlintUI.Styled.Collapsible,

@@ -12,6 +12,7 @@ defmodule FlintUI do
 
   ## Available Components
 
+  - `badge`
   - `button`
   - `card`
   - `collapsible`
@@ -34,6 +35,7 @@ defmodule FlintUI do
   require FlintUI.API
 
   @components [
+    {:badge, []},
     {:button, []},
     {:card, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},

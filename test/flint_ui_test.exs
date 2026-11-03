@@ -2,6 +2,7 @@ defmodule FlintUITest do
   use ExUnit.Case, async: true
 
   test "components/0 lists the registered components" do
+    assert :badge in FlintUI.components()
     assert :button in FlintUI.components()
     assert :card in FlintUI.components()
     assert :collapsible in FlintUI.components()

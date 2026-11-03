@@ -112,6 +112,13 @@
     --fl-control-icon-lg: 1.125rem;
     --fl-control-icon-xl: 1.25rem;
 
+    /* Badge heights (16/20/22/24/28px). Labels sit shorter than controls. */
+    --fl-badge-height-xs: 1rem;
+    --fl-badge-height-sm: 1.25rem;
+    --fl-badge-height-md: 1.375rem;
+    --fl-badge-height-lg: 1.5rem;
+    --fl-badge-height-xl: 1.75rem;
+
     /* Unified radius scale. Change `--fl-radius` to retune every component. */
     --fl-radius: 0.25rem;
     --fl-radius-xs: calc(var(--fl-radius) * 0.5);

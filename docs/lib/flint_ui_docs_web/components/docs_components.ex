@@ -44,13 +44,15 @@ defmodule FlintUIDocsWeb.DocsComponents do
         </div>
       </div>
       <div class="mt-4 flex flex-wrap gap-2 capitalize">
-        <.badge class={status_badge_class(@meta.status)}>
+        <.meta_badge class={status_badge_class(@meta.status)}>
           <.icon name={status_icon(@meta.status)} class="size-3" /> {to_string(@meta.status)}
-        </.badge>
-        <.badge>
+        </.meta_badge>
+        <.meta_badge>
           <.icon name={Nav.type_icon(@meta.type)} class="size-3" /> {to_string(@meta.type)}
-        </.badge>
-        <.badge><.icon name="lucide-calendar-days" class="size-3" />Since {@meta.since}</.badge>
+        </.meta_badge>
+        <.meta_badge>
+          <.icon name="lucide-calendar-days" class="size-3" />Since {@meta.since}
+        </.meta_badge>
       </div>
     </header>
     """
@@ -60,7 +62,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   slot :inner_block, required: true
 
-  defp badge(assigns) do
+  defp meta_badge(assigns) do
     ~H"""
     <span class={[
       @class,
