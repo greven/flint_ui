@@ -56,7 +56,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
           <div></div>
           <span
-            :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+            :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -67,7 +67,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+              :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
               variant={variant}
               color={color}
             >

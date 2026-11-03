@@ -28,7 +28,7 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:variant, :string,
-    values: ~w(solid soft subtle outline dashed ghost link dot),
+    values: ~w(solid subtle soft outline dashed ghost link dot),
     default: "subtle",
     doc: "The visual emphasis of the badge."
   )
@@ -130,7 +130,7 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:variant, :string,
-    values: ~w(solid soft subtle outline dashed ghost link),
+    values: ~w(solid subtle soft outline dashed ghost link),
     default: "outline",
     doc: "The visual emphasis of the button."
   )

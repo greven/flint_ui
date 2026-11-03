@@ -242,7 +242,7 @@
     --fl-color-info-content: light-dark(var(--fl-color-info-50), var(--fl-color-info-50));
     --fl-color-info-text: light-dark(var(--fl-color-info-700), var(--fl-color-info-400));
 
-    --fl-color-warning: var(--fl-color-warning-600);
+    --fl-color-warning: var(--fl-color-warning-500);
     --fl-color-warning-content: light-dark(var(--fl-color-warning-950), var(--fl-color-warning-950));
     --fl-color-warning-text: light-dark(var(--fl-color-warning-800), var(--fl-color-warning-600));
 
