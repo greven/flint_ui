@@ -249,6 +249,10 @@
         --fl-control-radius: var(--fl-radius-xl);
     }
 
+    [data-element="badge"][data-radius="full"] {
+        --fl-control-radius: var(--fl-radius-full);
+    }
+
     /* Wide: fills the container. */
     [data-element="badge"][data-wide] {
         display: flex;

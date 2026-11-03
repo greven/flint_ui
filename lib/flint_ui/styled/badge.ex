@@ -38,9 +38,9 @@ defmodule FlintUI.Styled.Badge do
         ),
         Prop.new(
           name: :radius,
-          values: ["xs", "sm", "md", "lg", "xl"],
+          values: ["xs", "sm", "md", "lg", "xl", "full"],
           default: "md",
-          doc: "The corner radius, from the shared radius scale."
+          doc: "The corner radius, from the shared radius scale. Use `full` for a pill shape."
         ),
         Prop.new(
           name: :wide,

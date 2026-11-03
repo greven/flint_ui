@@ -357,6 +357,10 @@
         --fl-control-radius: var(--fl-radius-xl);
     }
 
+    [data-element="button"][data-radius="full"] {
+        --fl-control-radius: var(--fl-radius-full);
+    }
+
     [data-element="button"][data-size="xs"] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xs);
     }

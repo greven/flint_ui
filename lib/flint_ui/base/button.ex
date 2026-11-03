@@ -51,7 +51,8 @@ defmodule FlintUI.Base.Button do
   attribute off. The control stays focusable and keeps its accessible name, so
   keyboard and screen-reader users do not lose their place. The bundled
   `flint.js` ignores activation while pending; guard the handler as well, because
-  requests can bypass the button. The bundled `flint.js` swallows
+  requests can bypass the button.
+  The bundled `flint.js` swallows
   clicks and form submits while the control is pending; always guard the handler
   too, because the server is the authority. Do not pass `disabled={@loading}`:
   that removes the control from the focus order. Do not combine it with
@@ -196,25 +197,16 @@ defmodule FlintUI.Base.Button do
     doc:
       "Additional HTML attributes. Pass `href`, `navigate`, or `patch` to render a link instead of a button."
 
-  slot :inner_block, doc: "The content of the button."
+  slot :inner_block, required: true, doc: "The content of the button."
 
   @impl true
   def render(assigns) do
     cond do
       link?(assigns) && (disabled?(assigns) || assigns.loading) ->
-        rest = drop_navigation(assigns.rest)
-        role = Map.get(rest, :role) || Map.get(rest, "role") || "link"
-        tabindex = Map.get(rest, :tabindex) || Map.get(rest, "tabindex") || "0"
-
-        assigns =
-          assign(assigns,
-            rest: Map.drop(rest, [:role, "role", :tabindex, "tabindex"]),
-            link_role: role,
-            link_tabindex: tabindex
-          )
+        assigns = assign(assigns, :rest, drop_navigation(assigns.rest))
 
         ~H"""
-        <a {@rest} role={@link_role} tabindex={@link_tabindex} {@flint_parts[:root]}>
+        <a {@rest} role="link" tabindex="0" {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </a>
         """

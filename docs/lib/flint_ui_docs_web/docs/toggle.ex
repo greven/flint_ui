@@ -20,7 +20,8 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
           %{key: :variant, type: :select, default: "solid", label: "Variant"},
           %{key: :color, type: :select, default: "neutral", label: "Color"},
-          %{key: :size, type: :select, default: "md", label: "Size"}
+          %{key: :size, type: :select, default: "md", label: "Size"},
+          %{key: :radius, type: :select, default: "md", label: "Radius"}
         ]
       }
     ]
@@ -34,6 +35,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         variant={props.variant}
         color={props.color}
         size={props.size}
+        radius={props.radius}
         pressed={props.pressed}
         disabled={props.disabled}
       >
@@ -50,6 +52,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         Snippet.attr("variant", props.variant, "solid"),
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
+        Snippet.attr("radius", props.radius, "md"),
         Snippet.flag("pressed", props.pressed),
         Snippet.flag("disabled", props.disabled)
       ],

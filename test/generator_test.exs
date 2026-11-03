@@ -40,13 +40,14 @@ defmodule FlintUI.GeneratorTest do
     refute source =~ "to_string(@"
   end
 
-  test "toggle maps its variant, size, and depth props" do
+  test "toggle maps its variant, size, radius, and depth props" do
     source = Generator.component_source(:toggle)
 
     assert source =~ "values: ~w(solid subtle outline ghost dashed)"
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
+    assert source =~ "data-radius={@radius}"
     assert source =~ "data-depth={@depth}"
     assert source =~ "attr(:depth, :boolean"
   end
@@ -210,6 +211,7 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--color-primary-50: var(--fl-color-primary-50);"
     assert bridge =~ "--color-error-950: var(--fl-color-error-950);"
     assert bridge =~ "--radius-md: var(--fl-radius-md);"
+    assert bridge =~ "--radius-full: var(--fl-radius-full);"
     assert bridge =~ "--font-sans: var(--fl-font-sans);"
     assert bridge =~ "--font-mono: var(--fl-font-mono);"
     assert bridge =~ "--spacing: var(--fl-spacing);"

@@ -177,6 +177,7 @@ defmodule FlintUI.Generator do
       --radius-lg: var(--fl-radius-lg);
       --radius-xl: var(--fl-radius-xl);
       --radius-2xl: var(--fl-radius-2xl);
+      --radius-full: var(--fl-radius-full);
 
       --font-sans: var(--fl-font-sans);
       --font-mono: var(--fl-font-mono);

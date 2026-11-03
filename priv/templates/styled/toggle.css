@@ -332,4 +332,25 @@
     [data-element="toggle"][data-size="xl"] > [data-element="icon"] {
         --fl-icon-size: var(--fl-control-icon-xl);
     }
+
+    /* Radius overrides use the shared scale. */
+    [data-element="toggle"][data-radius="xs"] {
+        --fl-control-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="toggle"][data-radius="sm"] {
+        --fl-control-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="toggle"][data-radius="lg"] {
+        --fl-control-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="toggle"][data-radius="xl"] {
+        --fl-control-radius: var(--fl-radius-xl);
+    }
+
+    [data-element="toggle"][data-radius="full"] {
+        --fl-control-radius: var(--fl-radius-full);
+    }
 }

@@ -37,6 +37,12 @@ defmodule FlintUI.Styled.Toggle do
           doc: "The control size."
         ),
         Prop.new(
+          name: :radius,
+          values: ["xs", "sm", "md", "lg", "xl", "full"],
+          default: "md",
+          doc: "The corner radius, from the shared radius scale. Use `full` for a pill shape."
+        ),
+        Prop.new(
           name: :depth,
           values: [true, false],
           default: true,
