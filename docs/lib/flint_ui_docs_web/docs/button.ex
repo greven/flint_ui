@@ -327,12 +327,11 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview {assigns} code={&code_css_vars/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
-          variant="subtle"
-          style="--fl-button-soft: linear-gradient(0.25turn, var(--color-green-100), var(--color-amber-100));
-            --fl-button-soft-border: var(--color-green-600); --fl-button-text: var(--color-green-800);
-            box-shadow: var(--shadow-md);"
+          variant="solid"
+          style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
+          background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
         >
-          <.icon name="lucide-rabbit" class="text-green-700 animate-bounce" /> Bunny
+          <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
         </Components.button>
 
         <Components.button
@@ -351,7 +350,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
           background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));"
         >
-          <.icon name="lucide-panda" class="text-cyan-100 animate-pulse" /> Panda
+          <.icon name="lucide-panda" class="text-cyan-100" /> Panda
         </Components.button>
       </div>
     </.preview>
@@ -576,64 +575,31 @@ defmodule FlintUIDocsWeb.Docs.Button do
   end
 
   defp code_css_vars(_) do
-    [
-      %{
-        label: "HEEx",
-        code: """
-        <.button
-          variant="subtle"
-          style="--fl-button-soft: linear-gradient(0.25turn, var(--color-green-100), var(--color-amber-100));
-            --fl-button-soft-border: var(--color-green-600); --fl-button-text: var(--color-green-800);
-            box-shadow: var(--shadow-md);">
-          <.icon name="lucide-rabbit" class="text-green-700 animate-bounce" /> Bunny
-        </.button>
+    """
+    <.button
+      variant="solid"
+      style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
+      background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
+    >
+      <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
+    </.button>
 
-        <.button
-          variant="solid"
-          loading
-          style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
-            --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
-            background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));">
-          <.icon name="lucide-heart" class="text-rose-50" />
-          <.loading_text variant="shimmer" text="Likes" />
-        </.button>
+    <.button
+      variant="solid"
+      style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+        --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
+        background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));" loading>
+      <.icon name="lucide-heart" class="text-rose-50" />
+      <.loading_text variant="shimmer" text="Likes" />
+    </.button>
 
-        <.button
-          variant="solid"
-          style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
-          background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
-          <.icon name="lucide-panda" class="text-cyan-100 animate-pulse" /> Panda
-        </.button>
-        """
-      },
-      %{
-        label: "CSS",
-        lang: :css,
-        code: """
-        /* assets/css/app.css */
-        [data-element="button"][data-variant="subtle"] {
-          --fl-button-soft: linear-gradient(
-            0.25turn,
-            var(--color-green-100),
-            var(--color-amber-100)
-          );
-          --fl-button-soft-border: var(--color-green-600);
-          --fl-button-text: var(--color-green-800);
-          box-shadow: var(--shadow-md);
-        }
-
-        [data-element="button"][data-variant="solid"] {
-          --fl-button-color: var(--color-cyan-700);
-          --fl-button-color-content: white;
-          background: linear-gradient(
-            0.25turn,
-            var(--color-cyan-500),
-            var(--color-blue-500)
-          );
-        }
-        """
-      }
-    ]
+    <.button
+      variant="solid"
+      style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+      background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
+      <.icon name="lucide-panda" class="text-cyan-100" /> Panda
+    </.button>
+    """
   end
 
   defp code_variant(props) do
