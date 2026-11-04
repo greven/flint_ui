@@ -1,10 +1,11 @@
 defmodule FlintUIDocsWeb.Preview do
   @moduledoc """
-  Preview card: rendered demo, optional controls, optional code block.
+  Preview card: rendered demo, optional controls, optional code panel.
 
   This is a function component rather than a LiveComponent so the demo can be a
-  slot. Per-preview state (control props, active code flavor, and source/code
-  view) belongs to `FlintUIDocsWeb.ComponentLive` and arrives through `state`.
+  slot. Per-preview state (control props, active code flavor, source/code view,
+  and the resize size) belongs to `FlintUIDocsWeb.ComponentLive` or to the
+  browser. The card forwards `state` to those layers.
 
   A section render receives its context through `assigns`, so the shortest call
   is to forward the whole map:
@@ -30,14 +31,27 @@ defmodule FlintUIDocsWeb.Preview do
       <.preview {assigns} preview_id={@preview_id <> "-grid"} preview_only>
 
   `code` and `codes` accept a string, a list of code flavors, or a 1-arity
-  function that receives the current props. The demo slot receives the same
-  props.
+  function that receives the current props. A flavor is either a map with
+  `:label`, `:lang`, and `:code`, or a `{lang, code}` pair. Each flavor becomes a
+  tab; the CSS tab is just another flavor:
+
+      codes={[
+        heex: "<.button color=\\"#009966\\">Common</.button>",
+        css: "[data-element=\\"button\\"] { --fl-button-color: #009966; }"
+      ]}
+
+  The demo slot receives the same props.
+
+  Set `collapsed` to start the code panel closed; it remains expandable. Set
+  `resizable={false}` to remove the resize handle, and `canvas_class` to give the
+  demo a surface other than the page background.
   """
 
   use FlintUIDocsWeb, :html
 
   alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Docs
+  alias FlintUIDocsWeb.Highlight
 
   attr :preview_id, :any, default: nil
   attr :id, :any, default: nil
@@ -51,6 +65,10 @@ defmodule FlintUIDocsWeb.Preview do
   attr :source, :any, default: nil
   attr :code_lang, :atom, default: :heex
   attr :preview_only, :boolean, default: false
+  attr :collapsible, :boolean, default: true
+  attr :collapsed, :boolean, default: false
+  attr :resizable, :boolean, default: true
+  attr :canvas_class, :any, default: nil
   attr :class, :any, default: nil
   slot :inner_block, required: true
 
@@ -75,6 +93,7 @@ defmodule FlintUIDocsWeb.Preview do
     code_view = if source && state.code_view == "source", do: "source", else: "code"
     show_code? = active_flavor != nil and not assigns.preview_only
     below? = controls != [] or show_code?
+    tabs? = code_view == "code" and flavors != nil and length(flavors) > 1
 
     assigns =
       assign(assigns,
@@ -91,22 +110,48 @@ defmodule FlintUIDocsWeb.Preview do
         code_view: code_view,
         show_code?: show_code?,
         below?: below?,
+        tabs?: tabs?,
         display_code: display_code(active_flavor, source, code_view),
         display_lang: display_lang(active_flavor, code_view),
         code_caption: code_caption(source, code_view)
       )
 
     ~H"""
-    <div id={@preview_id} class={@class} data-preview>
+    <div
+      id={@preview_id}
+      class={@class}
+      data-preview
+      data-preview-id={@preview_id}
+      phx-hook={if @resizable, do: ".PreviewResize"}
+    >
       <div class="rounded-lg shadow-lg/3">
         <div
           data-preview-canvas
           class={[
-            "grid min-h-24 place-items-center border border-solid border-default bg-foreground/1 p-6",
-            if(@below?, do: "rounded-t-lg", else: "rounded-lg")
+            "group relative grid min-h-24 place-items-center overflow-auto border border-solid border-default bg-transparent p-6",
+            if(@below?, do: "rounded-t-lg", else: "rounded-lg"),
+            @canvas_class
           ]}
         >
           {render_slot(@inner_block, @props)}
+
+          <button
+            :if={@resizable}
+            type="button"
+            data-preview-resize-handle
+            aria-label="Resize preview"
+            title="Drag to resize. Use the arrow keys to resize, or double-click to reset."
+            class="absolute right-2 bottom-2 z-10 inline-flex size-6 cursor-nwse-resize touch-none items-center justify-center rounded-md border border-default bg-surface/80 text-muted opacity-50 shadow-sm backdrop-blur transition-opacity hover:opacity-100 focus-visible:opacity-100"
+          >
+            <.icon name="lucide-move-diagonal-2" class="size-3.5" />
+          </button>
+
+          <span
+            :if={@resizable}
+            data-preview-size
+            hidden
+            class="pointer-events-none absolute bottom-2 left-2 rounded bg-surface/80 px-1.5 py-0.5 font-mono text-[10px] text-muted shadow-sm backdrop-blur"
+          ></span>
         </div>
 
         <.controls
@@ -130,19 +175,67 @@ defmodule FlintUIDocsWeb.Preview do
             code={@display_code}
             lang={@display_lang}
             caption={@code_caption}
-            class="rounded-none"
+            collapsible={@collapsible}
+            collapsed={@collapsed}
+            bordered={false}
+            rounded={false}
+            panel_id={if @tabs?, do: "#{@preview_id}-code-tabpanel", else: nil}
+            labelledby={if @tabs?, do: "#{@preview_id}-code-tab-#{@code_index}", else: nil}
           >
-            <:tabs :if={@code_view == "code" && length(@flavors) > 1}>
-              <button
-                :for={{flavor, i} <- Enum.with_index(@flavors)}
-                type="button"
-                phx-click="preview_code"
-                phx-value-id={@preview_id}
-                phx-value-index={i}
-                class={code_tab(i == @code_index)}
+            <:tabs :if={@tabs?}>
+              <div
+                id={"#{@preview_id}-code-tabs"}
+                role="tablist"
+                aria-label="Code examples"
+                phx-hook=".CodeTabs"
+                class="flex min-w-0 items-center gap-0.5 overflow-x-auto rounded-md bg-foreground/5 p-0.5"
               >
-                {flavor.label || "Code"}
-              </button>
+                <button
+                  :for={{flavor, i} <- Enum.with_index(@flavors)}
+                  type="button"
+                  id={"#{@preview_id}-code-tab-#{i}"}
+                  role="tab"
+                  aria-selected={to_string(i == @code_index)}
+                  aria-controls={"#{@preview_id}-code-tabpanel"}
+                  tabindex={if i == @code_index, do: "0", else: "-1"}
+                  phx-click="preview_code"
+                  phx-value-id={@preview_id}
+                  phx-value-index={i}
+                  class={code_tab(i == @code_index)}
+                >
+                  {flavor.label || Highlight.label(flavor.lang)}
+                </button>
+              </div>
+
+              <script :type={Phoenix.LiveView.ColocatedHook} name=".CodeTabs">
+                export default {
+                  mounted() {
+                    this.onKeydown = (event) => {
+                      const keys = ["ArrowLeft", "ArrowRight", "Home", "End"]
+                      if (!keys.includes(event.key)) return
+
+                      const tabs = Array.from(this.el.querySelectorAll("[role='tab']"))
+                      const current = tabs.indexOf(document.activeElement)
+                      if (current === -1) return
+
+                      let next = current
+                      if (event.key === "ArrowLeft") next = (current - 1 + tabs.length) % tabs.length
+                      if (event.key === "ArrowRight") next = (current + 1) % tabs.length
+                      if (event.key === "Home") next = 0
+                      if (event.key === "End") next = tabs.length - 1
+
+                      event.preventDefault()
+                      tabs[next].focus()
+                      tabs[next].click()
+                    }
+
+                    this.el.addEventListener("keydown", this.onKeydown)
+                  },
+                  destroyed() {
+                    this.el.removeEventListener("keydown", this.onKeydown)
+                  }
+                }
+              </script>
             </:tabs>
 
             <:actions :if={@source}>
@@ -162,21 +255,156 @@ defmodule FlintUIDocsWeb.Preview do
               </button>
             </:actions>
           </CodeBlock.code>
-
-          <div
-            :if={@code_view == "code" && @active_flavor[:styles]}
-            class="border-t border-default"
-          >
-            <CodeBlock.code
-              id={"#{@preview_id}-styles"}
-              code={@active_flavor.styles}
-              lang={:css}
-              caption="app.css"
-              class="rounded-none"
-            />
-          </div>
         </div>
       </div>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".PreviewResize">
+        export default {
+          mounted() {
+            this.canvas = this.el.querySelector("[data-preview-canvas]")
+            this.handle = this.el.querySelector("[data-preview-resize-handle]")
+            this.badge = this.el.querySelector("[data-preview-size]")
+            if (!this.canvas || !this.handle) return
+
+            this.key = "flint-preview-size:" + (this.el.dataset.previewId || this.el.id)
+            this.size = this.read()
+            this.apply()
+
+            this.onPointerDown = (event) => {
+              if (event.button !== 0) return
+
+              const rect = this.canvas.getBoundingClientRect()
+              this.drag = {x: event.clientX, y: event.clientY, width: rect.width, height: rect.height}
+              this.handle.setPointerCapture(event.pointerId)
+              event.preventDefault()
+
+              this.onPointerMove = (moveEvent) => {
+                if (!this.drag) return
+
+                const width = this.clampWidth(this.drag.width + moveEvent.clientX - this.drag.x)
+                const height = this.clampHeight(this.drag.height + moveEvent.clientY - this.drag.y)
+                this.setSize(width, height)
+              }
+
+              this.onPointerUp = () => {
+                this.drag = null
+                this.save()
+                window.removeEventListener("pointermove", this.onPointerMove)
+                window.removeEventListener("pointerup", this.onPointerUp)
+              }
+
+              window.addEventListener("pointermove", this.onPointerMove)
+              window.addEventListener("pointerup", this.onPointerUp)
+            }
+
+            this.onKeydown = (event) => {
+              const step = event.shiftKey ? 64 : 16
+              const current = this.currentSize()
+
+              if (event.key === "ArrowLeft") this.setSize(this.clampWidth(current.width - step), current.height)
+              else if (event.key === "ArrowRight") this.setSize(this.clampWidth(current.width + step), current.height)
+              else if (event.key === "ArrowUp") this.setSize(current.width, this.clampHeight(current.height - step))
+              else if (event.key === "ArrowDown") this.setSize(current.width, this.clampHeight(current.height + step))
+              else if (event.key === "Home") this.reset()
+              else return
+
+              event.preventDefault()
+              this.save()
+            }
+
+            this.onDoubleClick = () => this.reset()
+
+            this.bindHandle()
+          },
+
+          updated() {
+            this.canvas = this.el.querySelector("[data-preview-canvas]")
+            this.handle = this.el.querySelector("[data-preview-resize-handle]")
+            this.badge = this.el.querySelector("[data-preview-size]")
+            if (!this.canvas || !this.handle) return
+
+            this.bindHandle()
+            this.apply()
+          },
+
+          bindHandle() {
+            if (!this.handle) return
+
+            // addEventListener de-duplicates identical listener pairs, so this is
+            // safe on every update even when LiveView keeps the same node.
+            this.handle.addEventListener("pointerdown", this.onPointerDown)
+            this.handle.addEventListener("keydown", this.onKeydown)
+            this.handle.addEventListener("dblclick", this.onDoubleClick)
+          },
+
+          destroyed() {
+            this.handle?.removeEventListener("pointerdown", this.onPointerDown)
+            this.handle?.removeEventListener("keydown", this.onKeydown)
+            this.handle?.removeEventListener("dblclick", this.onDoubleClick)
+            window.removeEventListener("pointermove", this.onPointerMove)
+            window.removeEventListener("pointerup", this.onPointerUp)
+          },
+
+          read() {
+            try {
+              const value = JSON.parse(sessionStorage.getItem(this.key))
+              return value && value.width ? value : null
+            } catch (_error) {
+              return null
+            }
+          },
+
+          save() {
+            try {
+              if (this.size) sessionStorage.setItem(this.key, JSON.stringify(this.size))
+              else sessionStorage.removeItem(this.key)
+            } catch (_error) {
+              // Storage can be unavailable in private browsing; resizing still works.
+            }
+          },
+
+          apply() {
+            if (this.size) {
+              this.canvas.style.width = `${this.size.width}px`
+              this.canvas.style.height = `${this.size.height}px`
+            } else {
+              this.canvas.style.removeProperty("width")
+              this.canvas.style.removeProperty("height")
+            }
+
+            if (this.badge) {
+              this.badge.hidden = !this.size
+              this.badge.textContent = this.size
+                ? `${Math.round(this.size.width)} × ${Math.round(this.size.height)}`
+                : ""
+            }
+          },
+
+          reset() {
+            this.size = null
+            this.save()
+            this.apply()
+          },
+
+          setSize(width, height) {
+            this.size = {width, height}
+            this.apply()
+          },
+
+          currentSize() {
+            const rect = this.canvas.getBoundingClientRect()
+            return {width: rect.width, height: rect.height}
+          },
+
+          clampWidth(width) {
+            return Math.max(240, Math.min(width, this.el.clientWidth || width))
+          },
+
+          clampHeight(height) {
+            return Math.max(120, Math.min(height, 1200))
+          }
+        }
+      </script>
     </div>
     """
   end
@@ -295,14 +523,27 @@ defmodule FlintUIDocsWeb.Preview do
 
   defp normalize_codes(nil), do: nil
   defp normalize_codes(code) when is_binary(code), do: [flavor(%{code: code})]
-  defp normalize_codes(codes) when is_list(codes), do: Enum.map(codes, &flavor/1)
+
+  defp normalize_codes(codes) when is_list(codes) do
+    Enum.map(codes, fn
+      {lang, code} when is_atom(lang) and is_binary(code) ->
+        flavor(%{lang: lang, code: code})
+
+      %{} = code ->
+        flavor(code)
+
+      code when is_binary(code) ->
+        flavor(%{code: code})
+    end)
+  end
 
   defp flavor(%{} = flavor) do
+    lang = Map.get(flavor, :lang) || :heex
+
     %{
-      label: Map.get(flavor, :label),
-      lang: Map.get(flavor, :lang) || :heex,
-      code: Map.get(flavor, :code),
-      styles: Map.get(flavor, :styles)
+      label: Map.get(flavor, :label) || Highlight.label(lang),
+      lang: lang,
+      code: Map.get(flavor, :code)
     }
   end
 
@@ -359,11 +600,11 @@ defmodule FlintUIDocsWeb.Preview do
   ## CSS classes
 
   defp code_tab(true) do
-    "rounded bg-foreground/5 px-2 py-1 text-xs font-medium text-default"
+    "rounded bg-surface px-2 py-0.5 text-[11px] font-medium whitespace-nowrap text-default shadow-sm"
   end
 
   defp code_tab(false) do
-    "rounded px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
+    "rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap text-muted transition-colors hover:text-default"
   end
 
   defp addon_shell(width) do

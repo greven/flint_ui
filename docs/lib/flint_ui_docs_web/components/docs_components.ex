@@ -5,7 +5,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   use FlintUIDocsWeb, :html
 
-  alias FlintUIDocsWeb.Highlight
+  alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Markdown
   alias FlintUIDocsWeb.Nav
 
@@ -234,12 +234,16 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   attr :code, :string, required: true
   attr :lang, :atom, default: :heex
+  attr :collapsed, :boolean, default: false
 
   def code_block(assigns) do
     ~H"""
-    <pre class={[
-      "highlight mt-3 overflow-x-auto rounded-lg border border-default bg-foreground/3 p-4 text-xs leading-relaxed"
-    ]}><code>{Highlight.highlight(@code, @lang)}</code></pre>
+    <CodeBlock.code
+      code={@code}
+      lang={@lang}
+      collapsed={@collapsed}
+      class="mt-3"
+    />
     """
   end
 

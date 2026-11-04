@@ -324,7 +324,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Another way you can change the color of the button is using the exposed CSS variables, either through your stylesheets or
       using inline styles." />
 
-    <.preview id={"#{@id}-css-vars"} code={&code_css_vars/1}>
+    <.preview {assigns} code={&code_css_vars/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           variant="subtle"
@@ -409,7 +409,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.prose content="This example uses TailwindCSS but the same can be achieved using plain CSS." />
 
-    <.preview id={@id} code={&code_interactions/1}>
+    <.preview {assigns} code={&code_interactions/1}>
       <div
         id="button-interactions-demo"
         phx-hook=".ButtonInteractions"
@@ -576,32 +576,64 @@ defmodule FlintUIDocsWeb.Docs.Button do
   end
 
   defp code_css_vars(_) do
-    """
-    <.button
-      variant="subtle"
-      style="--fl-button-soft: linear-gradient(0.25turn, var(--color-green-100), var(--color-amber-100));
-        --fl-button-soft-border: var(--color-green-600); --fl-button-text: var(--color-green-800);
-        box-shadow: var(--shadow-md);">
-      <.icon name="lucide-rabbit" class="text-green-700 animate-bounce" /> Bunny
-    </.button>
+    [
+      %{
+        label: "HEEx",
+        code: """
+        <.button
+          variant="subtle"
+          style="--fl-button-soft: linear-gradient(0.25turn, var(--color-green-100), var(--color-amber-100));
+            --fl-button-soft-border: var(--color-green-600); --fl-button-text: var(--color-green-800);
+            box-shadow: var(--shadow-md);">
+          <.icon name="lucide-rabbit" class="text-green-700 animate-bounce" /> Bunny
+        </.button>
 
-    <.button
-      variant="solid"
-      loading
-      style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
-        --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
-        background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));">
-      <.icon name="lucide-heart" class="text-rose-50" />
-      <.loading_text variant="shimmer" text="Likes" />
-    </.button>
+        <.button
+          variant="solid"
+          loading
+          style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+            --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
+            background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));">
+          <.icon name="lucide-heart" class="text-rose-50" />
+          <.loading_text variant="shimmer" text="Likes" />
+        </.button>
 
-    <.button
-      variant="solid"
-      style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
-      <.icon name="lucide-panda" class="text-cyan-100 animate-pulse" /> Panda
-    </.button>
-    """
+        <.button
+          variant="solid"
+          style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+          background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
+          <.icon name="lucide-panda" class="text-cyan-100 animate-pulse" /> Panda
+        </.button>
+        """
+      },
+      %{
+        label: "CSS",
+        lang: :css,
+        code: """
+        /* assets/css/app.css */
+        [data-element="button"][data-variant="subtle"] {
+          --fl-button-soft: linear-gradient(
+            0.25turn,
+            var(--color-green-100),
+            var(--color-amber-100)
+          );
+          --fl-button-soft-border: var(--color-green-600);
+          --fl-button-text: var(--color-green-800);
+          box-shadow: var(--shadow-md);
+        }
+
+        [data-element="button"][data-variant="solid"] {
+          --fl-button-color: var(--color-cyan-700);
+          --fl-button-color-content: white;
+          background: linear-gradient(
+            0.25turn,
+            var(--color-cyan-500),
+            var(--color-blue-500)
+          );
+        }
+        """
+      }
+    ]
   end
 
   defp code_variant(props) do

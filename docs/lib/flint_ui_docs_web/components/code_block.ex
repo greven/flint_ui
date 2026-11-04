@@ -1,77 +1,146 @@
 defmodule FlintUIDocsWeb.CodeBlock do
   @moduledoc """
-  Syntax-highlighted code panel with a copy button.
+  A standalone syntax-highlighted code panel.
 
-  The panel owns the subtle tinted surface, the optional header, and the copy
-  interaction. Callers shape it for their context with `class` (the docs preview
-  uses it as the last, border-sharing section of a card; code-only sections use
-  the default rounded panel).
+  The panel owns the surface, the optional header, the copy interaction, and the
+  collapse disclosure. Callers shape it for their context with `class` and the
+  `bordered`/`rounded` flags. The docs guides use it for standalone snippets; the
+  preview uses it as the last, border-sharing section of a card.
 
-  The header appears when there is a `:tabs` slot, an `:actions` slot, or a
-  `caption`. It holds the tabs on the left and the actions plus copy button on the
-  right. Without a header the copy button floats in the top-right corner.
+  The header appears when there is a `:tabs` slot, an `:actions` slot, a
+  `caption`, or the panel is collapsible. It holds the tabs/caption on the left
+  and the actions, copy button, and collapse trigger on the right. Without a
+  header the copy button floats vertically centered on the right, so a one-line
+  snippet still has a properly centered action.
 
-  Code snippets are highlighted server-side by `FlintUIDocsWeb.Highlight`.
+  Code is highlighted server-side by `FlintUIDocsWeb.Highlight`; the token
+  colours follow the docs' semantic tokens in `assets/css/highlight.css`.
   """
 
   use FlintUIDocsWeb, :html
 
   alias FlintUIDocsWeb.Highlight
 
-  attr :id, :string, required: true
-  attr :copy_id, :string, default: nil
+  attr :id, :string,
+    default: nil,
+    doc: "The id of the code element. Derived from the source when omitted."
+
+  attr :copy_id, :string, default: nil, doc: "The id of the copy button."
+
   attr :code, :string, required: true
   attr :lang, :atom, default: :heex
   attr :caption, :string, default: nil
-  attr :class, :any, default: nil
 
-  slot :tabs
-  slot :actions
+  attr :collapsible, :boolean,
+    default: true,
+    doc: "Whether the panel exposes a disclosure trigger."
+
+  attr :collapsed, :boolean,
+    default: false,
+    doc: "Whether the panel starts collapsed."
+
+  attr :copy, :boolean, default: true, doc: "Whether the panel exposes a copy button."
+
+  attr :bordered, :boolean, default: true, doc: "Whether the panel draws its own border."
+
+  attr :rounded, :boolean, default: true, doc: "Whether the panel draws its own corner radius."
+
+  attr :panel_id, :string,
+    default: nil,
+    doc: "The id of the tab panel when the code is controlled by a tab list."
+
+  attr :labelledby, :string,
+    default: nil,
+    doc: "The id of the active tab that labels the panel."
+
+  attr :class, :any, default: nil, doc: "Additional classes for the outer wrapper."
+
+  slot :tabs, doc: "Tab triggers rendered in the header, usually one per code flavor."
+  slot :actions, doc: "Actions rendered before the copy button in the header."
 
   def code(assigns) do
+    id = assigns[:id] || generated_id(assigns)
+    header? = assigns.caption != nil or assigns.tabs != [] or assigns.actions != []
+    header? = header? or assigns.collapsible
+
     assigns =
       assigns
-      |> assign(:copy_id, assigns.copy_id || "#{assigns.id}-copy")
-      |> assign(:header?, assigns.caption != nil or assigns.tabs != [] or assigns.actions != [])
+      |> assign(:id, id)
+      |> assign(:copy_id, assigns[:copy_id] || "#{id}-copy")
+      |> assign(:header?, header?)
 
     ~H"""
-    <div class={[
-      "relative overflow-hidden bg-foreground/3",
-      @class || "rounded-lg"
-    ]}>
-      <div
-        :if={@header?}
-        class="flex items-center justify-between gap-3 border-b border-default px-3 py-1.5"
-      >
-        <div class="flex min-w-0 items-center gap-1">
-          <div :if={@tabs != []} class="flex min-w-0 items-center gap-1">
-            {render_slot(@tabs)}
-          </div>
-          <span
-            :if={@caption}
-            class="truncate px-1 font-mono text-xs text-muted"
-            title={@caption}
+    <div data-code-block class={@class}>
+      <%= if @header? do %>
+        <%= if @collapsible do %>
+          <.collapsible
+            id={"#{@id}-collapse"}
+            open={not @collapsed}
+            class={panel_class(assigns)}
           >
-            {@caption}
-          </span>
+            <:trigger :let={attrs}>
+              <.code_header
+                id={@id}
+                copy_id={@copy_id}
+                lang={@lang}
+                caption={@caption}
+                tabs={@tabs}
+                actions={@actions}
+                copy={@copy}
+                collapsible={@collapsible}
+                trigger_attrs={attrs}
+              />
+            </:trigger>
+            <:content :let={attrs}>
+              <.body
+                id={@id}
+                code={@code}
+                lang={@lang}
+                panel_id={@panel_id}
+                labelledby={@labelledby}
+                content_attrs={attrs}
+              />
+            </:content>
+          </.collapsible>
+        <% else %>
+          <div class={panel_class(assigns)}>
+            <.code_header
+              id={@id}
+              copy_id={@copy_id}
+              lang={@lang}
+              caption={@caption}
+              tabs={@tabs}
+              actions={@actions}
+              copy={@copy}
+              collapsible={@collapsible}
+              trigger_attrs={nil}
+            />
+            <.body
+              id={@id}
+              code={@code}
+              lang={@lang}
+              panel_id={@panel_id}
+              labelledby={@labelledby}
+              content_attrs={nil}
+            />
+          </div>
+        <% end %>
+      <% else %>
+        <div class={panel_class(assigns)}>
+          <.body
+            id={@id}
+            code={@code}
+            lang={@lang}
+            panel_id={@panel_id}
+            labelledby={@labelledby}
+            content_attrs={nil}
+            class="pr-16"
+          />
+          <div class="absolute inset-y-0 right-2 flex items-center">
+            <.copy_button :if={@copy} id={@copy_id} target={@id} />
+          </div>
         </div>
-        <div class="flex shrink-0 items-center gap-1.5">
-          {render_slot(@actions)}
-          <.copy_button id={@copy_id} target={@id} class="px-2 py-1" />
-        </div>
-      </div>
-
-      <.copy_button
-        :if={!@header?}
-        id={@copy_id}
-        target={@id}
-        class="absolute top-2 right-2 border border-default px-2 py-1"
-      />
-
-      <pre class={[
-        "highlight overflow-x-auto p-4 text-xs leading-relaxed",
-        !@header? && "pr-16"
-      ]}><code id={@id}>{Highlight.highlight(@code, @lang)}</code></pre>
+      <% end %>
 
       <script :type={Phoenix.LiveView.ColocatedHook} name=".CopyCode">
         export default {
@@ -96,9 +165,86 @@ defmodule FlintUIDocsWeb.CodeBlock do
     """
   end
 
+  ## Header
+
+  attr :id, :string, required: true
+  attr :copy_id, :string, required: true
+  attr :lang, :atom, required: true
+  attr :caption, :string, default: nil
+  attr :tabs, :list, default: []
+  attr :actions, :list, default: []
+  attr :copy, :boolean, default: true
+  attr :collapsible, :boolean, default: true
+  attr :trigger_attrs, :any, default: nil
+
+  defp code_header(assigns) do
+    ~H"""
+    <div
+      data-code-header
+      class="flex items-center justify-between gap-3 border-b border-default px-3 py-1.5 group-data-[state=closed]:border-b-0"
+    >
+      <div class="flex min-w-0 items-center gap-1.5">
+        <%= if @tabs != [] do %>
+          {render_slot(@tabs)}
+        <% else %>
+          <span
+            class="truncate px-1 font-mono text-xs text-muted"
+            title={@caption || Highlight.label(@lang)}
+          >
+            {@caption || Highlight.label(@lang)}
+          </span>
+        <% end %>
+      </div>
+
+      <div class="flex shrink-0 items-center gap-1">
+        {render_slot(@actions)}
+        <.copy_button :if={@copy} id={@copy_id} target={@id} />
+
+        <button
+          :if={@collapsible}
+          {@trigger_attrs || %{}}
+          data-code-collapse
+          aria-label="Toggle code"
+          class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-foreground/5 hover:text-default"
+        >
+          <.icon name="lucide-chevron-down" class="size-3.5" />
+        </button>
+      </div>
+    </div>
+    """
+  end
+
+  ## Body
+
+  attr :id, :string, required: true
+  attr :code, :string, required: true
+  attr :lang, :atom, required: true
+  attr :panel_id, :string, default: nil
+  attr :labelledby, :string, default: nil
+  attr :content_attrs, :any, default: nil
+  attr :class, :any, default: nil
+
+  defp body(assigns) do
+    ~H"""
+    <div {@content_attrs || %{}} data-code-body>
+      <pre
+        id={@panel_id}
+        role={@panel_id && "tabpanel"}
+        aria-labelledby={@labelledby}
+        tabindex={@panel_id && "0"}
+        class={[
+          "highlight overflow-x-auto p-4 text-xs leading-relaxed",
+          @class
+        ]}
+      ><code id={@id}>{Highlight.highlight(@code, @lang)}</code></pre>
+    </div>
+    """
+  end
+
+  ## Copy
+
   attr :id, :string, required: true
   attr :target, :string, required: true
-  attr :class, :any, default: nil
 
   defp copy_button(assigns) do
     ~H"""
@@ -108,10 +254,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
       phx-hook=".CopyCode"
       data-copy={@target}
       aria-label="Copy code"
-      class={[
-        "group inline-flex items-center gap-1.5 rounded-md text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default",
-        @class
-      ]}
+      class="group inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
     >
       <span class="relative grid size-3.5 place-items-center">
         <.icon
@@ -126,5 +269,24 @@ defmodule FlintUIDocsWeb.CodeBlock do
       Copy
     </button>
     """
+  end
+
+  ## Helpers
+
+  defp panel_class(assigns) do
+    [
+      "group relative overflow-hidden bg-foreground/3",
+      assigns.bordered && "border border-default",
+      assigns.rounded && "rounded-lg"
+    ]
+  end
+
+  defp generated_id(assigns) do
+    hash =
+      :crypto.hash(:sha256, "#{assigns.lang}:#{assigns.caption}:#{assigns.code}")
+      |> Base.encode16(case: :lower)
+      |> binary_part(0, 10)
+
+    "code-#{hash}"
   end
 end

@@ -7,7 +7,7 @@ defmodule FlintUIDocsWeb.ComponentLiveSectionsTest do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#usage h2 a[href='#usage']", "Usage")
-    assert has_element?(view, "#usage-button-basic [data-element='button']", "Unbound")
+    assert has_element?(view, "#usage-button-basic [data-element='button']", "Button")
     assert has_element?(view, "#usage-button-basic-code")
     assert has_element?(view, "#usage-color h3 a[href='#usage-color']", "Color")
   end

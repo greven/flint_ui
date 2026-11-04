@@ -64,9 +64,10 @@ defmodule FlintUIDocsWeb.Docs.Page do
   `assigns` carries the outline metadata plus `:name`, `:tab`, `:preview_id`, and
   `:state`. Pass the whole map to `<.preview {assigns}>` and the preview inherits
   its id, component name, controls, source, and state. Explicit attributes
-  override it; pass `code`, `codes`, and `preview_only` on the preview call.
-  Use `<DocsComponents.features>` and `<DocsComponents.snippets>` for structured
-  blocks that used to live in the section map.
+  override it; pass `code`, `codes`, `collapsed`, `resizable`, `canvas_class`,
+  and `preview_only` on the preview call. Use `<DocsComponents.features>` and
+  `<DocsComponents.snippets>` for structured blocks that used to live in the
+  section map.
 
   Keep the `render_section/1` clauses together; Elixir warns when clauses of the
   same function are separated by other definitions. A section without a clause
@@ -101,6 +102,19 @@ defmodule FlintUIDocsWeb.Docs.Page do
   teaching snippet comes from the preview's `code` (or `codes`). Pass `code` as
   a string or as a 1-arity function of the current props, which keeps the
   playground snippet in step with its controls.
+
+  Use `codes` when a preview needs several snippets. Each flavor becomes a tab:
+
+      codes={[
+        heex: "<.button color=\\"#009966\\">Common</.button>",
+        css: "[data-element=\\"button\\"] { --fl-button-color: #009966; }"
+      ]}
+
+  A flavor map can override the auto-generated label with `label`, and set
+  `lang` for highlighting. The code panel is expandable by default; pass
+  `collapsed` to start it closed. The demo canvas is resizable by default; pass
+  `resizable={false}` to remove the handle, or `canvas_class` to give the demo a
+  surface other than the page background.
   """
 
   @type section :: %{

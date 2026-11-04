@@ -246,6 +246,15 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     background-color: transparent;
 }
 
+/* The code panel's collapse trigger points down while open and right while closed. */
+[data-code-collapse] .lucide-chevron-down {
+    transition: transform 150ms;
+}
+
+[data-code-collapse][data-state="closed"] .lucide-chevron-down {
+    transform: rotate(-90deg);
+}
+
 /* Authored prose rendered by `FlintUIDocsWeb.Markdown.prose/1`. */
 @layer components {
     .docs-prose {

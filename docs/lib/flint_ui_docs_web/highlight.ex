@@ -3,10 +3,9 @@ defmodule FlintUIDocsWeb.Highlight do
   Server-side syntax highlighting for the docs code blocks, backed by Makeup.
 
   `highlight/2` returns HTML that is safe to embed inside
-  `<pre class="highlight">`; the token colours come from
-  `assets/css/highlight.css`, generated from Makeup's Paraiso Light (light) and
-  Paraiso Dark (dark) styles. Every token colour is emitted with `light-dark()`, so
-  the stylesheet follows the docs' color scheme from one set of classes. The
+  `<pre class="highlight">`. The token classes are styled in
+  `assets/css/highlight.css` with the docs' semantic color tokens, so
+  highlighting follows light/dark mode and the active `data-theme` preset. The
   `.highlight` background is transparent; the surrounding code panel supplies the
   surface.
   """
@@ -63,6 +62,17 @@ defmodule FlintUIDocsWeb.Highlight do
     |> List.first()
     |> then(&Map.get(@languages, &1, :heex))
   end
+
+  @doc """
+  Returns the display label for a code language.
+  """
+  def label(:heex), do: "HEEx"
+  def label(:eex), do: "EEX"
+  def label(:html), do: "HTML"
+  def label(:elixir), do: "Elixir"
+  def label(:css), do: "CSS"
+  def label(:shell), do: "Shell"
+  def label(_lang), do: "Code"
 
   defp lexer(lang), do: Map.get(@lexers, lang, @default)
 end

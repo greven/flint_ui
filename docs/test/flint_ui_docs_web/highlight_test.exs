@@ -33,4 +33,12 @@ defmodule FlintUIDocsWeb.HighlightTest do
     assert Highlight.language("") == :heex
     assert Highlight.language("unknown-lang") == :heex
   end
+
+  test "label/1 gives code tabs a readable name" do
+    assert Highlight.label(:heex) == "HEEx"
+    assert Highlight.label(:css) == "CSS"
+    assert Highlight.label(:elixir) == "Elixir"
+    assert Highlight.label(:shell) == "Shell"
+    assert Highlight.label(:unknown) == "Code"
+  end
 end
