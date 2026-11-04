@@ -30,6 +30,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       %{tab: :styled, section: :usage, id: :icon, title: "Icon"},
       %{tab: :styled, section: :usage, id: :size, title: "Size"},
       %{tab: :styled, section: :usage, id: :square, title: "Square"},
+      %{tab: :styled, section: :usage, id: :wide, title: "Wide"},
       %{
         tab: :styled,
         section: :usage,
@@ -44,7 +45,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         title: "Radius",
         controls: [%{key: :radius, type: :select, default: "md", label: "Radius"}]
       },
-      %{tab: :styled, section: :usage, id: :type, title: "Type"},
+      %{tab: :styled, section: :usage, id: :inset, title: "Inset"},
       %{
         tab: :styled,
         section: :examples,
@@ -216,6 +217,35 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{section: :usage, id: :wide} = assigns) do
+    ~H"""
+    <.prose content="Set `wide` to fill the width of the surrounding container." />
+    <.preview id={@id} code={&code_wide/1}>
+      <div class="w-full max-w-lg">
+        <Components.button variant="solid" wide>Full Width</Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :inset} = assigns) do
+    ~H"""
+    <.prose content="Set `inset` to pull the control over the padding it keeps for its hit area, so its
+      content lines up with surrounding content." />
+    <.prose content="It is most useful on `ghost` and `link` buttons, whose box is otherwise invisible." />
+    <.preview id={@id} code={&code_inset/1}>
+      <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
+        <span class="text-sm font-medium">Post successfully created.</span>
+        <div class="flex items-center gap-4">
+          <Components.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+            <Components.icon name="lucide-x" />
+          </Components.button>
+        </div>
+      </div>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :usage, id: :loading} = assigns) do
     ~H"""
     <.prose content="Set `loading` to mark the button as pending." />
@@ -254,12 +284,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
-  def render_section(%{section: :usage, id: :type} = assigns) do
-    ~H"""
-    <.prose content="Use the `type` attr to set the native button type. Default is `button`; use `submit` or `reset` inside a form." />
-    """
-  end
-
   def render_section(%{section: :usage, id: :radius} = assigns) do
     ~H"""
     <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, or `full` for a pill shape. Default radius is md." />
@@ -289,11 +313,23 @@ defmodule FlintUIDocsWeb.Docs.Button do
       using inline styles." />
 
     <.preview id={"#{@id}-css-vars"} code={&code_css_vars/1}>
-      <Components.button
-        variant="solid"
-        icon="lucide-palette"
-        style="--fl-button-color: aquamarine; --fl-button-color-content: darkslategray;"
-      >Custom</Components.button>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button
+          variant="subtle"
+          icon="lucide-panda"
+          style="--fl-button-soft: var(--color-emerald-50); --fl-button-soft-border: var(--color-emerald-600);
+            --fl-button-text: var(--color-emerald-900); box-shadow: var(--shadow-md);"
+        >Panda</Components.button>
+
+        <Components.button
+          variant="solid"
+          style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+            --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
+            background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));"
+        >
+          <.icon name="lucide-heart" class="text-cyan-50 animate-pulse" /> Like
+        </Components.button>
+      </div>
     </.preview>
     """
   end
@@ -336,9 +372,18 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   defp code_css_vars(_) do
     """
-    <.button variant="solid" icon="lucide-palette"
-      style="--fl-button-color: aquamarine; --fl-button-color-content: darkslategray;">
-      Custom
+    <.button
+      variant="subtle"
+      icon="lucide-panda"
+      style="--fl-button-soft: var(--color-emerald-50); --fl-button-soft-border: var(--color-emerald-600);
+        --fl-button-text: var(--color-emerald-900); box-shadow: var(--shadow-md);">Panda</.button>
+
+    <.button
+      variant="solid"
+      style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+        --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
+        background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));">
+      <.icon name="lucide-heart" class="text-cyan-50 animate-pulse" /> Like
     </.button>
     """
   end
@@ -349,6 +394,27 @@ defmodule FlintUIDocsWeb.Docs.Button do
       [Snippet.attr("variant", props.variant, "outline")],
       "Button"
     )
+  end
+
+  defp code_wide(_) do
+    """
+    <div class="w-full max-w-lg">
+      <.button variant="solid" wide>Full Width</.button>
+    </div>
+    """
+  end
+
+  defp code_inset(_) do
+    """
+    <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
+      <span class="text-sm font-medium">Post successfully created.</span>
+      <div class="flex items-center gap-4">
+        <.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+          <.icon name="lucide-x" />
+        </.button>
+      </div>
+    </div>
+    """
   end
 
   defp code_icon(_) do
