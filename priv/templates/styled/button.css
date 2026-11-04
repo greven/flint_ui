@@ -341,6 +341,10 @@
     }
 
     /* Radius overrides use the shared scale. */
+    [data-element="button"][data-radius="none"] {
+        --fl-control-radius: 0;
+    }
+
     [data-element="button"][data-radius="xs"] {
         --fl-control-radius: var(--fl-radius-xs);
     }

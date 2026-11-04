@@ -154,14 +154,14 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Use the `icon` attr to render a decorative icon before the label." />
     <.prose content="You can also use the `:leading` and `:trailing` slots to place an icon before or after the content." />
     <.prose content="For an icon-only button, combine `square` with an `aria-label` so it keeps an accessible name." />
-    <.preview {assigns} code={&code_icon/1}>
+    <.preview id={@id} code={&code_icon/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button icon="lucide-save">Save</Components.button>
         <Components.button variant="soft">
           <:trailing>
-            <.icon name="lucide-archive" />
+            <.icon name="lucide-arrow-right" />
           </:trailing>
-          Archive
+          Next
         </Components.button>
         <Components.button variant="solid">
           <:leading>
@@ -180,7 +180,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :size} = assigns) do
     ~H"""
     <.prose content="Use the `size` attr to change the control size, from `xs` to `xl`. Default size is md." />
-    <.preview {assigns} code={~S(<.button size="sm">Size<.button>)}>
+    <.preview id={@id} code={~S(<.button size="sm">Size<.button>)}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
       </div>
@@ -190,6 +190,29 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :square} = assigns) do
     ~H"""
+    <.prose content="Set `square` for an icon-only button. The box stays square at every `size`,
+      and inline padding is dropped so the icon fills it. The button still needs an accessible name,
+      so pass `aria-label` or `aria-labelledby` (the icon is not a label)." />
+
+    <.preview id={@id}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button square variant="ghost" aria-label="More options">
+          <Components.icon name="lucide-ellipsis" />
+        </Components.button>
+        <Components.button square variant="dashed" aria-label="Add item">
+          <Components.icon name="lucide-plus" />
+        </Components.button>
+        <Components.button square variant="outline" aria-label="Edit">
+          <Components.icon name="lucide-pencil" />
+        </Components.button>
+        <Components.button square variant="solid" aria-label="Delete">
+          <Components.icon name="lucide-trash" />
+        </Components.button>
+        <Components.button square variant="solid" color="info" aria-label="Download">
+          <Components.icon name="lucide-download" />
+        </Components.button>
+      </div>
+    </.preview>
     """
   end
 
@@ -197,7 +220,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="Set `loading` to mark the button as pending." />
     <.prose content="It stays focusable and keeps its accessible name, but activation is ignored, so add your own indicator." />
-    <.preview code={&code_loading/1}>
+    <.preview id={@id} code={&code_loading/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button loading>
           <.icon name="lucide-loader-circle" class="animate-spin" />Save
@@ -207,7 +230,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           <.loading variant="ring-dash" /> <.loading_text text="Loading" />
         </Components.button>
 
-        <Components.button variant="solid" color="info" square loading>
+        <Components.button variant="solid" color="primary" square loading>
           <.loading variant="dots-bounce" />
         </Components.button>
       </div>
@@ -218,7 +241,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :disabled} = assigns) do
     ~H"""
     <.prose content="Set `disabled` to prevent the button from being activated." />
-    <.preview code={~S(<.button disabled>Button<.button>)}>
+    <.preview id={@id} code={~S(<.button disabled>Button<.button>)}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
@@ -239,8 +262,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :radius} = assigns) do
     ~H"""
-    <.prose content="Use the `radius` attr to change the corner radius, from `xs` to `xl`, or `full` for a pill shape. Default radius is md." />
-    <.preview :let={props} {assigns} code={&code_radius/1}>
+    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, or `full` for a pill shape. Default radius is md." />
+    <.preview :let={props} id={@id} {assigns} code={&code_radius/1}>
       <Components.button radius={props.radius}>Button</Components.button>
     </.preview>
     """
@@ -260,6 +283,36 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <Components.button color="#7007E7" icon="lucide-shield">Epic</Components.button>
         <Components.button color="#FE9A00" icon="lucide-swords">Legendary</Components.button>
       </div>
+    </.preview>
+
+    <.prose content="Another way you can change the color of the button is using the exposed CSS variables, either through your stylesheets or
+      using inline styles." />
+
+    <.preview id={"#{@id}-css-vars"} code={&code_css_vars/1}>
+      <Components.button
+        variant="solid"
+        icon="lucide-palette"
+        style="--fl-button-color: aquamarine; --fl-button-color-content: darkslategray;"
+      >Custom</Components.button>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :examples, id: :destructive_confirmation} = assigns) do
+    ~H"""
+    <.prose content="Delete actions are worth a look. A `data-confirm` attribute makes the browser prompt before the button's `phx-click` event is sent,
+      and `phx-value-id` passes the targeted record along to your handler." />
+
+    <.preview id={@id} code={&code_destructive_confirm/1}>
+      <Components.button
+        variant="solid"
+        color="error"
+        phx-click="delete_item"
+        phx-value-id="67"
+        data-confirm="Delete item?"
+      >
+        <Components.icon name="lucide-trash" /> Delete Item
+      </Components.button>
     </.preview>
     """
   end
@@ -281,6 +334,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  defp code_css_vars(_) do
+    """
+    <.button variant="solid" icon="lucide-palette"
+      style="--fl-button-color: aquamarine; --fl-button-color-content: darkslategray;">
+      Custom
+    </.button>
+    """
+  end
+
   defp code_variant(props) do
     Snippet.tag(
       ".button",
@@ -294,9 +356,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button icon="lucide-save">Save</.button>
     <.button variant="soft">
       <:trailing>
-        <.icon name="lucide-archive" />
+        <.icon name="lucide-arrow-right" />
       </:trailing>
-      Archive
+      Next
     </.button>
     <.button variant="solid">
       <:leading>
@@ -321,7 +383,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <.loading variant="ring-dash" /> <.loading_text text="Loading" />
     </.button>
 
-    <.button variant="solid" color="info" square loading>
+    <.button variant="solid" color="primary" square loading>
       <.loading variant="dots-bounce" />
     </.button>
     """
@@ -329,6 +391,21 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   defp code_radius(props) do
     Snippet.tag(".button", [Snippet.attr("radius", props.radius, "md")], "Button")
+  end
+
+  defp code_destructive_confirm(_) do
+    """
+    <.button
+      variant="solid"
+      color="error"
+      phx-click="delete_item"
+      phx-value-id="67"
+      data-confirm="Delete item?"
+    >
+      <.icon name="lucide-trash" /> Delete Item
+    </.button>
+    Code
+    """
   end
 
   defp sizes,

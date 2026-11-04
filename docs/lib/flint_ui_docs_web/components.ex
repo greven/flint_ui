@@ -42,9 +42,10 @@ defmodule FlintUIDocsWeb.Components do
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The badge size.")
 
   attr(:radius, :string,
-    values: ~w(xs sm md lg xl full),
+    values: ~w(none xs sm md lg xl full),
     default: "md",
-    doc: "The corner radius, from the shared radius scale. Use `full` for a pill shape."
+    doc:
+      "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale."
   )
 
   attr(:wide, :boolean,
@@ -144,9 +145,10 @@ defmodule FlintUIDocsWeb.Components do
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The control size.")
 
   attr(:radius, :string,
-    values: ~w(xs sm md lg xl full),
+    values: ~w(none xs sm md lg xl full),
     default: "md",
-    doc: "The corner radius, from the shared radius scale. Use `full` for a pill shape."
+    doc:
+      "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale."
   )
 
   attr(:square, :boolean,
@@ -389,9 +391,10 @@ defmodule FlintUIDocsWeb.Components do
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The control size.")
 
   attr(:radius, :string,
-    values: ~w(xs sm md lg xl full),
+    values: ~w(none xs sm md lg xl full),
     default: "md",
-    doc: "The corner radius, from the shared radius scale. Use `full` for a pill shape."
+    doc:
+      "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale."
   )
 
   attr(:depth, :boolean,

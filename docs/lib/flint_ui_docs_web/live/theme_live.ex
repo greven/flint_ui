@@ -307,7 +307,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
             (default <code class="font-mono">var(--fl-radius-md)</code>). Components with
             their own shape, such as cards, badges, avatars, and switches, read the
             scale step that fits their anatomy. A theme that wants a
-            component-specific exception targets its hook.
+            component-specific exception targets its hook. For a single square
+            control, set <code class="font-mono">radius="none"</code>
+            instead of
+            overriding the token.
           </p>
           <DocsComponents.code_block code={snippet(:radius)} lang={:css} />
         </DocsComponents.section>
@@ -631,12 +634,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
       --fl-control-radius: var(--fl-radius-md);
     }
 
-    /* Square only controls */
+    /* All controls square */
     :root {
       --fl-control-radius: 0;
     }
 
-    /* Pill only controls */
+    /* All controls pill */
     :root {
       --fl-control-radius: var(--fl-radius-full);
     }

@@ -38,9 +38,10 @@ defmodule FlintUI.Styled.Button do
         ),
         Prop.new(
           name: :radius,
-          values: ["xs", "sm", "md", "lg", "xl", "full"],
+          values: ["none", "xs", "sm", "md", "lg", "xl", "full"],
           default: "md",
-          doc: "The corner radius, from the shared radius scale. Use `full` for a pill shape."
+          doc:
+            "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale."
         ),
         Prop.new(
           name: :square,

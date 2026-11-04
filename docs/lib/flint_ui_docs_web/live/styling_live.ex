@@ -258,8 +258,7 @@ defmodule FlintUIDocsWeb.StylingLive do
           <DocsComponents.code_block code={snippet(:attributes)} />
           <p class="mt-3 text-sm text-default">
             Attributes describe structure or a mode; they are not a styling language.
-            There is no <code class="font-mono">radius</code>
-            or <code class="font-mono">border</code>
+            There is no <code class="font-mono">border</code>
             prop. <code class="font-mono">color</code>
             accepts a semantic role, or a raw CSS color for a one-off accent or a value
             that comes from data; the component derives its label and text colors from

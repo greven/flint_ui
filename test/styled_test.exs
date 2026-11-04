@@ -82,7 +82,7 @@ defmodule FlintUI.StyledTest do
     assert "dot" in variant.values
 
     radius = Entry.prop(entry, :radius)
-    assert radius.values == ["xs", "sm", "md", "lg", "xl", "full"]
+    assert radius.values == ["none", "xs", "sm", "md", "lg", "xl", "full"]
     assert radius.default == "md"
 
     uppercase = Entry.prop(entry, :uppercase)

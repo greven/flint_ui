@@ -237,6 +237,14 @@ defmodule FlintUI.FlintCSSTest do
     refute css =~ "--fl-toggle-radius:"
   end
 
+  test "the none radius step removes the control radius", %{css: css} do
+    for name <- ~w(button toggle badge) do
+      selector = ~s([data-element="#{name}"][data-radius="none"])
+      assert css =~ selector
+      assert css =~ ~s(#{selector} {\n        --fl-control-radius: 0;)
+    end
+  end
+
   test "defines type, spacing, elevation, and motion scales", %{css: css} do
     assert css =~ "--fl-font-mono:"
     assert css =~ "--fl-font-size-md: 1rem;"
