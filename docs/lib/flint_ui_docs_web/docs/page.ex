@@ -112,9 +112,8 @@ defmodule FlintUIDocsWeb.Docs.Page do
 
   A flavor map can override the auto-generated label with `label`, and set
   `lang` for highlighting. The code panel is expandable by default; pass
-  `collapsed` to start it closed. The demo canvas is resizable by default; pass
-  `resizable={false}` to remove the handle, or `canvas_class` to give the demo a
-  surface other than the page background.
+  `collapsed` to start it closed. Pass `resizable` to add the resize handle, or
+  `canvas_class` to give the demo a surface other than the page background.
   """
 
   @type section :: %{

@@ -161,6 +161,25 @@ defmodule FlintUIDocsWeb.CodeBlock do
           }
         }
       </script>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".CodeHeader">
+        export default {
+          mounted() {
+            this.onClick = (event) => {
+              const root = this.el.closest("[data-element='collapsible']")
+              if (!root || root.dataset.state !== "closed") return
+              if (event.target.closest("button, a, input, select, textarea, [role='tab']")) return
+
+              root.dispatchEvent(new CustomEvent("fl:collapsible:toggle", {bubbles: true}))
+            }
+
+            this.el.addEventListener("click", this.onClick)
+          },
+          destroyed() {
+            this.el.removeEventListener("click", this.onClick)
+          }
+        }
+      </script>
     </div>
     """
   end
@@ -180,8 +199,10 @@ defmodule FlintUIDocsWeb.CodeBlock do
   defp code_header(assigns) do
     ~H"""
     <div
+      id={"#{@id}-header"}
       data-code-header
-      class="flex items-center justify-between gap-3 border-b border-default px-3 py-1.5 group-data-[state=closed]:border-b-0"
+      phx-hook=".CodeHeader"
+      class="relative flex items-center justify-between gap-3 border-b border-default px-3 py-1.5 group-data-[state=closed]:cursor-pointer group-data-[state=closed]:border-b-0"
     >
       <div class="flex min-w-0 items-center gap-1.5">
         <%= if @tabs != [] do %>
@@ -195,6 +216,14 @@ defmodule FlintUIDocsWeb.CodeBlock do
           </span>
         <% end %>
       </div>
+
+      <span
+        data-code-expand
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 hidden items-center justify-center whitespace-nowrap text-xs font-medium text-muted group-data-[state=closed]:flex"
+      >
+        Expand Code
+      </span>
 
       <div class="flex shrink-0 items-center gap-1">
         {render_slot(@actions)}

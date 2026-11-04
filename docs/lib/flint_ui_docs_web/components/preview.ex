@@ -43,14 +43,14 @@ defmodule FlintUIDocsWeb.Preview do
   The demo slot receives the same props.
 
   Set `collapsed` to start the code panel closed; it remains expandable. Set
-  `resizable={false}` to remove the resize handle, and `canvas_class` to give the
-  demo a surface other than the page background.
+  `resizable` to add the resize handle, and `canvas_class` to give the demo a
+  surface other than the page background.
   """
 
   use FlintUIDocsWeb, :html
 
-  alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Docs
+  alias FlintUIDocsWeb.CodeBlock
   alias FlintUIDocsWeb.Highlight
 
   attr :preview_id, :any, default: nil
@@ -67,7 +67,7 @@ defmodule FlintUIDocsWeb.Preview do
   attr :preview_only, :boolean, default: false
   attr :collapsible, :boolean, default: true
   attr :collapsed, :boolean, default: false
-  attr :resizable, :boolean, default: true
+  attr :resizable, :boolean, default: false
   attr :canvas_class, :any, default: nil
   attr :class, :any, default: nil
   slot :inner_block, required: true
@@ -275,7 +275,7 @@ defmodule FlintUIDocsWeb.Preview do
 
               const rect = this.canvas.getBoundingClientRect()
               this.drag = {x: event.clientX, y: event.clientY, width: rect.width, height: rect.height}
-              this.handle.setPointerCapture(event.pointerId)
+              this.handle.setPointerCapture?.(event.pointerId)
               event.preventDefault()
 
               this.onPointerMove = (moveEvent) => {
@@ -289,12 +289,12 @@ defmodule FlintUIDocsWeb.Preview do
               this.onPointerUp = () => {
                 this.drag = null
                 this.save()
-                window.removeEventListener("pointermove", this.onPointerMove)
-                window.removeEventListener("pointerup", this.onPointerUp)
+                this.removeDragListeners()
               }
 
               window.addEventListener("pointermove", this.onPointerMove)
               window.addEventListener("pointerup", this.onPointerUp)
+              window.addEventListener("pointercancel", this.onPointerUp)
             }
 
             this.onKeydown = (event) => {
@@ -330,8 +330,6 @@ defmodule FlintUIDocsWeb.Preview do
           bindHandle() {
             if (!this.handle) return
 
-            // addEventListener de-duplicates identical listener pairs, so this is
-            // safe on every update even when LiveView keeps the same node.
             this.handle.addEventListener("pointerdown", this.onPointerDown)
             this.handle.addEventListener("keydown", this.onKeydown)
             this.handle.addEventListener("dblclick", this.onDoubleClick)
@@ -341,8 +339,13 @@ defmodule FlintUIDocsWeb.Preview do
             this.handle?.removeEventListener("pointerdown", this.onPointerDown)
             this.handle?.removeEventListener("keydown", this.onKeydown)
             this.handle?.removeEventListener("dblclick", this.onDoubleClick)
+            this.removeDragListeners()
+          },
+
+          removeDragListeners() {
             window.removeEventListener("pointermove", this.onPointerMove)
             window.removeEventListener("pointerup", this.onPointerUp)
+            window.removeEventListener("pointercancel", this.onPointerUp)
           },
 
           read() {
@@ -609,7 +612,8 @@ defmodule FlintUIDocsWeb.Preview do
 
   defp addon_shell(width) do
     [
-      "flex min-w-0 items-stretch overflow-hidden rounded-md border border-default bg-surface text-left transition-colors focus-within:border-accented focus-within:ring-2 focus-within:ring-accented focus-within:ring-inset focus-visible:outline-none",
+      "flex min-w-0 items-stretch overflow-hidden rounded-md border border-default bg-surface text-left transition-colors",
+      "focus-within:border-accented focus-within:ring-2 focus-within:ring-accented focus-within:ring-inset focus-visible:outline-none",
       width
     ]
   end

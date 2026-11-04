@@ -415,18 +415,21 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#setup pre.highlight code span")
   end
 
-  test "the preview canvas is translucent and resizable", %{conn: conn} do
+  test "the preview canvas is translucent and resizable on request", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#example-button-interactions [data-preview-canvas].bg-transparent")
-    assert has_element?(view, "#example-button-interactions [data-preview-resize-handle]")
-    assert has_element?(view, "#example-button-interactions [data-preview-size]")
+    refute has_element?(view, "#example-button-interactions [data-preview-resize-handle]")
+
+    assert has_element?(view, "#color-grid [data-preview-resize-handle]")
+    assert has_element?(view, "#color-grid [data-preview-size]")
   end
 
   test "the code panel is a collapsible disclosure", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     assert has_element?(view, "#example-button-interactions-code-collapse[data-state='open']")
+    assert has_element?(view, "#example-button-interactions-code-header", "Expand Code")
 
     assert has_element?(
              view,

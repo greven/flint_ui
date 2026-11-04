@@ -26,7 +26,7 @@ defmodule FlintUIDocsWeb.CodeBlockTest do
     document = render_code(%{})
 
     assert count(document, "[data-code-block]") == 1
-    assert count(document, "[data-code-header]") == 1
+    assert count(document, "[data-code-header][phx-hook]") == 1
     assert count(document, "[data-code-collapse][aria-expanded='true']") == 1
     assert count(document, "[data-code-body]:not([hidden])") == 1
     assert count(document, "button[aria-label='Copy code']") == 1
