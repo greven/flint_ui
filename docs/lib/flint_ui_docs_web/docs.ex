@@ -191,6 +191,10 @@ defmodule FlintUIDocsWeb.Docs do
   Each group has a `:title`, an `:id`, an optional Markdown `:body`, an optional
   `:system` (`:api`, `:anatomy`, or `:keyboard`), and authored `:sections` that
   accumulate inside it.
+
+  The `:keyboard` system group renders the table built from `keyboard/0` and
+  drops the moduledoc body when that metadata exists, so the interactions are
+  not listed twice. A component without `keyboard/0` renders its prose instead.
   """
   def base_groups(name) do
     module = page(name)
@@ -277,7 +281,7 @@ defmodule FlintUIDocsWeb.Docs do
         end
 
       key == :keyboard ->
-        body = doc_section_body(doc, :keyboard)
+        body = keyboard_body(name, doc)
         base_group(key, title || "Keyboard", body, :keyboard)
 
       key == :intro ->
@@ -308,6 +312,16 @@ defmodule FlintUIDocsWeb.Docs do
       system: system,
       sections: []
     }
+  end
+
+  # `keyboard/0` drives the generated table, and a component documents the same
+  # interactions in its `## Keyboard` moduledoc. Rendering both repeats the
+  # section, so the table replaces the moduledoc body. Components without
+  # `keyboard/0` (e.g. Group) keep the prose-only section.
+  defp keyboard_body(name, doc) do
+    if FlintUI.Docs.keyboard(name) == [] do
+      doc_section_body(doc, :keyboard)
+    end
   end
 
   defp doc_section_body(doc, key) do

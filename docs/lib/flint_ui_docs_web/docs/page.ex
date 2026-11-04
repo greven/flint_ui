@@ -90,6 +90,11 @@ defmodule FlintUIDocsWeb.Docs.Page do
       `:intro`, `:api`, `:anatomy`, or `:keyboard`. `{key, "Title"}` overrides
       the heading. `:api` is appended when the list omits it.
 
+  `:keyboard` renders the table built from the component's `keyboard/0`, and
+  only falls back to the `## Keyboard` moduledoc body when the component
+  declares no keyboard metadata. Keep the moduledoc list as the source of truth
+  for the component; the docs page will not render it twice.
+
   Authored `tab: :base` sections merge into the matching moduledoc section, or
   become their own section when no matching key exists.
 

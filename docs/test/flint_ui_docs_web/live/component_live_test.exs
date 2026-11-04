@@ -203,6 +203,23 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#keyboard code", "Space")
   end
 
+  test "the keyboard section renders the metadata table without repeating the moduledoc list",
+       %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
+
+    assert has_element?(view, "#keyboard table")
+    assert has_element?(view, "#keyboard thead th", "Keys")
+    assert has_element?(view, "#keyboard tbody tr", "Activates an action button or a link")
+    refute has_element?(view, "#keyboard ul")
+  end
+
+  test "a component without keyboard metadata renders its moduledoc prose", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/group?tab=base")
+
+    assert has_element?(view, "#keyboard p", "adds no keyboard interaction of its own")
+    refute has_element?(view, "#keyboard table")
+  end
+
   test "collapsible playground wires the hook and disables the trigger", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible")
 

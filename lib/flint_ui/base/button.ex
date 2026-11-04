@@ -50,25 +50,17 @@ defmodule FlintUI.Base.Button do
   `aria-disabled="true"`, and `data-loading`, but leaves the native `disabled`
   attribute off. The control stays focusable and keeps its accessible name, so
   keyboard and screen-reader users do not lose their place. The bundled
-  `flint.js` ignores activation while pending; guard the handler as well, because
-  requests can bypass the button.
-  The bundled `flint.js` swallows
-  clicks and form submits while the control is pending; always guard the handler
-  too, because the server is the authority. Do not pass `disabled={@loading}`:
-  that removes the control from the focus order. Do not combine it with
-  `phx-disable-with` either: LiveView renders the native `disabled` attribute
-  and replaces the button's content for the request, so focus and the pending
-  indicator are lost until the reply.
+  `flint.js` ignores activation while pending, guard the handler as well,
+  because requests can bypass the button.
 
-  Announce progress in a status region outside the control. `aria-busy` tells
-  assistive technology to defer updates inside it, so text inside the button may
-  not be announced. A persistent `role="status"` region whose text changes is
-  the reliable pattern; reserve `aria-live="assertive"` for errors or urgent
-  messages, not routine progress. Keep the button's accessible name stable
-  rather than replacing it with `"Loading"`.
+  The bundled `flint.js` swallows clicks and form submits while the control is pending; always
+  guard the handler too, because the server is the authority. Do not pass `disabled={@loading}`:
+  that removes the control from the focus order. Do not combine it with `phx-disable-with` either:
+  LiveView renders the native `disabled` attribute and replaces the button's content for the
+  request, so focus and the pending indicator are lost until the reply.
 
   A pending link drops its `href`, `navigate`, or `patch` destination and stays
-  in the tab order, like a disabled link, while being announced as busy.
+  in the tab order, like a disabled link.
 
   ## Keyboard
 
