@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Preview do
       class={@class}
       data-preview
       data-preview-id={@preview_id}
-      phx-hook={if @resizable, do: ".PreviewResize"}
+      phx-hook=".PreviewResize"
     >
       <div class="rounded-lg shadow-lg/3">
         <div
@@ -135,16 +135,31 @@ defmodule FlintUIDocsWeb.Preview do
         >
           {render_slot(@inner_block, @props)}
 
-          <button
+          <div
             :if={@resizable}
-            type="button"
-            data-preview-resize-handle
-            aria-label="Resize preview"
-            title="Drag to resize. Use the arrow keys to resize, or double-click to reset."
-            class="absolute right-2 bottom-2 z-10 inline-flex size-6 cursor-nwse-resize touch-none items-center justify-center rounded-md border border-default bg-surface/80 text-muted opacity-50 shadow-sm backdrop-blur transition-opacity hover:opacity-100 focus-visible:opacity-100"
+            class="absolute right-2 bottom-2 z-10 flex items-center gap-1"
           >
-            <.icon name="lucide-move-diagonal-2" class="size-3.5" />
-          </button>
+            <button
+              type="button"
+              data-preview-resize-reset
+              aria-label="Reset preview size"
+              title="Reset preview size"
+              hidden
+              class="inline-flex size-6 items-center justify-center rounded-md border border-default bg-surface/80 text-muted opacity-50 shadow-sm backdrop-blur transition-opacity hover:opacity-100 focus-visible:opacity-100"
+            >
+              <.icon name="lucide-rotate-ccw" class="size-3.5" />
+            </button>
+
+            <button
+              type="button"
+              data-preview-resize-handle
+              aria-label="Resize preview"
+              title="Drag to resize. Use the arrow keys to resize, or double-click to reset."
+              class="inline-flex size-6 cursor-nwse-resize touch-none items-center justify-center rounded-md border border-default bg-surface/80 text-muted opacity-50 shadow-sm backdrop-blur transition-opacity hover:opacity-100 focus-visible:opacity-100"
+            >
+              <.icon name="lucide-move-diagonal-2" class="size-3.5" />
+            </button>
+          </div>
 
           <span
             :if={@resizable}
@@ -263,6 +278,7 @@ defmodule FlintUIDocsWeb.Preview do
           mounted() {
             this.canvas = this.el.querySelector("[data-preview-canvas]")
             this.handle = this.el.querySelector("[data-preview-resize-handle]")
+            this.resetButton = this.el.querySelector("[data-preview-resize-reset]")
             this.badge = this.el.querySelector("[data-preview-size]")
             if (!this.canvas || !this.handle) return
 
@@ -313,6 +329,7 @@ defmodule FlintUIDocsWeb.Preview do
             }
 
             this.onDoubleClick = () => this.reset()
+            this.onResetClick = () => this.reset()
 
             this.bindHandle()
           },
@@ -320,6 +337,7 @@ defmodule FlintUIDocsWeb.Preview do
           updated() {
             this.canvas = this.el.querySelector("[data-preview-canvas]")
             this.handle = this.el.querySelector("[data-preview-resize-handle]")
+            this.resetButton = this.el.querySelector("[data-preview-resize-reset]")
             this.badge = this.el.querySelector("[data-preview-size]")
             if (!this.canvas || !this.handle) return
 
@@ -333,12 +351,14 @@ defmodule FlintUIDocsWeb.Preview do
             this.handle.addEventListener("pointerdown", this.onPointerDown)
             this.handle.addEventListener("keydown", this.onKeydown)
             this.handle.addEventListener("dblclick", this.onDoubleClick)
+            this.resetButton?.addEventListener("click", this.onResetClick)
           },
 
           destroyed() {
             this.handle?.removeEventListener("pointerdown", this.onPointerDown)
             this.handle?.removeEventListener("keydown", this.onKeydown)
             this.handle?.removeEventListener("dblclick", this.onDoubleClick)
+            this.resetButton?.removeEventListener("click", this.onResetClick)
             this.removeDragListeners()
           },
 
@@ -373,6 +393,10 @@ defmodule FlintUIDocsWeb.Preview do
             } else {
               this.canvas.style.removeProperty("width")
               this.canvas.style.removeProperty("height")
+            }
+
+            if (this.resetButton) {
+              this.resetButton.hidden = !this.size
             }
 
             if (this.badge) {

@@ -421,7 +421,13 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#example-button-interactions [data-preview-canvas].bg-transparent")
     refute has_element?(view, "#example-button-interactions [data-preview-resize-handle]")
 
+    assert has_element?(
+             view,
+             "#color-grid[phx-hook='FlintUIDocsWeb.Preview.PreviewResize']"
+           )
+
     assert has_element?(view, "#color-grid [data-preview-resize-handle]")
+    assert has_element?(view, "#color-grid [data-preview-resize-reset][hidden]")
     assert has_element?(view, "#color-grid [data-preview-size]")
   end
 
