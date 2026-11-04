@@ -49,9 +49,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
       %{
         tab: :styled,
         section: :examples,
-        id: :custom_color,
-        title: "Custom Color",
+        id: :as_link,
+        title: "As a Link",
         group_title: "Examples"
+      },
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :custom_color,
+        title: "Custom Color"
       },
       %{
         tab: :styled,
@@ -371,9 +377,27 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{section: :examples, id: :as_link} = assigns) do
+    ~H"""
+    <.prose content="To render the button as a link, set `href`, `navigate`, or `patch` as an attribute." />
+    <.preview id={@id} code={&code_as_link/1}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button navigate="/components">Navigate</Components.button>
+        <Components.button variant="subtle" patch="/components/button#usage-color">Patch</Components.button>
+        <Components.button variant="solid" href="https://hex.pm/packages/flint_ui">
+          <:trailing>
+            <Components.icon name="lucide-arrow-up-right" />
+          </:trailing>
+          Docs
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :examples, id: :interactions} = assigns) do
     ~H"""
-    <.prose content="Loading can be more than a disabled click: slide the label out, reveal an
+    <.prose content="The loading can be more than a disabled click: slide the label out, reveal an
       indicator, and let the sound API mark the gesture and the result. The control keeps its
       accessible name while pending, and `aria-busy` tells assistive technology to wait for the
       outcome." />
@@ -461,6 +485,19 @@ defmodule FlintUIDocsWeb.Docs.Button do
         }
       </script>
     </.preview>
+    """
+  end
+
+  defp code_as_link(_) do
+    """
+    <.button navigate="/components">Navigate</.button>
+    <.button variant="subtle" patch="/components/button#usage-color">Patch</.button>
+    <.button variant="solid" href="https://hex.pm/packages/flint_ui">
+      <:trailing>
+        <.icon name="lucide-arrow-up-right" />
+      </:trailing>
+      Docs
+    </.button>
     """
   end
 
