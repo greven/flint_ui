@@ -35,6 +35,21 @@ defmodule FlintUI.Base.ButtonTest do
       </.button>
       """
     end
+
+    def button_with_link_attrs(assigns) do
+      ~H"""
+      <.button
+        href={@href}
+        disabled={@disabled}
+        loading={@loading}
+        target={@target}
+        rel={@rel}
+        download={@download}
+      >
+        Click
+      </.button>
+      """
+    end
   end
 
   @defaults %{
@@ -124,6 +139,27 @@ defmodule FlintUI.Base.ButtonTest do
 
       assert attr(html, "phx-click") == ["clicked"]
       assert attr(html, "data-role") == ["test"]
+    end
+
+    test "drops link-only attributes from the action-button form" do
+      assigns = %{
+        href: nil,
+        disabled: false,
+        loading: false,
+        target: "_blank",
+        rel: "noopener",
+        download: "report.txt"
+      }
+
+      html =
+        render_component(&TestComponent.button_with_link_attrs/1, assigns)
+        |> LazyHTML.from_fragment()
+
+      assert tag(html) == ["button"]
+
+      for name <- ~w(href target rel download) do
+        assert attr(html, name) == [], "expected #{name} to be dropped"
+      end
     end
   end
 
@@ -231,6 +267,26 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "aria-disabled") == ["true"]
       assert attr(html, "data-loading") == [""]
       assert attr(html, "data-disabled") == [""]
+    end
+
+    test "a disabled or pending link drops link-only attributes" do
+      for state <- [%{disabled: true, loading: false}, %{disabled: false, loading: true}] do
+        assigns =
+          Map.merge(
+            %{href: "/foo", target: "_blank", rel: "noopener", download: "report.txt"},
+            state
+          )
+
+        html =
+          render_component(&TestComponent.button_with_link_attrs/1, assigns)
+          |> LazyHTML.from_fragment()
+
+        assert tag(html) == ["a"]
+
+        for name <- ~w(href target rel download) do
+          assert attr(html, name) == [], "expected #{name} to be dropped"
+        end
+      end
     end
   end
 

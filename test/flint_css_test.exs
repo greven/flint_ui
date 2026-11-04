@@ -404,7 +404,7 @@ defmodule FlintUI.FlintCSSTest do
     end
 
     assert css =~
-             ~r/\[data-element="button"\]\[data-variant="link"\][^{]*:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-color-inverted\)\) 75%,\s*transparent\s*\);/
+             ~r/\[data-element="button"\]\[data-variant="link"\][^{]*:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-button-color, var\(--fl-color-inverted\)\)\) 75%,\s*transparent\s*\);/
 
     refute css =~ "--fl-button-soft-text"
   end
@@ -499,6 +499,12 @@ defmodule FlintUI.FlintCSSTest do
       assert css =~
                ~r/\[data-inset\]\[data-square\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{\s*margin: calc\(/
     end
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="link"\] \{[^}]*padding-block: 0;/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-variant="link"\]\[data-inset\] \{\s*margin-block: 0;/
   end
 
   test "loading buttons keep a progress cursor", %{css: css} do

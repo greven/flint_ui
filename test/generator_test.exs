@@ -22,7 +22,7 @@ defmodule FlintUI.GeneratorTest do
     source = Generator.component_source(:button)
 
     assert source =~ "attr(:variant, :string"
-    assert source =~ "values: ~w(outline solid subtle soft dashed ghost link)"
+    assert source =~ "values: ~w(solid subtle soft outline dashed ghost link)"
     assert source =~ "data-variant={@variant}"
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
@@ -148,6 +148,18 @@ defmodule FlintUI.GeneratorTest do
              ~s{slot(:trailing, doc: "Optional content rendered after the button's content.")}
   end
 
+  test "wrapper slots relax inner_block only when content attrs can fill it" do
+    assert %{required: false} =
+             :button
+             |> Generator.wrapper_slots()
+             |> Enum.find(&(&1.name == :inner_block))
+
+    assert %{required: true} =
+             :toggle
+             |> Generator.wrapper_slots()
+             |> Enum.find(&(&1.name == :inner_block))
+  end
+
   test "button declares content attributes separately from its data hooks" do
     source = Generator.component_source(:button)
 
@@ -165,7 +177,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "def badge(assigns) do"
     assert source =~ "data-badge"
     assert source =~ "attr(:variant, :string"
-    assert source =~ "values: ~w(outline solid subtle soft dashed ghost link dot)"
+    assert source =~ "values: ~w(solid soft subtle outline dashed ghost link dot)"
     assert source =~ "default: \"subtle\""
     assert source =~ "data-radius={@radius}"
     assert source =~ "data-uppercase={@uppercase}"

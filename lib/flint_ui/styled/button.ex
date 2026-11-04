@@ -113,7 +113,7 @@ defmodule FlintUI.Styled.Button do
           default:
             "color-mix(in oklab, var(--fl-button-color) var(--fl-border-strength), var(--fl-color-control))",
           doc:
-            "The matching border for subtle, outline, and dashed buttons; roles map it to the role's `-soft-border` token."
+            "The matching border for subtle, outline, and dashed buttons; roles map it to the role's `-soft-border` token. A raw color falls back to a border-strength mix, softer for subtle."
         )
       ],
       color_vars: [

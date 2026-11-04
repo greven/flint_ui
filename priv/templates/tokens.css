@@ -231,7 +231,7 @@
     --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));
     --fl-color-primary-text: light-dark(var(--fl-color-primary-600), var(--fl-color-primary-400));
     --fl-color-primary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-100)),
+        color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-200)),
         color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))
     );
     --fl-color-primary-soft-border: light-dark(
@@ -243,7 +243,7 @@
     --fl-color-secondary-content: light-dark(var(--fl-color-secondary-50), var(--fl-color-secondary-50));
     --fl-color-secondary-text: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-400));
     --fl-color-secondary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-secondary-100) 50%, var(--fl-color-secondary-100)),
+        color-mix(in oklab, var(--fl-color-secondary-100) 50%, var(--fl-color-secondary-200)),
         color-mix(in oklab, var(--fl-color-secondary-800) 70%, var(--fl-color-control))
     );
     --fl-color-secondary-soft-border: light-dark(
@@ -267,7 +267,7 @@
     --fl-color-info-content: light-dark(var(--fl-color-info-50), var(--fl-color-info-50));
     --fl-color-info-text: light-dark(var(--fl-color-info-800), var(--fl-color-info-400));
     --fl-color-info-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-info-100) 50%, var(--fl-color-info-50)),
+        color-mix(in oklab, var(--fl-color-info-100) 50%, var(--fl-color-info-200)),
         color-mix(in oklab, var(--fl-color-info-950) 70%, var(--fl-color-control))
     );
     --fl-color-info-soft-border: light-dark(
@@ -279,7 +279,7 @@
     --fl-color-success-content: light-dark(var(--fl-color-success-50), var(--fl-color-success-50));
     --fl-color-success-text: light-dark(var(--fl-color-success-800), var(--fl-color-success-600));
     --fl-color-success-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-success-100) 50%, var(--fl-color-success-50)),
+        color-mix(in oklab, var(--fl-color-success-100) 50%, var(--fl-color-success-200)),
         color-mix(in oklab, var(--fl-color-success-950) 70%, var(--fl-color-control))
     );
     --fl-color-success-soft-border: light-dark(
@@ -291,7 +291,7 @@
     --fl-color-warning-content: light-dark(var(--fl-color-warning-950), var(--fl-color-warning-950));
     --fl-color-warning-text: light-dark(var(--fl-color-warning-800), var(--fl-color-warning-600));
     --fl-color-warning-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-warning-100) 50%, var(--fl-color-warning-50)),
+        color-mix(in oklab, var(--fl-color-warning-100) 50%, var(--fl-color-warning-200)),
         color-mix(in oklab, var(--fl-color-warning-950) 70%, var(--fl-color-control))
     );
     --fl-color-warning-soft-border: light-dark(
@@ -303,7 +303,7 @@
     --fl-color-error-content: light-dark(oklch(100% 0 0), oklch(100% 0 0));
     --fl-color-error-text: light-dark(var(--fl-color-error-800), var(--fl-color-error-400));
     --fl-color-error-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-error-100) 50%, var(--fl-color-error-50)),
+        color-mix(in oklab, var(--fl-color-error-100) 50%, var(--fl-color-error-200)),
         color-mix(in oklab, var(--fl-color-error-950) 70%, var(--fl-color-control))
     );
     --fl-color-error-soft-border: light-dark(

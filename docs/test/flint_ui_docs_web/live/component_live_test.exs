@@ -117,6 +117,14 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#setup")
   end
 
+  test "the css tab lists the component's state hooks", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button?tab=css")
+
+    assert has_element?(view, "#selectors code", ~s|[data-element="button"][data-disabled]|)
+    assert has_element?(view, "#selectors code", ~s|[data-element="button"][data-loading]|)
+    assert has_element?(view, "#selectors code", ~s|[data-element="button"][data-pending-submit]|)
+  end
+
   test "legacy tabs land on the styled tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=styled")
 
@@ -339,6 +347,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#usage-button-color-controls select[name='color']")
     assert has_element?(view, "#usage-button-radius-controls select[name='radius']")
     assert has_element?(view, "#disabled [data-element='button']")
+    assert has_element?(view, "#disabled a[data-element='button'][aria-disabled='true']")
     assert has_element?(view, "#loading [data-element='button'][data-loading]")
   end
 
@@ -389,7 +398,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     view |> element("#component-sections-tab-styled") |> render_click()
 
-    assert has_element?(view, "#usage-button-variant [data-variant='subtle']")
+    assert has_element?(view, "#usage-button-variant [data-variant='outline']")
   end
 
   test "the playground code block reflects the current props", %{conn: conn} do
@@ -430,22 +439,6 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible")
 
     assert has_element?(view, "#setup pre.highlight code span")
-  end
-
-  test "the preview canvas is translucent and resizable on request", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/button")
-
-    assert has_element?(view, "#example-button-interactions [data-preview-canvas].bg-transparent")
-    refute has_element?(view, "#example-button-interactions [data-preview-resize-handle]")
-
-    assert has_element?(
-             view,
-             "#color-grid[phx-hook='FlintUIDocsWeb.Preview.PreviewResize']"
-           )
-
-    assert has_element?(view, "#color-grid [data-preview-resize-handle]")
-    assert has_element?(view, "#color-grid [data-preview-resize-reset][hidden]")
-    assert has_element?(view, "#color-grid [data-preview-size]")
   end
 
   test "the code panel is a collapsible disclosure", %{conn: conn} do

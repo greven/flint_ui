@@ -9,9 +9,10 @@ defmodule FlintUI.Base.Button do
       <.button phx-click="delete" disabled>Delete</.button>
 
   `loading` is a pending state, not a second disabled state. The control keeps
-  `aria-busy`, `aria-disabled`, and `data-loading`, stays focusable, and keeps
-  its accessible name, but activation is ignored while `flint.js` is loaded.
-  FlintUI is unstyled, so add an indicator yourself when you want one:
+  `aria-busy`, `aria-disabled`, and `data-loading`, stays focusable unless
+  `disabled` is also set, and keeps its accessible name, but activation is
+  ignored while `flint.js` is loaded. FlintUI is unstyled, so add an indicator
+  yourself when you want one:
 
       <.button loading={@saving}>
         <.icon :if={@saving} name="lucide-loader-circle" class="size-4 animate-spin" />
@@ -50,10 +51,10 @@ defmodule FlintUI.Base.Button do
   When `disabled` is set on a link, the `href`, `navigate`, or `patch`
   destination is removed, the link is marked with `aria-disabled="true"`, and it
   stays in the tab order so its state can be discovered. `flint.js` also blocks
-  clicks on it. Without the bundle, click handlers still run, so guard them
-  server-side. An action button uses the native `disabled` attribute and leaves
-  the tab order; a link has no native equivalent, so this difference is
-  deliberate.
+  clicks on it. Without the bundle, keyboard activation still fires click
+  handlers, so guard them server-side. An action button uses the native
+  `disabled` attribute and leaves the tab order. A link has no native equivalent,
+  so this difference is deliberate.
 
   `loading` is the pending state. It sets `aria-busy="true"`,
   `aria-disabled="true"`, and `data-loading`, but leaves the native `disabled`
@@ -77,9 +78,9 @@ defmodule FlintUI.Base.Button do
 
   A pending link drops its `href`, `navigate`, or `patch` destination and stays
   in the tab order, like a disabled link. A pending submit button renders
-  `type="button"` so it is not the form's default submit button; it returns to
-  `type="submit"` when the operation finishes. The guard still blocks submits
-  while the operation is pending.
+  `type="button"`, so it does not submit the form, it returns to `type="submit"`
+  when the operation finishes. The guard still blocks submits while the
+  operation is pending.
 
   ## Keyboard
 
@@ -126,13 +127,14 @@ defmodule FlintUI.Base.Button do
           name: "[data-loading]",
           value: "boolean",
           description:
-            "Present when `loading` is set. The control is pending: focusable unless also hard-disabled, and non-activatable while `flint.js` is loaded. Pair it with a status region; `aria-busy` alone does not announce."
+            "Present when `loading` is set. The control is pending: focusable unless also hard-disabled, and non-activatable while `flint.js` is loaded. Pair it with a status region,
+            `aria-busy` alone does not announce."
         },
         %Meta.PartAttr{
           name: "[data-pending-submit]",
           value: "boolean",
           description:
-            "Present on a pending `type=\"submit\"` button, which renders `type=\"button\"`. Used by `flint.js` to block implicit submission."
+            "Present on a pending `type=\"submit\"` button, which renders `type=\"button\"` and therefore does not submit the form. Used by `flint.js` to block implicit submission."
         },
         %Meta.PartAttr{
           name: "aria-busy",
@@ -144,7 +146,7 @@ defmodule FlintUI.Base.Button do
           name: "aria-disabled",
           value: ~s("true"),
           description:
-            "Set while the control is pending, and on a disabled link. A pending control stays focusable."
+            "Set while the control is pending, and on a disabled link. A pending control stays focusable unless also disabled."
         },
         %Meta.PartAttr{
           name: "role",
@@ -162,7 +164,7 @@ defmodule FlintUI.Base.Button do
           name: "type",
           value: ~s("button" | "submit" | "reset"),
           description:
-            "The button type. A pending submit button renders `type=\"button\"` so it is not the form's default submit button. Rendered only for an action button."
+            "The button type. A pending submit button renders `type=\"button\"` so it does not submit the form. Rendered only for an action button."
         },
         %Meta.PartAttr{
           name: "disabled",
@@ -240,7 +242,7 @@ defmodule FlintUI.Base.Button do
   attr :loading, :boolean,
     default: false,
     doc:
-      "Whether the control is pending. Sets `aria-busy`, `aria-disabled`, and `data-loading` while keeping it focusable. `flint.js` blocks activation, always guard the server event."
+      "Whether the control is pending. Sets `aria-busy`, `aria-disabled`, and `data-loading` while keeping it focusable unless `disabled` is also set. `flint.js` blocks activation, always guard the server event."
 
   attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download

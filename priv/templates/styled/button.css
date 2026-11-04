@@ -1,6 +1,7 @@
 @layer components {
-    /* Button. Public inputs: `--fl-button-color`, `-color-content`, `-text`.
-     * Shared depth, elevation and press behavior come from `--fl-control-*`. */
+    /* Button. Public inputs: `--fl-button-color`, `-color-content`, `-text`,
+     * `-soft`, and `-soft-border`. Shared depth, elevation and press behavior
+     * come from `--fl-control-*`. */
     [data-element="button"][data-variant] {
         display: inline-flex;
         position: relative;
@@ -27,7 +28,7 @@
             transform var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    /* Leading icon/loading. */
+    /* Icons and loading indicators. */
     [data-element="button"][data-variant] > :is([data-element="icon"], [data-element="loading"]) {
         flex-shrink: 0;
         --fl-icon-size: var(--fl-control-icon-md);
@@ -292,7 +293,9 @@
 
     [data-element="button"][data-variant="link"] {
         height: auto;
-        padding: 0;
+        /* Keep the size's inline padding for the hit area; the link has no
+         * block padding, so its line box follows the text. */
+        padding-block: 0;
         background: transparent;
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
         text-decoration: underline;
@@ -300,7 +303,11 @@
     }
 
     [data-element="button"][data-variant="link"]:not([data-disabled]):not([data-loading]):hover {
-        color: color-mix(in oklab, var(--fl-button-text, var(--fl-color-inverted)) 75%, transparent);
+        color: color-mix(
+            in oklab,
+            var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted))) 75%,
+            transparent
+        );
         text-decoration-thickness: 2px;
     }
 
@@ -423,6 +430,12 @@
     [data-element="button"][data-inset][data-size="xl"] {
         margin-inline: calc(-1 * (var(--fl-control-padding-x-xl) + 1px));
         margin-block: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2));
+    }
+
+    /* A link has no block padding and no fixed height, so inset only negates
+     * its inline padding. */
+    [data-element="button"][data-variant="link"][data-inset] {
+        margin-block: 0;
     }
 
     [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="xs"] {

@@ -29,6 +29,27 @@ defmodule FlintUI.Generator do
     )
   end
 
+  @doc """
+  Returns the slots the generated wrapper exposes.
+
+  The base slots and the entry's extra slots are merged by name. The wrapper
+  always renders its own body into the base's `inner_block`, so that slot is
+  optional when the entry also offers content attributes (such as `text` or
+  `icon`). Otherwise the base contract is kept as-is.
+  """
+  def wrapper_slots(name) when is_atom(name) do
+    case Styled.get(name) do
+      nil ->
+        FlintUI.Docs.slots(name)
+
+      entry ->
+        FlintUI.Docs.slots(name)
+        |> Kernel.++(entry.slots)
+        |> Enum.uniq_by(& &1.name)
+        |> Enum.map(&optional_inner_block(&1, entry))
+    end
+  end
+
   @tokens_part "tokens.css"
   @base_part "base.css"
   @focus_part "focus.css"
@@ -304,13 +325,18 @@ defmodule FlintUI.Generator do
   end
 
   defp slot_block(entry) do
-    base = FlintUI.Docs.slots(entry.name)
-
-    base
-    |> Kernel.++(entry.slots)
-    |> Enum.uniq_by(& &1.name)
+    entry.name
+    |> wrapper_slots()
     |> Enum.map_join("\n", &slot_decl/1)
   end
+
+  # A wrapper that renders content shortcuts (text/icon) supplies the base's
+  # inner block itself, so the caller must be able to omit it.
+  defp optional_inner_block(%{name: :inner_block} = slot, %{content_attrs: [_ | _]}) do
+    Map.put(slot, :required, false)
+  end
+
+  defp optional_inner_block(slot, _entry), do: slot
 
   defp slot_decl(slot) do
     head = slot_head(slot)

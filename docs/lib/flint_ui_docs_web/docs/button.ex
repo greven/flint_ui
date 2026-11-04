@@ -18,7 +18,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         section: :usage,
         id: :variant,
         title: "Variant",
-        controls: [%{key: :variant, type: :select, default: "subtle", label: "Variant"}]
+        controls: [%{key: :variant, type: :select, default: "outline", label: "Variant"}]
       },
       %{
         tab: :styled,
@@ -31,6 +31,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       %{tab: :styled, section: :usage, id: :size, title: "Size"},
       %{tab: :styled, section: :usage, id: :square, title: "Square"},
       %{tab: :styled, section: :usage, id: :wide, title: "Wide"},
+      %{tab: :styled, section: :usage, id: :depth, title: "Depth"},
       %{
         tab: :styled,
         section: :usage,
@@ -82,6 +83,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <Components.button>Button</Components.button>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
+    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)}>
+      <Components.button text="Button" />
+    </.preview>
     """
   end
 
@@ -193,7 +197,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :size} = assigns) do
     ~H"""
     <.prose content="Use the `size` attr to change the control size, from `xs` to `xl`. Default size is md." />
-    <.preview id={@id} code={~S(<.button size="sm">Size<.button>)}>
+    <.preview id={@id} code={~S(<.button size="sm">Size</.button>)}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
       </div>
@@ -240,6 +244,22 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{section: :usage, id: :depth} = assigns) do
+    ~H"""
+    <.prose content="Set `depth` to toggle the rim light and inner line. It defaults to `true`; pass
+      `depth={false}` for a flatter control." />
+    <.prose content="Elevation shadows stay on and are controlled separately with `--fl-control-shadow`." />
+    <.preview id={@id} code={&code_depth/1}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button variant="solid" color="info">Raised</Components.button>
+        <Components.button variant="solid" color="info" depth={false}>Flat</Components.button>
+        <Components.button variant="outline">Raised</Components.button>
+        <Components.button variant="outline" depth={false}>Flat</Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :usage, id: :inset} = assigns) do
     ~H"""
     <.prose content="Set `inset` to pull the control over the padding it keeps for its hit area, so its
@@ -261,8 +281,12 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :loading} = assigns) do
     ~H"""
     <.prose content="Set `loading` to mark the button as pending." />
-    <.prose content="It stays focusable and keeps its accessible name, and `flint.js` blocks activation.
-      Always guard the server event too. Add your own indicator when you want one." />
+    <.prose content="It stays focusable unless `disabled` is also set, and keeps its accessible name.
+      `flint.js` blocks activation; always guard the server event too. Add your own indicator when
+      you want one." />
+    <.prose content="Do not pass `disabled={@loading}`: that removes the control from the focus order.
+      Do not combine it with `phx-disable-with` either, because LiveView replaces the button's
+      content and disables every button in the form while it waits." />
     <.prose content={"Announce progress in a persistent `role=\"status\"` region outside the control.
       `aria-busy` marks the control as updating, but it is not itself an announcement."} />
     <.preview id={@id} code={&code_loading/1}>
@@ -286,11 +310,11 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :disabled} = assigns) do
     ~H"""
     <.prose content="Set `disabled` to prevent activation. Action buttons use the native
-      `disabled` attribute and leave the tab order; links lose their destination but stay
+      `disabled` attribute and leave the tab order. Links lose their destination but stay
       focusable so their state can be discovered." />
-    <.prose content="`flint.js` also blocks clicks on a disabled link. Without the bundle, click
-      handlers still run, so guard them server-side." />
-    <.preview id={@id} code={~S(<.button disabled>Button</.button>)}>
+    <.prose content="`flint.js` also blocks clicks on a disabled link. Without the bundle, keyboard
+      activation still fires click handlers, so guard them server-side." />
+    <.preview id={@id} code={&code_disabled/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
@@ -298,6 +322,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
           variant={variant}
           disabled
         >{variant}</Components.button>
+
+        <Components.button href="/components" disabled>Disabled link</Components.button>
       </div>
     </.preview>
     """
@@ -319,7 +345,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
             an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide
             theming, and pass `style` to override the derived values." />
 
-    <.preview id={"#{@id}-raw"} code={&code_raw/1}>
+    <.preview {assigns} codes={&code_raw/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button color="#009966" icon="lucide-coins">Common</Components.button>
         <Components.button color="#165DFC" icon="lucide-pickaxe">Rare</Components.button>
@@ -331,7 +357,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Another way you can change the color of the button is using the exposed CSS variables, either through your stylesheets or
       using inline styles." />
 
-    <.preview {assigns} code={&code_css_vars/1}>
+    <.preview {assigns} preview_id={"#{@preview_id}-css-vars"} code={&code_css_vars/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           variant="solid"
@@ -628,6 +654,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  defp code_depth(_) do
+    """
+    <.button variant="solid" color="info">Raised</.button>
+    <.button variant="solid" color="info" depth={false}>Flat</.button>
+    <.button variant="outline">Raised</.button>
+    <.button variant="outline" depth={false}>Flat</.button>
+    """
+  end
+
   defp code_inset(_) do
     """
     <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
@@ -679,6 +714,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  defp code_disabled(_) do
+    """
+    <.button disabled>Button</.button>
+    <.button href="/components" disabled>Disabled link</.button>
+    """
+  end
+
   defp code_radius(props) do
     Snippet.tag(".button", [Snippet.attr("radius", props.radius, "md")], "Button")
   end
@@ -694,7 +736,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
     >
       <.icon name="lucide-trash" /> Delete Item
     </.button>
-    Code
     """
   end
 

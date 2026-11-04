@@ -427,7 +427,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
       install_command: (entry && entry.install) || "mix flint.add #{name}",
       styled_attributes: styled_attribute_rows(attrs, entry),
       base_attributes: base_attribute_rows(attrs),
-      merged_slots: merged_slots(slots, entry),
+      merged_slots: FlintUI.Generator.wrapper_slots(name),
       anatomy: Docs.anatomy(name),
       styled_groups: Docs.groups(name, :styled),
       base_groups: Docs.base_groups(name),
@@ -526,11 +526,6 @@ defmodule FlintUIDocsWeb.ComponentLive do
     end
   end
 
-  defp merged_slots(slots, entry) do
-    extra = if entry, do: entry.slots, else: []
-    slots ++ extra
-  end
-
   defp public_css_vars(vars) do
     Enum.reject(vars, fn var -> String.starts_with?(var.name, "--_") end)
   end
@@ -548,9 +543,22 @@ defmodule FlintUIDocsWeb.ComponentLive do
         }
       end)
 
+    attrs = FlintUI.Docs.parts_attrs(entry.name)
+
+    state_selectors =
+      attrs
+      |> Map.get(:root, [])
+      |> Enum.filter(&String.starts_with?(&1.name, "[data-"))
+      |> Enum.reject(&(&1.name in ["[data-element]", "[data-part]"]))
+      |> Enum.map(fn attr ->
+        %{
+          selector: root <> attr.name,
+          description: "Targets the component when #{attr.name} is present."
+        }
+      end)
+
     part_selectors =
-      entry.name
-      |> FlintUI.Docs.parts_attrs()
+      attrs
       |> Map.keys()
       |> Enum.reject(&(&1 == :root))
       |> Enum.map(fn part ->
@@ -562,7 +570,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
     [
       %{selector: root, description: "Targets the component root."}
-      | prop_selectors ++ part_selectors
+      | prop_selectors ++ state_selectors ++ part_selectors
     ]
   end
 end
