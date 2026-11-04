@@ -1,28 +1,36 @@
 /**
- * Pending FlintUI controls stay focusable and announced, but must not activate.
+ * Pending FlintUI controls stay focusable, but must not activate. Disabled
+ * links also keep their click handlers in the markup, so the guard blocks them
+ * too.
  *
- * The guard is installed once when the core bundle loads. It only reacts to
- * elements marked `[data-element="button"][data-loading]`, so it is opt-in per
- * control. It is progressive enhancement: server handlers must still guard,
- * because requests can bypass the button and the bundle can be absent.
+ * The guard is installed once when the core bundle loads. It is progressive
+ * enhancement: server handlers must still guard, because requests can bypass
+ * the button and the bundle can be absent.
  */
 
 const PENDING_SELECTOR = '[data-element="button"][data-loading]';
+const DISABLED_SELECTOR = '[data-element="button"][data-disabled]';
+const CLICK_SELECTOR = `${PENDING_SELECTOR}, ${DISABLED_SELECTOR}`;
 
 const PENDING_SUBMIT_SELECTOR = [
   '[data-element="button"][data-loading][type="submit"]',
   '[data-element="button"][data-loading]:not([type])',
+  '[data-element="button"][data-loading][data-pending-submit]',
 ].join(",");
 
 let installed = false;
 
-function pendingFor(target: EventTarget | null): Element | null {
+function closestFor(target: EventTarget | null, selector: string): Element | null {
   if (!(target instanceof Element)) return null;
-  return target.closest(PENDING_SELECTOR);
+  return target.closest(selector);
+}
+
+function pendingFor(target: EventTarget | null): Element | null {
+  return closestFor(target, PENDING_SELECTOR);
 }
 
 function handleClick(event: MouseEvent): void {
-  if (!pendingFor(event.target)) return;
+  if (!closestFor(event.target, CLICK_SELECTOR)) return;
   event.preventDefault();
   event.stopImmediatePropagation();
 }
@@ -32,7 +40,8 @@ function pendingSubmitter(event: SubmitEvent): Element | null {
   if (submitter) return pendingFor(submitter);
 
   // Some synthetic submits omit the submitter. In that case, only block when
-  // the form contains a pending submit button.
+  // the form contains a pending submit button, including one that rendered
+  // with `type="button"` while pending.
   return event.target instanceof Element
     ? event.target.querySelector(PENDING_SUBMIT_SELECTOR)
     : null;

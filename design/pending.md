@@ -27,6 +27,12 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
   it without the guard.
 - Progress is announced through a persistent live region or an explicit
   accessible-name change; `aria-busy` alone is not an announcement.
+- Hard-disabled links stay focusable while native-disabled action buttons do
+  not. Links have no native `disabled`, and keeping the state discoverable is
+  worth the deliberate difference.
+- A pending submit button renders `type="button"` and carries
+  `data-pending-submit`, so implicit form submission is blocked even without the
+  guard and the guard can still find the button.
 
 ### Rejected alternatives
 
@@ -54,20 +60,24 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 - `loading` on a link drops `href`/`navigate`/`patch` and keeps the link
   focusable (`role="link"`, `tabindex="0"`).
 - `disabled` remains the hard state: native `disabled` on an action button,
-  `aria-disabled` + no destination on a link.
+  `aria-disabled` + no destination on a link. The guard also blocks clicks on a
+  disabled link, because its click handlers stay in the markup.
 - A control can be both pending and disabled; the native `disabled` wins.
+- A pending `type="submit"` button renders `type="button"` and
+  `data-pending-submit`; it returns to `type="submit"` when loading clears.
 
 **Browser guard (`flint.js`).**
 
 - Installed once when the core bundle loads; no hook or DOM id needed.
-- Capture-phase `click` and `submit` on `document`; only targets
-  `[data-element="button"][data-loading]`.
+- Capture-phase `click` on `document` cancels pending and disabled buttons and
+  links.
+- Capture-phase `submit` on `document` cancels when the submitter is pending, or
+  when the submitter is absent and the form contains a pending submit button
+  (including a type-swapped one marked `data-pending-submit`).
 - Cancels activation with `preventDefault()` + `stopImmediatePropagation()` so
   LiveView's window listeners and Phoenix HTML handlers do not run.
-- For submits, checks `SubmitEvent.submitter`; falls back to a pending submit
-  button in the form when the submitter is absent.
-- Progressive enhancement: without the bundle, pending is advisory and the
-  server guard is mandatory.
+- Progressive enhancement: without the bundle, pending is advisory, disabled
+  links keep their click handlers, and the server guard is mandatory.
 
 **Server.**
 
@@ -87,7 +97,7 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
   but do not announce the same change twice.
 - Do not rely on `aria-busy` to announce; some AT defers updates inside it.
 
-### LiveView 1.1.28 notes
+### LiveView 1.2 notes
 
 - `phx-click` pushes an event, sets a ref on the clicked element, and ignores
   repeat clicks on that element until the reply (`bindClick` checks
@@ -131,6 +141,8 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 
 - [x] Button pending semantics (`aria-busy`, `aria-disabled`, `data-loading`).
 - [x] Loading links drop navigation and stay focusable.
+- [x] Disabled links drop navigation, stay focusable, and are blocked by the guard.
+- [x] Pending submit buttons render `type="button"` and `data-pending-submit`.
 - [x] Browser click/submit guard in `flint.js` with Vitest coverage.
 - [x] Button docs, moduledoc, and metadata.
 - [x] Sound guide dogfoods `loading={@saving}`.
@@ -143,8 +155,6 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 - [ ] Announce the client-known in-flight window (`phx-click-loading` /
   `phx-submit-loading`) before the server reply; only the server-known
   `loading` state is announced today.
-- [ ] Consider React Aria's `type="button"` swap for pending submit buttons so
-  implicit form submission is blocked even without the guard.
 - [ ] Consider `aria-labelledby` with a labelled spinner (Base UI / React Aria)
   as an alternative to the external status region; it depends on the spinner
   exposing progress semantics.
@@ -171,6 +181,6 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 - React Aria Button `isPending`: retains focusability, disables press/hover,
   announces the pending state.
 - WAI-ARIA Authoring Practices; MDN `aria-busy`, `aria-disabled`, `role=status`.
-- LiveView 1.1.28: `assets/js/phoenix_live_view/view.js` (`disableForm/3`,
+- LiveView 1.2: `assets/js/phoenix_live_view/view.js` (`disableForm/3`,
   `putRef/4`), `live_socket.js` (`bindClicks/0`, `bindForms/0`),
   `element_ref.js` (`undoLoading/2`).

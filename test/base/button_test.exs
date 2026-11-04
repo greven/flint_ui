@@ -22,6 +22,19 @@ defmodule FlintUI.Base.ButtonTest do
       </.button>
       """
     end
+
+    def button_with_tabindex(assigns) do
+      ~H"""
+      <.button
+        href={@href}
+        disabled={@disabled}
+        loading={@loading}
+        tabindex={@tabindex}
+      >
+        Click
+      </.button>
+      """
+    end
   end
 
   @defaults %{
@@ -69,6 +82,31 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "data-disabled") == []
       assert attr(html, "disabled") == []
       assert attr(html, "tabindex") == []
+      assert attr(html, "data-pending-submit") == []
+    end
+
+    test "a pending submit button renders as a non-submitting button" do
+      html = render(type: "submit", loading: true)
+
+      assert tag(html) == ["button"]
+      assert attr(html, "type") == ["button"]
+      assert attr(html, "data-pending-submit") == [""]
+      assert attr(html, "aria-busy") == ["true"]
+      assert attr(html, "disabled") == []
+    end
+
+    test "a ready submit button keeps its submit type" do
+      html = render(type: "submit")
+
+      assert attr(html, "type") == ["submit"]
+      assert attr(html, "data-pending-submit") == []
+    end
+
+    test "a pending reset button keeps its reset type" do
+      html = render(type: "reset", loading: true)
+
+      assert attr(html, "type") == ["reset"]
+      assert attr(html, "data-pending-submit") == []
     end
 
     test "loading and disabled render a hard-disabled pending button" do
@@ -98,6 +136,17 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "data-element") == ["button"]
       assert attr(html, "type") == []
       assert attr(html, "disabled") == []
+      assert attr(html, "role") == []
+      assert attr(html, "tabindex") == []
+      assert attr(html, "aria-disabled") == []
+      assert attr(html, "aria-busy") == []
+    end
+
+    test "an empty href renders the action button form" do
+      html = render(href: "")
+
+      assert tag(html) == ["button"]
+      assert attr(html, "href") == []
     end
 
     test "renders a LiveView navigate link" do
@@ -138,6 +187,51 @@ defmodule FlintUI.Base.ButtonTest do
       assert attr(html, "data-loading") == [""]
       assert attr(html, "data-disabled") == []
     end
+
+    test "a pending navigate link drops its LiveView navigation metadata" do
+      html = render(navigate: "/foo", loading: true)
+
+      assert tag(html) == ["a"]
+      assert attr(html, "href") == []
+      assert attr(html, "data-phx-link") == []
+      assert attr(html, "role") == ["link"]
+      assert attr(html, "tabindex") == ["0"]
+    end
+
+    test "a pending patch link drops its LiveView navigation metadata" do
+      html = render(patch: "/foo", loading: true)
+
+      assert tag(html) == ["a"]
+      assert attr(html, "href") == []
+      assert attr(html, "data-phx-link") == []
+      assert attr(html, "role") == ["link"]
+      assert attr(html, "tabindex") == ["0"]
+    end
+
+    test "a disabled or pending link keeps a caller-supplied tabindex exactly once" do
+      assigns = %{href: "/foo", disabled: true, loading: false, tabindex: "-1"}
+      html = render_component(&TestComponent.button_with_tabindex/1, assigns)
+
+      assert attr(LazyHTML.from_fragment(html), "tabindex") == ["-1"]
+
+      assigns = %{href: "/foo", disabled: false, loading: true, tabindex: "-1"}
+      html = render_component(&TestComponent.button_with_tabindex/1, assigns)
+
+      assert attr(LazyHTML.from_fragment(html), "tabindex") == ["-1"]
+    end
+
+    test "a loading and disabled link combines both states" do
+      html = render(href: "/foo", loading: true, disabled: true)
+
+      assert tag(html) == ["a"]
+      assert attr(html, "href") == []
+      assert attr(html, "role") == ["link"]
+      assert attr(html, "tabindex") == ["0"]
+      assert attr(html, "aria-busy") == ["true"]
+      assert attr(html, "aria-disabled") == ["true"]
+      assert attr(html, "data-loading") == [""]
+      assert attr(html, "data-disabled") == [""]
+    end
   end
 
   describe "metadata" do
@@ -151,11 +245,17 @@ defmodule FlintUI.Base.ButtonTest do
 
       assert Enum.any?(parts.root, &(&1.name == "aria-busy"))
       assert Enum.any?(parts.root, &(&1.name == "aria-disabled"))
+      assert Enum.any?(parts.root, &(&1.name == "role"))
+      assert Enum.any?(parts.root, &(&1.name == "tabindex"))
+      assert Enum.any?(parts.root, &(&1.name == "[data-pending-submit]"))
     end
 
     test "documents keyboard interactions" do
-      assert [%FlintUI.Meta.Keyboard{keys: "Enter"}, %FlintUI.Meta.Keyboard{keys: "Space"}] =
-               FlintUI.Base.Button.keyboard()
+      assert [
+               %FlintUI.Meta.Keyboard{keys: "Tab"},
+               %FlintUI.Meta.Keyboard{keys: "Enter"},
+               %FlintUI.Meta.Keyboard{keys: "Space"}
+             ] = FlintUI.Base.Button.keyboard()
     end
   end
 end

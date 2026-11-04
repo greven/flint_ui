@@ -10,16 +10,17 @@ defmodule FlintUI.Base.Button do
 
   `loading` is a pending state, not a second disabled state. The control keeps
   `aria-busy`, `aria-disabled`, and `data-loading`, stays focusable, and keeps
-  its accessible name, but activation is ignored. FlintUI is unstyled, so add
-  an indicator yourself when you want one:
+  its accessible name, but activation is ignored while `flint.js` is loaded.
+  FlintUI is unstyled, so add an indicator yourself when you want one:
 
       <.button loading={@saving}>
         <.icon :if={@saving} name="lucide-loader-circle" class="size-4 animate-spin" />
         Save
       </.button>
 
-  Announce progress in a status region outside the control; `aria-busy` can defer
-  announcements inside it:
+  Announce progress in a status region outside the control. `aria-busy` marks
+  the control as updating and can defer announcements inside it, but it does not
+  announce the change itself:
 
       <.button loading={@saving} phx-click="save">Save</.button>
       <span role="status">{if @saving, do: "Saving…", else: ""}</span>
@@ -37,6 +38,10 @@ defmodule FlintUI.Base.Button do
   Always provide an accessible name. The content is the name in most cases, so
   prefix an icon-only button with `aria-label` or `aria-labelledby`.
 
+  Use the button form for actions and the link form for navigation. A link
+  styled as a button keeps link semantics: `Enter` activates it and `Space`
+  does not. If the control changes state, render a button instead.
+
   Action buttons render a native `<button>`, which browsers expose with an
   implicit `button` role and activate with both `Enter` and `Space`. Links
   render a native `<a>`, are exposed with an implicit `link` role, and are
@@ -44,28 +49,45 @@ defmodule FlintUI.Base.Button do
 
   When `disabled` is set on a link, the `href`, `navigate`, or `patch`
   destination is removed, the link is marked with `aria-disabled="true"`, and it
-  stays in the tab order so its state can be discovered. It cannot be activated.
+  stays in the tab order so its state can be discovered. `flint.js` also blocks
+  clicks on it. Without the bundle, click handlers still run, so guard them
+  server-side. An action button uses the native `disabled` attribute and leaves
+  the tab order; a link has no native equivalent, so this difference is
+  deliberate.
 
   `loading` is the pending state. It sets `aria-busy="true"`,
   `aria-disabled="true"`, and `data-loading`, but leaves the native `disabled`
-  attribute off. The control stays focusable and keeps its accessible name, so
-  keyboard and screen-reader users do not lose their place. The bundled
-  `flint.js` ignores activation while pending, guard the handler as well,
-  because requests can bypass the button.
+  attribute off. The control stays focusable unless `disabled` is also set, and
+  keeps its accessible name, so keyboard and screen-reader users do not lose
+  their place.
 
-  The bundled `flint.js` swallows clicks and form submits while the control is pending; always
-  guard the handler too, because the server is the authority. Do not pass `disabled={@loading}`:
-  that removes the control from the focus order. Do not combine it with `phx-disable-with` either:
-  LiveView renders the native `disabled` attribute and replaces the button's content for the
-  request, so focus and the pending indicator are lost until the reply.
+  The bundled `flint.js` blocks clicks and form submits while the control is
+  pending; always guard the handler too, because the server is the authority and
+  requests can bypass the control. Without `flint.js`, pending is advisory: the
+  control still activates, so the server guard is required.
+
+  Do not pass `disabled={@loading}`: that removes the control from the focus
+  order. Do not combine it with `phx-disable-with` either: LiveView renders the
+  native `disabled` attribute and replaces the button's content for the request,
+  so focus and the pending indicator are lost until the reply. LiveView also
+  disables every button in a form during `phx-submit` while it waits for the
+  reply, so a focused submit button loses focus for that window even without
+  `phx-disable-with`. Use `phx-click` with a server guard when focus
+  preservation matters.
 
   A pending link drops its `href`, `navigate`, or `patch` destination and stays
-  in the tab order, like a disabled link.
+  in the tab order, like a disabled link. A pending submit button renders
+  `type="button"` so it is not the form's default submit button; it returns to
+  `type="submit"` when the operation finishes. The guard still blocks submits
+  while the operation is pending.
 
   ## Keyboard
 
-  - `Enter` - activates a button or a link. Ignored while pending.
-  - `Space` - activates a button. Has no effect on a link. Ignored while pending.
+  - `Tab` - moves focus to the control. A disabled link stays in the tab order;
+    a disabled action button does not.
+  - `Enter` - activates an action button or a link. Ignored while pending.
+  - `Space` - activates an action button. Does not activate a link; the browser
+    scrolls the page. Ignored while pending.
   """
 
   use FlintUI.Component
@@ -98,18 +120,25 @@ defmodule FlintUI.Base.Button do
           name: "[data-disabled]",
           value: "boolean",
           description:
-            "Present when the button cannot be interacted with because `disabled` is set."
+            "Present when `disabled` is set. Action buttons also render the native `disabled` attribute; links stay focusable."
         },
         %Meta.PartAttr{
           name: "[data-loading]",
           value: "boolean",
           description:
-            "Present when `loading` is set. The control is pending: focusable, non-activatable, and announced."
+            "Present when `loading` is set. The control is pending: focusable unless also hard-disabled, and non-activatable while `flint.js` is loaded. Pair it with a status region; `aria-busy` alone does not announce."
+        },
+        %Meta.PartAttr{
+          name: "[data-pending-submit]",
+          value: "boolean",
+          description:
+            "Present on a pending `type=\"submit\"` button, which renders `type=\"button\"`. Used by `flint.js` to block implicit submission."
         },
         %Meta.PartAttr{
           name: "aria-busy",
           value: ~s("true"),
-          description: "Set to `\"true\"` while `loading` is set."
+          description:
+            "Set to `\"true\"` while `loading` is set. Marks the control as updating; use a status region for the announcement."
         },
         %Meta.PartAttr{
           name: "aria-disabled",
@@ -118,9 +147,22 @@ defmodule FlintUI.Base.Button do
             "Set while the control is pending, and on a disabled link. A pending control stays focusable."
         },
         %Meta.PartAttr{
+          name: "role",
+          value: ~s("link"),
+          description:
+            "Set on a disabled or pending link. A link with no destination has no implicit link role."
+        },
+        %Meta.PartAttr{
+          name: "tabindex",
+          value: ~s("0"),
+          description:
+            "Set on a disabled or pending link so it stays focusable. Not rendered on action buttons."
+        },
+        %Meta.PartAttr{
           name: "type",
           value: ~s("button" | "submit" | "reset"),
-          description: "The button type. Rendered only for an action button."
+          description:
+            "The button type. A pending submit button renders `type=\"button\"` so it is not the form's default submit button. Rendered only for an action button."
         },
         %Meta.PartAttr{
           name: "disabled",
@@ -135,12 +177,18 @@ defmodule FlintUI.Base.Button do
   def keyboard do
     [
       %Meta.Keyboard{
+        keys: "Tab",
+        description:
+          "Moves focus to the control. A disabled link stays in the tab order, a disabled action button does not."
+      },
+      %Meta.Keyboard{
         keys: "Enter",
         description: "Activates an action button or a link. Ignored while pending."
       },
       %Meta.Keyboard{
         keys: "Space",
-        description: "Activates an action button. Has no effect on a link. Ignored while pending."
+        description:
+          "Activates an action button. Does not activate a link; the browser scrolls the page. Ignored while pending."
       }
     ]
   end
@@ -150,17 +198,28 @@ defmodule FlintUI.Base.Button do
     disabled? = disabled?(assigns)
     link? = link?(assigns)
     pending? = assigns.loading
+    fallback_link? = link? && (disabled? || pending?)
+    pending_submit? = pending? && !link? && assigns.type == "submit"
 
-    %{
-      root: %{
-        "data-element" => "button",
-        "data-part" => "root",
-        "data-disabled" => disabled?,
-        "data-loading" => pending?,
-        "aria-busy" => pending? && "true",
-        "aria-disabled" => (pending? || (link? && disabled?)) && "true"
-      }
+    root = %{
+      "data-element" => "button",
+      "data-part" => "root",
+      "data-disabled" => disabled?,
+      "data-loading" => pending?,
+      "aria-busy" => pending? && "true",
+      "aria-disabled" => (pending? || (link? && disabled?)) && "true"
     }
+
+    root =
+      if fallback_link? do
+        Map.merge(root, %{"role" => "link", "tabindex" => "0"})
+      else
+        root
+      end
+
+    root = if pending_submit?, do: Map.put(root, "data-pending-submit", true), else: root
+
+    %{root: root}
   end
 
   @doc false
@@ -170,16 +229,18 @@ defmodule FlintUI.Base.Button do
   attr :type, :string,
     default: "button",
     values: ~w(button submit reset),
-    doc: "The button type, defaults to `button`. Rendered only for an action button."
+    doc:
+      "The button type, defaults to `button`. A pending submit button renders `type=\"button\"` until loading clears. Rendered only for an action button."
 
   attr :disabled, :boolean,
     default: false,
-    doc: "Whether the button should ignore user interaction."
+    doc:
+      "Whether the control is disabled. A button renders the native `disabled` attribute, a link loses its destination and stays focusable."
 
   attr :loading, :boolean,
     default: false,
     doc:
-      "Whether the control is pending. Sets `aria-busy`, `aria-disabled`, and `data-loading` while keeping it focusable; activation is ignored."
+      "Whether the control is pending. Sets `aria-busy`, `aria-disabled`, and `data-loading` while keeping it focusable. `flint.js` blocks activation, always guard the server event."
 
   attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download
@@ -187,7 +248,7 @@ defmodule FlintUI.Base.Button do
                 formmethod formnovalidate formtarget popovertarget autofocus
                 command commandfor),
     doc:
-      "Additional HTML attributes. Pass `href`, `navigate`, or `patch` to render a link instead of a button."
+      "Additional HTML attributes. Pass `href`, `navigate`, or `patch` to render a link instead of a button. Use the link form for navigation and the button form for actions."
 
   slot :inner_block, required: true, doc: "The content of the button."
 
@@ -198,7 +259,7 @@ defmodule FlintUI.Base.Button do
         assigns = assign(assigns, :rest, drop_navigation(assigns.rest))
 
         ~H"""
-        <a {@rest} role="link" tabindex="0" {@flint_parts[:root]}>
+        <a {@rest} {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </a>
         """
@@ -209,22 +270,41 @@ defmodule FlintUI.Base.Button do
         """
 
       true ->
+        assigns = assign(assigns, :rest, drop_navigation(assigns.rest))
+
         ~H"""
-        <button {@rest} type={@type} disabled={@disabled} {@flint_parts[:root]}>
+        <button {@rest} type={button_type(assigns)} disabled={@disabled} {@flint_parts[:root]}>
           {render_slot(@inner_block)}
         </button>
         """
     end
   end
 
+  defp button_type(%{loading: true, type: "submit"}), do: "button"
+  defp button_type(assigns), do: assigns.type
+
   defp link?(assigns) do
     rest = Map.get(assigns, :rest, %{})
-    rest[:href] || rest[:navigate] || rest[:patch]
+    Enum.any?([:href, :navigate, :patch], &present?(rest[&1]))
   end
+
+  defp present?(value), do: value not in [nil, false, ""]
 
   defp disabled?(assigns), do: assigns.disabled
 
   defp drop_navigation(rest) do
-    Map.drop(rest, [:href, :navigate, :patch, :replace, :method, :csrf_token])
+    Map.drop(rest, [
+      :href,
+      :navigate,
+      :patch,
+      :replace,
+      :method,
+      :csrf_token,
+      :target,
+      :rel,
+      :download,
+      :hreflang,
+      :referrerpolicy
+    ])
   end
 end

@@ -66,6 +66,30 @@ describe("pending guard", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
+  it("cancels a click on a disabled link", () => {
+    document.body.innerHTML = `
+      <a data-element="button" data-disabled role="link" tabindex="0" phx-click="delete">Delete</a>
+    `;
+    const { spy, controller } = listen(document, "click");
+
+    const event = click(document.querySelector("a")!);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
+    controller.abort();
+  });
+
+  it("allows a click on an active link", () => {
+    document.body.innerHTML = `<a data-element="button" href="/x">Settings</a>`;
+    const { spy, controller } = listen(document, "click");
+
+    const event = click(document.querySelector("a")!);
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(spy).toHaveBeenCalledTimes(1);
+    controller.abort();
+  });
+
   it("cancels a submit whose submitter is pending", () => {
     document.body.innerHTML = `
       <form id="form">
@@ -104,6 +128,19 @@ describe("pending guard", () => {
     document.body.innerHTML = `
       <form id="form">
         <button type="submit" data-element="button" data-loading>Save</button>
+      </form>
+    `;
+    const form = document.getElementById("form") as HTMLFormElement;
+
+    const event = submit(form);
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("cancels a submit when the pending submit button rendered as type=button", () => {
+    document.body.innerHTML = `
+      <form id="form">
+        <button type="button" data-element="button" data-loading data-pending-submit>Save</button>
       </form>
     `;
     const form = document.getElementById("form") as HTMLFormElement;

@@ -261,7 +261,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :usage, id: :loading} = assigns) do
     ~H"""
     <.prose content="Set `loading` to mark the button as pending." />
-    <.prose content="It stays focusable and keeps its accessible name, but activation is ignored, so add your own indicator." />
+    <.prose content="It stays focusable and keeps its accessible name, and `flint.js` blocks activation.
+      Always guard the server event too. Add your own indicator when you want one." />
+    <.prose content={"Announce progress in a persistent `role=\"status\"` region outside the control.
+      `aria-busy` marks the control as updating, but it is not itself an announcement."} />
     <.preview id={@id} code={&code_loading/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button loading>
@@ -282,8 +285,12 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :disabled} = assigns) do
     ~H"""
-    <.prose content="Set `disabled` to prevent the button from being activated." />
-    <.preview id={@id} code={~S(<.button disabled>Button<.button>)}>
+    <.prose content="Set `disabled` to prevent activation. Action buttons use the native
+      `disabled` attribute and leave the tab order; links lose their destination but stay
+      focusable so their state can be discovered." />
+    <.prose content="`flint.js` also blocks clicks on a disabled link. Without the bundle, click
+      handlers still run, so guard them server-side." />
+    <.preview id={@id} code={~S(<.button disabled>Button</.button>)}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
@@ -379,6 +386,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
   def render_section(%{section: :examples, id: :as_link} = assigns) do
     ~H"""
     <.prose content="To render the button as a link, set `href`, `navigate`, or `patch` as an attribute." />
+    <.prose content="Use the link form for navigation and the button form for actions. A link keeps
+      link semantics: `Enter` activates it and `Space` does not. If the control changes state, render
+      a button instead." />
     <.preview id={@id} code={&code_as_link/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button navigate="/components">Navigate</Components.button>
@@ -396,10 +406,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :examples, id: :interactions} = assigns) do
     ~H"""
-    <.prose content="The loading can be more than a disabled click: slide the label out, reveal an
+    <.prose content={"The loading can be more than a disabled click: slide the label out, reveal an
       indicator, and let the sound API mark the gesture and the result. The control keeps its
-      accessible name while pending, and `aria-busy` tells assistive technology to wait for the
-      outcome." />
+      accessible name while pending. `aria-busy` marks it as updating; the `role=\"status\"` region
+      carries the announcement."} />
 
     <.prose content="The demo simulates the round trip in the browser so you can try it here. In
       your app, drive the same `data-loading` hook with `loading={@saving}` and push the pending and
