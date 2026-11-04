@@ -256,8 +256,12 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         line-height: 1.75;
     }
 
+    .docs-prose + .docs-prose {
+        margin-top: 0.375em;
+    }
+
     .docs-prose a {
-        color: inherit;
+        color: var(--fl-color-primary);
         text-decoration: underline;
         text-decoration-thickness: 1px;
         text-underline-offset: 4px;

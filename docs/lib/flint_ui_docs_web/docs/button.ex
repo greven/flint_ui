@@ -58,6 +58,12 @@ defmodule FlintUIDocsWeb.Docs.Button do
         section: :examples,
         id: :destructive_confirmation,
         title: "Destructive Confirmation"
+      },
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :interactions,
+        title: "Interactions"
       }
     ]
   end
@@ -158,19 +164,19 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview id={@id} code={&code_icon/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button icon="lucide-save">Save</Components.button>
-        <Components.button variant="soft">
-          <:trailing>
-            <.icon name="lucide-arrow-right" />
-          </:trailing>
-          Next
-        </Components.button>
+        <Components.button variant="solid" color="error" icon="lucide-trash">Delete</Components.button>
         <Components.button variant="solid">
           <:leading>
             <.icon name="lucide-plus" />
           </:leading>
           New
         </Components.button>
-        <Components.button variant="solid" color="error" icon="lucide-trash">Delete</Components.button>
+        <Components.button variant="soft">
+          <:trailing>
+            <.icon name="lucide-arrow-right" />
+          </:trailing>
+          Next
+        </Components.button>
         <Components.button icon="lucide-ellipsis" aria-label="More" square />
         <Components.button variant="ghost" aria-label="Close" icon="lucide-x" square />
       </div>
@@ -365,6 +371,156 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{section: :examples, id: :interactions} = assigns) do
+    ~H"""
+    <.prose content="Loading can be more than a disabled click: slide the label out, reveal an
+      indicator, and let the sound API mark the gesture and the result. The control keeps its
+      accessible name while pending, and `aria-busy` tells assistive technology to wait for the
+      outcome." />
+
+    <.prose content="The demo simulates the round trip in the browser so you can try it here. In
+      your app, drive the same `data-loading` hook with `loading={@saving}` and push the pending and
+      success cues from LiveView. Press and release sounds come from the `data-sound-*`
+      attributes. For more details on adding sound, see the [Sounds guide](/guides/sound)." />
+
+    <.prose content="This example uses TailwindCSS but the same can be achieved using plain CSS." />
+
+    <.preview id={@id} code={&code_interactions/1}>
+      <div
+        id="button-interactions-demo"
+        phx-hook=".ButtonInteractions"
+        phx-update="ignore"
+      >
+        <Components.button
+          id="button-interactions-save"
+          variant="solid"
+          color="info"
+          class="relative overflow-hidden"
+          data-sound-press="press"
+          data-sound-release="release"
+          data-sound="tap"
+        >
+          <span class="block transition-transform duration-300 ease-out in-data-loading:translate-y-[calc(100%+1rem)] motion-reduce:transition-none">
+            Save changes
+          </span>
+          <span
+            aria-hidden="true"
+            class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity duration-300 ease-out in-data-loading:opacity-100 motion-reduce:transition-none"
+          >
+            <Components.loading variant="ring-dash" class="size-4" /> Saving
+          </span>
+        </Components.button>
+
+        <span id="button-interactions-status" role="status" class="sr-only"></span>
+      </div>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".ButtonInteractions">
+        export default {
+          mounted() {
+            this.button = this.el.querySelector("button")
+            this.status = this.el.querySelector("[role='status']")
+            this.onClick = () => this.save()
+            this.button.addEventListener("click", this.onClick)
+          },
+          save() {
+            if (this.button.hasAttribute("data-loading")) return
+
+            this.setPending(true)
+            this.play("loading")
+
+            this.timer = setTimeout(() => {
+              this.setPending(false)
+              this.status.textContent = "Saved changes"
+              this.play("success", { space: 1.2 })
+            }, 1400)
+          },
+          setPending(pending) {
+            this.button.toggleAttribute("data-loading", pending)
+
+            if (pending) {
+              this.button.setAttribute("aria-busy", "true")
+              this.button.setAttribute("aria-disabled", "true")
+              this.status.textContent = "Saving changes"
+            } else {
+              this.button.removeAttribute("aria-busy")
+              this.button.removeAttribute("aria-disabled")
+            }
+          },
+          play(name, options = {}) {
+            this.el.dispatchEvent(
+              new CustomEvent("fl:sound", {
+                detail: Object.assign({ name: name }, options),
+                bubbles: true
+              })
+            )
+          },
+          destroyed() {
+            clearTimeout(this.timer)
+            this.button.removeEventListener("click", this.onClick)
+          }
+        }
+      </script>
+    </.preview>
+    """
+  end
+
+  defp code_interactions(_) do
+    [
+      %{
+        label: "HEEx",
+        code: """
+        <.button
+          variant="solid"
+          color="info"
+          class="relative overflow-hidden"
+          loading={@saving}
+          phx-click="save"
+          data-sound-press="press"
+          data-sound-release="release"
+          data-sound="tap"
+        >
+          <span class="block transition-transform duration-300 ease-out in-data-loading:translate-y-[calc(100%+1rem)] motion-reduce:transition-none">
+            Save changes
+          </span>
+
+          <span
+            aria-hidden="true"
+            class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity duration-300 ease-out in-data-loading:opacity-100 motion-reduce:transition-none"
+          >
+            <.loading variant="ring-dash" class="size-4" />
+            Saving
+          </span>
+        </.button>
+
+        <span role="status" class="sr-only">
+          {if @saving, do: "Saving changes", else: @saved && "Saved changes"}
+        </span>
+        """
+      },
+      %{
+        label: "LiveView",
+        lang: :elixir,
+        code: """
+        def handle_event("save", _params, socket) do
+          Process.send_after(self(), :saved, 1400)
+
+          {:noreply,
+           socket
+           |> assign(saving: true, saved: false)
+           |> push_event("fl:sound", %{name: "loading"})}
+        end
+
+        def handle_info(:saved, socket) do
+          {:noreply,
+           socket
+           |> assign(saving: false, saved: true)
+           |> push_event("fl:sound", %{name: "success", space: 1.2})}
+        end
+        """
+      }
+    ]
+  end
+
   defp code_color(props) do
     Snippet.tag(
       ".button",
@@ -443,19 +599,19 @@ defmodule FlintUIDocsWeb.Docs.Button do
   defp code_icon(_) do
     """
     <.button icon="lucide-save">Save</.button>
-    <.button variant="soft">
-      <:trailing>
-        <.icon name="lucide-arrow-right" />
-      </:trailing>
-      Next
-    </.button>
+    <.button variant="solid" color="error" icon="lucide-trash">Delete</.button>
     <.button variant="solid">
       <:leading>
         <.icon name="lucide-plus" />
       </:leading>
       New
     </.button>
-    <.button variant="solid" color="error" icon="lucide-trash">Delete</.button>
+    <.button variant="soft">
+      <:trailing>
+        <.icon name="lucide-arrow-right" />
+      </:trailing>
+      Next
+    </.button>
     <.button icon="lucide-ellipsis" aria-label="More" square />
     <.button variant="ghost" aria-label="Close" icon="lucide-x" square />
     """
