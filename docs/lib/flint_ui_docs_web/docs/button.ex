@@ -316,18 +316,30 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           variant="subtle"
-          icon="lucide-panda"
-          style="--fl-button-soft: var(--color-emerald-50); --fl-button-soft-border: var(--color-emerald-600);
-            --fl-button-text: var(--color-emerald-900); box-shadow: var(--shadow-md);"
-        >Panda</Components.button>
+          style="--fl-button-soft: linear-gradient(0.25turn, var(--color-green-100), var(--color-amber-100));
+            --fl-button-soft-border: var(--color-green-600); --fl-button-text: var(--color-green-800);
+            box-shadow: var(--shadow-md);"
+        >
+          <.icon name="lucide-rabbit" class="text-green-700 animate-bounce" /> Bunny
+        </Components.button>
 
         <Components.button
           variant="solid"
           style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
             --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
             background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));"
+          loading
         >
-          <.icon name="lucide-heart" class="text-cyan-50 animate-pulse" /> Like
+          <.icon name="lucide-heart" class="text-rose-50" />
+          <Components.loading_text variant="shimmer" text="Likes" />
+        </Components.button>
+
+        <Components.button
+          variant="solid"
+          style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+          background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));"
+        >
+          <.icon name="lucide-panda" class="text-cyan-100 animate-pulse" /> Panda
         </Components.button>
       </div>
     </.preview>
@@ -374,16 +386,27 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
     <.button
       variant="subtle"
-      icon="lucide-panda"
-      style="--fl-button-soft: var(--color-emerald-50); --fl-button-soft-border: var(--color-emerald-600);
-        --fl-button-text: var(--color-emerald-900); box-shadow: var(--shadow-md);">Panda</.button>
+      style="--fl-button-soft: linear-gradient(0.25turn, var(--color-green-100), var(--color-amber-100));
+        --fl-button-soft-border: var(--color-green-600); --fl-button-text: var(--color-green-800);
+        box-shadow: var(--shadow-md);">
+      <.icon name="lucide-rabbit" class="text-green-700 animate-bounce" /> Bunny
+    </.button>
 
     <.button
       variant="solid"
+      loading
       style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
         --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
         background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));">
-      <.icon name="lucide-heart" class="text-cyan-50 animate-pulse" /> Like
+      <.icon name="lucide-heart" class="text-rose-50" />
+      <.loading_text variant="shimmer" text="Likes" />
+    </.button>
+
+    <.button
+      variant="solid"
+      style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+      background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
+      <.icon name="lucide-panda" class="text-cyan-100 animate-pulse" /> Panda
     </.button>
     """
   end
