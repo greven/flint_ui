@@ -216,7 +216,7 @@
     [data-element="button"][data-color="neutral"] {
         --fl-button-color: var(--fl-color-inverted);
         --fl-button-color-content: var(--fl-color-text-inverted);
-        --fl-button-text: var(--fl-color-text);
+        --fl-button-text: var(--fl-color-text-toned);
         --fl-button-soft: var(--fl-color-neutral-soft);
         --fl-button-soft-border: var(--fl-color-neutral-soft-border);
     }

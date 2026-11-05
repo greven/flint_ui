@@ -28,7 +28,7 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:variant, :string,
-    values: ~w(outline solid subtle soft dashed ghost link dot),
+    values: ~w(solid soft subtle outline dashed ghost dot),
     default: "subtle",
     doc: "The visual emphasis of the badge."
   )
@@ -132,7 +132,7 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:variant, :string,
-    values: ~w(solid subtle soft outline dashed ghost link),
+    values: ~w(solid soft subtle outline dashed ghost link),
     default: "outline",
     doc: "The visual emphasis of the button."
   )
@@ -386,7 +386,7 @@ defmodule FlintUIDocsWeb.Components do
   the theme targets. Headless behavior comes from `FlintUI.toggle`.
   """
   attr(:variant, :string,
-    values: ~w(solid subtle outline ghost dashed),
+    values: ~w(solid subtle outline dashed ghost),
     default: "solid",
     doc: "How the pressed state is emphasized."
   )

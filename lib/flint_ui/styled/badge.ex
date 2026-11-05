@@ -18,7 +18,7 @@ defmodule FlintUI.Styled.Badge do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "soft", "subtle", "outline", "dashed", "ghost", "link", "dot"],
+          values: ["solid", "soft", "subtle", "outline", "dashed", "ghost", "dot"],
           default: "subtle",
           doc: "The visual emphasis of the badge."
         ),
@@ -91,7 +91,7 @@ defmodule FlintUI.Styled.Badge do
           name: "--fl-badge-text",
           default: "var(--fl-badge-color)",
           doc:
-            "The label color on tinted, bordered, ghost, and link variants; it maps to the role's `-text` token."
+            "The label color on tinted, bordered, and ghost variants; it maps to the role's `-text` token."
         ),
         Var.new(
           name: "--fl-badge-soft",

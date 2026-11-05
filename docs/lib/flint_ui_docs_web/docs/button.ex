@@ -117,10 +117,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.preview id={"#{@id}-grid"}>
       <div class="overflow-x-auto py-1">
-        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
+        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-4">
           <div></div>
           <span
-            :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
+            :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -131,7 +131,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
+              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
               variant={variant}
               color={color}
             >
@@ -146,10 +146,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.preview id={"#{@id}-brand"}>
       <div class="overflow-x-auto py-1">
-        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
+        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-4">
           <div></div>
           <span
-            :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
+            :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -160,7 +160,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
+              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
               variant={variant}
               color={color}
             >
@@ -345,7 +345,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview id={@id} code={&code_disabled/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
-          :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
+          :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
           class="capitalize"
           variant={variant}
           disabled

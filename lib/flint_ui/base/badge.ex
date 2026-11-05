@@ -5,7 +5,7 @@ defmodule FlintUI.Base.Badge do
   ## Examples
 
       <.badge>New</.badge>
-      <.badge href={~p"/releases"} variant="link">v1.2.0</.badge>
+      <.badge href={~p"/releases"}>v1.2.0</.badge>
 
   Pass `as` to choose the root element. It defaults to `span`, so a badge can sit
   inside a paragraph, heading, or table cell; use `as="div"` when you need a

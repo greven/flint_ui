@@ -80,7 +80,7 @@
     [data-element="badge"][data-color="neutral"] {
         --fl-badge-color: var(--fl-color-inverted);
         --fl-badge-color-content: var(--fl-color-text-inverted);
-        --fl-badge-text: var(--fl-color-text);
+        --fl-badge-text: var(--fl-color-text-toned);
         --fl-badge-soft: var(--fl-color-neutral-soft);
         --fl-badge-soft-border: var(--fl-color-neutral-soft-border);
     }
@@ -178,35 +178,35 @@
      * scale. Inline padding is tighter than a control's. */
     [data-element="badge"][data-size="xs"] {
         height: var(--fl-badge-height-xs);
-        padding-inline: calc(var(--fl-spacing) * 1.5);
+        padding-inline: calc(var(--fl-spacing) * 1);
         gap: var(--fl-spacing-xs);
         font-size: 0.625rem;
     }
 
     [data-element="badge"][data-size="sm"] {
         height: var(--fl-badge-height-sm);
-        padding-inline: var(--fl-spacing-sm);
+        padding-inline: calc(var(--fl-spacing) * 1.25);
         gap: calc(var(--fl-spacing) * 1.5);
         font-size: var(--fl-control-font-size-xs);
     }
 
     [data-element="badge"][data-size="md"] {
         height: var(--fl-badge-height-md);
-        padding-inline: var(--fl-spacing-sm);
+        padding-inline: calc(var(--fl-spacing) * 1.5);
         gap: calc(var(--fl-spacing) * 1.5);
         font-size: var(--fl-control-font-size-sm);
     }
 
     [data-element="badge"][data-size="lg"] {
         height: var(--fl-badge-height-lg);
-        padding-inline: calc(var(--fl-spacing) * 2.5);
+        padding-inline: calc(var(--fl-spacing) * 2);
         gap: calc(var(--fl-spacing) * 1.5);
         font-size: var(--fl-control-font-size-md);
     }
 
     [data-element="badge"][data-size="xl"] {
         height: var(--fl-badge-height-xl);
-        padding-inline: var(--fl-spacing-md);
+        padding-inline: calc(var(--fl-spacing) * 2.5);
         gap: var(--fl-spacing-sm);
         font-size: var(--fl-control-font-size-xl);
     }
@@ -264,28 +264,28 @@
     }
 
     /* Inset: pull the box over its padding so the label lines up with
-     * surrounding content. Link badges are plain text, so they are skipped. */
-    [data-element="badge"][data-inset]:not([data-variant="link"])[data-size="xs"] {
+     * surrounding content. */
+    [data-element="badge"][data-inset][data-size="xs"] {
         margin-inline: calc(-1 * (var(--fl-spacing) * 1.5 + 1px));
         margin-block: calc(-1 * ((var(--fl-badge-height-xs) - 1em) / 2));
     }
 
-    [data-element="badge"][data-inset]:not([data-variant="link"])[data-size="sm"] {
+    [data-element="badge"][data-inset][data-size="sm"] {
         margin-inline: calc(-1 * (var(--fl-spacing-sm) + 1px));
         margin-block: calc(-1 * ((var(--fl-badge-height-sm) - 1em) / 2));
     }
 
-    [data-element="badge"][data-inset]:not([data-variant="link"])[data-size="md"] {
+    [data-element="badge"][data-inset][data-size="md"] {
         margin-inline: calc(-1 * (var(--fl-spacing-sm) + 1px));
         margin-block: calc(-1 * ((var(--fl-badge-height-md) - 1em) / 2));
     }
 
-    [data-element="badge"][data-inset]:not([data-variant="link"])[data-size="lg"] {
+    [data-element="badge"][data-inset][data-size="lg"] {
         margin-inline: calc(-1 * (var(--fl-spacing) * 2.5 + 1px));
         margin-block: calc(-1 * ((var(--fl-badge-height-lg) - 1em) / 2));
     }
 
-    [data-element="badge"][data-inset]:not([data-variant="link"])[data-size="xl"] {
+    [data-element="badge"][data-inset][data-size="xl"] {
         margin-inline: calc(-1 * (var(--fl-spacing-md) + 1px));
         margin-block: calc(-1 * ((var(--fl-badge-height-xl) - 1em) / 2));
     }
@@ -294,18 +294,5 @@
     [data-element="badge"][data-uppercase] {
         text-transform: uppercase;
         letter-spacing: 0.05em;
-    }
-
-    /* Link: plain text, matching the button's link variant. Size rules never
-     * apply because the badge drops its box. */
-    [data-element="badge"][data-variant="link"] {
-        height: auto;
-        padding: 0;
-        margin: 0;
-        background: transparent;
-        border-color: transparent;
-        color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
-        text-decoration: underline;
-        text-underline-offset: 4px;
     }
 }

@@ -18,7 +18,7 @@ defmodule FlintUI.Styled.Toggle do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "subtle", "outline", "ghost", "dashed"],
+          values: ["solid", "subtle", "outline", "dashed", "ghost"],
           default: "solid",
           doc: "How the pressed state is emphasized."
         ),
