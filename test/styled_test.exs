@@ -120,6 +120,7 @@ defmodule FlintUI.StyledTest do
              radius: "data-radius",
              square: "data-square",
              wide: "data-wide",
+             justify: "data-justify",
              depth: "data-depth",
              inset: "data-inset"
            }

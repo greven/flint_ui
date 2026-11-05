@@ -57,6 +57,13 @@ defmodule FlintUI.Styled.Button do
           doc: "Whether the button fills the width of its container."
         ),
         Prop.new(
+          name: :justify,
+          values: ["start", "center", "end", "between"],
+          default: "center",
+          doc:
+            "Where the content sits when the button is wider than its content. `between` pushes the leading and trailing content to the edges."
+        ),
+        Prop.new(
           name: :depth,
           values: [true, false],
           default: true,

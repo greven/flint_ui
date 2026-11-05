@@ -31,6 +31,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
       %{tab: :styled, section: :usage, id: :size, title: "Size"},
       %{tab: :styled, section: :usage, id: :square, title: "Square"},
       %{tab: :styled, section: :usage, id: :wide, title: "Wide"},
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :justify,
+        title: "Justify",
+        controls: [%{key: :justify, type: :select, default: "center", label: "Justify"}]
+      },
       %{tab: :styled, section: :usage, id: :depth, title: "Depth"},
       %{
         tab: :styled,
@@ -244,6 +251,27 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{section: :usage, id: :justify} = assigns) do
+    ~H"""
+    <.prose content="Use `justify` to choose where the content sits when the button is wider than its content.
+      It only has an effect when the button fills its container or has a fixed width.
+      `between` pushes the leading and trailing content to the edges, which is useful for triggers and split actions." />
+    <.preview :let={props} {assigns} code={&code_justify/1}>
+      <div class="w-full max-w-lg">
+        <Components.button variant="outline" wide justify={props.justify}>
+          <:leading>
+            <Components.icon name="lucide-folder" />
+          </:leading>
+          Project settings
+          <:trailing>
+            <Components.icon name="lucide-chevron-right" />
+          </:trailing>
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :usage, id: :depth} = assigns) do
     ~H"""
     <.prose content="Set `depth` to toggle the rim light and inner line. It defaults to `true`; pass
@@ -361,6 +389,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           variant="solid"
+          radius="full"
           style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
           background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
         >
@@ -369,6 +398,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
         <Components.button
           variant="solid"
+          radius="full"
           style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
             --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
             background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));"
@@ -380,6 +410,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
         <Components.button
           variant="solid"
+          radius="full"
           style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
           background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));"
         >
@@ -622,6 +653,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
     <.button
       variant="solid"
+      radius="full"
       style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
       background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
     >
@@ -630,6 +662,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.button
       variant="solid"
+      radius="full"
       style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
         --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
         background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));" loading>
@@ -639,6 +672,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.button
       variant="solid"
+      radius="full"
       style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
       background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
       <.icon name="lucide-panda" class="text-cyan-100" /> Panda
@@ -660,6 +694,22 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <.button variant="solid" wide>Full Width</.button>
     </div>
     """
+  end
+
+  defp code_justify(props) do
+    Snippet.tag(
+      ".button",
+      ["wide", Snippet.attr("justify", props.justify, "center")],
+      """
+      <:leading>
+        <.icon name="lucide-folder" />
+      </:leading>
+      Project settings
+      <:trailing>
+        <.icon name="lucide-chevron-right" />
+      </:trailing>
+      """
+    )
   end
 
   defp code_depth(_) do

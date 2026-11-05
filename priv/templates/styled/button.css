@@ -405,6 +405,20 @@
         width: 100%;
     }
 
+    /* Justify: where the content sits when the control is wider than its
+     * content. Only visible with `wide` or a stretched/fixed width. */
+    [data-element="button"][data-justify="start"] {
+        justify-content: flex-start;
+    }
+
+    [data-element="button"][data-justify="end"] {
+        justify-content: flex-end;
+    }
+
+    [data-element="button"][data-justify="between"] {
+        justify-content: space-between;
+    }
+
     /* Inset: pull the box over the padding it keeps for its hit area so
      * the content lines up with surrounding content. */
     [data-element="button"][data-inset][data-size="xs"] {

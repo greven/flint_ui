@@ -27,6 +27,16 @@ defmodule FlintUI.Styled.ButtonTest do
         <.button icon="lucide-search" square aria-label="Search" />
         """
       end
+
+      def justified(assigns) do
+        ~H"""
+        <.button wide justify={@justify}>
+          <:leading><span id="lead">L</span></:leading>
+          Save
+          <:trailing><span id="trail">T</span></:trailing>
+        </.button>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -83,5 +93,18 @@ defmodule FlintUI.Styled.ButtonTest do
 
     assert attr(document, :button, "aria-label") == ["Search"]
     assert LazyHTML.attribute(icon(document), "class") == ["lucide-search"]
+  end
+
+  test "justify defaults to center", %{wrapper: wrapper} do
+    document = render(wrapper, :text_and_icon)
+
+    assert attr(document, :button, "data-justify") == ["center"]
+  end
+
+  test "justify maps onto its data hook alongside wide", %{wrapper: wrapper} do
+    document = render(wrapper, :justified, %{justify: "between"})
+
+    assert attr(document, :button, "data-justify") == ["between"]
+    assert attr(document, :button, "data-wide") == [""]
   end
 end

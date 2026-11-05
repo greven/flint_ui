@@ -476,6 +476,17 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "width: 100%;"
   end
 
+  test "justify buttons distribute their content within the available width", %{css: css} do
+    assert css =~
+             ~r/\[data-element="button"\]\[data-justify="start"\] \{\s*justify-content: flex-start;/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-justify="end"\] \{\s*justify-content: flex-end;/
+
+    assert css =~
+             ~r/\[data-element="button"\]\[data-justify="between"\] \{\s*justify-content: space-between;/
+  end
+
   test "square buttons keep their icon at full strength", %{css: css} do
     assert css =~
              ~r/\[data-element="button"\]\[data-variant\]:not\(\[data-square\]\)\s*>\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
