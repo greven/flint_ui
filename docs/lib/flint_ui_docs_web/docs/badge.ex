@@ -27,7 +27,6 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         title: "Color",
         controls: [%{key: :color, type: :select, default: "neutral", label: "Color"}]
       },
-      %{tab: :styled, section: :usage, id: :dot, title: "Dot"},
       %{tab: :styled, section: :usage, id: :icon, title: "Icon"},
       %{tab: :styled, section: :usage, id: :size, title: "Size"},
       %{
@@ -47,6 +46,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         title: "As a Link",
         group_title: "Examples"
       },
+      %{tab: :styled, section: :examples, id: :status_dot, title: "Status Dot"},
       %{
         tab: :styled,
         section: :examples,
@@ -206,22 +206,10 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
   end
 
-  def render_section(%{section: :usage, id: :dot} = assigns) do
-    ~H"""
-    <.prose content="Use the `dot` variant for a status badge. The `color` fills the dot, while the border and text stay neutral. The dot is decorative, so keep the label meaningful and do not rely on color alone." />
-    <.preview {assigns} code={dot_code()}>
-      <div class="flex flex-wrap items-center gap-2">
-        <Components.badge variant="dot" color="success" radius="xl">Online</Components.badge>
-        <Components.badge variant="dot" color="warning" radius="xl">Pending</Components.badge>
-        <Components.badge variant="dot" color="error" radius="xl">Offline</Components.badge>
-      </div>
-    </.preview>
-    """
-  end
-
   def render_section(%{section: :examples, id: :as_link} = assigns) do
     ~H"""
-    <.prose content="Pass `href`, `navigate`, or `patch` to render the badge as a link. The badge keeps its styling and gains native link semantics: `Enter` activates it, and assistive technology announces it as a link." />
+    <.prose content="Pass `href`, `navigate`, or `patch` to render the badge as a link. The badge keeps its styling and gains native link semantics: `Enter` activates it,
+      and assistive technology announces it as a link." />
     <.prose content="Use the link form for navigation. Keep a plain badge for labels and statuses that only describe something." />
     <.preview {assigns} code={&code_as_link/1}>
       <div class="flex flex-wrap items-center gap-3">
@@ -241,37 +229,39 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
   end
 
-  def render_section(%{section: :examples, id: :custom_color} = assigns) do
+  def render_section(%{section: :examples, id: :status_dot} = assigns) do
     ~H"""
-    <.prose content="You can customize the `color` of a badge using raw CSS color for a one-off accent or a value that comes from data. The best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it. Raw colors are an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide theming, and pass `style` to override the derived values." />
-
-    <.preview {assigns} code={&code_raw/1}>
-      <div class="flex flex-wrap items-center gap-3">
-        <Components.badge variant="solid" color="#009966">Common</Components.badge>
-        <Components.badge variant="solid" color="#165DFC">Rare</Components.badge>
-        <Components.badge variant="solid" color="#7007E7">Epic</Components.badge>
-        <Components.badge variant="solid" color="#FE9A00">Legendary</Components.badge>
+    <.prose content="Use the `dot` variant for a status badge. The `color` fills the dot, while the border and text stay neutral. The dot is decorative, so keep
+      the label meaningful and do not rely on color alone." />
+    <.preview {assigns} code={dot_code()}>
+      <div class="flex flex-wrap items-center gap-2">
+        <Components.badge variant="dot" color="success" radius="xl">Online</Components.badge>
+        <Components.badge variant="dot" color="warning" radius="xl">Pending</Components.badge>
+        <Components.badge variant="dot" color="error" radius="xl">Offline</Components.badge>
       </div>
     </.preview>
+    """
+  end
 
+  def render_section(%{section: :examples, id: :custom_color} = assigns) do
+    ~H"""
+    <.prose content="You can customize the `color` of a badge using raw CSS color for a one-off accent or a value that comes from data." />
+    <.prose content="The best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it.
+      Raw colors are an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide theming,
+      and pass `style` to override the derived values." />
     <.prose content="You can also override the exposed CSS variables directly, either in your stylesheet or with inline styles." />
 
-    <.preview {assigns} preview_id={"#{@preview_id}-css-vars"} code={&code_css_vars/1}>
+    <.preview {assigns} code={&code_raw/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge
-          variant="solid"
-          radius="full"
-          style="--fl-badge-color: var(--color-violet-700); --fl-badge-color-content: white; background: linear-gradient(0.25turn, var(--color-violet-500), var(--color-fuchsia-500));"
-        >
-          New
-        </Components.badge>
+        <Components.badge variant="solid" color="#165DFC">J'aime le Bleu</Components.badge>
 
         <Components.badge
           variant="solid"
           radius="full"
-          style="--fl-badge-color: var(--color-teal-700); --fl-badge-color-content: white; background: linear-gradient(0.25turn, var(--color-teal-500), var(--color-cyan-500));"
+          style="--fl-badge-color: var(--color-violet-700);  --fl-badge-color-content: white;
+            background: linear-gradient(0.25turn, var(--color-violet-500), var(--color-fuchsia-500));"
         >
-          Live
+          Fancy Badge
         </Components.badge>
       </div>
     </.preview>
@@ -370,33 +360,11 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_raw(_) do
     """
-    <.badge variant="solid" color="#009966">Common</.badge>
-    <.badge variant="solid" color="#165DFC">Rare</.badge>
-    <.badge variant="solid" color="#7007E7">Epic</.badge>
-    <.badge variant="solid" color="#FE9A00">Legendary</.badge>
-    """
-    |> String.trim()
-  end
-
-  defp code_css_vars(_) do
-    """
-    <.badge
-      variant="solid"
-      radius="full"
-      style="--fl-badge-color: var(--color-violet-700); --fl-badge-color-content: white;
+    <.badge variant="solid" color="#165DFC">J'aime le Bleu</.badge>
+    <.badge variant="solid" radius="full"
+      style="--fl-badge-color: var(--color-violet-700);  --fl-badge-color-content: white;
       background: linear-gradient(0.25turn, var(--color-violet-500), var(--color-fuchsia-500));"
-    >
-      New
-    </.badge>
-
-    <.badge
-      variant="solid"
-      radius="full"
-      style="--fl-badge-color: var(--color-teal-700); --fl-badge-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-teal-500), var(--color-cyan-500));"
-    >
-      Live
-    </.badge>
+    >Fancy Badge</.badge>
     """
     |> String.trim()
   end

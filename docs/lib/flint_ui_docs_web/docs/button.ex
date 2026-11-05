@@ -368,10 +368,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :examples, id: :custom_color} = assigns) do
     ~H"""
-    <.prose content="You can customize the `color` of a button using raw CSS color for a one-off accent or a value that comes from data. The
-            best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it. Raw colors are
-            an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide
-            theming, and pass `style` to override the derived values." />
+    <.prose content="You can customize the `color` of a button using raw CSS color for a one-off accent or a value that comes from data." />
+    <.prose content="The best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it.
+        Raw colors are an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide
+        theming, and pass `style` to override the derived values." />
 
     <.preview {assigns} codes={&code_raw/1}>
       <div class="flex flex-wrap items-center gap-3">
@@ -385,7 +385,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Another way you can change the color of the button is using the exposed CSS variables, either through your stylesheets or
       using inline styles." />
 
-    <.preview {assigns} preview_id={"#{@preview_id}-css-vars"} code={&code_css_vars/1}>
+    <.preview {assigns} preview_id={"#{@preview_id}-css-vars"} code={&code_css_vars/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           variant="solid"
@@ -475,7 +475,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.prose content="This example uses TailwindCSS but the same can be achieved using plain CSS." />
 
-    <.preview {assigns} code={&code_interactions/1}>
+    <.preview {assigns} code={&code_interactions/1} collapsed>
       <div
         id="button-interactions-demo"
         phx-hook=".ButtonInteractions"
