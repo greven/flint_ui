@@ -119,7 +119,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Icons are decorative. Keep the badge's text meaningful on its own instead of relying on the icon to carry the state." />
     <.preview id={@id} code={&code_icon/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge icon="lucide-sparkles">New</Components.badge>
+        <Components.badge color="success" icon="lucide-badge-check">
+          Verified
+        </Components.badge>
+
+        <Components.badge variant="solid" color="neutral" icon="lucide-sparkles">
+          New
+        </Components.badge>
         <Components.badge variant="solid" color="success" icon="lucide-check">
           Passed
         </Components.badge>
@@ -127,9 +133,9 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           <:leading>
             <Components.icon name="lucide-clock" />
           </:leading>
-          In progress
+          Waiting
         </Components.badge>
-        <Components.badge variant="subtle" color="primary">
+        <Components.badge variant="solid" color="primary">
           Synced
           <:trailing>
             <Components.icon name="lucide-cloud" />
@@ -164,7 +170,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Set `wide` to fill the width of the surrounding container. The content stays centered." />
     <.preview id={@id} code={&code_wide/1}>
-      <div class="w-full max-w-lg">
+      <div class="w-full max-w-sm">
         <Components.badge variant="solid" color="info" wide>Full width</Components.badge>
       </div>
     </.preview>

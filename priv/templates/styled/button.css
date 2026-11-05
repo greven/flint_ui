@@ -265,7 +265,7 @@
                 var(--fl-color-surface)
             )
         );
-        background: var(--fl-color-surface);
+        background: transparent;
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
@@ -287,7 +287,7 @@
                 var(--fl-color-surface)
             )
         );
-        background: var(--fl-color-surface);
+        background: transparent;
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
