@@ -25,7 +25,7 @@ defmodule FlintUI.Styled.TabsTest do
           color="primary"
           size="lg"
           grow
-          align="spaced"
+          justify="between"
           class="extra"
           data-role="test"
         >
@@ -78,7 +78,7 @@ defmodule FlintUI.Styled.TabsTest do
     assert attr(document, :tabs, "data-variant") == ["outlined"]
     assert attr(document, :tabs, "data-color") == ["neutral"]
     assert attr(document, :tabs, "data-size") == ["md"]
-    assert attr(document, :tabs, "data-align") == ["start"]
+    assert attr(document, :tabs, "data-justify") == ["start"]
     assert attr(document, :tabs, "data-grow") == []
     assert count_part(document, "tab") == 2
     assert count_part(document, "panel") == 2
@@ -93,7 +93,7 @@ defmodule FlintUI.Styled.TabsTest do
     assert attr(document, :tabs, "data-color") == ["primary"]
     assert attr(document, :tabs, "data-size") == ["lg"]
     assert attr(document, :tabs, "data-grow") == [""]
-    assert attr(document, :tabs, "data-align") == ["spaced"]
+    assert attr(document, :tabs, "data-justify") == ["between"]
     assert attr(document, :tabs, "data-value") == ["billing"]
     assert attr(document, :tabs, "class") == ["extra"]
     assert attr(document, :tabs, "data-role") == ["test"]

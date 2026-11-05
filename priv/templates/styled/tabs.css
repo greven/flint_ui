@@ -55,21 +55,21 @@
         flex: 1;
     }
 
-    /* Layout: shared width and horizontal alignment. Overflow overrides grow
-     * later so a scrollable strip keeps its intrinsic tab widths. */
+    /* Layout: shared width and horizontal distribution. Overflow overrides
+     * grow later so a scrollable strip keeps its intrinsic tab widths. */
     [data-element="tabs"][data-grow][data-orientation="horizontal"] > [data-part="tablist"] > [data-part="tab"] {
         flex: 1 1 0;
     }
 
-    [data-element="tabs"][data-align="center"][data-orientation="horizontal"] > [data-part="tablist"] {
+    [data-element="tabs"][data-justify="center"][data-orientation="horizontal"] > [data-part="tablist"] {
         justify-content: center;
     }
 
-    [data-element="tabs"][data-align="end"][data-orientation="horizontal"] > [data-part="tablist"] {
+    [data-element="tabs"][data-justify="end"][data-orientation="horizontal"] > [data-part="tablist"] {
         justify-content: flex-end;
     }
 
-    [data-element="tabs"][data-align="spaced"][data-orientation="horizontal"] > [data-part="tablist"] {
+    [data-element="tabs"][data-justify="between"][data-orientation="horizontal"] > [data-part="tablist"] {
         justify-content: space-between;
     }
 

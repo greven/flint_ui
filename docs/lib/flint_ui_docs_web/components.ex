@@ -622,11 +622,11 @@ defmodule FlintUIDocsWeb.Components do
       "Whether the tabs share the available width. Horizontal only. Ignored when `scrollable` or `fadable` is set."
   )
 
-  attr(:align, :string,
-    values: ~w(start center end spaced),
+  attr(:justify, :string,
+    values: ~w(start center end between),
     default: "start",
     doc:
-      "Where the tabs sit in a horizontal tab list. `spaced` uses space-between. Ignored when `grow` fills the row."
+      "Where the tabs sit in a horizontal tab list. `between` uses space-between. Ignored when `grow` fills the row."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -691,7 +691,7 @@ defmodule FlintUIDocsWeb.Components do
       data-color={@data_color}
       data-size={@size}
       data-grow={@grow}
-      data-align={@align}
+      data-justify={@justify}
       class={@class}
       {@rest}
     >

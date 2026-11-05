@@ -294,9 +294,9 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="tabs"][data-color="primary"])
     assert css =~ ~s([data-element="tabs"][data-size="lg"])
     assert css =~ ~s([data-element="tabs"][data-grow])
-    assert css =~ ~s([data-element="tabs"][data-align="center"])
-    assert css =~ ~s([data-element="tabs"][data-align="end"])
-    assert css =~ ~s([data-element="tabs"][data-align="spaced"])
+    assert css =~ ~s([data-element="tabs"][data-justify="center"])
+    assert css =~ ~s([data-element="tabs"][data-justify="end"])
+    assert css =~ ~s([data-element="tabs"][data-justify="between"])
     assert css =~ "[data-tabs-tab]"
   end
 

@@ -124,10 +124,10 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "attr(:grow, :boolean"
-    assert source =~ "attr(:align, :string"
-    assert source =~ "values: ~w(start center end spaced)"
+    assert source =~ "attr(:justify, :string"
+    assert source =~ "values: ~w(start center end between)"
     assert source =~ "data-grow={@grow}"
-    assert source =~ "data-align={@align}"
+    assert source =~ "data-justify={@justify}"
 
     assert source =~
              "include: ~w(id activation_mode change_event disabled fadable findable label loop orientation scrollable value)"

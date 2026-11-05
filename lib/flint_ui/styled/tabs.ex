@@ -75,11 +75,11 @@ defmodule FlintUI.Styled.Tabs do
             "Whether the tabs share the available width. Horizontal only. Ignored when `scrollable` or `fadable` is set."
         ),
         Prop.new(
-          name: :align,
-          values: ["start", "center", "end", "spaced"],
+          name: :justify,
+          values: ["start", "center", "end", "between"],
           default: "start",
           doc:
-            "Where the tabs sit in a horizontal tab list. `spaced` uses space-between. Ignored when `grow` fills the row."
+            "Where the tabs sit in a horizontal tab list. `between` uses space-between. Ignored when `grow` fills the row."
         )
       ]
     }

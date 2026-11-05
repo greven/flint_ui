@@ -21,7 +21,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           %{key: :size, type: :select, default: "md", label: "Size"},
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
           %{key: :grow, type: :boolean, default: false, label: "Grow"},
-          %{key: :align, type: :select, default: "start", label: "Align"}
+          %{key: :justify, type: :select, default: "start", label: "Justify"}
         ]
       }
     ]
@@ -40,7 +40,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
           color={props.color}
           size={props.size}
           grow={props.grow}
-          align={props.align}
+          justify={props.justify}
           disabled={props.disabled}
         >
           <:tab value="overview">Overview</:tab>
@@ -78,7 +78,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
         Snippet.flag("grow", props.grow),
-        Snippet.attr("align", props.align, "start"),
+        Snippet.attr("justify", props.justify, "start"),
         Snippet.flag("disabled", props.disabled)
       ],
       """

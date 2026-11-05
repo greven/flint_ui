@@ -128,20 +128,10 @@
     --fl-color-primary-900: var(--color-cyan-900);
     --fl-color-primary-950: var(--color-cyan-950);
 
-    /* Cyan-600 cannot carry a near-white label, so the docs primary steps to
-       700 to keep the solid label light. Remapping a scale also means
-       re-checking the derived tokens. */
+    /* Cyan-600 cannot carry a near-white label, so the docs primary steps to 700 to keep the solid label light. */
     --fl-color-primary: var(--fl-color-primary-700);
     --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));
     --fl-color-primary-text: light-dark(var(--fl-color-primary-800), var(--fl-color-primary-600));
-    --fl-color-primary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-100)),
-        color-mix(in oklab, var(--fl-color-primary-950) 70%, var(--fl-color-control))
-    );
-    --fl-color-primary-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-primary-200) 40%, var(--fl-color-primary-300)),
-        color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))
-    );
 
     /* secondary: Tailwind indigo */
     --fl-color-secondary-50: var(--color-indigo-50);

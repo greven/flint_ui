@@ -18,7 +18,7 @@ def <%= @name %>(assigns) do
     data-color={@data_color}
     data-size={@size}
     data-grow={@grow}
-    data-align={@align}
+    data-justify={@justify}
     class={@class}
     {@rest}
   >
