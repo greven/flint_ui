@@ -119,21 +119,22 @@ defmodule FlintUI.Palette.CSS do
       );
       --fl-color-#{role}-soft: light-dark(
         color-mix(in oklab, var(--fl-color-#{role}-100) 50%, var(--fl-color-#{role}-200)),
-        color-mix(in oklab, var(--fl-color-#{role}-#{soft_dark}) 70%, var(--fl-color-control))
+        color-mix(in oklab, var(--fl-color-#{role}-#{soft_dark}) 70%, var(--fl-color-surface))
       );
       --fl-color-#{role}-soft-border: light-dark(
         color-mix(in oklab, var(--fl-color-#{role}-200) 50%, var(--fl-color-#{role}-300)),
-        color-mix(in oklab, var(--fl-color-#{role}-#{border_dark}) 70%, var(--fl-color-control))
+        color-mix(in oklab, var(--fl-color-#{role}-#{border_dark}) 70%, var(--fl-color-surface))
       );
     """
 
     scale <> "\n\n" <> String.trim_trailing(footer)
   end
 
-  # The tint pair blends the scale's light steps with the control surface. This
-  # keeps a light role and a dark one at a comparable visual weight instead of
-  # letting the fill's own lightness decide it. Neutral is chrome: its dark
-  # steps stay one step lighter than the colored roles.
+  # The tint pair blends the scale's light steps in light mode and the role's
+  # dark step with the surface in dark mode. This keeps a light role and a dark
+  # one at a comparable visual weight instead of letting the fill's own
+  # lightness decide it. Neutral is chrome: its dark steps stay one step lighter
+  # than the colored roles.
   defp soft_shades(role) do
     if role == :neutral, do: {800, 700}, else: {950, 800}
   end
@@ -170,11 +171,11 @@ defmodule FlintUI.Palette.CSS do
     end
   end
 
-  # The text-carrying variants paint the color over the control surface (the
-  # `subtle` background, 10%, deepening to 15% on hover), so the alias is scored
-  # against the strongest fill tint over that surface. The hover overlay itself
-  # is not modeled; `-text` is guaranteed AA on the resting background.
-  @text_tint 0.15
+  # The text-carrying variants paint the color over the surface (the soft tint,
+  # 10-25%, deepening on hover), so the alias is scored against the strongest
+  # resting fill tint over that surface. The hover overlay itself is not
+  # modeled; `-text` is guaranteed AA on the resting background.
+  @text_tint 0.18
 
   defp text_background(shades, shade, page) do
     Contrast.mix(shade_value(shades, shade), page, @text_tint)

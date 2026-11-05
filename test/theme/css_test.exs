@@ -22,7 +22,7 @@ defmodule FlintUI.Theme.CSSTest do
       assert css =~ "--fl-color-#{role}-content: light-dark("
       assert css =~ "--fl-color-#{role}-text: light-dark("
       assert css =~ "--fl-color-#{role}-soft: light-dark("
-      assert css =~ "--fl-color-#{role}-soft-border: light-dark("
+      assert css =~ "--fl-color-#{role}-soft-border: color-mix("
       refute css =~ "--fl-color-#{role}-foreground"
       refute css =~ "--fl-color-#{role}-soft-foreground"
     end
@@ -40,7 +40,6 @@ defmodule FlintUI.Theme.CSSTest do
           surface
           surface-muted
           surface-accented
-          control
           inverted
           border
           border-muted
@@ -79,10 +78,9 @@ defmodule FlintUI.Theme.CSSTest do
              "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));"
 
     assert css =~
-             ~r/--fl-color-control: light-dark\(\s*var\(--fl-color-surface\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-background\) 50%,\s*var\(--fl-color-surface\) 50%\s*\)\s*\)/
-
-    assert css =~
              ~r/--fl-color-surface-accented: light-dark\(\s*var\(--fl-color-neutral-100\),\s*var\(--fl-color-neutral-800\)\s*\)/
+
+    refute css =~ "--fl-color-control:"
   end
 
   test "text tiers are softened neutrals that clear AA where used", %{css: css} do
@@ -104,17 +102,16 @@ defmodule FlintUI.Theme.CSSTest do
     end
 
     white = "oklch(100% 0 none)"
-    light_control = white
+    light_surface = white
     light_accented = neutral.(100)
-    dark_control = FlintUI.Palette.Contrast.mix(neutral.(950), neutral.(900), 0.50)
     dark_surface = neutral.(900)
     dark_accented = neutral.(800)
 
     for {fg, surfaces} <- [
-          {neutral.(700), [light_control, light_accented]},
-          {neutral.(200), [dark_control, dark_surface, dark_accented]},
-          {neutral.(600), [light_control, light_accented]},
-          {neutral.(300), [dark_control, dark_surface, dark_accented]}
+          {neutral.(700), [light_surface, light_accented]},
+          {neutral.(200), [dark_surface, dark_accented]},
+          {neutral.(600), [light_surface, light_accented]},
+          {neutral.(300), [dark_surface, dark_accented]}
         ],
         surface <- surfaces do
       assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
@@ -149,12 +146,12 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "-soft-foreground"
 
     # Neutral colored text keeps the page ink and the inverted label.
-    assert css =~ "--fl-button-text: var(--fl-color-text);"
+    assert css =~ "--fl-button-text: var(--fl-color-text-toned);"
     assert css =~ "--fl-button-color-content: var(--fl-color-text-inverted);"
     assert css =~ "--fl-toggle-text: var(--fl-color-text);"
   end
 
-  test "role text clears AA on control and tinted surfaces", %{css: css} do
+  test "role text clears AA on surface and tinted surfaces", %{css: css} do
     alias FlintUI.Palette.{Contrast, Tailwind}
 
     neutral = fn shade ->
@@ -163,16 +160,16 @@ defmodule FlintUI.Theme.CSSTest do
     end
 
     white = "oklch(100% 0 none)"
-    dark_control = Contrast.mix(neutral.(950), neutral.(900), 0.50)
+    dark_surface = neutral.(900)
 
     # The docs palette: fill shade, AA text shade in light, AA text shade in dark.
     roles = [
-      {"primary", :red, 600, 700, 500},
+      {"primary", :red, 600, 700, 400},
       {"secondary", :gray, 600, 600, 400},
-      {"success", :emerald, 700, 800, 600},
-      {"info", :blue, 600, 700, 500},
-      {"warning", :amber, 400, 700, 400},
-      {"error", :red, 600, 700, 500}
+      {"success", :emerald, 700, 800, 500},
+      {"info", :blue, 600, 700, 400},
+      {"warning", :amber, 400, 800, 400},
+      {"error", :red, 600, 700, 400}
     ]
 
     for {role, color, fill_shade, light_text_shade, dark_text_shade} <- roles do
@@ -182,8 +179,8 @@ defmodule FlintUI.Theme.CSSTest do
       dark_text = Map.fetch!(shades, dark_text_shade)
 
       for {surface, background} <- [
-            {"light control", white},
-            {"light tint", Contrast.mix(fill, white, 0.10)}
+            {"light surface", white},
+            {"light tint", Contrast.mix(fill, white, 0.25)}
           ] do
         ratio = Contrast.ratio(light_text, background)
 
@@ -192,8 +189,8 @@ defmodule FlintUI.Theme.CSSTest do
       end
 
       for {surface, background} <- [
-            {"dark control", dark_control},
-            {"dark tint", Contrast.mix(fill, dark_control, 0.10)}
+            {"dark surface", dark_surface},
+            {"dark tint", Contrast.mix(fill, dark_surface, 0.18)}
           ] do
         ratio = Contrast.ratio(dark_text, background)
 
@@ -323,7 +320,7 @@ defmodule FlintUI.Theme.CSSTest do
 
     assert css =~ "--fl-tabs-color: var(--fl-color-inverted);"
     assert css =~ "--fl-tabs-text: var(--fl-color-text);"
-    assert css =~ "--fl-tabs-surface: var(--fl-color-control);"
+    assert css =~ "--fl-tabs-surface: var(--fl-color-surface);"
     assert css =~ "--fl-tabs-gap"
     assert css =~ "--fl-tabs-content-gap"
     refute css =~ "--fl-tabs-radius"
@@ -360,23 +357,23 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~r/>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]/
   end
 
-  test "an attached group overlaps children onto an opaque control fill", %{css: css} do
+  test "an attached group overlaps children onto an opaque surface fill", %{css: css} do
     # The later child's opaque fill covers the previous border at the seam, so
     # only one line shows. Neutral borders can stay alpha because the fill under
     # them does not change on hover.
     assert css =~ "margin-inline-start: -1px"
     assert css =~ "margin-block-start: -1px"
-    assert css =~ "--fl-color-control:"
+    assert css =~ "--fl-color-surface:"
     assert css =~ "oklch(1 0 0 / 8%)"
 
-    # Chromatic borders are opaque against the control fill and share the soft
+    # Chromatic borders are opaque against the surface fill and share the soft
     # strength across subtle, outline, and dashed.
-    assert css =~ ~r/var\(--fl-border-strength-soft\),\s+var\(--fl-color-control\)/
-    refute css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-control\)/
+    assert css =~ ~r/var\(--fl-border-strength-soft\),\s+var\(--fl-color-surface\)/
+    refute css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-surface\)/
   end
 
   test "bordered controls paint an opaque fill and a clipped hover overlay", %{css: css} do
-    assert css =~ "background: var(--fl-color-control);"
+    assert css =~ "background: var(--fl-color-surface);"
     assert css =~ "background: currentColor;"
     assert css =~ "inset: -1px;"
     assert css =~ "overflow: clip;"

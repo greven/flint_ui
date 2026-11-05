@@ -12,7 +12,7 @@
     [data-element="tabs"][data-tabs] {
         --fl-tabs-color: var(--fl-color-inverted);
         --fl-tabs-text: var(--fl-color-text);
-        --fl-tabs-surface: var(--fl-color-control);
+        --fl-tabs-surface: var(--fl-color-surface);
 
         display: flex;
         flex-direction: column;

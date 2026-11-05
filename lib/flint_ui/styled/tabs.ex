@@ -26,7 +26,7 @@ defmodule FlintUI.Styled.Tabs do
         ),
         Var.new(
           name: "--fl-tabs-surface",
-          default: "var(--fl-color-control)",
+          default: "var(--fl-color-surface)",
           doc: "The active tab surface for the segmented and minimal variants."
         ),
         Var.new(

@@ -164,22 +164,17 @@ defmodule FlintUIDocsWeb.ThemeLive do
             is the full toned step. The dark default is <code class="font-mono">neutral-950</code>
             (page) → <code class="font-mono">neutral-900</code>
             (surface) → <code class="font-mono">neutral-800</code>
-            (accented), with <code class="font-mono">control</code>
-            half a step above the page. Bordered controls paint <code class="font-mono">control</code>, an opaque fill just off the
-            page, so attached-group seams stay single while the neutral borders can
-            stay semi-transparent. Disabled controls dim with
-            <code class="font-mono">--fl-disabled-opacity</code>
+            (accented). Bordered controls paint <code class="font-mono">surface</code>, an
+            opaque fill one step above the page, so attached-group seams stay single
+            while the neutral borders can stay semi-transparent. Disabled controls
+            dim with <code class="font-mono">--fl-disabled-opacity</code>
             instead of swapping in dedicated fills.
           </p>
-          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Components.card :for={variant <- ~w(solid soft accented)} variant={variant}>
               <:title>{variant}</:title>
               <p class="text-sm text-toned">Body</p>
             </Components.card>
-            <div class="rounded-xl border border-default bg-control p-5">
-              <p class="font-semibold leading-5">control</p>
-              <p class="text-sm text-muted">Opaque control fill</p>
-            </div>
           </div>
           <div class="mt-3 flex flex-wrap items-center gap-3">
             <Components.button variant="subtle" disabled>Disabled subtle</Components.button>
@@ -401,8 +396,8 @@ defmodule FlintUIDocsWeb.ThemeLive do
             scale: their shade refs follow the new scale, but the chosen shade
             may no longer be the accessible one. The <code class="font-mono">-soft</code>
             and <code class="font-mono">-soft-border</code>
-            pair blends adjacent scale steps, so it follows a remapped scale
-            automatically. The docs app re-checks its cyan primary in <code class="font-mono">app.css</code>.
+            pair blends the role fill with the surface, so it follows a remapped
+            scale automatically. The docs app re-checks its cyan primary in <code class="font-mono">app.css</code>.
           </p>
           <p class="mt-3 text-sm text-default">
             Neutral is the page and surface ladder, so remapping it is the quickest
@@ -464,16 +459,6 @@ defmodule FlintUIDocsWeb.ThemeLive do
         var(--fl-color-surface)
       );
 
-      /* Opaque fill for bordered controls (half a step off the page). */
-      --fl-color-control: light-dark(
-        white,
-        color-mix(
-          in oklab,
-          var(--fl-color-background) 50%,
-          var(--fl-color-surface) 50%
-        )
-      );
-
       --fl-disabled-opacity: 0.5;
     }
     """
@@ -525,15 +510,16 @@ defmodule FlintUIDocsWeb.ThemeLive do
       var(--fl-color-primary-400)
     );
 
-    /* The tint pair blends scale steps, so light and dark roles stay equally
-     * visible without matching the solid fill's opacity. */
+    /* The tint pair blends the role fill with the surface, so light and dark
+     * roles stay equally visible without matching the solid fill's opacity. */
     --fl-color-primary-soft: light-dark(
-      color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-200)),
-      color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))
+      color-mix(in oklab, var(--fl-color-primary) 25%, var(--fl-color-surface)),
+      color-mix(in oklab, var(--fl-color-primary) 18%, var(--fl-color-surface))
     );
-    --fl-color-primary-soft-border: light-dark(
-      color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),
-      color-mix(in oklab, var(--fl-color-primary-700) 70%, var(--fl-color-control))
+    --fl-color-primary-soft-border: color-mix(
+      in oklab,
+      var(--fl-color-primary) 50%,
+      var(--fl-color-surface)
     );
     """
   end

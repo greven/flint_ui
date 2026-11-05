@@ -6,7 +6,7 @@ defmodule FlintUI.Palette.Contrast do
   from a palette scale instead of hardcoding them: the solid "on-fill" label is
   the shade with the highest contrast against the fill, and the "as text" alias
   is the shade nearest the brand shade that still meets the AA ratio against the
-  surface it sits on (the white or dark control surface, or the tinted subtle
+  surface it sits on (the white or dark surface, or the tinted subtle
   surface derived from it).
 
   Colors are converted oklch → oklab → linear sRGB and scored with the WCAG 2.1
@@ -18,11 +18,11 @@ defmodule FlintUI.Palette.Contrast do
   @aaa 7.0
 
   # Reference surfaces for role text: light is the white surface; dark is
-  # `--fl-color-control` (halfway between neutral-950 and neutral-900), the
-  # lightest dark backdrop a role text token sits on in outline/soft. Scoring
-  # against the darker page would overstate contrast.
+  # `--fl-color-surface` (neutral-900), the lightest dark backdrop a role text
+  # token sits on in outline/soft. Scoring against the darker page would
+  # overstate contrast.
   @light_background "oklch(100% 0 none)"
-  @dark_background "oklch(17.5% 0 none)"
+  @dark_background "oklch(20.5% 0 none)"
 
   @pattern ~r/^\s*oklch\(\s*([0-9.]+)(%?)\s+([0-9.]+|none)(?:\s+([0-9.]+|none))?\s*\)\s*$/
 
@@ -46,7 +46,7 @@ defmodule FlintUI.Palette.Contrast do
   @doc """
   The dark-mode surface the text alias is scored against.
 
-  This is the dark control surface (`--fl-color-control`), not the darker page:
+  This is the dark surface (`--fl-color-surface`), not the darker page:
   outline, soft, and subtle place role text over that lighter backdrop.
   """
   def dark_background, do: @dark_background

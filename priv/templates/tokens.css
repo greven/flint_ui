@@ -224,71 +224,71 @@
      * plus the tint pair used by soft/subtle/outline variants:
      *   <role>-soft         the tinted background
      *   <role>-soft-border  the matching edge
-     * The tint pair blends adjacent scale steps with the control surface, so a
-     * light fill (warning) and a dark one (info) stay equally visible without
-     * taking on the solid fill's opacity. */
+     * The tint pair blends the role fill with the surface, so a light fill
+     * (warning) and a dark one (info) stay equally visible without taking on
+     * the solid fill's opacity. */
     --fl-color-primary: var(--fl-color-primary-600);
     --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));
     --fl-color-primary-text: light-dark(var(--fl-color-primary-600), var(--fl-color-primary-400));
     --fl-color-primary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-primary) 25%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-primary) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-primary) 25%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-primary) 18%, var(--fl-color-surface))
     );
-    --fl-color-primary-soft-border: color-mix(in oklab, var(--fl-color-primary) 50%, var(--fl-color-background));
+    --fl-color-primary-soft-border: color-mix(in oklab, var(--fl-color-primary) 50%, var(--fl-color-surface));
 
     --fl-color-secondary: var(--fl-color-secondary-600);
     --fl-color-secondary-content: light-dark(var(--fl-color-secondary-50), var(--fl-color-secondary-50));
     --fl-color-secondary-text: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-400));
     --fl-color-secondary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-secondary) 25%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-secondary) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-secondary) 25%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-secondary) 18%, var(--fl-color-surface))
     );
-    --fl-color-secondary-soft-border: color-mix(in oklab, var(--fl-color-secondary) 50%, var(--fl-color-background));
+    --fl-color-secondary-soft-border: color-mix(in oklab, var(--fl-color-secondary) 50%, var(--fl-color-surface));
 
     --fl-color-neutral: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
     --fl-color-neutral-content: light-dark(var(--fl-color-neutral-50), var(--fl-color-neutral-950));
     --fl-color-neutral-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
     --fl-color-neutral-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-neutral) 4%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-neutral) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-neutral) 4%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-neutral) 16%, var(--fl-color-surface))
     );
-    --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 20%, var(--fl-color-background));
+    --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 20%, var(--fl-color-surface));
 
     --fl-color-info: var(--fl-color-info-600);
     --fl-color-info-content: light-dark(var(--fl-color-info-50), var(--fl-color-info-50));
     --fl-color-info-text: light-dark(var(--fl-color-info-800), var(--fl-color-info-400));
     --fl-color-info-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-info) 10%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-info) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-info) 10%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-info) 18%, var(--fl-color-surface))
     );
-    --fl-color-info-soft-border: color-mix(in oklab, var(--fl-color-info) 50%, var(--fl-color-background));
+    --fl-color-info-soft-border: color-mix(in oklab, var(--fl-color-info) 50%, var(--fl-color-surface));
 
     --fl-color-success: var(--fl-color-success-700);
     --fl-color-success-content: light-dark(var(--fl-color-success-50), var(--fl-color-success-50));
     --fl-color-success-text: light-dark(var(--fl-color-success-800), var(--fl-color-success-500));
     --fl-color-success-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-success) 10%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-success) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-success) 10%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-success) 18%, var(--fl-color-surface))
     );
-    --fl-color-success-soft-border: color-mix(in oklab, var(--fl-color-success) 50%, var(--fl-color-background));
+    --fl-color-success-soft-border: color-mix(in oklab, var(--fl-color-success) 50%, var(--fl-color-surface));
 
     --fl-color-warning: var(--fl-color-warning-500);
     --fl-color-warning-content: light-dark(var(--fl-color-warning-950), var(--fl-color-warning-950));
     --fl-color-warning-text: light-dark(var(--fl-color-warning-800), var(--fl-color-warning-400));
     --fl-color-warning-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-warning) 18%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-warning) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-warning) 20%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-warning) 18%, var(--fl-color-surface))
     );
-    --fl-color-warning-soft-border: color-mix(in oklab, var(--fl-color-warning) 50%, var(--fl-color-background));
+    --fl-color-warning-soft-border: color-mix(in oklab, var(--fl-color-warning) 50%, var(--fl-color-surface));
 
     --fl-color-error: var(--fl-color-error-600);
     --fl-color-error-content: light-dark(oklch(100% 0 0), oklch(100% 0 0));
     --fl-color-error-text: light-dark(var(--fl-color-error-800), var(--fl-color-error-400));
     --fl-color-error-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-error) 10%, var(--fl-color-background)),
-        color-mix(in oklab, var(--fl-color-error) 15%, var(--fl-color-background))
+        color-mix(in oklab, var(--fl-color-error) 10%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-error) 18%, var(--fl-color-surface))
     );
-    --fl-color-error-soft-border: color-mix(in oklab, var(--fl-color-error) 50%, var(--fl-color-background));
+    --fl-color-error-soft-border: color-mix(in oklab, var(--fl-color-error) 50%, var(--fl-color-surface));
 
     /* Chrome text. `highlighted` is for headings and strong labels; `text` is
      * the default ink; `toned` is softened copy; `muted` is meta; `dimmed` is
@@ -302,18 +302,13 @@
 
     /* Chrome surfaces. One neutral ladder off the page: `surface` is the
      * panel, `surface-muted` is the half step, and `surface-accented` is the
-     * full toned fill. Swapping `--fl-color-neutral-*` retints them together. */
+     * full toned fill. Bordered controls paint `surface`, so attached-group
+     * seams stay single. Swapping `--fl-color-neutral-*` retints them together. */
     --fl-color-background: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
     --fl-color-surface-accented: light-dark(var(--fl-color-neutral-100), var(--fl-color-neutral-800));
     --fl-color-surface-muted: color-mix(in oklab, var(--fl-color-surface-accented) 50%, var(--fl-color-surface));
 
-    /* Opaque fill for bordered controls, halfway between the page and the
-     * surface so attached-group seams stay single over a stable backdrop. */
-    --fl-color-control: light-dark(
-        var(--fl-color-surface),
-        color-mix(in oklab, var(--fl-color-background) 50%, var(--fl-color-surface) 50%)
-    );
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
 
     /* Chrome borders. `muted` is the quiet edge for dividers and muted

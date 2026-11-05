@@ -142,7 +142,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       </div>
     </.preview>
 
-    <.prose content="You can also override **Primary** and **Secondary** colors in your stylesheet." />
+    <.prose content="You can also override `primary` and `secondary` colors in your stylesheet." />
 
     <.preview id={"#{@id}-brand"}>
       <div class="overflow-x-auto py-1">

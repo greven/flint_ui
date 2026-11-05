@@ -232,13 +232,13 @@
         color: var(--fl-button-color-content, var(--fl-color-text-inverted));
     }
 
-    /* Soft: a tinted control surface with no border. Roles use the scale-step
-     * tint; a raw custom color falls back to a fill mix. */
+    /* Soft: a tinted surface with no border. Roles map `-soft`; a raw custom
+     * color falls back to a fill mix. */
     [data-element="button"][data-variant="soft"],
     [data-element="button"][data-variant="subtle"] {
         background: var(
             --fl-button-soft,
-            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-control))
+            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
         );
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
@@ -250,22 +250,22 @@
             color-mix(
                 in oklab,
                 var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-control)
+                var(--fl-color-surface)
             )
         );
     }
 
-    /* Outline: a colored border and label over the control surface. */
+    /* Outline: a colored border and label over the surface. */
     [data-element="button"][data-variant="outline"] {
         border-color: var(
             --fl-button-soft-border,
             color-mix(
                 in oklab,
                 var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-control)
+                var(--fl-color-surface)
             )
         );
-        background: var(--fl-color-control);
+        background: var(--fl-color-surface);
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
@@ -276,7 +276,7 @@
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
-    /* Dashed: outline with a dashed border on the control surface. */
+    /* Dashed: outline with a dashed border on the surface. */
     [data-element="button"][data-variant="dashed"] {
         border-style: dashed;
         border-color: var(
@@ -284,10 +284,10 @@
             color-mix(
                 in oklab,
                 var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-control)
+                var(--fl-color-surface)
             )
         );
-        background: var(--fl-color-control);
+        background: var(--fl-color-surface);
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 

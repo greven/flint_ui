@@ -12,7 +12,7 @@
         gap: var(--fl-spacing-sm);
         border: 1px solid var(--fl-color-border);
         border-radius: var(--fl-control-radius);
-        background: var(--fl-color-control);
+        background: var(--fl-color-surface);
         color: var(--fl-color-text);
         font-family: var(--fl-font-sans);
         font-size: var(--fl-control-font-size-md);
@@ -233,14 +233,14 @@
     [data-element="toggle"][data-variant="subtle"][data-state="on"] {
         background: var(
             --fl-toggle-soft,
-            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-control))
+            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
         );
         border-color: var(
             --fl-toggle-soft-border,
             color-mix(
                 in oklab,
                 var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-control)
+                var(--fl-color-surface)
             )
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
@@ -252,7 +252,7 @@
             color-mix(
                 in oklab,
                 var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-control)
+                var(--fl-color-surface)
             )
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
@@ -264,7 +264,7 @@
             color-mix(
                 in oklab,
                 var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-control)
+                var(--fl-color-surface)
             )
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));

@@ -14,7 +14,7 @@ defmodule FlintUI.Palette.CSSTest do
     refute css =~ "--fl-palette-"
   end
 
-  test "emits the scale-step soft tint and matching border" do
+  test "emits the soft tint and matching border" do
     css =
       CSS.render(
         primary: {Tailwind, :indigo},
@@ -23,16 +23,16 @@ defmodule FlintUI.Palette.CSSTest do
       )
 
     assert css =~
-             "--fl-color-primary-soft: light-dark(\n    color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-200)),\n    color-mix(in oklab, var(--fl-color-primary-950) 70%, var(--fl-color-control))"
+             "--fl-color-primary-soft: light-dark(\n    color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-200)),\n    color-mix(in oklab, var(--fl-color-primary-950) 70%, var(--fl-color-surface))"
 
     assert css =~
-             "--fl-color-primary-soft-border: light-dark(\n    color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),\n    color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))"
+             "--fl-color-primary-soft-border: light-dark(\n    color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),\n    color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-surface))"
 
     assert css =~
-             "--fl-color-warning-soft-border: light-dark(\n    color-mix(in oklab, var(--fl-color-warning-200) 50%, var(--fl-color-warning-300)),\n    color-mix(in oklab, var(--fl-color-warning-800) 70%, var(--fl-color-control))"
+             "--fl-color-warning-soft-border: light-dark(\n    color-mix(in oklab, var(--fl-color-warning-200) 50%, var(--fl-color-warning-300)),\n    color-mix(in oklab, var(--fl-color-warning-800) 70%, var(--fl-color-surface))"
 
     assert css =~
-             "--fl-color-neutral-soft: light-dark(\n    color-mix(in oklab, var(--fl-color-neutral-100) 50%, var(--fl-color-neutral-200)),\n    color-mix(in oklab, var(--fl-color-neutral-800) 70%, var(--fl-color-control))"
+             "--fl-color-neutral-soft: light-dark(\n    color-mix(in oklab, var(--fl-color-neutral-100) 50%, var(--fl-color-neutral-200)),\n    color-mix(in oklab, var(--fl-color-neutral-800) 70%, var(--fl-color-surface))"
   end
 
   test "uses a data-theme selector when a theme name is given" do

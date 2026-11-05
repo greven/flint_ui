@@ -87,12 +87,12 @@ defmodule FlintUI.Theme.ContrastTest do
             {:light, soft_light, border_light},
             {:dark, soft_dark, border_dark}
           ] do
-        control = control_surface(scales, scheme)
-        soft_ratio = Contrast.ratio(soft, control) || 0.0
+        surface = surface_color(scales, scheme)
+        soft_ratio = Contrast.ratio(soft, surface) || 0.0
         border_ratio = Contrast.ratio(border, soft) || 0.0
 
         assert soft_ratio >= 1.1,
-               "#{role}/#{scheme} soft #{soft} is too close to #{control}"
+               "#{role}/#{scheme} soft #{soft} is too close to #{surface}"
 
         assert border_ratio >= 1.1,
                "#{role}/#{scheme} border #{border} is too close to #{soft}"
@@ -119,25 +119,23 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
-  test "the contrast reference matches the shipped control surface", %{scales: scales} do
+  test "the contrast reference matches the shipped surface", %{scales: scales} do
     for scheme <- [:light, :dark] do
-      assert_in_delta Contrast.luminance(control_surface(scales, scheme)),
+      assert_in_delta Contrast.luminance(surface_color(scales, scheme)),
                       Contrast.luminance(background_reference(scheme)),
                       1.0e-6
     end
   end
 
-  # The surface role text sits on: white in light, and the neutral-900/950
-  # control mix in dark.
-  defp control_surface(_scales, :light), do: "oklch(100% 0 none)"
+  # The surface role text sits on: white in light, and neutral-900 in dark.
+  defp surface_color(_scales, :light), do: "oklch(100% 0 none)"
 
-  defp control_surface(scales, :dark) do
-    Contrast.mix(
-      Map.fetch!(scales["neutral"], "950"),
-      Map.fetch!(scales["neutral"], "900"),
-      0.5
-    )
+  defp surface_color(scales, :dark) do
+    Map.fetch!(scales["neutral"], "900")
   end
+
+  defp background_color(_scales, :light), do: "oklch(100% 0 none)"
+  defp background_color(scales, :dark), do: Map.fetch!(scales["neutral"], "950")
 
   defp background_reference(:light), do: Contrast.light_background()
   defp background_reference(:dark), do: Contrast.dark_background()
@@ -185,13 +183,16 @@ defmodule FlintUI.Theme.ContrastTest do
   end
 
   # Evaluates the small color expression subset the tokens use: scale vars,
-  # oklch literals, the control surface, and a two-stop color-mix.
+  # oklch literals, the surface, and a two-stop color-mix.
   defp eval_color(value, scales, scheme) do
     value = String.trim(value)
 
     cond do
-      value == "var(--fl-color-control)" ->
-        control_surface(scales, scheme)
+      value == "var(--fl-color-surface)" ->
+        surface_color(scales, scheme)
+
+      value == "var(--fl-color-background)" ->
+        background_color(scales, scheme)
 
       String.starts_with?(value, "var(--fl-color-") ->
         inner =
@@ -199,8 +200,15 @@ defmodule FlintUI.Theme.ContrastTest do
           |> String.replace_prefix("var(--fl-color-", "")
           |> String.trim_trailing(")")
 
-        [role, shade] = String.split(inner, "-", parts: 2)
-        Map.fetch!(Map.fetch!(scales, role), shade)
+        case String.split(inner, "-", parts: 2) do
+          [role, shade] ->
+            Map.fetch!(Map.fetch!(scales, role), shade)
+
+          [role] ->
+            {light, dark} = Map.get(@expected_fill_shades, role, {"600", "600"})
+            shade = if scheme == :light, do: light, else: dark
+            Map.fetch!(Map.fetch!(scales, role), shade)
+        end
 
       String.starts_with?(value, "color-mix(") ->
         [_, first, percent, second] =

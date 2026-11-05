@@ -163,7 +163,6 @@ defmodule FlintUI.Generator do
       --background-color-surface: var(--fl-color-surface);
       --background-color-muted: var(--fl-color-surface-muted);
       --background-color-accented: var(--fl-color-surface-accented);
-      --background-color-control: var(--fl-color-control);
       --background-color-inverted: var(--fl-color-inverted);
       --background-color-foreground: var(--fl-color-text);
       --color-inverted: var(--fl-color-inverted);

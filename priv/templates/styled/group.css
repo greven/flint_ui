@@ -88,7 +88,7 @@
     }
 
     /* Attached: collapse the children into a single block. Bordered controls
-   * paint an opaque `--fl-color-control` fill, so the later child's fill covers
+   * paint an opaque surface fill, so the later child's fill covers
    * the previous child's border in the shared column and only one seam shows.
    * Hover is an in-border overlay, keeping the alpha border's backdrop stable.
    * Raising the hovered/focused child lets its complete border win the seam. */

@@ -18,7 +18,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         section: :usage,
         id: :variant,
         title: "Variant",
-        controls: [%{key: :variant, type: :select, default: "subtle", label: "Variant"}]
+        controls: [%{key: :variant, type: :select, default: "outline", label: "Variant"}]
       },
       %{
         tab: :styled,
@@ -70,9 +70,6 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       </div>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
-    <.preview id={"#{@id}-text"} code={~S(<.badge text="Badge" />)}>
-      <Components.badge text="Badge" />
-    </.preview>
     """
   end
 

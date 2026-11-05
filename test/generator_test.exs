@@ -240,7 +240,7 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--background-color-default: var(--fl-color-background);"
     assert bridge =~ "--background-color-muted: var(--fl-color-surface-muted);"
     assert bridge =~ "--background-color-accented: var(--fl-color-surface-accented);"
-    assert bridge =~ "--background-color-control: var(--fl-color-control);"
+    refute bridge =~ "--background-color-control"
     assert bridge =~ "--border-color-default: var(--fl-color-border);"
     assert bridge =~ "--divide-color-default: var(--fl-color-border);"
     assert bridge =~ "--ring-color-default: var(--fl-color-ring);"
