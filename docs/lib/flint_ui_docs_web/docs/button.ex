@@ -113,7 +113,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
           <div></div>
           <span
-            :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
+            :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -124,7 +124,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
+              :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
               variant={variant}
               color={color}
             >
@@ -142,7 +142,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <div class="grid grid-cols-8 items-center gap-x-3 gap-y-6">
           <div></div>
           <span
-            :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
+            :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -153,7 +153,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
+              :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
               variant={variant}
               color={color}
             >
@@ -317,7 +317,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview id={@id} code={&code_disabled/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
-          :for={variant <- ~w(outline solid subtle soft dashed ghost link)}
+          :for={variant <- ~w(solid subtle soft outline dashed ghost link)}
           class="capitalize"
           variant={variant}
           disabled
@@ -602,12 +602,20 @@ defmodule FlintUIDocsWeb.Docs.Button do
   end
 
   defp code_raw(_) do
-    """
-    <.button color="#009966" icon="lucide-coins">Common</.button>
-    <.button color="#165DFC" icon="lucide-pickaxe">Rare</.button>
-    <.button color="#7007E7" icon="lucide-shield">Epic</.button>
-    <.button color="#FE9A00" icon="lucide-swords">Legendary</.button>
-    """
+    [
+      heex: """
+      <.button color="#009966" icon="lucide-coins">Common</.button>
+      <.button color="#165DFC" icon="lucide-pickaxe">Rare</.button>
+      <.button color="#7007E7" icon="lucide-shield">Epic</.button>
+      <.button color="#FE9A00" icon="lucide-swords">Legendary</.button>
+      """,
+      css: """
+      [data-element="button"][data-variant="subtle"] {
+        --fl-button-color: #009966;
+        --fl-button-color-content: white;
+      }
+      """
+    ]
   end
 
   defp code_css_vars(_) do

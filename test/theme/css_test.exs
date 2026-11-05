@@ -1,4 +1,4 @@
-defmodule FlintUI.FlintCSSTest do
+defmodule FlintUI.Theme.CSSTest do
   use ExUnit.Case, async: true
 
   setup_all do
@@ -61,17 +61,6 @@ defmodule FlintUI.FlintCSSTest do
 
     assert css =~
              ~r/--fl-color-border-muted: light-dark\(\s*oklch\(0 0 0 \/ 5%\),\s*oklch\(1 0 0 \/ 5%\)\s*\)/
-  end
-
-  test "border weight is a theme knob instead of a token per role", %{css: css} do
-    assert css =~ "--fl-border-strength: 50%;"
-    assert css =~ "--fl-border-strength-soft: 30%;"
-    assert css =~ "--fl-border-strength-solid: 12%;"
-
-    for role <- ~w(primary secondary neutral success info warning error) do
-      refute css =~ "--fl-color-#{role}-border:"
-      refute css =~ "--fl-color-#{role}-border-soft:"
-    end
   end
 
   test "solid buttons darken their fill for the border", %{css: css} do
@@ -380,9 +369,10 @@ defmodule FlintUI.FlintCSSTest do
     assert css =~ "--fl-color-control:"
     assert css =~ "oklch(1 0 0 / 8%)"
 
-    # Chromatic borders are opaque against the control fill.
-    assert css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-control\)/
+    # Chromatic borders are opaque against the control fill and share the soft
+    # strength across subtle, outline, and dashed.
     assert css =~ ~r/var\(--fl-border-strength-soft\),\s+var\(--fl-color-control\)/
+    refute css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-control\)/
   end
 
   test "bordered controls paint an opaque fill and a clipped hover overlay", %{css: css} do

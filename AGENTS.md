@@ -174,16 +174,18 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 
 ### Add a styled component
 
-All four parts, in one change:
+All five parts, in one change:
 
 1. `lib/flint_ui/styled/<name>.ex` — the `FlintUI.Styled.Entry`: base, target,
    install command, CSS part, token namespaces, props, slots, public variables.
 2. `priv/templates/styled/<name>.ex.eex` — the thin wrapper.
 3. `priv/templates/styled/<name>.css` — a selector for every non-default prop
    value, keyed on `[data-element="<name>"][data-*="…"]`.
-4. `docs/lib/flint_ui_docs_web/docs/<name>.ex` — the docs page.
+4. `test/styled/<name>_test.exs` — renders the generated wrapper and checks its
+   data hooks, forwarded attributes, and slots.
+5. `docs/lib/flint_ui_docs_web/docs/<name>.ex` — the docs page.
 
-`test/theme_contract_test.exs` fails if the CSS part is missing, a prop value
+`test/theme/contract_test.exs` fails if the CSS part is missing, a prop value
 has no selector, a token namespace is undefined, or a component declares a
 per-component radius token.
 

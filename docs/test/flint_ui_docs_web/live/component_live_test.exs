@@ -31,13 +31,20 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the header badges carry status, type, and since icons", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "header .lucide-badge-check")
-    assert has_element?(view, "header .lucide-mouse-pointer-click")
-    assert has_element?(view, "header .lucide-calendar-days")
+    assert has_element?(
+             view,
+             "header [data-element='badge'][data-color='info'] .lucide-badge-check"
+           )
+
+    assert has_element?(view, "header [data-element='badge'] .lucide-mouse-pointer-click")
+    assert has_element?(view, "header [data-element='badge'] .lucide-calendar-days")
 
     {:ok, view, _html} = live(conn, ~p"/components/toggle")
 
-    assert has_element?(view, "header .lucide-pencil-ruler")
+    assert has_element?(
+             view,
+             "header [data-element='badge'][data-color='warning'] .lucide-pencil-ruler"
+           )
   end
 
   test "component page defaults to the styled tab", %{conn: conn} do

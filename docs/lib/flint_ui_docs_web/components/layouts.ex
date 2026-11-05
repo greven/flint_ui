@@ -4,6 +4,8 @@ defmodule FlintUIDocsWeb.Layouts do
   """
   use FlintUIDocsWeb, :html
 
+  alias FlintUIDocsWeb.Components
+
   # Embed all files in layouts/* within this module.
   embed_templates("layouts/*")
 
@@ -131,30 +133,28 @@ defmodule FlintUIDocsWeb.Layouts do
           </.link>
 
           <nav aria-label="Primary" class="justify-self-center">
-            <.link
+            <Components.button
               navigate={~p"/themes"}
               aria-current={if @page == :themes, do: "page", else: nil}
-              class={[
-                "rounded-md px-2 py-1.5 text-sm font-medium whitespace-nowrap transition-colors sm:px-3",
-                if(@page == :themes,
-                  do: "text-default",
-                  else: "text-toned hover:bg-accented"
-                )
-              ]}
+              variant={if @page == :themes, do: "subtle", else: "ghost"}
+              size="sm"
             >
               Themes
-            </.link>
+            </Components.button>
           </nav>
 
           <nav class="flex items-center gap-1 justify-self-end">
-            <a
+            <Components.button
               href="https://github.com/greven/flint_ui"
-              class="rounded-md px-2 py-1.5 text-sm text-toned transition-colors hover:bg-accented sm:px-3"
+              target="_blank"
+              rel="noopener"
+              variant="ghost"
+              size="sm"
               aria-label="FlintUI on GitHub"
             >
-              <.icon name="lucide-github" class="size-4 sm:hidden" />
+              <Components.icon name="lucide-github" class="size-4 sm:hidden" />
               <span class="hidden sm:inline">GitHub</span>
-            </a>
+            </Components.button>
             <.theme_toggle />
           </nav>
         </div>
@@ -542,8 +542,8 @@ defmodule FlintUIDocsWeb.Layouts do
   """
   def theme_toggle(assigns) do
     ~H"""
-    <div class="flex items-center p-0.5">
-      <button
+    <div class="flex items-center gap-0.5">
+      <Components.button
         :for={
           {scheme, icon} <- [
             {"system", "lucide-monitor"},
@@ -552,13 +552,14 @@ defmodule FlintUIDocsWeb.Layouts do
           ]
         }
         type="button"
-        class="rounded p-1 text-muted transition-colors hover:bg-accented"
+        variant="ghost"
+        size="xs"
+        square
         phx-click={JS.dispatch("phx:set-scheme")}
         data-phx-scheme={scheme}
         aria-label={"Use #{scheme} scheme"}
-      >
-        <.icon name={icon} class="size-4" />
-      </button>
+        icon={icon}
+      />
     </div>
     """
   end
@@ -575,15 +576,17 @@ defmodule FlintUIDocsWeb.Layouts do
   def theme_preset_picker(assigns) do
     ~H"""
     <div class={["flex flex-wrap gap-1.5", @class]}>
-      <button
+      <Components.button
         :for={preset <- @themes}
         type="button"
-        class="rounded-md border border-default px-2.5 py-1 text-xs font-medium text-default transition-colors hover:bg-accented"
+        variant="outline"
+        size="xs"
+        radius="full"
         phx-click={JS.dispatch("phx:set-preset")}
         data-phx-preset={preset}
       >
         {preset}
-      </button>
+      </Components.button>
     </div>
     """
   end

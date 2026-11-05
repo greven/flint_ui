@@ -1,4 +1,4 @@
-defmodule FlintUITest.SoundTest do
+defmodule FlintUI.SoundTest do
   use ExUnit.Case, async: true
 
   @recipes Path.join([__DIR__, "..", "assets", "src", "lib", "sound", "recipes.ts"])

@@ -3,6 +3,8 @@ defmodule FlintUIDocsWeb.HomeLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUIDocsWeb.Components
+
   @sections [
     %{
       title: "Get Started",
@@ -41,30 +43,30 @@ defmodule FlintUIDocsWeb.HomeLive do
             own app. Theming is plain CSS, so Tailwind is optional.
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
-            <.link
+            <Components.button
               navigate="/getting-started/introduction"
-              class="rounded-md bg-inverted px-4 py-2 text-sm font-medium text-inverted transition-colors hover:bg-inverted/90"
+              variant="solid"
+              size="lg"
             >
               Get started
-            </.link>
-            <.link
-              navigate="/components"
-              class="rounded-md border border-default px-4 py-2 text-sm font-medium text-default transition-colors hover:bg-muted"
-            >
+            </Components.button>
+            <Components.button navigate="/components" variant="outline" size="lg">
               Browse components
-            </.link>
+            </Components.button>
           </div>
         </section>
 
         <section class="grid gap-4 sm:grid-cols-3">
-          <.link
-            :for={section <- @sections}
+          <Components.card
+            :for={{section, index} <- Enum.with_index(@sections)}
             navigate={section.path}
-            class="group rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-muted"
+            title_id={"home-section-#{index}"}
+            spacing="sm"
+            class="h-full"
           >
-            <span class="font-medium">{section.title}</span>
-            <p class="mt-1 text-sm text-toned">{section.description}</p>
-          </.link>
+            <:title>{section.title}</:title>
+            <:description>{section.description}</:description>
+          </Components.card>
         </section>
       </div>
     </Layouts.app>

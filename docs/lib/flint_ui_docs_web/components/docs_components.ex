@@ -6,6 +6,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   use FlintUIDocsWeb, :html
 
   alias FlintUIDocsWeb.CodeBlock
+  alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Markdown
   alias FlintUIDocsWeb.Nav
 
@@ -27,63 +28,72 @@ defmodule FlintUIDocsWeb.DocsComponents do
           </p>
         </div>
         <div :if={@links != []} class="flex flex-wrap items-center gap-2">
-          <a
+          <Components.button
             :for={link <- @links}
             href={link.href}
             target="_blank"
             rel="noopener"
-            class={[
-              "inline-flex items-center gap-1.5 rounded-md border border-default px-2.5 py-1 transition-colors",
-              "text-xs font-medium text-toned",
-              "hover:bg-muted hover:text-default"
-            ]}
+            variant="outline"
+            size="sm"
+            icon={link[:icon]}
           >
-            <FlintUI.icon :if={link[:icon]} name={link.icon} class="size-3.5" />
             {link.label}
-          </a>
+          </Components.button>
         </div>
       </div>
-      <div class="mt-4 flex flex-wrap gap-2 capitalize">
-        <.meta_badge class={status_badge_class(@meta.status)}>
-          <.icon name={status_icon(@meta.status)} class="size-3" /> {to_string(@meta.status)}
-        </.meta_badge>
-        <.meta_badge>
-          <.icon name={Nav.type_icon(@meta.type)} class="size-3" /> {to_string(@meta.type)}
-        </.meta_badge>
-        <.meta_badge>
-          <.icon name="lucide-calendar-days" class="size-3" />Since {@meta.since}
-        </.meta_badge>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <.status_badge status={@meta.status} />
+        <Components.badge
+          variant="subtle"
+          color="neutral"
+          size="sm"
+          icon={Nav.type_icon(@meta.type)}
+          class="capitalize"
+        >
+          {to_string(@meta.type)}
+        </Components.badge>
+        <Components.badge
+          variant="subtle"
+          color="neutral"
+          size="sm"
+          icon="lucide-calendar-days"
+        >
+          Since {@meta.since}
+        </Components.badge>
       </div>
     </header>
     """
   end
 
-  attr :class, :string, default: "text-toned border-accented"
+  @doc """
+  Renders the lifecycle status badge for a component.
+  """
 
-  slot :inner_block, required: true
+  attr :status, :atom, required: true
+  attr :class, :any, default: nil
 
-  defp meta_badge(assigns) do
+  def status_badge(assigns) do
+    assigns =
+      assigns
+      |> assign(:color, status_badge_color(assigns.status))
+      |> assign(:icon, status_icon(assigns.status))
+
     ~H"""
-    <span class={[
-      @class,
-      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-medium text-xs border"
-    ]}>
-      {render_slot(@inner_block)}
-    </span>
+    <Components.badge
+      variant="subtle"
+      color={@color}
+      size="sm"
+      icon={@icon}
+      class={["capitalize", @class]}
+    >
+      {to_string(@status)}
+    </Components.badge>
     """
   end
 
-  defp status_badge_class(:stable) do
-    "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900 dark:bg-sky-950/50 dark:text-sky-300"
-  end
-
-  defp status_badge_class(:draft) do
-    "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-300"
-  end
-
-  defp status_badge_class(_status) do
-    "text-toned border-accented"
-  end
+  defp status_badge_color(:stable), do: "info"
+  defp status_badge_color(:draft), do: "warning"
+  defp status_badge_color(_status), do: "neutral"
 
   # Icons are keyed by the `FlintUI.Meta` status, never by the display label, so
   # a new status raises instead of silently sharing a default.
@@ -317,9 +327,16 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def required_badge(assigns) do
     ~H"""
-    <span class="ml-1.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-amber-700 uppercase ring-1 ring-amber-200 ring-inset dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-900">
+    <Components.badge
+      variant="subtle"
+      color="warning"
+      size="xs"
+      radius="full"
+      uppercase
+      class="ml-1.5"
+    >
       Required
-    </span>
+    </Components.badge>
     """
   end
 
@@ -637,27 +654,25 @@ defmodule FlintUIDocsWeb.DocsComponents do
   attr :source, :atom, required: true
 
   def source_badge(assigns) do
+    assigns = assign(assigns, :color, source_badge_color(assigns.source))
+
     ~H"""
-    <span class={[
-      "ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-medium tracking-wide uppercase ring-1 ring-inset",
-      source_badge_class(@source)
-    ]}>
+    <Components.badge
+      variant="subtle"
+      color={@color}
+      size="xs"
+      radius="full"
+      uppercase
+      class="ml-1.5"
+    >
       {@source}
-    </span>
+    </Components.badge>
     """
   end
 
-  defp source_badge_class(:client) do
-    "bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:ring-sky-900"
-  end
-
-  defp source_badge_class(:server) do
-    "bg-violet-50 text-violet-700 ring-violet-200 dark:bg-violet-950/40 dark:text-violet-300 dark:ring-violet-900"
-  end
-
-  defp source_badge_class(_source) do
-    "bg-muted text-toned ring-default"
-  end
+  defp source_badge_color(:client), do: "info"
+  defp source_badge_color(:server), do: "primary"
+  defp source_badge_color(_source), do: "neutral"
 
   @doc false
 

@@ -1,0 +1,87 @@
+defmodule FlintUI.Styled.ButtonTest do
+  use FlintUI.StyledCase, async: true
+
+  setup_all do
+    wrapper =
+      compile_wrapper!(:button, ~S'''
+      def example(assigns) do
+        ~H"""
+        <.button color={@color} variant="solid" style={@style}>Deploy</.button>
+        """
+      end
+
+      def text_and_icon(assigns) do
+        ~H"""
+        <.button icon="lucide-save" text="Save" />
+        """
+      end
+
+      def slot_wins(assigns) do
+        ~H"""
+        <.button icon="lucide-save" text="Ignored">Save now</.button>
+        """
+      end
+
+      def icon_only(assigns) do
+        ~H"""
+        <.button icon="lucide-search" square aria-label="Search" />
+        """
+      end
+      ''')
+
+    %{wrapper: wrapper}
+  end
+
+  defp icon(document), do: LazyHTML.query(document, ~s([data-element="icon"]))
+
+  defp colored(wrapper, color, style \\ nil) do
+    render(wrapper, :example, %{color: color, style: style})
+  end
+
+  test "a role keeps the data hook and emits no inline color", %{wrapper: wrapper} do
+    document = colored(wrapper, "primary")
+
+    assert attr(document, :button, "data-color") == ["primary"]
+    assert attr(document, :button, "style") == []
+  end
+
+  test "a raw color omits the data hook and sets the public inputs", %{wrapper: wrapper} do
+    document = colored(wrapper, "#1D72FE")
+
+    assert attr(document, :button, "data-color") == []
+    style = document |> attr(:button, "style") |> List.first()
+
+    assert style =~ "--fl-button-color: #1D72FE"
+    assert style =~ "--fl-button-color-content: oklch(0% 0 0)"
+    assert style =~ "--fl-button-text: light-dark("
+  end
+
+  test "an explicit style wins over the derived inputs", %{wrapper: wrapper} do
+    document = colored(wrapper, "#1D72FE", "--fl-button-color-content: white")
+    style = document |> attr(:button, "style") |> List.first()
+
+    assert String.ends_with?(style, "; --fl-button-color-content: white")
+  end
+
+  test "text and icon are content shortcuts", %{wrapper: wrapper} do
+    document = render(wrapper, :text_and_icon)
+
+    assert root(document, :button) |> LazyHTML.text() |> String.trim() == "Save"
+    assert LazyHTML.attribute(icon(document), "class") == ["lucide-save"]
+    assert LazyHTML.attribute(icon(document), "aria-hidden") == ["true"]
+  end
+
+  test "the default slot wins over text", %{wrapper: wrapper} do
+    document = render(wrapper, :slot_wins)
+
+    assert root(document, :button) |> LazyHTML.text() |> String.trim() == "Save now"
+    refute root(document, :button) |> LazyHTML.text() |> String.contains?("Ignored")
+  end
+
+  test "an icon-only button keeps its aria-label", %{wrapper: wrapper} do
+    document = render(wrapper, :icon_only)
+
+    assert attr(document, :button, "aria-label") == ["Search"]
+    assert LazyHTML.attribute(icon(document), "class") == ["lucide-search"]
+  end
+end

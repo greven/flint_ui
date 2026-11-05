@@ -131,7 +131,7 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   attr(:variant, :string,
-    values: ~w(outline solid subtle soft dashed ghost link),
+    values: ~w(solid subtle soft outline dashed ghost link),
     default: "outline",
     doc: "The visual emphasis of the button."
   )

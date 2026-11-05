@@ -129,7 +129,7 @@
             --fl-badge-soft-border,
             color-mix(
                 in oklab,
-                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
                 var(--fl-color-control)
             )
         );
@@ -144,7 +144,7 @@
             --fl-badge-soft-border,
             color-mix(
                 in oklab,
-                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
                 var(--fl-color-control)
             )
         );

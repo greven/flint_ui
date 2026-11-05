@@ -139,7 +139,7 @@
         color-mix(in oklab, var(--fl-color-primary-950) 70%, var(--fl-color-control))
     );
     --fl-color-primary-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),
+        color-mix(in oklab, var(--fl-color-primary-200) 40%, var(--fl-color-primary-300)),
         color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))
     );
 

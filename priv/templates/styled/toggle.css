@@ -251,7 +251,7 @@
             --fl-toggle-soft-border,
             color-mix(
                 in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
                 var(--fl-color-control)
             )
         );
@@ -263,7 +263,7 @@
             --fl-toggle-soft-border,
             color-mix(
                 in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
                 var(--fl-color-control)
             )
         );

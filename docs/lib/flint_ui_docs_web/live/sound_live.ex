@@ -170,34 +170,32 @@ defmodule FlintUIDocsWeb.SoundLive do
         </p>
 
         <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-default bg-muted p-3">
-          <button
-            type="button"
+          <Components.toggle
             data-sound-enable
-            aria-pressed="false"
             aria-label="Toggle interface sounds"
-            phx-click={JS.dispatch("fl:sound:toggle")}
-            class="inline-flex items-center gap-2 rounded-lg border border-accented bg-surface px-3 py-1.5 text-sm font-medium text-default transition-colors aria-pressed:border-inverted aria-pressed:bg-inverted aria-pressed:text-inverted"
+            on_click={JS.dispatch("fl:sound:toggle")}
           >
             <span data-sound-icon="on" class="inline-flex items-center gap-2">
-              <.icon name="lucide-volume-2" class="size-4" /> Sound on
+              <Components.icon name="lucide-volume-2" class="size-4" /> Sound on
             </span>
             <span data-sound-icon="off" class="inline-flex items-center gap-2">
-              <.icon name="lucide-volume-x" class="size-4" /> Sound off
+              <Components.icon name="lucide-volume-x" class="size-4" /> Sound off
             </span>
-          </button>
+          </Components.toggle>
 
           <div class="flex flex-wrap items-center gap-1.5" aria-label="Sound theme">
             <span class="text-xs font-medium tracking-wide text-muted uppercase">Theme</span>
-            <button
+            <Components.toggle
               :for={theme <- @themes}
-              type="button"
               data-sound-theme-option={theme}
-              aria-pressed={to_string(theme == "default")}
-              phx-click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
-              class="rounded-full border border-accented px-2.5 py-1 text-xs font-medium text-toned transition-colors aria-pressed:border-inverted aria-pressed:bg-inverted aria-pressed:text-inverted"
+              pressed={theme == "default"}
+              variant="outline"
+              size="xs"
+              radius="full"
+              on_click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
             >
               {String.capitalize(theme)}
-            </button>
+            </Components.toggle>
           </div>
         </div>
 
@@ -277,9 +275,9 @@ defmodule FlintUIDocsWeb.SoundLive do
                   data-sound-close="drop"
                 >
                   <:trigger :let={attrs}>
-                    <button {attrs} class="text-sm font-medium underline underline-offset-2">
+                    <Components.button {attrs} variant="link" size="sm">
                       Show details
-                    </button>
+                    </Components.button>
                   </:trigger>
                   <:content :let={attrs}>
                     <p {attrs} class="pt-2 text-sm text-muted">
@@ -372,14 +370,15 @@ defmodule FlintUIDocsWeb.SoundLive do
             </label>
           </div>
 
-          <button
+          <Components.button
             type="button"
             data-sound="tap"
             data-sound-dial-demo
-            class="mt-4 rounded-lg border border-accented px-3 py-1.5 text-sm font-medium"
+            variant="outline"
+            class="mt-4"
           >
             Play this cue
-          </button>
+          </Components.button>
 
           <DocsComponents.code_block code={snippet(:dials)} />
         </div>

@@ -3,6 +3,7 @@ defmodule FlintUIDocsWeb.ComponentsLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.DocsComponents
 
   @impl true
@@ -24,24 +25,24 @@ defmodule FlintUIDocsWeb.ComponentsLive do
             />
           </h2>
           <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <.link
+            <Components.card
               :for={component <- group.components}
               navigate={~p"/components/#{component.name}"}
-              class="group flex flex-col rounded-lg border border-default p-5 transition-colors hover:border-accented hover:bg-muted"
+              title_id={"component-#{component.name}"}
+              spacing="sm"
+              class="group h-full"
             >
-              <div class="flex items-center justify-between gap-3">
-                <span class="font-medium">{component.label}</span>
-                <span class="rounded-full border border-default px-2 py-0.5 text-xs text-muted">
-                  {to_string(component.meta.status)}
-                </span>
-              </div>
-              <p class="mt-2 text-sm text-toned">
+              <:title>{component.label}</:title>
+              <:description>
                 {component.description || "Accessible, unstyled component."}
-              </p>
-              <span class="mt-4 text-sm font-medium text-muted group-hover:text-default">
+              </:description>
+              <:header_actions>
+                <DocsComponents.status_badge status={component.meta.status} />
+              </:header_actions>
+              <span class="text-sm font-medium text-muted group-hover:text-default">
                 View docs
               </span>
-            </.link>
+            </Components.card>
           </div>
         </section>
       </div>

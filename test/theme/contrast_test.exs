@@ -1,4 +1,4 @@
-defmodule FlintUI.ThemeContrastTest do
+defmodule FlintUI.Theme.ContrastTest do
   use ExUnit.Case, async: true
 
   alias FlintUI.Palette.Contrast

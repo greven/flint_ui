@@ -19,6 +19,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
   use FlintUIDocsWeb, :html
 
+  alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Highlight
 
   attr :id, :string,
@@ -229,15 +230,17 @@ defmodule FlintUIDocsWeb.CodeBlock do
         {render_slot(@actions)}
         <.copy_button :if={@copy} id={@copy_id} target={@id} />
 
-        <button
+        <Components.button
           :if={@collapsible}
           {@trigger_attrs || %{}}
           data-code-collapse
           aria-label="Toggle code"
-          class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-foreground/5 hover:text-default"
+          variant="ghost"
+          size="xs"
+          square
         >
-          <.icon name="lucide-chevron-down" class="size-3.5" />
-        </button>
+          <Components.icon name="lucide-chevron-down" class="size-3.5" />
+        </Components.button>
       </div>
     </div>
     """
@@ -277,26 +280,28 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
   defp copy_button(assigns) do
     ~H"""
-    <button
+    <Components.button
       type="button"
       id={@id}
       phx-hook=".CopyCode"
       data-copy={@target}
       aria-label="Copy code"
-      class="group inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
+      variant="ghost"
+      size="xs"
+      class="group"
     >
       <span class="relative grid size-3.5 place-items-center">
-        <.icon
+        <Components.icon
           name="lucide-copy"
           class="col-start-1 row-start-1 size-3.5 transition-opacity duration-200 group-data-copied:opacity-0"
         />
-        <.icon
+        <Components.icon
           name="lucide-check"
           class="col-start-1 row-start-1 size-3.5 text-green-600 opacity-0 transition-opacity duration-200 group-data-copied:opacity-100 dark:text-green-400"
         />
       </span>
       Copy
-    </button>
+    </Components.button>
     """
   end
 

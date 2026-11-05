@@ -51,6 +51,7 @@ defmodule FlintUIDocsWeb.Preview do
 
   alias FlintUIDocsWeb.Docs
   alias FlintUIDocsWeb.CodeBlock
+  alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Highlight
 
   attr :preview_id, :any, default: nil
@@ -139,26 +140,32 @@ defmodule FlintUIDocsWeb.Preview do
             :if={@resizable}
             class="absolute right-2 bottom-2 z-10 flex items-center gap-1"
           >
-            <button
+            <Components.button
               type="button"
               data-preview-resize-reset
               aria-label="Reset preview size"
               title="Reset preview size"
               hidden
-              class="inline-flex size-6 items-center justify-center rounded-md border border-default bg-surface/80 text-muted opacity-50 shadow-sm backdrop-blur transition-opacity hover:opacity-100 focus-visible:opacity-100"
-            >
-              <.icon name="lucide-rotate-ccw" class="size-3.5" />
-            </button>
+              variant="outline"
+              size="xs"
+              square
+              depth={false}
+              icon="lucide-rotate-ccw"
+              class="bg-surface/80 opacity-50 shadow-sm backdrop-blur hover:opacity-100 focus-visible:opacity-100"
+            />
 
-            <button
+            <Components.button
               type="button"
               data-preview-resize-handle
               aria-label="Resize preview"
               title="Drag to resize. Use the arrow keys to resize, or double-click to reset."
-              class="inline-flex size-6 cursor-nwse-resize touch-none items-center justify-center rounded-md border border-default bg-surface/80 text-muted opacity-50 shadow-sm backdrop-blur transition-opacity hover:opacity-100 focus-visible:opacity-100"
-            >
-              <.icon name="lucide-move-diagonal-2" class="size-3.5" />
-            </button>
+              variant="outline"
+              size="xs"
+              square
+              depth={false}
+              icon="lucide-move-diagonal-2"
+              class="cursor-nwse-resize touch-none bg-surface/80 opacity-50 shadow-sm backdrop-blur hover:opacity-100 focus-visible:opacity-100"
+            />
           </div>
 
           <span
@@ -254,20 +261,18 @@ defmodule FlintUIDocsWeb.Preview do
             </:tabs>
 
             <:actions :if={@source}>
-              <button
+              <Components.button
                 type="button"
                 id={"#{@preview_id}-source-toggle"}
                 phx-click="preview_view"
                 phx-value-id={@preview_id}
                 phx-value-view={if @code_view == "source", do: "code", else: "source"}
-                class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted transition-colors hover:bg-foreground/5 hover:text-default"
+                variant="ghost"
+                size="xs"
+                icon={if @code_view == "source", do: "lucide-code", else: "lucide-file-code"}
               >
-                <.icon
-                  name={if @code_view == "source", do: "lucide-code", else: "lucide-file-code"}
-                  class="size-3.5"
-                />
                 {if @code_view == "source", do: "Code", else: "Source"}
-              </button>
+              </Components.button>
             </:actions>
           </CodeBlock.code>
         </div>

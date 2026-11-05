@@ -34,7 +34,7 @@ defmodule FlintUI.WrapperProbeTest.Wrapper do
   FlintUI.API.component(:wrapper_probe)
 end
 
-defmodule FlintUIApiTest do
+defmodule FlintUI.APITest do
   use ExUnit.Case, async: true
 
   defp render(changed) do

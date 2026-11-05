@@ -261,7 +261,7 @@
             --fl-button-soft-border,
             color-mix(
                 in oklab,
-                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
                 var(--fl-color-control)
             )
         );
@@ -283,7 +283,7 @@
             --fl-button-soft-border,
             color-mix(
                 in oklab,
-                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength),
+                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
                 var(--fl-color-control)
             )
         );

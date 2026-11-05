@@ -1,4 +1,4 @@
-defmodule FlintUI.ThemeContractTest do
+defmodule FlintUI.Theme.ContractTest do
   use ExUnit.Case, async: true
 
   alias FlintUI.Styled

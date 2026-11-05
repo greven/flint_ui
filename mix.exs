@@ -6,6 +6,7 @@ defmodule FlintUI.MixProject do
       app: :flint_ui,
       version: "0.1.0",
       elixir: "~> 1.18",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       compilers: Mix.compilers() ++ [:flint_theme],
       deps: deps(),
@@ -44,6 +45,9 @@ defmodule FlintUI.MixProject do
       extra_applications: [:logger]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do

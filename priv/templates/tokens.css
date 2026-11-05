@@ -235,7 +235,7 @@
         color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-control))
     );
     --fl-color-primary-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),
+        color-mix(in oklab, var(--fl-color-primary-200) 40%, var(--fl-color-primary-300)),
         color-mix(in oklab, var(--fl-color-primary-700) 70%, var(--fl-color-control))
     );
 
@@ -247,7 +247,7 @@
         color-mix(in oklab, var(--fl-color-secondary-800) 70%, var(--fl-color-control))
     );
     --fl-color-secondary-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-secondary-200) 50%, var(--fl-color-secondary-300)),
+        color-mix(in oklab, var(--fl-color-secondary-200) 40%, var(--fl-color-secondary-300)),
         color-mix(in oklab, var(--fl-color-secondary-700) 70%, var(--fl-color-control))
     );
 
@@ -259,7 +259,7 @@
         color-mix(in oklab, var(--fl-color-neutral-800) 70%, var(--fl-color-control))
     );
     --fl-color-neutral-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-neutral-200) 50%, var(--fl-color-neutral-300)),
+        color-mix(in oklab, var(--fl-color-neutral-200) 40%, var(--fl-color-neutral-300)),
         color-mix(in oklab, var(--fl-color-neutral-700) 70%, var(--fl-color-control))
     );
 
@@ -271,7 +271,7 @@
         color-mix(in oklab, var(--fl-color-info-950) 70%, var(--fl-color-control))
     );
     --fl-color-info-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-info-200) 50%, var(--fl-color-info-300)),
+        color-mix(in oklab, var(--fl-color-info-200) 40%, var(--fl-color-info-300)),
         color-mix(in oklab, var(--fl-color-info-800) 70%, var(--fl-color-control))
     );
 
@@ -283,7 +283,7 @@
         color-mix(in oklab, var(--fl-color-success-950) 70%, var(--fl-color-control))
     );
     --fl-color-success-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-success-200) 50%, var(--fl-color-success-300)),
+        color-mix(in oklab, var(--fl-color-success-200) 40%, var(--fl-color-success-300)),
         color-mix(in oklab, var(--fl-color-success-800) 70%, var(--fl-color-control))
     );
 
@@ -295,7 +295,7 @@
         color-mix(in oklab, var(--fl-color-warning-950) 70%, var(--fl-color-control))
     );
     --fl-color-warning-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-warning-200) 50%, var(--fl-color-warning-300)),
+        color-mix(in oklab, var(--fl-color-warning-200) 40%, var(--fl-color-warning-300)),
         color-mix(in oklab, var(--fl-color-warning-800) 70%, var(--fl-color-control))
     );
 
@@ -307,7 +307,7 @@
         color-mix(in oklab, var(--fl-color-error-950) 70%, var(--fl-color-control))
     );
     --fl-color-error-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-error-200) 50%, var(--fl-color-error-300)),
+        color-mix(in oklab, var(--fl-color-error-200) 40%, var(--fl-color-error-300)),
         color-mix(in oklab, var(--fl-color-error-800) 70%, var(--fl-color-control))
     );
 
@@ -345,11 +345,9 @@
     --fl-color-border-accented: light-dark(var(--fl-color-neutral-300), oklch(1 0 0 / 12%));
     --fl-color-ring: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
 
-    /* Colored control borders derive from the role color. */
-    --fl-border-strength: 50%;
+    /* Colored control borders. */
     --fl-border-strength-soft: 30%;
-    /* Solid controls darken their fill by this amount for the border. */
-    --fl-border-strength-solid: 12%;
+    --fl-border-strength-solid: 15%;
 
     /* Disabled controls dim with this opacity instead of swapping fills. */
     --fl-disabled-opacity: 0.5;
