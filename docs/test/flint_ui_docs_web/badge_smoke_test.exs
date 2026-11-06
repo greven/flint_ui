@@ -34,6 +34,27 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
              "Fresh"
            )
 
+    assert has_element?(
+             view,
+             "#example-badge-removable_chip [data-element='badge'][data-variant='dashed'] [data-element='button'][aria-label='Remove Elixir filter']"
+           )
+
+    assert has_element?(
+             view,
+             "#example-badge-icon_only [data-element='badge'][role='img'][aria-label='Verified']"
+           )
+
+    assert has_element?(
+             view,
+             "#example-badge-icon_only [data-element='badge'][role='status'][aria-label='3 unread notifications']"
+           )
+
+    assert has_element?(
+             view,
+             "#example-badge-inside_button [data-element='button'] [data-element='badge'][data-size='xs']",
+             "3 new"
+           )
+
     assert has_element?(view, "#api")
     assert has_element?(view, "#setup")
   end

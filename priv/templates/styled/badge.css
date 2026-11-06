@@ -11,7 +11,7 @@
         border: 1px solid transparent;
         border-radius: var(--fl-control-radius);
         font-family: var(--fl-font-sans);
-        font-weight: var(--fl-font-weight-medium);
+        font-weight: var(--fl-font-weight-semibold);
         line-height: 1;
         white-space: nowrap;
         text-decoration: none;
@@ -278,6 +278,6 @@
     /* Uppercase labels get a little tracking to keep them legible. */
     [data-element="badge"][data-uppercase] {
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.025em;
     }
 }

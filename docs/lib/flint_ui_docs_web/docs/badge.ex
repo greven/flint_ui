@@ -56,7 +56,20 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         section: :examples,
         id: :custom_color,
         title: "Custom Color"
-      }
+      },
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :removable_chip,
+        title: "Removable Chip"
+      },
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :inside_button,
+        title: "Inside a Button"
+      },
+      %{tab: :styled, section: :examples, id: :icon_only, title: "Icon Only"}
     ]
   end
 
@@ -193,11 +206,18 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Set `uppercase` to render the label in uppercase." />
     <.preview id={@id} code={&code_uppercase/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge size="xs" variant="solid" color="info" uppercase>New</Components.badge>
-        <Components.badge size="sm" variant="subtle" color="success" uppercase>
-          Stable
+        <Components.badge size="xs" variant="solid" color="neutral" radius="sm" uppercase>
+          Tiny
         </Components.badge>
-        <Components.badge variant="dot" color="success" uppercase>Status</Components.badge>
+        <Components.badge variant="solid" color="info" size="sm" radius="full" uppercase>
+          Small
+        </Components.badge>
+        <Components.badge variant="dot" color="info" radius="full" uppercase>
+          Huge
+        </Components.badge>
+        <Components.badge variant="subtle" color="warning" size="lg" uppercase>
+          If True
+        </Components.badge>
       </div>
     </.preview>
     """
@@ -315,6 +335,103 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
   end
 
+  def render_section(%{section: :examples, id: :removable_chip} = assigns) do
+    ~H"""
+    <.prose content="A chip is a badge that can be removed. Keep the badge as the label and give the
+      remove action its own button, so it stays keyboard operable, keeps a focus ring, and does not
+      turn the badge into a click target." />
+    <.prose content="Name the button after the value it removes so every chip has a distinct
+      accessible name." />
+    <.preview {assigns} code={&code_removable_chip/1}>
+      <div class="flex flex-wrap items-center gap-2">
+        <Components.badge
+          :for={tag <- ~w(Elixir Phoenix LiveView)}
+          variant="dashed"
+          color="primary"
+          size="lg"
+          radius="full"
+        >
+          {tag}
+          <:trailing>
+            <Components.button
+              variant="ghost"
+              size="xs"
+              square
+              radius="full"
+              class="-me-1"
+              aria-label={"Remove #{tag} filter"}
+              phx-click="remove_filter"
+              phx-value-tag={tag}
+            >
+              <Components.icon name="lucide-x" />
+            </Components.button>
+          </:trailing>
+        </Components.badge>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :examples, id: :inside_button} = assigns) do
+    ~H"""
+    <.prose content="A badge can annotate a button's label, for example to show a count or a plan.
+      The badge is part of the button's accessible name, so keep the combined text meaningful." />
+    <.preview {assigns} code={&code_inside_button/1}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button variant="solid" color="neutral">
+          Uprade
+          <Components.badge
+            style="--fl-badge-color: #ffffff20"
+            variant="solid"
+            color="neutral"
+            size="xs"
+            radius="sm"
+          >
+            Pro+
+          </Components.badge>
+        </Components.button>
+        <Components.button variant="soft">
+          Unread
+          <Components.badge variant="solid" color="neutral" size="xs" radius="sm">
+            99
+          </Components.badge>
+        </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :examples, id: :icon_only} = assigns) do
+    ~H"""
+    <.prose content={"When a badge has no visible text, give it an accessible name with `aria-label`
+      plus `role=\"img\"`. The same rule covers a bare count: include the context in the label, such as
+      `3 unread notifications`. Use `role=\"status\"` instead of `role=\"img\"` when the count changes
+      and should be announced."} />
+    <.preview {assigns} code={&code_icon_only/1} collapsed>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.badge variant="solid" color="success" role="img" aria-label="Verified">
+          <Components.icon name="lucide-circle-check" />
+        </Components.badge>
+        <Components.badge variant="solid" role="img" aria-label="Package">
+          <Components.icon name="lucide-package" />
+        </Components.badge>
+        <Components.badge variant="subtle" color="neutral" role="img" aria-label="Saved">
+          <Components.icon name="lucide-bookmark" />
+        </Components.badge>
+        <Components.badge
+          variant="solid"
+          color="error"
+          size="xs"
+          role="status"
+          aria-label="7 unread notifications"
+        >
+          7
+        </Components.badge>
+      </div>
+    </.preview>
+    """
+  end
+
   defp code_variant(props) do
     Snippet.tag(".badge", [Snippet.attr("variant", props.variant, "subtle")], "Badge")
   end
@@ -376,9 +493,10 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_uppercase(_) do
     """
-    <.badge size="xs" variant="solid" color="info" uppercase>New</.badge>
-    <.badge size="sm" variant="subtle" color="success" uppercase>Stable</.badge>
-    <.badge variant="dot" color="success" uppercase>Status</.badge>
+    <.badge size="xs" variant="solid" color="neutral" radius="sm" uppercase>Tiny</.badge>
+    <.badge variant="solid" color="info" size="sm" radius="full" uppercase>Small</.badge>
+    <.badge variant="dot" color="info" radius="full" uppercase>Huge</.badge>
+    <.badge variant="subtle" color="warning" size="lg" uppercase>If True</.badge>
     """
     |> String.trim()
   end
@@ -388,6 +506,72 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge variant="solid" color="info" navigate="/components/badge">Badge Docs</.badge>
     <.badge variant="subtle" color="info" patch="/components/badge#usage-color">Color Options</.badge>
     <.badge variant="outline" color="info" href="/components">Browse Components</.badge>
+    """
+    |> String.trim()
+  end
+
+  defp code_removable_chip(_) do
+    ~S"""
+    <.badge
+      :for={tag <- @active_filters}
+      variant="dashed"
+      color="primary"
+      size="lg"
+      radius="full"
+    >
+      {tag}
+      <:trailing>
+        <.button
+          variant="ghost"
+          size="xs"
+          square
+          radius="full"
+          class="-me-1"
+          aria-label={"Remove #{tag} filter"}
+          phx-click="remove_filter"
+          phx-value-tag={tag}
+        >
+          <.icon name="lucide-x" />
+        </.button>
+      </:trailing>
+    </.badge>
+    """
+    |> String.trim()
+  end
+
+  defp code_icon_only(_) do
+    ~S"""
+    <.badge variant="solid" color="success" role="img" aria-label="Verified">
+      <.icon name="lucide-circle-check" />
+    </.badge>
+    <.badge variant="solid" role="img" aria-label="Package">
+      <.icon name="lucide-package" />
+    </.badge>
+    <.badge variant="subtle" color="neutral" role="img" aria-label="Saved">
+      <.icon name="lucide-bookmark" />
+    </.badge>
+    <.badge variant="solid" color="error" size="xs" role="status"
+      aria-label="7 unread notifications">
+      7
+    </.badge>
+    """
+    |> String.trim()
+  end
+
+  defp code_inside_button(_) do
+    """
+    <.button variant="outline">
+      Changelog
+      <.badge variant="soft" color="info" size="xs">3 new</.badge>
+    </.button>
+    <.button variant="solid" color="primary">
+      Upgrade
+      <.badge variant="soft" color="neutral" size="xs">Pro</.badge>
+    </.button>
+    <.button variant="ghost">
+      Notifications
+      <.badge variant="solid" color="error" size="xs">9+</.badge>
+    </.button>
     """
     |> String.trim()
   end
