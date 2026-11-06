@@ -55,7 +55,7 @@ defmodule FlintUI.Styled.Tabs do
         ),
         Prop.new(
           name: :color,
-          values: ["primary", "secondary", "success", "info", "warning", "error", "neutral"],
+          values: ["neutral", "info", "success", "warning", "error", "primary", "secondary"],
           default: "neutral",
           allow_custom: true,
           doc:

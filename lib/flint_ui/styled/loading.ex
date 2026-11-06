@@ -32,13 +32,13 @@ defmodule FlintUI.Styled.Loading do
           name: :color,
           values: [
             "inherit",
-            "primary",
-            "secondary",
-            "success",
+            "neutral",
             "info",
+            "success",
             "warning",
             "error",
-            "neutral"
+            "primary",
+            "secondary"
           ],
           default: "inherit",
           allow_custom: true,

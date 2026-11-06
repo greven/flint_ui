@@ -58,13 +58,13 @@ defmodule FlintUI.StyledTest do
     color = Entry.prop(entry, :color)
 
     assert color.values == [
-             "primary",
-             "secondary",
+             "neutral",
              "info",
              "success",
              "warning",
              "error",
-             "neutral"
+             "primary",
+             "secondary"
            ]
 
     assert color.default == "neutral"
@@ -72,6 +72,17 @@ defmodule FlintUI.StyledTest do
     size = Entry.prop(entry, :size)
     assert size.values == ["xs", "sm", "md", "lg", "xl"]
     assert size.default == "md"
+  end
+
+  test "color props list roles in the canonical docs order" do
+    canonical = ~w(neutral info success warning error primary secondary)
+
+    for entry <- Styled.entries(), color <- List.wrap(Entry.prop(entry, :color)) do
+      values = Enum.reject(color.values, &(&1 == "inherit"))
+
+      assert values == canonical,
+             "expected #{entry.name}.color to follow #{inspect(canonical)}, got #{inspect(color.values)}"
+    end
   end
 
   test "badge defaults to the subtle treatment" do

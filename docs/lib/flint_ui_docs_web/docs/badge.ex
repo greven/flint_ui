@@ -12,13 +12,18 @@ defmodule FlintUIDocsWeb.Docs.Badge do
   @impl true
   def sections do
     [
-      %{tab: :styled, section: :usage, id: :basic, title: "Usage"},
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :basic,
+        title: "Usage"
+      },
       %{
         tab: :styled,
         section: :usage,
         id: :variant,
         title: "Variant",
-        controls: [%{key: :variant, type: :select, default: "outline", label: "Variant"}]
+        controls: [%{key: :variant, type: :select, default: "subtle", label: "Variant"}]
       },
       %{
         tab: :styled,
@@ -61,13 +66,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Use the `inner_block` to set the content of the badge." />
     <.preview {assigns} code="<.badge>Badge</.badge>">
-      <div class="flex items-center flex-wrap gap-3">
-        <Components.badge>Some</Components.badge>
-        <Components.badge color="info">Things</Components.badge>
-        <Components.badge color="success">Come</Components.badge>
-        <Components.badge color="warning">In Small</Components.badge>
-        <Components.badge color="error">Packages</Components.badge>
-      </div>
+      <Components.badge>Badge</Components.badge>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
     """
@@ -77,7 +76,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Use the `variant` attr to change the visual emphasis of the badge. The default variant is `subtle`." />
     <.preview :let={props} {assigns} code={&code_variant/1}>
-      <Components.badge variant={props.variant}>Badge</Components.badge>
+      <div class="flex items-center flex-wrap gap-3">
+        <Components.badge variant={props.variant}>The Best</Components.badge>
+        <Components.badge variant={props.variant} color="info">Things</Components.badge>
+        <Components.badge variant={props.variant} color="success">Come</Components.badge>
+        <Components.badge variant={props.variant} color="warning">In Small</Components.badge>
+        <Components.badge variant={props.variant} color="error">Packages</Components.badge>
+      </div>
     </.preview>
     """
   end
@@ -90,8 +95,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     </.preview>
 
     <.prose content="Each `color` and `variant` compose freely: every variant is available in every role.
-      Each row below is a color role, each column a variant. You can use any of the semantic theme colors, `primary`, `secondary`,
-      `info`, `success`, etc." />
+      Each row below is a color role, each column a variant. You can use any of the semantic theme colors: `neutral`, `info`,
+      `success`, `warning`, `error`, `primary`, and `secondary`." />
 
     <.preview id={"#{@id}-grid"}>
       <div class="space-y-3">
@@ -117,30 +122,33 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Use the `icon` attr to render a decorative icon before the label. The icon scales with the badge size." />
     <.prose content="You can also use the `:leading` and `:trailing` slots to place an icon or other content before and after the label." />
     <.prose content="Icons are decorative. Keep the badge's text meaningful on its own instead of relying on the icon to carry the state." />
-    <.preview id={@id} code={&code_icon/1}>
-      <div class="flex flex-wrap items-center gap-3">
-        <Components.badge color="success" icon="lucide-badge-check">
-          Verified
-        </Components.badge>
-
-        <Components.badge variant="solid" color="neutral" icon="lucide-sparkles">
-          New
-        </Components.badge>
-        <Components.badge variant="solid" color="success" icon="lucide-check">
-          Passed
-        </Components.badge>
-        <Components.badge variant="outline" color="info">
-          <:leading>
-            <Components.icon name="lucide-clock" />
-          </:leading>
-          Waiting
-        </Components.badge>
-        <Components.badge variant="solid" color="primary">
-          Synced
-          <:trailing>
-            <Components.icon name="lucide-cloud" />
-          </:trailing>
-        </Components.badge>
+    <.preview id={@id} code={&code_icon/1} collapsed>
+      <div class="grid grid-rows-2 gap-3">
+        <div class="flex flex-wrap justify-center gap-3">
+          <Components.badge color="neutral" icon="lucide-bookmark">Saved</Components.badge>
+          <Components.badge color="success" icon="lucide-badge-check">Success</Components.badge>
+          <Components.badge color="info" icon="lucide-info">Info</Components.badge>
+          <Components.badge color="warning" icon="lucide-clock">Warning</Components.badge>
+          <Components.badge color="error" icon="lucide-shield-x">Forbidden</Components.badge>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <Components.badge variant="solid" color="neutral">
+            <:leading><Components.icon name="lucide-tag-plus" /></:leading>
+            New Version
+          </Components.badge>
+          <Components.badge variant="solid" color="primary">
+            Synced
+            <:trailing><Components.icon name="lucide-cloud-check" /></:trailing>
+          </Components.badge>
+          <Components.badge variant="soft" color="neutral">
+            Next
+            <:trailing><Components.icon name="lucide-arrow-right" /></:trailing>
+          </Components.badge>
+          <Components.badge variant="ghost" color="error">
+            <:leading><Components.icon name="lucide-shield-x" /></:leading>
+            Forbidden
+          </Components.badge>
+        </div>
       </div>
     </.preview>
     """
@@ -170,8 +178,10 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Set `wide` to fill the width of the surrounding container. The content stays centered." />
     <.preview id={@id} code={&code_wide/1}>
-      <div class="w-full max-w-sm">
-        <Components.badge variant="solid" color="info" wide>Full width</Components.badge>
+      <div class="w-full max-w-xs">
+        <Components.badge variant="solid" icon="lucide-move-horizontal" wide>
+          Full width
+        </Components.badge>
       </div>
     </.preview>
     """
@@ -182,17 +192,20 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Set `inset` to pull the badge over the padding it keeps for its box, so its label lines up with surrounding content. The hit area is unchanged." />
     <.prose content="It is most useful when a badge starts a row or sits inline with text and would otherwise look indented." />
     <.preview id={@id} code={&code_inset/1}>
-      <div class="w-full max-w-lg space-y-4 text-sm">
-        <div class="flex items-baseline gap-3">
-          <span class="w-24 shrink-0 text-xs font-medium text-muted">Default</span>
-          <Components.badge variant="subtle" color="success">Passed</Components.badge>
-          <span class="text-toned">Build finished</span>
+      <div>
+        <div class="flex justify-center items-baseline gap-2">
+          <div class="shrink-0 text-lg font-medium text-highlighted">New Package</div>
+          <Components.badge
+            size="lg"
+            variant="solid"
+            color="neutral"
+            icon="lucide-package-plus"
+            inset="top bottom"
+          >
+            New
+          </Components.badge>
         </div>
-        <div class="flex items-baseline gap-3">
-          <span class="w-24 shrink-0 text-xs font-medium text-muted">Inset</span>
-          <Components.badge variant="subtle" color="success" inset>Passed</Components.badge>
-          <span class="text-toned">Build finished</span>
-        </div>
+        <p class="mt-0.5 text-muted">Build finished</p>
       </div>
     </.preview>
     """
@@ -219,16 +232,18 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Use the link form for navigation. Keep a plain badge for labels and statuses that only describe something." />
     <.preview {assigns} code={&code_as_link/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge href="/components">Browse components</Components.badge>
         <Components.badge variant="solid" color="info" navigate="/components/badge">
-          Badge docs
+          Badge Docs
         </Components.badge>
         <Components.badge
-          variant="outline"
-          color="success"
+          variant="subtle"
+          color="info"
           patch="/components/badge#usage-color"
         >
-          Color options
+          Color Options
+        </Components.badge>
+        <Components.badge variant="outline" color="info" href="/components">
+          Browse Components
         </Components.badge>
       </div>
     </.preview>
@@ -237,13 +252,14 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :examples, id: :status_dot} = assigns) do
     ~H"""
-    <.prose content="Use the `dot` variant for a status badge. The `color` fills the dot, while the border and text stay neutral. The dot is decorative, so keep
-      the label meaningful and do not rely on color alone." />
+    <.prose content="Use the `dot` variant for a status badge. The `color` fills the dot, while the border and text stay neutral.
+      The dot is decorative, so keep the label meaningful and do not rely on color alone. Using the `color` attr you can set any custom color." />
     <.preview {assigns} code={dot_code()}>
       <div class="flex flex-wrap items-center gap-2">
         <Components.badge variant="dot" color="success" radius="xl">Online</Components.badge>
         <Components.badge variant="dot" color="warning" radius="xl">Pending</Components.badge>
         <Components.badge variant="dot" color="error" radius="xl">Offline</Components.badge>
+        <Components.badge variant="dot" color="#9810FA" radius="xl">Custom</Components.badge>
       </div>
     </.preview>
     """
@@ -251,23 +267,67 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :examples, id: :custom_color} = assigns) do
     ~H"""
-    <.prose content="You can customize the `color` of a badge using raw CSS color for a one-off accent or a value that comes from data." />
-    <.prose content="The best available contrast is used, so a mid-tone fill can still fall below AA when neither black nor white clears it.
-      Raw colors are an escape hatch: they do not follow `data-theme` presets or the semantic role contract. Prefer a role for app-wide theming,
-      and pass `style` to override the derived values." />
-    <.prose content="You can also override the exposed CSS variables directly, either in your stylesheet or with inline styles." />
+    <.prose content="You can pass a raw CSS color to `color` for a one-off accent or a value that comes from data. FlintUI keeps the fill exactly and derives the label with
+      the best contrast available, so a mid-tone fill can still fall below AA when neither black nor white clears it." />
+    <.prose content="Styling the badge yourself with `style` or utility classes goes further: it overrides the derived label, border, and text colors, so contrast is up to you.
+        Most of the examples below look vivid but do not meet WCAG AA. Prefer a semantic role or a theme override
+        for anything app-wide, and treat raw colors as a deliberate exception." />
 
-    <.preview {assigns} code={&code_raw/1} collapsed>
+    <.preview {assigns} code={&code_raw/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge variant="solid" color="#165DFC">J'aime le Bleu</Components.badge>
+        <Components.badge variant="solid" size="lg" color="#00B9DB" style="color: white;">
+          Cyan
+        </Components.badge>
+        <Components.badge variant="solid" size="lg" color="#05A6F3" style="color: white;">
+          Sky
+        </Components.badge>
+        <Components.badge variant="solid" size="lg" class="bg-lime-500 border-lime-600 text-lime-50">
+          Lime
+        </Components.badge>
+        <Components.badge variant="solid" size="lg" class="bg-rose-500 border-rose-600 text-white">
+          Rose
+        </Components.badge>
+      </div>
+    </.preview>
+
+    <.prose content="For a subtle gradient badge, paint the soft fill on the padding box and the gradient on the border box,
+      then clip the same gradient to the label. A local custom property keeps the border and text in sync." />
+    <.prose content="Wrap the label in its own element so the text clip does not catch an icon. In forced-colors mode the background
+      image is dropped, so restore the text fill with a `@media (forced-colors: active)` rule." />
+
+    <.preview {assigns} preview_id={"#{@preview_id}-gradient"} code={&code_gradient/1} collapsed>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.badge
+          variant="subtle"
+          color="primary"
+          size="sm"
+          style="--badge-gradient: linear-gradient(90deg, light-dark(#1D4ED8, #84b3ff), light-dark(#A21CAF, #df6cff)); background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
+        >
+          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
+            New
+          </span>
+        </Components.badge>
 
         <Components.badge
-          variant="solid"
-          radius="full"
-          style="--fl-badge-color: var(--color-violet-700);  --fl-badge-color-content: white;
-            background: linear-gradient(0.25turn, var(--color-violet-500), var(--color-fuchsia-500));"
+          variant="subtle"
+          color="warning"
+          size="sm"
+          style="--badge-gradient: linear-gradient(90deg, light-dark(#92400E, #fcd34d), light-dark(#BE123C, #fda4af)); background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
-          Fancy Badge
+          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
+            Beta
+          </span>
+        </Components.badge>
+
+        <Components.badge
+          variant="subtle"
+          color="success"
+          size="sm"
+          style="--badge-gradient: linear-gradient(90deg, light-dark(#047857, #6ee7b7), light-dark(#3F6212, #bef264)); background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
+        >
+          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
+            Fresh
+          </span>
         </Components.badge>
       </div>
     </.preview>
@@ -292,19 +352,22 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_icon(_) do
     """
-    <.badge icon="lucide-sparkles">New</.badge>
-    <.badge variant="solid" color="success" icon="lucide-check">Passed</.badge>
-    <.badge variant="outline" color="info">
-      <:leading>
-        <.icon name="lucide-clock" />
-      </:leading>
-      In progress
+    <.badge color="neutral" icon="lucide-bookmark">Saved</.badge>
+    <.badge color="success" icon="lucide-badge-check">Success</.badge>
+    <.badge color="info" icon="lucide-info">Info</.badge>
+    <.badge color="warning" icon="lucide-clock">Warning</.badge>
+    <.badge color="error" icon="lucide-shield-x">Forbidden</.badge>
+    <.badge variant="solid" color="neutral">
+      <:leading><.icon name="lucide-tag-plus" /></:leading> New Version
     </.badge>
-    <.badge variant="subtle" color="primary">
-      Synced
-      <:trailing>
-        <.icon name="lucide-cloud" />
-      </:trailing>
+    <.badge variant="solid" color="primary">
+      Synced <:trailing><.icon name="lucide-cloud-check" /></:trailing>
+    </.badge>
+    <.badge variant="soft" color="neutral">
+      Next <:trailing><.icon name="lucide-arrow-right" /></:trailing>
+    </.badge>
+    <.badge variant="ghost" color="error">
+      <:leading><.icon name="lucide-shield-x" /></:leading> Forbidden
     </.badge>
     """
     |> String.trim()
@@ -324,7 +387,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
   defp code_wide(_) do
     """
     <div class="w-full">
-      <.badge variant="solid" color="info" wide>Full width</.badge>
+      <.badge variant="solid" icon="lucide-move-horizontal" wide>Full Width</.badge>
     </div>
     """
     |> String.trim()
@@ -357,20 +420,75 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_as_link(_) do
     """
-    <.badge href="/components">Browse components</.badge>
-    <.badge variant="solid" color="info" navigate="/components/badge">Badge docs</.badge>
-    <.badge variant="outline" color="success" patch="/components/badge#usage-color">Color options</.badge>
+    <.badge variant="solid" color="info" navigate="/components/badge">Badge Docs</.badge>
+    <.badge variant="subtle" color="info" patch="/components/badge#usage-color">Color Options</.badge>
+    <.badge variant="outline" color="info" href="/components">Browse Components</.badge>
     """
     |> String.trim()
   end
 
   defp code_raw(_) do
     """
-    <.badge variant="solid" color="#165DFC">J'aime le Bleu</.badge>
-    <.badge variant="solid" radius="full"
-      style="--fl-badge-color: var(--color-violet-700);  --fl-badge-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-violet-500), var(--color-fuchsia-500));"
-    >Fancy Badge</.badge>
+    <.badge variant="solid" size="lg" color="#00B9DB" style="color: white;">Cyan</.badge>
+    <.badge variant="solid" size="lg" color="#05A6F3" style="color: white;">Sky</.badge>
+    <.badge variant="solid" size="lg" class="bg-lime-500 border-lime-600">Lime</.badge>
+    <.badge variant="solid" size="lg" class="bg-rose-500 border-rose-600">Rose</.badge>
+    """
+    |> String.trim()
+  end
+
+  defp code_gradient(_) do
+    """
+    <.badge
+      variant="subtle"
+      color="primary"
+      size="sm"
+      style="--badge-gradient: linear-gradient(90deg,
+        light-dark(#1D4ED8, #84b3ff), light-dark(#A21CAF, #df6cff));
+        background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box,
+          var(--badge-gradient) border-box;
+        border-color: transparent;"
+    >
+      <span style="background-image: var(--badge-gradient);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;">
+        New
+      </span>
+    </.badge>
+
+    <.badge
+      variant="subtle"
+      color="warning"
+      size="sm"
+      style="--badge-gradient: linear-gradient(90deg,
+        light-dark(#92400E, #fcd34d), light-dark(#BE123C, #fda4af));
+        background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box,
+          var(--badge-gradient) border-box;
+        border-color: transparent;"
+    >
+      <span style="background-image: var(--badge-gradient);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;">
+        Beta
+      </span>
+    </.badge>
+
+    <.badge
+      variant="subtle"
+      color="success"
+      size="sm"
+      style="--badge-gradient: linear-gradient(90deg,
+        light-dark(#047857, #6ee7b7), light-dark(#3F6212, #bef264));
+        background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box,
+          var(--badge-gradient) border-box;
+        border-color: transparent;"
+    >
+      <span style="background-image: var(--badge-gradient);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;">
+        Fresh
+      </span>
+    </.badge>
     """
     |> String.trim()
   end

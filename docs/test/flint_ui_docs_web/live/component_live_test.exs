@@ -451,18 +451,40 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the code panel is a collapsible disclosure", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#example-button-interactions-code-collapse[data-state='open']")
+    # The interactions example starts collapsed to keep the page compact.
+    assert has_element?(view, "#example-button-interactions-code-collapse[data-state='closed']")
     assert has_element?(view, "#example-button-interactions-code-header", "Expand Code")
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-collapse [data-part='trigger'][aria-expanded='true']"
+             "#example-button-interactions-code-collapse [data-part='trigger'][aria-expanded='false']"
+           )
+
+    assert has_element?(
+             view,
+             "#example-button-interactions-code-collapse [data-part='content'][hidden]"
+           )
+
+    # A default preview starts expanded.
+    assert has_element?(view, "#usage-button-basic-code-collapse[data-state='open']")
+
+    assert has_element?(
+             view,
+             "#usage-button-basic-code-collapse [data-part='trigger'][aria-expanded='true']"
            )
 
     refute has_element?(
              view,
-             "#example-button-interactions-code-collapse [data-part='content'][hidden]"
+             "#usage-button-basic-code-collapse [data-part='content'][hidden]"
            )
+
+    assert has_element?(
+             view,
+             "#icon-code-close[data-code-close][phx-click]",
+             "Close Code"
+           )
+
+    refute has_element?(view, "#usage-button-basic-code-close")
   end
 
   test "preview code flavors switch with accessible tabs", %{conn: conn} do

@@ -270,7 +270,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button
-              :for={role <- ~w(primary secondary success info warning error)}
+              :for={role <- ~w(info success warning error primary secondary)}
               variant="outline"
               color={role}
             >

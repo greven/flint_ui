@@ -26,10 +26,22 @@ defmodule FlintUIDocsWeb.CodeBlockTest do
     document = render_code(%{})
 
     assert count(document, "[data-code-block]") == 1
+    assert count(document, "[data-element='collapsible'][data-collapsible]") == 1
     assert count(document, "[data-code-header][phx-hook]") == 1
     assert count(document, "[data-code-collapse][aria-expanded='true']") == 1
     assert count(document, "[data-code-body]:not([hidden])") == 1
+    assert count(document, "[data-code-close]") == 0
     assert count(document, "button[aria-label='Copy code']") == 1
+  end
+
+  test "shows the close footer only for tall collapsible panels" do
+    tall_code = Enum.map_join(1..9, "\n", &"<.button>Save #{&1}</.button>")
+
+    tall = render_code(%{code: tall_code})
+    assert count(tall, "[data-code-close][phx-click]") == 1
+
+    not_collapsible = render_code(%{code: tall_code, collapsible: false})
+    assert count(not_collapsible, "[data-code-close]") == 0
   end
 
   test "starts collapsed when asked" do
@@ -43,6 +55,7 @@ defmodule FlintUIDocsWeb.CodeBlockTest do
     document = render_code(%{collapsible: false})
 
     assert count(document, "[data-code-header]") == 0
+    assert count(document, "[data-code-close]") == 0
 
     assert count(
              document,

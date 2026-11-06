@@ -3,7 +3,9 @@ defmodule FlintUIDocsWeb.CodeBlock do
   A standalone syntax-highlighted code panel.
 
   The panel owns the surface, the optional header, the copy interaction, and the
-  collapse disclosure. Callers shape it for their context with `class` and the
+  collapse disclosure. When a collapsible snippet is tall enough, the open panel
+  ends with a quiet "Close Code" footer so it can be dismissed without scrolling
+  back to the header. Callers shape it for their context with `class` and the
   `bordered`/`rounded` flags. The docs guides use it for standalone snippets; the
   preview uses it as the last, border-sharing section of a card.
 
@@ -21,6 +23,12 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Highlight
+
+  # The close footer only helps once the snippet is tall enough to push it out
+  # of view. Nine lines is roughly 200px at the panel's `text-xs`/
+  # `leading-relaxed` typography plus the `p-4` frame. `pre` does not wrap, so
+  # line count is a reliable height proxy.
+  @close_footer_min_lines 9
 
   attr :id, :string,
     default: nil,
@@ -74,7 +82,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
     <div data-code-block class={@class}>
       <%= if @header? do %>
         <%= if @collapsible do %>
-          <.collapsible
+          <Components.collapsible
             id={"#{@id}-collapse"}
             open={not @collapsed}
             class={panel_class(assigns)}
@@ -100,9 +108,10 @@ defmodule FlintUIDocsWeb.CodeBlock do
                 panel_id={@panel_id}
                 labelledby={@labelledby}
                 content_attrs={attrs}
+                collapsible
               />
             </:content>
-          </.collapsible>
+          </Components.collapsible>
         <% else %>
           <div class={panel_class(assigns)}>
             <.code_header
@@ -254,6 +263,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
   attr :panel_id, :string, default: nil
   attr :labelledby, :string, default: nil
   attr :content_attrs, :any, default: nil
+  attr :collapsible, :boolean, default: false
   attr :class, :any, default: nil
 
   defp body(assigns) do
@@ -269,6 +279,21 @@ defmodule FlintUIDocsWeb.CodeBlock do
           @class
         ]}
       ><code id={@id}>{Highlight.highlight(@code, @lang)}</code></pre>
+
+      <Components.button
+        :if={@collapsible and tall_code?(@code)}
+        type="button"
+        id={"#{@id}-close"}
+        data-code-close
+        phx-click={close_collapsible("#{@id}-collapse")}
+        variant="ghost"
+        size="xs"
+        wide
+        radius="none"
+        class="text-muted hover:text-default"
+      >
+        <Components.icon name="lucide-chevron-up" class="size-3.5" /> Close Code
+      </Components.button>
     </div>
     """
   end
@@ -306,6 +331,14 @@ defmodule FlintUIDocsWeb.CodeBlock do
   end
 
   ## Helpers
+
+  defp tall_code?(code) do
+    code
+    |> String.trim_trailing("\n")
+    |> String.split("\n")
+    |> length()
+    |> Kernel.>=(@close_footer_min_lines)
+  end
 
   defp panel_class(assigns) do
     [

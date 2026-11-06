@@ -8,8 +8,32 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
 
     assert has_element?(view, "#usage-badge-basic [data-element='badge'][data-variant='subtle']")
     assert has_element?(view, "#usage-badge-basic", "Badge")
-    assert has_element?(view, "#usage-badge-dot [data-variant='dot'][data-color='success']")
-    assert has_element?(view, "#usage-badge-dot", "Online")
+
+    assert has_element?(
+             view,
+             "#example-badge-status_dot [data-variant='dot'][data-color='success']"
+           )
+
+    assert has_element?(view, "#example-badge-status_dot", "Online")
+
+    assert has_element?(
+             view,
+             "#example-badge-custom_color-gradient [data-variant='subtle'][data-color='primary']",
+             "New"
+           )
+
+    assert has_element?(
+             view,
+             "#example-badge-custom_color-gradient [data-variant='subtle'][data-color='warning']",
+             "Beta"
+           )
+
+    assert has_element?(
+             view,
+             "#example-badge-custom_color-gradient [data-variant='subtle'][data-color='success']",
+             "Fresh"
+           )
+
     assert has_element?(view, "#api")
     assert has_element?(view, "#setup")
   end
