@@ -50,13 +50,6 @@ defmodule FlintUI.Styled.Badge do
           doc: "Whether the badge fills the width of its container."
         ),
         Prop.new(
-          name: :inset,
-          values: [true, false],
-          default: false,
-          doc:
-            "Whether to negate the badge's padding so its content aligns with surrounding content. The hit area is unchanged."
-        ),
-        Prop.new(
           name: :uppercase,
           values: [true, false],
           default: false,

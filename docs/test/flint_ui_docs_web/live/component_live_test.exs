@@ -358,6 +358,19 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#loading [data-element='button'][data-loading]")
   end
 
+  test "the button inset preview toggles inset", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#usage-button-inset-controls select[name='inset']")
+    assert has_element?(view, "#usage-button-inset [data-element='button'][data-inset]")
+
+    view
+    |> element("#usage-button-inset-controls")
+    |> render_change(%{"inset" => "false"})
+
+    refute has_element?(view, "#usage-button-inset [data-element='button'][data-inset]")
+  end
+
   test "preview controls opt out of password-manager autofill", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/icon")
 

@@ -42,7 +42,6 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         controls: [%{key: :radius, type: :select, default: "md", label: "Radius"}]
       },
       %{tab: :styled, section: :usage, id: :wide, title: "Wide"},
-      %{tab: :styled, section: :usage, id: :inset, title: "Inset"},
       %{tab: :styled, section: :usage, id: :uppercase, title: "Uppercase"},
       %{
         tab: :styled,
@@ -187,30 +186,6 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
   end
 
-  def render_section(%{section: :usage, id: :inset} = assigns) do
-    ~H"""
-    <.prose content="Set `inset` to pull the badge over the padding it keeps for its box, so its label lines up with surrounding content. The hit area is unchanged." />
-    <.prose content="It is most useful when a badge starts a row or sits inline with text and would otherwise look indented." />
-    <.preview id={@id} code={&code_inset/1}>
-      <div>
-        <div class="flex justify-center items-baseline gap-2">
-          <div class="shrink-0 text-lg font-medium text-highlighted">New Package</div>
-          <Components.badge
-            size="lg"
-            variant="solid"
-            color="neutral"
-            icon="lucide-package-plus"
-            inset="top bottom"
-          >
-            New
-          </Components.badge>
-        </div>
-        <p class="mt-0.5 text-muted">Build finished</p>
-      </div>
-    </.preview>
-    """
-  end
-
   def render_section(%{section: :usage, id: :uppercase} = assigns) do
     ~H"""
     <.prose content="Set `uppercase` to render the label in uppercase. A little letter spacing is added so short labels stay legible." />
@@ -301,7 +276,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           variant="subtle"
           color="primary"
           size="sm"
-          style="--badge-gradient: linear-gradient(90deg, light-dark(#1D4ED8, #84b3ff), light-dark(#A21CAF, #df6cff)); background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
+          style="--badge-gradient: linear-gradient(90deg, light-dark(#1D4ED8, #84b3ff), light-dark(#A21CAF, #df6cff));
+            background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
           <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
             New
@@ -312,7 +288,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           variant="subtle"
           color="warning"
           size="sm"
-          style="--badge-gradient: linear-gradient(90deg, light-dark(#92400E, #fcd34d), light-dark(#BE123C, #fda4af)); background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
+          style="--badge-gradient: linear-gradient(90deg, light-dark(#92400E, #fcd34d), light-dark(#BE123C, #fda4af));
+            background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
           <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
             Beta
@@ -323,7 +300,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           variant="subtle"
           color="success"
           size="sm"
-          style="--badge-gradient: linear-gradient(90deg, light-dark(#047857, #6ee7b7), light-dark(#3F6212, #bef264)); background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
+          style="--badge-gradient: linear-gradient(90deg, light-dark(#047857, #6ee7b7), light-dark(#3F6212, #bef264));
+            background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
           <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
             Fresh
@@ -388,21 +366,6 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
     <div class="w-full">
       <.badge variant="solid" icon="lucide-move-horizontal" wide>Full Width</.badge>
-    </div>
-    """
-    |> String.trim()
-  end
-
-  defp code_inset(_) do
-    """
-    <div class="flex items-baseline gap-3">
-      <.badge variant="subtle" color="success">Passed</.badge>
-      <span>Build finished</span>
-    </div>
-
-    <div class="flex items-baseline gap-3">
-      <.badge variant="subtle" color="success" inset>Passed</.badge>
-      <span>Build finished</span>
     </div>
     """
     |> String.trim()

@@ -36,7 +36,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "attr(:square, :boolean"
     assert source =~ "attr(:wide, :boolean"
     assert source =~ "attr(:depth, :boolean"
-    assert source =~ "attr(:inset, :boolean"
+    assert source =~ "attr(:inset, :any"
     assert source =~ "data-inset={@inset}"
     assert source =~ "<FlintUI.button"
     assert source =~ "render_slot(@inner_block)"
@@ -71,7 +71,7 @@ defmodule FlintUI.GeneratorTest do
 
     # `data-wide={@wide}` renders a bare attribute when true and omits it when
     # false, so there is never a `data-wide="false"` in the markup.
-    for prop <- ~w(square wide depth inset) do
+    for prop <- ~w(square wide depth) do
       assert source =~ "data-#{prop}={@#{prop}}"
       refute source =~ "data-#{prop}={to_string(@#{prop})}"
     end
@@ -185,6 +185,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-radius={@radius}"
     assert source =~ "data-uppercase={@uppercase}"
     assert source =~ "attr(:uppercase, :boolean"
+    refute source =~ "data-inset={@inset}"
 
     assert source =~
              "include: ~w(as href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"

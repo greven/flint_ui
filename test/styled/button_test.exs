@@ -37,6 +37,18 @@ defmodule FlintUI.Styled.ButtonTest do
         </.button>
         """
       end
+
+      def inset_all(assigns) do
+        ~H"""
+        <.button variant="ghost" inset>Dismiss</.button>
+        """
+      end
+
+      def inset_sides(assigns) do
+        ~H"""
+        <.button variant="ghost" inset="top bottom">Top and bottom</.button>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -106,5 +118,17 @@ defmodule FlintUI.Styled.ButtonTest do
 
     assert attr(document, :button, "data-justify") == ["between"]
     assert attr(document, :button, "data-wide") == [""]
+  end
+
+  test "a bare inset keeps the all-sides hook", %{wrapper: wrapper} do
+    document = render(wrapper, :inset_all)
+
+    assert attr(document, :button, "data-inset") == [""]
+  end
+
+  test "a directional inset keeps its space-separated value", %{wrapper: wrapper} do
+    document = render(wrapper, :inset_sides)
+
+    assert attr(document, :button, "data-inset") == ["top bottom"]
   end
 end

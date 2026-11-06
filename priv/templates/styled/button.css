@@ -236,9 +236,17 @@
      * color falls back to a fill mix. */
     [data-element="button"][data-variant="soft"],
     [data-element="button"][data-variant="subtle"] {
-        background: var(
-            --fl-button-soft,
-            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+        background: color-mix(
+            in oklab,
+            var(
+                --fl-button-soft,
+                color-mix(
+                    in oklab,
+                    var(--fl-button-color, var(--fl-color-inverted)) 10%,
+                    var(--fl-color-surface)
+                )
+            ) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
         );
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
@@ -317,18 +325,24 @@
         gap: var(--fl-control-gap-xs);
         font-size: var(--fl-control-font-size-xs);
         line-height: var(--fl-control-line-height-xs);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-xs) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-line-height-xs)) / 2));
     }
 
     [data-element="button"][data-size="sm"] {
         height: var(--fl-control-height-sm);
         padding-inline: var(--fl-control-padding-x-sm);
         gap: var(--fl-control-gap-sm);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-sm) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-line-height-sm)) / 2));
     }
 
     [data-element="button"][data-size="md"] {
         height: var(--fl-control-height-md);
         padding-inline: var(--fl-control-padding-x-md);
         gap: var(--fl-control-gap-md);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-md) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-line-height-md)) / 2));
     }
 
     [data-element="button"][data-size="lg"] {
@@ -337,6 +351,8 @@
         gap: var(--fl-control-gap-lg);
         font-size: var(--fl-control-font-size-lg);
         line-height: var(--fl-control-line-height-lg);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-lg) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-line-height-lg)) / 2));
     }
 
     [data-element="button"][data-size="xl"] {
@@ -345,6 +361,8 @@
         gap: var(--fl-control-gap-xl);
         font-size: var(--fl-control-font-size-xl);
         line-height: var(--fl-control-line-height-xl);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-xl) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2));
     }
 
     /* Radius overrides use the shared scale. */
@@ -419,56 +437,72 @@
         justify-content: space-between;
     }
 
-    /* Inset: pull the box over the padding it keeps for its hit area so
-     * the content lines up with surrounding content. */
-    [data-element="button"][data-inset][data-size="xs"] {
-        margin-inline: calc(-1 * (var(--fl-control-padding-x-xs) + 1px));
-        margin-block: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-line-height-xs)) / 2));
-    }
-
-    [data-element="button"][data-inset][data-size="sm"] {
-        margin-inline: calc(-1 * (var(--fl-control-padding-x-sm) + 1px));
-        margin-block: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-line-height-sm)) / 2));
-    }
-
-    [data-element="button"][data-inset][data-size="md"] {
-        margin-inline: calc(-1 * (var(--fl-control-padding-x-md) + 1px));
-        margin-block: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-line-height-md)) / 2));
-    }
-
-    [data-element="button"][data-inset][data-size="lg"] {
-        margin-inline: calc(-1 * (var(--fl-control-padding-x-lg) + 1px));
-        margin-block: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-line-height-lg)) / 2));
-    }
-
-    [data-element="button"][data-inset][data-size="xl"] {
-        margin-inline: calc(-1 * (var(--fl-control-padding-x-xl) + 1px));
-        margin-block: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2));
-    }
-
-    /* A link has no block padding and no fixed height, so inset only negates
-     * its inline padding. */
-    [data-element="button"][data-variant="link"][data-inset] {
-        margin-block: 0;
-    }
-
+    /* Square buttons inset by the free space around the icon instead of the
+     * inline padding. */
     [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="xs"] {
-        margin: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-icon-xs)) / 2));
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-icon-xs)) / 2));
+        --_inset-block: var(--_inset-inline);
     }
 
     [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="sm"] {
-        margin: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-icon-sm)) / 2));
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-icon-sm)) / 2));
+        --_inset-block: var(--_inset-inline);
     }
 
     [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="md"] {
-        margin: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-icon-md)) / 2));
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-icon-md)) / 2));
+        --_inset-block: var(--_inset-inline);
     }
 
     [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="lg"] {
-        margin: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-icon-lg)) / 2));
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-icon-lg)) / 2));
+        --_inset-block: var(--_inset-inline);
     }
 
     [data-element="button"][data-inset][data-square]:not([data-variant="link"])[data-size="xl"] {
-        margin: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-icon-xl)) / 2));
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-icon-xl)) / 2));
+        --_inset-block: var(--_inset-inline);
+    }
+
+    /* A link has no block padding and no fixed height, so only its inline
+     * padding can be negated. */
+    [data-element="button"][data-variant="link"] {
+        --_inset-block: 0;
+    }
+
+    /* Inset: pull the box over the padding it keeps for its hit area so the
+     * content lines up with surrounding content. `inset` alone (or `all`)
+     * negates every side; otherwise each space-separated token negates the
+     * matching side. `left`/`right` are inline-start/inline-end, so they follow
+     * the writing direction. */
+    [data-element="button"][data-inset] {
+        margin-block-start: 0;
+        margin-block-end: 0;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+    }
+
+    [data-element="button"][data-inset=""],
+    [data-element="button"][data-inset~="all"] {
+        margin-block-start: var(--_inset-block);
+        margin-block-end: var(--_inset-block);
+        margin-inline-start: var(--_inset-inline);
+        margin-inline-end: var(--_inset-inline);
+    }
+
+    [data-element="button"][data-inset~="top"] {
+        margin-block-start: var(--_inset-block);
+    }
+
+    [data-element="button"][data-inset~="bottom"] {
+        margin-block-end: var(--_inset-block);
+    }
+
+    [data-element="button"][data-inset~="left"] {
+        margin-inline-start: var(--_inset-inline);
+    }
+
+    [data-element="button"][data-inset~="right"] {
+        margin-inline-end: var(--_inset-inline);
     }
 }

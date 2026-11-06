@@ -50,7 +50,6 @@ defmodule FlintUI.Styled.BadgeTest do
     assert attr(document, :badge, "data-size") == ["md"]
     assert attr(document, :badge, "data-radius") == ["md"]
     assert attr(document, :badge, "data-uppercase") == []
-    assert attr(document, :badge, "data-inset") == []
     assert attr(document, :badge, "data-wide") == []
   end
 

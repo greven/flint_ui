@@ -253,8 +253,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
             is the role as text on a neutral surface. It also owns
             <code class="font-mono">-primary-soft</code>
             and <code class="font-mono">-primary-soft-border</code>
-            for tinted and bordered variants. Override the role in your app
-            stylesheet after the theme import:
+            for tinted and bordered variants. Tinted fills composite at
+            <code class="font-mono">--fl-tint-opacity</code>
+            (90%) so the surface below shows through; the <code class="font-mono">-soft</code>
+            token carries extra strength so the rendered fill still reads
+            against the surface. Override the role in your app stylesheet after
+            the theme import:
           </p>
           <DocsComponents.code_block code={snippet(:brand_css)} lang={:css} />
           <p class="mt-3 text-sm text-default">
@@ -511,10 +515,13 @@ defmodule FlintUIDocsWeb.ThemeLive do
     );
 
     /* The tint pair blends the role fill with the surface, so light and dark
-     * roles stay equally visible without matching the solid fill's opacity. */
+     * roles stay equally visible without matching the solid fill's opacity.
+     * Components composite it at --fl-tint-opacity; the token carries a little
+     * extra strength to keep the rendered fill visible. */
+    --fl-tint-opacity: 0.9;
     --fl-color-primary-soft: light-dark(
-      color-mix(in oklab, var(--fl-color-primary) 25%, var(--fl-color-surface)),
-      color-mix(in oklab, var(--fl-color-primary) 18%, var(--fl-color-surface))
+      color-mix(in oklab, var(--fl-color-primary) 8%, var(--fl-color-surface)),
+      color-mix(in oklab, var(--fl-color-primary) 20%, var(--fl-color-surface))
     );
     --fl-color-primary-soft-border: color-mix(
       in oklab,

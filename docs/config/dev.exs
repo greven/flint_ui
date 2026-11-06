@@ -63,9 +63,9 @@ config :flint_ui_docs, FlintUIDocsWeb.Endpoint,
       ~r"priv/static/(?!uploads/).*\.(js|css|png|jpeg|jpg|gif|svg)$"E,
       # Gettext translations
       ~r"priv/gettext/.*\.po$"E,
-      # Router, Controllers, LiveViews and LiveComponents
-      ~r"lib/flint_ui_docs_web/router\.ex$"E,
-      ~r"lib/flint_ui_docs_web/(controllers|live|components)/.*\.(ex|heex)$"E,
+      # Everything in the docs web layer: router, layouts, controllers,
+      # LiveViews, components, and the per-component docs pages.
+      ~r"lib/flint_ui_docs_web(\.ex|/.*\.(ex|heex))$"E,
       # The library lives outside the docs app, so reload it explicitly.
       ~r"lib/flint_ui/.*\.(ex|heex)$"E
     ]

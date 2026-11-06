@@ -53,7 +53,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
         title: "Radius",
         controls: [%{key: :radius, type: :select, default: "md", label: "Radius"}]
       },
-      %{tab: :styled, section: :usage, id: :inset, title: "Inset"},
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :inset,
+        title: "Inset",
+        controls: [%{key: :inset, type: :boolean, default: true, label: "Inset"}]
+      },
       %{
         tab: :styled,
         section: :examples,
@@ -290,14 +296,22 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :inset} = assigns) do
     ~H"""
-    <.prose content="Set `inset` to pull the control over the padding it keeps for its hit area, so its
+    <.prose content="Pass `inset` to pull the control over the padding it keeps for its hit area, so its
       content lines up with surrounding content." />
-    <.prose content="It is most useful on `ghost` and `link` buttons, whose box is otherwise invisible." />
-    <.preview id={@id} code={&code_inset/1}>
+    <.prose content="To inset only some sides, pass a space-separated combination of `top`, `bottom`, `left`,
+      and `right`, `all` is the same as a bare `inset`. Left and right follow the writing direction.
+      It is most useful on `ghost` and `link` buttons, whose box is otherwise invisible." />
+    <.preview :let={props} id={@id} {assigns} code={&code_inset/1} collapsed>
       <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
         <span class="text-sm font-medium">Post successfully created.</span>
         <div class="flex items-center gap-4">
-          <Components.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+          <Components.button
+            variant="ghost"
+            size="sm"
+            square
+            inset={props.inset}
+            aria-label="Dismiss"
+          >
             <Components.icon name="lucide-x" />
           </Components.button>
         </div>
@@ -495,7 +509,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
           </span>
           <span
             aria-hidden="true"
-            class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity duration-300 ease-out in-data-loading:opacity-100 motion-reduce:transition-none"
+            class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity
+              duration-300 ease-out in-data-loading:opacity-100 motion-reduce:transition-none"
           >
             <Components.loading variant="ring-dash" class="size-4" /> Saving
           </span>
@@ -588,7 +603,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
           <span
             aria-hidden="true"
-            class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity duration-300 ease-out in-data-loading:opacity-100 motion-reduce:transition-none"
+            class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 opacity-0
+              transition-opacity duration-300 ease-out in-data-loading:opacity-100 motion-reduce:transition-none"
           >
             <.loading variant="ring-dash" class="size-4" />
             Saving
@@ -721,12 +737,14 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
-  defp code_inset(_) do
+  defp code_inset(props) do
+    inset = if props.inset, do: " inset", else: ""
+
     """
     <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
       <span class="text-sm font-medium">Post successfully created.</span>
       <div class="flex items-center gap-4">
-        <.button variant="ghost" size="sm" square inset aria-label="Dismiss">
+        <.button variant="ghost" size="sm" square#{inset} aria-label="Dismiss">
           <.icon name="lucide-x" />
         </.button>
       </div>

@@ -231,9 +231,14 @@
     }
 
     [data-element="toggle"][data-variant="subtle"][data-state="on"] {
-        background: var(
-            --fl-toggle-soft,
-            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+        background: color-mix(
+            in oklab,
+            var(
+                    --fl-toggle-soft,
+                    color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+                )
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
         );
         border-color: var(
             --fl-toggle-soft-border,

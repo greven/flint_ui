@@ -42,6 +42,7 @@ defmodule FlintUI.Theme.ContractTest do
     attribute = Prop.attribute(prop)
 
     cond do
+      Prop.multi?(prop) -> ~s|#{root}[#{attribute}~="#{value}"]|
       not Prop.boolean?(prop) -> ~s|#{root}[#{attribute}="#{value}"]|
       value -> ~s|#{root}[#{attribute}]|
       true -> ~s|#{root}:not([#{attribute}])|

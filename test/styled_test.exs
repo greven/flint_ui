@@ -141,6 +141,13 @@ defmodule FlintUI.StyledTest do
 
     assert Prop.boolean?(Entry.prop(entry, :square))
     assert Prop.boolean?(Entry.prop(entry, :wide))
+    assert Prop.multi?(Entry.prop(entry, :inset))
+    refute Prop.multi?(Entry.prop(entry, :depth))
+  end
+
+  test "Prop.new/1 allows a false default for a multi prop" do
+    assert %Prop{default: false} =
+             Prop.new(name: :inset, values: ["top", "bottom"], default: false, multi: true)
   end
 
   test "Prop.new/1 rejects a default outside its values" do

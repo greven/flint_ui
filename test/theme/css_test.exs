@@ -381,6 +381,15 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-control-active-opacity: 0.07;"
   end
 
+  test "soft and subtle fills composite at the shared tint opacity", %{css: css} do
+    assert css =~ "--fl-tint-opacity: 0.9;"
+
+    for part <- ~w(styled/badge.css styled/button.css styled/toggle.css) do
+      source = File.read!(FlintUI.Generator.part_path(part))
+      assert source =~ "calc(var(--fl-tint-opacity, 0.9) * 100%)"
+    end
+  end
+
   test "every colored button variant uses the role text token", %{css: css} do
     assert css =~
              ~r/\[data-element="button"\]\[data-variant="soft"\],\s*\[data-element="button"\]\[data-variant="subtle"\] \{[^}]*color: var\(--fl-button-text/
@@ -414,7 +423,7 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-accented\);\s*border-color: var\(--fl-color-border-muted\);/
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: var\(\s*--fl-toggle-soft,/
+             ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(\s*in oklab,\s*var\(\s*--fl-toggle-soft,/
 
     # Both controls expose the depth flattening hook.
     assert css =~
@@ -489,20 +498,26 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-element="button"\]\[data-variant\]:not\(\[data-square\]\)\s*>\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
   end
 
-  test "inset buttons negate their padding", %{css: css} do
+  test "inset buttons negate only the requested sides", %{css: css} do
     for size <- ~w(xs sm md lg xl) do
       assert css =~
-               ~r/\[data-element="button"\]\[data-inset\]\[data-size="#{size}"\] \{\s*margin-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
+               ~r/\[data-element="button"\]\[data-size="#{size}"\] \{[^}]*--_inset-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
 
       assert css =~
-               ~r/\[data-inset\]\[data-square\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{\s*margin: calc\(/
+               ~r/\[data-element="button"\]\[data-size="#{size}"\] \{[^}]*--_inset-block: calc\(\s*-1 \* \(\(var\(--fl-control-height-#{size}\) - var\(--fl-control-line-height-#{size}\)\) \/ 2\)/
+
+      assert css =~
+               ~r/\[data-element="button"\]\[data-inset\]\[data-square\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{[^}]*--_inset-inline: calc\(\s*-1 \* \(\(var\(--fl-control-height-#{size}\) - var\(--fl-control-icon-#{size}\)\) \/ 2\)/
     end
 
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="link"\] \{[^}]*padding-block: 0;/
+    for side <- ~w(top bottom left right) do
+      assert css =~ ~s([data-element="button"][data-inset~="#{side}"])
+    end
 
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="link"\]\[data-inset\] \{\s*margin-block: 0;/
+    assert css =~ ~s([data-element="button"][data-inset=""])
+    assert css =~ ~s([data-element="button"][data-inset~="all"])
+
+    assert css =~ ~r/\[data-element="button"\]\[data-variant="link"\] \{\s*--_inset-block: 0;/
   end
 
   test "loading buttons keep a progress cursor", %{css: css} do
@@ -544,7 +559,7 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "boolean styling hooks are presence/absence, never string values", %{css: css} do
-    for hook <- ~w(square wide depth inset outline shadow inverted padded) do
+    for hook <- ~w(square wide depth outline shadow inverted padded) do
       refute css =~ ~r/\[data-#{hook}="(true|false)"\]/
     end
   end

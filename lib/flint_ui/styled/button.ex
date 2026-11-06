@@ -72,10 +72,11 @@ defmodule FlintUI.Styled.Button do
         ),
         Prop.new(
           name: :inset,
-          values: [true, false],
+          values: ["top", "bottom", "left", "right", "all"],
           default: false,
+          multi: true,
           doc:
-            "Whether to negate the button's invisible padding so its content aligns with surrounding content. Most useful on ghost and link variants; the hit area is unchanged."
+            "Negates the control's padding on the selected sides so its content aligns with surrounding content. Pass `inset` for every side, or a space-separated combination of `top`, `bottom`, `left`, `right`, and `all` (for example, `inset=\"top bottom\"`). Left and right follow the writing direction. The hit area is unchanged. Most useful on ghost and link variants."
         )
       ],
       content_attrs: [

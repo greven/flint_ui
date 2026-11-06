@@ -10,6 +10,9 @@ defmodule FlintUI.Styled.Prop do
   any string. `values` still lists the documented presets and keeps driving the
   theme contract; the wrapper is responsible for validating the extra values
   (see `FlintUI.Styled.Color` for `:color`).
+
+  A prop can also accept a space-separated combination of its values with
+  `multi: true` (see `multi?/1`). Its default is `false` to mean "none selected".
   """
 
   @type t :: %__MODULE__{
@@ -17,19 +20,23 @@ defmodule FlintUI.Styled.Prop do
           values: [term()],
           default: term(),
           doc: String.t() | nil,
-          allow_custom: boolean()
+          allow_custom: boolean(),
+          multi: boolean()
         }
 
   @enforce_keys [:name, :values, :default]
-  defstruct [:name, :values, :default, :doc, allow_custom: false]
+  defstruct [:name, :values, :default, :doc, allow_custom: false, multi: false]
 
   @doc """
   Builds a prop, raising when `:default` is not one of `:values`.
+
+  A multi prop (`multi: true`) may default to `false` to mean "none selected"
+  even though `false` is not one of the documented values.
   """
   def new(fields) do
     prop = struct!(__MODULE__, fields)
 
-    unless prop.default in prop.values do
+    unless prop.default in prop.values or (prop.multi and prop.default == false) do
       raise ArgumentError,
             "prop #{inspect(prop.name)} default #{inspect(prop.default)} is not one of #{inspect(prop.values)}"
     end
@@ -58,4 +65,16 @@ defmodule FlintUI.Styled.Prop do
       true
   """
   def boolean?(%__MODULE__{values: values}), do: values == [true, false]
+
+  @doc """
+  Whether the prop accepts a space-separated combination of its values.
+
+  A multi prop is declared as `:any` so a bare attribute (`inset`), a single
+  value (`inset="top"`), and a combination (`inset="top bottom"`) all work.
+  `false` (or `nil`) means no value is selected. Boolean props are not multi.
+
+      iex> FlintUI.Styled.Prop.multi?(%FlintUI.Styled.Prop{name: :inset, values: ["top"], default: false, multi: true})
+      true
+  """
+  def multi?(%__MODULE__{multi: multi}), do: multi
 end

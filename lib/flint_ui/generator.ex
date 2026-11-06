@@ -290,6 +290,10 @@ defmodule FlintUI.Generator do
         "attr(:#{prop.name}, :boolean, " <>
           "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
 
+      FlintUI.Styled.Prop.multi?(prop) ->
+        "attr(:#{prop.name}, :any, " <>
+          "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
+
       prop.allow_custom ->
         doc = "#{prop.doc} Semantic roles: #{Enum.join(prop.values, ", ")}."
 

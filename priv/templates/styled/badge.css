@@ -3,6 +3,8 @@
      * Badges are labels, not controls: they use the shared badge height scale
      * and never add elevation, depth rims, or press feedback. */
     [data-element="badge"][data-variant] {
+        --fl-tint-opacity: 0.75;
+
         box-sizing: border-box;
         display: inline-flex;
         align-items: center;
@@ -87,9 +89,14 @@
 
     /* Subtle is the default: a tinted label with a matching border. */
     [data-element="badge"][data-variant="subtle"] {
-        background: var(
-            --fl-badge-soft,
-            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+        background: color-mix(
+            in oklab,
+            var(
+                    --fl-badge-soft,
+                    color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+                )
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
         );
         border-color: var(
             --fl-badge-soft-border,
@@ -115,9 +122,14 @@
 
     /* Soft: a tinted label with no border. */
     [data-element="badge"][data-variant="soft"] {
-        background: var(
-            --fl-badge-soft,
-            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+        background: color-mix(
+            in oklab,
+            var(
+                    --fl-badge-soft,
+                    color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
+                )
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
@@ -263,33 +275,6 @@
     [data-element="badge"][data-wide] {
         display: flex;
         width: 100%;
-    }
-
-    /* Inset: pull the box over its padding and border so the label lines up
-     * with surrounding content. */
-    [data-element="badge"][data-inset][data-size="xs"] {
-        margin-inline: calc(-1 * (var(--fl-spacing) * 1 + 1px));
-        margin-block: calc(-1 * ((var(--fl-badge-height-xs) - 1em) / 2));
-    }
-
-    [data-element="badge"][data-inset][data-size="sm"] {
-        margin-inline: calc(-1 * (var(--fl-spacing) * 1.25 + 1px));
-        margin-block: calc(-1 * ((var(--fl-badge-height-sm) - 1em) / 2));
-    }
-
-    [data-element="badge"][data-inset][data-size="md"] {
-        margin-inline: calc(-1 * (var(--fl-spacing) * 1.5 + 1px));
-        margin-block: calc(-1 * ((var(--fl-badge-height-md) - 1em) / 2));
-    }
-
-    [data-element="badge"][data-inset][data-size="lg"] {
-        margin-inline: calc(-1 * (var(--fl-spacing) * 2 + 1px));
-        margin-block: calc(-1 * ((var(--fl-badge-height-lg) - 1em) / 2));
-    }
-
-    [data-element="badge"][data-inset][data-size="xl"] {
-        margin-inline: calc(-1 * (var(--fl-spacing) * 2.5 + 1px));
-        margin-block: calc(-1 * ((var(--fl-badge-height-xl) - 1em) / 2));
     }
 
     /* Uppercase labels get a little tracking to keep them legible. */
