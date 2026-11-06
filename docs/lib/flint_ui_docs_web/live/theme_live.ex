@@ -239,8 +239,11 @@ defmodule FlintUIDocsWeb.ThemeLive do
             scale. Components read the role fill
             (<code class="font-mono">--fl-color-primary</code>), which resolves a
             shade per scheme, so the same button looks right in light and dark
-            without a second override. Non-neutral fills start at the
-            <code class="font-mono">600</code>
+            without a second override. <code class="font-mono">primary</code>
+            and <code class="font-mono">secondary</code>
+            ship the neutral ramp by default, so a fresh theme assumes no brand
+            hue; override the role or its scale to opt in. Chromatic fills start
+            at the <code class="font-mono">600</code>
             step and step to <code class="font-mono">700</code>
             when that is what a near-white solid label needs; warning is the
             exception and stays at <code class="font-mono">600</code>
@@ -497,13 +500,14 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   defp snippet(:colors) do
     """
-    /* Each role owns a 50..950 ramp ... */
-    --fl-color-primary-50: oklch(0.985 0 0);
-    --fl-color-primary-600: oklch(0.439 0 0);
-    --fl-color-primary-950: oklch(0.145 0 0);
+    /* Each role owns a 50..950 ramp. Primary and secondary ship the neutral
+     * ramp until a theme brands them. */
+    --fl-color-primary-50: var(--fl-color-neutral-50);
+    --fl-color-primary-600: var(--fl-color-neutral-600);
+    --fl-color-primary-950: var(--fl-color-neutral-950);
 
     /* ... and three core jobs: fill, label on the fill, and text on the page.
-     * Fills default to 600; the labels are contrast-picked against them. */
+     * Fills start at 600 and the labels are contrast-picked against them. */
     --fl-color-primary: var(--fl-color-primary-600);
     --fl-color-primary-content: light-dark(
       var(--fl-color-primary-50),

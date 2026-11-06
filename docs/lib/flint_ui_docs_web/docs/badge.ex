@@ -127,8 +127,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           <Components.badge color="neutral" icon="lucide-bookmark">Saved</Components.badge>
           <Components.badge color="success" icon="lucide-badge-check">Success</Components.badge>
           <Components.badge color="info" icon="lucide-info">Info</Components.badge>
-          <Components.badge color="warning" icon="lucide-clock">Warning</Components.badge>
-          <Components.badge color="error" icon="lucide-shield-x">Forbidden</Components.badge>
+          <Components.badge color="warning" icon="lucide-clock">Pending</Components.badge>
+          <Components.badge color="error" icon="lucide-circle-x">Failure</Components.badge>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
           <Components.badge variant="solid" color="neutral">
@@ -139,13 +139,15 @@ defmodule FlintUIDocsWeb.Docs.Badge do
             Synced
             <:trailing><Components.icon name="lucide-cloud-check" /></:trailing>
           </Components.badge>
-          <Components.badge variant="soft" color="neutral">
-            Next
-            <:trailing><Components.icon name="lucide-arrow-right" /></:trailing>
+          <Components.badge color="warning" variant="soft" icon="lucide-ticket-percent">
+            50% off
           </Components.badge>
-          <Components.badge variant="ghost" color="error">
-            <:leading><Components.icon name="lucide-shield-x" /></:leading>
-            Forbidden
+          <Components.badge variant="soft" color="neutral">
+            Files
+            <:trailing><Components.icon name="lucide-files" /></:trailing>
+          </Components.badge>
+          <Components.badge variant="ghost" icon="lucide-ghost">
+            Removed
           </Components.badge>
         </div>
       </div>
@@ -188,13 +190,14 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :usage, id: :uppercase} = assigns) do
     ~H"""
-    <.prose content="Set `uppercase` to render the label in uppercase. A little letter spacing is added so short labels stay legible." />
+    <.prose content="Set `uppercase` to render the label in uppercase." />
     <.preview id={@id} code={&code_uppercase/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge variant="solid" color="info" uppercase>New</Components.badge>
-        <Components.badge variant="subtle" color="success" uppercase>Stable</Components.badge>
-        <Components.badge variant="outline" color="warning" uppercase>Beta</Components.badge>
-        <Components.badge variant="dot" color="error" uppercase>Offline</Components.badge>
+        <Components.badge size="xs" variant="solid" color="info" uppercase>New</Components.badge>
+        <Components.badge size="sm" variant="subtle" color="success" uppercase>
+          Stable
+        </Components.badge>
+        <Components.badge variant="dot" color="success" uppercase>Status</Components.badge>
       </div>
     </.preview>
     """
@@ -333,20 +336,20 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge color="neutral" icon="lucide-bookmark">Saved</.badge>
     <.badge color="success" icon="lucide-badge-check">Success</.badge>
     <.badge color="info" icon="lucide-info">Info</.badge>
-    <.badge color="warning" icon="lucide-clock">Warning</.badge>
-    <.badge color="error" icon="lucide-shield-x">Forbidden</.badge>
+    <.badge color="warning" icon="lucide-clock">Pending</.badge>
+    <.badge color="error" icon="lucide-circle-x">Failure</.badge>
     <.badge variant="solid" color="neutral">
       <:leading><.icon name="lucide-tag-plus" /></:leading> New Version
     </.badge>
     <.badge variant="solid" color="primary">
-      Synced <:trailing><.icon name="lucide-cloud-check" /></:trailing>
+      <:trailing><.icon name="lucide-cloud-check" /></:trailing> Synced
     </.badge>
+    <.badge color="warning" variant="soft" icon="lucide-ticket-percent">50% off</.badge>
     <.badge variant="soft" color="neutral">
-      Next <:trailing><.icon name="lucide-arrow-right" /></:trailing>
+      <:trailing><.icon name="lucide-files" /></:trailing>
+      Files
     </.badge>
-    <.badge variant="ghost" color="error">
-      <:leading><.icon name="lucide-shield-x" /></:leading> Forbidden
-    </.badge>
+    <.badge variant="ghost" icon="lucide-ghost">Removed</.badge>
     """
     |> String.trim()
   end
@@ -373,10 +376,9 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_uppercase(_) do
     """
-    <.badge variant="solid" color="info" uppercase>New</.badge>
-    <.badge variant="subtle" color="success" uppercase>Stable</.badge>
-    <.badge variant="outline" color="warning" uppercase>Beta</.badge>
-    <.badge variant="dot" color="error" uppercase>Offline</.badge>
+    <.badge size="xs" variant="solid" color="info" uppercase>New</.badge>
+    <.badge size="sm" variant="subtle" color="success" uppercase>Stable</.badge>
+    <.badge variant="dot" color="success" uppercase>Status</.badge>
     """
     |> String.trim()
   end

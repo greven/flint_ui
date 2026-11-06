@@ -115,7 +115,7 @@
     --fl-font-sans: var(--font-sans);
 
     /* primary: Tailwind cyan */
-    /*--fl-color-primary-50: var(--color-cyan-50);
+    --fl-color-primary-50: var(--color-cyan-50);
     --fl-color-primary-100: var(--color-cyan-100);
     --fl-color-primary-200: var(--color-cyan-200);
     --fl-color-primary-300: var(--color-cyan-300);
@@ -125,37 +125,11 @@
     --fl-color-primary-700: var(--color-cyan-700);
     --fl-color-primary-800: var(--color-cyan-800);
     --fl-color-primary-900: var(--color-cyan-900);
-    --fl-color-primary-950: var(--color-cyan-950);*/
+    --fl-color-primary-950: var(--color-cyan-950);
 
     /* Cyan-600 cannot carry a near-white label, so the docs primary steps to 700 to keep the solid label light. */
-    /*--fl-color-primary: var(--fl-color-primary-700);
-    --fl-color-primary-text: light-dark(var(--fl-color-primary-800), var(--fl-color-primary-600));*/
-
-    /* secondary: Tailwind indigo */
-    /*--fl-color-secondary-50: var(--color-indigo-50);
-    --fl-color-secondary-100: var(--color-indigo-100);
-    --fl-color-secondary-200: var(--color-indigo-200);
-    --fl-color-secondary-300: var(--color-indigo-300);
-    --fl-color-secondary-400: var(--color-indigo-400);
-    --fl-color-secondary-500: var(--color-indigo-500);
-    --fl-color-secondary-600: var(--color-indigo-600);
-    --fl-color-secondary-700: var(--color-indigo-700);
-    --fl-color-secondary-800: var(--color-indigo-800);
-    --fl-color-secondary-900: var(--color-indigo-900);
-    --fl-color-secondary-950: var(--color-indigo-950);*/
-
-    /* neutral: Tailwind neutral */
-    /*--fl-color-neutral-50: var(--color-neutral-50);
-    --fl-color-neutral-100: var(--color-neutral-100);
-    --fl-color-neutral-200: var(--color-neutral-200);
-    --fl-color-neutral-300: var(--color-neutral-300);
-    --fl-color-neutral-400: var(--color-neutral-400);
-    --fl-color-neutral-500: var(--color-neutral-500);
-    --fl-color-neutral-600: var(--color-neutral-600);
-    --fl-color-neutral-700: var(--color-neutral-700);
-    --fl-color-neutral-800: var(--color-neutral-800);
-    --fl-color-neutral-900: var(--color-neutral-900);
-    --fl-color-neutral-950: var(--color-neutral-950);*/
+    --fl-color-primary: var(--fl-color-primary-700);
+    --fl-color-primary-text: light-dark(var(--fl-color-primary-800), var(--fl-color-primary-600));
 }
 
 /* A live custom preset. Select "brand" in the theming guide's preset picker. */

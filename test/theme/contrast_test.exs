@@ -8,7 +8,8 @@ defmodule FlintUI.Theme.ContrastTest do
 
   # Fills use 600 when it supports a light label, stepping to 700 when it does
   # not. Warning keeps a light fill with a dark label so amber stays yellow,
-  # and neutral is the inverted surface.
+  # and neutral is the inverted surface. Primary and secondary default to
+  # neutral until a theme brands them.
   @expected_fill_shades %{
     "neutral" => {"900", "200"},
     "success" => {"700", "700"},
@@ -19,13 +20,13 @@ defmodule FlintUI.Theme.ContrastTest do
 
   setup_all do
     css = File.read!(FlintUI.Generator.part_path("tokens.css"))
-    %{css: css, scales: parse_scales(css)}
+    %{tokens: parse_tokens(css), scales: parse_scales(css)}
   end
 
-  test "every shipped role label clears AA on its fill", %{css: css, scales: scales} do
+  test "every shipped role label clears AA on its fill", %{tokens: tokens} do
     for role <- @roles do
-      {fill_light, fill_dark} = resolve(css, scales, role)
-      {content_light, content_dark} = resolve(css, scales, "#{role}-content")
+      {fill_light, fill_dark} = resolve(tokens, role)
+      {content_light, content_dark} = resolve(tokens, "#{role}-content")
 
       for {scheme, fill, content} <- [
             {:light, fill_light, content_light},
@@ -39,12 +40,9 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
-  test "solid labels stay light for the roles that prefer white", %{
-    css: css,
-    scales: scales
-  } do
+  test "solid labels stay light for the roles that prefer white", %{tokens: tokens} do
     for role <- @light_label_roles do
-      {content_light, content_dark} = resolve(css, scales, "#{role}-content")
+      {content_light, content_dark} = resolve(tokens, "#{role}-content")
 
       for {scheme, content} <- [{:light, content_light}, {:dark, content_dark}] do
         luminance = Contrast.luminance(content) || 0.0
@@ -55,13 +53,10 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
-  test "every shipped role text clears AA on its soft surface", %{
-    css: css,
-    scales: scales
-  } do
+  test "every shipped role text clears AA on its soft surface", %{tokens: tokens} do
     for role <- @roles do
-      {soft_light, soft_dark} = resolve(css, scales, "#{role}-soft")
-      {text_light, text_dark} = resolve(css, scales, "#{role}-text")
+      {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
+      {text_light, text_dark} = resolve(tokens, "#{role}-text")
 
       for {scheme, soft, text} <- [
             {:light, soft_light, text_light},
@@ -76,12 +71,12 @@ defmodule FlintUI.Theme.ContrastTest do
   end
 
   test "soft surfaces stay visible and their border reads against them", %{
-    css: css,
+    tokens: tokens,
     scales: scales
   } do
     for role <- @roles do
-      {soft_light, soft_dark} = resolve(css, scales, "#{role}-soft")
-      {border_light, border_dark} = resolve(css, scales, "#{role}-soft-border")
+      {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
+      {border_light, border_dark} = resolve(tokens, "#{role}-soft-border")
 
       for {scheme, soft, border} <- [
             {:light, soft_light, border_light},
@@ -101,21 +96,28 @@ defmodule FlintUI.Theme.ContrastTest do
   end
 
   test "role fills use their accessibility step, and neutral stays inverted", %{
-    css: css,
-    scales: scales
+    tokens: tokens
   } do
     for role <- @roles do
-      {fill_light, fill_dark} = resolve(css, scales, role)
+      {fill_light, fill_dark} = resolve(tokens, role)
       {light, dark} = Map.get(@expected_fill_shades, role, {"600", "600"})
 
       expected = {
-        eval_color("var(--fl-color-#{role}-#{light})", scales, :light),
-        eval_color("var(--fl-color-#{role}-#{dark})", scales, :dark)
+        eval_token(tokens, "#{role}-#{light}", :light),
+        eval_token(tokens, "#{role}-#{dark}", :dark)
       }
 
       assert {fill_light, fill_dark} == expected,
-             "#{role} should resolve its fill to #{inspect({light, dark})}, got " <>
+             "#{role} should resolve its fill to #{inspect({role, light, dark})}, got " <>
                inspect({fill_light, fill_dark})
+    end
+  end
+
+  test "primary and secondary scales default to the neutral ramp", %{tokens: tokens} do
+    for role <- ~w(primary secondary), shade <- @shades do
+      assert eval_token(tokens, "#{role}-#{shade}", :light) ==
+               eval_token(tokens, "neutral-#{shade}", :light),
+             "#{role}-#{shade} should default to neutral-#{shade}"
     end
   end
 
@@ -134,11 +136,14 @@ defmodule FlintUI.Theme.ContrastTest do
     Map.fetch!(scales["neutral"], "900")
   end
 
-  defp background_color(_scales, :light), do: "oklch(100% 0 none)"
-  defp background_color(scales, :dark), do: Map.fetch!(scales["neutral"], "950")
-
   defp background_reference(:light), do: Contrast.light_background()
   defp background_reference(:dark), do: Contrast.dark_background()
+
+  defp parse_tokens(css) do
+    ~r/--fl-color-([a-z0-9-]+):\s*([^;]+);/
+    |> Regex.scan(css, capture: :all_but_first)
+    |> Map.new(fn [name, value] -> {name, String.trim(value)} end)
+  end
 
   defp parse_scales(css) do
     Map.new(@roles, fn role ->
@@ -152,18 +157,51 @@ defmodule FlintUI.Theme.ContrastTest do
     end)
   end
 
-  defp resolve(css, scales, token) do
-    [_, value] = Regex.run(~r/--fl-color-#{Regex.escape(token)}:\s*([^;]+);/, css)
+  defp resolve(tokens, token) do
+    {eval_token(tokens, token, :light), eval_token(tokens, token, :dark)}
+  end
+
+  defp eval_token(tokens, name, scheme) do
+    eval_expr(tokens, Map.fetch!(tokens, name), scheme)
+  end
+
+  # Evaluates the small color expression subset the tokens use: scale vars,
+  # role aliases, oklch literals, light-dark branches, and a two-stop
+  # color-mix.
+  defp eval_expr(tokens, value, scheme) do
     value = String.trim(value)
 
-    case Regex.run(~r/^light-dark\((.*)\)$/s, value) do
-      [_, inner] ->
+    cond do
+      String.starts_with?(value, "light-dark(") ->
+        [_, inner] = Regex.run(~r/^light-dark\((.*)\)$/s, value)
         [light, dark] = split_top_level(inner)
-        {eval_color(light, scales, :light), eval_color(dark, scales, :dark)}
+        eval_expr(tokens, if(scheme == :light, do: light, else: dark), scheme)
 
-      nil ->
-        resolved = eval_color(value, scales, :light)
-        {resolved, resolved}
+      String.starts_with?(value, "var(--fl-color-") ->
+        name =
+          value
+          |> String.replace_prefix("var(--fl-color-", "")
+          |> String.trim_trailing(")")
+
+        eval_token(tokens, name, scheme)
+
+      String.starts_with?(value, "color-mix(") ->
+        [_, first, percent, second] =
+          Regex.run(~r/^color-mix\(in oklab,\s*(.+)\s+(\d+)%,\s*(.+)\)$/s, value)
+
+        weight = String.to_integer(percent) / 100
+
+        Contrast.mix(
+          eval_expr(tokens, first, scheme),
+          eval_expr(tokens, second, scheme),
+          weight
+        )
+
+      String.starts_with?(value, "oklch(") ->
+        value
+
+      true ->
+        flunk("unexpected token value in tokens.css: #{inspect(value)}")
     end
   end
 
@@ -180,53 +218,5 @@ defmodule FlintUI.Theme.ContrastTest do
     end)
     |> then(fn {parts, current, _depth} -> Enum.reverse([Enum.reverse(current) | parts]) end)
     |> Enum.map(&(&1 |> Enum.join() |> String.trim()))
-  end
-
-  # Evaluates the small color expression subset the tokens use: scale vars,
-  # oklch literals, the surface, and a two-stop color-mix.
-  defp eval_color(value, scales, scheme) do
-    value = String.trim(value)
-
-    cond do
-      value == "var(--fl-color-surface)" ->
-        surface_color(scales, scheme)
-
-      value == "var(--fl-color-background)" ->
-        background_color(scales, scheme)
-
-      String.starts_with?(value, "var(--fl-color-") ->
-        inner =
-          value
-          |> String.replace_prefix("var(--fl-color-", "")
-          |> String.trim_trailing(")")
-
-        case String.split(inner, "-", parts: 2) do
-          [role, shade] ->
-            Map.fetch!(Map.fetch!(scales, role), shade)
-
-          [role] ->
-            {light, dark} = Map.get(@expected_fill_shades, role, {"600", "600"})
-            shade = if scheme == :light, do: light, else: dark
-            Map.fetch!(Map.fetch!(scales, role), shade)
-        end
-
-      String.starts_with?(value, "color-mix(") ->
-        [_, first, percent, second] =
-          Regex.run(~r/^color-mix\(in oklab,\s*(.+)\s+(\d+)%,\s*(.+)\)$/s, value)
-
-        weight = String.to_integer(percent) / 100
-
-        Contrast.mix(
-          eval_color(first, scales, scheme),
-          eval_color(second, scales, scheme),
-          weight
-        )
-
-      String.starts_with?(value, "oklch(") ->
-        value
-
-      true ->
-        flunk("unexpected token value in tokens.css: #{inspect(value)}")
-    end
   end
 end

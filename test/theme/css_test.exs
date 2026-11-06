@@ -9,6 +9,8 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "color-scheme: light dark;"
     assert css =~ "--fl-color-primary: var(--fl-color-primary-600);"
     assert css =~ "--fl-color-primary-content: light-dark("
+    assert css =~ "--fl-color-primary-600: var(--fl-color-neutral-600);"
+    assert css =~ "--fl-color-neutral: light-dark("
     assert css =~ "--fl-radius:"
     assert css =~ "--fl-radius-md:"
     assert css =~ "--fl-font-sans:"
@@ -25,6 +27,11 @@ defmodule FlintUI.Theme.CSSTest do
       assert css =~ "--fl-color-#{role}-soft-border: color-mix("
       refute css =~ "--fl-color-#{role}-foreground"
       refute css =~ "--fl-color-#{role}-soft-foreground"
+    end
+
+    # Primary and secondary ship the neutral ramp until a theme brands them.
+    for role <- ~w(primary secondary), shade <- ~w(50 100 200 300 400 500 600 700 800 900 950) do
+      assert css =~ "--fl-color-#{role}-#{shade}: var(--fl-color-neutral-#{shade});"
     end
   end
 

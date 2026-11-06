@@ -184,7 +184,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Use the `icon` attr to render a decorative icon before the label." />
     <.prose content="You can also use the `:leading` and `:trailing` slots to place an icon before or after the content." />
     <.prose content="For an icon-only button, combine `square` with an `aria-label` so it keeps an accessible name." />
-    <.preview id={@id} code={&code_icon/1}>
+    <.preview id={@id} code={&code_icon/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button icon="lucide-save">Save</Components.button>
         <Components.button variant="solid" color="error" icon="lucide-trash">Delete</Components.button>
@@ -262,7 +262,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Use `justify` to choose where the content sits when the button is wider than its content.
       It only has an effect when the button fills its container or has a fixed width.
       `between` pushes the leading and trailing content to the edges, which is useful for triggers and split actions." />
-    <.preview :let={props} {assigns} code={&code_justify/1}>
+    <.preview :let={props} {assigns} code={&code_justify/1} collapsed>
       <div class="w-full max-w-lg">
         <Components.button variant="outline" wide justify={props.justify}>
           <:leading>
@@ -283,7 +283,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Set `depth` to toggle the rim light and inner line. It defaults to `true`; pass
       `depth={false}` for a flatter control." />
     <.prose content="Elevation shadows stay on and are controlled separately with `--fl-control-shadow`." />
-    <.preview id={@id} code={&code_depth/1}>
+    <.preview id={@id} code={&code_depth/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button variant="solid" color="info">Raised</Components.button>
         <Components.button variant="solid" color="info" depth={false}>Flat</Components.button>
@@ -331,7 +331,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       content and disables every button in the form while it waits." />
     <.prose content={"Announce progress in a persistent `role=\"status\"` region outside the control.
       `aria-busy` marks the control as updating, but it is not itself an announcement."} />
-    <.preview id={@id} code={&code_loading/1}>
+    <.preview id={@id} code={&code_loading/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button loading>
           <.icon name="lucide-loader-circle" class="animate-spin" />Save

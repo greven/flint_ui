@@ -132,31 +132,8 @@
     /* Shared by buttons, toggles and future form controls. */
     --fl-control-radius: var(--fl-radius-md);
 
-    /* Semantic color scales: each role owns a 50..950 ramp. */
-    --fl-color-primary-50: oklch(0.985 0 0);
-    --fl-color-primary-100: oklch(0.97 0 0);
-    --fl-color-primary-200: oklch(0.922 0 0);
-    --fl-color-primary-300: oklch(0.87 0 0);
-    --fl-color-primary-400: oklch(0.708 0 0);
-    --fl-color-primary-500: oklch(0.556 0 0);
-    --fl-color-primary-600: oklch(0.439 0 0);
-    --fl-color-primary-700: oklch(0.371 0 0);
-    --fl-color-primary-800: oklch(0.269 0 0);
-    --fl-color-primary-900: oklch(0.205 0 0);
-    --fl-color-primary-950: oklch(0.145 0 0);
-
-    --fl-color-secondary-50: oklch(0.985 0 0);
-    --fl-color-secondary-100: oklch(0.97 0 0);
-    --fl-color-secondary-200: oklch(0.922 0 0);
-    --fl-color-secondary-300: oklch(0.87 0 0);
-    --fl-color-secondary-400: oklch(0.708 0 0);
-    --fl-color-secondary-500: oklch(0.556 0 0);
-    --fl-color-secondary-600: oklch(0.439 0 0);
-    --fl-color-secondary-700: oklch(0.371 0 0);
-    --fl-color-secondary-800: oklch(0.269 0 0);
-    --fl-color-secondary-900: oklch(0.205 0 0);
-    --fl-color-secondary-950: oklch(0.145 0 0);
-
+    /* Semantic color scales: each role owns a 50..950 ramp. Primary and
+     * secondary start on the neutral ramp until a theme brands them. */
     --fl-color-neutral-50: oklch(0.985 0 0);
     --fl-color-neutral-100: oklch(0.97 0 0);
     --fl-color-neutral-200: oklch(0.922 0 0);
@@ -168,6 +145,30 @@
     --fl-color-neutral-800: oklch(0.269 0 0);
     --fl-color-neutral-900: oklch(0.205 0 0);
     --fl-color-neutral-950: oklch(0.145 0 0);
+
+    --fl-color-primary-50: var(--fl-color-neutral-50);
+    --fl-color-primary-100: var(--fl-color-neutral-100);
+    --fl-color-primary-200: var(--fl-color-neutral-200);
+    --fl-color-primary-300: var(--fl-color-neutral-300);
+    --fl-color-primary-400: var(--fl-color-neutral-400);
+    --fl-color-primary-500: var(--fl-color-neutral-500);
+    --fl-color-primary-600: var(--fl-color-neutral-600);
+    --fl-color-primary-700: var(--fl-color-neutral-700);
+    --fl-color-primary-800: var(--fl-color-neutral-800);
+    --fl-color-primary-900: var(--fl-color-neutral-900);
+    --fl-color-primary-950: var(--fl-color-neutral-950);
+
+    --fl-color-secondary-50: var(--fl-color-neutral-50);
+    --fl-color-secondary-100: var(--fl-color-neutral-100);
+    --fl-color-secondary-200: var(--fl-color-neutral-200);
+    --fl-color-secondary-300: var(--fl-color-neutral-300);
+    --fl-color-secondary-400: var(--fl-color-neutral-400);
+    --fl-color-secondary-500: var(--fl-color-neutral-500);
+    --fl-color-secondary-600: var(--fl-color-neutral-600);
+    --fl-color-secondary-700: var(--fl-color-neutral-700);
+    --fl-color-secondary-800: var(--fl-color-neutral-800);
+    --fl-color-secondary-900: var(--fl-color-neutral-900);
+    --fl-color-secondary-950: var(--fl-color-neutral-950);
 
     --fl-color-success-50: oklch(0.982 0.018 155.826);
     --fl-color-success-100: oklch(0.962 0.044 156.743);
@@ -245,18 +246,24 @@
     );
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 15%, var(--fl-color-surface));
 
-    /* By default primary and secondary are just the same as neutral. */
-    --fl-color-primary: var(--fl-color-neutral);
-    --fl-color-primary-content: var(--fl-color-neutral-content);
-    --fl-color-primary-text: var(--fl-color-neutral-text);
-    --fl-color-primary-soft: var(--fl-color-neutral-soft);
-    --fl-color-primary-soft-border: var(--fl-color-neutral-soft-border);
+    /* Primary and secondary placeholders. */
+    --fl-color-primary: var(--fl-color-primary-600);
+    --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));
+    --fl-color-primary-text: light-dark(var(--fl-color-primary-600), var(--fl-color-primary-400));
+    --fl-color-primary-soft: light-dark(
+        color-mix(in oklab, var(--fl-color-primary) 8%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-primary) 20%, var(--fl-color-surface))
+    );
+    --fl-color-primary-soft-border: color-mix(in oklab, var(--fl-color-primary) 50%, var(--fl-color-surface));
 
-    --fl-color-secondary: var(--fl-color-neutral);
-    --fl-color-secondary-content: var(--fl-color-neutral-content);
-    --fl-color-secondary-text: var(--fl-color-neutral-text);
-    --fl-color-secondary-soft: var(--fl-color-neutral-soft);
-    --fl-color-secondary-soft-border: var(--fl-color-neutral-soft-border);
+    --fl-color-secondary: var(--fl-color-secondary-600);
+    --fl-color-secondary-content: light-dark(var(--fl-color-secondary-50), var(--fl-color-secondary-50));
+    --fl-color-secondary-text: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-400));
+    --fl-color-secondary-soft: light-dark(
+        color-mix(in oklab, var(--fl-color-secondary) 8%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-secondary) 20%, var(--fl-color-surface))
+    );
+    --fl-color-secondary-soft-border: color-mix(in oklab, var(--fl-color-secondary) 50%, var(--fl-color-surface));
 
     --fl-color-info: var(--fl-color-info-600);
     --fl-color-info-content: light-dark(var(--fl-color-info-50), var(--fl-color-info-50));

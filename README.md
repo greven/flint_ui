@@ -76,11 +76,13 @@ also owns `-soft` and `-soft-border` for tinted and bordered variants. Those
 blend the role with the surface rather than repeating the solid fill, so a light
 role and a dark one stay equally visible. Components composite the tint at
 `--fl-tint-opacity` (90%), so the surface below shows through while the
-`-soft` token keeps enough strength to stay visible. Non-neutral fills start at the `600` step;
-when a solid control cannot carry a light label there, the fill steps to `700`
-so the label stays near-white. Warning is the exception: amber stays at `600`
-with a dark label so it does not turn brown. Both labels are contrast-picked
-against the resolved fill. Text follows the same tiered idea: `text-highlighted`
+`-soft` token keeps enough strength to stay visible. Primary and secondary
+ship the neutral ramp by default, so a fresh theme assumes no brand hue;
+override the role or its scale to opt in. Chromatic fills start at the `600`
+step; when a solid control cannot carry a light label there, the fill steps to
+`700` so the label stays near-white. Warning is the exception: amber stays at `600` with a dark
+label so it does not turn brown. Both labels are contrast-picked against the
+resolved fill. Text follows the same tiered idea: `text-highlighted`
 for headings, `text` for body, `text-toned` for secondary copy, `text-muted` for
 meta, and `text-dimmed` for placeholders. `text-dimmed` is below AA by design;
 do not use it for readable content.
