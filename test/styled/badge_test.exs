@@ -51,6 +51,8 @@ defmodule FlintUI.Styled.BadgeTest do
     assert attr(document, :badge, "data-radius") == ["md"]
     assert attr(document, :badge, "data-uppercase") == []
     assert attr(document, :badge, "data-wide") == []
+    assert attr(document, :badge, "data-leading") == []
+    assert attr(document, :badge, "data-trailing") == []
   end
 
   test "renders leading, icon, content, and trailing in order", %{wrapper: wrapper} do
@@ -65,6 +67,8 @@ defmodule FlintUI.Styled.BadgeTest do
 
     assert LazyHTML.tag(root(document, :badge)) == ["div"]
     assert attr(document, :badge, "data-uppercase") == [""]
+    assert attr(document, :badge, "data-leading") == [""]
+    assert attr(document, :badge, "data-trailing") == [""]
     assert text == "L Beta T"
     refute text =~ "Ignored"
     assert LazyHTML.query(document, ~s(#lead)) |> LazyHTML.text() == "L"

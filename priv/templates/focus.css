@@ -1,8 +1,5 @@
 @layer focus {
-    /* Bordered interactive controls pair the ring with a full-color border.
-     * The border color is only defined by the `ring` preset; the other presets
-     * reset it, so `revert-layer` leaves their borders untouched. Structural
-     * borders never opt in here. */
+    /* Bordered interactive controls pair the ring with a full-color border. */
     [data-element="button"][data-variant]:focus-visible:not([data-disabled]),
     [data-element="toggle"][data-variant]:focus-visible:not([data-disabled]),
     [data-element="badge"][data-part][data-variant]:focus-visible,

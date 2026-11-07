@@ -3,6 +3,15 @@
      * Badges are labels, not controls: they use the shared badge height scale
      * and never add elevation, depth rims, or press feedback. */
     [data-element="badge"][data-variant] {
+        /* A nested control follows the badge's row rather than the control scale. */
+        --_badge-control-size: max(
+            var(--fl-control-icon-xs),
+            calc(var(--_badge-size, var(--fl-badge-height-md)) - 4px)
+        );
+        --_badge-control-inset: max(
+            0px,
+            calc((var(--_badge-size, var(--fl-badge-height-md)) - 2px - var(--_badge-control-size)) / 2)
+        );
         box-sizing: border-box;
         display: inline-flex;
         align-items: center;
@@ -18,8 +27,7 @@
         vertical-align: middle;
     }
 
-    /* Leading/trailing icons scale with the badge text. The small negative
-     * start margin optically aligns the icon with the badge's inline padding. */
+    /* Leading/trailing icons scale with the badge text. */
     [data-element="badge"][data-variant] > [data-element="icon"] {
         flex-shrink: 0;
         --fl-icon-size: 1em;
@@ -161,8 +169,7 @@
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
-    /* Dot: an outline-style status badge. The border and text stay neutral;
-     * the color only fills the leading dot. */
+    /* Dot: an outline-style status badge. */
     [data-element="badge"][data-variant="dot"] {
         background: var(--fl-color-surface);
         border-color: var(--fl-color-border);
@@ -185,12 +192,7 @@
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
-    /* Sizes use the badge height scale; text stays on the shared control
-     * scale. Inline padding is tighter than a control's, but always stays
-     * wider than the gap so a leading dot or icon reads as part of the label
-     * instead of being pinned to the edge. `--_badge-size` is the box height
-     * for the current size; the full radius reads it for its minimum inline
-     * size, so a circle stays in step with the scale. */
+    /* Sizes use the badge height scale. */
     [data-element="badge"][data-size="xs"] {
         --_badge-size: var(--fl-badge-height-xs);
         height: var(--_badge-size);
@@ -252,6 +254,23 @@
         --fl-icon-size: 1.125rem;
     }
 
+    /* A nested control follows the badge's row. */
+    [data-element="badge"][data-variant] > :is([data-element="button"], [data-element="toggle"])[data-size] {
+        box-sizing: border-box;
+        height: var(--_badge-control-size);
+        --_inset-inline: 0;
+        --_inset-block: 0;
+    }
+
+    /* A control in the leading or trailing slot owns that edge. */
+    [data-element="badge"][data-variant][data-leading]:has(> :is([data-element="button"], [data-element="toggle"])) {
+        padding-inline-start: var(--_badge-control-inset);
+    }
+
+    [data-element="badge"][data-variant][data-trailing]:has(> :is([data-element="button"], [data-element="toggle"])) {
+        padding-inline-end: var(--_badge-control-inset);
+    }
+
     /* Radius overrides use the shared scale. */
     [data-element="badge"][data-radius="none"] {
         --fl-control-radius: 0;
@@ -273,12 +292,7 @@
         --fl-control-radius: var(--fl-radius-xl);
     }
 
-    /* Full is a pill for labels and a circle for one-character counts. When the
-     * content is narrower than the badge is tall - "7", or a bare dot - the
-     * minimum inline size matches the height, so the full radius has a square
-     * box to round and does not read as a squashed oval. Wider labels keep
-     * their content width and stay pills.
-     */
+    /* Full is a pill for labels and a circle for one-character counts. */
     [data-element="badge"][data-radius="full"] {
         --fl-control-radius: var(--fl-radius-full);
         min-inline-size: var(--_badge-size, var(--fl-badge-height-md));

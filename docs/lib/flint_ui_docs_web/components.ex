@@ -67,8 +67,16 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   slot(:inner_block, doc: "The content of the badge.")
-  slot(:leading, doc: "Optional content rendered before the badge's content.")
-  slot(:trailing, doc: "Optional content rendered after the badge's content.")
+
+  slot(:leading,
+    doc:
+      "Optional content rendered before the badge's content. A nested Button or Toggle is sized to the badge's row."
+  )
+
+  slot(:trailing,
+    doc:
+      "Optional content rendered after the badge's content. A nested Button or Toggle is sized to the badge's row and inset from the edge."
+  )
 
   def badge(assigns) do
     assigns =
@@ -83,6 +91,8 @@ defmodule FlintUIDocsWeb.Components do
     ~H"""
     <FlintUI.badge
       data-badge
+      data-leading={@leading != []}
+      data-trailing={@trailing != []}
       data-variant={@variant}
       data-color={@data_color}
       data-size={@size}

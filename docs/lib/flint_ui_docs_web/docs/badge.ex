@@ -61,7 +61,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         tab: :styled,
         section: :examples,
         id: :removable_badge,
-        title: "Removable Chip"
+        title: "Removable Badge"
       },
       %{
         tab: :styled,
@@ -340,53 +340,83 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :examples, id: :removable_badge} = assigns) do
     ~H"""
-    <.prose content="A Badge with a actionable inside, most commonly a close button is a commonly used pattern,
-      sometimes known as a chip. Keep the badge as the label and give the remove action its own button." />
+    <.prose content="A badge with an action inside, most commonly a close button, is a common pattern
+      known as a chip. Keep the badge as the label and give the remove action its own button." />
     <.prose content="Name the button after the value it removes so every chip has a distinct accessible name." />
     <.preview {assigns} code={&code_removable_badge/1} collapsed>
-      <Components.badge variant="outline" size="lg" radius="full">
-        Bananas
-        <:trailing>
-          <Components.button
-            variant="ghost"
-            size="xs"
+      <div class="space-y-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <Components.badge
+            :for={tag <- ~w(Elixir Phoenix LiveView)}
+            variant="solid"
             radius="full"
-            class="-me-2.25"
-            aria-label="Remove Bananas"
-            phx-click="remove_filter"
-            phx-value-tag="Bananas"
-            square
           >
-            <Components.icon name="lucide-x" />
-          </Components.button>
-        </:trailing>
-      </Components.badge>
+            {tag}
+            <:trailing>
+              <Components.button
+                size="xs"
+                radius="full"
+                variant="ghost"
+                class="text-current/80"
+                aria-label={"Remove #{tag}"}
+                phx-click="remove_filter"
+                phx-value-tag={tag}
+                square
+              >
+                <Components.icon name="lucide-x" />
+              </Components.button>
+            </:trailing>
+          </Components.badge>
+        </div>
 
-      <%!-- <div class="flex flex-wrap items-center gap-2">
-        <Components.badge
-          :for={tag <- ~w(Elixir Phoenix LiveView)}
-          variant="dashed"
-          color="primary"
-          size="lg"
-          radius="full"
-        >
-          {tag}
-          <:trailing>
-            <Components.button
-              variant="ghost"
-              size="xs"
-              square
-              radius="full"
-              class="-me-1"
-              aria-label={"Remove #{tag} filter"}
-              phx-click="remove_filter"
-              phx-value-tag={tag}
-            >
-              <Components.icon name="lucide-x" />
-            </Components.button>
-          </:trailing>
-        </Components.badge>
-      </div> --%>
+        <div class="flex flex-wrap items-center gap-2">
+          <Components.badge
+            :for={tag <- ~w(Elixir Phoenix LiveView)}
+            variant="outline"
+            radius="full"
+          >
+            {tag}
+            <:trailing>
+              <Components.button
+                size="xs"
+                radius="full"
+                variant="soft"
+                color="neutral"
+                aria-label={"Remove #{tag}"}
+                phx-click="remove_filter"
+                phx-value-tag={tag}
+                square
+              >
+                <Components.icon name="lucide-x" />
+              </Components.button>
+            </:trailing>
+          </Components.badge>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <Components.badge
+            :for={tag <- ~w(Elixir Phoenix LiveView)}
+            variant="dashed"
+            color="success"
+          >
+            {tag}
+            <:trailing>
+              <Components.button
+                size="xs"
+                radius="sm"
+                variant="ghost"
+                class="text-current/80"
+                aria-label={"Remove #{tag}"}
+                phx-click="remove_filter"
+                phx-value-tag={tag}
+                square
+              >
+                <Components.icon name="lucide-x" />
+              </Components.button>
+            </:trailing>
+          </Components.badge>
+        </div>
+      </div>
     </.preview>
     """
   end
@@ -553,29 +583,30 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_removable_badge(_) do
     ~S"""
-    <.badge
-      :for={tag <- @active_filters}
-      variant="dashed"
-      color="primary"
-      size="lg"
-      radius="full"
-    >
-      {tag}
-      <:trailing>
-        <.button
-          variant="ghost"
-          size="xs"
-          square
-          radius="full"
-          class="-me-1"
-          aria-label={"Remove #{tag} filter"}
-          phx-click="remove_filter"
-          phx-value-tag={tag}
-        >
-          <.icon name="lucide-x" />
-        </.button>
-      </:trailing>
-    </.badge>
+    <div class="flex flex-wrap items-center gap-2">
+      <.badge
+        :for={tag <- ~w(Elixir Phoenix LiveView)}
+        variant="dashed"
+        color="success"
+        size="md"
+      >
+        {tag}
+        <:trailing>
+          <.button
+            size="xs"
+            radius="sm"
+            variant="ghost"
+            class="text-current/80"
+            aria-label={"Remove #{tag}"}
+            phx-click="remove_filter"
+            phx-value-tag={tag}
+            square
+          >
+            <.icon name="lucide-x" />
+          </.button>
+        </:trailing>
+      </.badge>
+    </div>
     """
     |> String.trim()
   end

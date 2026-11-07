@@ -12,8 +12,16 @@ defmodule FlintUI.Styled.Badge do
       css: "styled/badge.css",
       tokens: [:color, :radius, :font, :spacing, :control, :badge],
       slots: [
-        Slot.new(name: :leading, doc: "Optional content rendered before the badge's content."),
-        Slot.new(name: :trailing, doc: "Optional content rendered after the badge's content.")
+        Slot.new(
+          name: :leading,
+          doc:
+            "Optional content rendered before the badge's content. A nested Button or Toggle is sized to the badge's row."
+        ),
+        Slot.new(
+          name: :trailing,
+          doc:
+            "Optional content rendered after the badge's content. A nested Button or Toggle is sized to the badge's row and inset from the edge."
+        )
       ],
       props: [
         Prop.new(

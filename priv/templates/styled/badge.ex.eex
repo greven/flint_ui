@@ -16,6 +16,8 @@ def <%= @name %>(assigns) do
   ~H"""
   <FlintUI.badge
     data-badge
+    data-leading={@leading != []}
+    data-trailing={@trailing != []}
     data-variant={@variant}
     data-color={@data_color}
     data-size={@size}
