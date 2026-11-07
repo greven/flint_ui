@@ -13,6 +13,11 @@ defmodule FlintUI.Styled.Prop do
 
   A prop can also accept a space-separated combination of its values with
   `multi: true` (see `multi?/1`). Its default is `false` to mean "none selected".
+
+  `forwarded_to` names a nested component's `data-element` when the wrapper
+  renders the prop on that component instead of on its own root. The theme
+  contract then checks the nested component's selectors, for example the
+  indicator's badge props resolve against `[data-element="badge"]`.
   """
 
   @type t :: %__MODULE__{
@@ -21,11 +26,20 @@ defmodule FlintUI.Styled.Prop do
           default: term(),
           doc: String.t() | nil,
           allow_custom: boolean(),
-          multi: boolean()
+          multi: boolean(),
+          forwarded_to: atom() | nil
         }
 
   @enforce_keys [:name, :values, :default]
-  defstruct [:name, :values, :default, :doc, allow_custom: false, multi: false]
+  defstruct [
+    :name,
+    :values,
+    :default,
+    :doc,
+    :forwarded_to,
+    allow_custom: false,
+    multi: false
+  ]
 
   @doc """
   Builds a prop, raising when `:default` is not one of `:values`.

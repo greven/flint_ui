@@ -36,9 +36,11 @@ defmodule FlintUI.Theme.ContractTest do
   end
 
   # Boolean hooks are presence/absence: true adds the attribute, false removes
-  # it, so there are no `="true"`/`="false"` selectors to match.
+  # it, so there are no `="true"`/`="false"` selectors to match. A forwarded
+  # prop is rendered on a nested component, so its selectors are checked against
+  # that component's `data-element`.
   defp prop_selector(entry, prop, value) do
-    root = ~s([data-element="#{entry.name}"])
+    root = ~s([data-element="#{prop.forwarded_to || entry.name}"])
     attribute = Prop.attribute(prop)
 
     cond do

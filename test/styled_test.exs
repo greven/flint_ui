@@ -13,6 +13,7 @@ defmodule FlintUI.StyledTest do
                :collapsible,
                :group,
                :icon,
+               :indicator,
                :loading,
                :loading_text,
                :tabs,

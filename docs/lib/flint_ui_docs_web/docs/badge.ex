@@ -365,7 +365,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
                 variant="ghost"
                 class="text-current/80"
                 aria-label={"Remove #{tag}"}
-                phx-click="remove_filter"
+                phx-click="remove_tag"
                 phx-value-tag={tag}
                 square
               >
@@ -389,7 +389,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
                 variant="soft"
                 color="neutral"
                 aria-label={"Remove #{tag}"}
-                phx-click="remove_filter"
+                phx-click="remove_tag"
                 phx-value-tag={tag}
                 square
               >
@@ -413,7 +413,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
                 variant="ghost"
                 class="text-current/80"
                 aria-label={"Remove #{tag}"}
-                phx-click="remove_filter"
+                phx-click="remove_tag"
                 phx-value-tag={tag}
                 square
               >
@@ -431,6 +431,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="A badge can annotate a button's label, for example to show a count or a plan.
       The badge is part of the button's accessible name, so keep the combined text meaningful." />
+    <.prose content="For a count or dot on the corner of a control instead of inline, use
+      [Indicator](/components/indicator). It keeps the badge out of the anchor's name and positions it over the corner." />
     <.preview {assigns} code={&code_inside_button/1} collapsed>
       <div class="flex flex-wrap items-center gap-6">
         <Components.button variant="solid" color="neutral">
@@ -604,7 +606,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
             variant="ghost"
             class="text-current/80"
             aria-label={"Remove #{tag}"}
-            phx-click="remove_filter"
+            phx-click="remove_tag"
             phx-value-tag={tag}
             square
           >

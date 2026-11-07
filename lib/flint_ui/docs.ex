@@ -196,7 +196,9 @@ defmodule FlintUI.Docs do
   """
   def attrs(component) when is_atom(component) do
     component_module(component).__components__()[:render][:attrs]
-    |> Enum.reject(&(&1.name == :flint_parts))
+    # `doc: false` marks an internal connector, such as the part map or a
+    # wrapper-supplied nested attribute map. It is never public API.
+    |> Enum.reject(&(&1.name == :flint_parts or &1[:doc] == false))
     |> Enum.sort_by(&{not &1.required, &1.name})
   end
 

@@ -284,6 +284,10 @@
         --fl-control-radius: var(--fl-radius-sm);
     }
 
+    [data-element="badge"][data-radius="md"] {
+        --fl-control-radius: var(--fl-radius-md);
+    }
+
     [data-element="badge"][data-radius="lg"] {
         --fl-control-radius: var(--fl-radius-lg);
     }

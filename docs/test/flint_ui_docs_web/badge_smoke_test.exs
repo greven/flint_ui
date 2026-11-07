@@ -6,8 +6,17 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
   test "badge page renders the basic example", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/badge")
 
-    assert has_element?(view, "#usage-badge-basic [data-element='badge'][data-variant='subtle']")
-    assert has_element?(view, "#usage-badge-basic", "Badge")
+    assert has_element?(
+             view,
+             "#usage-badge-basic [data-element='badge'][data-variant='solid']",
+             "Solid"
+           )
+
+    assert has_element?(
+             view,
+             "#usage-badge-basic [data-element='badge'][data-variant='soft']",
+             "Soft"
+           )
 
     assert has_element?(
              view,
@@ -19,24 +28,24 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
     assert has_element?(
              view,
              "#example-badge-custom-color-preview-gradient [data-variant='subtle'][data-color='primary']",
-             "New"
+             "Pink"
            )
 
     assert has_element?(
              view,
              "#example-badge-custom-color-preview-gradient [data-variant='subtle'][data-color='warning']",
-             "Beta"
+             "Pony"
            )
 
     assert has_element?(
              view,
              "#example-badge-custom-color-preview-gradient [data-variant='subtle'][data-color='success']",
-             "Fresh"
+             "Club"
            )
 
     assert has_element?(
              view,
-             "#example-badge-removable-chip-preview [data-element='badge'][data-variant='dashed'] [data-element='button'][aria-label='Remove Elixir filter']"
+             "#example-badge-removable-badge-preview [data-element='badge'][data-variant='dashed'] [data-element='button'][aria-label='Remove Elixir']"
            )
 
     assert has_element?(
@@ -46,13 +55,13 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
 
     assert has_element?(
              view,
-             "#example-badge-icon-only-preview [data-element='badge'][role='status'][aria-label='3 unread notifications']"
+             "#example-badge-icon-only-preview [data-element='badge'][role='status'][aria-label='7 unread notifications']"
            )
 
     assert has_element?(
              view,
              "#example-badge-inside-button-preview [data-element='button'] [data-element='badge'][data-size='xs']",
-             "3 new"
+             "Pro+"
            )
 
     assert has_element?(view, "#api")

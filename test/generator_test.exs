@@ -13,7 +13,9 @@ defmodule FlintUI.GeneratorTest do
       assert source =~ "data-#{name}"
 
       if FlintUI.Styled.Entry.prop(entry, :size) do
-        assert source =~ "data-size={@size}"
+        # Forwarded props land on a nested element, so the wrapper writes them
+        # into a hook map instead of the root template.
+        assert source =~ "data-size={@size}" or source =~ ~s("data-size" => assigns.size)
       end
     end
   end

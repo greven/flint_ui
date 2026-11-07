@@ -41,6 +41,7 @@ defmodule FlintUI do
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
     {:group, []},
     {:icon, []},
+    {:indicator, []},
     {:loading, []},
     {:loading_text, []},
     {:tabs, [:select_tab]},
