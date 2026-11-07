@@ -465,17 +465,21 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
     # The interactions example starts collapsed to keep the page compact.
-    assert has_element?(view, "#example-button-interactions-code-collapse[data-state='closed']")
-    assert has_element?(view, "#example-button-interactions-code-header", "Expand Code")
+    assert has_element?(
+             view,
+             "#example-button-interactions-preview-code-collapse[data-state='closed']"
+           )
+
+    assert has_element?(view, "#example-button-interactions-preview-code-header", "Expand Code")
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-collapse [data-part='trigger'][aria-expanded='false']"
+             "#example-button-interactions-preview-code-collapse [data-part='trigger'][aria-expanded='false']"
            )
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-collapse [data-part='content'][hidden]"
+             "#example-button-interactions-preview-code-collapse [data-part='content'][hidden]"
            )
 
     # A default preview starts expanded.
@@ -503,46 +507,49 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "preview code flavors switch with accessible tabs", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#example-button-interactions-code-tabs[role='tablist']")
+    assert has_element?(view, "#example-button-interactions-preview-code-tabs[role='tablist']")
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-tab-0[role='tab'][aria-selected='true'][tabindex='0']"
+             "#example-button-interactions-preview-code-tab-0[role='tab'][aria-selected='true'][tabindex='0']"
            )
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-tab-1[role='tab'][aria-selected='false'][tabindex='-1']"
+             "#example-button-interactions-preview-code-tab-1[role='tab'][aria-selected='false'][tabindex='-1']"
            )
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-tabpanel[role='tabpanel'][aria-labelledby='example-button-interactions-code-tab-0']"
+             "#example-button-interactions-preview-code-tabpanel[role='tabpanel'][aria-labelledby='example-button-interactions-preview-code-tab-0']"
            )
 
-    view |> element("#example-button-interactions-code-tab-1") |> render_click()
-
-    assert has_element?(view, "#example-button-interactions-code-tab-1[aria-selected='true']")
+    view |> element("#example-button-interactions-preview-code-tab-1") |> render_click()
 
     assert has_element?(
              view,
-             "#example-button-interactions-code-tabpanel[aria-labelledby='example-button-interactions-code-tab-1']"
+             "#example-button-interactions-preview-code-tab-1[aria-selected='true']"
            )
 
-    assert has_element?(view, "#example-button-interactions-code", "def handle_event")
+    assert has_element?(
+             view,
+             "#example-button-interactions-preview-code-tabpanel[aria-labelledby='example-button-interactions-preview-code-tab-1']"
+           )
+
+    assert has_element?(view, "#example-button-interactions-preview-code", "def handle_event")
   end
 
   test "a CSS flavor renders as its own code tab", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#example-button-custom_color-code-tabs[role='tablist']")
-    assert has_element?(view, "#example-button-custom_color-code-tab-1", "CSS")
+    assert has_element?(view, "#example-button-custom-color-preview-code-tabs[role='tablist']")
+    assert has_element?(view, "#example-button-custom-color-preview-code-tab-1", "CSS")
 
-    view |> element("#example-button-custom_color-code-tab-1") |> render_click()
+    view |> element("#example-button-custom-color-preview-code-tab-1") |> render_click()
 
     assert has_element?(
              view,
-             "#example-button-custom_color-code",
+             "#example-button-custom-color-preview-code",
              ~s([data-element="button"][data-variant="subtle"])
            )
   end
@@ -561,6 +568,11 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#on-this-page", "On this page")
     assert has_element?(view, "#api h2[data-toc='section']", "API")
     assert has_element?(view, "#api #attributes h3[data-toc='subsection']", "Attributes")
+
+    assert has_element?(
+             view,
+             "#example-button-interactions h3 a[href='#example-button-interactions']"
+           )
 
     {:ok, base, _html} = live(conn, ~p"/components/button?tab=base")
 

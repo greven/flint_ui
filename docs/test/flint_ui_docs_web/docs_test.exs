@@ -94,10 +94,29 @@ defmodule FlintUIDocsWeb.DocsTest do
     assert Docs.section_anchor(:button, %{section: :usage, id: :variant}) == "usage-variant"
 
     assert Docs.preview_id(:button, %{section: :examples, id: :icon}) ==
-             "example-button-icon"
+             "example-button-icon-preview"
 
     assert Docs.section_anchor(:button, %{section: :examples, id: :icon}) ==
-             "example-button-icon-section"
+             "example-button-icon"
+  end
+
+  test "section anchors and group ids use dashes, not underscores" do
+    assert Docs.preview_id(:badge, %{section: :examples, id: :inside_button}) ==
+             "example-badge-inside-button-preview"
+
+    assert Docs.section_anchor(:badge, %{section: :examples, id: :inside_button}) ==
+             "example-badge-inside-button"
+
+    assert Docs.section_anchor(:tabs, %{tab: :base, section: :js_helpers}) ==
+             "base-js-helpers"
+
+    [group] =
+      Docs.group_sections(
+        [%{tab: :styled, section: :custom_things, id: :some_example, title: "Custom things"}],
+        :styled
+      )
+
+    assert group.id == "custom-things"
   end
 
   test "the first section supplies the group heading" do

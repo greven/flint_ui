@@ -11,7 +11,7 @@
         border: 1px solid transparent;
         border-radius: var(--fl-control-radius);
         font-family: var(--fl-font-sans);
-        font-weight: var(--fl-font-weight-semibold);
+        font-weight: var(--fl-font-weight-medium);
         line-height: 1;
         white-space: nowrap;
         text-decoration: none;
@@ -167,6 +167,7 @@
         background: var(--fl-color-surface);
         border-color: var(--fl-color-border);
         color: var(--fl-color-text);
+        font-weight: var(--fl-font-weight-semibold);
     }
 
     [data-element="badge"][data-variant="dot"]::before {
@@ -187,37 +188,44 @@
     /* Sizes use the badge height scale; text stays on the shared control
      * scale. Inline padding is tighter than a control's, but always stays
      * wider than the gap so a leading dot or icon reads as part of the label
-     * instead of being pinned to the edge. */
+     * instead of being pinned to the edge. `--_badge-size` is the box height
+     * for the current size; the full radius reads it for its minimum inline
+     * size, so a circle stays in step with the scale. */
     [data-element="badge"][data-size="xs"] {
-        height: var(--fl-badge-height-xs);
+        --_badge-size: var(--fl-badge-height-xs);
+        height: var(--_badge-size);
         padding-inline: calc(var(--fl-spacing) * 1);
         gap: calc(var(--fl-spacing) * 0.75);
         font-size: 0.625rem;
     }
 
     [data-element="badge"][data-size="sm"] {
-        height: var(--fl-badge-height-sm);
+        --_badge-size: var(--fl-badge-height-sm);
+        height: var(--_badge-size);
         padding-inline: calc(var(--fl-spacing) * 1.25);
         gap: var(--fl-spacing-xs);
         font-size: var(--fl-control-font-size-xs);
     }
 
     [data-element="badge"][data-size="md"] {
-        height: var(--fl-badge-height-md);
+        --_badge-size: var(--fl-badge-height-md);
+        height: var(--_badge-size);
         padding-inline: calc(var(--fl-spacing) * 1.5);
         gap: var(--fl-spacing-xs);
         font-size: var(--fl-control-font-size-sm);
     }
 
     [data-element="badge"][data-size="lg"] {
-        height: var(--fl-badge-height-lg);
+        --_badge-size: var(--fl-badge-height-lg);
+        height: var(--_badge-size);
         padding-inline: calc(var(--fl-spacing) * 2);
         gap: calc(var(--fl-spacing) * 1.25);
         font-size: var(--fl-control-font-size-md);
     }
 
     [data-element="badge"][data-size="xl"] {
-        height: var(--fl-badge-height-xl);
+        --_badge-size: var(--fl-badge-height-xl);
+        height: var(--_badge-size);
         padding-inline: calc(var(--fl-spacing) * 2.5);
         gap: calc(var(--fl-spacing) * 1.5);
         font-size: var(--fl-control-font-size-xl);
@@ -265,8 +273,15 @@
         --fl-control-radius: var(--fl-radius-xl);
     }
 
+    /* Full is a pill for labels and a circle for one-character counts. When the
+     * content is narrower than the badge is tall - "7", or a bare dot - the
+     * minimum inline size matches the height, so the full radius has a square
+     * box to round and does not read as a squashed oval. Wider labels keep
+     * their content width and stay pills.
+     */
     [data-element="badge"][data-radius="full"] {
         --fl-control-radius: var(--fl-radius-full);
+        min-inline-size: var(--_badge-size, var(--fl-badge-height-md));
     }
 
     /* Wide: fills the container. */

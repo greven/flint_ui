@@ -163,11 +163,22 @@ defmodule FlintUIDocsWeb.Docs do
 
   def preview_id(name, section) do
     case {section[:preview_id], section.section, Map.get(section, :id)} do
-      {id, _section, _id} when is_binary(id) -> id
-      {_preview_id, :usage, id} when not is_nil(id) -> "usage-#{name}-#{id}"
-      {_preview_id, :examples, id} when not is_nil(id) -> "example-#{name}-#{id}"
-      {_preview_id, section, nil} -> "#{section}-#{name}"
-      {_preview_id, section, id} -> "#{section}-#{name}-#{id}"
+      {id, _section, _id} when is_binary(id) ->
+        anchor_id(id)
+
+      # Examples use the same slug as the section anchor, so suffix the preview
+      # to keep the heading and preview DOM ids distinct.
+      {_preview_id, :examples, id} when not is_nil(id) ->
+        anchor_id("example-#{name}-#{id}-preview")
+
+      {_preview_id, :usage, id} when not is_nil(id) ->
+        anchor_id("usage-#{name}-#{id}")
+
+      {_preview_id, section, nil} ->
+        anchor_id("#{section}-#{name}")
+
+      {_preview_id, section, id} ->
+        anchor_id("#{section}-#{name}-#{id}")
     end
   end
 
@@ -180,9 +191,10 @@ defmodule FlintUIDocsWeb.Docs do
     case {section.section, Map.get(section, :id)} do
       {section, nil} -> to_string(section)
       {:usage, id} -> "usage-#{id}"
-      {:examples, id} -> "example-#{name}-#{id}-section"
+      {:examples, id} -> "example-#{name}-#{id}"
       {section, id} -> "#{section}-#{id}"
     end
+    |> anchor_id()
   end
 
   @doc """
@@ -254,7 +266,7 @@ defmodule FlintUIDocsWeb.Docs do
 
     Map.merge(group, %{
       title: first[:group_title] || first[:title],
-      id: to_string(group.section)
+      id: anchor_id(group.section)
     })
   end
 
@@ -307,7 +319,7 @@ defmodule FlintUIDocsWeb.Docs do
       tab: :base,
       section: key,
       title: title,
-      id: if(key == :intro, do: "overview", else: to_string(key)),
+      id: anchor_id(if(key == :intro, do: "overview", else: key)),
       body: body,
       system: system,
       sections: []
@@ -347,7 +359,7 @@ defmodule FlintUIDocsWeb.Docs do
             tab: :base,
             section: section.section,
             title: section[:group_title] || section[:title] || humanize(section.section),
-            id: to_string(section.section),
+            id: anchor_id(section.section),
             body: nil,
             system: nil,
             sections: [section]
@@ -375,6 +387,14 @@ defmodule FlintUIDocsWeb.Docs do
       main?: false,
       subsection?: group.sections != []
     })
+  end
+
+  # Fragment ids are URL-facing, so keep them to dashes: `:inside_button`
+  # becomes `inside-button` instead of leaking the Elixir atom's underscore.
+  defp anchor_id(value) do
+    value
+    |> to_string()
+    |> String.replace("_", "-")
   end
 
   defp component_source(name) do

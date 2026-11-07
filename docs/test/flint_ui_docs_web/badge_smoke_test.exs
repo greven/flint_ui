@@ -11,47 +11,47 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
 
     assert has_element?(
              view,
-             "#example-badge-status_dot [data-variant='dot'][data-color='success']"
+             "#example-badge-status-dot-preview [data-variant='dot'][data-color='success']"
            )
 
-    assert has_element?(view, "#example-badge-status_dot", "Online")
+    assert has_element?(view, "#example-badge-status-dot-preview", "Online")
 
     assert has_element?(
              view,
-             "#example-badge-custom_color-gradient [data-variant='subtle'][data-color='primary']",
+             "#example-badge-custom-color-preview-gradient [data-variant='subtle'][data-color='primary']",
              "New"
            )
 
     assert has_element?(
              view,
-             "#example-badge-custom_color-gradient [data-variant='subtle'][data-color='warning']",
+             "#example-badge-custom-color-preview-gradient [data-variant='subtle'][data-color='warning']",
              "Beta"
            )
 
     assert has_element?(
              view,
-             "#example-badge-custom_color-gradient [data-variant='subtle'][data-color='success']",
+             "#example-badge-custom-color-preview-gradient [data-variant='subtle'][data-color='success']",
              "Fresh"
            )
 
     assert has_element?(
              view,
-             "#example-badge-removable_chip [data-element='badge'][data-variant='dashed'] [data-element='button'][aria-label='Remove Elixir filter']"
+             "#example-badge-removable-chip-preview [data-element='badge'][data-variant='dashed'] [data-element='button'][aria-label='Remove Elixir filter']"
            )
 
     assert has_element?(
              view,
-             "#example-badge-icon_only [data-element='badge'][role='img'][aria-label='Verified']"
+             "#example-badge-icon-only-preview [data-element='badge'][role='img'][aria-label='Verified']"
            )
 
     assert has_element?(
              view,
-             "#example-badge-icon_only [data-element='badge'][role='status'][aria-label='3 unread notifications']"
+             "#example-badge-icon-only-preview [data-element='badge'][role='status'][aria-label='3 unread notifications']"
            )
 
     assert has_element?(
              view,
-             "#example-badge-inside_button [data-element='button'] [data-element='badge'][data-size='xs']",
+             "#example-badge-inside-button-preview [data-element='button'] [data-element='badge'][data-size='xs']",
              "3 new"
            )
 

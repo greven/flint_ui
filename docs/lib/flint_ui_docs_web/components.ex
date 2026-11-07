@@ -45,7 +45,7 @@ defmodule FlintUIDocsWeb.Components do
     values: ~w(none xs sm md lg xl full),
     default: "md",
     doc:
-      "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale."
+      "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale. A `full` badge with content narrower than its height, such as a one-character count, renders as a circle."
   )
 
   attr(:wide, :boolean,

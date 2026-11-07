@@ -60,7 +60,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       %{
         tab: :styled,
         section: :examples,
-        id: :removable_chip,
+        id: :removable_badge,
         title: "Removable Chip"
       },
       %{
@@ -181,7 +181,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :usage, id: :radius} = assigns) do
     ~H"""
-    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, or `full` for a pill shape. The default radius is `md`." />
+    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, or `full` for a pill shape. A `full` badge whose content is narrower than it is tall, such as a one-character count, renders as a circle instead of a squashed oval. The default radius is `md`." />
     <.preview :let={props} id={@id} {assigns} code={&code_radius/1}>
       <Components.badge radius={props.radius}>Badge</Components.badge>
     </.preview>
@@ -302,8 +302,9 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           style="--badge-gradient: linear-gradient(90deg, light-dark(#1D4ED8, #84b3ff), light-dark(#A21CAF, #df6cff));
             background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
-          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
-            New
+          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text;
+              -webkit-text-fill-color: transparent; color: transparent;">
+            Pink
           </span>
         </Components.badge>
 
@@ -314,8 +315,9 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           style="--badge-gradient: linear-gradient(90deg, light-dark(#92400E, #fcd34d), light-dark(#BE123C, #fda4af));
             background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
-          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
-            Beta
+          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text;
+              -webkit-text-fill-color: transparent; color: transparent;">
+            Pony
           </span>
         </Components.badge>
 
@@ -326,8 +328,9 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           style="--badge-gradient: linear-gradient(90deg, light-dark(#047857, #6ee7b7), light-dark(#3F6212, #bef264));
             background: linear-gradient(var(--fl-badge-soft), var(--fl-badge-soft)) padding-box, var(--badge-gradient) border-box; border-color: transparent;"
         >
-          <span style="background-image: var(--badge-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
-            Fresh
+          <span style="background-image: var(--badge-gradient);
+              -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
+            Club
           </span>
         </Components.badge>
       </div>
@@ -335,15 +338,31 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
   end
 
-  def render_section(%{section: :examples, id: :removable_chip} = assigns) do
+  def render_section(%{section: :examples, id: :removable_badge} = assigns) do
     ~H"""
-    <.prose content="A chip is a badge that can be removed. Keep the badge as the label and give the
-      remove action its own button, so it stays keyboard operable, keeps a focus ring, and does not
-      turn the badge into a click target." />
-    <.prose content="Name the button after the value it removes so every chip has a distinct
-      accessible name." />
-    <.preview {assigns} code={&code_removable_chip/1}>
-      <div class="flex flex-wrap items-center gap-2">
+    <.prose content="A Badge with a actionable inside, most commonly a close button is a commonly used pattern,
+      sometimes known as a chip. Keep the badge as the label and give the remove action its own button." />
+    <.prose content="Name the button after the value it removes so every chip has a distinct accessible name." />
+    <.preview {assigns} code={&code_removable_badge/1} collapsed>
+      <Components.badge variant="outline" size="lg" radius="full">
+        Bananas
+        <:trailing>
+          <Components.button
+            variant="ghost"
+            size="xs"
+            radius="full"
+            class="-me-2.25"
+            aria-label="Remove Bananas"
+            phx-click="remove_filter"
+            phx-value-tag="Bananas"
+            square
+          >
+            <Components.icon name="lucide-x" />
+          </Components.button>
+        </:trailing>
+      </Components.badge>
+
+      <%!-- <div class="flex flex-wrap items-center gap-2">
         <Components.badge
           :for={tag <- ~w(Elixir Phoenix LiveView)}
           variant="dashed"
@@ -367,7 +386,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
             </Components.button>
           </:trailing>
         </Components.badge>
-      </div>
+      </div> --%>
     </.preview>
     """
   end
@@ -376,13 +395,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="A badge can annotate a button's label, for example to show a count or a plan.
       The badge is part of the button's accessible name, so keep the combined text meaningful." />
-    <.preview {assigns} code={&code_inside_button/1}>
-      <div class="flex flex-wrap items-center gap-3">
+    <.preview {assigns} code={&code_inside_button/1} collapsed>
+      <div class="flex flex-wrap items-center gap-6">
         <Components.button variant="solid" color="neutral">
-          Uprade
+          Upgrade
           <Components.badge
-            style="--fl-badge-color: #ffffff20"
-            variant="solid"
+            class="bg-neutral-50/20 text-neutral-50 dark:bg-neutral-900/75 dark:text-neutral-50"
+            variant="soft"
             color="neutral"
             size="xs"
             radius="sm"
@@ -390,12 +409,30 @@ defmodule FlintUIDocsWeb.Docs.Badge do
             Pro+
           </Components.badge>
         </Components.button>
-        <Components.button variant="soft">
-          Unread
-          <Components.badge variant="solid" color="neutral" size="xs" radius="sm">
-            99
-          </Components.badge>
-        </Components.button>
+
+        <Components.tabs
+          id="tabs-with-badges"
+          label="Workspace sections"
+          variant="minimal"
+          value="rules"
+        >
+          <:tab :let={attrs} value="rules" custom>
+            <Components.button variant="subtle" {attrs}>
+              Rules
+              <Components.badge variant="solid" color="neutral" size="xs" radius="sm">
+                7
+              </Components.badge>
+            </Components.button>
+          </:tab>
+          <:tab :let={attrs} value="members" custom>
+            <Components.button variant="subtle" {attrs}>
+              Members
+              <Components.badge variant="solid" color="info" size="xs" radius="sm">
+                3
+              </Components.badge>
+            </Components.button>
+          </:tab>
+        </Components.tabs>
       </div>
     </.preview>
     """
@@ -421,11 +458,15 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         <Components.badge
           variant="solid"
           color="error"
-          size="xs"
+          radius="full"
+          size="sm"
           role="status"
           aria-label="7 unread notifications"
         >
           7
+        </Components.badge>
+        <Components.badge variant="soft" size="xs" role="status" aria-label="3 emails">
+          3
         </Components.badge>
       </div>
     </.preview>
@@ -510,7 +551,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     |> String.trim()
   end
 
-  defp code_removable_chip(_) do
+  defp code_removable_badge(_) do
     ~S"""
     <.badge
       :for={tag <- @active_filters}
@@ -550,9 +591,12 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge variant="subtle" color="neutral" role="img" aria-label="Saved">
       <.icon name="lucide-bookmark" />
     </.badge>
-    <.badge variant="solid" color="error" size="xs" role="status"
-      aria-label="7 unread notifications">
+    <.badge variant="solid" color="error" radius="full" size="sm"
+      role="status" aria-label="7 unread notifications">
       7
+    </.badge>
+    <.badge variant="soft" size="xs" role="status" aria-label="3 emails">
+      3
     </.badge>
     """
     |> String.trim()
@@ -560,18 +604,31 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_inside_button(_) do
     """
-    <.button variant="outline">
-      Changelog
-      <.badge variant="soft" color="info" size="xs">3 new</.badge>
-    </.button>
-    <.button variant="solid" color="primary">
+    # Button with Badge
+    <.button variant="solid" color="neutral">
       Upgrade
-      <.badge variant="soft" color="neutral" size="xs">Pro</.badge>
+      <.badge variant="solid" color="neutral" size="xs" radius="sm"
+        class="bg-neutral-50/20 text-neutral-50 dark:bg-neutral-900/75 dark:text-neutral-50">
+        Pro+
+      </.badge>
     </.button>
-    <.button variant="ghost">
-      Notifications
-      <.badge variant="solid" color="error" size="xs">9+</.badge>
-    </.button>
+
+    # Tabs with custom buttons and badges
+    <.tabs id="tabs-with-badges" value="rules" label="Settings" variant="minimal"
+    >
+      <:tab value="rules" custom>
+        <.button variant="soft">
+          Rules
+          <.badge variant="solid" color="neutral" size="xs" radius="sm">7</.badge>
+        </.button>
+      </:tab>
+      <:tab value="members" custom>
+        <.button variant="soft">
+          Members
+          <.badge variant="solid" color="info" size="xs" radius="sm">3</.badge>
+        </.button>
+      </:tab>
+    </.tabs>
     """
     |> String.trim()
   end
@@ -601,7 +658,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       <span style="background-image: var(--badge-gradient);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; color: transparent;">
-        New
+        Pink
       </span>
     </.badge>
 
@@ -618,7 +675,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       <span style="background-image: var(--badge-gradient);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; color: transparent;">
-        Beta
+        Pony
       </span>
     </.badge>
 
@@ -635,7 +692,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       <span style="background-image: var(--badge-gradient);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; color: transparent;">
-        Fresh
+        Club
       </span>
     </.badge>
     """
