@@ -78,7 +78,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Use the `inner_block` to set the content of the badge." />
     <.preview {assigns} code="<.badge>Badge</.badge>">
-      <Components.badge>Badge</Components.badge>
+      <div class="flex items-center gap-3">
+        <Components.badge variant="solid">Solid</Components.badge>
+        <Components.badge variant="soft">Soft</Components.badge>
+        <Components.badge variant="soft" color="error">Destructive</Components.badge>
+        <Components.badge variant="outline">Outline</Components.badge>
+        <Components.badge variant="ghost">Ghost</Components.badge>
+      </div>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
     """
