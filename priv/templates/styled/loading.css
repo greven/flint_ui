@@ -26,40 +26,40 @@
     /* Semantic roles read the role's text token, so the indicator stays legible on
    * the page. `inherit` (the default) has no rule and follows `currentColor`. */
     [data-element="loading"][data-color="primary"] {
-        color: var(--fl-color-primary-text);
+        color: var(--fl-color-primary);
     }
 
     [data-element="loading"][data-color="secondary"] {
-        color: var(--fl-color-secondary-text);
+        color: var(--fl-color-secondary);
     }
 
     [data-element="loading"][data-color="success"] {
-        color: var(--fl-color-success-text);
+        color: var(--fl-color-success);
     }
 
     [data-element="loading"][data-color="info"] {
-        color: var(--fl-color-info-text);
+        color: var(--fl-color-info);
     }
 
     [data-element="loading"][data-color="warning"] {
-        color: var(--fl-color-warning-text);
+        color: var(--fl-color-warning);
     }
 
     [data-element="loading"][data-color="error"] {
-        color: var(--fl-color-error-text);
+        color: var(--fl-color-error);
     }
 
     [data-element="loading"][data-color="neutral"] {
-        color: var(--fl-color-neutral-text);
+        color: var(--fl-color-neutral);
     }
 
     /* Absolute tones stay dark/light in either scheme. */
     [data-element="loading"][data-color="dark"] {
-        color: var(--fl-color-dark-text);
+        color: var(--fl-color-dark);
     }
 
     [data-element="loading"][data-color="light"] {
-        color: var(--fl-color-light-text);
+        color: var(--fl-color-light);
     }
 
     [data-element="loading"][data-variant="ring"] [data-part="arc"],
