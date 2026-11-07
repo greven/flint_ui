@@ -66,8 +66,9 @@
         min-width: 0;
     }
 
-    /* Variants are neutral surface steps: `soft` is the half-step toward
-     * `accented`, the full toned step. Light steps darker, dark lighter. */
+    /* Variants are neutral surface steps: `soft` is a faint tint off the pure
+     * surface, and `accented` is the strong tint. Light tints darker, dark
+     * tints lighter. */
     [data-element="card"][data-variant="solid"] {
         --fl-card-surface: var(--fl-color-surface);
     }

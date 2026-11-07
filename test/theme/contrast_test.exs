@@ -71,8 +71,7 @@ defmodule FlintUI.Theme.ContrastTest do
   end
 
   test "soft surfaces stay visible and their border reads against them", %{
-    tokens: tokens,
-    scales: scales
+    tokens: tokens
   } do
     for role <- @roles do
       {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
@@ -82,7 +81,7 @@ defmodule FlintUI.Theme.ContrastTest do
             {:light, soft_light, border_light},
             {:dark, soft_dark, border_dark}
           ] do
-        surface = surface_color(scales, scheme)
+        surface = eval_token(tokens, "surface", scheme)
         soft_ratio = Contrast.ratio(soft, surface) || 0.0
         border_ratio = Contrast.ratio(border, soft) || 0.0
 
@@ -121,12 +120,17 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
-  test "the contrast reference matches the shipped surface", %{scales: scales} do
-    for scheme <- [:light, :dark] do
-      assert_in_delta Contrast.luminance(surface_color(scales, scheme)),
-                      Contrast.luminance(background_reference(scheme)),
-                      1.0e-6
-    end
+  test "the contrast reference is conservative against the shipped surfaces", %{
+    tokens: tokens
+  } do
+    # Light mode scores dark role text against the pure surface (white). Dark
+    # mode scores light role text against the lightest tinted step, so the
+    # reference must be at least as light as `surface-accented`.
+    assert (Contrast.luminance(Contrast.light_background()) || 0.0) >=
+             (Contrast.luminance(eval_token(tokens, "surface", :light)) || 0.0)
+
+    assert (Contrast.luminance(Contrast.dark_background()) || 0.0) >=
+             (Contrast.luminance(eval_token(tokens, "surface-accented", :dark)) || 0.0)
   end
 
   test "absolute tones stay pinned and readable", %{tokens: tokens} do
@@ -151,16 +155,6 @@ defmodule FlintUI.Theme.ContrastTest do
       end
     end
   end
-
-  # The surface role text sits on: white in light, and neutral-900 in dark.
-  defp surface_color(_scales, :light), do: "oklch(100% 0 none)"
-
-  defp surface_color(scales, :dark) do
-    Map.fetch!(scales["neutral"], "900")
-  end
-
-  defp background_reference(:light), do: Contrast.light_background()
-  defp background_reference(:dark), do: Contrast.dark_background()
 
   defp parse_tokens(css) do
     ~r/--fl-color-([a-z0-9-]+):\s*([^;]+);/
@@ -210,9 +204,10 @@ defmodule FlintUI.Theme.ContrastTest do
 
       String.starts_with?(value, "color-mix(") ->
         [_, first, percent, second] =
-          Regex.run(~r/^color-mix\(in oklab,\s*(.+)\s+(\d+)%,\s*(.+)\)$/s, value)
+          Regex.run(~r/^color-mix\(\s*in oklab,\s*(.+)\s+(\d+(?:\.\d+)?)%,\s*(.+)\)$/s, value)
 
-        weight = String.to_integer(percent) / 100
+        {weight, _} = Float.parse(percent)
+        weight = weight / 100
 
         Contrast.mix(
           eval_expr(tokens, first, scheme),

@@ -157,17 +157,18 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
         <DocsComponents.section title="Surfaces" id="surfaces">
           <p class="mt-3 text-sm text-default">
-            Surfaces are one opaque neutral ladder. <code class="font-mono">solid</code>
-            is the surface step, <code class="font-mono">soft</code>
-            is a half-step toward <code class="font-mono">accented</code>, and
-            <code class="font-mono">accented</code>
-            is the full toned step. The dark default is <code class="font-mono">neutral-950</code>
-            (page) → <code class="font-mono">neutral-900</code>
-            (surface) → <code class="font-mono">neutral-800</code>
-            (accented). Bordered controls paint <code class="font-mono">surface</code>, an
-            opaque fill one step above the page, so attached-group seams stay single
-            while the neutral borders can stay semi-transparent. Disabled controls
-            dim with <code class="font-mono">--fl-disabled-opacity</code>
+            <code class="font-mono">surface</code>
+            is the pure anchor — white in light, <code class="font-mono">neutral-950</code>
+            in dark. The page and the other surface steps are tints of it toward
+            the opposite neutral extreme: <code class="font-mono">background</code>
+            is the page (1.5%), <code class="font-mono">surface-muted</code>
+            is a faint panel (3%), and <code class="font-mono">surface-accented</code>
+            is the strong panel (6%). The same tint order holds in both schemes,
+            so the page is never pure and a card is never the page color. Bordered
+            controls paint <code class="font-mono">surface</code>, an opaque fill
+            that matches the card, so attached-group seams stay single while the
+            neutral borders can stay semi-transparent. Disabled controls dim with
+            <code class="font-mono">--fl-disabled-opacity</code>
             instead of swapping in dedicated fills.
           </p>
           <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -221,12 +222,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <p class="font-medium">Dimmed is below AA by design</p>
             <p class="mt-1">
               <code class="font-mono">text-dimmed</code>
-              is 2.6:1 on white and 4.2:1 on the dark page. Use it for placeholders,
+              is 2.6:1 on white and 4.6:1 on the dark page. Use it for placeholders,
               disabled labels, and decoration — never for body copy or interactive
               labels. <code class="font-mono">text-muted</code>
-              clears AA on the page and <code class="font-mono">surface-muted</code>; on
+              clears AA on <code class="font-mono">surface</code>, the page, and <code class="font-mono">surface-muted</code>; on
               <code class="font-mono">surface-accented</code>
-              in light it is 4.34:1, so use <code class="font-mono">text-toned</code>
+              in light it is 4.28:1, so use <code class="font-mono">text-toned</code>
               there.
             </p>
           </div>
@@ -476,16 +477,24 @@ defmodule FlintUIDocsWeb.ThemeLive do
   defp snippet(:surfaces) do
     """
     :root {
-      --fl-color-background: light-dark(white, var(--fl-color-neutral-950));
-      --fl-color-surface: light-dark(white, var(--fl-color-neutral-900));
-      --fl-color-surface-accented: light-dark(
-        var(--fl-color-neutral-100),
-        var(--fl-color-neutral-800)
+      --fl-color-surface: light-dark(
+        white,
+        var(--fl-color-neutral-950)
+      );
+      --fl-color-background: color-mix(
+        in oklab,
+        var(--fl-color-surface) 98.5%,
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
       );
       --fl-color-surface-muted: color-mix(
         in oklab,
-        var(--fl-color-surface-accented) 50%,
-        var(--fl-color-surface)
+        var(--fl-color-surface) 97%,
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+      );
+      --fl-color-surface-accented: color-mix(
+        in oklab,
+        var(--fl-color-surface) 94%,
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
       );
 
       --fl-disabled-opacity: 0.5;
@@ -509,7 +518,11 @@ defmodule FlintUIDocsWeb.ThemeLive do
         var(--fl-color-neutral-300)
       );
       --fl-color-text-muted: light-dark(
-        var(--fl-color-neutral-500),
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-500) 90%,
+          var(--fl-color-neutral-600)
+        ),
         var(--fl-color-neutral-400)
       );
       --fl-color-text-dimmed: light-dark(

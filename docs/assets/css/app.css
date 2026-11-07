@@ -320,6 +320,10 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         font-size: inherit;
     }
 
+    .docs-prose pre + p {
+        margin-block: 1rem;
+    }
+
     .docs-prose blockquote {
         border-left: 2px solid var(--fl-color-border-accented);
         padding-left: 1rem;

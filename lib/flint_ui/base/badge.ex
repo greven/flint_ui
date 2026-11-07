@@ -18,8 +18,8 @@ defmodule FlintUI.Base.Badge do
   it conveys a state that changes, put it in a live region or pair it with text
   that announces the change. Icons are decorative. When a badge has no visible
   text, name it with `aria-label` and `role="img"`, or name the surrounding
-  element; use `role="status"` for a count that updates and should be
-  announced.
+  element. Use `role="status"` for a count that updates and should
+  be announced.
 
   A link badge renders a native `<a>`, so it keeps the link role and browser
   activation behavior.

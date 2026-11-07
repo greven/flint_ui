@@ -140,10 +140,15 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   placeholders and decoration. `text-dimmed` is below AA on purpose; never use
   it for readable content or interactive labels. On the full toned fill, prefer
   `text-toned` over `text-muted`.
-- **Chrome ladders share three levels.** `muted` is the faint step, the bare
-  token is the default, and `accented` is the strong step:
-  `surface-muted` / `surface` / `surface-accented`, and `border-muted` /
-  `border` / `border-accented`. Never use `muted` for a strong fill.
+- **Chrome ladders share three levels.** `surface` is the pure anchor: white in
+  light and `neutral-950` in dark. `background` is the page, a 1.5% tint off it
+  toward the opposite neutral extreme; `surface-muted` is the 3% step and
+  `surface-accented` the 6% step. The tint order is the same in both schemes, so
+  the page is never pure and a card is never the page color. `muted` is the
+  faint step and `accented` the strong step, so `border-muted` / `border` /
+  `border-accented` read the same way. Opaque bordered controls paint
+  `surface`, so attached-group seams stay single. Never use `muted` for a strong
+  fill.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.

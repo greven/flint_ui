@@ -87,11 +87,13 @@ for headings, `text` for body, `text-toned` for secondary copy, `text-muted` for
 meta, and `text-dimmed` for placeholders. `text-dimmed` is below AA by design;
 do not use it for readable content.
 
-Neutral chrome uses the same three-level idea: `surface` is the panel,
-`surface-muted` is the half step, and `surface-accented` is the full toned fill.
-`muted` always means the faint step and `accented` always means the strong one,
-so `bg-muted` / `bg-accented` and `border-muted` / `border-accented` read the
-same way.
+Neutral chrome is anchored on the pure `surface`: white in light and
+`neutral-950` in dark. The page (`background`) is a 1.5% tint of it toward the
+opposite neutral extreme, `surface-muted` is the 3% step, and
+`surface-accented` is the 6% step. The tint order is the same in both schemes,
+so the page is never pure and a card is never the page color. `muted` always
+means the faint step and `accented` always means the strong one, so `bg-muted` /
+`bg-accented` and `border-muted` / `border-accented` read the same way.
 
 For a full `50..950` scale, map the role shades to the palette you already
 have. With Tailwind, point them at the `--color-*` variables in `app.css`:

@@ -72,7 +72,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
         tab: :styled,
         section: :examples,
         id: :dot,
-        title: "Dot",
+        title: "Dot Indicator",
         group_title: "Examples"
       },
       %{tab: :styled, section: :examples, id: :inline, title: "Inline vs Corner"},
@@ -280,21 +280,6 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
     """
   end
 
-  def render_section(%{section: :examples, id: :live} = assigns) do
-    ~H"""
-    <.prose content="Give the badge `badge_label` to expose it with its own accessible name, and
-      `status` to announce a changing count as a live region. Keep the anchor's name short in
-      that case." />
-    <.preview {assigns} code={&code_live/1} collapsed>
-      <Components.indicator label="3" badge_label="3 unread messages" status>
-        <Components.button variant="subtle" square aria-label="Inbox">
-          <Components.icon name="lucide-mail" />
-        </Components.button>
-      </Components.indicator>
-    </.preview>
-    """
-  end
-
   def render_section(%{section: :examples, id: :inline} = assigns) do
     ~H"""
     <.prose content="Keep a badge inline inside a control when the count belongs to that control's
@@ -313,6 +298,21 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
           </Components.button>
         </Components.indicator>
       </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :examples, id: :live} = assigns) do
+    ~H"""
+    <.prose content="Give the badge `badge_label` to expose it with its own accessible name, and
+      `status` to announce a changing count as a live region. Keep the anchor's name short in
+      that case." />
+    <.preview {assigns} code={&code_live/1} collapsed>
+      <Components.indicator label="3" color="neutral" badge_label="3 unread messages" status>
+        <Components.button variant="subtle" square aria-label="Inbox">
+          <Components.icon name="lucide-mail" />
+        </Components.button>
+      </Components.indicator>
     </.preview>
     """
   end

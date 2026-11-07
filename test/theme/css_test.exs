@@ -91,15 +91,18 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-element="button"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
   end
 
-  test "surface steps are opaque and move toward the accented step", %{css: css} do
+  test "the pure surface anchors the page and the tint steps", %{css: css} do
     assert css =~
-             ~r/--fl-color-surface-muted: color-mix\(\s*in oklab,\s*var\(--fl-color-surface-accented\) 50%,\s*var\(--fl-color-surface\)\s*\)/
+             "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));"
 
     assert css =~
-             "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));"
+             ~r/--fl-color-background: color-mix\(\s*in oklab,\s*var\(--fl-color-surface\) 98\.5%,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-surface-accented: light-dark\(\s*var\(--fl-color-neutral-100\),\s*var\(--fl-color-neutral-800\)\s*\)/
+             ~r/--fl-color-surface-muted: color-mix\(\s*in oklab,\s*var\(--fl-color-surface\) 97%,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-surface-accented: color-mix\(\s*in oklab,\s*var\(--fl-color-surface\) 94%,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*\)/
 
     refute css =~ "--fl-color-control:"
   end
@@ -123,8 +126,11 @@ defmodule FlintUI.Theme.CSSTest do
     end
 
     white = "oklch(100% 0 none)"
-    light_surface = white
-    light_accented = neutral.(100)
+    # Conservative proxies for the pure surface and the 6% accented step: use
+    # surfaces at least as dark as the real light steps and at least as light as
+    # the real dark steps so the AA checks do not overstate contrast.
+    light_surface = neutral.(100)
+    light_accented = neutral.(200)
     dark_surface = neutral.(900)
     dark_accented = neutral.(800)
 
@@ -142,10 +148,13 @@ defmodule FlintUI.Theme.CSSTest do
     assert FlintUI.Palette.Contrast.ratio(neutral.(900), white) >= 4.5
     assert FlintUI.Palette.Contrast.ratio(white, neutral.(950)) >= 4.5
 
-    # `text-muted` clears AA on the page and surface-muted, but not on surface-accented.
-    assert FlintUI.Palette.Contrast.ratio(neutral.(500), white) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(50)) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(100)) < 4.5
+    # `text-muted` clears AA on the pure surface, the page tint, and the
+    # `surface-muted` step, but not on the stronger `surface-accented` step.
+    text_muted = FlintUI.Palette.Contrast.mix(neutral.(500), neutral.(600), 0.9)
+    assert FlintUI.Palette.Contrast.ratio(text_muted, white) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(50)) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(100)) >= 4.5
+    assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(200)) < 4.5
 
     # `dimmed` is intentionally below AA: placeholders and decoration only.
     assert FlintUI.Palette.Contrast.ratio(neutral.(400), white) < 4.5

@@ -17,10 +17,10 @@ defmodule FlintUI.Palette.Contrast do
   @aa 4.5
   @aaa 7.0
 
-  # Reference surfaces for role text: light is the white surface; dark is
-  # `--fl-color-surface` (neutral-900), the lightest dark backdrop a role text
-  # token sits on in outline/soft. Scoring against the darker page would
-  # overstate contrast.
+  # Reference surfaces for role text: light is the pure surface (white); dark
+  # approximates `--fl-color-surface-accented`, the lightest dark backdrop a
+  # role text token sits on in outline/soft. Scoring against the darker pure
+  # surface would overstate contrast.
   @light_background "oklch(100% 0 none)"
   @dark_background "oklch(20.5% 0 none)"
 
@@ -46,8 +46,9 @@ defmodule FlintUI.Palette.Contrast do
   @doc """
   The dark-mode surface the text alias is scored against.
 
-  This is the dark surface (`--fl-color-surface`), not the darker page:
-  outline, soft, and subtle place role text over that lighter backdrop.
+  This approximates `--fl-color-surface-accented`, the lightest backdrop role
+  text sits on in outline, soft, and subtle. Scoring against the darker pure
+  surface would overstate contrast.
   """
   def dark_background, do: @dark_background
 

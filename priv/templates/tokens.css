@@ -242,7 +242,7 @@
     --fl-color-neutral-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
     --fl-color-neutral-soft: light-dark(
         color-mix(in oklab, var(--fl-color-neutral) 6%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-neutral) 7%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface))
     );
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 15%, var(--fl-color-surface));
 
@@ -304,7 +304,7 @@
     --fl-color-warning-text: light-dark(var(--fl-color-warning-800), var(--fl-color-warning-400));
     --fl-color-warning-soft: light-dark(
         color-mix(in oklab, var(--fl-color-warning) 20%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-warning) 8%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-warning) 9%, var(--fl-color-surface))
     );
     --fl-color-warning-soft-border: color-mix(in oklab, var(--fl-color-warning) 50%, var(--fl-color-surface));
 
@@ -323,18 +323,39 @@
     --fl-color-text-highlighted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
     --fl-color-text: light-dark(var(--fl-color-neutral-700), var(--fl-color-neutral-200));
     --fl-color-text-toned: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-300));
-    --fl-color-text-muted: light-dark(var(--fl-color-neutral-500), var(--fl-color-neutral-400));
+    /* `muted` clears AA on `surface` and on the 3% `surface-muted` step, so
+     * light mode blends the 500 shade a little toward 600 instead of sitting
+     * on the AA edge. */
+    --fl-color-text-muted: light-dark(
+        color-mix(in oklab, var(--fl-color-neutral-500) 90%, var(--fl-color-neutral-600)),
+        var(--fl-color-neutral-400)
+    );
     --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
     --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
 
-    /* Chrome surfaces. One neutral ladder off the page: `surface` is the
-     * panel, `surface-muted` is the half step, and `surface-accented` is the
-     * full toned fill. Bordered controls paint `surface`, so attached-group
-     * seams stay single. Swapping `--fl-color-neutral-*` retints them together. */
-    --fl-color-background: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
-    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-900));
-    --fl-color-surface-accented: light-dark(var(--fl-color-neutral-100), var(--fl-color-neutral-800));
-    --fl-color-surface-muted: color-mix(in oklab, var(--fl-color-surface-accented) 50%, var(--fl-color-surface));
+    /* Chrome surfaces. `surface` is the pure anchor: white in light and
+     * neutral-950 in dark. Everything else is a tint of it toward the opposite
+     * neutral extreme, so the same tint order holds in both schemes:
+     *   background 1.5%  ->  muted 3%  ->  accented 6%
+     * The page is therefore never pure and a card is never the page color.
+     * Bordered controls paint `surface`, so attached-group seams stay single.
+     * Swapping `--fl-color-neutral-*` retints them together. */
+    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
+    --fl-color-background: color-mix(
+        in oklab,
+        var(--fl-color-surface) 98.5%,
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+    );
+    --fl-color-surface-muted: color-mix(
+        in oklab,
+        var(--fl-color-surface) 97%,
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+    );
+    --fl-color-surface-accented: color-mix(
+        in oklab,
+        var(--fl-color-surface) 94%,
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+    );
 
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
 
