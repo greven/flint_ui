@@ -4,8 +4,7 @@ defmodule FlintUIDocsWeb.Highlight do
 
   `highlight/2` returns HTML that is safe to embed inside
   `<pre class="highlight">`. The token classes are styled in
-  `assets/css/highlight.css` with the docs' semantic color tokens, so
-  highlighting follows light/dark mode and the active `data-theme` preset. The
+  `assets/css/highlight.css` with GitHub's light and dark syntax palettes. The
   `.highlight` background is transparent; the surrounding code panel supplies the
   surface.
   """

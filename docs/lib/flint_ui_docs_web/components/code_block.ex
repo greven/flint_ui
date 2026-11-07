@@ -212,7 +212,11 @@ defmodule FlintUIDocsWeb.CodeBlock do
       id={"#{@id}-header"}
       data-code-header
       phx-hook=".CodeHeader"
-      class="relative flex items-center justify-between gap-3 border-b border-default px-3 py-1.5 group-data-[state=closed]:cursor-pointer group-data-[state=closed]:border-b-0"
+      class={[
+        "relative flex items-center justify-between gap-3 px-3 py-1.5",
+        "bg-surface/50 border-b border-default",
+        "group-data-[state=closed]:cursor-pointer group-data-[state=closed]:border-b-0"
+      ]}
     >
       <div class="flex min-w-0 items-center gap-1.5">
         <%= if @tabs != [] do %>
@@ -286,13 +290,13 @@ defmodule FlintUIDocsWeb.CodeBlock do
         id={"#{@id}-close"}
         data-code-close
         phx-click={close_collapsible("#{@id}-collapse")}
-        variant="ghost"
+        variant="soft"
         size="xs"
         wide
         radius="none"
         class="text-muted hover:text-default"
       >
-        <Components.icon name="lucide-chevron-up" class="size-3.5" /> Close Code
+        Close Code
       </Components.button>
     </div>
     """
@@ -342,7 +346,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
   defp panel_class(assigns) do
     [
-      "group relative overflow-hidden bg-foreground/3",
+      "group relative overflow-hidden bg-foreground/2",
       assigns.bordered && "border border-default",
       assigns.rounded && "rounded-lg"
     ]

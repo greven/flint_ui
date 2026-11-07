@@ -1,12 +1,47 @@
 /* Makeup token colours for the docs code panels.
-   The classes come from `Makeup.highlight_inner_html/2`; the colours are the
-   docs' semantic tokens, so highlighting follows light/dark mode and the active
-   `data-theme` preset. The panel supplies the surface, so `.highlight` stays
-   transparent. */
+   The classes come from `Makeup.highlight_inner_html/2`; the colours follow
+   GitHub's light and dark syntax palettes (Primer `prettylights`, with the dark
+   side matching Pygments `github-dark`). `light-dark()` follows the system
+   scheme and a forced `data-color-scheme`. The panel supplies the surface, so
+   `.highlight` stays transparent.
+
+   Only token colours change; the code panel background is owned by `CodeBlock`
+   and stays untouched. */
 
 .highlight {
     color: var(--fl-color-text);
     background-color: transparent;
+
+    /* GitHub syntax palette: light value first, dark value second. */
+    --hl-comment: light-dark(#6e7781, #8b949e);
+    --hl-keyword: light-dark(#cf222e, #ff7b72);
+    --hl-keyword-constant: light-dark(#0550ae, #79c0ff);
+    --hl-class: light-dark(#953800, #f0883e);
+    --hl-namespace: light-dark(#cf222e, #ff7b72);
+    --hl-string: light-dark(#0a3069, #a5d6ff);
+    --hl-string-affix: light-dark(#0550ae, #79c0ff);
+    --hl-number: light-dark(#0550ae, #a5d6ff);
+    --hl-constant: light-dark(#0550ae, #79c0ff);
+    --hl-escape: light-dark(#0550ae, #79c0ff);
+    --hl-symbol: light-dark(#0a3069, #a5d6ff);
+    --hl-function: light-dark(#8250df, #d2a8ff);
+    --hl-attribute: light-dark(#24292f, #e6edf3);
+    --hl-tag: light-dark(#116329, #7ee787);
+    --hl-builtin: light-dark(#24292f, #e6edf3);
+    --hl-name: light-dark(#24292f, #e6edf3);
+    --hl-entity: light-dark(#953800, #ffa657);
+    --hl-variable: light-dark(#0550ae, #79c0ff);
+    --hl-operator: light-dark(#cf222e, #ff7b72);
+    --hl-punctuation: light-dark(#24292f, #e6edf3);
+    --hl-deleted: light-dark(#82071e, #ffa198);
+    --hl-inserted: light-dark(#116329, #56d364);
+    --hl-heading: light-dark(#0550ae, #79c0ff);
+    --hl-prompt: light-dark(#6e7781, #8b949e);
+    --hl-error: light-dark(#cf222e, #f85149);
+    --hl-exception: light-dark(#953800, #f0883e);
+    --hl-output: light-dark(#6e7781, #8b949e);
+    --hl-traceback: light-dark(#cf222e, #ff7b72);
+    --hl-whitespace: light-dark(#6e7781, #6e7681);
 }
 
 .highlight .hll {
@@ -31,21 +66,34 @@
 .highlight .cpf,
 .highlight .cs,
 .highlight .sd {
-    color: var(--fl-color-text-muted);
+    color: var(--hl-comment);
     font-style: italic;
 }
 
-/* Keywords, declarations, and types */
+/* Keywords and declarations */
 .highlight .k,
-.highlight .kc,
 .highlight .kd,
 .highlight .kn,
-.highlight .kp,
 .highlight .kr,
-.highlight .kt,
-.highlight .nc,
+.highlight .kt {
+    color: var(--hl-keyword);
+    font-weight: 500;
+}
+
+.highlight .kc,
+.highlight .kp {
+    color: var(--hl-keyword-constant);
+    font-weight: 500;
+}
+
+/* Class and namespace names */
+.highlight .nc {
+    color: var(--hl-class);
+    font-weight: 500;
+}
+
 .highlight .nn {
-    color: var(--fl-color-primary-text);
+    color: var(--hl-namespace);
     font-weight: 500;
 }
 
@@ -53,82 +101,106 @@
 .highlight .s,
 .highlight .s1,
 .highlight .s2,
-.highlight .sa,
 .highlight .sb,
 .highlight .sc,
-.highlight .sh,
-.highlight .sr,
 .highlight .sx {
-    color: var(--fl-color-success-text);
+    color: var(--hl-string);
 }
 
+.highlight .sa,
+.highlight .sh,
+.highlight .sr,
 .highlight .dl {
-    color: var(--fl-color-success-text);
+    color: var(--hl-string-affix);
 }
 
 /* Numbers, dates, constants, and escapes */
 .highlight .l,
-.highlight .ld,
 .highlight .m,
 .highlight .mb,
 .highlight .mf,
 .highlight .mh,
 .highlight .mi,
 .highlight .mo,
-.highlight .il,
-.highlight .no,
-.highlight .se,
+.highlight .il {
+    color: var(--hl-number);
+}
+
+.highlight .ld,
+.highlight .no {
+    color: var(--hl-constant);
+}
+
+.highlight .se {
+    color: var(--hl-escape);
+}
+
 .highlight .si,
 .highlight .ss {
-    color: var(--fl-color-warning-text);
+    color: var(--hl-symbol);
 }
 
 /* Functions, attributes, decorators, and namespaces */
-.highlight .na,
+.highlight .na {
+    color: var(--hl-attribute);
+}
+
 .highlight .nd,
 .highlight .nf,
 .highlight .fm {
-    color: var(--fl-color-info-text);
+    color: var(--hl-function);
 }
 
 /* Tags and tag-like names */
-.highlight .nt,
+.highlight .nt {
+    color: var(--hl-tag);
+}
+
 .highlight .nb,
 .highlight .bp {
-    color: var(--fl-color-primary-text);
+    color: var(--hl-builtin);
 }
 
 /* Plain names, variables, labels, and punctuation */
 .highlight .n,
-.highlight .ni,
+.highlight .nx {
+    color: var(--hl-name);
+}
+
+.highlight .ni {
+    color: var(--hl-entity);
+}
+
 .highlight .nl,
 .highlight .py,
 .highlight .vc,
 .highlight .vg,
 .highlight .vi,
-.highlight .vm,
-.highlight .nx {
-    color: var(--fl-color-text);
+.highlight .vm {
+    color: var(--hl-variable);
 }
 
 .highlight .o,
-.highlight .ow,
+.highlight .ow {
+    color: var(--hl-operator);
+}
+
 .highlight .p {
-    color: var(--fl-color-text-toned);
+    color: var(--hl-punctuation);
 }
 
 /* Generic and diff output */
 .highlight .gd {
-    color: var(--fl-color-error-text);
+    color: var(--hl-deleted);
 }
 
 .highlight .gi {
-    color: var(--fl-color-success-text);
+    color: var(--hl-inserted);
 }
 
 .highlight .gh,
 .highlight .gu {
-    color: var(--fl-color-text-highlighted);
+    color: var(--hl-heading);
     font-weight: 600;
 }
 
@@ -141,26 +213,38 @@
 }
 
 .highlight .gp {
-    color: var(--fl-color-text-muted);
+    color: var(--hl-prompt);
     font-weight: 600;
 }
 
-.highlight .gr,
-.highlight .err,
-.highlight .ne {
-    color: var(--fl-color-error-text);
+.highlight .gr {
+    color: var(--hl-deleted);
 }
 
 .highlight .err {
+    color: var(--hl-error);
     background-color: color-mix(in oklab, var(--fl-color-error) 12%, transparent);
+}
+
+.highlight .ne {
+    color: var(--hl-exception);
 }
 
 /* Catch-all tokens that should follow the surrounding text. */
 .highlight .esc,
 .highlight .g,
-.highlight .go,
-.highlight .gt,
-.highlight .w,
 .highlight .x {
-    color: var(--fl-color-text);
+    color: var(--hl-name);
+}
+
+.highlight .go {
+    color: var(--hl-output);
+}
+
+.highlight .gt {
+    color: var(--hl-traceback);
+}
+
+.highlight .w {
+    color: var(--hl-whitespace);
 }
