@@ -9,9 +9,10 @@ defmodule FlintUI.Styled.Entry do
   its theme stylesheet part (`:css`, relative to `priv/templates`). The docs and
   the generator both read from here.
 
-  `:content_attrs` are ordinary attributes the wrapper reads while rendering
-  content, such as a text fallback or an icon name. Unlike `:props`, they do not
-  map to a `data-*` hook and are not forwarded to the base.
+  `:content_attrs` are ordinary attributes the wrapper reads while rendering,
+  such as a text fallback, an icon name, or a CSS-variable-backed input. Unlike
+  `:props`, they do not map to a `data-*` hook and are not forwarded to the base.
+  Only attributes with `fills_content: true` relax a required `inner_block`.
 
   `:color_vars` maps the semantic outputs of a raw `color` value onto the
   component's public CSS variables: `:fill` (the exact color), `:on_fill` (the

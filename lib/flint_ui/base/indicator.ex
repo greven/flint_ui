@@ -16,6 +16,10 @@ defmodule FlintUI.Base.Indicator do
   `inline-flex` so it hugs an inline anchor; pass `class="flex"` when the anchor
   is block-level.
 
+  With no `label`, the badge is a dot. A dot drops the label height scale and
+  uses the theme's smaller marker scale, so it stays a compact status mark
+  instead of a full badge.
+
   ## Accessibility
 
   The badge is decorative by default: it is `aria-hidden`, so the count must be
@@ -71,6 +75,12 @@ defmodule FlintUI.Base.Indicator do
           value: "badge",
           description:
             "The positioning wrapper around the nested badge. The nested badge keeps `data-element=\"badge\"` and `data-part=\"root\"`."
+        },
+        %Meta.PartAttr{
+          name: "[data-dot]",
+          value: "boolean",
+          description:
+            "Present on the nested badge when `label` is empty. The theme renders it as a compact dot instead of a full badge."
         }
       ]
     }
@@ -101,7 +111,8 @@ defmodule FlintUI.Base.Indicator do
 
   attr :label, :string,
     default: nil,
-    doc: "The visible badge content. Omit it to render a dot."
+    doc:
+      "The visible badge content. Omit it to render a dot, which uses the smaller marker size scale."
 
   attr :badge_label, :string,
     default: nil,
@@ -128,6 +139,7 @@ defmodule FlintUI.Base.Indicator do
         <span
           data-element="badge"
           data-part="root"
+          data-dot={dot?(assigns)}
           {@badge_attrs}
           role={badge_role(assigns)}
           aria-label={@badge_label}
@@ -139,6 +151,10 @@ defmodule FlintUI.Base.Indicator do
     </.dynamic_tag>
     """
   end
+
+  # A dot is a badge with no visible content; whitespace-only labels count as
+  # empty so a formatted template does not accidentally render a full badge.
+  defp dot?(%{label: label}), do: is_nil(label) or String.trim(label) == ""
 
   defp badge_role(%{status: true}), do: "status"
 

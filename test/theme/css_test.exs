@@ -35,6 +35,20 @@ defmodule FlintUI.Theme.CSSTest do
     end
   end
 
+  test "defines absolute tones and maps them on every color component", %{css: css} do
+    assert css =~ "--fl-color-dark: var(--fl-color-neutral-900);"
+    assert css =~ "--fl-color-light: var(--fl-color-neutral-50);"
+    assert css =~ "--fl-color-dark-content: var(--fl-color-neutral-50);"
+    assert css =~ "--fl-color-light-content: var(--fl-color-neutral-900);"
+    assert css =~ "--fl-color-dark-text: light-dark("
+    assert css =~ "--fl-color-light-text: light-dark("
+
+    for element <- ~w(button badge toggle tabs loading loading_text),
+        tone <- ~w(dark light) do
+      assert css =~ ~s([data-element="#{element}"][data-color="#{tone}"])
+    end
+  end
+
   test "defines the text, surface, and border ladders", %{css: css} do
     for token <- ~w(
           text-highlighted

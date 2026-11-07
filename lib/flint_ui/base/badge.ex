@@ -31,7 +31,7 @@ defmodule FlintUI.Base.Badge do
   def meta do
     %Meta{
       name: :badge,
-      type: :element,
+      type: :feedback,
       since: "0.1",
       status: :draft
     }

@@ -266,6 +266,17 @@
         --fl-tabs-text: var(--fl-color-error-text);
     }
 
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="tabs"][data-color="dark"] {
+        --fl-tabs-color: var(--fl-color-dark);
+        --fl-tabs-text: var(--fl-color-dark-text);
+    }
+
+    [data-element="tabs"][data-color="light"] {
+        --fl-tabs-color: var(--fl-color-light);
+        --fl-tabs-text: var(--fl-color-light-text);
+    }
+
     /* Sizes drive the default trigger metrics. */
     [data-element="tabs"][data-size="xs"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         height: var(--fl-control-height-xs);

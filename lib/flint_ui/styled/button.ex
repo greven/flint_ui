@@ -83,12 +83,14 @@ defmodule FlintUI.Styled.Button do
         Attr.new(
           name: :icon,
           type: :string,
+          fills_content: true,
           doc:
             "An icon CSS class rendered before the button's content. The icon is decorative; use `aria-label` when the button has no text."
         ),
         Attr.new(
           name: :text,
           type: :string,
+          fills_content: true,
           doc:
             "A text label rendered when the default slot is not given. The default slot wins when both are set."
         )

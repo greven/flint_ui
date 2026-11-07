@@ -246,6 +246,22 @@
     );
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 15%, var(--fl-color-surface));
 
+    /* Absolute tones. Unlike `neutral`, these do not follow the color scheme:
+     * `dark` stays dark and `light` stays light. They alias the neutral extremes,
+     * so retinting the neutral ramp retints them too. Text-carrying variants
+     * still resolve their `-text` per scheme so they stay legible. */
+    --fl-color-dark: var(--fl-color-neutral-900);
+    --fl-color-dark-content: var(--fl-color-neutral-50);
+    --fl-color-dark-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
+    --fl-color-dark-soft: var(--fl-color-neutral-soft);
+    --fl-color-dark-soft-border: var(--fl-color-neutral-soft-border);
+
+    --fl-color-light: var(--fl-color-neutral-50);
+    --fl-color-light-content: var(--fl-color-neutral-900);
+    --fl-color-light-text: light-dark(var(--fl-color-neutral-700), var(--fl-color-neutral-50));
+    --fl-color-light-soft: var(--fl-color-neutral-soft);
+    --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
+
     /* Primary and secondary placeholders. */
     --fl-color-primary: var(--fl-color-primary-600);
     --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));

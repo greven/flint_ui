@@ -14,9 +14,11 @@ defmodule FlintUI.Styled.ColorTest do
 
   @colors ~w(#1D72FE #FFE066 #111827 #22C55E #F43F5E)
 
-  test "valid?/1 accepts roles and raw colors" do
+  test "valid?/1 accepts roles, absolute tones, and raw colors" do
     assert StyledColor.valid?("primary")
     assert StyledColor.valid?("inherit")
+    assert StyledColor.valid?("dark")
+    assert StyledColor.valid?("light")
     assert StyledColor.valid?("#1D72FE")
     assert StyledColor.valid?("rgb(29 114 254)")
     refute StyledColor.valid?("nope")
@@ -44,6 +46,16 @@ defmodule FlintUI.Styled.ColorTest do
       assert assigns.rest.style =~ "--fl-button-color-content"
       assert assigns.rest.style =~ "--fl-button-text"
       refute assigns.rest.style =~ "data-color"
+    end
+
+    test "absolute tones keep the data hook even when the entry omits them" do
+      for tone <- ~w(dark light) do
+        assigns =
+          StyledColor.apply(%{color: tone, rest: %{}, __changed__: %{}}, @roles, @vars)
+
+        assert assigns.data_color == tone
+        assert assigns.rest == %{}
+      end
     end
 
     test "the caller's style wins over the derived inputs" do

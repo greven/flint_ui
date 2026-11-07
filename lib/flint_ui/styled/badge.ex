@@ -68,11 +68,13 @@ defmodule FlintUI.Styled.Badge do
         Attr.new(
           name: :icon,
           type: :string,
+          fills_content: true,
           doc: "An icon CSS class rendered before the badge's content. The icon is decorative."
         ),
         Attr.new(
           name: :text,
           type: :string,
+          fills_content: true,
           doc:
             "A text label rendered when the default slot is not given. The default slot wins when both are set."
         )

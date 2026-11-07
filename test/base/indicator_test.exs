@@ -56,6 +56,14 @@ defmodule FlintUI.Base.IndicatorTest do
       """
     end
 
+    def blank_label(assigns) do
+      ~H"""
+      <.indicator label="   ">
+        <button id="anchor">Inbox</button>
+      </.indicator>
+      """
+    end
+
     def as_div(assigns) do
       ~H"""
       <.indicator as="div" label="3">
@@ -92,6 +100,7 @@ defmodule FlintUI.Base.IndicatorTest do
     assert LazyHTML.tag(badge(document)) == ["span"]
     assert attr(badge(document), "data-element") == ["badge"]
     assert attr(badge(document), "data-part") == ["root"]
+    assert attr(badge(document), "data-dot") == []
     assert badge(document) |> LazyHTML.text() |> String.trim() == "3"
   end
 
@@ -108,6 +117,13 @@ defmodule FlintUI.Base.IndicatorTest do
 
     assert badge(document) |> LazyHTML.text() |> String.trim() == ""
     assert attr(badge(document), "aria-hidden") == ["true"]
+    assert attr(badge(document), "data-dot") == [""]
+  end
+
+  test "treats a whitespace-only label as a dot" do
+    document = render(&TestComponent.blank_label/1)
+
+    assert attr(badge(document), "data-dot") == [""]
   end
 
   test "spreads the nested badge hooks" do
@@ -142,11 +158,12 @@ defmodule FlintUI.Base.IndicatorTest do
   end
 
   test "declares its type and documented parts" do
-    assert %FlintUI.Meta{name: :indicator, type: :element, status: :draft} =
+    assert %FlintUI.Meta{name: :indicator, type: :feedback, status: :draft} =
              FlintUI.Base.Indicator.meta()
 
     parts = FlintUI.Base.Indicator.parts_attrs()
     assert parts.root |> Enum.any?(&(&1.name == "[data-element]"))
     assert parts.badge |> Enum.any?(&(&1.name == "[data-part]"))
+    assert parts.badge |> Enum.any?(&(&1.name == "[data-dot]"))
   end
 end

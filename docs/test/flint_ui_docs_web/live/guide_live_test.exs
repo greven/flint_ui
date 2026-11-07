@@ -78,6 +78,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#focus")
     assert has_element?(view, "#surfaces")
     assert has_element?(view, "#light-dark")
+    assert has_element?(view, "#absolute")
     assert has_element?(view, "#custom")
     assert has_element?(view, "#palette")
     assert has_element?(view, "#tailwind")

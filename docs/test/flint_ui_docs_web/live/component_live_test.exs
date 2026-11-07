@@ -381,6 +381,18 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, selector)
   end
 
+  test "submitting a text control applies it instead of reloading the page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/icon")
+
+    assert has_element?(view, "#main-icon-controls[phx-submit='preview_change']")
+
+    view
+    |> element("#main-icon-controls")
+    |> render_submit(%{"name" => "lucide-star"})
+
+    assert has_element?(view, "#main-icon [data-element='icon'].lucide-star")
+  end
+
   test "the loading playground exposes its controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
 

@@ -53,6 +53,15 @@
         color: var(--fl-color-neutral-text);
     }
 
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="loading"][data-color="dark"] {
+        color: var(--fl-color-dark-text);
+    }
+
+    [data-element="loading"][data-color="light"] {
+        color: var(--fl-color-light-text);
+    }
+
     [data-element="loading"][data-variant="ring"] [data-part="arc"],
     [data-element="loading"][data-variant="ring-bg"] [data-part="arc"] {
         animation: fl-loading-spin 600ms linear infinite;

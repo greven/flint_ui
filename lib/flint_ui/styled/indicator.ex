@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Indicator do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop, Var}
+  alias FlintUI.Styled.{Attr, Entry, Prop, Var}
 
   def entry do
     %Entry{
@@ -61,6 +61,22 @@ defmodule FlintUI.Styled.Indicator do
           values: [true, false],
           default: false,
           doc: "Adds a ring in the surrounding surface color so the badge reads as a cutout."
+        ),
+        Prop.new(
+          name: :attention,
+          values: ~w(none pulse ping bounce heartbeat),
+          default: "none",
+          doc:
+            "An optional animation that draws attention to the badge. `pulse` fades the badge like Tailwind's `animate-pulse`, `ping` scales a filled halo behind the badge, `bounce` gives the badge a short vertical hop, and `heartbeat` gives it a double scale beat. All stop under `prefers-reduced-motion`."
+        )
+      ],
+      content_attrs: [
+        Attr.new(
+          name: :offset,
+          type: :integer,
+          default: 0,
+          doc:
+            "The distance in pixels to move the badge away from the anchor's corner, applied uniformly to both axes. Useful when the anchor has a large border radius, where the default placement can look detached. Positive values push the badge outward; negative values pull it inward."
         )
       ],
       slots: [],
@@ -72,6 +88,12 @@ defmodule FlintUI.Styled.Indicator do
             "Extra distance between the badge and the corner. Positive values push the badge outward."
         ),
         Var.new(
+          name: "--fl-indicator-dot-size",
+          default: "size scale (6px to 18px)",
+          doc:
+            "The diameter of a label-less dot. Defaults to the size scale: 6px at `xs`, then 8px, 12px, 16px, and 18px at `xl`."
+        ),
+        Var.new(
           name: "--fl-indicator-ring-width",
           default: "2px",
           doc: "The width of the surface ring."
@@ -80,6 +102,12 @@ defmodule FlintUI.Styled.Indicator do
           name: "--fl-indicator-ring-color",
           default: "var(--fl-color-surface)",
           doc: "The ring color. Match it to the surrounding surface on a tinted card or image."
+        ),
+        Var.new(
+          name: "--fl-ping-color",
+          default: "var(--fl-badge-color)",
+          doc:
+            "The color of the `ping` halo. Defaults to the nested badge's fill, so it follows the badge color; set it to a role or raw color to detach it."
         )
       ],
       color_vars: [

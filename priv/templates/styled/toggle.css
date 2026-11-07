@@ -179,6 +179,23 @@
         --fl-toggle-soft-border: var(--fl-color-neutral-soft-border);
     }
 
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="toggle"][data-color="dark"] {
+        --fl-toggle-color: var(--fl-color-dark);
+        --fl-toggle-color-content: var(--fl-color-dark-content);
+        --fl-toggle-text: var(--fl-color-dark-text);
+        --fl-toggle-soft: var(--fl-color-dark-soft);
+        --fl-toggle-soft-border: var(--fl-color-dark-soft-border);
+    }
+
+    [data-element="toggle"][data-color="light"] {
+        --fl-toggle-color: var(--fl-color-light);
+        --fl-toggle-color-content: var(--fl-color-light-content);
+        --fl-toggle-text: var(--fl-color-light-text);
+        --fl-toggle-soft: var(--fl-color-light-soft);
+        --fl-toggle-soft-border: var(--fl-color-light-soft-border);
+    }
+
     /* Off states. The variant only changes how the pressed state is emphasized,
      * so an unpressed toggle stays on the neutral chrome ladder. Subtle is the
      * one exception: it is the toned chip the pressed state steps up from. */

@@ -163,6 +163,13 @@ defmodule FlintUI.GeneratorTest do
              :toggle
              |> Generator.wrapper_slots()
              |> Enum.find(&(&1.name == :inner_block))
+
+    # The indicator's offset input is read by the wrapper but cannot fill the
+    # anchor slot, so the anchor stays required.
+    assert %{required: true} =
+             :indicator
+             |> Generator.wrapper_slots()
+             |> Enum.find(&(&1.name == :inner_block))
   end
 
   test "button declares content attributes separately from its data hooks" do

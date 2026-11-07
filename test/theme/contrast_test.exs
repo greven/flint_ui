@@ -129,6 +129,29 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
+  test "absolute tones stay pinned and readable", %{tokens: tokens} do
+    for {tone, fill, content} <- [
+          {"dark", "neutral-900", "neutral-50"},
+          {"light", "neutral-50", "neutral-900"}
+        ] do
+      {fill_light, fill_dark} = resolve(tokens, tone)
+      assert fill_light == fill_dark
+      assert fill_light == eval_token(tokens, fill, :light)
+
+      {content_light, content_dark} = resolve(tokens, "#{tone}-content")
+      assert content_light == content_dark
+      assert content_light == eval_token(tokens, content, :light)
+      assert (Contrast.ratio(fill_light, content_light) || 0.0) >= Contrast.aa()
+
+      {soft_light, soft_dark} = resolve(tokens, "#{tone}-soft")
+      {text_light, text_dark} = resolve(tokens, "#{tone}-text")
+
+      for {soft, text} <- [{soft_light, text_light}, {soft_dark, text_dark}] do
+        assert (Contrast.ratio(text, soft) || 0.0) >= Contrast.aa()
+      end
+    end
+  end
+
   # The surface role text sits on: white in light, and neutral-900 in dark.
   defp surface_color(_scales, :light), do: "oklch(100% 0 none)"
 

@@ -2,11 +2,17 @@ defmodule FlintUI.Styled.Color do
   @moduledoc """
   Resolves the `color` prop of a generated wrapper.
 
-  Known role values stay on `data-color`, so the theme's role rules apply
-  unchanged. Any other value is parsed as a raw color and expanded into the
-  component's public color inputs. The fill is used exactly; labels and text are
-  derived for WCAG contrast, preferring the requested color and moving only its
-  lightness when it would be unreadable.
+  Known semantic roles and the absolute tones (`dark` and `light`) stay on
+  `data-color`, so the theme's value rules apply unchanged. Any other value is
+  parsed as a raw color and expanded into the component's public color inputs.
+  The fill is used exactly; labels and text are derived for WCAG contrast,
+  preferring the requested color and moving only its lightness when it would be
+  unreadable.
+
+  The absolute tones are not semantic roles: they have no scale and do not
+  appear in the registry's documented `color` values. They are accepted
+  everywhere the prop is free-form so a component can opt into a fixed dark or
+  light fill without adding it to the public value list.
 
   The derived values are inline custom properties, so an explicit `style` on the
   instance wins over them.
@@ -15,28 +21,31 @@ defmodule FlintUI.Styled.Color do
   alias FlintUI.Palette.{Color, Contrast}
 
   @roles ~w(primary secondary success info warning error neutral inherit)
+  @absolute ~w(dark light)
 
   @doc """
-  Whether `value` is a known role or a parseable raw color.
+  Whether `value` is a known role, an absolute tone, or a parseable raw color.
 
-  This is the union of the documented roles, including `inherit`, and is meant
-  for sanitizing values before they reach a component. A wrapper validates
-  against its own role list.
+  This is the union of the documented roles (including `inherit`) and the
+  absolute tones, and is meant for sanitizing values before they reach a
+  component. A wrapper validates against its own role list.
   """
   def valid?(value) when is_binary(value) do
-    value in @roles or match?({:ok, _}, Color.parse(value))
+    value in @roles or value in @absolute or match?({:ok, _}, Color.parse(value))
   end
 
   def valid?(_value), do: false
 
   @doc false
-  # Expands a raw `color` into the wrapper's assigns. Role values only set the
-  # presence hook; raw values also merge the derived style into `rest`.
+  # Expands a raw `color` into the wrapper's assigns. Known values only set the
+  # presence hook; raw values also merge the derived style into `rest`. The
+  # absolute tones are known everywhere, even when an entry omits them from its
+  # public value list.
   def apply(assigns, roles, vars) do
     value = assigns.color
 
     {data_color, rest} =
-      if value in roles do
+      if value in roles or value in @absolute do
         {value, Map.get(assigns, :rest)}
       else
         case Color.parse(value) do
@@ -175,7 +184,8 @@ defmodule FlintUI.Styled.Color do
     """
     invalid color #{inspect(value)} for the `color` prop.
 
-    Use a semantic role (#{Enum.join(roles, ", ")}) or a raw color:
+    Use a semantic role (#{Enum.join(roles, ", ")}), an absolute tone
+    (#{Enum.join(@absolute, ", ")}), or a raw color:
 
       * #rgb or #rrggbb
       * rgb(29 114 254)

@@ -1,7 +1,8 @@
 @layer components {
     /* Indicator. Public inputs: `--fl-indicator-offset`,
-     * `--fl-indicator-ring-width`, and `--fl-indicator-ring-color`. The root is
-     * the containing block; the badge wrapper is the positioned overlay. The
+     * `--fl-indicator-ring-width`, `--fl-indicator-ring-color`,
+     * `--fl-indicator-dot-size`, and `--fl-ping-color`. The root is the
+     * containing block; the badge wrapper is the positioned overlay. The
      * nested badge keeps the Badge theme's treatment. */
     [data-element="indicator"][data-indicator] {
         --_indicator-out: calc(50% + var(--fl-indicator-offset, 0px));
@@ -63,12 +64,148 @@
         --_indicator-out: var(--fl-indicator-offset, 0px);
     }
 
+    /* A label-less badge is a dot. It drops the label height scale for the
+     * marker scale, so it reads as a status mark rather than a full badge.
+     * `--fl-indicator-dot-size` on the indicator or a container overrides it. */
+    [data-element="indicator"] [data-element="badge"][data-dot] {
+        --_indicator-dot: var(--fl-indicator-dot-size, var(--_indicator-dot-scale, 8px));
+        width: var(--_indicator-dot);
+        height: var(--_indicator-dot);
+        min-inline-size: var(--_indicator-dot);
+        padding-inline: 0;
+        border: 0;
+    }
+
+    [data-element="indicator"] [data-element="badge"][data-dot][data-size="xs"] {
+        --_indicator-dot-scale: 6px;
+    }
+
+    [data-element="indicator"] [data-element="badge"][data-dot][data-size="sm"] {
+        --_indicator-dot-scale: 8px;
+    }
+
+    [data-element="indicator"] [data-element="badge"][data-dot][data-size="md"] {
+        --_indicator-dot-scale: 12px;
+    }
+
+    [data-element="indicator"] [data-element="badge"][data-dot][data-size="lg"] {
+        --_indicator-dot-scale: 16px;
+    }
+
+    [data-element="indicator"] [data-element="badge"][data-dot][data-size="xl"] {
+        --_indicator-dot-scale: 18px;
+    }
+
     /* The ring paints on the nested badge so it follows the badge's radius. */
-    [data-element="indicator"][data-ring]
-        > [data-part="badge"]
-        > [data-element="badge"] {
-        box-shadow:
-            0 0 0 var(--fl-indicator-ring-width, 2px)
-            var(--fl-indicator-ring-color, var(--fl-color-surface));
+    [data-element="indicator"][data-ring] > [data-part="badge"] > [data-element="badge"] {
+        box-shadow: 0 0 0 var(--fl-indicator-ring-width, 2px) var(--fl-indicator-ring-color, var(--fl-color-surface));
+    }
+
+    /* Attention animations. `pulse` fades the badge like Tailwind's
+     * `animate-pulse`, `ping` scales a filled halo behind the badge, `bounce`
+     * lifts it, and `heartbeat` gives it a double scale beat. All are
+     * decorative, so reduced-motion users keep the static badge. */
+    [data-element="indicator"][data-attention="pulse"] [data-element="badge"] {
+        animation: fl-indicator-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    [data-element="indicator"][data-attention="ping"] [data-element="badge"] {
+        position: relative;
+    }
+
+    [data-element="indicator"][data-attention="ping"] [data-element="badge"]::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: var(--fl-ping-color, var(--fl-badge-color));
+        opacity: 0.75;
+        pointer-events: none;
+        animation: fl-indicator-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    [data-element="indicator"][data-attention="bounce"] [data-element="badge"] {
+        animation: fl-indicator-bounce 2s ease-in-out infinite;
+    }
+
+    [data-element="indicator"][data-attention="heartbeat"] [data-element="badge"] {
+        animation: fl-indicator-heartbeat 1.3s ease-in-out infinite;
+    }
+
+    @keyframes fl-indicator-pulse {
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes fl-indicator-ping {
+        0% {
+            opacity: 0.75;
+            transform: scale(1);
+        }
+
+        75%,
+        100% {
+            opacity: 0;
+            transform: scale(2);
+        }
+    }
+
+    @keyframes fl-indicator-heartbeat {
+        0% {
+            transform: scale(1);
+        }
+
+        14% {
+            transform: scale(1.3);
+        }
+
+        28% {
+            transform: scale(1);
+        }
+
+        42% {
+            transform: scale(1.3);
+        }
+
+        70%,
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fl-indicator-bounce {
+        0%,
+        50%,
+        100% {
+            transform: translateY(0);
+        }
+
+        62% {
+            transform: translateY(-30%);
+        }
+
+        74% {
+            transform: translateY(0);
+        }
+
+        82% {
+            transform: translateY(-10%);
+        }
+
+        90% {
+            transform: translateY(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="indicator"][data-attention] [data-element="badge"] {
+            animation: none;
+        }
+
+        [data-element="indicator"][data-attention="ping"] [data-element="badge"]::before {
+            display: none;
+        }
     }
 }

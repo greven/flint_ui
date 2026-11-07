@@ -287,6 +287,28 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:colors)} lang={:css} />
         </DocsComponents.section>
 
+        <DocsComponents.section title="Absolute tones" id="absolute">
+          <p class="mt-3 text-sm text-default">
+            <code class="font-mono">neutral</code>
+            is the page's opposite: it is dark in light and light in dark. For a fill
+            that must not follow the scheme — a control composed against a fixed
+            surface or another component — use the absolute tones <code class="font-mono">dark</code>
+            and <code class="font-mono">light</code>
+            on any <code class="font-mono">color</code>
+            attribute. They are not semantic
+            roles: they have no scale and are not offered in the component examples or
+            pickers. They alias the neutral extremes, so retinting the neutral ramp
+            retints them too, and a theme can override the fill and label pair directly.
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <Components.button variant="solid" color="dark">Dark</Components.button>
+            <Components.button variant="solid" color="light">Light</Components.button>
+            <Components.button variant="outline" color="dark">Dark outline</Components.button>
+            <Components.button variant="outline" color="light">Light outline</Components.button>
+          </div>
+          <DocsComponents.code_block code={snippet(:absolute)} lang={:css} />
+        </DocsComponents.section>
+
         <DocsComponents.section title="Scaling" id="scaling">
           <p class="mt-3 text-sm text-default">
             Type, spacing, elevation, breakpoints, and motion are tokens too.
@@ -532,6 +554,31 @@ defmodule FlintUIDocsWeb.ThemeLive do
       var(--fl-color-primary) 50%,
       var(--fl-color-surface)
     );
+    """
+  end
+
+  defp snippet(:absolute) do
+    """
+    /* Absolute tones do not follow the color scheme. They alias the neutral
+     * extremes, so retinting the neutral ramp retints them too. A theme can
+     * override the fill and label pair directly. */
+    --fl-color-dark: var(--fl-color-neutral-900);
+    --fl-color-dark-content: var(--fl-color-neutral-50);
+    --fl-color-dark-text: light-dark(
+      var(--fl-color-neutral-900),
+      var(--fl-color-neutral-200)
+    );
+    --fl-color-dark-soft: var(--fl-color-neutral-soft);
+    --fl-color-dark-soft-border: var(--fl-color-neutral-soft-border);
+
+    --fl-color-light: var(--fl-color-neutral-50);
+    --fl-color-light-content: var(--fl-color-neutral-900);
+    --fl-color-light-text: light-dark(
+      var(--fl-color-neutral-700),
+      var(--fl-color-neutral-50)
+    );
+    --fl-color-light-soft: var(--fl-color-neutral-soft);
+    --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
     """
   end
 

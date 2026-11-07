@@ -334,9 +334,14 @@ defmodule FlintUI.Generator do
   end
 
   # A wrapper that renders content shortcuts (text/icon) supplies the base's
-  # inner block itself, so the caller must be able to omit it.
-  defp optional_inner_block(%{name: :inner_block} = slot, %{content_attrs: [_ | _]}) do
-    Map.put(slot, :required, false)
+  # inner block itself, so the caller must be able to omit it. Other wrapper
+  # inputs, such as an indicator offset, leave the slot required.
+  defp optional_inner_block(%{name: :inner_block} = slot, %{content_attrs: content_attrs}) do
+    if Enum.any?(content_attrs, & &1.fills_content) do
+      Map.put(slot, :required, false)
+    else
+      slot
+    end
   end
 
   defp optional_inner_block(slot, _entry), do: slot

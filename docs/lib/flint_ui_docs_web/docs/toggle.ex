@@ -17,11 +17,11 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         section: :main,
         controls: [
           %{key: :pressed, type: :boolean, default: false, label: "Pressed"},
-          %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
           %{key: :variant, type: :select, default: "solid", label: "Variant"},
           %{key: :color, type: :select, default: "neutral", label: "Color"},
           %{key: :size, type: :select, default: "md", label: "Size"},
-          %{key: :radius, type: :select, default: "md", label: "Radius"}
+          %{key: :radius, type: :select, default: "md", label: "Radius"},
+          %{key: :disabled, type: :boolean, default: false, label: "Disabled"}
         ]
       }
     ]

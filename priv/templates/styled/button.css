@@ -221,6 +221,23 @@
         --fl-button-soft-border: var(--fl-color-neutral-soft-border);
     }
 
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="button"][data-color="dark"] {
+        --fl-button-color: var(--fl-color-dark);
+        --fl-button-color-content: var(--fl-color-dark-content);
+        --fl-button-text: var(--fl-color-dark-text);
+        --fl-button-soft: var(--fl-color-dark-soft);
+        --fl-button-soft-border: var(--fl-color-dark-soft-border);
+    }
+
+    [data-element="button"][data-color="light"] {
+        --fl-button-color: var(--fl-color-light);
+        --fl-button-color-content: var(--fl-color-light-content);
+        --fl-button-text: var(--fl-color-light-text);
+        --fl-button-soft: var(--fl-color-light-soft);
+        --fl-button-soft-border: var(--fl-color-light-soft-border);
+    }
+
     /* Solid: the color fills the button with a darker edge line. */
     [data-element="button"][data-variant="solid"] {
         background: var(--fl-button-color, var(--fl-color-inverted));

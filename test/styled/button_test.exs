@@ -67,6 +67,15 @@ defmodule FlintUI.Styled.ButtonTest do
     assert attr(document, :button, "style") == []
   end
 
+  test "an absolute tone keeps the data hook and emits no inline color", %{wrapper: wrapper} do
+    for tone <- ~w(dark light) do
+      document = colored(wrapper, tone)
+
+      assert attr(document, :button, "data-color") == [tone]
+      assert attr(document, :button, "style") == []
+    end
+  end
+
   test "a raw color omits the data hook and sets the public inputs", %{wrapper: wrapper} do
     document = colored(wrapper, "#1D72FE")
 

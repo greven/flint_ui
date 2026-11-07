@@ -464,6 +464,7 @@ defmodule FlintUIDocsWeb.Preview do
       <form
         id={"#{@id}-controls"}
         phx-change="preview_change"
+        phx-submit="preview_change"
         class="flex flex-wrap items-center gap-2.5"
       >
         <input type="hidden" name="preview_id" value={@id} />

@@ -22,7 +22,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
           %{key: :variant, type: :select, values: @variants, default: "dots", label: "Variant"},
           %{key: :color, type: :select, default: "inherit", label: "Color"},
           %{key: :dots, type: :number, default: 3, label: "Dots"},
-          %{key: :duration, type: :number, default: nil, label: "Duration (ms, blank = default)"}
+          %{key: :duration, type: :number, default: nil, label: "Duration (ms)"}
         ]
       }
     ]

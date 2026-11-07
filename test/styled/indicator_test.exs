@@ -59,6 +59,38 @@ defmodule FlintUI.Styled.IndicatorTest do
         </.indicator>
         """
       end
+
+      def offset_and_style(assigns) do
+        ~H"""
+        <.indicator label="3" offset={4} style="color: red">
+          <button id="anchor">Inbox</button>
+        </.indicator>
+        """
+      end
+
+      def attention(assigns) do
+        ~H"""
+        <.indicator label="3" attention="pulse">
+          <button id="anchor">Inbox</button>
+        </.indicator>
+        """
+      end
+
+      def attention_ping(assigns) do
+        ~H"""
+        <.indicator label="3" attention="ping" style="--fl-ping-color: #1D72FE">
+          <button id="anchor">Inbox</button>
+        </.indicator>
+        """
+      end
+
+      def attention_heartbeat(assigns) do
+        ~H"""
+        <.indicator label="3" attention="heartbeat">
+          <button id="anchor">Inbox</button>
+        </.indicator>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -74,7 +106,9 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert attr(document, :indicator, "data-position") == ["top-right"]
     assert attr(document, :indicator, "data-inset") == []
     assert attr(document, :indicator, "data-ring") == []
+    assert attr(document, :indicator, "data-attention") == []
     assert attr(document, :indicator, "data-indicator") == [""]
+    assert attr(document, :indicator, "style") == []
 
     assert badge_attr(document, "data-element") == ["badge"]
     assert badge_attr(document, "data-part") == ["root"]
@@ -84,6 +118,30 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert badge_attr(document, "data-radius") == ["full"]
     assert badge_attr(document, "aria-hidden") == ["true"]
     assert badge(document) |> LazyHTML.text() |> String.trim() == "3"
+  end
+
+  test "maps offset onto the indicator input and merges an explicit style", %{
+    wrapper: wrapper
+  } do
+    document = render(wrapper, :offset_and_style)
+
+    style = attr(document, :indicator, "style") |> List.first()
+
+    assert style =~ "--fl-indicator-offset: 4px"
+    assert style =~ "color: red"
+  end
+
+  test "maps attention onto the root", %{wrapper: wrapper} do
+    assert attr(render(wrapper, :attention), :indicator, "data-attention") == ["pulse"]
+
+    document = render(wrapper, :attention_ping)
+
+    assert attr(document, :indicator, "data-attention") == ["ping"]
+    assert attr(document, :indicator, "style") |> List.first() =~ "--fl-ping-color: #1D72FE"
+
+    assert attr(render(wrapper, :attention_heartbeat), :indicator, "data-attention") == [
+             "heartbeat"
+           ]
   end
 
   test "maps position, inset, and ring onto the root", %{wrapper: wrapper} do
@@ -133,6 +191,7 @@ defmodule FlintUI.Styled.IndicatorTest do
 
     assert badge(document) |> LazyHTML.text() |> String.trim() == ""
     assert badge_attr(document, "data-radius") == ["full"]
+    assert badge_attr(document, "data-dot") == [""]
     assert badge_attr(document, "aria-hidden") == ["true"]
   end
 end

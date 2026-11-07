@@ -93,6 +93,23 @@
         --fl-badge-soft-border: var(--fl-color-neutral-soft-border);
     }
 
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="badge"][data-color="dark"] {
+        --fl-badge-color: var(--fl-color-dark);
+        --fl-badge-color-content: var(--fl-color-dark-content);
+        --fl-badge-text: var(--fl-color-dark-text);
+        --fl-badge-soft: var(--fl-color-dark-soft);
+        --fl-badge-soft-border: var(--fl-color-dark-soft-border);
+    }
+
+    [data-element="badge"][data-color="light"] {
+        --fl-badge-color: var(--fl-color-light);
+        --fl-badge-color-content: var(--fl-color-light-content);
+        --fl-badge-text: var(--fl-color-light-text);
+        --fl-badge-soft: var(--fl-color-light-soft);
+        --fl-badge-soft-border: var(--fl-color-light-soft-border);
+    }
+
     /* Subtle is the default: a tinted label with a matching border. */
     [data-element="badge"][data-variant="subtle"] {
         background: color-mix(

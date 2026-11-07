@@ -38,6 +38,15 @@
         color: var(--fl-color-neutral-text);
     }
 
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="loading_text"][data-color="dark"] {
+        color: var(--fl-color-dark-text);
+    }
+
+    [data-element="loading_text"][data-color="light"] {
+        color: var(--fl-color-light-text);
+    }
+
     [data-element="loading_text"][data-variant="dots"] [data-part="dots"] {
         display: inline-flex;
     }
