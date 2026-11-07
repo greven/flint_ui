@@ -14,7 +14,9 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     [
       %{
         tab: :styled,
-        section: :main,
+        section: :usage,
+        id: :basic,
+        title: "Usage",
         controls: [
           %{key: :name, type: :string, default: "lucide-house", label: "Icon (lucide-…)"},
           %{key: :label, type: :string, default: "", label: "Label (accessible name)"},
@@ -25,7 +27,7 @@ defmodule FlintUIDocsWeb.Docs.Icon do
   end
 
   @impl true
-  def render_section(%{section: :main} = assigns) do
+  def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.icon name={props.name} label={blank_to_nil(props.label)} size={props.size} />

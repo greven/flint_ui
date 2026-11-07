@@ -18,7 +18,7 @@ defmodule FlintUIDocsWeb.IndicatorSmokeTest do
            )
 
     assert has_element?(view, "#usage-label h3 a[href='#usage-label']", "Label")
-    assert has_element?(view, "#usage-indicator-label [data-element='badge']", "1")
+    assert has_element?(view, "#usage-indicator-label [data-element='badge']", "68")
 
     assert has_element?(
              view,

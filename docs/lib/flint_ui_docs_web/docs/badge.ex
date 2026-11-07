@@ -455,17 +455,37 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           value="rules"
         >
           <:tab :let={attrs} value="rules" custom>
-            <Components.button variant="subtle" {attrs}>
+            <Components.button
+              variant="subtle"
+              {attrs}
+              class="group aria-selected:bg-inverted aria-selected:text-inverted aria-selected:border-inverted"
+            >
               Rules
-              <Components.badge variant="solid" color="neutral" size="xs" radius="sm">
+              <Components.badge
+                variant="solid"
+                color="neutral"
+                size="xs"
+                radius="sm"
+                class="group-aria-selected:bg-surface group-aria-selected:text-default group-aria-selected:border-default"
+              >
                 7
               </Components.badge>
             </Components.button>
           </:tab>
           <:tab :let={attrs} value="members" custom>
-            <Components.button variant="subtle" {attrs}>
+            <Components.button
+              variant="subtle"
+              {attrs}
+              class="group aria-selected:bg-inverted aria-selected:text-inverted aria-selected:border-inverted"
+            >
               Members
-              <Components.badge variant="solid" color="info" size="xs" radius="sm">
+              <Components.badge
+                variant="solid"
+                color="info"
+                size="xs"
+                radius="sm"
+                class="group-aria-selected:bg-surface group-aria-selected:text-default group-aria-selected:border-default"
+              >
                 3
               </Components.badge>
             </Components.button>
@@ -652,19 +672,43 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       </.badge>
     </.button>
 
-    # Tabs with custom buttons and badges
-    <.tabs id="tabs-with-badges" value="rules" label="Settings" variant="minimal"
-    >
-      <:tab value="rules" custom>
-        <.button variant="soft">
+    # Tabs with custom buttons and badges. The trigger attributes carry
+    # `data-state` and `aria-selected`; style the selected state yourself.
+    <.tabs id="tabs-with-badges" value="rules" label="Settings" variant="minimal">
+      <:tab value="rules" custom :let={attrs}>
+        <.button
+          variant="subtle"
+          {attrs}
+          class="group aria-selected:bg-inverted aria-selected:text-inverted aria-selected:border-inverted"
+        >
           Rules
-          <.badge variant="solid" color="neutral" size="xs" radius="sm">7</.badge>
+          <.badge
+            variant="solid"
+            color="neutral"
+            size="xs"
+            radius="sm"
+            class="group-aria-selected:bg-surface group-aria-selected:text-default group-aria-selected:border-default"
+          >
+            7
+          </.badge>
         </.button>
       </:tab>
-      <:tab value="members" custom>
-        <.button variant="soft">
+      <:tab value="members" custom :let={attrs}>
+        <.button
+          variant="subtle"
+          {attrs}
+          class="group aria-selected:bg-inverted aria-selected:text-inverted aria-selected:border-inverted"
+        >
           Members
-          <.badge variant="solid" color="info" size="xs" radius="sm">3</.badge>
+          <.badge
+            variant="solid"
+            color="info"
+            size="xs"
+            radius="sm"
+            class="group-aria-selected:bg-surface group-aria-selected:text-default group-aria-selected:border-default"
+          >
+            3
+          </.badge>
         </.button>
       </:tab>
     </.tabs>

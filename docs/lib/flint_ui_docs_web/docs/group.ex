@@ -14,7 +14,9 @@ defmodule FlintUIDocsWeb.Docs.Group do
     [
       %{
         tab: :styled,
-        section: :main,
+        section: :usage,
+        id: :basic,
+        title: "Usage",
         controls: [
           %{key: :orientation, type: :select, default: "horizontal", label: "Orientation"},
           %{key: :variant, type: :select, default: "attached", label: "Variant"},
@@ -25,7 +27,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
   end
 
   @impl true
-  def render_section(%{section: :main} = assigns) do
+  def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.group

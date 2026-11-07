@@ -53,6 +53,19 @@ defmodule FlintUI.Base.Tabs do
   styles. A raw custom `<button>` should set `type="button"` itself; a composed
   button component usually sets it already.
 
+  A custom trigger receives `data-state` (`"active"` or `"inactive"`) and the
+  matching `aria-selected`, updated by the hook after a client change, so the
+  selected state is not server-only. The styled layer leaves the custom trigger
+  alone on purpose, which means the selected treatment is yours to add. Target
+  the state in CSS, or use a state variant when your styling tool provides one:
+
+      <.button {attrs} class="aria-selected:bg-inverted aria-selected:text-inverted">
+        Monthly
+      </.button>
+
+  The same state is available to plain CSS as
+  `[data-part="tab"][data-state="active"]`.
+
   ## Link triggers
 
   A custom trigger may be a link. This is useful when the active tab belongs in

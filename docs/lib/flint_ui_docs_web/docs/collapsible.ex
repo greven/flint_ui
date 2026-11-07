@@ -15,7 +15,9 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
     [
       %{
         tab: :styled,
-        section: :main,
+        section: :usage,
+        id: :basic,
+        title: "Usage",
         controls: [
           %{key: :open, type: :boolean, default: false, label: "Open"},
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
@@ -26,7 +28,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
   end
 
   @impl true
-  def render_section(%{section: :main} = assigns) do
+  def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <div class="w-full max-w-74 self-start">

@@ -14,7 +14,9 @@ defmodule FlintUIDocsWeb.Docs.Card do
     [
       %{
         tab: :styled,
-        section: :main,
+        section: :usage,
+        id: :basic,
+        title: "Usage",
         controls: [
           %{key: :variant, type: :select, default: "solid", label: "Variant"},
           %{key: :body, type: :select, default: "seamless", label: "Body"},
@@ -30,7 +32,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
   end
 
   @impl true
-  def render_section(%{section: :main} = assigns) do
+  def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.card

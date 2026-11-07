@@ -16,7 +16,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
     [
       %{
         tab: :styled,
-        section: :main,
+        section: :usage,
         controls: [
           %{key: :text, type: :string, default: "Saving", label: "Text"},
           %{key: :variant, type: :select, values: @variants, default: "dots", label: "Variant"},
@@ -29,7 +29,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   end
 
   @impl true
-  def render_section(%{section: :main} = assigns) do
+  def render_section(%{section: :usage} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.loading_text

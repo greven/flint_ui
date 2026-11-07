@@ -16,7 +16,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
     [
       %{
         tab: :styled,
-        section: :main,
+        section: :usage,
         controls: [
           %{key: :variant, type: :select, values: @variants, default: "ring", label: "Variant"},
           %{key: :color, type: :select, default: "inherit", label: "Color"},
@@ -29,7 +29,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
   end
 
   @impl true
-  def render_section(%{section: :main} = assigns) do
+  def render_section(%{section: :usage} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.loading

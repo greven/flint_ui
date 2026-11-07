@@ -103,7 +103,7 @@ defmodule FlintUI.Base.BadgeTest do
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :badge, type: :element, status: :draft} =
+      assert %FlintUI.Meta{name: :badge, type: :feedback, status: :draft} =
                FlintUI.Base.Badge.meta()
 
       parts = FlintUI.Base.Badge.parts_attrs()
