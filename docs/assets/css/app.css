@@ -17,9 +17,7 @@
 /* Docs typefaces. `font-sans` is the default body face; `font-display` is the
    heading utility used by the base heading rule below. */
 @theme {
-    --font-sans:
-        "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-display: "Raleway", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -150,10 +148,7 @@
     --fl-color-primary: oklch(0.55 0.24 275);
     --fl-color-primary-content: oklch(1 0 0);
     --fl-color-primary-text: light-dark(oklch(0.491 0.27 292.581), oklch(0.702 0.183 293.541));
-    --fl-color-primary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-primary) 12%, white),
-        color-mix(in oklab, var(--fl-color-primary) 58%, black)
-    );
+    --fl-color-primary-soft: light-dark(color-mix(in oklab, var(--fl-color-primary) 12%, white), color-mix(in oklab, var(--fl-color-primary) 58%, black));
     --fl-color-primary-soft-border: light-dark(
         color-mix(in oklab, var(--fl-color-primary) 20%, white),
         color-mix(in oklab, var(--fl-color-primary) 45%, black)
@@ -295,12 +290,13 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     }
 
     .docs-prose code {
+        background-color: var(--fl-color-surface);
+        border: 1px solid var(--fl-color-border-accented);
         border-radius: 0.25rem;
-        background-color: var(--fl-color-surface-accented);
         padding: 0.125rem 0.25rem;
-        color: var(--fl-color-text);
+        color: var(--fl-color-text-highlighted);
         font-family: var(--fl-font-mono);
-        font-size: 0.75rem;
+        font-size: var(--fl-font-size-xs);
     }
 
     .docs-prose pre {

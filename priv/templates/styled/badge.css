@@ -108,10 +108,14 @@
     [data-element="badge"][data-variant="subtle"] {
         background: color-mix(
             in oklab,
-            var(--fl-badge-soft, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            var(--fl-badge-soft, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
         );
-        border-color: var(--fl-badge-soft-border, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface)));
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
+        );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
@@ -126,7 +130,8 @@
     [data-element="badge"][data-variant="soft"] {
         background: color-mix(
             in oklab,
-            var(--fl-badge-soft, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            var(--fl-badge-soft, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
@@ -135,7 +140,10 @@
     /* Outline: a colored border and label over the surface. */
     [data-element="badge"][data-variant="outline"] {
         background: var(--fl-color-surface);
-        border-color: var(--fl-badge-soft-border, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface)));
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
+        );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
@@ -143,7 +151,10 @@
     [data-element="badge"][data-variant="dashed"] {
         background: var(--fl-color-surface);
         border-style: dashed;
-        border-color: var(--fl-badge-soft-border, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface)));
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
+        );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 

@@ -334,7 +334,7 @@
      * neutral-950 in dark. Everything else is a tint of it toward the opposite
      * neutral extreme, so the same tint order holds in both schemes:
      * background 1 step -> muted 2 steps -> accented 4 steps. */
-    --fl-surface-step: 1.5%;
+    --fl-surface-step: 2%;
 
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
     --fl-color-background: color-mix(

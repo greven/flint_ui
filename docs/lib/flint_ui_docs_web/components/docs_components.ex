@@ -65,42 +65,6 @@ defmodule FlintUIDocsWeb.DocsComponents do
     """
   end
 
-  @doc """
-  Renders the lifecycle status badge for a component.
-  """
-
-  attr :status, :atom, required: true
-  attr :class, :any, default: nil
-
-  def status_badge(assigns) do
-    assigns =
-      assigns
-      |> assign(:color, status_badge_color(assigns.status))
-      |> assign(:icon, status_icon(assigns.status))
-
-    ~H"""
-    <Components.badge
-      variant="subtle"
-      color={@color}
-      size="sm"
-      icon={@icon}
-      class={["capitalize", @class]}
-    >
-      {to_string(@status)}
-    </Components.badge>
-    """
-  end
-
-  defp status_badge_color(:stable), do: "info"
-  defp status_badge_color(:draft), do: "warning"
-  defp status_badge_color(_status), do: "neutral"
-
-  # Icons are keyed by the `FlintUI.Meta` status, never by the display label, so
-  # a new status raises instead of silently sharing a default.
-  defp status_icon(:stable), do: "lucide-badge-check"
-  defp status_icon(:draft), do: "lucide-pencil-ruler"
-  defp status_icon(:deprecated), do: "lucide-archive"
-
   @doc false
 
   attr :features, :list, required: true
@@ -325,12 +289,341 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   @doc false
 
+  attr :slots, :list, required: true
+
+  def slot_table(assigns) do
+    ~H"""
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-xl text-left text-sm">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+          <tr>
+            <th class="py-3 pr-6 font-medium">Slot</th>
+            <th class="py-3 font-medium">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-default">
+          <tr :for={slot <- @slots} class="align-top">
+            <td class="py-4 pr-6 whitespace-nowrap">
+              <code class={code_class()}>{slot.name}</code>
+              <.required_badge :if={slot.required} />
+            </td>
+            <td class="py-4 leading-6 text-toned">
+              <p>{slot.doc}</p>
+              <p :if={Map.get(slot, :attrs, []) != []} class="mt-1 text-xs text-muted">
+                Attributes: {Enum.map_join(Map.get(slot, :attrs, []), ", ", & &1.name)}
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    """
+  end
+
+  @doc false
+
+  attr :events, :list, required: true
+
+  def events_table(assigns) do
+    ~H"""
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-xl text-left text-sm">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+          <tr>
+            <th class="py-3 pr-6 font-medium">Event</th>
+            <th class="py-3 font-medium">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-default">
+          <tr :for={event <- @events} class="align-top">
+            <td class="py-4 pr-6 whitespace-nowrap">
+              <code class={code_class()}>{event.name}</code>
+              <.source_badge source={event.source} />
+              <.required_badge :if={event.required} />
+            </td>
+            <td class="py-4 leading-6 text-toned">{event.doc}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    """
+  end
+
+  @doc false
+
+  attr :parts, :list, required: true
+
+  def parts_tables(assigns) do
+    ~H"""
+    <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
+      <p class="text-xs font-semibold tracking-wider text-muted uppercase">{part}</p>
+      <div class="mt-2 overflow-x-auto">
+        <table class="w-full min-w-xl text-left text-sm">
+          <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+            <tr>
+              <th class="py-3 pr-6 font-medium">Attribute</th>
+              <th class="py-3 font-medium">Value</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-default">
+            <tr :for={part_attr <- part_attrs} class="align-top">
+              <td class="py-4 pr-6 leading-6">
+                <code class={code_class()}>{part_attr_label(part_attr.name)}</code>
+                <p :if={part_attr.description} class="mt-1 text-xs text-muted">
+                  {part_attr.description}
+                </p>
+              </td>
+              <td class="py-4 leading-6">
+                <code class={code_class()}>{part_attr.value}</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    """
+  end
+
+  defp part_attr_label("[" <> rest) do
+    if String.starts_with?(rest, "data-") and String.ends_with?(rest, "]") do
+      String.trim_trailing(rest, "]")
+    else
+      "[" <> rest
+    end
+  end
+
+  defp part_attr_label(name), do: name
+
+  @doc false
+
+  attr :css_vars, :list, required: true
+  attr :show_default, :boolean, default: false
+
+  def css_vars_table(assigns) do
+    ~H"""
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-xl text-left text-sm">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+          <tr>
+            <th class="py-3 pr-6 font-medium">Variable</th>
+            <th :if={@show_default} class="py-3 pr-6 font-medium">Default</th>
+            <th class="py-3 font-medium">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-default">
+          <tr :for={css_var <- @css_vars} class="align-top">
+            <td class="py-4 pr-6 whitespace-nowrap">
+              <code class={code_class()}>{css_var.name}</code>
+            </td>
+            <td :if={@show_default} class="py-4 pr-6 leading-6">
+              <code class={code_class()}>{css_var_default(css_var)}</code>
+            </td>
+            <td class="py-4 leading-6 text-toned">
+              {css_var_description(css_var)}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    """
+  end
+
+  defp css_var_default(css_var) do
+    case Map.get(css_var, :default) do
+      nil -> "\u2014"
+      default -> default
+    end
+  end
+
+  defp css_var_description(css_var) do
+    Map.get(css_var, :description) || Map.get(css_var, :doc)
+  end
+
+  @doc false
+
+  attr :selectors, :list, required: true
+
+  def selectors_table(assigns) do
+    ~H"""
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-xl text-left text-sm">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+          <tr>
+            <th class="py-3 pr-6 font-medium">Selector</th>
+            <th class="py-3 font-medium">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-default">
+          <tr :for={selector <- @selectors} class="align-top">
+            <td class="py-4 pr-6 leading-6">
+              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
+                {selector.selector}
+              </code>
+            </td>
+            <td class="py-4 leading-6 text-toned">
+              {selector.description}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    """
+  end
+
+  @doc false
+
+  attr :keyboard, :list, required: true
+
+  def keyboard_table(assigns) do
+    ~H"""
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-xl text-left text-sm">
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+          <tr>
+            <th class="py-3 pr-6 font-medium">Keys</th>
+            <th class="py-3 font-medium">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-default">
+          <tr :for={kbd <- @keyboard} class="align-top">
+            <td class="py-4 pr-6 whitespace-nowrap">
+              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
+                {kbd.keys}
+              </code>
+            </td>
+            <td class="py-4 leading-6 text-toned">{kbd.description}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    """
+  end
+
+  @doc false
+
+  attr :doc, :string, default: nil
+  attr :values, :list, default: []
+  attr :default, :any, default: nil
+
+  def attribute_description(assigns) do
+    assigns = assign(assigns, :values, visible_values(assigns.values))
+
+    ~H"""
+    <div class="space-y-1">
+      <Markdown.prose :if={@doc} content={@doc} />
+      <p :if={@values != []} class="mt-3 text-xs">
+        Values: <code class={code_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code>
+      </p>
+      <p :if={@default != nil} class="mt-3 text-xs">
+        Default: <code class={code_class()}>{default_label(@default)}</code>
+      </p>
+    </div>
+    """
+  end
+
+  # A boolean `values: [true, false]` is not a choice worth spelling out; the
+  # Type column already communicates it.
+  defp visible_values([true, false]), do: []
+  defp visible_values(values) when is_list(values), do: values
+  defp visible_values(_values), do: []
+
+  defp value_label(value), do: to_string(value)
+
+  @doc false
+
+  attr :item, :map, required: true
+
+  def type_cell(assigns) do
+    values = type_values(assigns.item)
+    type = assigns.item[:type] || :string
+    assigns = assign(assigns, values: values, type: type)
+
+    ~H"""
+    <code :if={@values == []} class={code_class()}>{@type}</code>
+    <span :if={@values != []} class="group relative inline-flex" tabindex="0">
+      <code class={code_class()}>{@type}</code>
+      <span
+        role="tooltip"
+        class={[
+          "absolute bottom-full left-0 z-10 mb-1.5 hidden w-max max-w-64 rounded-md bg-inverted px-2 py-1.5",
+          "pointer-events-none text-xs whitespace-normal text-inverted shadow-lg",
+          "group-focus-within:block group-hover:block"
+        ]}
+      >
+        {Enum.map_join(@values, " | ", &to_string/1)}
+      </span>
+    </span>
+    """
+  end
+
+  defp type_values(%{type: type}) when type in [:boolean, "boolean"], do: []
+  defp type_values(%{values: values}) when is_list(values) and values != [], do: values
+
+  defp type_values(attr) do
+    case values_for(attr) do
+      values when is_list(values) and values != [] -> values
+      _ -> []
+    end
+  end
+
+  defp values_for(attr) do
+    case attr[:opts] do
+      opts when is_list(opts) -> Keyword.get(opts, :values)
+      _ -> nil
+    end
+  end
+
+  defp code_class do
+    "rounded bg-accented px-1.5 py-1 font-semibold font-mono text-xs"
+  end
+
+  defp default_label(value), do: inspect(value)
+
+  @doc """
+  Renders the lifecycle status badge for a component.
+  """
+
+  attr :status, :atom, required: true
+  attr :class, :any, default: nil
+
+  def status_badge(assigns) do
+    assigns =
+      assigns
+      |> assign(:color, status_badge_color(assigns.status))
+      |> assign(:icon, status_icon(assigns.status))
+
+    ~H"""
+    <Components.badge
+      variant="subtle"
+      color={@color}
+      size="sm"
+      icon={@icon}
+      class={["capitalize", @class]}
+    >
+      {to_string(@status)}
+    </Components.badge>
+    """
+  end
+
+  defp status_badge_color(:stable), do: "info"
+  defp status_badge_color(:draft), do: "warning"
+  defp status_badge_color(_status), do: "neutral"
+
+  # Icons are keyed by the `FlintUI.Meta` status, never by the display label, so
+  # a new status raises instead of silently sharing a default.
+  defp status_icon(:stable), do: "lucide-badge-check"
+  defp status_icon(:draft), do: "lucide-pencil-ruler"
+  defp status_icon(:deprecated), do: "lucide-archive"
+
+  @doc false
+
   def required_badge(assigns) do
     ~H"""
     <Components.badge
       class="ml-1"
       variant="subtle"
       color="error"
+      radius="sm"
       size="xs"
       uppercase
     >
@@ -338,6 +631,31 @@ defmodule FlintUIDocsWeb.DocsComponents do
     </Components.badge>
     """
   end
+
+  @doc false
+
+  attr :source, :atom, required: true
+
+  def source_badge(assigns) do
+    assigns = assign(assigns, :color, source_badge_color(assigns.source))
+
+    ~H"""
+    <Components.badge
+      class="ml-1.5"
+      variant="subtle"
+      color={@color}
+      radius="sm"
+      size="xs"
+      uppercase
+    >
+      {@source}
+    </Components.badge>
+    """
+  end
+
+  defp source_badge_color(:client), do: "info"
+  defp source_badge_color(:server), do: "primary"
+  defp source_badge_color(_source), do: "neutral"
 
   @tone_zinc %{
     rail: "border-l-border-accented",
@@ -585,317 +903,4 @@ defmodule FlintUIDocsWeb.DocsComponents do
   defp anatomy_attr_class(:html) do
     "text-toned ring-default"
   end
-
-  @doc false
-
-  attr :slots, :list, required: true
-
-  def slot_table(assigns) do
-    ~H"""
-    <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-          <tr>
-            <th class="py-3 pr-6 font-medium">Slot</th>
-            <th class="py-3 font-medium">Description</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-default">
-          <tr :for={slot <- @slots} class="align-top">
-            <td class="py-4 pr-6 whitespace-nowrap">
-              <code class={code_class()}>{slot.name}</code>
-              <.required_badge :if={slot.required} />
-            </td>
-            <td class="py-4 leading-6 text-toned">
-              <p>{slot.doc}</p>
-              <p :if={Map.get(slot, :attrs, []) != []} class="mt-1 text-xs text-muted">
-                Attributes: {Enum.map_join(Map.get(slot, :attrs, []), ", ", & &1.name)}
-              </p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    """
-  end
-
-  @doc false
-
-  attr :events, :list, required: true
-
-  def events_table(assigns) do
-    ~H"""
-    <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-          <tr>
-            <th class="py-3 pr-6 font-medium">Event</th>
-            <th class="py-3 font-medium">Description</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-default">
-          <tr :for={event <- @events} class="align-top">
-            <td class="py-4 pr-6 whitespace-nowrap">
-              <code class={code_class()}>{event.name}</code>
-              <.source_badge source={event.source} />
-              <.required_badge :if={event.required} />
-            </td>
-            <td class="py-4 leading-6 text-toned">{event.doc}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    """
-  end
-
-  @doc false
-
-  attr :source, :atom, required: true
-
-  def source_badge(assigns) do
-    assigns = assign(assigns, :color, source_badge_color(assigns.source))
-
-    ~H"""
-    <Components.badge
-      variant="subtle"
-      color={@color}
-      size="xs"
-      radius="full"
-      uppercase
-      class="ml-1.5"
-    >
-      {@source}
-    </Components.badge>
-    """
-  end
-
-  defp source_badge_color(:client), do: "info"
-  defp source_badge_color(:server), do: "primary"
-  defp source_badge_color(_source), do: "neutral"
-
-  @doc false
-
-  attr :parts, :list, required: true
-
-  def parts_tables(assigns) do
-    ~H"""
-    <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
-      <p class="text-xs font-semibold tracking-wider text-muted uppercase">{part}</p>
-      <div class="mt-2 overflow-x-auto">
-        <table class="w-full min-w-xl text-left text-sm">
-          <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-            <tr>
-              <th class="py-3 pr-6 font-medium">Attribute</th>
-              <th class="py-3 font-medium">Value</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-default">
-            <tr :for={part_attr <- part_attrs} class="align-top">
-              <td class="py-4 pr-6 leading-6">
-                <code class={code_class()}>{part_attr_label(part_attr.name)}</code>
-                <p :if={part_attr.description} class="mt-1 text-xs text-muted">
-                  {part_attr.description}
-                </p>
-              </td>
-              <td class="py-4 leading-6">
-                <code class={code_class()}>{part_attr.value}</code>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    """
-  end
-
-  defp part_attr_label("[" <> rest) do
-    if String.starts_with?(rest, "data-") and String.ends_with?(rest, "]") do
-      String.trim_trailing(rest, "]")
-    else
-      "[" <> rest
-    end
-  end
-
-  defp part_attr_label(name), do: name
-
-  @doc false
-
-  attr :css_vars, :list, required: true
-  attr :show_default, :boolean, default: false
-
-  def css_vars_table(assigns) do
-    ~H"""
-    <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-          <tr>
-            <th class="py-3 pr-6 font-medium">Variable</th>
-            <th :if={@show_default} class="py-3 pr-6 font-medium">Default</th>
-            <th class="py-3 font-medium">Description</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-default">
-          <tr :for={css_var <- @css_vars} class="align-top">
-            <td class="py-4 pr-6 whitespace-nowrap">
-              <code class={code_class()}>{css_var.name}</code>
-            </td>
-            <td :if={@show_default} class="py-4 pr-6 leading-6">
-              <code class={code_class()}>{css_var_default(css_var)}</code>
-            </td>
-            <td class="py-4 leading-6 text-toned">
-              {css_var_description(css_var)}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    """
-  end
-
-  defp css_var_default(css_var) do
-    case Map.get(css_var, :default) do
-      nil -> "\u2014"
-      default -> default
-    end
-  end
-
-  defp css_var_description(css_var) do
-    Map.get(css_var, :description) || Map.get(css_var, :doc)
-  end
-
-  @doc false
-
-  attr :selectors, :list, required: true
-
-  def selectors_table(assigns) do
-    ~H"""
-    <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-          <tr>
-            <th class="py-3 pr-6 font-medium">Selector</th>
-            <th class="py-3 font-medium">Description</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-default">
-          <tr :for={selector <- @selectors} class="align-top">
-            <td class="py-4 pr-6 leading-6">
-              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
-                {selector.selector}
-              </code>
-            </td>
-            <td class="py-4 leading-6 text-toned">
-              {selector.description}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    """
-  end
-
-  @doc false
-
-  attr :keyboard, :list, required: true
-
-  def keyboard_table(assigns) do
-    ~H"""
-    <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
-        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-          <tr>
-            <th class="py-3 pr-6 font-medium">Keys</th>
-            <th class="py-3 font-medium">Description</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-default">
-          <tr :for={kbd <- @keyboard} class="align-top">
-            <td class="py-4 pr-6 whitespace-nowrap">
-              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
-                {kbd.keys}
-              </code>
-            </td>
-            <td class="py-4 leading-6 text-toned">{kbd.description}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    """
-  end
-
-  @doc false
-
-  attr :doc, :string, default: nil
-  attr :values, :list, default: []
-  attr :default, :any, default: nil
-
-  def attribute_description(assigns) do
-    assigns = assign(assigns, :values, visible_values(assigns.values))
-
-    ~H"""
-    <div class="space-y-1">
-      <p :if={@doc}>{@doc}</p>
-      <p :if={@values != []} class="text-xs">
-        Values: <code class={code_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code>
-      </p>
-      <p :if={@default != nil} class="text-xs">
-        Default: <code class={code_class()}>{default_label(@default)}</code>
-      </p>
-    </div>
-    """
-  end
-
-  # A boolean `values: [true, false]` is not a choice worth spelling out; the
-  # Type column already communicates it.
-  defp visible_values([true, false]), do: []
-  defp visible_values(values) when is_list(values), do: values
-  defp visible_values(_values), do: []
-
-  defp value_label(value), do: to_string(value)
-
-  @doc false
-
-  attr :item, :map, required: true
-
-  def type_cell(assigns) do
-    values = type_values(assigns.item)
-    type = assigns.item[:type] || :string
-    assigns = assign(assigns, values: values, type: type)
-
-    ~H"""
-    <code :if={@values == []} class={code_class()}>{@type}</code>
-    <span :if={@values != []} class="group relative inline-flex" tabindex="0">
-      <code class={code_class()}>{@type}</code>
-      <span
-        role="tooltip"
-        class="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 hidden w-max max-w-64 rounded-md bg-inverted px-2 py-1.5 text-xs whitespace-normal text-inverted shadow-lg group-focus-within:block group-hover:block"
-      >
-        {Enum.map_join(@values, " | ", &to_string/1)}
-      </span>
-    </span>
-    """
-  end
-
-  defp type_values(%{type: type}) when type in [:boolean, "boolean"], do: []
-  defp type_values(%{values: values}) when is_list(values) and values != [], do: values
-
-  defp type_values(attr) do
-    case values_for(attr) do
-      values when is_list(values) and values != [] -> values
-      _ -> []
-    end
-  end
-
-  defp values_for(attr) do
-    case attr[:opts] do
-      opts when is_list(opts) -> Keyword.get(opts, :values)
-      _ -> nil
-    end
-  end
-
-  defp code_class do
-    "rounded bg-accented px-1 py-1 font-semibold font-mono text-xs text-default"
-  end
-
-  defp default_label(value), do: inspect(value)
 end
