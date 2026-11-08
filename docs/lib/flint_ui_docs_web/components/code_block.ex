@@ -15,6 +15,10 @@ defmodule FlintUIDocsWeb.CodeBlock do
   header the copy button floats vertically centered on the right, so a one-line
   snippet still has a properly centered action.
 
+  Clicking a collapsed header expands the panel. A collapsed tab still selects
+  its flavor and expands the panel in the same click, so the chosen snippet is
+  visible right away.
+
   Code is highlighted server-side by `FlintUIDocsWeb.Highlight`; the token
   colours follow the docs' semantic tokens in `assets/css/highlight.css`.
   """
@@ -178,7 +182,14 @@ defmodule FlintUIDocsWeb.CodeBlock do
             this.onClick = (event) => {
               const root = this.el.closest("[data-element='collapsible']")
               if (!root || root.dataset.state !== "closed") return
-              if (event.target.closest("button, a, input, select, textarea, [role='tab']")) return
+
+              // A tab switches the snippet, so it must reveal the panel it selects.
+              if (event.target.closest("[role='tab']")) {
+                root.dispatchEvent(new CustomEvent("fl:collapsible:toggle", {bubbles: true}))
+                return
+              }
+
+              if (event.target.closest("button, a, input, select, textarea")) return
 
               root.dispatchEvent(new CustomEvent("fl:collapsible:toggle", {bubbles: true}))
             }

@@ -329,11 +329,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <Components.badge
       variant="subtle"
-      color="warning"
-      size="xs"
-      radius="full"
+      color="error"
+      size="sm"
       uppercase
-      class="ml-1.5"
+      class="ml-1"
     >
       Required
     </Components.badge>
