@@ -328,11 +328,11 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def required_badge(assigns) do
     ~H"""
     <Components.badge
+      class="ml-1"
       variant="subtle"
       color="error"
-      size="sm"
+      size="xs"
       uppercase
-      class="ml-1"
     >
       Required
     </Components.badge>
@@ -894,7 +894,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp code_class do
-    "rounded bg-accented px-1 py-0.5 font-mono text-xs text-default"
+    "rounded bg-accented px-1 py-1 font-semibold font-mono text-xs text-default"
   end
 
   defp default_label(value), do: inspect(value)
