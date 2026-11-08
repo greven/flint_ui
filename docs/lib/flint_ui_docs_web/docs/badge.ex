@@ -23,7 +23,11 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         section: :usage,
         id: :variant,
         title: "Variant",
-        controls: [%{key: :variant, type: :select, default: "subtle", label: "Variant"}]
+        controls: [
+          %{key: :variant, type: :select, default: "subtle", label: "Variant"},
+          %{key: :radius, type: :select, default: "md", label: "Radius"},
+          %{key: :pill, type: :boolean, default: false, label: "Pill"}
+        ]
       },
       %{
         tab: :styled,
@@ -40,6 +44,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         id: :radius,
         title: "Radius",
         controls: [%{key: :radius, type: :select, default: "md", label: "Radius"}]
+      },
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :pill,
+        title: "Pill",
+        controls: [%{key: :pill, type: :boolean, default: true, label: "Pill"}]
       },
       %{tab: :styled, section: :usage, id: :wide, title: "Wide"},
       %{tab: :styled, section: :usage, id: :uppercase, title: "Uppercase"},
@@ -92,14 +103,40 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :usage, id: :variant} = assigns) do
     ~H"""
-    <.prose content="Use the `variant` attr to change the visual emphasis of the badge. The default variant is `subtle`." />
+    <.prose content="Use the `variant` attr to change the visual emphasis of the badge. The default variant is `subtle`.
+        Subtle and soft are the faint variants; outline and dashed use the full-strength role color for the border." />
     <.preview :let={props} {assigns} code={&code_variant/1}>
       <div class="flex items-center flex-wrap gap-3">
-        <Components.badge variant={props.variant}>The Best</Components.badge>
-        <Components.badge variant={props.variant} color="info">Things</Components.badge>
-        <Components.badge variant={props.variant} color="success">Come</Components.badge>
-        <Components.badge variant={props.variant} color="warning">In Small</Components.badge>
-        <Components.badge variant={props.variant} color="error">Packages</Components.badge>
+        <Components.badge variant={props.variant} radius={props.radius} pill={props.pill}>
+          The Best
+        </Components.badge>
+        <Components.badge variant={props.variant} radius={props.radius} pill={props.pill} color="info">
+          Things
+        </Components.badge>
+        <Components.badge
+          variant={props.variant}
+          radius={props.radius}
+          pill={props.pill}
+          color="success"
+        >
+          Come
+        </Components.badge>
+        <Components.badge
+          variant={props.variant}
+          radius={props.radius}
+          pill={props.pill}
+          color="warning"
+        >
+          In Small
+        </Components.badge>
+        <Components.badge
+          variant={props.variant}
+          radius={props.radius}
+          pill={props.pill}
+          color="error"
+        >
+          Packages
+        </Components.badge>
       </div>
     </.preview>
     """
@@ -187,9 +224,18 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   def render_section(%{section: :usage, id: :radius} = assigns) do
     ~H"""
-    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, or `full` for a pill shape. A `full` badge whose content is narrower than it is tall, such as a one-character count, renders as a circle instead of a squashed oval. The default radius is `md`." />
+    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, following the shared radius scale. The default radius is `md`. For a full-radius pill, use `pill` instead." />
     <.preview :let={props} id={@id} {assigns} code={&code_radius/1}>
       <Components.badge radius={props.radius}>Badge</Components.badge>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :pill} = assigns) do
+    ~H"""
+    <.prose content="Set `pill` for a full-radius pill. Pills add extra inline padding so a short label clears the curve, and `pill` takes precedence over `radius`. The Indicator uses the pill shape for its count markers and keeps a one-character count circular." />
+    <.preview :let={props} id={@id} {assigns} code={&code_pill/1}>
+      <Components.badge variant="solid" pill={props.pill}>Badge</Components.badge>
     </.preview>
     """
   end
@@ -199,7 +245,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Set `wide` to fill the width of the surrounding container. The content stays centered." />
     <.preview id={@id} code={&code_wide/1}>
       <div class="w-full max-w-xs">
-        <Components.badge variant="solid" icon="lucide-move-horizontal" wide>
+        <Components.badge variant="solid" wide>
           Full width
         </Components.badge>
       </div>
@@ -212,13 +258,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="Set `uppercase` to render the label in uppercase." />
     <.preview id={@id} code={&code_uppercase/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.badge size="xs" variant="solid" color="neutral" radius="sm" uppercase>
+        <Components.badge variant="solid" color="neutral" size="xs" radius="sm" uppercase>
           Tiny
         </Components.badge>
-        <Components.badge variant="solid" color="info" size="sm" radius="full" uppercase>
+        <Components.badge variant="outline" color="info" size="sm" pill uppercase>
           Small
         </Components.badge>
-        <Components.badge variant="dot" color="info" radius="full" uppercase>
+        <Components.badge variant="dot" color="info" pill uppercase>
           Huge
         </Components.badge>
         <Components.badge variant="subtle" color="warning" size="lg" uppercase>
@@ -355,13 +401,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           <Components.badge
             :for={tag <- ~w(Elixir Phoenix LiveView)}
             variant="solid"
-            radius="full"
+            pill
           >
             {tag}
             <:trailing>
               <Components.button
                 size="xs"
-                radius="full"
+                pill
                 variant="ghost"
                 class="text-current/80"
                 aria-label={"Remove #{tag}"}
@@ -379,13 +425,13 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           <Components.badge
             :for={tag <- ~w(Elixir Phoenix LiveView)}
             variant="outline"
-            radius="full"
+            pill
           >
             {tag}
             <:trailing>
               <Components.button
                 size="xs"
-                radius="full"
+                pill
                 variant="soft"
                 color="neutral"
                 aria-label={"Remove #{tag}"}
@@ -516,7 +562,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         <Components.badge
           variant="solid"
           color="error"
-          radius="full"
+          pill
           size="sm"
           role="status"
           aria-label="7 unread notifications"
@@ -532,7 +578,15 @@ defmodule FlintUIDocsWeb.Docs.Badge do
   end
 
   defp code_variant(props) do
-    Snippet.tag(".badge", [Snippet.attr("variant", props.variant, "subtle")], "Badge")
+    Snippet.tag(
+      ".badge",
+      [
+        Snippet.attr("variant", props.variant, "subtle"),
+        Snippet.attr("radius", props.radius, "md"),
+        Snippet.flag("pill", props.pill)
+      ],
+      "Badge"
+    )
   end
 
   defp code_color(props) do
@@ -545,6 +599,14 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_radius(props) do
     Snippet.tag(".badge", [Snippet.attr("radius", props.radius, "md")], "Badge")
+  end
+
+  defp code_pill(props) do
+    Snippet.tag(
+      ".badge",
+      [Snippet.attr("variant", "solid"), Snippet.flag("pill", props.pill)],
+      "Badge"
+    )
   end
 
   defp code_icon(_) do
@@ -584,7 +646,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
   defp code_wide(_) do
     """
     <div class="w-full">
-      <.badge variant="solid" icon="lucide-move-horizontal" wide>Full Width</.badge>
+      <.badge variant="solid" wide>Full Width</.badge>
     </div>
     """
     |> String.trim()
@@ -592,9 +654,9 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_uppercase(_) do
     """
-    <.badge size="xs" variant="solid" color="neutral" radius="sm" uppercase>Tiny</.badge>
-    <.badge variant="solid" color="info" size="sm" radius="full" uppercase>Small</.badge>
-    <.badge variant="dot" color="info" radius="full" uppercase>Huge</.badge>
+    <.badge variant="solid" color="neutral" size="xs" radius="sm" uppercase>Tiny</.badge>
+    <.badge variant="outline" color="info" size="sm" pill uppercase>Small</.badge>
+    <.badge variant="dot" color="info" pill uppercase>Huge</.badge>
     <.badge variant="subtle" color="warning" size="lg" uppercase>If True</.badge>
     """
     |> String.trim()
@@ -650,7 +712,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge variant="subtle" color="neutral" role="img" aria-label="Saved">
       <.icon name="lucide-bookmark" />
     </.badge>
-    <.badge variant="solid" color="error" radius="full" size="sm"
+    <.badge variant="solid" color="error" pill size="sm"
       role="status" aria-label="7 unread notifications">
       7
     </.badge>

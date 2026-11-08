@@ -49,6 +49,12 @@ defmodule FlintUI.Styled.ButtonTest do
         <.button variant="ghost" inset="top bottom">Top and bottom</.button>
         """
       end
+
+      def pill(assigns) do
+        ~H"""
+        <.button pill>Deploy</.button>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -139,5 +145,11 @@ defmodule FlintUI.Styled.ButtonTest do
     document = render(wrapper, :inset_sides)
 
     assert attr(document, :button, "data-inset") == ["top bottom"]
+  end
+
+  test "maps pill onto its data hook", %{wrapper: wrapper} do
+    document = render(wrapper, :pill)
+
+    assert attr(document, :button, "data-pill") == [""]
   end
 end

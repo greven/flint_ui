@@ -29,6 +29,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "data-radius={@radius}"
+    assert source =~ "data-pill={@pill}"
     assert source =~ "data-square={@square}"
     assert source =~ "data-wide={@wide}"
     assert source =~ "attr(:justify, :string"
@@ -53,6 +54,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "data-radius={@radius}"
+    assert source =~ "data-pill={@pill}"
     assert source =~ "data-depth={@depth}"
     assert source =~ "attr(:depth, :boolean"
   end
@@ -192,6 +194,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "values: ~w(solid soft subtle outline dashed ghost dot)"
     assert source =~ "default: \"subtle\""
     assert source =~ "data-radius={@radius}"
+    assert source =~ "data-pill={@pill}"
     assert source =~ "data-uppercase={@uppercase}"
     assert source =~ "attr(:uppercase, :boolean"
     refute source =~ "data-inset={@inset}"

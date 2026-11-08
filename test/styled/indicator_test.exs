@@ -22,7 +22,7 @@ defmodule FlintUI.Styled.IndicatorTest do
 
       def badge_props(assigns) do
         ~H"""
-        <.indicator label="12" variant="soft" color="info" size="lg" radius="md">
+        <.indicator label="12" variant="soft" color="info" size="lg">
           <button id="anchor">Inbox</button>
         </.indicator>
         """
@@ -115,7 +115,8 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert badge_attr(document, "data-variant") == ["solid"]
     assert badge_attr(document, "data-color") == ["error"]
     assert badge_attr(document, "data-size") == ["xs"]
-    assert badge_attr(document, "data-radius") == ["full"]
+    assert badge_attr(document, "data-pill") == [""]
+    assert badge_attr(document, "data-radius") == []
     assert badge_attr(document, "aria-hidden") == ["true"]
     assert badge(document) |> LazyHTML.text() |> String.trim() == "3"
   end
@@ -160,7 +161,8 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert badge_attr(document, "data-variant") == ["soft"]
     assert badge_attr(document, "data-color") == ["info"]
     assert badge_attr(document, "data-size") == ["lg"]
-    assert badge_attr(document, "data-radius") == ["md"]
+    assert badge_attr(document, "data-pill") == [""]
+    assert badge_attr(document, "data-radius") == []
     assert badge(document) |> LazyHTML.text() |> String.trim() == "12"
   end
 
@@ -190,7 +192,8 @@ defmodule FlintUI.Styled.IndicatorTest do
     document = render(wrapper, :dot)
 
     assert badge(document) |> LazyHTML.text() |> String.trim() == ""
-    assert badge_attr(document, "data-radius") == ["full"]
+    assert badge_attr(document, "data-pill") == [""]
+    assert badge_attr(document, "data-radius") == []
     assert badge_attr(document, "data-dot") == [""]
     assert badge_attr(document, "aria-hidden") == ["true"]
   end

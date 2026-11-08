@@ -23,10 +23,10 @@
         inset-block-end: var(--_indicator-block-end, auto);
         inset-inline-start: var(--_indicator-inline-start, auto);
         inset-inline-end: var(--_indicator-inline-end, auto);
-        z-index: 1;
         display: inline-flex;
         pointer-events: none;
         translate: var(--_indicator-x, 0) var(--_indicator-y, 0);
+        z-index: 1;
     }
 
     /* The badge is centred on the anchor's corner by default. */
@@ -62,6 +62,13 @@
      * still push it outward; a negative value pulls it further in. */
     [data-element="indicator"][data-inset] {
         --_indicator-out: var(--fl-indicator-offset, 0px);
+    }
+
+    /* The nested badge is a marker pinned to a corner, so it keeps the compact
+     * pill padding: a one-character count stays a circle instead of growing
+     * into a pill. Standalone badges add pill padding for long labels. */
+    [data-element="indicator"] [data-element="badge"][data-pill] {
+        --_badge-pill-padding: var(--_badge-padding);
     }
 
     /* A label-less badge is a dot. It drops the label height scale for the
@@ -101,10 +108,7 @@
         box-shadow: 0 0 0 var(--fl-indicator-ring-width, 2px) var(--fl-indicator-ring-color, var(--fl-color-surface));
     }
 
-    /* Attention animations. `pulse` fades the badge like Tailwind's
-     * `animate-pulse`, `ping` scales a filled halo behind the badge, `bounce`
-     * lifts it, and `heartbeat` gives it a double scale beat. All are
-     * decorative, so reduced-motion users keep the static badge. */
+    /* Attention animations. */
     [data-element="indicator"][data-attention="pulse"] [data-element="badge"] {
         animation: fl-indicator-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }

@@ -1,17 +1,24 @@
 @layer components {
-    /* Badge. Public inputs: `--fl-badge-color`, `-color-content`, `-text`.
-     * Badges are labels, not controls: they use the shared badge height scale
-     * and never add elevation, depth rims, or press feedback. */
+    /* Badge. Public inputs: `--fl-badge-color`, `-color-content`, `-text`,
+     * `-soft`, `-soft-border`, and `-border-width`. Badges are labels, not
+     * controls: they use the shared badge height scale and never add elevation,
+     * depth rims, or press feedback. */
     [data-element="badge"][data-variant] {
         /* A nested control follows the badge's row rather than the control scale. */
-        --_badge-control-size: max(var(--fl-control-icon-xs), calc(var(--_badge-size, var(--fl-badge-height-md)) - 4px));
-        --_badge-control-inset: max(0px, calc((var(--_badge-size, var(--fl-badge-height-md)) - 2px - var(--_badge-control-size)) / 2));
+        --_badge-control-size: max(
+            var(--fl-control-icon-xs),
+            calc(var(--_badge-size, var(--fl-badge-height-md)) - (2 * var(--fl-badge-border-width, 1px)) - 2px)
+        );
+        --_badge-control-inset: max(
+            0px,
+            calc((var(--_badge-size, var(--fl-badge-height-md)) - (2 * var(--fl-badge-border-width, 1px)) - var(--_badge-control-size)) / 2)
+        );
         box-sizing: border-box;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: var(--fl-spacing-xs);
-        border: 1px solid transparent;
+        border: var(--fl-badge-border-width, 1px) solid transparent;
         border-radius: var(--fl-control-radius);
         font-family: var(--fl-font-sans);
         font-weight: var(--fl-font-weight-medium);
@@ -137,24 +144,18 @@
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
-    /* Outline: a colored border and label over the surface. */
+    /* Outline: a full-strength role edge and label over the surface. */
     [data-element="badge"][data-variant="outline"] {
         background: var(--fl-color-surface);
-        border-color: var(
-            --fl-badge-soft-border,
-            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
-        );
+        border-color: var(--fl-badge-color, var(--fl-color-inverted));
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
-    /* Dashed: outline with a dashed border. */
+    /* Dashed: outline with a dashed role edge. */
     [data-element="badge"][data-variant="dashed"] {
         background: var(--fl-color-surface);
         border-style: dashed;
-        border-color: var(
-            --fl-badge-soft-border,
-            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
-        );
+        border-color: var(--fl-badge-color, var(--fl-color-inverted));
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
@@ -184,40 +185,45 @@
     /* Sizes use the badge height scale. */
     [data-element="badge"][data-size="xs"] {
         --_badge-size: var(--fl-badge-height-xs);
+        --_badge-padding: calc(var(--fl-spacing) * 1);
         height: var(--_badge-size);
-        padding-inline: calc(var(--fl-spacing) * 1);
+        padding-inline: var(--_badge-padding);
         gap: calc(var(--fl-spacing) * 0.75);
         font-size: 0.625rem;
     }
 
     [data-element="badge"][data-size="sm"] {
         --_badge-size: var(--fl-badge-height-sm);
+        --_badge-padding: calc(var(--fl-spacing) * 1.25);
         height: var(--_badge-size);
-        padding-inline: calc(var(--fl-spacing) * 1.25);
+        padding-inline: var(--_badge-padding);
         gap: var(--fl-spacing-xs);
         font-size: var(--fl-control-font-size-xs);
     }
 
     [data-element="badge"][data-size="md"] {
         --_badge-size: var(--fl-badge-height-md);
+        --_badge-padding: calc(var(--fl-spacing) * 1.5);
         height: var(--_badge-size);
-        padding-inline: calc(var(--fl-spacing) * 1.5);
+        padding-inline: var(--_badge-padding);
         gap: var(--fl-spacing-xs);
         font-size: var(--fl-control-font-size-sm);
     }
 
     [data-element="badge"][data-size="lg"] {
         --_badge-size: var(--fl-badge-height-lg);
+        --_badge-padding: calc(var(--fl-spacing) * 2);
         height: var(--_badge-size);
-        padding-inline: calc(var(--fl-spacing) * 2);
+        padding-inline: var(--_badge-padding);
         gap: calc(var(--fl-spacing) * 1.25);
         font-size: var(--fl-control-font-size-md);
     }
 
     [data-element="badge"][data-size="xl"] {
         --_badge-size: var(--fl-badge-height-xl);
+        --_badge-padding: calc(var(--fl-spacing) * 2.5);
         height: var(--_badge-size);
-        padding-inline: calc(var(--fl-spacing) * 2.5);
+        padding-inline: var(--_badge-padding);
         gap: calc(var(--fl-spacing) * 1.5);
         font-size: var(--fl-control-font-size-xl);
     }
@@ -285,10 +291,14 @@
         --fl-control-radius: var(--fl-radius-xl);
     }
 
-    /* Full is a pill for labels and a circle for one-character counts. */
-    [data-element="badge"][data-radius="full"] {
+    /* Pill: full radius plus extra inline padding so a short label clears the
+     * curve. The minimum width keeps a label-less pill from collapsing; a
+     * nested marker badge resets the padding (see indicator.css). */
+    [data-element="badge"][data-pill] {
         --fl-control-radius: var(--fl-radius-full);
+        --_badge-pill-padding: calc(var(--_badge-padding) + 0.1875rem);
         min-inline-size: var(--_badge-size, var(--fl-badge-height-md));
+        padding-inline: var(--_badge-pill-padding);
     }
 
     /* Wide: fills the container. */

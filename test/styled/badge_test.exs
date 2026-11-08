@@ -37,6 +37,12 @@ defmodule FlintUI.Styled.BadgeTest do
         <.badge variant="dot" color="success">Online</.badge>
         """
       end
+
+      def pill(assigns) do
+        ~H"""
+        <.badge pill>New</.badge>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -49,6 +55,7 @@ defmodule FlintUI.Styled.BadgeTest do
     assert attr(document, :badge, "data-variant") == ["subtle"]
     assert attr(document, :badge, "data-size") == ["md"]
     assert attr(document, :badge, "data-radius") == ["md"]
+    assert attr(document, :badge, "data-pill") == []
     assert attr(document, :badge, "data-uppercase") == []
     assert attr(document, :badge, "data-wide") == []
     assert attr(document, :badge, "data-leading") == []
@@ -101,5 +108,11 @@ defmodule FlintUI.Styled.BadgeTest do
     assert attr(document, :badge, "data-variant") == ["dot"]
     assert attr(document, :badge, "data-color") == ["success"]
     assert root(document, :badge) |> LazyHTML.text() |> String.trim() == "Online"
+  end
+
+  test "maps pill onto its own hook", %{wrapper: wrapper} do
+    document = render(wrapper, :pill)
+
+    assert attr(document, :badge, "data-pill") == [""]
   end
 end

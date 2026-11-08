@@ -19,8 +19,8 @@ defmodule FlintUIDocsWeb.Preview do
       end
 
   The preview inherits `:preview_id`, `:name`, `:controls`, `:state`, `:source`,
-  and `:tab` from that map. `:code`, `:codes`, and `:preview_only` are section
-  content, so pass them explicitly:
+  and `:tab` from that map. `:code`, `:codes`, `:preview_only`, and `:code_only`
+  are section content, so pass them explicitly:
 
       <.preview {assigns} code={~s(<.button>Save</.button>)}>
         <Components.button>Save</Components.button>
@@ -45,6 +45,11 @@ defmodule FlintUIDocsWeb.Preview do
   Set `collapsed` to start the code panel closed; it remains expandable. Set
   `resizable` to add the resize handle, and `canvas_class` to give the demo a
   surface other than the page background.
+
+  Set `code_only` to drop the demo canvas and controls and keep just the code
+  panel: the header, flavors, source toggle, copy button, and collapse still
+  work. A code-only preview needs `code` or `codes` and cannot be combined with
+  `preview_only`; `controls`, `resizable`, and `canvas_class` are ignored.
   """
 
   use FlintUIDocsWeb, :html
@@ -66,12 +71,13 @@ defmodule FlintUIDocsWeb.Preview do
   attr :source, :any, default: nil
   attr :code_lang, :atom, default: :heex
   attr :preview_only, :boolean, default: false
+  attr :code_only, :boolean, default: false
   attr :collapsible, :boolean, default: true
   attr :collapsed, :boolean, default: false
   attr :resizable, :boolean, default: false
   attr :canvas_class, :any, default: nil
   attr :class, :any, default: nil
-  slot :inner_block, required: true
+  slot :inner_block, required: false
 
   def preview(assigns) do
     name = assigns[:name]
@@ -93,8 +99,22 @@ defmodule FlintUIDocsWeb.Preview do
     source = state.source
     code_view = if source && state.code_view == "source", do: "source", else: "code"
     show_code? = active_flavor != nil and not assigns.preview_only
-    below? = controls != [] or show_code?
+    code_only? = assigns.code_only
+    show_canvas? = not code_only?
+    below? = show_canvas? and (controls != [] or show_code?)
     tabs? = code_view == "code" and flavors != nil and length(flavors) > 1
+
+    cond do
+      code_only? and not show_code? ->
+        raise ArgumentError,
+              "a code-only preview needs :code or :codes and cannot also set :preview_only"
+
+      show_canvas? and assigns[:inner_block] in [nil, []] ->
+        raise ArgumentError, "a preview needs an inner_block unless :code_only is set"
+
+      true ->
+        :ok
+    end
 
     assigns =
       assign(assigns,
@@ -110,6 +130,8 @@ defmodule FlintUIDocsWeb.Preview do
         source: source,
         code_view: code_view,
         show_code?: show_code?,
+        code_only?: code_only?,
+        show_canvas?: show_canvas?,
         below?: below?,
         tabs?: tabs?,
         display_code: display_code(active_flavor, source, code_view),
@@ -123,10 +145,11 @@ defmodule FlintUIDocsWeb.Preview do
       class={@class}
       data-preview
       data-preview-id={@preview_id}
-      phx-hook=".PreviewResize"
+      phx-hook={if @show_canvas?, do: ".PreviewResize"}
     >
       <div class="rounded-lg shadow-lg/3">
         <div
+          :if={@show_canvas?}
           data-preview-canvas
           class={[
             "group relative grid min-h-24 place-items-center overflow-auto border border-solid border-default bg-transparent p-6",
@@ -177,7 +200,7 @@ defmodule FlintUIDocsWeb.Preview do
         </div>
 
         <.controls
-          :if={@controls != []}
+          :if={@show_canvas? and @controls != []}
           id={@preview_id}
           name={@name}
           layer={@layer}
@@ -189,7 +212,13 @@ defmodule FlintUIDocsWeb.Preview do
         <div
           :if={@show_code?}
           data-preview-code
-          class="overflow-hidden rounded-b-lg border-x border-b border-default"
+          class={[
+            "overflow-hidden border-default",
+            if(@code_only?,
+              do: "rounded-lg border",
+              else: "rounded-b-lg border-x border-b"
+            )
+          ]}
         >
           <CodeBlock.code
             id={"#{@preview_id}-code"}

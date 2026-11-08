@@ -368,7 +368,8 @@
         --fl-control-radius: var(--fl-radius-xl);
     }
 
-    [data-element="button"][data-radius="full"] {
+    /* Pill: full radius; the control keeps its height and padding. */
+    [data-element="button"][data-pill] {
         --fl-control-radius: var(--fl-radius-full);
     }
 

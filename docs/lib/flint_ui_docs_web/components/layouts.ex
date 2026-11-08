@@ -398,7 +398,7 @@ defmodule FlintUIDocsWeb.Layouts do
                 this.list.appendChild(item)
               }
 
-              this.items.push({element: entry.element, link})
+              this.items.push({element: entry.element, link, level: entry.level})
             }
 
             this.updateActive()
@@ -467,17 +467,20 @@ defmodule FlintUIDocsWeb.Layouts do
             if (!item) return
 
             if (this.active !== item) {
-              const inactive = ["border-transparent", "text-muted"]
               const active = ["border-inverted", "text-default", "font-medium"]
+              const inactive = (entry) =>
+                entry.level === 2
+                  ? ["border-transparent", "text-toned"]
+                  : ["border-transparent", "text-muted"]
 
               for (const entry of this.items) {
                 if (entry === item) {
-                  entry.link.classList.remove(...inactive)
+                  entry.link.classList.remove(...inactive(entry))
                   entry.link.classList.add(...active)
                   entry.link.setAttribute("aria-current", "location")
                 } else {
                   entry.link.classList.remove(...active)
-                  entry.link.classList.add(...inactive)
+                  entry.link.classList.add(...inactive(entry))
                   entry.link.removeAttribute("aria-current")
                 }
               }
@@ -581,7 +584,7 @@ defmodule FlintUIDocsWeb.Layouts do
         type="button"
         variant="outline"
         size="xs"
-        radius="full"
+        pill
         phx-click={JS.dispatch("phx:set-preset")}
         data-phx-preset={preset}
       >

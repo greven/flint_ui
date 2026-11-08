@@ -36,14 +36,6 @@ defmodule FlintUI.Styled.Indicator do
           doc: "The nested badge size."
         ),
         Prop.new(
-          name: :radius,
-          values: ~w(none xs sm md lg xl full),
-          default: "full",
-          forwarded_to: :badge,
-          doc:
-            "The nested badge corner radius. Use `full` for a pill; a full badge narrower than its height, such as a single digit, renders as a circle."
-        ),
-        Prop.new(
           name: :position,
           values: ~w(top-right top-left bottom-right bottom-left),
           default: "top-right",

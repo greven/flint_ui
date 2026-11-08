@@ -17,7 +17,7 @@ defmodule FlintUI.Styled.ToggleTest do
           variant="outline"
           color="primary"
           size="lg"
-          radius="full"
+          pill
           depth={false}
           class="extra"
           data-role="test"
@@ -48,6 +48,7 @@ defmodule FlintUI.Styled.ToggleTest do
     assert attr(document, :toggle, "data-color") == ["neutral"]
     assert attr(document, :toggle, "data-size") == ["md"]
     assert attr(document, :toggle, "data-radius") == ["md"]
+    assert attr(document, :toggle, "data-pill") == []
     assert attr(document, :toggle, "data-depth") == [""]
     assert attr(document, :toggle, "aria-pressed") == ["false"]
   end
@@ -58,7 +59,8 @@ defmodule FlintUI.Styled.ToggleTest do
     assert attr(document, :toggle, "data-variant") == ["outline"]
     assert attr(document, :toggle, "data-color") == ["primary"]
     assert attr(document, :toggle, "data-size") == ["lg"]
-    assert attr(document, :toggle, "data-radius") == ["full"]
+    assert attr(document, :toggle, "data-radius") == ["md"]
+    assert attr(document, :toggle, "data-pill") == [""]
     assert attr(document, :toggle, "data-depth") == []
     assert attr(document, :toggle, "aria-pressed") == ["true"]
     assert attr(document, :toggle, "class") == ["extra"]

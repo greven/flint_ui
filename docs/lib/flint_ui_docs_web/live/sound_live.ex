@@ -191,7 +191,7 @@ defmodule FlintUIDocsWeb.SoundLive do
               pressed={theme == "default"}
               variant="outline"
               size="xs"
-              radius="full"
+              pill
               on_click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
             >
               {String.capitalize(theme)}

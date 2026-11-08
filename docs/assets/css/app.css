@@ -296,7 +296,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         padding: 0.125rem 0.25rem;
         color: var(--fl-color-text-highlighted);
         font-family: var(--fl-font-mono);
-        font-size: var(--fl-font-size-xs);
+        font-size: var(--fl-font-size-sm);
     }
 
     .docs-prose pre {
@@ -311,6 +311,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 
     .docs-prose pre code {
         background: transparent;
+        border: none;
         padding: 0;
         color: inherit;
         font-size: inherit;

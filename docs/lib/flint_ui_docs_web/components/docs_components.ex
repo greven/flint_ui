@@ -356,7 +356,12 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def parts_tables(assigns) do
     ~H"""
     <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
-      <p class="text-xs font-semibold tracking-wider text-muted uppercase">{part}</p>
+      <%!-- <p class="text-xs font-semibold tracking-wider text-muted uppercase">{part}</p> --%>
+      <Components.badge variant="subtle" color="dark" size="xl" class="capitalize">
+        {part}
+      </Components.badge>
+
+      <Components.button variant="subtle" color="dark" size="xl" class="capitalize">{part}</Components.button>
       <div class="mt-2 overflow-x-auto">
         <table class="w-full min-w-xl text-left text-sm">
           <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
@@ -369,12 +374,12 @@ defmodule FlintUIDocsWeb.DocsComponents do
             <tr :for={part_attr <- part_attrs} class="align-top">
               <td class="py-4 pr-6 leading-6">
                 <code class={code_class()}>{part_attr_label(part_attr.name)}</code>
-                <p :if={part_attr.description} class="mt-1 text-xs text-muted">
+                <p :if={part_attr.description} class="mt-1 text-sm text-muted">
                   {part_attr.description}
                 </p>
               </td>
               <td class="py-4 leading-6">
-                <code class={code_class()}>{part_attr.value}</code>
+                <code class={code_value_class()}>{part_attr.value}</code>
               </td>
             </tr>
           </tbody>
@@ -416,7 +421,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
               <code class={code_class()}>{css_var.name}</code>
             </td>
             <td :if={@show_default} class="py-4 pr-6 leading-6">
-              <code class={code_class()}>{css_var_default(css_var)}</code>
+              <code class={code_value_class()}>{css_var_default(css_var)}</code>
             </td>
             <td class="py-4 leading-6 text-toned">
               {css_var_description(css_var)}
@@ -512,10 +517,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <div class="space-y-1">
       <Markdown.prose :if={@doc} content={@doc} />
       <p :if={@values != []} class="mt-3 text-xs">
-        Values: <code class={code_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code>
+        Values: <code class={code_value_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code>
       </p>
       <p :if={@default != nil} class="mt-3 text-xs">
-        Default: <code class={code_class()}>{default_label(@default)}</code>
+        Default: <code class={code_value_class()}>{default_label(@default)}</code>
       </p>
     </div>
     """
@@ -539,9 +544,9 @@ defmodule FlintUIDocsWeb.DocsComponents do
     assigns = assign(assigns, values: values, type: type)
 
     ~H"""
-    <code :if={@values == []} class={code_class()}>{@type}</code>
+    <code :if={@values == []} class={code_value_class()}>{@type}</code>
     <span :if={@values != []} class="group relative inline-flex" tabindex="0">
-      <code class={code_class()}>{@type}</code>
+      <code class={code_value_class()}>{@type}</code>
       <span
         role="tooltip"
         class={[
@@ -574,7 +579,11 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp code_class do
-    "rounded bg-accented px-1.5 py-1 font-semibold font-mono text-xs"
+    "rounded bg-inverted px-1.5 py-0.75 font-semibold font-mono text-xs text-inverted"
+  end
+
+  defp code_value_class do
+    "rounded bg-accented px-1.5 py-1 font-semibold font-mono text-xs text-default"
   end
 
   defp default_label(value), do: inspect(value)
@@ -594,11 +603,11 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
     ~H"""
     <Components.badge
+      class={["capitalize", @class]}
       variant="subtle"
       color={@color}
       size="sm"
       icon={@icon}
-      class={["capitalize", @class]}
     >
       {to_string(@status)}
     </Components.badge>
@@ -621,10 +630,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <Components.badge
       class="ml-1"
-      variant="subtle"
+      variant="outline"
       color="error"
       radius="sm"
-      size="xs"
+      size="sm"
       uppercase
     >
       Required
@@ -642,10 +651,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <Components.badge
       class="ml-1.5"
-      variant="subtle"
+      variant="outline"
       color={@color}
       radius="sm"
-      size="xs"
+      size="sm"
       uppercase
     >
       {@source}

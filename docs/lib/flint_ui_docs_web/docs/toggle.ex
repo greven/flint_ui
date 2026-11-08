@@ -23,6 +23,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           %{key: :color, type: :select, default: "neutral", label: "Color"},
           %{key: :size, type: :select, default: "md", label: "Size"},
           %{key: :radius, type: :select, default: "md", label: "Radius"},
+          %{key: :pill, type: :boolean, default: false, label: "Pill"},
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"}
         ]
       }
@@ -38,6 +39,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         color={props.color}
         size={props.size}
         radius={props.radius}
+        pill={props.pill}
         pressed={props.pressed}
         disabled={props.disabled}
       >
@@ -55,6 +57,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
         Snippet.attr("radius", props.radius, "md"),
+        Snippet.flag("pill", props.pill),
         Snippet.flag("pressed", props.pressed),
         Snippet.flag("disabled", props.disabled)
       ],

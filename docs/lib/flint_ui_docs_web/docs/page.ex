@@ -65,9 +65,9 @@ defmodule FlintUIDocsWeb.Docs.Page do
   `:state`. Pass the whole map to `<.preview {assigns}>` and the preview inherits
   its id, component name, controls, source, and state. Explicit attributes
   override it; pass `code`, `codes`, `collapsed`, `resizable`, `canvas_class`,
-  and `preview_only` on the preview call. Use `<DocsComponents.features>` and
-  `<DocsComponents.snippets>` for structured blocks that used to live in the
-  section map.
+  `preview_only`, and `code_only` on the preview call. Use
+  `<DocsComponents.features>` and `<DocsComponents.snippets>` for structured
+  blocks that used to live in the section map.
 
   Keep the `render_section/1` clauses together; Elixir warns when clauses of the
   same function are separated by other definitions. A section without a clause
@@ -119,6 +119,11 @@ defmodule FlintUIDocsWeb.Docs.Page do
   `lang` for highlighting. The code panel is expandable by default; pass
   `collapsed` to start it closed. Pass `resizable` to add the resize handle, or
   `canvas_class` to give the demo a surface other than the page background.
+
+  When a section only needs to show a snippet, pass `code_only` to drop the demo
+  canvas and controls while keeping the header, flavors, source toggle, copy
+  button, and collapse. A code-only preview still needs `code` or `codes` and
+  cannot also set `preview_only`.
   """
 
   @type section :: %{

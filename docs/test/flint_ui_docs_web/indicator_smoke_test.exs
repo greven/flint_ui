@@ -35,7 +35,7 @@ defmodule FlintUIDocsWeb.IndicatorSmokeTest do
 
     assert has_element?(
              view,
-             "#example-indicator-dot-preview [data-element='badge'][data-radius='full']"
+             "#example-indicator-dot-preview [data-element='badge'][data-pill]"
            )
 
     assert has_element?(

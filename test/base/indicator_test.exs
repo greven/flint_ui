@@ -23,7 +23,7 @@ defmodule FlintUI.Base.IndicatorTest do
             "data-variant" => "solid",
             "data-color" => "error",
             "data-size" => "xs",
-            "data-radius" => "full"
+            "data-pill" => true
           }
         }
       >
@@ -132,7 +132,7 @@ defmodule FlintUI.Base.IndicatorTest do
     assert attr(badge(document), "data-variant") == ["solid"]
     assert attr(badge(document), "data-color") == ["error"]
     assert attr(badge(document), "data-size") == ["xs"]
-    assert attr(badge(document), "data-radius") == ["full"]
+    assert attr(badge(document), "data-pill") == [""]
   end
 
   test "a badge_label exposes the badge as an image" do

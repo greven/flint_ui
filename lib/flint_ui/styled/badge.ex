@@ -46,10 +46,17 @@ defmodule FlintUI.Styled.Badge do
         ),
         Prop.new(
           name: :radius,
-          values: ["none", "xs", "sm", "md", "lg", "xl", "full"],
+          values: ["none", "xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc:
-            "The corner radius. Use `none` for square corners and `full` for a pill shape; `xs` through `xl` follow the shared radius scale. A `full` badge with content narrower than its height, such as a one-character count, renders as a circle."
+            "The corner radius, from `none` for square corners to `xl`, following the shared radius scale. Use `pill` for a full-radius pill."
+        ),
+        Prop.new(
+          name: :pill,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether the badge renders as a full-radius pill. Pills also add inline padding so a short label clears the curve, and `pill` takes precedence over `radius`."
         ),
         Prop.new(
           name: :wide,
@@ -83,7 +90,8 @@ defmodule FlintUI.Styled.Badge do
         Var.new(
           name: "--fl-badge-color",
           default: "var(--fl-color-inverted)",
-          doc: "The solid fill and the source for tinted surfaces and borders."
+          doc:
+            "The solid fill, the outline/dashed border, and the source for tinted surfaces and borders."
         ),
         Var.new(
           name: "--fl-badge-color-content",
@@ -107,7 +115,13 @@ defmodule FlintUI.Styled.Badge do
           default:
             "color-mix(in oklab, var(--fl-badge-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
           doc:
-            "The matching border for subtle, outline, and dashed badges; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
+            "The matching border for subtle badges; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
+        ),
+        Var.new(
+          name: "--fl-badge-border-width",
+          default: "1px",
+          doc:
+            "The badge border width. Set it to `0` to remove the border without changing the variant."
         )
       ],
       color_vars: [

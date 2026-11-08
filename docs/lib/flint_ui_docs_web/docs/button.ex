@@ -18,7 +18,11 @@ defmodule FlintUIDocsWeb.Docs.Button do
         section: :usage,
         id: :variant,
         title: "Variant",
-        controls: [%{key: :variant, type: :select, default: "outline", label: "Variant"}]
+        controls: [
+          %{key: :variant, type: :select, default: "outline", label: "Variant"},
+          %{key: :radius, type: :select, default: "md", label: "Radius"},
+          %{key: :pill, type: :boolean, default: false, label: "Pill"}
+        ]
       },
       %{
         tab: :styled,
@@ -52,6 +56,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
         id: :radius,
         title: "Radius",
         controls: [%{key: :radius, type: :select, default: "md", label: "Radius"}]
+      },
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :pill,
+        title: "Pill",
+        controls: [%{key: :pill, type: :boolean, default: true, label: "Pill"}]
       },
       %{
         tab: :styled,
@@ -96,9 +107,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <Components.button>Button</Components.button>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
-    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)}>
-      <Components.button text="Button" />
-    </.preview>
+    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)} code_only />
     """
   end
 
@@ -106,7 +115,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="Use the `variant` attr to change the visual style of the button. Default variant is outline." />
     <.preview :let={props} {assigns} code={&code_variant/1}>
-      <Components.button variant={props.variant}>Button</Components.button>
+      <Components.button variant={props.variant} radius={props.radius} pill={props.pill}>Button</Components.button>
     </.preview>
     """
   end
@@ -373,9 +382,24 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :radius} = assigns) do
     ~H"""
-    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, or `full` for a pill shape. Default radius is md." />
+    <.prose content="Use the `radius` attr to change the corner radius, from `none` to `xl`, following the shared radius scale.
+      The default radius is `md`. For a full-radius pill, use `pill` instead." />
     <.preview :let={props} id={@id} {assigns} code={&code_radius/1}>
       <Components.button radius={props.radius}>Button</Components.button>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :pill} = assigns) do
+    ~H"""
+    <.prose content="Set `pill` for a full-radius pill. It only changes the radius: the button keeps its height and padding, and `pill` takes precedence over `radius`. Combine it with `square` for a circular icon-only button." />
+    <.preview :let={props} id={@id} {assigns} code={&code_pill/1}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.button pill={props.pill}>Button</Components.button>
+        <Components.button pill={props.pill} square aria-label="Search">
+          <Components.icon name="lucide-search" />
+        </Components.button>
+      </div>
     </.preview>
     """
   end
@@ -403,7 +427,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
           variant="solid"
-          radius="full"
+          pill
           style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
           background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
         >
@@ -412,7 +436,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
         <Components.button
           variant="solid"
-          radius="full"
+          pill
           style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
             --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
             background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));"
@@ -424,7 +448,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
         <Components.button
           variant="solid"
-          radius="full"
+          pill
           style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
           background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));"
         >
@@ -665,41 +689,14 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ]
   end
 
-  defp code_css_vars(_) do
-    """
-    <.button
-      variant="solid"
-      radius="full"
-      style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
-    >
-      <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
-    </.button>
-
-    <.button
-      variant="solid"
-      radius="full"
-      style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
-        --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
-        background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));" loading>
-      <.icon name="lucide-heart" class="text-rose-50" />
-      <.loading_text variant="shimmer" text="Likes" />
-    </.button>
-
-    <.button
-      variant="solid"
-      radius="full"
-      style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
-      <.icon name="lucide-panda" class="text-cyan-100" /> Panda
-    </.button>
-    """
-  end
-
   defp code_variant(props) do
     Snippet.tag(
       ".button",
-      [Snippet.attr("variant", props.variant, "outline")],
+      [
+        Snippet.attr("variant", props.variant, "outline"),
+        Snippet.attr("radius", props.radius, "md"),
+        Snippet.flag("pill", props.pill)
+      ],
       "Button"
     )
   end
@@ -801,6 +798,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
     Snippet.tag(".button", [Snippet.attr("radius", props.radius, "md")], "Button")
   end
 
+  defp code_pill(props) do
+    Snippet.tag(".button", [Snippet.flag("pill", props.pill)], "Button")
+  end
+
   defp code_destructive_confirm(_) do
     """
     <.button
@@ -811,6 +812,37 @@ defmodule FlintUIDocsWeb.Docs.Button do
       data-confirm="Delete item?"
     >
       <.icon name="lucide-trash" /> Delete Item
+    </.button>
+    """
+  end
+
+  defp code_css_vars(_) do
+    """
+    <.button
+      variant="solid"
+      pill
+      style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
+      background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
+    >
+      <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
+    </.button>
+
+    <.button
+      variant="solid"
+      pill
+      style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+        --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
+        background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));" loading>
+      <.icon name="lucide-heart" class="text-rose-50" />
+      <.loading_text variant="shimmer" text="Likes" />
+    </.button>
+
+    <.button
+      variant="solid"
+      pill
+      style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+      background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
+      <.icon name="lucide-panda" class="text-cyan-100" /> Panda
     </.button>
     """
   end

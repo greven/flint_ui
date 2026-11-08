@@ -126,7 +126,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
         <Components.button
           variant="solid"
           size="lg"
-          radius="full"
+          pill
           square
           aria-label="Feathers"
         >
@@ -289,7 +289,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
       <div class="flex flex-wrap items-center gap-6">
         <Components.button variant="subtle">
           Inbox
-          <Components.badge variant="solid" color="error" size="xs" radius="full">3</Components.badge>
+          <Components.badge variant="solid" color="error" size="xs" pill>3</Components.badge>
         </Components.button>
 
         <Components.indicator label="3">
@@ -351,7 +351,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
         Snippet.attr("ring", true)
       ],
       """
-      <.button variant="solid" size="lg" radius="full" square aria-label="Feathers">
+      <.button variant="solid" size="lg" pill square aria-label="Feathers">
         <.icon name="lucide-feather" />
       </.button>
       """
@@ -479,7 +479,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
     """
     <.button variant="subtle">
       Inbox
-      <.badge variant="solid" color="error" size="xs" radius="full">3</.badge>
+      <.badge variant="solid" color="error" size="xs" pill>3</.badge>
     </.button>
 
     <.indicator label="3">

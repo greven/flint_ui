@@ -94,12 +94,29 @@ defmodule FlintUI.StyledTest do
     assert "dot" in variant.values
 
     radius = Entry.prop(entry, :radius)
-    assert radius.values == ["none", "xs", "sm", "md", "lg", "xl", "full"]
+    assert radius.values == ["none", "xs", "sm", "md", "lg", "xl"]
     assert radius.default == "md"
+
+    pill = Entry.prop(entry, :pill)
+    assert Prop.boolean?(pill)
+    assert pill.default == false
 
     uppercase = Entry.prop(entry, :uppercase)
     assert Prop.boolean?(uppercase)
     assert uppercase.default == false
+  end
+
+  test "every radius control uses the shared scale with a pill modifier" do
+    for name <- [:badge, :button, :toggle] do
+      entry = Styled.get(name)
+      radius = Entry.prop(entry, :radius)
+      pill = Entry.prop(entry, :pill)
+
+      assert radius.values == ["none", "xs", "sm", "md", "lg", "xl"]
+      assert radius.default == "md"
+      assert Prop.boolean?(pill)
+      assert pill.default == false
+    end
   end
 
   test "raw color props declare the public inputs they populate" do
@@ -130,6 +147,7 @@ defmodule FlintUI.StyledTest do
              color: "data-color",
              size: "data-size",
              radius: "data-radius",
+             pill: "data-pill",
              square: "data-square",
              wide: "data-wide",
              justify: "data-justify",

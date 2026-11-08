@@ -437,6 +437,36 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "--fl-button-soft-text"
   end
 
+  test "badge outline and dashed use the role fill for their border", %{css: css} do
+    for variant <- ~w(outline dashed) do
+      assert css =~
+               ~r/\[data-element="badge"\]\[data-variant="#{variant}"\] \{[^}]*border-color: var\(--fl-badge-color, var\(--fl-color-inverted\)\)/
+    end
+
+    # Subtle keeps the faint matching border.
+    assert css =~
+             ~r/\[data-element="badge"\]\[data-variant="subtle"\] \{[^}]*border-color: var\(\s*--fl-badge-soft-border,/
+
+    # The border width is a public input with a 1px default.
+    assert css =~ "border: var(--fl-badge-border-width, 1px) solid transparent;"
+    assert css =~ "2 * var(--fl-badge-border-width, 1px)"
+  end
+
+  test "pills use the full radius and indicator markers keep compact padding", %{css: css} do
+    # Badges add inline padding for the label; the nested indicator badge resets
+    # it so a one-character count stays a circle. Controls only change the radius.
+    assert css =~ ~s([data-element="badge"][data-pill] {)
+    assert css =~ "--_badge-pill-padding: calc(var(--_badge-padding) + 0.1875rem);"
+
+    assert css =~
+             ~r/\[data-element="indicator"\] \[data-element="badge"\]\[data-pill\] \{\s*--_badge-pill-padding: var\(--_badge-padding\);/
+
+    for name <- ~w(button toggle) do
+      assert css =~
+               ~r/\[data-element="#{name}"\]\[data-pill\] \{\s*--fl-control-radius: var\(--fl-radius-full\);/
+    end
+  end
+
   test "toggle variants mirror the button's depth and pressed treatments", %{css: css} do
     # Solid pressed darkens its fill for the border and wears the top rim light.
     assert css =~
