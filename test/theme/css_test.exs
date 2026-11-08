@@ -92,17 +92,19 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "the pure surface anchors the page and the tint steps", %{css: css} do
+    assert css =~ "--fl-surface-step: 1.5%;"
+
     assert css =~
              "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));"
 
     assert css =~
-             ~r/--fl-color-background: color-mix\(\s*in oklab,\s*var\(--fl-color-surface\) 98\.5%,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*\)/
+             ~r/--fl-color-background: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*var\(--fl-surface-step\),\s*var\(--fl-color-surface\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-surface-muted: color-mix\(\s*in oklab,\s*var\(--fl-color-surface\) 97%,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*\)/
+             ~r/--fl-color-surface-muted: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 2\),\s*var\(--fl-color-surface\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-surface-accented: color-mix\(\s*in oklab,\s*var\(--fl-color-surface\) 94%,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*\)/
+             ~r/--fl-color-surface-accented: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 4\),\s*var\(--fl-color-surface\)\s*\)/
 
     refute css =~ "--fl-color-control:"
   end

@@ -39,10 +39,7 @@
         border-color: var(--fl-color-border-accented);
     }
 
-    [data-element="card"][data-card][data-link][data-shadow]:not([data-variant="ghost"]):is(
-            :hover,
-            :focus-visible
-        ) {
+    [data-element="card"][data-card][data-link][data-shadow]:not([data-variant="ghost"]):is(:hover, :focus-visible) {
         box-shadow: var(--fl-shadow-md);
     }
 
@@ -60,8 +57,7 @@
     }
 
     /* Keep horizontal regions shrinkable so long content does not widen the row. */
-    [data-element="card"][data-orientation="horizontal"]
-        > :is([data-part="header"], [data-part="body"], [data-part="footer"]),
+    [data-element="card"][data-orientation="horizontal"] > :is([data-part="header"], [data-part="body"], [data-part="footer"]),
     [data-element="card"][data-orientation="horizontal"] [data-part="body"] > [data-part="section"] {
         min-width: 0;
     }
@@ -131,11 +127,7 @@
         color: inherit;
     }
 
-    [data-element="card"][data-card]:is(
-            [data-body="separated"],
-            [data-body="separated-header"],
-            [data-body="separated-footer"]
-        ) {
+    [data-element="card"][data-card]:is([data-body="separated"], [data-body="separated-header"], [data-body="separated-footer"]) {
         gap: 0;
     }
 
@@ -161,27 +153,15 @@
         border-radius: var(--fl-radius-lg);
         background: light-dark(
             color-mix(in oklab, var(--fl-color-text) 2.5%, transparent),
-            color-mix(
-                in oklab,
-                var(--fl-card-text, var(--fl-color-text)) 2.5%,
-                var(--fl-card-surface, var(--fl-color-surface))
-            )
+            color-mix(in oklab, var(--fl-card-text, var(--fl-color-text)) 2.5%, var(--fl-card-surface, var(--fl-color-surface)))
         );
         box-shadow: light-dark(inset 0 1px 2px rgb(0 0 0 / 0.05), var(--fl-shadow-xs));
     }
 
-    [data-element="card"]:is([data-variant="soft"], [data-variant="accented"]):is(
-            [data-body="inset"],
-            [data-body="flush"]
-        )
-        > [data-part="body"] {
+    [data-element="card"]:is([data-variant="soft"], [data-variant="accented"]):is([data-body="inset"], [data-body="flush"]) > [data-part="body"] {
         background: light-dark(
             var(--fl-color-surface),
-            color-mix(
-                in oklab,
-                var(--fl-card-text, var(--fl-color-text)) 2.5%,
-                var(--fl-card-surface, var(--fl-color-surface))
-            )
+            color-mix(in oklab, var(--fl-card-text, var(--fl-color-text)) 2.5%, var(--fl-card-surface, var(--fl-color-surface)))
         );
         box-shadow: var(--fl-shadow-xs);
     }
@@ -258,8 +238,7 @@
     }
 
     /* Inverted surfaces flip lightness, so swap the band strengths with them. */
-    [data-element="card"][data-card][data-inverted][data-body="separated"]
-        > :is([data-part="header"], [data-part="footer"]),
+    [data-element="card"][data-card][data-inverted][data-body="separated"] > :is([data-part="header"], [data-part="footer"]),
     [data-element="card"][data-card][data-inverted][data-body="separated-header"] > [data-part="header"],
     [data-element="card"][data-card][data-inverted][data-body="separated-footer"] > [data-part="footer"] {
         background: light-dark(
@@ -288,8 +267,7 @@
 
     /* A band also needs the inset on its body-facing side, since separated roots
      * have no gap. Unbanded regions keep only their outer inset. */
-    [data-element="card"][data-body="separated"][data-orientation="vertical"]
-        > :is([data-part="header"], [data-part="footer"]),
+    [data-element="card"][data-body="separated"][data-orientation="vertical"] > :is([data-part="header"], [data-part="footer"]),
     [data-element="card"][data-body="separated-header"][data-orientation="vertical"] > [data-part="header"],
     [data-element="card"][data-body="separated-footer"][data-orientation="vertical"] > [data-part="footer"] {
         padding-block: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) - var(--fl-spacing));
@@ -316,19 +294,13 @@
 
     /* Divided draws a line between every region, never before the first. A padded
      * section or the footer gets breathing room below the line. */
-    [data-element="card"][data-orientation="vertical"][data-body="divided"]
-        > [data-part="body"]
-        > [data-part="section"]:not(:first-child),
-    [data-element="card"][data-orientation="vertical"][data-body="divided"]
-        > [data-part="body"]:not(:first-child)
-        > [data-part="section"]:first-child,
+    [data-element="card"][data-orientation="vertical"][data-body="divided"] > [data-part="body"] > [data-part="section"]:not(:first-child),
+    [data-element="card"][data-orientation="vertical"][data-body="divided"] > [data-part="body"]:not(:first-child) > [data-part="section"]:first-child,
     [data-element="card"][data-orientation="vertical"][data-body="divided"] > [data-part="footer"]:not(:first-child) {
         border-block-start: 1px solid var(--fl-card-border, var(--fl-color-border));
     }
 
-    [data-element="card"][data-orientation="vertical"][data-body="divided"]
-        > [data-part="body"]
-        > [data-part="section"][data-padded]:not(:first-child),
+    [data-element="card"][data-orientation="vertical"][data-body="divided"] > [data-part="body"] > [data-part="section"][data-padded]:not(:first-child),
     [data-element="card"][data-orientation="vertical"][data-body="divided"]
         > [data-part="body"]:not(:first-child)
         > [data-part="section"][data-padded]:first-child {
@@ -353,12 +325,8 @@
         margin-block-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) * -1);
     }
 
-    [data-element="card"][data-orientation="horizontal"][data-body="divided"]
-        > [data-part="body"]
-        > [data-part="section"]:not(:first-child),
-    [data-element="card"][data-orientation="horizontal"][data-body="divided"]
-        > [data-part="body"]:not(:first-child)
-        > [data-part="section"]:first-child,
+    [data-element="card"][data-orientation="horizontal"][data-body="divided"] > [data-part="body"] > [data-part="section"]:not(:first-child),
+    [data-element="card"][data-orientation="horizontal"][data-body="divided"] > [data-part="body"]:not(:first-child) > [data-part="section"]:first-child,
     [data-element="card"][data-orientation="horizontal"][data-body="divided"] > [data-part="footer"]:not(:first-child) {
         border-inline-start: 1px solid var(--fl-card-border, var(--fl-color-border));
     }

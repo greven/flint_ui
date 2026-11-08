@@ -326,35 +326,31 @@
     /* `muted` clears AA on `surface` and on the 3% `surface-muted` step, so
      * light mode blends the 500 shade a little toward 600 instead of sitting
      * on the AA edge. */
-    --fl-color-text-muted: light-dark(
-        color-mix(in oklab, var(--fl-color-neutral-500) 90%, var(--fl-color-neutral-600)),
-        var(--fl-color-neutral-400)
-    );
+    --fl-color-text-muted: light-dark(color-mix(in oklab, var(--fl-color-neutral-500) 90%, var(--fl-color-neutral-600)), var(--fl-color-neutral-400));
     --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
     --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
 
     /* Chrome surfaces. `surface` is the pure anchor: white in light and
      * neutral-950 in dark. Everything else is a tint of it toward the opposite
      * neutral extreme, so the same tint order holds in both schemes:
-     *   background 1.5%  ->  muted 3%  ->  accented 6%
-     * The page is therefore never pure and a card is never the page color.
-     * Bordered controls paint `surface`, so attached-group seams stay single.
-     * Swapping `--fl-color-neutral-*` retints them together. */
+     * background 1 step -> muted 2 steps -> accented 4 steps. */
+    --fl-surface-step: 1.5%;
+
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
     --fl-color-background: color-mix(
         in oklab,
-        var(--fl-color-surface) 98.5%,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) var(--fl-surface-step),
+        var(--fl-color-surface)
     );
     --fl-color-surface-muted: color-mix(
         in oklab,
-        var(--fl-color-surface) 97%,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) calc(var(--fl-surface-step) * 2),
+        var(--fl-color-surface)
     );
     --fl-color-surface-accented: color-mix(
         in oklab,
-        var(--fl-color-surface) 94%,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) calc(var(--fl-surface-step) * 4),
+        var(--fl-color-surface)
     );
 
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));

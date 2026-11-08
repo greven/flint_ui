@@ -80,12 +80,7 @@
     }
 
     /* Bordered variants stay clipped; ghost is borderless. */
-    [data-element="toggle"][data-variant]:is(
-            [data-variant="solid"],
-            [data-variant="outline"],
-            [data-variant="dashed"],
-            [data-variant="subtle"]
-        ) {
+    [data-element="toggle"][data-variant]:is([data-variant="solid"], [data-variant="outline"], [data-variant="dashed"], [data-variant="subtle"]) {
         overflow: hidden;
         overflow: clip;
     }
@@ -239,31 +234,20 @@
     /* Pressed states mirror the button variants. */
     [data-element="toggle"][data-variant="solid"][data-state="on"] {
         background: var(--fl-toggle-color, var(--fl-color-inverted));
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-color, var(--fl-color-inverted)),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-toggle-color-content, var(--fl-color-text-inverted));
     }
 
     [data-element="toggle"][data-variant="subtle"][data-state="on"] {
         background: color-mix(
             in oklab,
-            var(
-                    --fl-toggle-soft,
-                    color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
-                )
+            var(--fl-toggle-soft, color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
                 calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
         );
         border-color: var(
             --fl-toggle-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
@@ -271,11 +255,7 @@
     [data-element="toggle"][data-variant="outline"][data-state="on"] {
         border-color: var(
             --fl-toggle-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
@@ -283,11 +263,7 @@
     [data-element="toggle"][data-variant="dashed"][data-state="on"] {
         border-color: var(
             --fl-toggle-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }

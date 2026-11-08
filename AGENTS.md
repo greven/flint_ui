@@ -141,9 +141,10 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   it for readable content or interactive labels. On the full toned fill, prefer
   `text-toned` over `text-muted`.
 - **Chrome ladders share three levels.** `surface` is the pure anchor: white in
-  light and `neutral-950` in dark. `background` is the page, a 1.5% tint off it
-  toward the opposite neutral extreme; `surface-muted` is the 3% step and
-  `surface-accented` the 6% step. The tint order is the same in both schemes, so
+  light and `neutral-950` in dark. `background` is the page, one tint step off it
+  toward the opposite neutral extreme; `surface-muted` is two steps and
+  `surface-accented` four. `--fl-surface-step` sets one step; its 1.5% default
+  keeps the ladder at 1.5/3/6%. The tint order is the same in both schemes, so
   the page is never pure and a card is never the page color. `muted` is the
   faint step and `accented` the strong step, so `border-muted` / `border` /
   `border-accented` read the same way. Opaque bordered controls paint

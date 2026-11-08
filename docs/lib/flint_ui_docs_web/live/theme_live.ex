@@ -160,12 +160,14 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <code class="font-mono">surface</code>
             is the pure anchor — white in light, <code class="font-mono">neutral-950</code>
             in dark. The page and the other surface steps are tints of it toward
-            the opposite neutral extreme: <code class="font-mono">background</code>
-            is the page (1.5%), <code class="font-mono">surface-muted</code>
-            is a faint panel (3%), and <code class="font-mono">surface-accented</code>
-            is the strong panel (6%). The same tint order holds in both schemes,
-            so the page is never pure and a card is never the page color. Bordered
-            controls paint <code class="font-mono">surface</code>, an opaque fill
+            the opposite neutral extreme. <code class="font-mono">--fl-surface-step</code>
+            is one tint step: <code class="font-mono">background</code>
+            is the page (one step), <code class="font-mono">surface-muted</code>
+            is a faint panel (two steps), and <code class="font-mono">surface-accented</code>
+            is the strong panel (four steps). The default 1.5% keeps the ladder at
+            1.5/3/6%; raise the step to strengthen every surface together. The same
+            tint order holds in both schemes, so the page is never pure and a card
+            is never the page color. Bordered controls paint <code class="font-mono">surface</code>, an opaque fill
             that matches the card, so attached-group seams stay single while the
             neutral borders can stay semi-transparent. Disabled controls dim with
             <code class="font-mono">--fl-disabled-opacity</code>
@@ -477,24 +479,29 @@ defmodule FlintUIDocsWeb.ThemeLive do
   defp snippet(:surfaces) do
     """
     :root {
+      --fl-surface-step: 1.5%;
+
       --fl-color-surface: light-dark(
         white,
         var(--fl-color-neutral-950)
       );
       --fl-color-background: color-mix(
         in oklab,
-        var(--fl-color-surface) 98.5%,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+          var(--fl-surface-step),
+        var(--fl-color-surface)
       );
       --fl-color-surface-muted: color-mix(
         in oklab,
-        var(--fl-color-surface) 97%,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+          calc(var(--fl-surface-step) * 2),
+        var(--fl-color-surface)
       );
       --fl-color-surface-accented: color-mix(
         in oklab,
-        var(--fl-color-surface) 94%,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
+          calc(var(--fl-surface-step) * 4),
+        var(--fl-color-surface)
       );
 
       --fl-disabled-opacity: 0.5;

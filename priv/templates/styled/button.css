@@ -77,25 +77,16 @@
     }
 
     /* Bordered variants stay clipped. */
-    [data-element="button"][data-variant]:is(
-            [data-variant="solid"],
-            [data-variant="outline"],
-            [data-variant="dashed"],
-            [data-variant="subtle"]
-        ) {
+    [data-element="button"][data-variant]:is([data-variant="solid"], [data-variant="outline"], [data-variant="dashed"], [data-variant="subtle"]) {
         overflow: hidden;
         overflow: clip;
     }
 
-    [data-element="button"][data-variant]:not([data-variant="link"]):not([data-disabled]):not(
-            [data-loading]
-        ):hover::after {
+    [data-element="button"][data-variant]:not([data-variant="link"]):not([data-disabled]):not([data-loading]):hover::after {
         opacity: var(--fl-control-hover-opacity);
     }
 
-    [data-element="button"][data-variant]:not([data-variant="link"]):not([data-disabled]):not(
-            [data-loading]
-        ):active::after {
+    [data-element="button"][data-variant]:not([data-variant="link"]):not([data-disabled]):not([data-loading]):active::after {
         opacity: var(--fl-control-active-opacity);
     }
 
@@ -129,8 +120,8 @@
         border-color: rgb(255 255 255 / calc(12% * var(--fl-control-depth, 1)));
     }
 
-    /* Elevation: solid, subtle and outline share the control shadow; override
-     * `--fl-control-shadow` to remove it. */
+    /* Elevation: solid, subtle and outline share the control shadow;
+    * override `--fl-control-shadow` to remove it. */
     [data-element="button"][data-variant="solid"],
     [data-element="button"][data-variant="subtle"] {
         box-shadow: var(--fl-control-shadow, 0 0 #0000);
@@ -241,11 +232,7 @@
     /* Solid: the color fills the button with a darker edge line. */
     [data-element="button"][data-variant="solid"] {
         background: var(--fl-button-color, var(--fl-color-inverted));
-        border-color: color-mix(
-            in oklab,
-            var(--fl-button-color, var(--fl-color-inverted)),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-button-color-content, var(--fl-color-text-inverted));
     }
 
@@ -255,14 +242,8 @@
     [data-element="button"][data-variant="subtle"] {
         background: color-mix(
             in oklab,
-            var(
-                --fl-button-soft,
-                color-mix(
-                    in oklab,
-                    var(--fl-button-color, var(--fl-color-inverted)) 10%,
-                    var(--fl-color-surface)
-                )
-            ) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            var(--fl-button-soft, color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
         );
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
@@ -272,11 +253,7 @@
     [data-element="button"][data-variant="subtle"] {
         border-color: var(
             --fl-button-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
     }
 
@@ -284,13 +261,9 @@
     [data-element="button"][data-variant="outline"] {
         border-color: var(
             --fl-button-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
-        background: transparent;
+        background: var(--fl-color-surface);
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
@@ -306,11 +279,7 @@
         border-style: dashed;
         border-color: var(
             --fl-button-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
         background: transparent;
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
@@ -328,11 +297,7 @@
     }
 
     [data-element="button"][data-variant="link"]:not([data-disabled]):not([data-loading]):hover {
-        color: color-mix(
-            in oklab,
-            var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted))) 75%,
-            transparent
-        );
+        color: color-mix(in oklab, var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted))) 75%, transparent);
         text-decoration-thickness: 2px;
     }
 

@@ -24,13 +24,11 @@
 }
 
 [data-element="collapsible"][data-collapsible][data-animate] [data-part="content"][data-state="open"] {
-    animation: fl-collapsible-expand var(--fl-collapsible-duration, var(--fl-duration-base))
-        var(--fl-collapsible-easing, var(--fl-ease-in-out));
+    animation: fl-collapsible-expand var(--fl-collapsible-duration, var(--fl-duration-base)) var(--fl-collapsible-easing, var(--fl-ease-in-out));
 }
 
 [data-element="collapsible"][data-collapsible][data-animate] [data-part="content"][data-state="closed"] {
-    animation: fl-collapsible-collapse var(--fl-collapsible-duration, var(--fl-duration-base))
-        var(--fl-collapsible-easing, var(--fl-ease-in-out));
+    animation: fl-collapsible-collapse var(--fl-collapsible-duration, var(--fl-duration-base)) var(--fl-collapsible-easing, var(--fl-ease-in-out));
 }
 
 @keyframes fl-collapsible-expand {

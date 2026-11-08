@@ -119,6 +119,9 @@ erl_crash.dump
 # Ignore assets that are produced by build tools.
 /priv/static/
 
+# A consumer-style theme copied by `mix flint.setup`/`flint.theme` if run at the repo root.
+/assets/css/flint.css
+
 # The docs' copy of the assembled FlintUI theme (see FlintUIDocs.Theme).
 # The palette is checked in as a CSS source file.
 /docs/assets/css/flint.css

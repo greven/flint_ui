@@ -20,7 +20,7 @@ defmodule FlintUI.Theme.ContrastTest do
 
   setup_all do
     css = File.read!(FlintUI.Generator.part_path("tokens.css"))
-    %{tokens: parse_tokens(css), scales: parse_scales(css)}
+    %{tokens: parse_tokens(css), scales: parse_scales(css), step: parse_surface_step(css)}
   end
 
   test "every shipped role label clears AA on its fill", %{tokens: tokens} do
@@ -121,7 +121,8 @@ defmodule FlintUI.Theme.ContrastTest do
   end
 
   test "the contrast reference is conservative against the shipped surfaces", %{
-    tokens: tokens
+    tokens: tokens,
+    step: step
   } do
     # Light mode scores dark role text against the pure surface (white). Dark
     # mode scores light role text against the lightest tinted step, so the
@@ -129,8 +130,12 @@ defmodule FlintUI.Theme.ContrastTest do
     assert (Contrast.luminance(Contrast.light_background()) || 0.0) >=
              (Contrast.luminance(eval_token(tokens, "surface", :light)) || 0.0)
 
+    dark_surface = eval_token(tokens, "surface", :dark)
+    dark_contrast = eval_token(tokens, "neutral-50", :dark)
+    accented_dark = Contrast.mix(dark_contrast, dark_surface, step * 4)
+
     assert (Contrast.luminance(Contrast.dark_background()) || 0.0) >=
-             (Contrast.luminance(eval_token(tokens, "surface-accented", :dark)) || 0.0)
+             (Contrast.luminance(accented_dark) || 0.0)
   end
 
   test "absolute tones stay pinned and readable", %{tokens: tokens} do
@@ -160,6 +165,12 @@ defmodule FlintUI.Theme.ContrastTest do
     ~r/--fl-color-([a-z0-9-]+):\s*([^;]+);/
     |> Regex.scan(css, capture: :all_but_first)
     |> Map.new(fn [name, value] -> {name, String.trim(value)} end)
+  end
+
+  defp parse_surface_step(css) do
+    [_, percent] = Regex.run(~r/--fl-surface-step:\s*([\d.]+)%/, css)
+    {step, _} = Float.parse(percent)
+    step / 100
   end
 
   defp parse_scales(css) do

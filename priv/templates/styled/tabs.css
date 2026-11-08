@@ -98,15 +98,11 @@
             box-shadow var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="tabs"][data-tabs][data-orientation="vertical"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab] {
+    [data-element="tabs"][data-tabs][data-orientation="vertical"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         justify-content: flex-start;
     }
 
-    [data-element="tabs"][data-tabs]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
+    [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
         color: var(--fl-color-text);
     }
 
@@ -116,9 +112,7 @@
 
     /* Outlined: only the indicator carries the accent. The label stays on the
      * normal text color, so a colored indicator does not tint it. */
-    [data-element="tabs"][data-variant="outlined"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+    [data-element="tabs"][data-variant="outlined"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab][data-state="active"] {
         color: var(--fl-color-text);
     }
 
@@ -128,10 +122,7 @@
     }
 
     /* Leading icons and loading indicators follow the tab size. */
-    [data-element="tabs"][data-tabs]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] > :is([data-element="icon"], [data-element="loading"]) {
         flex-shrink: 0;
         --fl-icon-size: var(--fl-control-icon-md);
         width: var(--fl-icon-size);
@@ -141,9 +132,7 @@
     /* Outlined: a bottom (or inline-end) indicator on the active tab. It grows
      * in over the base duration and leaves over the fast one, so the two bars
      * hand over instead of cross-fading at the same weight. */
-    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]::after {
+    [data-element="tabs"][data-variant="outlined"][data-orientation="horizontal"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab]::after {
         content: "";
         position: absolute;
         inset-inline: 0;
@@ -167,9 +156,7 @@
             transform var(--fl-duration-base) var(--fl-ease-out);
     }
 
-    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]::after {
+    [data-element="tabs"][data-variant="outlined"][data-orientation="vertical"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab]::after {
         content: "";
         position: absolute;
         inset-block: 0;
@@ -206,9 +193,7 @@
         border-radius: var(--fl-control-radius);
     }
 
-    [data-element="tabs"][data-variant="segmented"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+    [data-element="tabs"][data-variant="segmented"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab][data-state="active"] {
         background: var(--fl-tabs-surface);
         color: var(--fl-tabs-text);
         box-shadow: var(--fl-shadow-xs);
@@ -220,16 +205,12 @@
         border-radius: var(--fl-radius-full);
     }
 
-    [data-element="tabs"][data-variant="minimal"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
+    [data-element="tabs"][data-variant="minimal"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab]:not([data-disabled]):hover {
         background: color-mix(in oklab, var(--fl-color-surface-accented) 60%, transparent);
         color: var(--fl-color-text);
     }
 
-    [data-element="tabs"][data-variant="minimal"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab][data-state="active"] {
+    [data-element="tabs"][data-variant="minimal"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab][data-state="active"] {
         background: var(--fl-color-surface-accented);
         color: var(--fl-tabs-text);
     }
@@ -286,10 +267,7 @@
         line-height: var(--fl-control-line-height-xs);
     }
 
-    [data-element="tabs"][data-size="xs"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="tabs"][data-size="xs"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xs);
     }
 
@@ -301,10 +279,7 @@
         line-height: var(--fl-control-line-height-sm);
     }
 
-    [data-element="tabs"][data-size="sm"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="tabs"][data-size="sm"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-sm);
     }
 
@@ -316,10 +291,7 @@
         line-height: var(--fl-control-line-height-lg);
     }
 
-    [data-element="tabs"][data-size="lg"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="tabs"][data-size="lg"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-lg);
     }
 
@@ -331,10 +303,7 @@
         line-height: var(--fl-control-line-height-xl);
     }
 
-    [data-element="tabs"][data-size="xl"]
-        > [data-part="tablist"]
-        > [data-part="tab"][data-tabs-tab]
-        > :is([data-element="icon"], [data-element="loading"]) {
+    [data-element="tabs"][data-size="xl"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] > :is([data-element="icon"], [data-element="loading"]) {
         --fl-icon-size: var(--fl-control-icon-xl);
     }
 
@@ -351,18 +320,13 @@
         scrollbar-width: none;
     }
 
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"]::-webkit-scrollbar {
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"]::-webkit-scrollbar {
         display: none;
     }
 
     /* The scroll container must not squeeze the tabs to fit. */
-    [data-element="tabs"][data-tabs][data-scrollable][data-orientation="horizontal"]
-        > [data-part="tablist"]
-        > [data-part="tab"],
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"]
-        > [data-part="tab"] {
+    [data-element="tabs"][data-tabs][data-scrollable][data-orientation="horizontal"] > [data-part="tablist"] > [data-part="tab"],
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"] > [data-part="tab"] {
         flex: 0 0 auto;
     }
 
@@ -377,41 +341,24 @@
         bottom: 0;
     }
 
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"][data-fade-start] {
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"][data-fade-start] {
         -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl));
         mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl));
     }
 
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"][data-fade-end] {
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"][data-fade-end] {
         -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
         mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
     }
 
-    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"]
-        > [data-part="tablist"][data-fade-start][data-fade-end] {
-        -webkit-mask-image: linear-gradient(
-            to right,
-            transparent,
-            #000 var(--fl-spacing-xl),
-            #000 calc(100% - var(--fl-spacing-xl)),
-            transparent
-        );
-        mask-image: linear-gradient(
-            to right,
-            transparent,
-            #000 var(--fl-spacing-xl),
-            #000 calc(100% - var(--fl-spacing-xl)),
-            transparent
-        );
+    [data-element="tabs"][data-tabs][data-fadable][data-orientation="horizontal"] > [data-part="tablist"][data-fade-start][data-fade-end] {
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl), #000 calc(100% - var(--fl-spacing-xl)), transparent);
+        mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl), #000 calc(100% - var(--fl-spacing-xl)), transparent);
     }
 
     @media (prefers-reduced-motion: reduce) {
         [data-element="tabs"][data-tabs] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab],
-        [data-element="tabs"][data-variant="outlined"]
-            > [data-part="tablist"]
-            > [data-part="tab"][data-tabs-tab]::after {
+        [data-element="tabs"][data-variant="outlined"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab]::after {
             transition: none;
         }
 

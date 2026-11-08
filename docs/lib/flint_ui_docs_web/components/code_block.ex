@@ -214,7 +214,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
       phx-hook=".CodeHeader"
       class={[
         "relative flex items-center justify-between gap-3 px-3 py-1.5",
-        "bg-neutral-500/5 border-b border-default",
+        "bg-neutral-400/8 dark:bg-neutral-600/8 border-b border-default",
         "group-data-[state=closed]:cursor-pointer group-data-[state=closed]:border-b-0"
       ]}
     >
@@ -346,7 +346,7 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
   defp panel_class(assigns) do
     [
-      "group relative overflow-hidden bg-neutral-50/1",
+      "group relative overflow-hidden bg-neutral-200/5 dark:bg-neutral-500/2",
       assigns.bordered && "border border-default",
       assigns.rounded && "rounded-lg"
     ]

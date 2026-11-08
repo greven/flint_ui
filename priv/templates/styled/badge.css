@@ -4,14 +4,8 @@
      * and never add elevation, depth rims, or press feedback. */
     [data-element="badge"][data-variant] {
         /* A nested control follows the badge's row rather than the control scale. */
-        --_badge-control-size: max(
-            var(--fl-control-icon-xs),
-            calc(var(--_badge-size, var(--fl-badge-height-md)) - 4px)
-        );
-        --_badge-control-inset: max(
-            0px,
-            calc((var(--_badge-size, var(--fl-badge-height-md)) - 2px - var(--_badge-control-size)) / 2)
-        );
+        --_badge-control-size: max(var(--fl-control-icon-xs), calc(var(--_badge-size, var(--fl-badge-height-md)) - 4px));
+        --_badge-control-inset: max(0px, calc((var(--_badge-size, var(--fl-badge-height-md)) - 2px - var(--_badge-control-size)) / 2));
         box-sizing: border-box;
         display: inline-flex;
         align-items: center;
@@ -114,32 +108,17 @@
     [data-element="badge"][data-variant="subtle"] {
         background: color-mix(
             in oklab,
-            var(
-                    --fl-badge-soft,
-                    color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
-                )
-                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            var(--fl-badge-soft, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))) calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
         );
-        border-color: var(
-            --fl-badge-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
-        );
+        border-color: var(--fl-badge-soft-border, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface)));
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
     /* Solid: the color fills the badge. No rim light or shadow. */
     [data-element="badge"][data-variant="solid"] {
         background: var(--fl-badge-color, var(--fl-color-inverted));
-        border-color: color-mix(
-            in oklab,
-            var(--fl-badge-color, var(--fl-color-inverted)),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-badge-color-content, var(--fl-color-text-inverted));
     }
 
@@ -147,11 +126,7 @@
     [data-element="badge"][data-variant="soft"] {
         background: color-mix(
             in oklab,
-            var(
-                    --fl-badge-soft,
-                    color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))
-                )
-                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            var(--fl-badge-soft, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface))) calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
         );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
@@ -160,14 +135,7 @@
     /* Outline: a colored border and label over the surface. */
     [data-element="badge"][data-variant="outline"] {
         background: var(--fl-color-surface);
-        border-color: var(
-            --fl-badge-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
-        );
+        border-color: var(--fl-badge-soft-border, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface)));
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
@@ -175,14 +143,7 @@
     [data-element="badge"][data-variant="dashed"] {
         background: var(--fl-color-surface);
         border-style: dashed;
-        border-color: var(
-            --fl-badge-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
-        );
+        border-color: var(--fl-badge-soft-border, color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface)));
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 

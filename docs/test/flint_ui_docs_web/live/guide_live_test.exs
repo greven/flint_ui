@@ -88,6 +88,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     html = render(view)
     assert html =~ "--fl-color-primary"
     assert html =~ "--fl-color-surface-muted"
+    assert html =~ "--fl-surface-step"
     assert html =~ "--fl-disabled-opacity"
     assert html =~ "data-theme"
     assert html =~ "data-focus"
