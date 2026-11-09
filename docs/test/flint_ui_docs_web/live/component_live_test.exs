@@ -302,7 +302,23 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "icon page renders a FlintUI icon", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/icon")
 
-    assert has_element?(view, "#main-icon [data-element='icon']")
+    assert has_element?(view, "#usage-icon-basic [data-element='icon']")
+  end
+
+  test "the icon playground selects from safelisted icons", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/icon")
+
+    assert has_element?(
+             view,
+             "#usage-icon-basic-controls select[name='name'] option[value='lucide-wifi']"
+           )
+
+    view
+    |> element("#usage-icon-basic-controls")
+    |> render_change(%{"name" => "lucide-wifi"})
+
+    assert has_element?(view, "#usage-icon-basic [data-element='icon'].lucide-wifi")
+    assert has_element?(view, "#usage-icon-basic-code", "lucide-wifi")
   end
 
   test "loading page renders a FlintUI loading indicator", %{conn: conn} do
@@ -375,7 +391,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     {:ok, view, _html} = live(conn, ~p"/components/icon")
 
     selector =
-      "#main-icon-controls input[name='name']" <>
+      "#usage-icon-basic-controls input[name='label']" <>
         "[autocomplete='off'][data-1p-ignore][data-form-type='other'][class*='keeper-ignore']"
 
     assert has_element?(view, selector)
@@ -384,13 +400,13 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "submitting a text control applies it instead of reloading the page", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/icon")
 
-    assert has_element?(view, "#main-icon-controls[phx-submit='preview_change']")
+    assert has_element?(view, "#usage-icon-basic-controls[phx-submit='preview_change']")
 
     view
-    |> element("#main-icon-controls")
-    |> render_submit(%{"name" => "lucide-star"})
+    |> element("#usage-icon-basic-controls")
+    |> render_submit(%{"label" => "Warning"})
 
-    assert has_element?(view, "#main-icon [data-element='icon'].lucide-star")
+    assert has_element?(view, "#usage-icon-basic [data-element='icon'][aria-label='Warning']")
   end
 
   test "the loading playground exposes its controls", %{conn: conn} do

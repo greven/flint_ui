@@ -5,6 +5,8 @@ defmodule FlintUI.Base.Icon do
   The `name` is applied verbatim as a CSS class. FlintUI does not ship icon
   assets; the host application provides the classes, for example a Tailwind
   plugin that exposes `lucide-*` utilities (the docs site does exactly this).
+  Tailwind and other source-scanning pipelines only emit classes that appear
+  literally in the scanned files, so safelist any names you build at runtime.
   Size and color are controlled through `class`:
 
       <.icon name="lucide-house" />

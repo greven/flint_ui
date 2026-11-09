@@ -6,6 +6,22 @@ defmodule FlintUIDocsWeb.Docs.Icon do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
+  # Tailwind's Lucide plugin is JIT: it only emits the CSS for classes it finds
+  # as literal text in a scanned source file. Keep these names as literals so
+  # the playground can offer only icons the docs bundle actually generated.
+  @icons ~w(
+    lucide-house lucide-wifi lucide-mail lucide-bell lucide-search lucide-user
+    lucide-users lucide-settings lucide-heart lucide-star lucide-check lucide-x
+    lucide-plus lucide-minus lucide-arrow-left lucide-arrow-right
+    lucide-chevron-down lucide-circle-alert lucide-circle-check lucide-info
+    lucide-triangle-alert lucide-calendar-days lucide-clock lucide-download
+    lucide-upload lucide-trash lucide-pencil lucide-copy lucide-link lucide-lock
+    lucide-eye lucide-sun lucide-moon lucide-volume-2 lucide-play lucide-pause
+    lucide-refresh-cw lucide-loader-circle lucide-palette lucide-code-xml
+    lucide-image lucide-file lucide-folder lucide-shopping-cart
+    lucide-credit-card lucide-map-pin lucide-phone
+  )
+
   @impl true
   def base_docs, do: :all
 
@@ -18,7 +34,7 @@ defmodule FlintUIDocsWeb.Docs.Icon do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :name, type: :string, default: "lucide-house", label: "Icon (lucide-…)"},
+          %{key: :name, type: :select, values: @icons, default: "lucide-house", label: "Icon"},
           %{key: :label, type: :string, default: "", label: "Label (accessible name)"},
           %{key: :size, type: :select, default: "md", label: "Size"}
         ]
