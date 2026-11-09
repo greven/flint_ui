@@ -12,6 +12,8 @@ defmodule FlintUI do
 
   ## Available Components
 
+  - `avatar`
+  - `avatar_group`
   - `badge`
   - `button`
   - `card`
@@ -35,6 +37,8 @@ defmodule FlintUI do
   require FlintUI.API
 
   @components [
+    {:avatar, []},
+    {:avatar_group, []},
     {:badge, []},
     {:button, []},
     {:card, []},

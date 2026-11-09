@@ -102,6 +102,54 @@ defmodule FlintUI.Styled.ColorTest do
     end
   end
 
+  describe "apply_style/3" do
+    test "role values keep the data hook and omit the style" do
+      assigns =
+        StyledColor.apply_style(
+          %{color: "primary", rest: %{style: "color: red"}, __changed__: %{}},
+          @roles,
+          @vars
+        )
+
+      assert assigns.data_color == "primary"
+      assert assigns.color_style == nil
+      assert assigns.rest == %{style: "color: red"}
+    end
+
+    test "raw values leave rest alone and return the inputs as color_style" do
+      assigns =
+        StyledColor.apply_style(
+          %{color: "#1D72FE", rest: %{style: "object-position: top"}, __changed__: %{}},
+          @roles,
+          @vars
+        )
+
+      assert assigns.data_color == nil
+      assert assigns.rest == %{style: "object-position: top"}
+      assert assigns.color_style =~ "--fl-button-color: #1D72FE"
+      assert assigns.color_style =~ "--fl-button-color-content"
+      assert assigns.color_style =~ "--fl-button-text"
+      assert assigns.__changed__[:color_style]
+    end
+  end
+
+  describe "initials_color/1" do
+    test "is stable for the same name and picks a vendored hue" do
+      first = StyledColor.initials_color("Jane Doe")
+      second = StyledColor.initials_color("Jane Doe")
+
+      assert first == second
+      assert first =~ ~r/^tw:[a-z]+-600$/
+      assert StyledColor.valid?(first)
+    end
+
+    test "blank names stay on the neutral role" do
+      assert StyledColor.initials_color("") == "neutral"
+      assert StyledColor.initials_color("  ") == "neutral"
+      assert StyledColor.initials_color(nil) == "neutral"
+    end
+  end
+
   describe "tailwind palette colors" do
     test "tw: names select the 500 shade by default" do
       assigns =
@@ -181,6 +229,20 @@ defmodule FlintUI.Styled.ColorTest do
       derived = StyledColor.derive("#111827", color)
 
       assert derived.on_text |> elem(0) == "#111827"
+    end
+
+    test "prefer_white keeps white until it falls below 3:1" do
+      {:ok, lime} = Color.parse(Tailwind.shades(:lime)[600])
+
+      assert StyledColor.derive(lime.css, lime, on_fill: :prefer_white).on_fill == Color.white()
+      assert StyledColor.derive(lime.css, lime).on_fill == Color.black()
+    end
+
+    test "prefer_white falls back to black on a pale fill" do
+      {:ok, pale} = Color.parse("#FDE68A")
+      derived = StyledColor.derive(pale.css, pale, on_fill: :prefer_white)
+
+      assert derived.on_fill == Color.black()
     end
 
     test "the single text derivation clears AA on the tinted surface" do

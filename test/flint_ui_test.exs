@@ -28,6 +28,21 @@ defmodule FlintUITest do
     end
   end
 
+  describe "Docs.description/1" do
+    test "returns the first sentence, joining a description wrapped across lines" do
+      assert FlintUI.Docs.description(:avatar) ==
+               "Shows a person or entity as an image, falling back to initials or custom content."
+
+      assert FlintUI.Docs.description(:card) ==
+               "A container that groups related content into an optional header, sections and an optional footer."
+    end
+
+    test "returns a single-line description" do
+      assert FlintUI.Docs.description(:button) ==
+               "Renders a button that performs an action, or a link styled as a button."
+    end
+  end
+
   describe "Docs.doc_sections/1" do
     test "splits the moduledoc into an intro and slugged sections" do
       doc = FlintUI.Docs.doc_sections(:button)

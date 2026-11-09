@@ -119,6 +119,14 @@
     --fl-badge-height-lg: 1.5rem;
     --fl-badge-height-xl: 1.75rem;
 
+    /* Avatar sizes (24/32/40/48/56px). The avatar is its own anatomy, so it
+     * reads this scale rather than the shorter control or badge heights. */
+    --fl-avatar-size-xs: 1.5rem;
+    --fl-avatar-size-sm: 2rem;
+    --fl-avatar-size-md: 2.5rem;
+    --fl-avatar-size-lg: 3rem;
+    --fl-avatar-size-xl: 3.5rem;
+
     /* Unified radius scale. Change `--fl-radius` to retune every component. */
     --fl-radius: 0.25rem;
     --fl-radius-xs: calc(var(--fl-radius) * 0.5);
@@ -334,7 +342,7 @@
      * neutral-950 in dark. Everything else is a tint of it toward the opposite
      * neutral extreme, so the same tint order holds in both schemes:
      * background 1 step -> muted 2 steps -> accented 4 steps. */
-    --fl-surface-step: 2%;
+    --fl-surface-step: 1.5%;
 
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
     --fl-color-background: color-mix(

@@ -295,9 +295,16 @@ defmodule FlintUI.Generator do
           "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
 
       prop.allow_custom ->
-        doc = "#{prop.doc} Semantic roles: #{Enum.join(prop.values, ", ")}."
+        doc =
+          if prop.name == :color do
+            "#{prop.doc} Semantic roles: #{Enum.join(prop.values, ", ")}."
+          else
+            prop.doc
+          end
 
-        "attr(:#{prop.name}, :string, " <>
+        type = prop.type || :string
+
+        "attr(:#{prop.name}, #{inspect(type)}, " <>
           "default: #{inspect(prop.default)}, doc: #{inspect(doc)})"
 
       true ->

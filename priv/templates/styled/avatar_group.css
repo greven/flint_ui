@@ -1,0 +1,76 @@
+@layer components {
+    /* Avatar group. Public inputs: `--fl-avatar-group-overlap`,
+     * `--fl-avatar-group-ring-width`, and `--fl-avatar-group-ring-color`.
+     * Overlap is a fraction of the child avatar's size, so it scales with the
+     * size cascade instead of using a fixed pixel gap. */
+    [data-element="avatar_group"][data-avatar_group] {
+        --fl-avatar-group-overlap: 0.25;
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+    }
+
+    [data-element="avatar_group"][data-avatar_group] > * {
+        flex-shrink: 0;
+    }
+
+    [data-element="avatar_group"][data-avatar_group] > * + * {
+        margin-inline-start: calc(
+            var(--fl-avatar-size, var(--fl-avatar-size-md)) * -1 * var(--fl-avatar-group-overlap)
+        );
+    }
+
+    /* Overlap presets. `none` keeps the avatars separate. */
+    [data-element="avatar_group"][data-overlap="none"] {
+        --fl-avatar-group-overlap: 0;
+    }
+
+    [data-element="avatar_group"][data-overlap="xs"] {
+        --fl-avatar-group-overlap: 0.125;
+    }
+
+    [data-element="avatar_group"][data-overlap="sm"] {
+        --fl-avatar-group-overlap: 0.1875;
+    }
+
+    [data-element="avatar_group"][data-overlap="md"] {
+        --fl-avatar-group-overlap: 0.25;
+    }
+
+    [data-element="avatar_group"][data-overlap="lg"] {
+        --fl-avatar-group-overlap: 0.375;
+    }
+
+    [data-element="avatar_group"][data-overlap="xl"] {
+        --fl-avatar-group-overlap: 0.5;
+    }
+
+    /* Size cascades onto direct avatar children. A child with a numeric size
+     * writes --fl-avatar-size inline, so its explicit input still wins. */
+    [data-element="avatar_group"][data-size="xs"] > [data-element="avatar"] {
+        --fl-avatar-size: var(--fl-avatar-size-xs);
+    }
+
+    [data-element="avatar_group"][data-size="sm"] > [data-element="avatar"] {
+        --fl-avatar-size: var(--fl-avatar-size-sm);
+    }
+
+    [data-element="avatar_group"][data-size="md"] > [data-element="avatar"] {
+        --fl-avatar-size: var(--fl-avatar-size-md);
+    }
+
+    [data-element="avatar_group"][data-size="lg"] > [data-element="avatar"] {
+        --fl-avatar-size: var(--fl-avatar-size-lg);
+    }
+
+    [data-element="avatar_group"][data-size="xl"] > [data-element="avatar"] {
+        --fl-avatar-size: var(--fl-avatar-size-xl);
+    }
+
+    /* The ring follows each avatar's own radius. A later sibling paints over
+     * the earlier avatar, so its ring reads as the separator at the seam. */
+    [data-element="avatar_group"][data-ring] > [data-element="avatar"] {
+        box-shadow: 0 0 0 var(--fl-avatar-group-ring-width, 2px)
+            var(--fl-avatar-group-ring-color, var(--fl-color-surface));
+    }
+}

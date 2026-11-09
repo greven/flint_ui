@@ -30,7 +30,11 @@ defmodule FlintUI.Docs do
 
   @doc """
   Returns a short, single-line description for a component, taken from the first
-  non-empty line of its moduledoc.
+  sentence of its moduledoc.
+
+  The first paragraph is joined into a single line, so a description wrapped
+  across source lines is not cut off. Anything after the first period is
+  dropped.
   """
   def description(component) when is_atom(component) do
     case Code.fetch_docs(component_module(component)) do
@@ -38,10 +42,22 @@ defmodule FlintUI.Docs do
         doc
         |> String.split("\n")
         |> Enum.map(&String.trim/1)
-        |> Enum.find(&(&1 != ""))
+        |> Enum.drop_while(&(&1 == ""))
+        |> Enum.take_while(&(&1 != ""))
+        |> Enum.join(" ")
+        |> first_sentence()
 
       _ ->
         nil
+    end
+  end
+
+  defp first_sentence(""), do: nil
+
+  defp first_sentence(text) do
+    case String.split(text, ".", parts: 2) do
+      [sentence, _rest] -> sentence <> "."
+      [sentence] -> sentence
     end
   end
 

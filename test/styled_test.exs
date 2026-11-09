@@ -7,6 +7,8 @@ defmodule FlintUI.StyledTest do
   test "names/0 covers every component that ships a styled entry" do
     assert Enum.sort(Styled.names()) ==
              Enum.sort([
+               :avatar,
+               :avatar_group,
                :badge,
                :button,
                :card,
@@ -120,7 +122,7 @@ defmodule FlintUI.StyledTest do
   end
 
   test "raw color props declare the public inputs they populate" do
-    for name <- [:badge, :button, :toggle, :tabs, :loading, :loading_text] do
+    for name <- [:avatar, :badge, :button, :toggle, :tabs, :loading, :loading_text] do
       entry = Styled.get(name)
       color = Entry.prop(entry, :color)
 

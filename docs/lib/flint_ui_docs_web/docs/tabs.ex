@@ -37,7 +37,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
   end
 
   @impl true
-  def render_section(%{section: :usage} = assigns) do
+  def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <div class="w-full max-w-md">

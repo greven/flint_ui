@@ -20,6 +20,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
         controls: [
           %{key: :variant, type: :select, values: @variants, default: "ring", label: "Variant"},
           %{key: :color, type: :select, default: "inherit", label: "Color"},
+          %{key: :size, type: :select, default: "md", label: "Size"},
           %{key: :duration, type: :number, default: nil, label: "Duration (ms)"},
           %{key: :weight, type: :number, default: nil, label: "Weight"}
         ]
@@ -34,6 +35,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
       <Components.loading
         variant={variant(props)}
         color={props.color}
+        size={props.size}
         duration={duration(props)}
         weight={weight(props)}
       />
@@ -49,6 +51,7 @@ defmodule FlintUIDocsWeb.Docs.Loading do
       [
         Snippet.attr("variant", variant, "ring"),
         Snippet.attr("color", props.color, "inherit"),
+        Snippet.attr("size", props.size, "md"),
         Snippet.attr("duration", duration(props), default_duration(variant)),
         Snippet.attr("weight", weight(props), default_weight(variant))
       ]

@@ -238,14 +238,14 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "collapsible playground wires the hook and disables the trigger", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible")
 
-    assert has_element?(view, "#main-collapsible [data-element='collapsible']")
-    assert has_element?(view, "#main-collapsible .border-dashed")
+    assert has_element?(view, "#usage-collapsible-basic [data-element='collapsible']")
+    assert has_element?(view, "#usage-collapsible-basic .border-dashed")
 
     view
-    |> element("#main-collapsible-controls")
+    |> element("#usage-collapsible-basic-controls")
     |> render_change(%{"disabled" => "true"})
 
-    assert has_element?(view, "#main-collapsible [data-part='trigger'][disabled]")
+    assert has_element?(view, "#usage-collapsible-basic [data-part='trigger'][disabled]")
   end
 
   test "card page renders the generated card", %{conn: conn} do
@@ -253,22 +253,22 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#main-card [data-element='card'][data-variant='solid'][data-body='seamless'][data-orientation='vertical'][data-spacing='md'][data-outline]"
+             "#usage-card-basic [data-element='card'][data-variant='solid'][data-body='seamless'][data-orientation='vertical'][data-spacing='md'][data-outline]"
            )
 
-    assert has_element?(view, "#main-card [data-part='title']", "Starred repositories")
+    assert has_element?(view, "#usage-card-basic [data-part='title']", "Starred repositories")
   end
 
   test "card body control changes the body treatment", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
 
-    assert has_element?(view, "#main-card [data-element='card'][data-body='seamless']")
+    assert has_element?(view, "#usage-card-basic [data-element='card'][data-body='seamless']")
 
     view
-    |> element("#main-card-controls")
+    |> element("#usage-card-basic-controls")
     |> render_change(%{"body" => "inset"})
 
-    assert has_element?(view, "#main-card [data-element='card'][data-body='inset']")
+    assert has_element?(view, "#usage-card-basic [data-element='card'][data-body='inset']")
   end
 
   test "boolean controls render as true/false selects", %{conn: conn} do
@@ -276,27 +276,27 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#main-card-controls select[name='outline'] option[value='true']"
+             "#usage-card-basic-controls select[name='outline'] option[value='true']"
            )
 
     assert has_element?(
              view,
-             "#main-card-controls select[name='outline'] option[value='false']"
+             "#usage-card-basic-controls select[name='outline'] option[value='false']"
            )
 
-    refute has_element?(view, "#main-card-controls button[phx-value-key]")
+    refute has_element?(view, "#usage-card-basic-controls button[phx-value-key]")
   end
 
   test "card shadow control toggles the default", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
 
-    assert has_element?(view, "#main-card [data-element='card'][data-shadow]")
+    assert has_element?(view, "#usage-card-basic [data-element='card'][data-shadow]")
 
     view
-    |> element("#main-card-controls")
+    |> element("#usage-card-basic-controls")
     |> render_change(%{"shadow" => "false"})
 
-    assert has_element?(view, "#main-card [data-element='card']:not([data-shadow])")
+    assert has_element?(view, "#usage-card-basic [data-element='card']:not([data-shadow])")
   end
 
   test "icon page renders a FlintUI icon", %{conn: conn} do
@@ -324,35 +324,35 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "loading page renders a FlintUI loading indicator", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
 
-    assert has_element?(view, "#main-loading [data-element='loading']")
+    assert has_element?(view, "#usage-loading [data-element='loading']")
   end
 
   test "toggle page renders a FlintUI toggle", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/toggle")
 
-    assert has_element?(view, "#main-toggle [data-element='toggle'][aria-pressed='false']")
+    assert has_element?(view, "#usage-toggle-basic [data-element='toggle'][aria-pressed='false']")
 
     view
-    |> element("#main-toggle-controls")
+    |> element("#usage-toggle-basic-controls")
     |> render_change(%{"pressed" => "true"})
 
-    assert has_element?(view, "#main-toggle [data-element='toggle'][aria-pressed='true']")
+    assert has_element?(view, "#usage-toggle-basic [data-element='toggle'][aria-pressed='true']")
   end
 
   test "tabs playground can disable the whole list", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/tabs")
 
-    assert has_element?(view, "#main-tabs [data-element='tabs']:not([data-disabled])")
-    assert has_element?(view, "#main-tabs [role='tablist'] > [role='tab'][tabindex='0']")
+    assert has_element?(view, "#usage-tabs-basic [data-element='tabs']:not([data-disabled])")
+    assert has_element?(view, "#usage-tabs-basic [role='tablist'] > [role='tab'][tabindex='0']")
 
     view
-    |> element("#main-tabs-controls")
+    |> element("#usage-tabs-basic-controls")
     |> render_change(%{"disabled" => "true"})
 
-    assert has_element?(view, "#main-tabs [data-element='tabs'][data-disabled]")
-    refute has_element?(view, "#main-tabs [role='tab']:not([aria-disabled='true'])")
-    refute has_element?(view, "#main-tabs [role='tablist'] > [role='tab'][tabindex='0']")
-    assert has_element?(view, "#main-tabs-code", "disabled")
+    assert has_element?(view, "#usage-tabs-basic [data-element='tabs'][data-disabled]")
+    refute has_element?(view, "#usage-tabs-basic [role='tab']:not([aria-disabled='true'])")
+    refute has_element?(view, "#usage-tabs-basic [role='tablist'] > [role='tab'][tabindex='0']")
+    assert has_element?(view, "#usage-tabs-basic-code", "disabled")
   end
 
   test "collapsible page documents keyboard interactions on the base tab", %{conn: conn} do
@@ -412,11 +412,11 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the loading playground exposes its controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
 
-    assert has_element?(view, "#main-loading-controls select[name='variant']")
-    assert has_element?(view, "#main-loading-controls select[name='color']")
-    assert has_element?(view, "#main-loading-controls select[name='size']")
-    assert has_element?(view, "#main-loading-controls input[name='duration']")
-    assert has_element?(view, "#main-loading-controls input[name='weight']")
+    assert has_element?(view, "#usage-loading-controls select[name='variant']")
+    assert has_element?(view, "#usage-loading-controls select[name='color']")
+    assert has_element?(view, "#usage-loading-controls select[name='size']")
+    assert has_element?(view, "#usage-loading-controls input[name='duration']")
+    assert has_element?(view, "#usage-loading-controls input[name='weight']")
   end
 
   test "the preview canvas is solid and glues its controls", %{conn: conn} do
@@ -471,15 +471,15 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
   test "select and number controls update the preview", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/loading")
-    assert has_element?(view, "#main-loading [data-element='loading']")
+    assert has_element?(view, "#usage-loading [data-element='loading']")
 
     view
-    |> element("#main-loading-controls")
+    |> element("#usage-loading-controls")
     |> render_change(%{"variant" => "dots-fade"})
 
     assert has_element?(
              view,
-             "#main-loading [data-element='loading'][data-variant='dots-fade']"
+             "#usage-loading [data-element='loading'][data-variant='dots-fade']"
            )
   end
 

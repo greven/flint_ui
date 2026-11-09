@@ -18,6 +18,10 @@ defmodule FlintUI.Styled.Prop do
   renders the prop on that component instead of on its own root. The theme
   contract then checks the nested component's selectors, for example the
   indicator's badge props resolve against `[data-element="badge"]`.
+
+  `type` overrides the generated `attr/3` type. It is mainly for a free-form
+  prop that accepts more than strings, such as a size that also takes a number.
+  Without it a free-form prop is declared as `:string`.
   """
 
   @type t :: %__MODULE__{
@@ -27,7 +31,8 @@ defmodule FlintUI.Styled.Prop do
           doc: String.t() | nil,
           allow_custom: boolean(),
           multi: boolean(),
-          forwarded_to: atom() | nil
+          forwarded_to: atom() | nil,
+          type: atom() | nil
         }
 
   @enforce_keys [:name, :values, :default]
@@ -37,6 +42,7 @@ defmodule FlintUI.Styled.Prop do
     :default,
     :doc,
     :forwarded_to,
+    :type,
     allow_custom: false,
     multi: false
   ]

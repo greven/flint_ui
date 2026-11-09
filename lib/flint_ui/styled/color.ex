@@ -22,6 +22,16 @@ defmodule FlintUI.Styled.Color do
 
   The derived values are inline custom properties, so an explicit `style` on the
   instance wins over them.
+
+  `apply/3` merges a raw value's style into `rest`, which suits a wrapper whose
+  root is the component. `apply_style/3` returns the style as a separate
+  `:color_style` assign instead, for wrappers whose `rest` targets a nested
+  element and whose color inputs belong on the root.
+
+  Pass `on_fill: :prefer_white` to `apply_style/4`, `style/4`, or `derive/3` to
+  keep white labels on a raw fill unless white falls below 3:1. That suits
+  initials-style colors that read as an image rather than body text; the default
+  `:best` always picks the stronger of white and black.
   """
 
   alias FlintUI.Palette
@@ -30,6 +40,13 @@ defmodule FlintUI.Styled.Color do
   @roles ~w(primary secondary success info warning error neutral inherit)
   @absolute ~w(dark light)
   @tailwind_default_shade 500
+  # White is kept for image-like labels until it misses the 3:1 large-text floor.
+  @prefer_white_min_contrast 3.0
+
+  # Saturated hues used for deterministic initials. Neutrals are deliberately
+  # omitted so every name lands on a readable, recognisable fill.
+  @initials_colors ~w(red orange amber lime green emerald teal cyan sky blue indigo violet purple fuchsia pink rose)
+  @initials_shade 600
 
   @doc """
   Whether `value` is a known role, an absolute tone, a `tw:` palette color, or a
@@ -72,6 +89,50 @@ defmodule FlintUI.Styled.Color do
     |> put_assign(:data_color, data_color)
     |> put_assign(:rest, rest)
   end
+
+  @doc false
+  # Like `apply/3`, but leaves `rest` alone and returns the raw color's inputs
+  # as a `:color_style` assign. A wrapper whose root owns the color variables
+  # (while `rest` belongs to a nested image) can place that style on the root.
+  def apply_style(assigns, roles, vars, opts \\ []) do
+    {data_color, color_style} =
+      case resolve(assigns.color, roles) do
+        {:hook, hook} ->
+          {hook, nil}
+
+        {:raw, source, color} ->
+          {nil, style(source, color, vars, opts)}
+
+        :error ->
+          raise ArgumentError, invalid_message(assigns.color, roles)
+      end
+
+    assigns
+    |> put_assign(:data_color, data_color)
+    |> put_assign(:color_style, color_style)
+  end
+
+  @doc false
+  # A stable, per-name color for initials. SHA-256 keeps the mapping stable
+  # across nodes and OTP releases. A blank name stays on the theme's neutral
+  # role so it follows presets instead of picking an arbitrary hue.
+  def initials_color(name) when is_binary(name) do
+    case String.trim(name) do
+      "" ->
+        "neutral"
+
+      name ->
+        index =
+          :crypto.hash(:sha256, name)
+          |> :binary.bin_to_list()
+          |> Enum.sum()
+          |> rem(length(@initials_colors))
+
+        "tw:#{Enum.at(@initials_colors, index)}-#{@initials_shade}"
+    end
+  end
+
+  def initials_color(_name), do: "neutral"
 
   # Resolves a free-form color once, so `valid?/1` and `apply/3` agree on what
   # is accepted. A role or absolute tone is a presence hook; everything else is
@@ -134,8 +195,8 @@ defmodule FlintUI.Styled.Color do
 
   @doc false
   # The inline style for a parsed raw color, keyed by the wrapper's color vars.
-  def style(source, color, vars) do
-    values = derive(source, color)
+  def style(source, color, vars, opts \\ []) do
+    values = derive(source, color, opts)
 
     vars
     |> Enum.map(fn {key, var} ->
@@ -153,14 +214,14 @@ defmodule FlintUI.Styled.Color do
   # The derived values for a raw color. Text values are `{light, dark}` pairs;
   # the label on a fill is a single scheme-independent color. The role text is
   # scored against the tinted surface, the stricter background in both schemes.
-  def derive(source, color) do
+  def derive(source, color, opts \\ []) do
     target = Contrast.aa()
     light = Contrast.light_background()
     dark = Contrast.dark_background()
 
     %{
       fill: source,
-      on_fill: on_fill(color),
+      on_fill: on_fill(color, opts),
       on_text: {
         readable(source, color, tint(color, light), target),
         readable(source, color, tint(color, dark), target)
@@ -168,11 +229,17 @@ defmodule FlintUI.Styled.Color do
     }
   end
 
-  defp on_fill(color) do
+  defp on_fill(color, opts) do
     white = Contrast.ratio(color.css, Color.white()) || 0.0
     black = Contrast.ratio(color.css, Color.black()) || 0.0
 
-    if white >= black, do: Color.white(), else: Color.black()
+    case Keyword.get(opts, :on_fill, :best) do
+      :prefer_white ->
+        if white >= @prefer_white_min_contrast, do: Color.white(), else: Color.black()
+
+      _ ->
+        if white >= black, do: Color.white(), else: Color.black()
+    end
   end
 
   # Keep the requested color when it clears the target. Otherwise mix it toward

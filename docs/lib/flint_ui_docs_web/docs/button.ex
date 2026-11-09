@@ -107,7 +107,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <Components.button>Button</Components.button>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
-    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)} code_only />
+    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)}>
+      <Components.button text="Button" />
+    </.preview>
     """
   end
 

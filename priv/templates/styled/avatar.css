@@ -1,0 +1,187 @@
+@layer components {
+    /* Avatar. Public inputs: `--fl-avatar-size`, `--fl-avatar-color`, and
+     * `--fl-avatar-color-content`. The root owns the size and color so the
+     * image and fallback can swap without losing the inline inputs. */
+    [data-element="avatar"][data-avatar] {
+        --fl-avatar-color: var(--fl-color-inverted);
+        --fl-avatar-color-content: var(--fl-color-text-inverted);
+        --fl-avatar-size: var(--fl-avatar-size-md);
+        --_avatar-radius: 0;
+        box-sizing: border-box;
+        display: inline-flex;
+        position: relative;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--fl-avatar-size);
+        block-size: var(--fl-avatar-size);
+        overflow: hidden;
+        vertical-align: middle;
+        background: var(--fl-color-surface-muted);
+        color: var(--fl-avatar-color-content);
+        font-family: var(--fl-font-sans);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: 1;
+        user-select: none;
+    }
+
+    [data-element="avatar"][data-avatar] > [data-part="image"] {
+        position: absolute;
+        inset: 0;
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+        /* The fallback sits behind the loading image. Hide the browser's alt
+         * text so it does not paint over the initials; the image is unaffected. */
+        color: transparent;
+    }
+
+    /* A hairline on the photo edge, blended into the image. It only draws while
+     * the image is showing, so initials and the fallback stay free of it. */
+    [data-element="avatar"][data-avatar]::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        mix-blend-mode: darken;
+        pointer-events: none;
+    }
+
+    [data-element="avatar"][data-avatar]:is([data-status="loading"], [data-status="loaded"])::after {
+        box-shadow: inset 0 0 0 1px var(--fl-color-border);
+    }
+
+    [data-element="avatar"][data-avatar] > [data-part="fallback"] {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        inline-size: 100%;
+        block-size: 100%;
+        background: var(--fl-avatar-color);
+        color: var(--fl-avatar-color-content);
+        font-size: calc(var(--fl-avatar-size) * 0.4);
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+    }
+
+    /* The component toggles `hidden` from JS. Keep it authoritative over the
+     * author `display` values above. */
+    [data-element="avatar"][data-avatar] > [data-part="image"][hidden],
+    [data-element="avatar"][data-avatar] > [data-part="fallback"][hidden] {
+        display: none;
+    }
+
+    [data-element="avatar"][data-avatar] > [data-part="fallback"] > [data-element="icon"] {
+        flex-shrink: 0;
+        --fl-icon-size: calc(var(--fl-avatar-size) * 0.55);
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+    }
+
+    /* Sizes use the avatar scale. A numeric size writes --fl-avatar-size
+     * inline instead and therefore wins over these rules. */
+    [data-element="avatar"][data-size="xs"] {
+        --fl-avatar-size: var(--fl-avatar-size-xs);
+    }
+
+    [data-element="avatar"][data-size="sm"] {
+        --fl-avatar-size: var(--fl-avatar-size-sm);
+    }
+
+    [data-element="avatar"][data-size="md"] {
+        --fl-avatar-size: var(--fl-avatar-size-md);
+    }
+
+    [data-element="avatar"][data-size="lg"] {
+        --fl-avatar-size: var(--fl-avatar-size-lg);
+    }
+
+    [data-element="avatar"][data-size="xl"] {
+        --fl-avatar-size: var(--fl-avatar-size-xl);
+    }
+
+    /* Shape and radius are split: circle ignores radius, square reads it.
+     * Keeping the radius selectors separate also keeps them discoverable to
+     * the theme contract. */
+    [data-element="avatar"][data-shape="circle"] {
+        border-radius: var(--fl-radius-full);
+    }
+
+    [data-element="avatar"][data-radius="none"] {
+        --_avatar-radius: 0;
+    }
+
+    [data-element="avatar"][data-radius="xs"] {
+        --_avatar-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="avatar"][data-radius="sm"] {
+        --_avatar-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="avatar"][data-radius="md"] {
+        --_avatar-radius: var(--fl-radius-md);
+    }
+
+    [data-element="avatar"][data-radius="lg"] {
+        --_avatar-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="avatar"][data-radius="xl"] {
+        --_avatar-radius: var(--fl-radius-xl);
+    }
+
+    [data-element="avatar"][data-shape="square"] {
+        border-radius: var(--_avatar-radius);
+    }
+
+    /* Each color sets the public inputs. Raw and initials colors override them
+     * with inline custom properties on the root. */
+    [data-element="avatar"][data-color="primary"] {
+        --fl-avatar-color: var(--fl-color-primary);
+        --fl-avatar-color-content: var(--fl-color-primary-content);
+    }
+
+    [data-element="avatar"][data-color="success"] {
+        --fl-avatar-color: var(--fl-color-success);
+        --fl-avatar-color-content: var(--fl-color-success-content);
+    }
+
+    [data-element="avatar"][data-color="info"] {
+        --fl-avatar-color: var(--fl-color-info);
+        --fl-avatar-color-content: var(--fl-color-info-content);
+    }
+
+    [data-element="avatar"][data-color="warning"] {
+        --fl-avatar-color: var(--fl-color-warning);
+        --fl-avatar-color-content: var(--fl-color-warning-content);
+    }
+
+    [data-element="avatar"][data-color="error"] {
+        --fl-avatar-color: var(--fl-color-error);
+        --fl-avatar-color-content: var(--fl-color-error-content);
+    }
+
+    [data-element="avatar"][data-color="secondary"] {
+        --fl-avatar-color: var(--fl-color-secondary);
+        --fl-avatar-color-content: var(--fl-color-secondary-content);
+    }
+
+    [data-element="avatar"][data-color="neutral"] {
+        --fl-avatar-color: var(--fl-color-inverted);
+        --fl-avatar-color-content: var(--fl-color-text-inverted);
+    }
+
+    [data-element="avatar"][data-color="dark"] {
+        --fl-avatar-color: var(--fl-color-dark);
+        --fl-avatar-color-content: var(--fl-color-dark-content);
+    }
+
+    [data-element="avatar"][data-color="light"] {
+        --fl-avatar-color: var(--fl-color-light);
+        --fl-avatar-color-content: var(--fl-color-light-content);
+    }
+}
