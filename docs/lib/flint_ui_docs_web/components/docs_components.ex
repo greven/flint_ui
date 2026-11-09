@@ -356,12 +356,14 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def parts_tables(assigns) do
     ~H"""
     <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
-      <%!-- <p class="text-xs font-semibold tracking-wider text-muted uppercase">{part}</p> --%>
-      <Components.badge variant="subtle" color="dark" size="xl" class="capitalize">
+      <Components.badge
+        class="capitalize font-mono text-neutral-950 bg-blue-200/60 dark:bg-blue-200"
+        variant="soft"
+        size="xl"
+      >
         {part}
       </Components.badge>
 
-      <Components.button variant="subtle" color="dark" size="xl" class="capitalize">{part}</Components.button>
       <div class="mt-2 overflow-x-auto">
         <table class="w-full min-w-xl text-left text-sm">
           <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">

@@ -144,9 +144,9 @@
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
-    /* Outline: a full-strength role edge and label over the surface. */
+    /* Outline: a full-strength role edge and label with no background. */
     [data-element="badge"][data-variant="outline"] {
-        background: var(--fl-color-surface);
+        background: transparent;
         border-color: var(--fl-badge-color, var(--fl-color-inverted));
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
