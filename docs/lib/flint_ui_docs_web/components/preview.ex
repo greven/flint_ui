@@ -145,12 +145,14 @@ defmodule FlintUIDocsWeb.Preview do
       class={@class}
       data-preview
       data-preview-id={@preview_id}
-      phx-hook={if @show_canvas?, do: ".PreviewResize"}
     >
       <div class="rounded-lg shadow-lg/3">
         <div
           :if={@show_canvas?}
+          id={"#{@preview_id}-canvas"}
           data-preview-canvas
+          data-preview-id={@preview_id}
+          phx-hook=".PreviewResize"
           class={[
             "group relative grid min-h-24 place-items-center overflow-auto border border-solid border-default bg-transparent p-6",
             if(@below?, do: "rounded-t-lg", else: "rounded-lg"),
@@ -310,13 +312,13 @@ defmodule FlintUIDocsWeb.Preview do
       <script :type={Phoenix.LiveView.ColocatedHook} name=".PreviewResize">
         export default {
           mounted() {
-            this.canvas = this.el.querySelector("[data-preview-canvas]")
-            this.handle = this.el.querySelector("[data-preview-resize-handle]")
-            this.resetButton = this.el.querySelector("[data-preview-resize-reset]")
-            this.badge = this.el.querySelector("[data-preview-size]")
-            if (!this.canvas || !this.handle) return
+            this.canvas = this.el
+            this.handle = this.canvas.querySelector("[data-preview-resize-handle]")
+            this.resetButton = this.canvas.querySelector("[data-preview-resize-reset]")
+            this.badge = this.canvas.querySelector("[data-preview-size]")
+            if (!this.handle) return
 
-            this.key = "flint-preview-size:" + (this.el.dataset.previewId || this.el.id)
+            this.key = "flint-preview-size:" + (this.canvas.dataset.previewId || this.canvas.id)
             this.size = this.read()
             this.apply()
 
@@ -369,11 +371,11 @@ defmodule FlintUIDocsWeb.Preview do
           },
 
           updated() {
-            this.canvas = this.el.querySelector("[data-preview-canvas]")
-            this.handle = this.el.querySelector("[data-preview-resize-handle]")
-            this.resetButton = this.el.querySelector("[data-preview-resize-reset]")
-            this.badge = this.el.querySelector("[data-preview-size]")
-            if (!this.canvas || !this.handle) return
+            this.canvas = this.el
+            this.handle = this.canvas.querySelector("[data-preview-resize-handle]")
+            this.resetButton = this.canvas.querySelector("[data-preview-resize-reset]")
+            this.badge = this.canvas.querySelector("[data-preview-size]")
+            if (!this.handle) return
 
             this.bindHandle()
             this.apply()
@@ -458,7 +460,8 @@ defmodule FlintUIDocsWeb.Preview do
           },
 
           clampWidth(width) {
-            return Math.max(240, Math.min(width, this.el.clientWidth || width))
+            const available = this.canvas.parentElement?.clientWidth || this.canvas.clientWidth || width
+            return Math.max(240, Math.min(width, available))
           },
 
           clampHeight(height) {

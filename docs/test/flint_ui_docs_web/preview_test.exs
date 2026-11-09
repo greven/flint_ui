@@ -36,6 +36,13 @@ defmodule FlintUIDocsWeb.PreviewTest do
 
     assert count(document, "[data-preview-canvas]") == 1
     assert count(document, "[data-preview-canvas] [data-demo]") == 1
+
+    assert count(
+             document,
+             "[data-preview-canvas][phx-hook='FlintUIDocsWeb.Preview.PreviewResize']"
+           ) ==
+             1
+
     assert count(document, "[data-preview-code]") == 1
   end
 
@@ -53,7 +60,8 @@ defmodule FlintUIDocsWeb.PreviewTest do
     assert count(document, "[data-code-header]") == 1
     assert count(document, "code#test-preview-code") == 1
     assert count(document, "button[aria-label='Copy code']") == 1
-    assert count(document, "[phx-hook='.PreviewResize']") == 0
+    assert count(document, "[phx-hook='FlintUIDocsWeb.Preview.PreviewResize']") == 0
+    assert count(document, "[data-preview-resize-handle]") == 0
   end
 
   test "code-only keeps code flavors and the source toggle" do
