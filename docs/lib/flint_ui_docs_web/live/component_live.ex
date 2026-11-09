@@ -165,7 +165,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 previews={@previews}
               />
 
-              <DocsComponents.section title="Public CSS variables" id="css-variables">
+              <DocsComponents.section title="Public CSS Variables" id="css-variables">
                 <p :if={@style_vars == []} class="mt-2 text-sm text-muted">
                   This component has no public CSS variables. Its appearance is
                   controlled by its props and the surrounding theme.
@@ -177,7 +177,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 />
               </DocsComponents.section>
 
-              <DocsComponents.section title="Selectors and state hooks" id="selectors">
+              <DocsComponents.section title="Selectors and State Hooks" id="selectors">
                 <p class="mt-2 text-sm text-toned">
                   The styled theme targets the component through these hooks. The headless
                   base sets the same <code class="font-mono">data-*</code>
@@ -186,7 +186,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 <DocsComponents.selectors_table selectors={@css_selectors} />
               </DocsComponents.section>
 
-              <DocsComponents.section title="Theme tokens" id="theme">
+              <DocsComponents.section title="Theme Tokens" id="theme">
                 <p class="mt-2 text-sm text-toned">
                   This component reads these token namespaces:
                 </p>
@@ -322,14 +322,18 @@ defmodule FlintUIDocsWeb.ComponentLive do
       <DocsComponents.events_table :if={@events != []} events={@events} />
     </DocsComponents.subsection>
 
-    <DocsComponents.subsection title="Data attributes" id="data-attributes">
+    <DocsComponents.subsection title="Data Attributes" id="data-attributes">
       <p :if={@parts == []} class="mt-2 text-sm text-muted">
         No data attributes documented.
       </p>
-      <DocsComponents.parts_tables :if={@parts != []} parts={@parts} />
+      <DocsComponents.parts_tables
+        :if={@parts != []}
+        component_name={component_name(@active)}
+        parts={@parts}
+      />
     </DocsComponents.subsection>
 
-    <DocsComponents.subsection title="CSS variables" id="css-variables">
+    <DocsComponents.subsection title="CSS Variables" id="css-variables">
       <p :if={@css_vars == []} class="mt-2 text-sm text-muted">
         No runtime CSS variables documented.
       </p>
@@ -572,5 +576,12 @@ defmodule FlintUIDocsWeb.ComponentLive do
       %{selector: root, description: "Targets the component root."}
       | prop_selectors ++ state_selectors ++ part_selectors
     ]
+  end
+
+  defp component_name(name) do
+    name
+    |> FlintUI.API.component_module()
+    |> Module.split()
+    |> List.last()
   end
 end

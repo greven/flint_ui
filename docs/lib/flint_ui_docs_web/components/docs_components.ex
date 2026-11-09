@@ -352,16 +352,19 @@ defmodule FlintUIDocsWeb.DocsComponents do
   @doc false
 
   attr :parts, :list, required: true
+  attr :component_name, :string, required: true
 
   def parts_tables(assigns) do
     ~H"""
-    <div :for={{part, part_attrs} <- @parts} class="mt-6 first:mt-4">
+    <div :for={{part, part_attrs} <- @parts} class="mt-8 first:mt-4">
       <Components.badge
-        class="capitalize font-mono text-neutral-950 bg-blue-200/60 dark:bg-blue-200"
+        class="capitalize font-mono bg-blue-200/60 dark:bg-blue-200"
         variant="soft"
         size="xl"
       >
-        {part}
+        <span class="font-light text-neutral-700">
+          {@component_name}.<span class="font-medium text-neutral-950">{part}</span>
+        </span>
       </Components.badge>
 
       <div class="mt-2 overflow-x-auto">
@@ -636,9 +639,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
       color="error"
       radius="sm"
       size="sm"
-      uppercase
     >
-      Required
+      required
     </Components.badge>
     """
   end
@@ -657,7 +659,6 @@ defmodule FlintUIDocsWeb.DocsComponents do
       color={@color}
       radius="sm"
       size="sm"
-      uppercase
     >
       {@source}
     </Components.badge>
