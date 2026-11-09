@@ -18,9 +18,16 @@ defmodule FlintUI.Styled.Button do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "soft", "subtle", "outline", "dashed", "ghost", "link"],
-          default: "outline",
+          values: ["solid", "soft", "subtle", "surface", "outline", "ghost", "link"],
+          default: "surface",
           doc: "The visual emphasis of the button."
+        ),
+        Prop.new(
+          name: :dashed,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether the button's border is dashed. Composes with any variant; variants without a visible border are unaffected."
         ),
         Prop.new(
           name: :color,
@@ -75,7 +82,7 @@ defmodule FlintUI.Styled.Button do
           values: [true, false],
           default: true,
           doc:
-            "Whether solid and outline buttons show their highlight/inner line. Shadows are always on for solid, subtle, and outline; remove them with `--fl-control-shadow`."
+            "Whether solid and surface buttons show their highlight/inner line. Shadows are always on for solid, subtle, and surface; remove them with `--fl-control-shadow`."
         ),
         Prop.new(
           name: :inset,
@@ -106,7 +113,7 @@ defmodule FlintUI.Styled.Button do
         Var.new(
           name: "--fl-button-color",
           default: "var(--fl-color-inverted)",
-          doc: "The solid fill and the source for tinted surfaces and focus."
+          doc: "The solid fill, the outline border, and the source for tinted surfaces and focus."
         ),
         Var.new(
           name: "--fl-button-color-content",
@@ -130,7 +137,7 @@ defmodule FlintUI.Styled.Button do
           default:
             "color-mix(in oklab, var(--fl-button-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
           doc:
-            "The matching border for subtle, outline, and dashed buttons; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
+            "The matching border for subtle and surface buttons; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
         )
       ],
       color_vars: [

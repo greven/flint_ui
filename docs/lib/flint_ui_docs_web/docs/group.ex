@@ -35,8 +35,8 @@ defmodule FlintUIDocsWeb.Docs.Group do
         variant={props.variant}
         size={props.size}
       >
-        <Components.button variant="outline">Copy</Components.button>
-        <Components.button variant="outline">Paste</Components.button>
+        <Components.button variant="surface">Copy</Components.button>
+        <Components.button variant="surface">Paste</Components.button>
       </Components.group>
     </.preview>
     """
@@ -51,8 +51,8 @@ defmodule FlintUIDocsWeb.Docs.Group do
         Snippet.attr("size", props.size, "md")
       ],
       """
-      <.button variant="outline">Copy</.button>
-      <.button variant="outline">Paste</.button>
+      <.button variant="surface">Copy</.button>
+      <.button variant="surface">Paste</.button>
       """
       |> String.trim()
     )

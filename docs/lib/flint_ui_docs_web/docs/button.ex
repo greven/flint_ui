@@ -19,7 +19,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         id: :variant,
         title: "Variant",
         controls: [
-          %{key: :variant, type: :select, default: "outline", label: "Variant"},
+          %{key: :variant, type: :select, default: "surface", label: "Variant"},
           %{key: :radius, type: :select, default: "md", label: "Radius"},
           %{key: :pill, type: :boolean, default: false, label: "Pill"}
         ]
@@ -113,7 +113,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :variant} = assigns) do
     ~H"""
-    <.prose content="Use the `variant` attr to change the visual style of the button. Default variant is outline." />
+    <.prose content="Use the `variant` attr to change the visual style of the button. Default variant is surface.
+      Pass `dashed` to make the border dashed on any variant that has one; combine it with `outline` for an outlined dashed button." />
     <.preview :let={props} {assigns} code={&code_variant/1}>
       <Components.button variant={props.variant} radius={props.radius} pill={props.pill}>Button</Components.button>
     </.preview>
@@ -135,7 +136,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <div class="grid grid-cols-8 items-center gap-x-3 gap-y-4">
           <div></div>
           <span
-            :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+            :for={variant <- ~w(solid soft subtle surface outline ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -146,7 +147,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+              :for={variant <- ~w(solid soft subtle surface outline ghost link)}
               variant={variant}
               color={color}
             >
@@ -164,7 +165,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <div class="grid grid-cols-8 items-center gap-x-3 gap-y-4">
           <div></div>
           <span
-            :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+            :for={variant <- ~w(solid soft subtle surface outline ghost link)}
             class="text-center text-xs font-medium text-muted"
           >
             {variant}
@@ -175,7 +176,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
           >
             <span class="text-xs font-medium text-muted">{color}</span>
             <Components.button
-              :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+              :for={variant <- ~w(solid soft subtle surface outline ghost link)}
               variant={variant}
               color={color}
             >
@@ -184,6 +185,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
           </div>
         </div>
       </div>
+    </.preview>
+
+    <.prose content="If you want the border of the button to be dashed, use the boolean attr `dashed`." />
+
+    <.preview
+      id={"#{@id}-dashed"}
+      code={~S(<.button variant="outline" color="info" dashed>Dashing</.button>)}
+    >
+      <Components.button variant="outline" color="info" dashed>Dashing</Components.button>
     </.preview>
     """
   end
@@ -233,15 +243,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
       and inline padding is dropped so the icon fills it. The button still needs an accessible name,
       so pass `aria-label` or `aria-labelledby` (the icon is not a label)." />
 
-    <.preview id={@id}>
+    <.preview id={@id} code={&code_square/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button square variant="ghost" aria-label="More options">
           <Components.icon name="lucide-ellipsis" />
         </Components.button>
-        <Components.button square variant="dashed" aria-label="Add item">
+        <Components.button square variant="surface" depth={false} dashed pill aria-label="Add item">
           <Components.icon name="lucide-plus" />
         </Components.button>
-        <Components.button square variant="outline" aria-label="Edit">
+        <Components.button square variant="surface" aria-label="Edit">
           <Components.icon name="lucide-pencil" />
         </Components.button>
         <Components.button square variant="solid" aria-label="Delete">
@@ -273,7 +283,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       `between` pushes the leading and trailing content to the edges, which is useful for triggers and split actions." />
     <.preview :let={props} {assigns} code={&code_justify/1} collapsed>
       <div class="w-full max-w-lg">
-        <Components.button variant="outline" wide justify={props.justify}>
+        <Components.button variant="surface" wide justify={props.justify}>
           <:leading>
             <Components.icon name="lucide-folder" />
           </:leading>
@@ -296,8 +306,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <div class="flex flex-wrap items-center gap-3">
         <Components.button variant="solid" color="info">Raised</Components.button>
         <Components.button variant="solid" color="info" depth={false}>Flat</Components.button>
-        <Components.button variant="outline">Raised</Components.button>
-        <Components.button variant="outline" depth={false}>Flat</Components.button>
+        <Components.button variant="surface">Raised</Components.button>
+        <Components.button variant="surface" depth={false}>Flat</Components.button>
       </div>
     </.preview>
     """
@@ -368,7 +378,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview id={@id} code={&code_disabled/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button
-          :for={variant <- ~w(solid soft subtle outline dashed ghost link)}
+          :for={variant <- ~w(solid soft subtle surface outline ghost link)}
           class="capitalize"
           variant={variant}
           disabled
@@ -693,7 +703,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     Snippet.tag(
       ".button",
       [
-        Snippet.attr("variant", props.variant, "outline"),
+        Snippet.attr("variant", props.variant, "surface"),
         Snippet.attr("radius", props.radius, "md"),
         Snippet.flag("pill", props.pill)
       ],
@@ -729,8 +739,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
     <.button variant="solid" color="info">Raised</.button>
     <.button variant="solid" color="info" depth={false}>Flat</.button>
-    <.button variant="outline">Raised</.button>
-    <.button variant="outline" depth={false}>Flat</.button>
+    <.button variant="surface">Raised</.button>
+    <.button variant="surface" depth={false}>Flat</.button>
     """
   end
 
@@ -769,6 +779,26 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button variant="ghost" aria-label="Close" icon="lucide-x" square />
     """
     |> String.trim()
+  end
+
+  defp code_square(_) do
+    """
+    <.button square variant="ghost" aria-label="More options">
+      <.icon name="lucide-ellipsis" />
+    </.button>
+    <.button square variant="surface" depth={false} dashed pill aria-label="Add item">
+      <.icon name="lucide-plus" />
+    </.button>
+    <.button square variant="surface" aria-label="Edit">
+      <.icon name="lucide-pencil" />
+    </.button>
+    <.button square variant="solid" aria-label="Delete">
+      <.icon name="lucide-trash" />
+    </.button>
+    <.button square variant="solid" color="info" aria-label="Download">
+      <.icon name="lucide-download" />
+    </.button>
+    """
   end
 
   defp code_loading(_) do

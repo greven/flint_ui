@@ -151,12 +151,20 @@
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
     }
 
-    /* Dashed: outline with a dashed role edge. */
-    [data-element="badge"][data-variant="dashed"] {
+    /* Surface: a soft role edge over the surface fill. */
+    [data-element="badge"][data-variant="surface"] {
         background: var(--fl-color-surface);
-        border-style: dashed;
-        border-color: var(--fl-badge-color, var(--fl-color-inverted));
+        border-color: var(
+            --fl-badge-soft-border,
+            color-mix(in oklab, var(--fl-badge-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
+        );
         color: var(--fl-badge-text, var(--fl-badge-color, var(--fl-color-inverted)));
+    }
+
+    /* Dashed: an orthogonal modifier that dashes any visible border.
+     * Variants without a border are unaffected. */
+    [data-element="badge"][data-dashed] {
+        border-style: dashed;
     }
 
     /* Dot: an outline-style status badge. */

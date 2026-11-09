@@ -14,10 +14,18 @@ defmodule FlintUI.Styled.Indicator do
       props: [
         Prop.new(
           name: :variant,
-          values: ~w(solid soft subtle outline dashed ghost),
+          values: ~w(solid soft subtle surface outline ghost),
           default: "solid",
           forwarded_to: :badge,
           doc: "The visual emphasis of the nested badge."
+        ),
+        Prop.new(
+          name: :dashed,
+          values: [true, false],
+          default: false,
+          forwarded_to: :badge,
+          doc:
+            "Whether the nested badge's border is dashed. Composes with any variant; variants without a visible border are unaffected."
         ),
         Prop.new(
           name: :color,

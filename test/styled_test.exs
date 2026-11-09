@@ -52,8 +52,8 @@ defmodule FlintUI.StyledTest do
     entry = Styled.get(:button)
 
     variant = Entry.prop(entry, :variant)
-    assert variant.values == ["solid", "soft", "subtle", "outline", "dashed", "ghost", "link"]
-    assert variant.default == "outline"
+    assert variant.values == ["solid", "soft", "subtle", "surface", "outline", "ghost", "link"]
+    assert variant.default == "surface"
     assert variant.default in variant.values
 
     color = Entry.prop(entry, :color)
@@ -144,6 +144,7 @@ defmodule FlintUI.StyledTest do
 
     assert Entry.hooks(entry) == %{
              variant: "data-variant",
+             dashed: "data-dashed",
              color: "data-color",
              size: "data-size",
              radius: "data-radius",

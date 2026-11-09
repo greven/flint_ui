@@ -33,7 +33,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
             href={link.href}
             target="_blank"
             rel="noopener"
-            variant="outline"
+            variant="surface"
             size="sm"
             icon={link[:icon]}
           >
@@ -585,7 +585,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp code_value_class do
-    "rounded bg-accented px-1.5 py-1 font-semibold font-mono text-xs text-default"
+    "rounded bg-accented px-1.5 py-1 font-mono text-xs text-default"
   end
 
   defp default_label(value), do: inspect(value)

@@ -77,7 +77,7 @@
     }
 
     /* Bordered variants stay clipped. */
-    [data-element="button"][data-variant]:is([data-variant="solid"], [data-variant="outline"], [data-variant="dashed"], [data-variant="subtle"]) {
+    [data-element="button"][data-variant]:is([data-variant="solid"], [data-variant="surface"], [data-variant="outline"], [data-variant="subtle"]) {
         overflow: hidden;
         overflow: clip;
     }
@@ -120,14 +120,14 @@
         border-color: rgb(255 255 255 / calc(12% * var(--fl-control-depth, 1)));
     }
 
-    /* Elevation: solid, subtle and outline share the control shadow;
+    /* Elevation: solid, subtle and surface share the control shadow;
     * override `--fl-control-shadow` to remove it. */
     [data-element="button"][data-variant="solid"],
     [data-element="button"][data-variant="subtle"] {
         box-shadow: var(--fl-control-shadow, 0 0 #0000);
     }
 
-    [data-element="button"][data-variant="outline"] {
+    [data-element="button"][data-variant="surface"] {
         box-shadow:
             inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
             var(--fl-control-shadow, 0 0 #0000);
@@ -257,8 +257,8 @@
         );
     }
 
-    /* Outline: a colored border and label over the surface. */
-    [data-element="button"][data-variant="outline"] {
+    /* Surface: a colored border and label over the surface fill. */
+    [data-element="button"][data-variant="surface"] {
         border-color: var(
             --fl-button-soft-border,
             color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
@@ -274,15 +274,17 @@
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
     }
 
-    /* Dashed: outline with a dashed border on the surface. */
-    [data-element="button"][data-variant="dashed"] {
-        border-style: dashed;
-        border-color: var(
-            --fl-button-soft-border,
-            color-mix(in oklab, var(--fl-button-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
-        );
+    /* Outline: a full-strength role border and label with no fill. */
+    [data-element="button"][data-variant="outline"] {
+        border-color: var(--fl-button-color, var(--fl-color-inverted));
         background: transparent;
         color: var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted)));
+    }
+
+    /* Dashed: an orthogonal modifier that dashes any visible border.
+     * Variants without a border are unaffected. */
+    [data-element="button"][data-dashed] {
+        border-style: dashed;
     }
 
     [data-element="button"][data-variant="link"] {

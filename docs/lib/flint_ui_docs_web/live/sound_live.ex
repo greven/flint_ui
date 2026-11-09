@@ -189,7 +189,7 @@ defmodule FlintUIDocsWeb.SoundLive do
               :for={theme <- @themes}
               data-sound-theme-option={theme}
               pressed={theme == "default"}
-              variant="outline"
+              variant="surface"
               size="xs"
               pill
               on_click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
@@ -240,7 +240,7 @@ defmodule FlintUIDocsWeb.SoundLive do
             </p>
             <div class="mt-3 flex flex-wrap gap-2">
               <Components.button
-                variant="outline"
+                variant="surface"
                 data-sound-press="press"
                 data-sound-release="release"
                 data-sound="tap"
@@ -298,7 +298,7 @@ defmodule FlintUIDocsWeb.SoundLive do
                 the DOM, so any toast library can opt in with an attribute.
               </p>
               <div class="mt-3 flex flex-wrap gap-2">
-                <Components.button variant="outline" phx-click="notify" data-sound="tap">
+                <Components.button variant="surface" phx-click="notify" data-sound="tap">
                   Notify
                 </Components.button>
                 <Components.button
@@ -374,7 +374,7 @@ defmodule FlintUIDocsWeb.SoundLive do
             type="button"
             data-sound="tap"
             data-sound-dial-demo
-            variant="outline"
+            variant="surface"
             class="mt-4"
           >
             Play this cue

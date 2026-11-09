@@ -24,8 +24,9 @@ defmodule FlintUI.GeneratorTest do
     source = Generator.component_source(:button)
 
     assert source =~ "attr(:variant, :string"
-    assert source =~ "values: ~w(solid soft subtle outline dashed ghost link)"
+    assert source =~ "values: ~w(solid soft subtle surface outline ghost link)"
     assert source =~ "data-variant={@variant}"
+    assert source =~ "data-dashed={@dashed}"
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "data-radius={@radius}"
@@ -49,8 +50,9 @@ defmodule FlintUI.GeneratorTest do
   test "toggle maps its variant, size, radius, and depth props" do
     source = Generator.component_source(:toggle)
 
-    assert source =~ "values: ~w(solid subtle outline dashed ghost)"
+    assert source =~ "values: ~w(solid subtle surface outline ghost)"
     assert source =~ "data-variant={@variant}"
+    assert source =~ "data-dashed={@dashed}"
     assert source =~ "data-color={@data_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "data-radius={@radius}"
@@ -191,8 +193,9 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "def badge(assigns) do"
     assert source =~ "data-badge"
     assert source =~ "attr(:variant, :string"
-    assert source =~ "values: ~w(solid soft subtle outline dashed ghost dot)"
+    assert source =~ "values: ~w(solid soft subtle surface outline ghost dot)"
     assert source =~ "default: \"subtle\""
+    assert source =~ "data-dashed={@dashed}"
     assert source =~ "data-radius={@radius}"
     assert source =~ "data-pill={@pill}"
     assert source =~ "data-uppercase={@uppercase}"

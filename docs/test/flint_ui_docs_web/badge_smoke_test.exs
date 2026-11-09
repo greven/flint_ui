@@ -45,7 +45,7 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
 
     assert has_element?(
              view,
-             "#example-badge-removable-badge-preview [data-element='badge'][data-variant='dashed'] [data-element='button'][aria-label='Remove Elixir']"
+             "#example-badge-removable-badge-preview [data-element='badge'][data-variant='surface'][data-dashed] [data-element='button'][aria-label='Remove Elixir']"
            )
 
     assert has_element?(

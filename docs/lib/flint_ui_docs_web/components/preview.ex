@@ -169,7 +169,7 @@ defmodule FlintUIDocsWeb.Preview do
               aria-label="Reset preview size"
               title="Reset preview size"
               hidden
-              variant="outline"
+              variant="surface"
               size="xs"
               square
               depth={false}
@@ -182,7 +182,7 @@ defmodule FlintUIDocsWeb.Preview do
               data-preview-resize-handle
               aria-label="Resize preview"
               title="Drag to resize. Use the arrow keys to resize, or double-click to reset."
-              variant="outline"
+              variant="surface"
               size="xs"
               square
               depth={false}

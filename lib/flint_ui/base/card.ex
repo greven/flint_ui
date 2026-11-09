@@ -19,7 +19,7 @@ defmodule FlintUI.Base.Card do
         </:section>
         <:footer>3 repositories</:footer>
         <:footer_actions>
-          <FlintUI.button variant="outline">View logs</FlintUI.button>
+          <FlintUI.button variant="surface">View logs</FlintUI.button>
         </:footer_actions>
       </FlintUI.card>
 

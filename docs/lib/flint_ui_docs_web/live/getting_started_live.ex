@@ -59,8 +59,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
         <DocsComponents.section title="3. Brand colors (optional)" id="colors">
           <p class="text-sm text-default">
             Override semantic tokens in your app stylesheet, after the theme
-            import. The soft/outline label derives from the fill, so a role
-            needs only its fill and solid label:
+            import. The soft, surface, and outline label derives from the fill,
+            so a role needs only its fill and solid label:
           </p>
           <DocsComponents.code_block code={snippet(:brand)} lang={:css} />
           <p class="mt-3 text-sm text-default">
@@ -140,7 +140,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     :root {
       --fl-color-primary: oklch(0.55 0.24 275);
       --fl-color-primary-content: oklch(1 0 0);
-      /* Tinted, outlined, ghost, and link read -text. */
+      /* Tinted, surface, outline, ghost, and link read -text. */
       --fl-color-primary-text: light-dark(
         oklch(0.491 0.27 292.581),
         oklch(0.702 0.183 293.541)

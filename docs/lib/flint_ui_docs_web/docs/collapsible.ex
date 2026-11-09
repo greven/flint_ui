@@ -40,7 +40,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
           hidden_until_found={props.hidden_until_found}
         >
           <:trigger :let={attrs}>
-            <Components.button {attrs} variant="outline" wide justify="between" class="group">
+            <Components.button {attrs} variant="surface" wide justify="between" class="group">
               Open
               <Components.icon
                 name="lucide-chevron-down"
@@ -76,7 +76,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
   defp styled_code_body do
     """
     <:trigger :let={attrs}>
-      <.button {attrs} variant="outline" wide justify="between" class="group">
+      <.button {attrs} variant="surface" wide justify="between" class="group">
         Open
         <.icon name="lucide-chevron-down" class="size-4 transition-transform group-aria-expanded:rotate-180" />
       </.button>

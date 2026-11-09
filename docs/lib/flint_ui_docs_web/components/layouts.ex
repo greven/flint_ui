@@ -582,7 +582,7 @@ defmodule FlintUIDocsWeb.Layouts do
       <Components.button
         :for={preset <- @themes}
         type="button"
-        variant="outline"
+        variant="surface"
         size="xs"
         pill
         phx-click={JS.dispatch("phx:set-preset")}

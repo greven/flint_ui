@@ -399,7 +399,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "oklch(1 0 0 / 8%)"
 
     # Chromatic borders are opaque against the surface fill and share the soft
-    # strength across subtle, outline, and dashed.
+    # strength across subtle and surface.
     assert css =~ ~r/var\(--fl-border-strength-soft\),\s+var\(--fl-color-surface\)/
     refute css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-surface\)/
   end
@@ -426,7 +426,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~r/\[data-element="button"\]\[data-variant="soft"\],\s*\[data-element="button"\]\[data-variant="subtle"\] \{[^}]*color: var\(--fl-button-text/
 
-    for variant <- ~w(outline dashed ghost link) do
+    for variant <- ~w(surface outline ghost link) do
       assert css =~
                ~r/\[data-element="button"\]\[data-variant="#{variant}"\] \{[^}]*color: var\(--fl-button-text/
     end
@@ -437,19 +437,42 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "--fl-button-soft-text"
   end
 
-  test "badge outline and dashed use the role fill for their border", %{css: css} do
-    for variant <- ~w(outline dashed) do
-      assert css =~
-               ~r/\[data-element="badge"\]\[data-variant="#{variant}"\] \{[^}]*border-color: var\(--fl-badge-color, var\(--fl-color-inverted\)\)/
-    end
+  test "badge surface and outline use different border strengths", %{css: css} do
+    assert css =~
+             ~r/\[data-element="badge"\]\[data-variant="outline"\] \{[^}]*border-color: var\(--fl-badge-color, var\(--fl-color-inverted\)\)/
 
-    # Subtle keeps the faint matching border.
+    assert css =~
+             ~r/\[data-element="badge"\]\[data-variant="surface"\] \{[^}]*border-color: var\(\s*--fl-badge-soft-border,/
+
+    # Subtle keeps the faint matching border too.
     assert css =~
              ~r/\[data-element="badge"\]\[data-variant="subtle"\] \{[^}]*border-color: var\(\s*--fl-badge-soft-border,/
 
     # The border width is a public input with a 1px default.
     assert css =~ "border: var(--fl-badge-border-width, 1px) solid transparent;"
     assert css =~ "2 * var(--fl-badge-border-width, 1px)"
+  end
+
+  test "surface uses the soft role border while outline uses the full role color", %{css: css} do
+    for name <- ~w(button badge toggle) do
+      assert css =~
+               ~r/\[data-element="#{name}"\]\[data-variant="outline"\][^{]*\{[^}]*border-color: var\(--fl-#{name}-color, var\(--fl-color-inverted\)\)/
+    end
+
+    for name <- ~w(button badge) do
+      assert css =~
+               ~r/\[data-element="#{name}"\]\[data-variant="surface"\] \{[^}]*border-color: var\(\s*--fl-#{name}-soft-border,/
+    end
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="on"\] \{[^}]*border-color: var\(\s*--fl-toggle-soft-border,/
+  end
+
+  test "dashed is an orthogonal border modifier, not a variant", %{css: css} do
+    for name <- ~w(button badge toggle) do
+      assert css =~
+               ~r/\[data-element="#{name}"\]\[data-dashed\] \{\s*border-style: dashed;/
+    end
   end
 
   test "pills use the full radius and indicator markers keep compact padding", %{css: css} do
@@ -475,9 +498,9 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="on"\]::before \{\s*border-color: rgb\(255 255 255 \/ calc\(12% \* var\(--fl-control-depth, 1\)\)\);/
 
-    # Outline carries the button's inner line and elevation.
+    # Surface carries the button's inner line and elevation.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="outline"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
+             ~r/\[data-element="toggle"\]\[data-variant="surface"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
 
     # Subtle is a toned neutral chip when off and a tinted surface when on,
     # rather than a lighter outline.

@@ -28,6 +28,14 @@ defmodule FlintUI.Styled.IndicatorTest do
         """
       end
 
+      def dashed_badge(assigns) do
+        ~H"""
+        <.indicator label="12" variant="surface" dashed>
+          <button id="anchor">Inbox</button>
+        </.indicator>
+        """
+      end
+
       def raw_color(assigns) do
         ~H"""
         <.indicator label="3" color="#1D72FE">
@@ -113,6 +121,7 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert badge_attr(document, "data-element") == ["badge"]
     assert badge_attr(document, "data-part") == ["root"]
     assert badge_attr(document, "data-variant") == ["solid"]
+    assert badge_attr(document, "data-dashed") == []
     assert badge_attr(document, "data-color") == ["error"]
     assert badge_attr(document, "data-size") == ["xs"]
     assert badge_attr(document, "data-pill") == [""]
@@ -164,6 +173,13 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert badge_attr(document, "data-pill") == [""]
     assert badge_attr(document, "data-radius") == []
     assert badge(document) |> LazyHTML.text() |> String.trim() == "12"
+  end
+
+  test "forwards dashed to the nested badge", %{wrapper: wrapper} do
+    document = render(wrapper, :dashed_badge)
+
+    assert badge_attr(document, "data-variant") == ["surface"]
+    assert badge_attr(document, "data-dashed") == [""]
   end
 
   test "expands a raw color into the badge inputs on the root", %{wrapper: wrapper} do

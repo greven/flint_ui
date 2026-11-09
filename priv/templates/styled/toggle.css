@@ -80,7 +80,7 @@
     }
 
     /* Bordered variants stay clipped; ghost is borderless. */
-    [data-element="toggle"][data-variant]:is([data-variant="solid"], [data-variant="outline"], [data-variant="dashed"], [data-variant="subtle"]) {
+    [data-element="toggle"][data-variant]:is([data-variant="solid"], [data-variant="surface"], [data-variant="outline"], [data-variant="subtle"]) {
         overflow: hidden;
         overflow: clip;
     }
@@ -199,8 +199,8 @@
         border-color: var(--fl-color-border-muted);
     }
 
-    [data-element="toggle"][data-variant="dashed"] {
-        border-style: dashed;
+    [data-element="toggle"][data-variant="outline"] {
+        background: transparent;
         box-shadow: 0 0 #0000;
     }
 
@@ -210,9 +210,15 @@
         box-shadow: 0 0 #0000;
     }
 
-    /* Depth: the outline wears the same inner line and elevation as the button,
+    /* Dashed: an orthogonal modifier that dashes any visible border.
+     * Variants without a border are unaffected. */
+    [data-element="toggle"][data-dashed] {
+        border-style: dashed;
+    }
+
+    /* Depth: the surface wears the same inner line and elevation as the button,
      * and the pressed solid fill wears the same top rim light. */
-    [data-element="toggle"][data-variant="outline"] {
+    [data-element="toggle"][data-variant="surface"] {
         box-shadow:
             inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
             var(--fl-control-shadow, 0 0 #0000);
@@ -252,7 +258,7 @@
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
-    [data-element="toggle"][data-variant="outline"][data-state="on"] {
+    [data-element="toggle"][data-variant="surface"][data-state="on"] {
         border-color: var(
             --fl-toggle-soft-border,
             color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
@@ -260,11 +266,8 @@
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 
-    [data-element="toggle"][data-variant="dashed"][data-state="on"] {
-        border-color: var(
-            --fl-toggle-soft-border,
-            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
-        );
+    [data-element="toggle"][data-variant="outline"][data-state="on"] {
+        border-color: var(--fl-toggle-color, var(--fl-color-inverted));
         color: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
     }
 

@@ -26,9 +26,16 @@ defmodule FlintUI.Styled.Badge do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "soft", "subtle", "outline", "dashed", "ghost", "dot"],
+          values: ["solid", "soft", "subtle", "surface", "outline", "ghost", "dot"],
           default: "subtle",
           doc: "The visual emphasis of the badge."
+        ),
+        Prop.new(
+          name: :dashed,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether the badge's border is dashed. Composes with any variant; variants without a visible border are unaffected."
         ),
         Prop.new(
           name: :color,
@@ -91,7 +98,7 @@ defmodule FlintUI.Styled.Badge do
           name: "--fl-badge-color",
           default: "var(--fl-color-inverted)",
           doc:
-            "The solid fill, the outline/dashed border, and the source for tinted surfaces and borders."
+            "The solid fill, the outline border, and the source for tinted surfaces and borders."
         ),
         Var.new(
           name: "--fl-badge-color-content",
@@ -115,7 +122,7 @@ defmodule FlintUI.Styled.Badge do
           default:
             "color-mix(in oklab, var(--fl-badge-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
           doc:
-            "The matching border for subtle badges; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
+            "The matching border for subtle and surface badges; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
         ),
         Var.new(
           name: "--fl-badge-border-width",

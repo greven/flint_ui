@@ -52,7 +52,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
         <p>Reorder or remove the repositories you follow.</p>
         <:footer>3 repositories</:footer>
         <:footer_actions>
-          <Components.button variant="outline" size="sm">View logs</Components.button>
+          <Components.button variant="surface" size="sm">View logs</Components.button>
         </:footer_actions>
       </Components.card>
     </.preview>
@@ -109,7 +109,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     <p>Reorder or remove the repositories you follow.</p>
     <:footer>3 repositories</:footer>
     <:footer_actions>
-      <.button variant="outline" size="sm">View logs</.button>
+      <.button variant="surface" size="sm">View logs</.button>
     </:footer_actions>
     """
     |> String.trim()

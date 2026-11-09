@@ -144,12 +144,12 @@ defmodule FlintUIDocsWeb.ThemeLive do
             </table>
           </div>
           <div class="mt-4 flex flex-wrap items-center gap-3">
-            <div data-focus="ring"><Components.button variant="outline">Ring</Components.button></div>
+            <div data-focus="ring"><Components.button variant="surface">Ring</Components.button></div>
             <div data-focus="outline">
-              <Components.button variant="outline">Outline</Components.button>
+              <Components.button variant="surface">Outline</Components.button>
             </div>
             <div data-focus="inset">
-              <Components.button variant="outline">Inset</Components.button>
+              <Components.button variant="surface">Inset</Components.button>
             </div>
           </div>
           <DocsComponents.code_block code={snippet(:focus)} lang={:css} />
@@ -269,7 +269,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:brand_css)} lang={:css} />
           <p class="mt-3 text-sm text-default">
             Solid controls use <code class="font-mono">-content</code>. Tinted,
-            outlined, ghost, and link variants all use the regular
+            surface, outline, ghost, and link variants all use the regular
             <code class="font-mono">-text</code>
             token, which is contrast-picked
             for AA. Set <code class="font-mono">-text</code>
@@ -281,7 +281,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button
               :for={role <- ~w(info success warning error primary secondary)}
-              variant="outline"
+              variant="surface"
               color={role}
             >
               {role}
@@ -306,8 +306,8 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button variant="solid" color="dark">Dark</Components.button>
             <Components.button variant="solid" color="light">Light</Components.button>
-            <Components.button variant="outline" color="dark">Dark outline</Components.button>
-            <Components.button variant="outline" color="light">Light outline</Components.button>
+            <Components.button variant="surface" color="dark">Dark surface</Components.button>
+            <Components.button variant="surface" color="light">Light surface</Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:absolute)} lang={:css} />
         </DocsComponents.section>
@@ -344,10 +344,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
         <DocsComponents.section title="Depth" id="depth">
           <p class="mt-3 text-sm text-default">
-            Solid and outline buttons are raised: <code class="font-mono">solid</code>
-            wears a top highlight, <code class="font-mono">outline</code>
+            Solid and surface buttons are raised: <code class="font-mono">solid</code>
+            wears a top highlight, <code class="font-mono">surface</code>
             a bottom inner line, and both scale with the shared <code class="font-mono">--fl-control-depth</code>. Shadows are
-            independent and always on for <code class="font-mono">solid</code>, <code class="font-mono">subtle</code>, and <code class="font-mono">outline</code>;
+            independent and always on for <code class="font-mono">solid</code>, <code class="font-mono">subtle</code>, and <code class="font-mono">surface</code>;
             set <code class="font-mono">--fl-control-shadow</code>
             to <code class="font-mono">0 0 #0000</code>
             to remove them. Pressing
@@ -359,7 +359,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button variant="solid" color="primary">solid</Components.button>
-            <Components.button variant="outline">outline</Components.button>
+            <Components.button variant="surface">surface</Components.button>
             <Components.button variant="solid" color="primary" depth={false}>flat</Components.button>
             <Components.button variant="ghost">ghost (flat)</Components.button>
           </div>
@@ -610,7 +610,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
     :root {
       --fl-color-primary: oklch(0.55 0.24 275);
       --fl-color-primary-content: oklch(1 0 0);
-      /* Tinted, outlined, ghost, and link read -text, so retint that AA shade. */
+      /* Tinted, surface, outline, ghost, and link read -text, so retint that AA shade. */
       --fl-color-primary-text: light-dark(
         oklch(0.491 0.27 292.581),
         oklch(0.702 0.183 293.541)

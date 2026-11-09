@@ -25,6 +25,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         title: "Variant",
         controls: [
           %{key: :variant, type: :select, default: "subtle", label: "Variant"},
+          %{key: :dashed, type: :boolean, default: false, label: "Dashed"},
           %{key: :radius, type: :select, default: "md", label: "Radius"},
           %{key: :pill, type: :boolean, default: false, label: "Pill"}
         ]
@@ -93,6 +94,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         <Components.badge variant="solid">Solid</Components.badge>
         <Components.badge variant="soft">Soft</Components.badge>
         <Components.badge variant="soft" color="error">Destructive</Components.badge>
+        <Components.badge variant="surface">Surface</Components.badge>
         <Components.badge variant="outline">Outline</Components.badge>
         <Components.badge variant="ghost">Ghost</Components.badge>
       </div>
@@ -104,17 +106,30 @@ defmodule FlintUIDocsWeb.Docs.Badge do
   def render_section(%{section: :usage, id: :variant} = assigns) do
     ~H"""
     <.prose content="Use the `variant` attr to change the visual emphasis of the badge. The default variant is `subtle`.
-        Subtle and soft are the faint variants; outline and dashed use the full-strength role color for the border." />
+        Subtle and soft are the faint variants; surface keeps the faint soft border and outline uses the full-strength role color.
+        Pass `dashed` to make that border dashed on any variant that has one." />
     <.preview :let={props} {assigns} code={&code_variant/1}>
       <div class="flex items-center flex-wrap gap-3">
-        <Components.badge variant={props.variant} radius={props.radius} pill={props.pill}>
+        <Components.badge
+          variant={props.variant}
+          dashed={props.dashed}
+          radius={props.radius}
+          pill={props.pill}
+        >
           The Best
         </Components.badge>
-        <Components.badge variant={props.variant} radius={props.radius} pill={props.pill} color="info">
+        <Components.badge
+          variant={props.variant}
+          dashed={props.dashed}
+          radius={props.radius}
+          pill={props.pill}
+          color="info"
+        >
           Things
         </Components.badge>
         <Components.badge
           variant={props.variant}
+          dashed={props.dashed}
           radius={props.radius}
           pill={props.pill}
           color="success"
@@ -123,6 +138,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         </Components.badge>
         <Components.badge
           variant={props.variant}
+          dashed={props.dashed}
           radius={props.radius}
           pill={props.pill}
           color="warning"
@@ -131,6 +147,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         </Components.badge>
         <Components.badge
           variant={props.variant}
+          dashed={props.dashed}
           radius={props.radius}
           pill={props.pill}
           color="error"
@@ -160,7 +177,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           class="flex flex-wrap gap-3 justify-center"
         >
           <Components.badge
-            :for={variant <- ~w(solid soft subtle outline dashed ghost)}
+            :for={variant <- ~w(solid soft subtle surface outline ghost)}
             variant={variant}
             color={color}
           >
@@ -448,7 +465,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         <div class="flex flex-wrap items-center gap-2">
           <Components.badge
             :for={tag <- ~w(Elixir Phoenix LiveView)}
-            variant="dashed"
+            variant="surface"
+            dashed
             color="success"
           >
             {tag}
@@ -582,6 +600,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       ".badge",
       [
         Snippet.attr("variant", props.variant, "subtle"),
+        Snippet.flag("dashed", props.dashed),
         Snippet.attr("radius", props.radius, "md"),
         Snippet.flag("pill", props.pill)
       ],
@@ -676,7 +695,8 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <div class="flex flex-wrap items-center gap-2">
       <.badge
         :for={tag <- ~w(Elixir Phoenix LiveView)}
-        variant="dashed"
+        variant="surface"
+        dashed
         color="success"
         size="md"
       >

@@ -50,7 +50,7 @@ defmodule FlintUIDocsWeb.HomeLive do
             >
               Get started
             </Components.button>
-            <Components.button navigate="/components" variant="outline" size="lg">
+            <Components.button navigate="/components" variant="surface" size="lg">
               Browse components
             </Components.button>
           </div>

@@ -18,9 +18,16 @@ defmodule FlintUI.Styled.Toggle do
       props: [
         Prop.new(
           name: :variant,
-          values: ["solid", "subtle", "outline", "dashed", "ghost"],
+          values: ["solid", "subtle", "surface", "outline", "ghost"],
           default: "solid",
           doc: "How the pressed state is emphasized."
+        ),
+        Prop.new(
+          name: :dashed,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether the toggle's border is dashed. Composes with any variant; variants without a visible border are unaffected."
         ),
         Prop.new(
           name: :color,
@@ -55,14 +62,15 @@ defmodule FlintUI.Styled.Toggle do
           values: [true, false],
           default: true,
           doc:
-            "Whether solid and outline toggles show their highlight/inner line. Shadows are always on for solid, subtle, and outline; remove them with `--fl-control-shadow`."
+            "Whether solid and surface toggles show their highlight/inner line. Shadows are always on for solid, subtle, and surface; remove them with `--fl-control-shadow`."
         )
       ],
       vars: [
         Var.new(
           name: "--fl-toggle-color",
           default: "var(--fl-color-inverted)",
-          doc: "The pressed fill and the source for tinted surfaces and focus."
+          doc:
+            "The pressed fill, the pressed outline border, and the source for tinted surfaces and focus."
         ),
         Var.new(
           name: "--fl-toggle-color-content",
@@ -85,7 +93,7 @@ defmodule FlintUI.Styled.Toggle do
           default:
             "color-mix(in oklab, var(--fl-toggle-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
           doc:
-            "The matching border for pressed subtle, outline, and dashed toggles; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
+            "The matching border for pressed subtle and surface toggles; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
         )
       ],
       color_vars: [

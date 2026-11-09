@@ -397,7 +397,7 @@ defmodule FlintUIDocsWeb.StylingLive do
 
   defp snippet(:attributes) do
     """
-    <.button variant="outline" color="error" size="sm">Delete</.button>
+    <.button variant="surface" color="error" size="sm">Delete</.button>
 
     <.card body="divided" spacing="sm" shadow={false}>
       <:title>Deployments</:title>

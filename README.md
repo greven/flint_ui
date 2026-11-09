@@ -62,7 +62,7 @@ your app stylesheet:
 :root {
   --fl-color-primary: oklch(0.55 0.24 275);
   --fl-color-primary-content: oklch(1 0 0);
-  /* Tinted, outlined, ghost, and link use the role's AA text shade. */
+  /* Tinted, surface, outline, ghost, and link use the role's AA text shade. */
   --fl-color-primary-text: light-dark(
     oklch(0.491 0.27 292.581),
     oklch(0.702 0.183 293.541)

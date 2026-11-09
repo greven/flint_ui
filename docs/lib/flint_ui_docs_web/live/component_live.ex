@@ -464,7 +464,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   defp normalize_tab("api"), do: "styled"
   defp normalize_tab(_), do: "styled"
 
-  defp tab_variant(tab, value), do: if(tab == value, do: "solid", else: "outline")
+  defp tab_variant(tab, value), do: if(tab == value, do: "solid", else: "surface")
   defp tab_depth(tab, value), do: if(tab == value, do: true, else: false)
 
   defp order_parts(parts) do
