@@ -336,11 +336,11 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="You can pass a raw CSS color to `color` for a one-off accent or a value that comes from data. FlintUI keeps the fill exactly and derives
       the label with the best contrast available, so a mid-tone fill can still fall below AA when neither black nor white clears it.
-      A `tw:` prefix names a color from the bundled Tailwind palette, e.g. `tw:violet` (violet-500) or `tw:violet-700`. It works without Tailwind and
+      A `tw:` prefix names a color from the bundled Tailwind palette, e.g. `tw:indigo` (indigo-500) or `tw:indigo-600`. It works without Tailwind and
       derives the label and text contrast, but it is a static palette, not a theme role." />
 
-    <.prose content="Styling the badge yourself with `style` or utility classes goes further: it overrides the derived label, border, and text colors, so contrast is up to you.
-        Most of the hand-styled examples below look vivid but do not meet WCAG AA. Prefer a semantic role or a theme override
+    <.prose content="Styling the badge yourself with `style` or utility classes goes further: it overrides the derived label, border, and text colors,
+        so contrast is up to you. Most of the hand-styled examples below look vivid but do not meet WCAG AA. Prefer a semantic role or a theme override
         for anything app-wide, and treat raw colors as a deliberate exception." />
 
     <.preview {assigns} code={&code_raw/1}>
@@ -357,7 +357,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         <Components.badge variant="solid" size="lg" class="bg-rose-500 border-rose-600 text-white">
           Rose
         </Components.badge>
-        <Components.badge variant="solid" size="lg" color="tw:violet-700">Violet</Components.badge>
+        <Components.badge variant="solid" size="lg" color="tw:indigo-600">Violet</Components.badge>
       </div>
     </.preview>
 
@@ -808,6 +808,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge variant="solid" size="lg" color="#05A6F3" style="color: white;">Sky</.badge>
     <.badge variant="solid" size="lg" class="bg-lime-500 border-lime-600">Lime</.badge>
     <.badge variant="solid" size="lg" class="bg-rose-500 border-rose-600">Rose</.badge>
+    <.badge variant="solid" size="lg" color="tw:violet-700">Violet</.badge>
     """
     |> String.trim()
   end
