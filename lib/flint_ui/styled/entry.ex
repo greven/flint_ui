@@ -21,9 +21,22 @@ defmodule FlintUI.Styled.Entry do
   `color` property directly instead of a custom variable. Entries without a
   customizable `color` prop leave this empty.
 
+  `:related` names components that are closely connected to this one, such as
+  `:avatar` and `:avatar_group`. It is not a dependency: both components stand
+  on their own and merely link to each other in the docs. A relation may also be
+  written as `{name, nav: true}` when the related component belongs under this
+  one in the docs sidebar. Only a component that makes no sense apart from its
+  companion should opt into that grouping; a broadly reusable component such as
+  Group stays at the top level on a Button page.
+
+  `:dependencies` names components this one is built on, such as Indicator using
+  Badge. Dependencies are one-way and do not imply a related link.
+
   The generator merges `:slots` with the base component's own slots when it
   renders the wrapper's `slot/2` declarations.
   """
+
+  @type relation :: atom() | {atom(), keyword()}
 
   @type t :: %__MODULE__{
           name: atom(),
@@ -36,7 +49,9 @@ defmodule FlintUI.Styled.Entry do
           content_attrs: [FlintUI.Styled.Attr.t()],
           slots: [FlintUI.Styled.Slot.t()],
           vars: [FlintUI.Styled.Var.t()],
-          color_vars: keyword()
+          color_vars: keyword(),
+          related: [relation()],
+          dependencies: [atom()]
         }
 
   @enforce_keys [:name, :base, :target]
@@ -50,12 +65,35 @@ defmodule FlintUI.Styled.Entry do
             content_attrs: [],
             slots: [],
             vars: [],
-            color_vars: []
+            color_vars: [],
+            related: [],
+            dependencies: []
 
   @doc """
   Returns the extra attribute with the given name, or `nil`.
   """
   def prop(%__MODULE__{props: props}, name), do: Enum.find(props, &(&1.name == name))
+
+  @doc """
+  Returns the names of the components this component relates to.
+  """
+  def related(%__MODULE__{related: related}), do: Enum.map(related, &relation_name/1)
+
+  @doc """
+  Returns the related component names nested under this component in the docs
+  sidebar.
+  """
+  def nav_related(%__MODULE__{related: related}) do
+    for {name, opts} <- related, Keyword.get(opts, :nav, false), do: name
+  end
+
+  @doc """
+  Returns the names of the components this component is built on.
+  """
+  def dependencies(%__MODULE__{dependencies: dependencies}), do: dependencies
+
+  defp relation_name({name, _opts}), do: name
+  defp relation_name(name), do: name
 
   @doc """
   Returns a map of attribute name to the data attribute a generated wrapper sets,

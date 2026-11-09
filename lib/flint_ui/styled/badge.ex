@@ -11,6 +11,7 @@ defmodule FlintUI.Styled.Badge do
       install: "mix flint.add badge",
       css: "styled/badge.css",
       tokens: [:color, :radius, :font, :spacing, :control, :badge],
+      dependencies: [:icon],
       slots: [
         Slot.new(
           name: :leading,

@@ -11,6 +11,7 @@ defmodule FlintUI.Styled.LoadingText do
       install: "mix flint.add loading_text",
       css: "styled/loading_text.css",
       tokens: [:color],
+      related: [:loading],
       slots: [],
       color_vars: [on_text: :color],
       props: [

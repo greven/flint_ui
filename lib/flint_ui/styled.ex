@@ -74,9 +74,20 @@ defmodule FlintUI.Styled do
       custom_color_without_vars?(entry) ->
         {:error, {:missing_color_vars, entry.name}}
 
+      invalid_relations(entry) != [] ->
+        {:error, {:unknown_relation, entry.name, invalid_relations(entry)}}
+
       true ->
         :ok
     end
+  end
+
+  defp invalid_relations(entry) do
+    components = FlintUI.components()
+
+    (Entry.related(entry) ++ Entry.dependencies(entry))
+    |> Enum.reject(&(&1 in components and &1 != entry.name))
+    |> Enum.uniq()
   end
 
   defp custom_color_without_vars?(entry) do

@@ -192,4 +192,78 @@ defmodule FlintUI.StyledTest do
   test "Slot.new/1 rejects missing fields" do
     assert_raise ArgumentError, fn -> Slot.new([]) end
   end
+
+  test "related components are registered and never point at themselves" do
+    for entry <- Styled.entries() do
+      for name <- Entry.related(entry) do
+        assert name in FlintUI.components()
+        refute name == entry.name
+      end
+    end
+  end
+
+  test "dependencies are registered and never point at themselves" do
+    for entry <- Styled.entries() do
+      for name <- Entry.dependencies(entry) do
+        assert name in FlintUI.components()
+        refute name == entry.name
+      end
+    end
+  end
+
+  test "only related components can nest in the docs navigation" do
+    for entry <- Styled.entries(), name <- Entry.nav_related(entry) do
+      assert name in Entry.related(entry)
+    end
+  end
+
+  test "avatar and avatar group are related, and only avatar owns the nav group" do
+    avatar = Styled.get(:avatar)
+    avatar_group = Styled.get(:avatar_group)
+
+    assert Entry.related(avatar) == [:avatar_group]
+    assert Entry.related(avatar_group) == [:avatar]
+    assert Entry.nav_related(avatar) == [:avatar_group]
+    assert Entry.nav_related(avatar_group) == []
+  end
+
+  test "button and toggle relate to group without making it a nav child" do
+    button = Styled.get(:button)
+    group = Styled.get(:group)
+    toggle = Styled.get(:toggle)
+
+    assert Entry.related(button) == [:group]
+    assert Entry.related(group) == [:button, :toggle]
+    assert Entry.related(toggle) == [:group]
+    assert Entry.nav_related(button) == []
+    assert Entry.nav_related(group) == []
+    assert Entry.nav_related(toggle) == []
+  end
+
+  test "icon is a dependency of the components that render an icon shortcut" do
+    expected_related = %{
+      avatar: [:avatar_group],
+      badge: [],
+      button: [:group]
+    }
+
+    for {name, related} <- expected_related do
+      entry = Styled.get(name)
+
+      assert Entry.dependencies(entry) == [:icon]
+      assert Entry.related(entry) == related
+    end
+  end
+
+  test "loading and loading text are related" do
+    assert Entry.related(Styled.get(:loading)) == [:loading_text]
+    assert Entry.related(Styled.get(:loading_text)) == [:loading]
+  end
+
+  test "indicator depends on badge without relating to it" do
+    indicator = Styled.get(:indicator)
+
+    assert Entry.dependencies(indicator) == [:badge]
+    assert Entry.related(indicator) == []
+  end
 end

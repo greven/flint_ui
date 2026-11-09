@@ -6,7 +6,11 @@ defmodule FlintUIDocsWeb.NavTest do
   alias FlintUIDocsWeb.Nav
 
   test "every section page path is unique and routable", %{conn: conn} do
-    pages = for section <- Nav.sections(), group <- section.groups, page <- group.pages, do: page
+    pages =
+      for section <- Nav.sections(),
+          group <- section.groups,
+          page <- flatten_pages(group.pages),
+          do: page
 
     paths = Enum.map(pages, & &1.path)
     assert paths == Enum.uniq(paths)
@@ -19,13 +23,31 @@ defmodule FlintUIDocsWeb.NavTest do
   test "the components section mirrors the component registry" do
     groups =
       Nav.get!(:components).groups
-      |> Map.new(fn group -> {group.label, Enum.map(group.pages, & &1.name)} end)
+      |> Map.new(fn group ->
+        {group.label, group.pages |> flatten_pages() |> Enum.map(& &1.name)}
+      end)
 
     expected =
       FlintUI.Docs.grouped_components()
       |> Map.new(fn {type, names} -> {type_label(type), names} end)
 
     assert groups == expected
+  end
+
+  test "related components can nest in their type group" do
+    element = Enum.find(Nav.get!(:components).groups, &(&1.label == "Element"))
+    avatar = Enum.find(element.pages, &(&1.name == :avatar))
+
+    assert Enum.map(avatar.children, & &1.name) == [:avatar_group]
+    refute Enum.any?(element.pages, &(&1.name == :avatar_group))
+  end
+
+  test "related components without a nav relation stay top-level" do
+    action = Enum.find(Nav.get!(:components).groups, &(&1.label == "Action"))
+    button = Enum.find(action.pages, &(&1.name == :button))
+
+    assert button.children == []
+    assert Enum.any?(action.pages, &(&1.name == :group))
   end
 
   test "breadcrumbs/2 builds the section and group trail", %{} do
@@ -47,6 +69,13 @@ defmodule FlintUIDocsWeb.NavTest do
            ]
   end
 
+  test "breadcrumbs/2 finds a nested related component in its type group" do
+    assert Nav.breadcrumbs(:components, :avatar_group) == [
+             %{label: "Components", path: "/components"},
+             %{label: "Element", path: "/components"}
+           ]
+  end
+
   test "every sidebar group declares a Lucide icon" do
     for section <- Nav.sections(), group <- section.groups do
       assert group.icon =~ ~r/^lucide-[a-z0-9-]+$/,
@@ -60,6 +89,12 @@ defmodule FlintUIDocsWeb.NavTest do
 
     assert length(icons) == length(Enum.uniq(icons))
     assert Enum.all?(icons, &(&1 =~ ~r/^lucide-/))
+  end
+
+  defp flatten_pages(pages) do
+    Enum.flat_map(pages, fn page ->
+      [page | flatten_pages(Map.get(page, :children, []))]
+    end)
   end
 
   defp type_label(type) do

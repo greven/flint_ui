@@ -279,4 +279,34 @@ defmodule FlintUI.Docs do
       []
     end
   end
+
+  @doc """
+  Returns the components closely related to a component, as declared by its
+  styled entry.
+  """
+  def related(component) when is_atom(component) do
+    entry_relations(component, &FlintUI.Styled.Entry.related/1)
+  end
+
+  @doc """
+  Returns the related components nested under a component in the docs sidebar.
+  """
+  def nav_related(component) when is_atom(component) do
+    entry_relations(component, &FlintUI.Styled.Entry.nav_related/1)
+  end
+
+  @doc """
+  Returns the components a component is built on, as declared by its styled
+  entry.
+  """
+  def dependencies(component) when is_atom(component) do
+    entry_relations(component, &FlintUI.Styled.Entry.dependencies/1)
+  end
+
+  defp entry_relations(component, fun) do
+    case FlintUI.Styled.get(component) do
+      nil -> []
+      entry -> fun.(entry)
+    end
+  end
 end

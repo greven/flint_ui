@@ -11,6 +11,7 @@ defmodule FlintUI.Styled.Indicator do
       install: "mix flint.add indicator",
       css: "styled/indicator.css",
       tokens: [:color],
+      dependencies: [:badge],
       props: [
         Prop.new(
           name: :variant,

@@ -11,6 +11,8 @@ defmodule FlintUI.Styled.Button do
       install: "mix flint.add button",
       css: "styled/button.css",
       tokens: [:color, :radius, :font, :spacing, :shadow, :control, :duration, :ease],
+      related: [:group],
+      dependencies: [:icon],
       slots: [
         Slot.new(name: :leading, doc: "Optional content rendered before the button's content."),
         Slot.new(name: :trailing, doc: "Optional content rendered after the button's content.")

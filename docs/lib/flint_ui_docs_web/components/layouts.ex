@@ -228,22 +228,54 @@ defmodule FlintUIDocsWeb.Layouts do
           </p>
         </div>
         <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-default">
-          <.link
+          <.sidebar_page
             :for={item <- group.pages}
-            navigate={item.path}
-            aria-current={if page_active?(item, @active, @page), do: "page", else: nil}
-            class={[
-              "group -ml-px pr-2 pl-1.5 border-l transition-colors hover:text-default",
-              sidebar_item_class(page_active?(item, @active, @page))
-            ]}
-          >
-            <div class="px-2 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-foreground/5">
-              {item.label}
-            </div>
-          </.link>
+            item={item}
+            active={@active}
+            page={@page}
+          />
         </nav>
       </div>
     </aside>
+    """
+  end
+
+  attr :item, :map, required: true
+  attr :active, :atom, default: nil
+  attr :page, :atom, default: nil
+  attr :depth, :integer, default: 0
+
+  defp sidebar_page(assigns) do
+    ~H"""
+    <.link
+      navigate={@item.path}
+      aria-current={if page_active?(@item, @active, @page), do: "page", else: nil}
+      data-nav-depth={@depth}
+      class={[
+        "group -ml-px pr-2 pl-1.5 border-l transition-colors hover:text-default",
+        sidebar_item_class(page_active?(@item, @active, @page))
+      ]}
+    >
+      <div class={[
+        "flex items-center gap-2 px-2 py-1.5 font-medium text-sm capitalize rounded-md group-hover:bg-foreground/5",
+        @depth > 0 && "ml-0.5"
+      ]}>
+        <.icon
+          :if={@depth > 0}
+          name="lucide-corner-down-right"
+          class="size-3 shrink-0 text-muted"
+        />
+        <span class="truncate">{@item.label}</span>
+      </div>
+    </.link>
+
+    <.sidebar_page
+      :for={child <- Map.get(@item, :children, [])}
+      item={child}
+      active={@active}
+      page={@page}
+      depth={@depth + 1}
+    />
     """
   end
 

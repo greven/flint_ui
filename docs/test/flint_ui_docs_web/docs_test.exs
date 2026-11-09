@@ -42,6 +42,17 @@ defmodule FlintUIDocsWeb.DocsTest do
     end
   end
 
+  test "every related and dependency component has a docs page" do
+    for {name, _module} <- Docs.modules() do
+      for related <- FlintUI.Docs.related(name) ++ FlintUI.Docs.dependencies(name) do
+        assert Map.has_key?(Docs.modules(), related),
+               "expected #{name} to relate to a documented component, got #{inspect(related)}"
+
+        refute related == name, "expected #{name} not to relate to itself"
+      end
+    end
+  end
+
   test "every component has a styled section with a render clause" do
     for {name, module} <- Docs.modules() do
       assert [first | _rest] = Docs.sections(name, :styled)

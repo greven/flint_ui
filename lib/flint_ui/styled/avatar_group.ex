@@ -11,6 +11,7 @@ defmodule FlintUI.Styled.AvatarGroup do
       install: "mix flint.add avatar_group",
       css: "styled/avatar_group.css",
       tokens: [:avatar, :color],
+      related: [:avatar],
       slots: [],
       props: [
         Prop.new(

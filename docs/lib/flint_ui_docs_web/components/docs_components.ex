@@ -322,6 +322,29 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   @doc false
 
+  attr :components, :list, required: true
+
+  def component_links(assigns) do
+    ~H"""
+    <ul class="mt-4 grid gap-2 sm:grid-cols-3">
+      <li :for={component <- @components}>
+        <.link
+          navigate={component.path}
+          class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2 text-sm font-medium transition-colors hover:border-accented hover:bg-muted"
+        >
+          <span>{component.label}</span>
+          <FlintUI.icon
+            name="lucide-arrow-right"
+            class="size-4 shrink-0 text-muted transition-colors group-hover:text-default"
+          />
+        </.link>
+      </li>
+    </ul>
+    """
+  end
+
+  @doc false
+
   attr :events, :list, required: true
 
   def events_table(assigns) do

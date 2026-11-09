@@ -7,7 +7,8 @@ defmodule FlintUIDocsWeb.Nav do
           required(:id) => atom(),
           required(:label) => String.t(),
           required(:path) => String.t(),
-          optional(:name) => atom()
+          optional(:name) => atom(),
+          optional(:children) => [page()]
         }
 
   @type group :: %{
@@ -68,12 +69,53 @@ defmodule FlintUIDocsWeb.Nav do
       %{
         label: type_label(type),
         icon: type_icon(type),
-        pages:
-          Enum.map(names, fn name ->
-            %{id: name, name: name, label: humanize(name), path: "/components/#{name}"}
-          end)
+        pages: component_pages(names)
       }
     end)
+  end
+
+  # A related component opts into the sidebar grouping from the other side,
+  # with `{name, nav: true}` in its styled entry. Nesting stays inside one type
+  # group so every section keeps a single component category.
+  defp component_pages(names) do
+    names = Enum.sort(names)
+    name_set = MapSet.new(names)
+
+    children_by_parent =
+      Map.new(names, fn name ->
+        children =
+          name
+          |> FlintUI.Docs.nav_related()
+          |> Enum.filter(&MapSet.member?(name_set, &1))
+
+        {name, children}
+      end)
+
+    nested =
+      children_by_parent
+      |> Map.values()
+      |> List.flatten()
+      |> MapSet.new()
+
+    for name <- names, not MapSet.member?(nested, name) do
+      component_page(name, children_by_parent, [])
+    end
+  end
+
+  defp component_page(name, children_by_parent, ancestors) do
+    children =
+      children_by_parent
+      |> Map.get(name, [])
+      |> Enum.reject(&(&1 == name or &1 in ancestors))
+      |> Enum.map(&component_page(&1, children_by_parent, [name | ancestors]))
+
+    %{
+      id: name,
+      name: name,
+      label: humanize(name),
+      path: "/components/#{name}",
+      children: children
+    }
   end
 
   @doc """
@@ -108,7 +150,7 @@ defmodule FlintUIDocsWeb.Nav do
 
   defp group_crumbs(%{id: :components} = section, page_id) when not is_nil(page_id) do
     Enum.find_value(section.groups, [], fn group ->
-      if Enum.any?(group.pages, &(&1.name == page_id)) do
+      if Enum.any?(group.pages, &page_match?(&1, page_id)) do
         [%{label: group.label, path: "/components"}]
       end
     end)
@@ -116,10 +158,15 @@ defmodule FlintUIDocsWeb.Nav do
 
   defp group_crumbs(section, page_id) do
     Enum.find_value(section.groups, [], fn group ->
-      if Enum.any?(group.pages, &(&1.id == page_id)) do
+      if Enum.any?(group.pages, &page_match?(&1, page_id)) do
         [%{label: group.label, path: group.pages |> List.first() |> Map.fetch!(:path)}]
       end
     end)
+  end
+
+  defp page_match?(page, page_id) do
+    page.id == page_id or
+      Enum.any?(Map.get(page, :children, []), &page_match?(&1, page_id))
   end
 
   @doc """

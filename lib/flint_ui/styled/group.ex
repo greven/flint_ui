@@ -11,6 +11,7 @@ defmodule FlintUI.Styled.Group do
       install: "mix flint.add group",
       css: "styled/group.css",
       tokens: [:color, :radius, :spacing, :control],
+      related: [:button, :toggle],
       slots: [],
       vars: [
         Var.new(

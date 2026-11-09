@@ -157,6 +157,38 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#theme")
   end
 
+  test "the styled API links related components and dependencies", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/avatar")
+
+    assert has_element?(view, "#api #related")
+    assert has_element?(view, "#related a[href='/components/avatar_group']", "Avatar Group")
+    refute has_element?(view, "#related a[href='/components/avatar']")
+    assert has_element?(view, "#dependencies a[href='/components/icon']", "Icon")
+
+    {:ok, view, _html} = live(conn, ~p"/components/indicator")
+
+    assert has_element?(view, "#api #dependencies")
+    assert has_element?(view, "#dependencies a[href='/components/badge']", "Badge")
+    refute has_element?(view, "#related")
+  end
+
+  test "the sidebar nests related components but keeps shared components top-level", %{
+    conn: conn
+  } do
+    {:ok, view, _html} = live(conn, ~p"/components/avatar")
+
+    assert has_element?(view, "aside a[href='/components/avatar'][data-nav-depth='0']")
+    assert has_element?(view, "aside a[href='/components/avatar_group'][data-nav-depth='1']")
+
+    assert has_element?(
+             view,
+             "aside a[href='/components/avatar_group'] .lucide-corner-down-right"
+           )
+
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+    assert has_element?(view, "aside a[href='/components/group'][data-nav-depth='0']")
+  end
+
   test "the styled API documents text and icon", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 

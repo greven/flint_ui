@@ -116,6 +116,28 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   </p>
                   <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
                 </DocsComponents.subsection>
+
+                <DocsComponents.subsection
+                  :if={@dependencies != []}
+                  title="Dependencies"
+                  id="dependencies"
+                >
+                  <p class="text-sm text-toned">
+                    This component makes use of the following components as part of its implementation.
+                  </p>
+                  <DocsComponents.component_links components={@dependencies} />
+                </DocsComponents.subsection>
+
+                <DocsComponents.subsection
+                  :if={@related != []}
+                  title="Related"
+                  id="related"
+                >
+                  <p class="text-sm text-toned">
+                    Components that are commonly used or must be used with this one.
+                  </p>
+                  <DocsComponents.component_links components={@related} />
+                </DocsComponents.subsection>
               </DocsComponents.section>
             </section>
           </:panel>
@@ -432,6 +454,8 @@ defmodule FlintUIDocsWeb.ComponentLive do
       styled_attributes: styled_attribute_rows(attrs, entry),
       base_attributes: base_attribute_rows(attrs),
       merged_slots: FlintUI.Generator.wrapper_slots(name),
+      related: component_links(FlintUI.Docs.related(name)),
+      dependencies: component_links(FlintUI.Docs.dependencies(name)),
       anatomy: Docs.anatomy(name),
       styled_groups: Docs.groups(name, :styled),
       base_groups: Docs.base_groups(name),
@@ -583,5 +607,11 @@ defmodule FlintUIDocsWeb.ComponentLive do
     |> FlintUI.API.component_module()
     |> Module.split()
     |> List.last()
+  end
+
+  defp component_links(names) do
+    Enum.map(names, fn name ->
+      %{name: name, label: Docs.title(name), path: "/components/#{name}"}
+    end)
   end
 end
