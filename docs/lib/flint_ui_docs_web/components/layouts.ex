@@ -152,7 +152,7 @@ defmodule FlintUIDocsWeb.Layouts do
               size="sm"
               aria-label="FlintUI on GitHub"
             >
-              <Components.icon name="lucide-github" class="size-4 sm:hidden" />
+              <Components.icon name="lucide-code-xml" class="size-4 sm:hidden" />
               <span class="hidden sm:inline">GitHub</span>
             </Components.button>
             <.theme_toggle />

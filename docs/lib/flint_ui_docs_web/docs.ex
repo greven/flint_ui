@@ -424,7 +424,7 @@ defmodule FlintUIDocsWeb.Docs do
       %{
         label: "Source",
         href: source_url(name),
-        icon: "lucide-github"
+        icon: "lucide-code-xml"
       }
     ]
   end
