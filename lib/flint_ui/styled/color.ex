@@ -9,6 +9,12 @@ defmodule FlintUI.Styled.Color do
   preferring the requested color and moving only its lightness when it would be
   unreadable.
 
+  A raw value can name a color from the bundled Tailwind palette with a `tw:`
+  prefix: `tw:rose` is rose-500 and `tw:rose-700` is rose-700. The palette is
+  vendored as data, so it works without Tailwind. It is a static snapshot, not
+  the host app's Tailwind theme, and the names are not semantic roles: they do
+  not follow presets or change with the color scheme.
+
   The absolute tones are not semantic roles: they have no scale and do not
   appear in the registry's documented `color` values. They are accepted
   everywhere the prop is free-form so a component can opt into a fixed dark or
@@ -18,20 +24,23 @@ defmodule FlintUI.Styled.Color do
   instance wins over them.
   """
 
-  alias FlintUI.Palette.{Color, Contrast}
+  alias FlintUI.Palette
+  alias FlintUI.Palette.{Color, Contrast, Tailwind}
 
   @roles ~w(primary secondary success info warning error neutral inherit)
   @absolute ~w(dark light)
+  @tailwind_default_shade 500
 
   @doc """
-  Whether `value` is a known role, an absolute tone, or a parseable raw color.
+  Whether `value` is a known role, an absolute tone, a `tw:` palette color, or a
+  parseable raw color.
 
-  This is the union of the documented roles (including `inherit`) and the
-  absolute tones, and is meant for sanitizing values before they reach a
-  component. A wrapper validates against its own role list.
+  This is the union of the documented roles (including `inherit`), the absolute
+  tones, and the accepted raw forms, and is meant for sanitizing values before
+  they reach a component. A wrapper validates against its own role list.
   """
   def valid?(value) when is_binary(value) do
-    value in @roles or value in @absolute or match?({:ok, _}, Color.parse(value))
+    resolve(value, @roles) != :error
   end
 
   def valid?(_value), do: false
@@ -45,16 +54,15 @@ defmodule FlintUI.Styled.Color do
     value = assigns.color
 
     {data_color, rest} =
-      if value in roles or value in @absolute do
-        {value, Map.get(assigns, :rest)}
-      else
-        case Color.parse(value) do
-          {:ok, color} ->
-            {nil, merge_style(Map.get(assigns, :rest), style(value, color, vars))}
+      case resolve(value, roles) do
+        {:hook, hook} ->
+          {hook, Map.get(assigns, :rest)}
 
-          :error ->
-            raise ArgumentError, invalid_message(value, roles)
-        end
+        {:raw, source, color} ->
+          {nil, merge_style(Map.get(assigns, :rest), style(source, color, vars))}
+
+        :error ->
+          raise ArgumentError, invalid_message(value, roles)
       end
 
     # Both assigns are derived from `color`, and a previous raw value may have
@@ -63,6 +71,65 @@ defmodule FlintUI.Styled.Color do
     assigns
     |> put_assign(:data_color, data_color)
     |> put_assign(:rest, rest)
+  end
+
+  # Resolves a free-form color once, so `valid?/1` and `apply/3` agree on what
+  # is accepted. A role or absolute tone is a presence hook; everything else is
+  # a raw color, with the CSS string used as the fill.
+  defp resolve(value, roles) when is_binary(value) do
+    if value in roles or value in @absolute do
+      {:hook, value}
+    else
+      raw(value)
+    end
+  end
+
+  defp resolve(_value, _roles), do: :error
+
+  defp raw(value) do
+    case tailwind(value) do
+      {:ok, css} ->
+        case Color.parse(css) do
+          {:ok, color} -> {:raw, color.css, color}
+          :error -> :error
+        end
+
+      :error ->
+        case Color.parse(value) do
+          {:ok, color} -> {:raw, value, color}
+          :error -> :error
+        end
+    end
+  end
+
+  # `tw:<name>` selects the 500 shade; `tw:<name>-<shade>` selects an explicit
+  # one. Names and shades are validated against the vendored palette, so a typo
+  # is an error rather than a silently unstyled control.
+  defp tailwind(value) do
+    with "tw:" <> rest <- String.downcase(String.trim(value)) do
+      case String.split(rest, "-", parts: 2) do
+        [name] ->
+          palette_color(name, @tailwind_default_shade)
+
+        [name, shade] ->
+          case Integer.parse(shade) do
+            {shade, ""} -> palette_color(name, shade)
+            _ -> :error
+          end
+      end
+    else
+      _ -> :error
+    end
+  end
+
+  defp palette_color(name, shade) do
+    with color when not is_nil(color) <-
+           Enum.find(Tailwind.colors(), &(Atom.to_string(&1) == name)),
+         true <- shade in Palette.shade_keys() do
+      {:ok, Map.fetch!(Tailwind.shades(color), shade)}
+    else
+      _ -> :error
+    end
   end
 
   @doc false
@@ -185,8 +252,9 @@ defmodule FlintUI.Styled.Color do
     invalid color #{inspect(value)} for the `color` prop.
 
     Use a semantic role (#{Enum.join(roles, ", ")}), an absolute tone
-    (#{Enum.join(@absolute, ", ")}), or a raw color:
+    (#{Enum.join(@absolute, ", ")}), a Tailwind palette color, or a raw color:
 
+      * tw:rose (rose-500) or tw:rose-700 (shades 50..950)
       * #rgb or #rrggbb
       * rgb(29 114 254)
       * oklch(58% 0.2 264)

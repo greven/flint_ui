@@ -43,7 +43,7 @@ defmodule FlintUI.Styled.Loading do
           default: "inherit",
           allow_custom: true,
           doc:
-            "The theme color of the indicator, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`."
+            "The theme color of the indicator, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`."
         ),
         Prop.new(
           name: :size,

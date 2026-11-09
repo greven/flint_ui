@@ -35,7 +35,7 @@ defmodule FlintUI.Styled.Button do
           default: "neutral",
           allow_custom: true,
           doc:
-            "The theme color the variant is built from, or a raw CSS color such as `#1D72FE` for a one-off accent."
+            "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :size,

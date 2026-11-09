@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.ColorTest do
   use ExUnit.Case, async: true
 
-  alias FlintUI.Palette.{Color, Contrast}
+  alias FlintUI.Palette.{Color, Contrast, Tailwind}
   alias FlintUI.Styled.Color, as: StyledColor
 
   @roles ~w(primary secondary success info warning error neutral)
@@ -21,6 +21,15 @@ defmodule FlintUI.Styled.ColorTest do
     assert StyledColor.valid?("light")
     assert StyledColor.valid?("#1D72FE")
     assert StyledColor.valid?("rgb(29 114 254)")
+    assert StyledColor.valid?("tw:rose")
+    assert StyledColor.valid?("tw:rose-700")
+    assert StyledColor.valid?("tw:neutral")
+    assert StyledColor.valid?("TW:Rose-700")
+    refute StyledColor.valid?("tw:nope")
+    refute StyledColor.valid?("tw:rose-0")
+    refute StyledColor.valid?("tw:rose-999")
+    refute StyledColor.valid?("tw:rose-")
+    refute StyledColor.valid?("tw:")
     refute StyledColor.valid?("nope")
     refute StyledColor.valid?(nil)
   end
@@ -87,8 +96,63 @@ defmodule FlintUI.Styled.ColorTest do
         end
 
       assert error.message =~ "primary"
+      assert error.message =~ "tw:rose"
       assert error.message =~ "#rrggbb"
       assert error.message =~ "oklch"
+    end
+  end
+
+  describe "tailwind palette colors" do
+    test "tw: names select the 500 shade by default" do
+      assigns =
+        StyledColor.apply(%{color: "tw:rose", rest: %{}, __changed__: %{}}, @roles, @vars)
+
+      {:ok, expected} = Color.parse(Tailwind.shades(:rose)[500])
+
+      assert assigns.data_color == nil
+      assert assigns.rest.style =~ "--fl-button-color: #{expected.css}"
+      assert assigns.rest.style =~ "--fl-button-color-content"
+      assert assigns.rest.style =~ "--fl-button-text"
+    end
+
+    test "tw: names accept an explicit shade" do
+      assigns =
+        StyledColor.apply(%{color: "tw:rose-700", rest: %{}, __changed__: %{}}, @roles, @vars)
+
+      {:ok, expected} = Color.parse(Tailwind.shades(:rose)[700])
+
+      assert assigns.rest.style =~ "--fl-button-color: #{expected.css}"
+    end
+
+    test "tw: names are case-insensitive and allow surrounding whitespace" do
+      assigns =
+        StyledColor.apply(%{color: " TW:Rose-700 ", rest: %{}, __changed__: %{}}, @roles, @vars)
+
+      {:ok, expected} = Color.parse(Tailwind.shades(:rose)[700])
+
+      assert assigns.rest.style =~ "--fl-button-color: #{expected.css}"
+    end
+
+    test "a bare role keeps the hook while tw: selects the palette" do
+      role = StyledColor.apply(%{color: "neutral", rest: %{}, __changed__: %{}}, @roles, @vars)
+
+      palette =
+        StyledColor.apply(%{color: "tw:neutral", rest: %{}, __changed__: %{}}, @roles, @vars)
+
+      assert role.data_color == "neutral"
+      assert role.rest == %{}
+      assert palette.data_color == nil
+      assert palette.rest.style =~ "--fl-button-color:"
+    end
+
+    test "the derived label and text clear AA" do
+      {:ok, color} = Color.parse(Tailwind.shades(:rose)[500])
+      derived = StyledColor.derive(color.css, color)
+
+      {light_text, dark_text} = derived.on_text
+
+      assert ratio(light_text, tint(color, Contrast.light_background())) >= 4.5
+      assert ratio(dark_text, tint(color, Contrast.dark_background())) >= 4.5
     end
   end
 

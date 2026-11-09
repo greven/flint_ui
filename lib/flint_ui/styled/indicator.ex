@@ -34,7 +34,7 @@ defmodule FlintUI.Styled.Indicator do
           allow_custom: true,
           forwarded_to: :badge,
           doc:
-            "The theme color the nested badge is built from, or a raw CSS color such as `#1D72FE` for a one-off accent."
+            "The theme color the nested badge is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :size,

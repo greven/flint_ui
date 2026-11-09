@@ -636,7 +636,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <Components.badge
       class="ml-1"
       variant="outline"
-      color="error"
+      color="tw:rose"
       radius="sm"
       size="sm"
     >

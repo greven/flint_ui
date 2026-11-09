@@ -386,6 +386,32 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </p>
         </DocsComponents.section>
 
+        <DocsComponents.section title="Ad-hoc palette colors" id="palette-colors">
+          <p class="mt-3 text-sm text-default">
+            For a one-off color, the <code class="font-mono">color</code>
+            attribute also accepts a <code class="font-mono">tw:</code>
+            prefix that names a color from the bundled Tailwind palette.
+            <code class="font-mono">tw:rose</code>
+            is <code class="font-mono">rose-500</code>; <code class="font-mono">tw:rose-700</code>
+            picks an explicit shade. The palette is vendored as data, so it works
+            without Tailwind, and FlintUI still derives an accessible label and text
+            color for the fill.
+          </p>
+          <p class="mt-3 text-sm text-default">
+            This is an escape hatch, not a role: its fill is static, so it does not follow
+            presets, <code class="font-mono">data-color-scheme</code> remapping, or a theme
+            override (the derived label and text stay readable in both schemes). Use it
+            for decoration, data-driven accents, and one-off examples. For anything
+            app-wide, map a role instead (see <a href="#palette" class="underline">Full color scales</a>).
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <Components.button color="tw:rose">Rose</Components.button>
+            <Components.button color="tw:rose-700">Rose 700</Components.button>
+            <Components.button variant="solid" color="tw:emerald-600">Emerald</Components.button>
+          </div>
+          <DocsComponents.code_block code={snippet(:palette_colors)} />
+        </DocsComponents.section>
+
         <DocsComponents.section title="Light and dark" id="light-dark">
           <p class="mt-3 text-sm text-default">
             Light and dark are automatic. To force a scheme, set
@@ -616,6 +642,14 @@ defmodule FlintUIDocsWeb.ThemeLive do
         oklch(0.702 0.183 293.541)
       );
     }
+    """
+  end
+
+  defp snippet(:palette_colors) do
+    """
+    <.button color="tw:rose">Rose 500</.button>
+    <.button color="tw:rose-700">Rose 700</.button>
+    <.button variant="solid" color="tw:emerald-600">Emerald 600</.button>
     """
   end
 
