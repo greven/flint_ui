@@ -7,9 +7,9 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
   alias FlintUIDocsWeb.Docs.Snippet
 
   @avatars [
-    %{src: "https://i.pravatar.cc/160?img=12", name: "José Valim"},
-    %{src: "https://i.pravatar.cc/160?img=32", name: "Chris McCord"},
-    %{src: "https://i.pravatar.cc/160?img=5", name: "Nuno Freire"},
+    %{src: "https://i.pravatar.cc/160?img=12", name: "John Smith"},
+    %{src: "https://i.pravatar.cc/160?img=32", name: "Jane Doe"},
+    %{src: "https://i.pravatar.cc/160?img=5", name: "Joan Wood"},
     %{name: "Chris McCord"}
   ]
 
@@ -38,7 +38,7 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
     assigns = Map.put(assigns, :avatars, @avatars)
 
     ~H"""
-    <.prose content="Pass avatars directly as children. The group handles the overlap, size cascade, and optional surface ring.
+    <.prose content="Pass [avatars](/components/avatar) directly as children. The group handles the overlap, size cascade, and optional surface ring.
       Overflow is caller-controlled, for example with a final avatar named `+3`." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.avatar_group
