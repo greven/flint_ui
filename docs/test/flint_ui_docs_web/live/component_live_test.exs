@@ -337,6 +337,24 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#usage-icon-basic [data-element='icon']")
   end
 
+  test "flag page renders a FlintUI flag and its controls", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/flag")
+
+    assert has_element?(view, "#usage-flag-basic [data-element='flag'].flag-pt")
+    assert has_element?(view, "#usage-flag-basic-controls select[name='name']")
+    assert has_element?(view, "#usage-flag-basic-controls select[name='radius']")
+
+    view
+    |> element("#usage-flag-basic-controls")
+    |> render_change(%{"name" => "flag-us-square", "overlay" => "wave", "border" => "true"})
+
+    assert has_element?(
+             view,
+             "#usage-flag-basic [data-element='flag'].flag-us-square" <>
+               "[data-overlay='wave'][data-border]"
+           )
+  end
+
   test "the icon playground selects from safelisted icons", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/icon")
 

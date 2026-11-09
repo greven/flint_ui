@@ -59,6 +59,11 @@ defmodule FlintUIDocsWeb.Nav do
         label: "Interaction",
         icon: "lucide-volume-2",
         pages: [%{id: :sound, label: "Sounds", path: "/guides/sound"}]
+      },
+      %{
+        label: "Assets",
+        icon: "lucide-shapes",
+        pages: [%{id: :icons, label: "Icons & flags", path: "/guides/icons"}]
       }
     ]
   end

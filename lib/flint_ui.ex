@@ -43,6 +43,7 @@ defmodule FlintUI do
     {:button, []},
     {:card, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
+    {:flag, []},
     {:group, []},
     {:icon, []},
     {:indicator, []},

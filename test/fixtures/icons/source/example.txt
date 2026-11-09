@@ -1,0 +1,11 @@
+defmodule Example do
+  def render(assigns) do
+    ~H"""
+    <.icon name="lucide-house" />
+    <Components.icon name="hero-x-mark-mini" class="size-4" />
+    <span class="si-github"></span>
+    <.flag name="flag-pt-square" />
+    <.icon name={"lucide-#{@icon}"} />
+    """
+  end
+end

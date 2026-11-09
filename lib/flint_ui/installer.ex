@@ -2,7 +2,7 @@ if Code.ensure_loaded?(Igniter) do
   defmodule FlintUI.Installer do
     @moduledoc false
 
-    alias FlintUI.Generator
+    alias FlintUI.{Generator, Icons}
 
     @theme_css "assets/css/flint.css"
     @app_css "assets/css/app.css"
@@ -36,24 +36,114 @@ if Code.ensure_loaded?(Igniter) do
 
     @doc "Adds `@import \"./flint.css\";` to the app stylesheet."
     def import_theme_css(igniter) do
+      append_app_css(igniter, ~s(@import "./flint.css";))
+    end
+
+    @doc """
+    Appends a line to the app stylesheet when it is not already there.
+
+    Falls back to a notice with the exact line when the host does not use the
+    standard `assets/css/app.css` path.
+    """
+    def append_app_css(igniter, line) do
       path = @app_css
 
       if Igniter.exists?(igniter, path) do
         Igniter.update_file(igniter, path, fn source ->
           content = Rewrite.Source.get(source, :content)
 
-          if String.contains?(content, "flint.css") do
+          if String.contains?(content, line) do
             source
           else
             Rewrite.Source.update(
               source,
               :content,
-              String.trim_trailing(content) <> "\n\n@import \"./flint.css\";\n"
+              String.trim_trailing(content) <> "\n\n" <> line <> "\n"
             )
           end
         end)
       else
-        Igniter.add_notice(igniter, "Add `@import \"./flint.css\";` to your main stylesheet.")
+        Igniter.add_notice(igniter, "Add `#{line}` to your main stylesheet.")
+      end
+    end
+
+    @doc "Adds the asset-only dependency for an icon set."
+    def add_icon_dep(igniter, set) do
+      %{dep_spec: dep} = Icons.get!(set)
+
+      Igniter.Project.Deps.add_dep(igniter, dep, on_exists: :skip, yes?: true)
+    end
+
+    @doc "Writes the Tailwind vendor plugin for an icon set."
+    def install_icon_plugin(igniter, set) do
+      path = "assets/vendor/#{Icons.plugin_file(set)}"
+
+      Igniter.create_new_file(igniter, path, Icons.plugin_source(set), on_exists: :skip)
+    end
+
+    @doc "Writes a placeholder for an icon set's generated plain CSS."
+    def install_icon_css_stub(igniter, set) do
+      path = Path.join("assets/css", Icons.css_file(set))
+
+      Igniter.create_new_file(igniter, path, Icons.css_stub(set), on_exists: :skip)
+    end
+
+    @doc "Adds the scanned-icon compiler to the project's compiler list."
+    def add_icon_compiler(igniter) do
+      Igniter.Project.MixProject.update(igniter, :project, [:compilers], fn
+        nil ->
+          {:ok, {:code, "Mix.compilers() ++ [:flint_icons]"}}
+
+        zipper ->
+          source = Macro.to_string(zipper.node)
+
+          cond do
+            String.contains?(source, ":flint_icons") ->
+              {:ok, zipper}
+
+            Igniter.Code.List.list?(zipper) ->
+              Igniter.Code.List.append_to_list(zipper, :flint_icons)
+
+            true ->
+              {:warning,
+               """
+               Add `:flint_icons` to your compilers in mix.exs:
+
+                   compilers: Mix.compilers() ++ [:flint_icons]
+               """}
+          end
+      end)
+    end
+
+    @doc "Stores the scanner's source globs and safelist in config.exs."
+    def configure_icon_scanner(igniter, opts) do
+      igniter =
+        case opts[:source_globs] do
+          globs when is_list(globs) and globs != [] ->
+            Igniter.Project.Config.configure_new(
+              igniter,
+              "config.exs",
+              :flint_ui,
+              [:icon_source_globs],
+              globs
+            )
+
+          _ ->
+            igniter
+        end
+
+      case opts[:safelist] do
+        safelist when is_list(safelist) and safelist != [] ->
+          Igniter.Project.Config.configure_new(
+            igniter,
+            "config.exs",
+            :flint_ui,
+            [:icon_safelist],
+            safelist
+          )
+
+        _ ->
+          igniter
       end
     end
 

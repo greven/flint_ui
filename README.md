@@ -124,6 +124,29 @@ scale, but the shipped picks assume the default scales. Custom themes are
 own token (`text-default`, `bg-surface`, `border-default`, `text-primary` vs
 `bg-primary`). That mapping needs Tailwind 4.1 or newer.
 
+## Icons and flags
+
+`<.icon>` applies `name` verbatim as a class; FlintUI does not ship icon assets.
+Install an upstream set with `mix flint.icons`, choosing Tailwind or plain CSS:
+
+```sh
+mix flint.icons lucide --tailwind
+mix flint.icons lucide --css
+mix flint.icons --all --css --scan
+```
+
+The task adds an asset-only git dependency, runs `mix deps.get`, and wires the
+set in. Heroicons (`hero-*`), Lucide (`lucide-*`), Simple Icons (`si-*`), and
+Flag Icons (`flag-*`) are supported. Plain CSS mode writes
+`assets/css/flint-<set>.css`. Add `--scan` to emit only the classes found in
+your source and install the `:flint_icons` compiler; dynamic names can be
+passed with `--safelist`. See the docs guide for the class prefixes and usage.
+
+```heex
+<.icon name="lucide-house" />
+<.flag name="flag-pt" label="Portugal" />
+```
+
 ## Documentation
 
 The docs site is a separate Phoenix app under `docs/`. It covers the styled

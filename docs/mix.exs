@@ -69,6 +69,13 @@ defmodule FlintUIDocs.MixProject do
        sparse: "icons",
        app: false,
        compile: false,
+       depth: 1},
+      {:flag_icons,
+       github: "lipis/flag-icons",
+       tag: "v7.5.0",
+       sparse: "flags",
+       app: false,
+       compile: false,
        depth: 1}
     ]
   end

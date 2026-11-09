@@ -13,7 +13,7 @@ defmodule FlintUIDocsWeb.HomeLive do
     },
     %{
       title: "Guides",
-      description: "Theming, tokens, and how the styled layer fits together.",
+      description: "Theming, icons, and how the styled layer fits together.",
       path: "/guides/theming"
     },
     %{

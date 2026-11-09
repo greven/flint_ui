@@ -13,6 +13,7 @@ defmodule FlintUI.StyledTest do
                :button,
                :card,
                :collapsible,
+               :flag,
                :group,
                :icon,
                :indicator,

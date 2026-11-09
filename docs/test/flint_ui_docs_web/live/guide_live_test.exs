@@ -70,6 +70,29 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#section-getting-started[aria-current='page']")
   end
 
+  test "icons guide documents both install modes and every set", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/icons")
+
+    assert has_element?(view, "#install")
+    assert has_element?(view, "#sets")
+    assert has_element?(view, "#tailwind")
+    assert has_element?(view, "#css")
+    assert has_element?(view, "#usage")
+    assert has_element?(view, "#accessibility")
+    assert has_element?(view, "#licenses")
+    assert has_element?(view, "#section-guides[aria-current='page']")
+    assert has_element?(view, "aside a[href='/guides/icons']")
+
+    html = render(view)
+    assert html =~ "flint.icons"
+    assert html =~ "--tailwind"
+    assert html =~ "--css"
+    assert html =~ "hero-x-mark-mini"
+    assert html =~ "lucide-house"
+    assert html =~ "si-github"
+    assert html =~ "flag-pt-square"
+  end
+
   test "theming page documents tokens and custom themes", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming")
 

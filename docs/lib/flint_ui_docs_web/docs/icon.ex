@@ -45,6 +45,7 @@ defmodule FlintUIDocsWeb.Docs.Icon do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
+    <.prose content="FlintUI does not ship icon assets. See the [Icons & flags guide](/guides/icons) to install Lucide, Heroicons, Simple Icons, or Flag Icons with Tailwind or plain CSS." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.icon name={props.name} label={blank_to_nil(props.label)} size={props.size} />
     </.preview>

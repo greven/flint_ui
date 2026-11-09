@@ -11,7 +11,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     {"mix flint.setup --tailwind", "Also map tokens onto Tailwind utilities."},
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
-    {"mix flint.theme", "Refresh the generated theme stylesheet from the library."}
+    {"mix flint.theme", "Refresh the generated theme stylesheet from the library."},
+    {"mix flint.icons <set>", "Install icon or flag assets with Tailwind or plain CSS."}
   ]
 
   @impl true

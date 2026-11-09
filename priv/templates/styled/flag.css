@@ -1,0 +1,82 @@
+@layer components {
+    /* Flag. The host flag class supplies `background-image` and `aspect-ratio`;
+     * this layer owns the box, sizing, radius, and decorative treatments. */
+    [data-element="flag"] {
+        --fl-flag-size: 1.5rem;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+        vertical-align: middle;
+        width: var(--fl-flag-size);
+        border-radius: var(--fl-radius-xs);
+        background-color: var(--fl-color-surface-muted);
+    }
+
+    [data-element="flag"][data-size="sm"] {
+        --fl-flag-size: 1.25rem;
+    }
+
+    [data-element="flag"][data-size="lg"] {
+        --fl-flag-size: 2rem;
+    }
+
+    [data-element="flag"][data-radius="none"] {
+        border-radius: 0;
+    }
+
+    [data-element="flag"][data-radius="sm"] {
+        border-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="flag"][data-radius="md"] {
+        border-radius: var(--fl-radius-md);
+    }
+
+    [data-element="flag"][data-radius="lg"] {
+        border-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="flag"][data-radius="full"] {
+        border-radius: var(--fl-radius-full);
+    }
+
+    [data-element="flag"][data-shadow] {
+        box-shadow: var(--fl-shadow-sm);
+    }
+
+    [data-element="flag"]::before,
+    [data-element="flag"]::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: inherit;
+    }
+
+    [data-element="flag"][data-overlay="linear"]::before {
+        background: linear-gradient(
+            to top,
+            rgb(0 0 0 / 30%) 2%,
+            rgb(255 255 255 / 70%) 98%
+        );
+    }
+
+    [data-element="flag"][data-overlay="wave"]::before {
+        background: linear-gradient(
+            45deg,
+            rgb(0 0 0 / 20%),
+            rgb(39 39 39 / 22%) 11%,
+            hsl(0 0% 100% / 30%) 27%,
+            rgb(0 0 0 / 24%) 41%,
+            rgb(0 0 0 / 55%) 52%,
+            hsl(0 0% 100% / 26%) 63%,
+            rgb(0 0 0 / 27%) 74%,
+            hsl(0 0% 100% / 30%)
+        );
+    }
+
+    [data-element="flag"][data-border]::after {
+        border: 1px solid color-mix(in oklab, var(--fl-color-text) 40%, transparent);
+        mix-blend-mode: overlay;
+    }
+}
