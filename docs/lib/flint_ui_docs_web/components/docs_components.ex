@@ -381,7 +381,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div :for={{part, part_attrs} <- @parts} class="mt-8 first:mt-4">
       <Components.badge
-        class="capitalize font-mono bg-blue-200/60 dark:bg-blue-200"
+        class="font-mono bg-amber-300/30 dark:bg-amber-100"
         variant="soft"
         size="xl"
       >

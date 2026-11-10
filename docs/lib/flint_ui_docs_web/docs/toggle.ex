@@ -43,7 +43,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         pressed={props.pressed}
         disabled={props.disabled}
       >
-        <.icon name="lucide-bold" /> Bold
+        <.icon name="lucide-letter-b" /> Bold
       </Components.toggle>
     </.preview>
     """

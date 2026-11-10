@@ -260,7 +260,7 @@
         color-mix(in oklab, var(--fl-color-neutral) 6%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface))
     );
-    --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 15%, var(--fl-color-surface));
+    --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 18%, var(--fl-color-surface));
 
     /* Absolute tones. Unlike `neutral`, these do not follow the color scheme:
      * `dark` stays dark and `light` stays light. They alias the neutral extremes,

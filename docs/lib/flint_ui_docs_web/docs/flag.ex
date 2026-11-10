@@ -31,11 +31,11 @@ defmodule FlintUIDocsWeb.Docs.Flag do
             default: "regular",
             label: "Shape"
           },
-          %{key: :size, type: :select, default: "md", label: "Size"},
+          %{key: :size, type: :select, default: "xl", label: "Size"},
           %{key: :radius, type: :select, default: "xs", label: "Radius"},
-          %{key: :overlay, type: :select, default: "none", label: "Overlay"},
-          %{key: :border, type: :boolean, default: false, label: "Border"},
-          %{key: :shadow, type: :boolean, default: false, label: "Shadow"}
+          %{key: :overlay, type: :select, default: "wave", label: "Overlay"},
+          %{key: :border, type: :boolean, default: true, label: "Border"},
+          %{key: :shadow, type: :boolean, default: true, label: "Shadow"}
         ]
       },
       %{
@@ -79,12 +79,12 @@ defmodule FlintUIDocsWeb.Docs.Flag do
     <.preview
       {assigns}
       code={
-        ~s|<.flag code="jp" />\n<.flag code="eu" shape="square" />\n<.flag code="pt" shape="round" />|
+        ~s|<.flag code="jp" shadow />\n<.flag code="eu" shape="square" />\n<.flag code="pt" shape="round" />|
       }
       canvas_class="gap-4"
     >
       <div class="flex items-center gap-4">
-        <Components.flag code="jp" label="Japan" />
+        <Components.flag code="jp" label="Japan" shadow />
         <Components.flag code="eu" shape="square" label="European Union" />
         <Components.flag code="ch" shape="round" label="Switzerland" />
       </div>

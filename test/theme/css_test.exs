@@ -180,7 +180,7 @@ defmodule FlintUI.Theme.CSSTest do
     # Neutral colored text keeps the page ink and the inverted label.
     assert css =~ "--fl-button-text: var(--fl-color-text-toned);"
     assert css =~ "--fl-button-color-content: var(--fl-color-text-inverted);"
-    assert css =~ "--fl-toggle-text: var(--fl-color-text);"
+    assert css =~ "--fl-toggle-text: var(--fl-color-text-toned);"
   end
 
   test "role text clears AA on surface and tinted surfaces", %{css: css} do
@@ -466,6 +466,11 @@ defmodule FlintUI.Theme.CSSTest do
 
     assert css =~
              ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="on"\] \{[^}]*border-color: var\(\s*--fl-toggle-soft-border,/
+
+    # Neutral's shared soft border is too quiet for a state change, so the
+    # toggle strengthens it to match the colored role edges.
+    assert css =~
+             "--fl-toggle-soft-border: color-mix(in oklab, var(--fl-toggle-color) 30%, var(--fl-color-surface));"
   end
 
   test "dashed is an orthogonal border modifier, not a variant", %{css: css} do
@@ -502,10 +507,10 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~r/\[data-element="toggle"\]\[data-variant="surface"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
 
-    # Subtle is a toned neutral chip when off and a tinted surface when on,
-    # rather than a lighter outline.
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-accented\);\s*border-color: var\(--fl-color-border-muted\);/
+    # Subtle keeps the neutral off state; only the pressed state carries the
+    # tinted surface.
+    refute css =~
+             ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-accented\);/
 
     assert css =~
              ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(\s*in oklab,\s*var\(\s*--fl-toggle-soft,/

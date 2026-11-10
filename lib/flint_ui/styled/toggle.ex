@@ -87,14 +87,14 @@ defmodule FlintUI.Styled.Toggle do
           name: "--fl-toggle-soft",
           default: "color-mix(in oklab, var(--fl-toggle-color) 10%, var(--fl-color-surface))",
           doc:
-            "The tinted surface behind pressed soft and subtle toggles; roles map it to the role's `-soft` token."
+            "The tinted surface behind pressed subtle toggles; roles map it to the role's `-soft` token."
         ),
         Var.new(
           name: "--fl-toggle-soft-border",
           default:
             "color-mix(in oklab, var(--fl-toggle-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
           doc:
-            "The matching border for pressed subtle and surface toggles; roles map it to the role's `-soft-border` token. A raw color falls back to the soft border-strength mix."
+            "The matching border for pressed subtle and surface toggles; colored roles map it to the role's `-soft-border` token. Neutral strengthens the shared mix so the pressed state stays legible. A raw color falls back to the soft border-strength mix."
         )
       ],
       color_vars: [

@@ -342,7 +342,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#usage-flag-basic [data-element='flag'][data-name='flag-pt'][style*='/images/flags/pt.svg']"
+             "#usage-flag-basic [data-element='flag'][data-name='flag-gb'][style*='/images/flags/gb.svg']"
            )
 
     assert has_element?(view, "#usage-flag-basic-controls select[name='code']")
@@ -376,12 +376,12 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "#shapes-flag-shapes [data-element='flag'][data-name='flag-pt-square'][data-shape='round']"
+             "#shapes-flag-shapes [data-element='flag'][data-name='flag-ch-square'][data-shape='round']"
            )
 
     assert has_element?(
              view,
-             "#overlays-flag-overlays [data-element='flag'][data-name='flag-us'][data-overlay='linear'][data-border]"
+             "#overlays-flag-overlays [data-element='flag'][data-name='flag-es'][data-overlay='linear'][data-border]"
            )
   end
 
@@ -468,25 +468,25 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   end
 
   test "preview controls opt out of password-manager autofill", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/icon")
+    {:ok, view, _html} = live(conn, ~p"/components/indicator")
 
     selector =
-      "#usage-icon-basic-controls input[name='label']" <>
+      "#usage-indicator-label-controls input[name='label']" <>
         "[autocomplete='off'][data-1p-ignore][data-form-type='other'][class*='keeper-ignore']"
 
     assert has_element?(view, selector)
   end
 
   test "submitting a text control applies it instead of reloading the page", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/components/icon")
+    {:ok, view, _html} = live(conn, ~p"/components/indicator")
 
-    assert has_element?(view, "#usage-icon-basic-controls[phx-submit='preview_change']")
+    assert has_element?(view, "#usage-indicator-label-controls[phx-submit='preview_change']")
 
     view
-    |> element("#usage-icon-basic-controls")
-    |> render_submit(%{"label" => "Warning"})
+    |> element("#usage-indicator-label-controls")
+    |> render_submit(%{"label" => "99"})
 
-    assert has_element?(view, "#usage-icon-basic [data-element='icon'][aria-label='Warning']")
+    assert has_element?(view, "#usage-indicator-label [data-element='badge']", "99")
   end
 
   test "the loading playground exposes its controls", %{conn: conn} do
@@ -515,18 +515,18 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     view
     |> element("#usage-button-variant-controls")
-    |> render_change(%{"variant" => "solid"})
+    |> render_change(%{"variant" => "outline"})
 
-    assert has_element?(view, "#usage-button-variant [data-variant='solid']")
+    assert has_element?(view, "#usage-button-variant [data-variant='outline']")
 
     view |> element("#component-sections-tab-base") |> render_click()
 
     assert has_element?(view, "#component-sections-panel-base")
-    refute has_element?(view, "#usage-button-variant [data-variant='solid']")
+    refute has_element?(view, "#usage-button-variant [data-variant='outline']")
 
     view |> element("#component-sections-tab-styled") |> render_click()
 
-    assert has_element?(view, "#usage-button-variant [data-variant='surface']")
+    assert has_element?(view, "#usage-button-variant [data-variant='solid']")
   end
 
   test "the playground code block reflects the current props", %{conn: conn} do

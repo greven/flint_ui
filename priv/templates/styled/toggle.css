@@ -169,9 +169,10 @@
     [data-element="toggle"][data-color="neutral"] {
         --fl-toggle-color: var(--fl-color-inverted);
         --fl-toggle-color-content: var(--fl-color-text-inverted);
-        --fl-toggle-text: var(--fl-color-text);
+        --fl-toggle-text: var(--fl-color-text-toned);
         --fl-toggle-soft: var(--fl-color-neutral-soft);
-        --fl-toggle-soft-border: var(--fl-color-neutral-soft-border);
+        /* A pressed neutral needs a stronger edge. */
+        --fl-toggle-soft-border: color-mix(in oklab, var(--fl-toggle-color) 32%, var(--fl-color-surface));
     }
 
     /* Absolute tones stay dark/light in either scheme. */
@@ -191,14 +192,7 @@
         --fl-toggle-soft-border: var(--fl-color-light-soft-border);
     }
 
-    /* Off states. The variant only changes how the pressed state is emphasized,
-     * so an unpressed toggle stays on the neutral chrome ladder. Subtle is the
-     * one exception: it is the toned chip the pressed state steps up from. */
-    [data-element="toggle"][data-variant="subtle"] {
-        background: var(--fl-color-surface-accented);
-        border-color: var(--fl-color-border-muted);
-    }
-
+    /* Off states. The variant only changes how the pressed state is emphasized. */
     [data-element="toggle"][data-variant="outline"] {
         background: transparent;
         box-shadow: 0 0 #0000;
