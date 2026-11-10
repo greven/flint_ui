@@ -223,6 +223,20 @@ test fails when a public base attribute or styled prop has no doc, so document
 new API on the component or prop itself. Dogfood FlintUI components in the docs;
 only deliberate unstyled demonstrations may keep raw HTML.
 
+### Shared docs chrome
+
+Guides and component pages must start with `<DocsComponents.page_header ...>` so
+every page shares one title and intro scale. Do not hand-roll an `h1` in a
+LiveView.
+
+Links are either Markdown links inside `Markdown.prose` or HEEx links carrying
+`class="docs-link"`. Both resolve to the same `.docs-prose a, .docs-link` rule in
+`docs/assets/css/app.css`; never use a bare `underline` utility for authored
+prose. Use `DocsComponents.content_paragraph/1` or `Markdown.prose` for body copy
+so guides and generated component pages keep the same text size, line height,
+and tone. Inline code inside that prose is styled automatically; hand-authored
+inline code elsewhere carries `class="docs-code font-mono"`.
+
 ### Definition of done
 
 - `mise exec -- mix format`

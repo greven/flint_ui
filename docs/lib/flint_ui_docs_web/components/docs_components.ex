@@ -10,6 +10,41 @@ defmodule FlintUIDocsWeb.DocsComponents do
   alias FlintUIDocsWeb.Markdown
   alias FlintUIDocsWeb.Nav
 
+  @doc """
+  Renders the title and intro shared by every docs page.
+
+  Keep page-level typography here instead of in each LiveView so guides and
+  component pages start with the same heading scale and intro tone. Use the
+  `:actions` slot for header actions, `:description` when the intro needs rich
+  content, and `:meta` for badges or other metadata.
+  """
+
+  attr :title, :string, required: true
+  attr :subtitle, :string, default: nil
+  attr :class, :any, default: nil
+
+  slot :actions, doc: "Actions rendered opposite the title."
+  slot :description, doc: "Rich intro content used instead of `subtitle`."
+  slot :meta, doc: "Badges or metadata rendered below the intro."
+
+  def page_header(assigns) do
+    ~H"""
+    <header class={@class}>
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="min-w-0">
+          <h1 class="text-4xl font-semibold tracking-tight">{@title}</h1>
+          <p :if={@subtitle} class="mt-4 max-w-2xl text-lg text-muted">{@subtitle}</p>
+          <div :if={@description != []} class="mt-4 max-w-2xl text-lg text-muted">
+            {render_slot(@description)}
+          </div>
+        </div>
+        {render_slot(@actions)}
+      </div>
+      {render_slot(@meta)}
+    </header>
+    """
+  end
+
   @doc false
 
   attr :title, :string, required: true
@@ -19,15 +54,9 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def component_header(assigns) do
     ~H"""
-    <header class="mb-16">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div class="min-w-0">
-          <h1 class="text-4xl font-semibold tracking-tight">{@title}</h1>
-          <p :if={@subtitle} class="mt-4 max-w-2xl text-lg text-muted">
-            {@subtitle}
-          </p>
-        </div>
-        <div :if={@links != []} class="flex flex-wrap items-center gap-2">
+    <.page_header title={@title} subtitle={@subtitle} class="mb-16">
+      <:actions :if={@links != []}>
+        <div class="flex flex-wrap items-center gap-2">
           <Components.button
             :for={link <- @links}
             href={link.href}
@@ -40,28 +69,31 @@ defmodule FlintUIDocsWeb.DocsComponents do
             {link.label}
           </Components.button>
         </div>
-      </div>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <.status_badge status={@meta.status} />
-        <Components.badge
-          variant="subtle"
-          color="neutral"
-          size="sm"
-          icon={Nav.type_icon(@meta.type)}
-          class="capitalize"
-        >
-          {to_string(@meta.type)}
-        </Components.badge>
-        <Components.badge
-          variant="subtle"
-          color="neutral"
-          size="sm"
-          icon="lucide-calendar-days"
-        >
-          Since {@meta.since}
-        </Components.badge>
-      </div>
-    </header>
+      </:actions>
+
+      <:meta>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <.status_badge status={@meta.status} />
+          <Components.badge
+            variant="subtle"
+            color="neutral"
+            size="sm"
+            icon={Nav.type_icon(@meta.type)}
+            class="capitalize"
+          >
+            {to_string(@meta.type)}
+          </Components.badge>
+          <Components.badge
+            variant="subtle"
+            color="neutral"
+            size="sm"
+            icon="lucide-calendar-days"
+          >
+            Since {@meta.since}
+          </Components.badge>
+        </div>
+      </:meta>
+    </.page_header>
     """
   end
 
@@ -190,17 +222,26 @@ defmodule FlintUIDocsWeb.DocsComponents do
     """
   end
 
-  @doc false
+  @doc """
+  Renders one authored prose paragraph through the same renderer as Markdown
+  content.
 
-  attr :as, :string, default: "p"
-  attr :class, :string, default: nil
-  slot :inner_block
+  Use this instead of a raw `<p class="text-sm">` in a guide. The paragraph then
+  shares component-page body size, line height, link treatment, and inline code
+  styling with `Markdown.prose`.
+  """
+
+  attr :as, :string, default: "p", doc: "The inner tag; keep the default for prose."
+  attr :class, :string, default: nil, doc: "Spacing classes for the prose wrapper."
+  slot :inner_block, required: true
 
   def content_paragraph(assigns) do
     ~H"""
-    <.dynamic_tag tag_name={@as} class={["text-toned", @class]}>
-      {render_slot(@inner_block)}
-    </.dynamic_tag>
+    <Markdown.prose class={@class}>
+      <.dynamic_tag tag_name={@as} class="text-toned">
+        {render_slot(@inner_block)}
+      </.dynamic_tag>
+    </Markdown.prose>
     """
   end
 

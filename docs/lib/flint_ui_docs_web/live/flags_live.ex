@@ -15,114 +15,117 @@ defmodule FlintUIDocsWeb.FlagsLive do
     ~H"""
     <Layouts.app flash={@flash} section={:guides} page={:flags}>
       <div class="max-w-3xl">
-        <h1 class="text-3xl font-semibold tracking-tight">Flags</h1>
-        <p class="mt-3 text-default">
-          <code class="font-mono">&lt;.flag&gt;</code>
-          loads a copied SVG from <code class="font-mono">/images/flags</code>
-          using <code class="font-mono">code</code>
-          and <code class="font-mono">shape</code>. Because the URL is built at
-          runtime, the code can be dynamic and the same markup works with
-          Tailwind or plain CSS. No class scanning or safelist is involved.
-        </p>
+        <DocsComponents.page_header title="Flags">
+          <:description>
+            <code class="docs-code font-mono">&lt;.flag&gt;</code>
+            loads a copied SVG from <code class="docs-code font-mono">/images/flags</code>
+            using <code class="docs-code font-mono">code</code>
+            and <code class="docs-code font-mono">shape</code>. Because the URL is built at
+            runtime, the code can be dynamic and the same markup works with
+            Tailwind or plain CSS. No class scanning or safelist is involved.
+          </:description>
+        </DocsComponents.page_header>
 
         <DocsComponents.section title="Install assets" id="install">
-          <p class="text-sm text-default">
-            Install Flag Icons with <code class="font-mono">--assets</code>. The
-            task copies the 4:3 and 1:1 SVGs to <code class="font-mono">priv/static/images/flags</code>, which is
-            already served by the default Phoenix <code class="font-mono">Plug.Static</code>
+          <DocsComponents.content_paragraph>
+            Install Flag Icons with <code class="docs-code font-mono">--assets</code>. The
+            task copies the 4:3 and 1:1 SVGs to <code class="docs-code font-mono">priv/static/images/flags</code>, which is
+            already served by the default Phoenix <code class="docs-code font-mono">Plug.Static</code>
             allowlist.
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:install)} lang={:shell} />
-          <p class="mt-3 text-sm text-default">
+          <DocsComponents.content_paragraph class="mt-3">
             The task adds the asset as a git dependency
-            (<code class="font-mono">app: false</code>, <code class="font-mono">compile: false</code>)
-            and runs <code class="font-mono">mix deps.get</code>. Re-run
-            <code class="font-mono">mix flint.icons.copy_flags</code>
+            (<code class="docs-code font-mono">app: false</code>, <code class="docs-code font-mono">compile: false</code>)
+            and runs <code class="docs-code font-mono">mix deps.get</code>. Re-run
+            <code class="docs-code font-mono">mix flint.icons.copy_flags</code>
             after
-            updating the dependency. Pass <code class="font-mono">--only pt,us</code>
-            to copy a subset; pass <code class="font-mono">--dest</code>
+            updating the dependency. Pass <code class="docs-code font-mono">--only pt,us</code>
+            to copy a subset; pass <code class="docs-code font-mono">--dest</code>
             to copy
-            elsewhere and set <code class="font-mono">config :flint_ui, flag_path: "/..."</code>
+            elsewhere and set
+            <code class="docs-code font-mono">config :flint_ui, flag_path: "/..."</code>
             to match.
-          </p>
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="Asset layout" id="assets">
-          <p class="text-sm text-default">
+          <DocsComponents.content_paragraph>
             The component maps the shape to a file and the code to a filename:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:assets)} lang={:text} />
-          <p class="mt-3 text-sm text-default">
-            The default base URL is <code class="font-mono">/images/flags</code>.
-            Override it for the whole app with <code class="font-mono">config :flint_ui, flag_path: "/images/flags"</code>,
-            or per instance with the <code class="font-mono">path</code> attribute.
-          </p>
+          <DocsComponents.content_paragraph class="mt-3">
+            The default base URL is <code class="docs-code font-mono">/images/flags</code>.
+            Override it for the whole app with <code class="docs-code font-mono">config :flint_ui, flag_path: "/images/flags"</code>,
+            or per instance with the <code class="docs-code font-mono">path</code> attribute.
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="Dynamic flags" id="dynamic">
-          <p class="text-sm text-default">
+          <DocsComponents.content_paragraph>
             Pass the selected code directly. Changing the assign changes the
             image URL on the next render, so this works in a dropdown, table, or
             any data-driven list:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:dynamic)} />
-          <p class="mt-3 text-sm text-default">
-            Give a meaningful flag a <code class="font-mono">label</code>; leave
+          <DocsComponents.content_paragraph class="mt-3">
+            Give a meaningful flag a <code class="docs-code font-mono">label</code>; leave
             decorative flags unlabeled. A flag is not a language.
-          </p>
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="Shapes" id="shapes">
-          <p class="text-sm text-default">
-            <code class="font-mono">regular</code>
-            uses the 4:3 file, <code class="font-mono">square</code>
-            uses the 1:1 file, and <code class="font-mono">round</code>
+          <DocsComponents.content_paragraph>
+            <code class="docs-code font-mono">regular</code>
+            uses the 4:3 file, <code class="docs-code font-mono">square</code>
+            uses the 1:1 file, and <code class="docs-code font-mono">round</code>
             uses the 1:1 file with a full radius:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:shapes)} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Raw flag classes" id="classes">
-          <p class="text-sm text-default">
-            The <code class="font-mono">&lt;.flag&gt;</code>
+          <DocsComponents.content_paragraph>
+            The <code class="docs-code font-mono">&lt;.flag&gt;</code>
             component does not
-            need generated classes. If you also want the raw <code class="font-mono">flag-*</code>
+            need generated classes. If you also want the raw
+            <code class="docs-code font-mono">flag-*</code>
             classes for direct use, install
             the set in Tailwind or plain CSS mode. Tailwind mode still writes a
             Flag Icons vendor plugin:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:classes)} lang={:shell} />
           <DocsComponents.code_block code={snippet(:tailwind)} lang={:css} />
-          <p class="mt-3 text-sm text-default">
-            The plugin emits <code class="font-mono">flag-&lt;code&gt;</code>
-            and <code class="font-mono">flag-&lt;code&gt;-square</code>
+          <DocsComponents.content_paragraph class="mt-3">
+            The plugin emits <code class="docs-code font-mono">flag-&lt;code&gt;</code>
+            and <code class="docs-code font-mono">flag-&lt;code&gt;-square</code>
             when it finds
             those classes literally in source, so dynamic names still need a
-            safelist. That limitation does not apply to <code class="font-mono">&lt;.flag&gt;</code>, which uses the copied
+            safelist. That limitation does not apply to <code class="docs-code font-mono">&lt;.flag&gt;</code>, which uses the copied
             SVGs instead.
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:class_usage)} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Accessibility" id="accessibility">
-          <p class="text-sm text-default">
+          <DocsComponents.content_paragraph>
             A flag is decorative by default and hidden from assistive technology.
-            When it conveys meaning on its own, pass <code class="font-mono">label</code>
+            When it conveys meaning on its own, pass <code class="docs-code font-mono">label</code>
             to expose it as an image with an accessible name:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:accessibility)} />
-          <p class="mt-3 text-sm text-default">
+          <DocsComponents.content_paragraph class="mt-3">
             Use a text label for a language and only use a flag when it
             represents the country or region itself.
-          </p>
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="Licenses" id="licenses">
-          <p class="text-sm text-default">
+          <DocsComponents.content_paragraph>
             Flag Icons are fetched from their upstream repository and keep their
             original MIT license. Review the upstream notice before
             redistributing them.
-          </p>
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
       </div>
     </Layouts.app>

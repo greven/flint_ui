@@ -26,73 +26,72 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     ~H"""
     <Layouts.app flash={@flash} section={:getting_started} page={:installation}>
       <div class="max-w-3xl">
-        <h1 class="text-3xl font-semibold tracking-tight">Installation</h1>
-        <p class="mt-3 text-default">
-          FlintUI ships accessible, unstyled components, plus a styled layer you generate
-          into your own app. Theming is plain CSS, so Tailwind is optional.
-        </p>
+        <DocsComponents.page_header
+          title="Installation"
+          subtitle="FlintUI ships accessible, unstyled components, plus a styled layer you generate into your own app. Theming is plain CSS, so Tailwind is optional."
+        />
 
         <DocsComponents.section title="1. Add the dependency" id="install">
           <DocsComponents.code_block code={snippet(:dependency)} lang={:elixir} />
-          <p class="mt-3 text-sm text-default">
-            Then run <code class="font-mono">mix deps.get</code>.
-          </p>
+          <DocsComponents.content_paragraph class="mt-3">
+            Then run <code class="docs-code font-mono">mix deps.get</code>.
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="2. Set up the theme" id="setup">
           <DocsComponents.code_block code="mix flint.setup" lang={:shell} />
-          <p class="mt-3 text-sm text-default">
-            This creates <code class="font-mono">MyAppWeb.Components</code>, copies the
-            theme stylesheet to <code class="font-mono">assets/css/flint.css</code>, imports
+          <DocsComponents.content_paragraph class="mt-3">
+            This creates <code class="docs-code font-mono">MyAppWeb.Components</code>, copies the
+            theme stylesheet to <code class="docs-code font-mono">assets/css/flint.css</code>, imports
             it, wires the components module into your HTML helpers, and registers FlintUI's
-            LiveView hooks in <code class="font-mono">assets/js/app.js</code>.
-          </p>
-          <p class="mt-3 text-sm text-default">
-            Using Tailwind? Pass <code class="font-mono">--tailwind</code>
+            LiveView hooks in <code class="docs-code font-mono">assets/js/app.js</code>.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            Using Tailwind? Pass <code class="docs-code font-mono">--tailwind</code>
             to also map the
-            FlintUI tokens onto utilities (<code class="font-mono">bg-primary</code>, <code class="font-mono">border-default</code>, …).
-            Pass <code class="font-mono">--no-js</code>
-            if you wire <code class="font-mono">app.js</code>
+            FlintUI tokens onto utilities (<code class="docs-code font-mono">bg-primary</code>, <code class="docs-code font-mono">border-default</code>, …).
+            Pass <code class="docs-code font-mono">--no-js</code>
+            if you wire <code class="docs-code font-mono">app.js</code>
             yourself.
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code="mix flint.setup --tailwind" lang={:shell} />
         </DocsComponents.section>
 
         <DocsComponents.section title="3. Brand colors (optional)" id="colors">
-          <p class="text-sm text-default">
+          <DocsComponents.content_paragraph>
             Override semantic tokens in your app stylesheet, after the theme
             import. The soft, surface, and outline label derives from the fill,
             so a role needs only its fill and solid label:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:brand)} lang={:css} />
-          <p class="mt-3 text-sm text-default">
-            For a full <code class="font-mono">50..950</code>
+          <DocsComponents.content_paragraph class="mt-3">
+            For a full <code class="docs-code font-mono">50..950</code>
             scale, map the
             role shades to the palette you already have. With Tailwind, point
-            them at the <code class="font-mono">--color-*</code>
-            variables in <code class="font-mono">app.css</code>; without Tailwind, paste the
+            them at the <code class="docs-code font-mono">--color-*</code>
+            variables in <code class="docs-code font-mono">app.css</code>; without Tailwind, paste the
             literal scale. The role tokens stay the only color contract.
-          </p>
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="4. Generate components" id="generate">
-          <p class="text-sm text-default">
+          <DocsComponents.content_paragraph>
             Generate the styled wrappers you need. They are written into your app, so you
             own and can edit them.
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:add)} lang={:shell} />
         </DocsComponents.section>
 
         <DocsComponents.section title="5. Use a component" id="usage">
-          <p class="text-sm text-default">
-            Generated components are imported from <code class="font-mono">MyAppWeb.Components</code>, so you use them with the
+          <DocsComponents.content_paragraph>
+            Generated components are imported from <code class="docs-code font-mono">MyAppWeb.Components</code>, so you use them with the
             familiar tag syntax:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:usage)} />
-          <p class="mt-3 text-sm text-default">
+          <DocsComponents.content_paragraph class="mt-3">
             The headless base stays available explicitly — useful when you want full
             control and no default styling:
-          </p>
+          </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:headless)} />
         </DocsComponents.section>
 
@@ -106,7 +105,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
             </thead>
             <tbody class="divide-y divide-default">
               <tr :for={{command, description} <- @commands}>
-                <td class="py-2 pr-4"><code class="font-mono">{command}</code></td>
+                <td class="py-2 pr-4"><code class="docs-code font-mono">{command}</code></td>
                 <td class="py-2 text-toned">{description}</td>
               </tr>
             </tbody>
@@ -114,8 +113,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
         </DocsComponents.section>
 
         <p class="mt-8 text-sm text-muted">
-          Next: browse the <.link navigate="/components" class="underline">components</.link>
-          or read about <.link navigate="/guides/theming" class="underline">theming</.link>.
+          Next: browse the <.link navigate="/components" class="docs-link">components</.link>
+          or read about <.link navigate="/guides/theming" class="docs-link">theming</.link>.
         </p>
       </div>
     </Layouts.app>

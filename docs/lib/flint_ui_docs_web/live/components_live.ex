@@ -11,13 +11,12 @@ defmodule FlintUIDocsWeb.ComponentsLive do
     ~H"""
     <Layouts.app flash={@flash} section={:components}>
       <div class="max-w-5xl">
-        <h1 class="text-3xl font-semibold tracking-tight">Components</h1>
-        <p class="mt-3 text-default">
-          Accessible components for Phoenix LiveView, with a headless base and a
-          generated styled layer you own.
-        </p>
+        <DocsComponents.page_header
+          title="Components"
+          subtitle="Accessible components for Phoenix LiveView, with a headless base and a generated styled layer you own."
+        />
 
-        <section :for={group <- @groups} id={"components-#{group.type}"} class="mt-10 first:mt-8">
+        <section :for={group <- @groups} id={"components-#{group.type}"} class="mt-10">
           <h2 data-toc="section" class="text-xl font-semibold tracking-tight">
             <DocsComponents.heading_link
               title={group.label}

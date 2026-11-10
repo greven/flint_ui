@@ -82,8 +82,8 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 <DocsComponents.code_block code={@install_command} lang={:shell} />
                 <DocsComponents.content_paragraph class="mt-4">
                   The wrapper is intentionally thin: it declares the styled props, maps them
-                  onto <code class="font-mono">data-*</code>
-                  hooks, forwards <code class="font-mono">class</code>
+                  onto <code class="docs-code font-mono">data-*</code>
+                  hooks, forwards <code class="docs-code font-mono">class</code>
                   and the base attributes, and delegates behavior to the headless component.
                   You own and can edit this code.
                 </DocsComponents.content_paragraph>
@@ -94,7 +94,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   The generated wrapper exposes these attributes and slots. Data attributes,
                   events, and runtime CSS variables are documented on the <.link
                     patch={"#{~p"/components/#{@active}?tab=base"}#data-attributes"}
-                    class="underline"
+                    class="docs-link"
                   >
                 Base tab
               </.link>.
@@ -205,7 +205,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
               <DocsComponents.section title="Selectors and State Hooks" id="selectors">
                 <p class="mt-2 text-sm text-toned">
                   The styled theme targets the component through these hooks. The headless
-                  base sets the same <code class="font-mono">data-*</code>
+                  base sets the same <code class="docs-code font-mono">data-*</code>
                   attributes, so the selectors work without the generated wrapper too.
                 </p>
                 <DocsComponents.selectors_table selectors={@css_selectors} />
@@ -224,9 +224,9 @@ defmodule FlintUIDocsWeb.ComponentLive do
                   </li>
                 </ul>
                 <p class="mt-3 text-sm text-muted">
-                  See <.link navigate={~p"/guides/theming"} class="underline">Theming</.link>
+                  See <.link navigate={~p"/guides/theming"} class="docs-link">Theming</.link>
                   for tokens and custom themes. For the headless base, see
-                  <.link navigate={~p"/getting-started/styling"} class="underline">Styling</.link>
+                  <.link navigate={~p"/getting-started/styling"} class="docs-link">Styling</.link>
                   and this component's Base tab.
                 </p>
               </DocsComponents.section>

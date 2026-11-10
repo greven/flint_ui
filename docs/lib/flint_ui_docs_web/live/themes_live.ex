@@ -3,6 +3,8 @@ defmodule FlintUIDocsWeb.ThemesLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUIDocsWeb.DocsComponents
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok, assign(socket, page_title: "Themes")}
@@ -13,12 +15,13 @@ defmodule FlintUIDocsWeb.ThemesLive do
     ~H"""
     <Layouts.app flash={@flash} page={:themes}>
       <div class="mx-auto max-w-2xl py-10">
-        <h1 class="text-3xl font-semibold tracking-tight">Themes</h1>
-        <p class="mt-3 text-default">
-          A visual theme editor is on the way. For now, the
-          <.link navigate={~p"/guides/theming"} class="underline">Theming guide</.link>
-          covers tokens, presets, and full color scales.
-        </p>
+        <DocsComponents.page_header title="Themes">
+          <:description>
+            A visual theme editor is on the way. For now, the
+            <.link navigate={~p"/guides/theming"} class="docs-link">Theming guide</.link>
+            covers tokens, presets, and full color scales.
+          </:description>
+        </DocsComponents.page_header>
       </div>
     </Layouts.app>
     """

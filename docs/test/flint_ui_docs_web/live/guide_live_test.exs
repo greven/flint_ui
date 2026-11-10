@@ -47,6 +47,14 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert render(view) =~ "mix flint.add"
   end
 
+  test "guides use the shared page header and link treatment", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/getting-started/installation")
+
+    assert has_element?(view, "main h1.text-4xl", "Installation")
+    assert has_element?(view, "main a[href='/components'].docs-link")
+    assert has_element?(view, "main .docs-prose code.docs-code", "mix deps.get")
+  end
+
   test "pages render the on-this-page outline", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/getting-started/installation")
 
