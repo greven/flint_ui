@@ -250,13 +250,28 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   @doc false
+  attr :layout, :atom, required: true, values: [:three, :two]
+
+  def reference_colgroup(assigns) do
+    ~H"""
+    <colgroup>
+      <col :for={width <- reference_widths(@layout)} class={width} />
+    </colgroup>
+    """
+  end
+
+  defp reference_widths(:three), do: ["w-[38%]", "w-[22%]", "w-[40%]"]
+  defp reference_widths(:two), do: ["w-[60%]", "w-[40%]"]
+
+  @doc false
 
   attr :rows, :list, required: true
 
   def attributes_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={:three} />
         <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Attr</th>
@@ -277,6 +292,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
               <.attribute_description
                 doc={row[:doc]}
                 values={row[:values] || []}
+                number={row[:number] || false}
                 default={row[:default]}
               />
             </td>
@@ -294,7 +310,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def slot_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={:two} />
         <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Slot</th>
@@ -350,7 +367,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def events_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={:two} />
         <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Event</th>
@@ -381,17 +399,18 @@ defmodule FlintUIDocsWeb.DocsComponents do
     ~H"""
     <div :for={{part, part_attrs} <- @parts} class="mt-8 first:mt-4">
       <Components.badge
-        class="font-mono bg-amber-300/30 dark:bg-amber-100"
+        class="font-mono text-lg leading-tight bg-sky-200/30 dark:bg-sky-100"
         variant="soft"
         size="xl"
       >
-        <span class="font-light text-neutral-700">
+        <span class="font-sans font-normal text-default/80 dark:text-inverted/80">
           {@component_name}.<span class="font-medium text-neutral-950">{part}</span>
         </span>
       </Components.badge>
 
       <div class="mt-2 overflow-x-auto">
-        <table class="w-full min-w-xl text-left text-sm">
+        <table class="w-full min-w-xl table-fixed text-left text-sm">
+          <.reference_colgroup layout={:two} />
           <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
             <tr>
               <th class="py-3 pr-6 font-medium">Attribute</th>
@@ -435,7 +454,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def css_vars_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={if @show_default, do: :three, else: :two} />
         <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Variable</th>
@@ -479,7 +499,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def selectors_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={:two} />
         <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Selector</th>
@@ -510,7 +531,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def keyboard_table(assigns) do
     ~H"""
     <div class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-xl text-left text-sm">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={:two} />
         <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
           <tr>
             <th class="py-3 pr-6 font-medium">Keys</th>
@@ -536,6 +558,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   attr :doc, :string, default: nil
   attr :values, :list, default: []
+  attr :number, :boolean, default: false
   attr :default, :any, default: nil
 
   def attribute_description(assigns) do
@@ -545,7 +568,10 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <div class="space-y-1">
       <Markdown.prose :if={@doc} content={@doc} />
       <p :if={@values != []} class="mt-3 text-xs">
-        Values: <code class={code_value_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code>
+        Values:
+        <code class={code_value_class()}>{Enum.map_join(@values, ", ", &value_label/1)}</code><span :if={
+          @number
+        }> or a number</span>
       </p>
       <p :if={@default != nil} class="mt-3 text-xs">
         Default: <code class={code_value_class()}>{default_label(@default)}</code>
@@ -567,8 +593,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
   attr :item, :map, required: true
 
   def type_cell(assigns) do
-    values = type_values(assigns.item)
-    type = assigns.item[:type] || :string
+    values = assigns.item |> type_values() |> with_number(assigns.item)
+    type = type_label(assigns.item)
     assigns = assign(assigns, values: values, type: type)
 
     ~H"""
@@ -588,6 +614,14 @@ defmodule FlintUIDocsWeb.DocsComponents do
     </span>
     """
   end
+
+  # A free-form size declared as `:any` takes a preset string or a number of
+  # pixels, so document both alternatives rather than the internal type.
+  defp type_label(%{number: true}), do: "string | number"
+  defp type_label(item), do: item[:type] || :string
+
+  defp with_number(values, %{number: true}), do: values ++ ["number"]
+  defp with_number(values, _item), do: values
 
   defp type_values(%{type: type}) when type in [:boolean, "boolean"], do: []
   defp type_values(%{values: values}) when is_list(values) and values != [], do: values

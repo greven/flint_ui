@@ -227,6 +227,14 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     refute has_element?(view, "#attributes tbody tr code", "string —")
   end
 
+  test "a numeric size documents the number alternative", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/icon")
+
+    assert has_element?(view, "#attributes tbody tr code", "string | number")
+    assert has_element?(view, "#attributes tbody tr", "or a number")
+    assert has_element?(view, "#attributes tbody tr", "xs | sm | md | lg | xl | number")
+  end
+
   test "the base tab documents base-specific content", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=base")
 

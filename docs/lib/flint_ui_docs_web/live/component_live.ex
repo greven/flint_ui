@@ -187,7 +187,10 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 previews={@previews}
               />
 
-              <DocsComponents.section title="Public CSS Variables" id="css-variables">
+              <DocsComponents.section title="CSS Variables" id="css-variables">
+                <p :if={@style_vars != []} class="mt-2 text-sm text-toned">
+                  Public CSS variables exposed by this component.
+                </p>
                 <p :if={@style_vars == []} class="mt-2 text-sm text-muted">
                   This component has no public CSS variables. Its appearance is
                   controlled by its props and the surrounding theme.
@@ -195,7 +198,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 <DocsComponents.css_vars_table
                   :if={@style_vars != []}
                   css_vars={@style_vars}
-                  show_default={true}
+                  show_default={false}
                 />
               </DocsComponents.section>
 
@@ -530,6 +533,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
       name: prop.name,
       type: if(FlintUI.Styled.Prop.boolean?(prop), do: :boolean, else: :string),
       values: prop.values,
+      number: prop.type == :any,
       default: prop.default,
       required: false,
       doc: prop.doc
