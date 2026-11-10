@@ -188,9 +188,14 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
       Set `ring` to paint a ring in the surrounding surface color so the badge reads
       as a cutout.
 
-      Match `--fl-indicator-ring-color` to the surface behind the indicator.)} />
+      Match `--fl-indicator-ring-color` to the surface behind the indicator.
+      By default the ring color is set to the surface color token `--fl-color-surface`.)} />
     <.preview :let={props} {assigns} code={&code_ring/1} collapsed>
-      <Components.indicator label="3" ring={props.ring}>
+      <Components.indicator
+        label="3"
+        ring={props.ring}
+        style="--fl-indicator-ring-color: var(--fl-color-background);"
+      >
         <Components.button variant="subtle" square aria-label="Inbox, 3 unread">
           <Components.icon name="lucide-mail" />
         </Components.button>
@@ -246,31 +251,31 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
       `Ada Lovelace, online`, and do not rely on color alone." />
     <.preview {assigns} code={&code_dot/1} collapsed>
       <div class="flex flex-wrap items-center gap-6">
-        <Components.indicator color="dark" size="xs" ring>
+        <Components.indicator color="dark" size="xs" offset="-2">
           <Components.button variant="subtle" square aria-label="Ada Lovelace, stealth">
             <Components.icon name="lucide-user-x" />
           </Components.button>
         </Components.indicator>
 
-        <Components.indicator color="success" size="sm">
+        <Components.indicator color="success" size="sm" offset="-2">
           <Components.button variant="subtle" square aria-label="Ada Lovelace, online">
             <Components.icon name="lucide-user" />
           </Components.button>
         </Components.indicator>
 
-        <Components.indicator color="warning" size="md">
+        <Components.indicator color="warning" size="md" offset="-2">
           <Components.button variant="subtle" square aria-label="Ada Lovelace, away">
             <Components.icon name="lucide-user" />
           </Components.button>
         </Components.indicator>
 
-        <Components.indicator color="error" size="lg">
+        <Components.indicator color="error" size="lg" offset="-2">
           <Components.button variant="subtle" square aria-label="Ada Lovelace, offline">
             <Components.icon name="lucide-user" />
           </Components.button>
         </Components.indicator>
 
-        <Components.indicator color="info" size="xl">
+        <Components.indicator color="info" size="xl" offset="-2">
           <Components.button variant="subtle" square aria-label="Ada Lovelace, in a meeting">
             <Components.icon name="lucide-user" />
           </Components.button>
@@ -419,7 +424,11 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
     indicator =
       Snippet.tag(
         ".indicator",
-        [Snippet.attr("label", "3"), Snippet.flag("ring", props.ring)],
+        [
+          Snippet.attr("style", "--fl-indicator-ring-color: var(--fl-color-background);"),
+          Snippet.attr("label", "3"),
+          Snippet.flag("ring", props.ring)
+        ],
         anchor_code()
       )
 
@@ -431,31 +440,31 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
 
   defp code_dot(_) do
     """
-    <.indicator color="neutral" size="xs" ring>
+    <.indicator color="neutral" size="xs" offset="-2">
       <.button variant="subtle" square aria-label="Ada Lovelace, stealth">
         <.icon name="lucide-user-x" />
       </.button>
     </.indicator>
 
-    <.indicator color="success" size="sm">
+    <.indicator color="success" size="sm" offset="-2">
       <.button variant="subtle" square aria-label="Ada Lovelace, online">
         <.icon name="lucide-user" />
       </.button>
     </.indicator>
 
-    <.indicator color="warning" size="md">
+    <.indicator color="warning" size="md" offset="-2">
       <.button variant="subtle" square aria-label="Ada Lovelace, away">
         <.icon name="lucide-user" />
       </.button>
     </.indicator>
 
-    <.indicator color="error" size="lg">
+    <.indicator color="error" size="lg" offset="-2">
       <.button variant="subtle" square aria-label="Ada Lovelace, offline">
         <.icon name="lucide-user" />
       </.button>
     </.indicator>
 
-    <.indicator color="info" size="xl">
+    <.indicator color="info" size="xl" offset="-2">
       <.button variant="subtle" square aria-label="Ada Lovelace, in a meeting">
         <.icon name="lucide-user" />
       </.button>
