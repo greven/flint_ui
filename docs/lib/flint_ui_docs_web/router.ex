@@ -29,6 +29,7 @@ defmodule FlintUIDocsWeb.Router do
     live("/guides/theming", ThemeLive, :index)
     live("/guides/sound", SoundLive, :index)
     live("/guides/icons", IconsLive, :index)
+    live("/guides/flags", FlagsLive, :index)
 
     live("/components", ComponentsLive, :index)
     live("/components/:name", ComponentLive, :show)

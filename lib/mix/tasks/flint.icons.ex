@@ -12,7 +12,7 @@ if Code.ensure_loaded?(Igniter) do
     Supported sets: `heroicons`, `lucide`, `simple_icons`, and `flags`.
 
     The task adds an asset-only dependency (no app, no compilation), then wires
-    the assets in one of two ways:
+    the assets in one of three ways:
 
       * `--tailwind` — writes a vendor plugin to `assets/vendor/` and adds the
         matching `@plugin` line to `assets/css/app.css`. Tailwind emits the
@@ -20,6 +20,10 @@ if Code.ensure_loaded?(Igniter) do
       * `--css` — writes plain CSS to `assets/css/flint-<set>.css` from the
         downloaded SVGs and imports it from `assets/css/app.css`. No Tailwind
         required.
+      * `--assets` — copies the Flag Icons SVGs into
+        `priv/static/images/flags` as `<code>.svg` and `<code>-square.svg`. The
+        `<.flag>` component builds the URL from `code` and `shape`, so dynamic
+        flags need no class and no safelist. This mode is only for `flags`.
 
     Add `--scan` to the plain CSS mode to emit only the icon classes found in
     your source instead of every icon in the set. This also installs the
@@ -29,10 +33,16 @@ if Code.ensure_loaded?(Igniter) do
 
     Names built at runtime cannot be scanned; pass them with
     `--safelist lucide-wifi,lucide-house`. `--source` overrides the default
-    source globs.
+    source globs, and `--only` copies or emits a subset.
 
-    Without either mode flag the task picks Tailwind when `app.css` imports it
-    and plain CSS otherwise.
+    Use `--assets` for the `<.flag>` component and the class modes for direct
+    `flag-*` classes:
+
+        mix flint.icons flags --assets
+        mix flint.icons flags --assets --only pt,us,br
+
+    Without a mode flag the task picks Tailwind when `app.css` imports it and
+    plain CSS otherwise.
 
     Choose the set by the class prefixes it produces:
 
@@ -40,7 +50,8 @@ if Code.ensure_loaded?(Igniter) do
         `hero-<name>-micro`
       * `lucide` — `lucide-<name>`
       * `simple_icons` — `si-<name>`
-      * `flags` — `flag-<country>` and `flag-<country>-square`
+      * `flags` — `flag-<country>` and `flag-<country>-square`; `--assets`
+        instead copies the SVGs for the `<.flag>` component
 
     Assets keep their upstream licenses: Heroicons (MIT), Lucide (ISC),
     Simple Icons (CC0-1.0), and Flag Icons (MIT).
@@ -58,9 +69,11 @@ if Code.ensure_loaded?(Igniter) do
           all: :boolean,
           tailwind: :boolean,
           css: :boolean,
+          assets: :boolean,
           scan: :boolean,
           safelist: :keep,
-          source: :keep
+          source: :keep,
+          only: :keep
         ],
         aliases: [a: :all]
       }
@@ -71,12 +84,22 @@ if Code.ensure_loaded?(Igniter) do
       sets = resolve_sets(igniter.args.positional[:sets] || [], igniter.args.options)
       mode = resolve_mode(igniter, igniter.args.options)
 
-      with {:ok, sets} <- sets, {:ok, mode} <- mode do
+      with {:ok, sets} <- sets,
+           {:ok, mode} <- mode,
+           :ok <- validate_mode(sets, mode) do
         install(igniter, sets, mode, igniter.args.options)
       else
         {:error, message} -> Igniter.add_issue(igniter, message)
       end
     end
+
+    defp validate_mode([:flag_icons], :assets), do: :ok
+
+    defp validate_mode(_sets, :assets) do
+      {:error, "`--assets` is only available for the `flags` set."}
+    end
+
+    defp validate_mode(_sets, _mode), do: :ok
 
     defp resolve_sets(positional, options) do
       names = if options[:all], do: Icons.sets(), else: positional
@@ -102,21 +125,21 @@ if Code.ensure_loaded?(Igniter) do
     end
 
     defp resolve_mode(igniter, options) do
-      cond do
-        options[:tailwind] && options[:css] ->
-          {:error, "Pass only one of `--tailwind` or `--css`."}
+      selected = for key <- [:tailwind, :css, :assets], options[key], do: key
 
-        options[:tailwind] ->
-          {:ok, :tailwind}
+      case selected do
+        [mode] ->
+          {:ok, mode}
 
-        options[:css] ->
-          {:ok, :css}
+        [_ | _] ->
+          {:error, "Pass only one of `--tailwind`, `--css`, or `--assets`."}
 
-        tailwind?(igniter) ->
-          {:ok, :tailwind}
-
-        true ->
-          {:ok, :css}
+        [] ->
+          if tailwind?(igniter) do
+            {:ok, :tailwind}
+          else
+            {:ok, :css}
+          end
       end
     end
 
@@ -163,6 +186,9 @@ if Code.ensure_loaded?(Igniter) do
               |> Installer.install_icon_css_stub(set)
               |> Installer.append_app_css(Icons.css_import(set))
             end)
+
+          :assets ->
+            igniter
         end
 
       igniter =
@@ -186,6 +212,16 @@ if Code.ensure_loaded?(Igniter) do
 
     defp maybe_generate(igniter, _sets, :tailwind, _options), do: igniter
 
+    defp maybe_generate(igniter, _sets, :assets, options) do
+      args =
+        case values(options, :only) do
+          [] -> []
+          only -> ["--only", Enum.join(only, ",")]
+        end
+
+      Igniter.add_task(igniter, "flint.icons.copy_flags", args)
+    end
+
     defp maybe_generate(igniter, sets, :css, options) do
       args =
         Enum.map(sets, &set_name/1) ++
@@ -196,7 +232,7 @@ if Code.ensure_loaded?(Igniter) do
     end
 
     defp flag_args(options) do
-      for {key, flag} <- [safelist: "--safelist", source: "--source"],
+      for {key, flag} <- [safelist: "--safelist", source: "--source", only: "--only"],
           value <- values(options, key) do
         [flag, value]
       end
@@ -254,6 +290,15 @@ if Code.ensure_loaded?(Igniter) do
             icons your source uses.
             """
           end
+
+        :assets ->
+          """
+          Installed #{names} and copied the SVGs to `priv/static/images/flags`. \
+          The `<.flag>` component builds the image URL from `code` and `shape`, so \
+          the code can be dynamic and no safelist is needed. Re-run \
+          `mix flint.icons.copy_flags` after updating the dependency; pass \
+          `--only pt,us` to copy a subset.
+          """
       end
     end
 

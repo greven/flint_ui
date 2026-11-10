@@ -8,16 +8,19 @@ defmodule FlintUI.Base.FlagTest do
 
     def default_example(assigns) do
       ~H"""
-      <.flag name="flag-pt" />
+      <.flag code="pt" />
       """
     end
 
     def flag_example(assigns) do
       ~H"""
       <.flag
-        name={@name}
+        code={@code}
+        shape={@shape}
+        path={@path}
         class={@class}
         label={@label}
+        style={@style}
         phx-click="clicked"
         data-role="test"
       />
@@ -26,7 +29,12 @@ defmodule FlintUI.Base.FlagTest do
   end
 
   defp render(overrides \\ %{}) do
-    assigns = Map.merge(%{name: "flag-pt", class: nil, label: nil}, Map.new(overrides))
+    assigns =
+      Map.merge(
+        %{code: "pt", shape: "regular", path: nil, class: nil, label: nil, style: nil},
+        Map.new(overrides)
+      )
+
     render_component(&TestComponent.flag_example/1, assigns) |> LazyHTML.from_fragment()
   end
 
@@ -42,12 +50,52 @@ defmodule FlintUI.Base.FlagTest do
     do: attr(html, "class") |> Enum.join(" ") |> String.split(" ", trim: true)
 
   describe "flag" do
-    test "renders a span with the flag class and no built-in size" do
+    test "builds the 4:3 URL from the code" do
       html = default_fragment()
 
       assert tag(html) == ["span"]
       assert attr(html, "data-element") == ["flag"]
-      assert class_list(html) == ["flag-pt"]
+      assert attr(html, "data-name") == ["flag-pt"]
+      assert attr(html, "data-shape") == ["regular"]
+      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt.svg")|]
+      assert class_list(html) == []
+    end
+
+    test "maps square and round to the 1:1 URL" do
+      html = render(shape: "square")
+      assert attr(html, "data-name") == ["flag-pt-square"]
+      assert attr(html, "data-shape") == ["square"]
+      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt-square.svg")|]
+
+      html = render(shape: "round")
+      assert attr(html, "data-name") == ["flag-pt-square"]
+      assert attr(html, "data-shape") == ["round"]
+      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt-square.svg")|]
+    end
+
+    test "normalizes the code" do
+      html = render(code: "  PT ")
+      assert attr(html, "data-name") == ["flag-pt"]
+      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt.svg")|]
+    end
+
+    test "rejects a code that would break the URL" do
+      assert_raise ArgumentError, ~r/invalid flag code/, fn ->
+        render(code: "pt'); color: red; x: url('")
+      end
+    end
+
+    test "path overrides the default asset base" do
+      html = render(path: "/assets/flags/")
+      assert attr(html, "style") == [~s|background-image: url("/assets/flags/pt.svg")|]
+    end
+
+    test "merges a caller style after the background image" do
+      html = render(style: "opacity: 0.5")
+
+      assert attr(html, "style") == [
+               ~s|background-image: url("/images/flags/pt.svg"); opacity: 0.5|
+             ]
     end
 
     test "is decorative by default" do
@@ -62,7 +110,6 @@ defmodule FlintUI.Base.FlagTest do
       html = render(class: "rounded shadow")
       classes = class_list(html)
 
-      assert "flag-pt" in classes
       assert "rounded" in classes
       assert "shadow" in classes
     end
@@ -91,6 +138,9 @@ defmodule FlintUI.Base.FlagTest do
 
       assert %FlintUI.Meta.PartAttr{value: "flag"} =
                Enum.find(parts.root, &(&1.name == "[data-element]"))
+
+      assert %FlintUI.Meta.PartAttr{name: "[data-name]"} =
+               Enum.find(parts.root, &(&1.name == "[data-name]"))
     end
   end
 end

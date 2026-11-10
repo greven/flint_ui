@@ -4,8 +4,12 @@ defmodule Example do
     <.icon name="lucide-house" />
     <Components.icon name="hero-x-mark-mini" class="size-4" />
     <span class="si-github"></span>
-    <.flag name="flag-pt-square" />
+    <span class="flag-pt-square"></span>
+    <span class="flag-us"></span>
+    <span class="flag-br-square"></span>
+    <span class="flag-de"></span>
     <.icon name={"lucide-#{@icon}"} />
+    <.flag code={@code} shape="square" />
     """
   end
 end

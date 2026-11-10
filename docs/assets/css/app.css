@@ -170,10 +170,9 @@
     }
 }
 
-/* Tailwind plugins that make the `lucide-*` and `flag-*` classes available.
-   The icon and flag installations are managed by your mix.exs. */
+/* A Tailwind plugin that makes the `lucide-*` classes available.
+   The icon installation is managed by your mix.exs. */
 @plugin "../vendor/lucide";
-@plugin "../vendor/flag-icons";
 
 /* Add variants based on LiveView classes */
 @custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);

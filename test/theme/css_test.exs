@@ -315,7 +315,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="loading_text"][data-variant="blink"])
     assert css =~ ~s([data-element="loading_text"][data-variant="shimmer"])
     assert css =~ ~s([data-element="loading_text"][data-variant="wave"])
-    assert css =~ ~s([data-element="icon"][data-size])
+    assert css =~ ~s([data-element="icon"][data-icon])
     assert css =~ "--fl-icon-size:"
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
     assert css =~ ~s([data-element="tabs"][data-variant="segmented"])

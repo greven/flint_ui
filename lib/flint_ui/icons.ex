@@ -233,6 +233,47 @@ defmodule FlintUI.Icons do
     Path.join(Mix.Project.deps_path(), Atom.to_string(dep))
   end
 
+  @doc "The installed Flag Icons SVG directory."
+  def flag_source_dir, do: Path.join(deps_path(:flag_icons), "flags")
+
+  @doc "The default public directory for copied flag SVGs."
+  def flag_public_dir, do: Path.join(["priv", "static", "images", "flags"])
+
+  @doc """
+  Copies Flag Icons SVGs into a public directory.
+
+  The 4:3 SVGs become `<code>.svg` and the 1:1 SVGs become `<code>-square.svg`,
+  matching the URL the Flag component builds. Pass `:only` to copy a subset and
+  `:source`/`:dest` to override the directories. Returns the copied paths.
+  """
+  @spec copy_flag_assets!(keyword()) :: [Path.t()]
+  def copy_flag_assets!(opts \\ []) do
+    source = opts[:source] || flag_source_dir()
+    dest = opts[:dest] || flag_public_dir()
+    only = opts[:only] |> List.wrap() |> Enum.map(&normalize_code/1) |> MapSet.new()
+
+    unless File.dir?(source) do
+      raise ArgumentError,
+            "Flag Icons assets not found at #{source}. Run `mix deps.get` first."
+    end
+
+    for {subdir, suffix} <- [{"4x3", ""}, {"1x1", "-square"}],
+        file <- Path.wildcard(Path.join([source, subdir, "*.svg"])),
+        code = Path.basename(file, ".svg"),
+        copy?(code, only) do
+      target = Path.join(dest, "#{code}#{suffix}.svg")
+      File.mkdir_p!(Path.dirname(target))
+      File.cp!(file, target)
+      target
+    end
+  end
+
+  defp copy?(code, only), do: MapSet.size(only) == 0 or MapSet.member?(only, code)
+
+  defp normalize_code(code) do
+    code |> to_string() |> String.trim() |> String.downcase()
+  end
+
   ## Rules
 
   defp rules(:heroicons, dir, classes) do

@@ -1,23 +1,44 @@
 @layer components {
-    /* Flag. The host flag class supplies `background-image` and `aspect-ratio`;
-     * this layer owns the box, sizing, radius, and decorative treatments. */
+    /* Flag. The copied SVG is applied inline as the background image; this
+     * layer owns the box, sizing, radius, and decorative treatments. */
     [data-element="flag"] {
-        --fl-flag-size: 1.5rem;
+        --fl-flag-size: var(--fl-flag-size-md);
         display: inline-block;
         position: relative;
         overflow: hidden;
         vertical-align: middle;
         width: var(--fl-flag-size);
+        aspect-ratio: 4 / 3;
         border-radius: var(--fl-radius-xs);
         background-color: var(--fl-color-surface-muted);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+
+    [data-element="flag"][data-shape="square"],
+    [data-element="flag"][data-shape="round"] {
+        aspect-ratio: 1;
+    }
+
+    [data-element="flag"][data-size="xs"] {
+        --fl-flag-size: var(--fl-flag-size-xs);
     }
 
     [data-element="flag"][data-size="sm"] {
-        --fl-flag-size: 1.25rem;
+        --fl-flag-size: var(--fl-flag-size-sm);
+    }
+
+    [data-element="flag"][data-size="md"] {
+        --fl-flag-size: var(--fl-flag-size-md);
     }
 
     [data-element="flag"][data-size="lg"] {
-        --fl-flag-size: 2rem;
+        --fl-flag-size: var(--fl-flag-size-lg);
+    }
+
+    [data-element="flag"][data-size="xl"] {
+        --fl-flag-size: var(--fl-flag-size-xl);
     }
 
     [data-element="flag"][data-radius="none"] {
@@ -36,7 +57,16 @@
         border-radius: var(--fl-radius-lg);
     }
 
+    [data-element="flag"][data-radius="xl"] {
+        border-radius: var(--fl-radius-xl);
+    }
+
     [data-element="flag"][data-radius="full"] {
+        border-radius: var(--fl-radius-full);
+    }
+
+    /* `round` is a shape, not a radius value, so it wins over the radius prop. */
+    [data-element="flag"][data-shape="round"] {
         border-radius: var(--fl-radius-full);
     }
 
@@ -54,25 +84,19 @@
     }
 
     [data-element="flag"][data-overlay="linear"]::before {
-        background: linear-gradient(
-            to top,
-            rgb(0 0 0 / 30%) 2%,
-            rgb(255 255 255 / 70%) 98%
-        );
+        mix-blend-mode: overlay;
+        /*background-image: linear-gradient(to top, rgb(0 0 0 / 30%) 2%, rgb(255 255 255 / 70%) 98%);*/
+        background-image: linear-gradient(to top, oklab(0 0 0 / 0.3) 0%, oklab(1 0 5.96046e-8 / 0.7) 100%);
+    }
+
+    @supports (background-image: linear-gradient(in lab, red, red)) {
+        [data-element="flag"][data-overlay="linear"]::before {
+            background-image: linear-gradient(to top in oklab, color-mix(in oklab, #000 30%, transparent) 2%, color-mix(in oklab, #fff 70%, transparent) 98%);
+        }
     }
 
     [data-element="flag"][data-overlay="wave"]::before {
-        background: linear-gradient(
-            45deg,
-            rgb(0 0 0 / 20%),
-            rgb(39 39 39 / 22%) 11%,
-            hsl(0 0% 100% / 30%) 27%,
-            rgb(0 0 0 / 24%) 41%,
-            rgb(0 0 0 / 55%) 52%,
-            hsl(0 0% 100% / 26%) 63%,
-            rgb(0 0 0 / 27%) 74%,
-            hsl(0 0% 100% / 30%)
-        );
+        background-image: linear-gradient(45deg, #0003, #27272738 11%, #ffffff4d 27%, #0000003d 41%, #0000008c 52%, #ffffff42 63%, #00000045 74%, #ffffff4d);
     }
 
     [data-element="flag"][data-border]::after {

@@ -1,22 +1,32 @@
 @layer components {
     /* Icon. `--fl-icon-size` is the box; per-size rules set it and a control can
-   * override it on its child, so host icon sets that read it follow the control. */
-    [data-element="icon"][data-size] {
+   * override it on its child, so host icon sets that read it follow the control.
+   * The box rule keys on the styled wrapper's `data-icon` marker so a numeric
+   * size can set `--fl-icon-size` inline without a `data-size` value. */
+    [data-element="icon"][data-icon] {
         display: inline-block;
         vertical-align: middle;
         width: var(--fl-icon-size);
         height: var(--fl-icon-size);
     }
 
+    [data-element="icon"][data-size="xs"] {
+        --fl-icon-size: var(--fl-control-icon-xs);
+    }
+
     [data-element="icon"][data-size="sm"] {
-        --fl-icon-size: 1rem;
+        --fl-icon-size: var(--fl-control-icon-sm);
     }
 
     [data-element="icon"][data-size="md"] {
-        --fl-icon-size: 1.25rem;
+        --fl-icon-size: var(--fl-control-icon-md);
     }
 
     [data-element="icon"][data-size="lg"] {
-        --fl-icon-size: 1.5rem;
+        --fl-icon-size: var(--fl-control-icon-lg);
+    }
+
+    [data-element="icon"][data-size="xl"] {
+        --fl-icon-size: var(--fl-control-icon-xl);
     }
 }

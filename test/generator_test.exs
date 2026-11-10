@@ -14,12 +14,15 @@ defmodule FlintUI.GeneratorTest do
 
       if FlintUI.Styled.Entry.prop(entry, :size) do
         # Forwarded props land on a nested element, so the wrapper writes them
-        # into a hook map instead of the root template. Avatar sizes may pass
-        # through a helper that separates scale names from numeric values.
+        # into a hook map instead of the root template. Avatar, icon, and flag
+        # sizes may pass through a helper that separates scale names from
+        # numeric values.
         assert source =~ "data-size={@size}" or
+                 source =~ "data-size={@data_size}" or
                  source =~ ~s("data-size" => assigns.size) or
-                 Regex.match?(~r/data-size=\{.*@size.*\}/, source) or
-                 Regex.match?(~r/"data-size" => .*assigns\.size/, source)
+                 source =~ ~s("data-size" => assigns.data_size) or
+                 Regex.match?(~r/data-size=\{.*@(data_)?size.*\}/, source) or
+                 Regex.match?(~r/"data-size" => .*assigns\.(data_)?size/, source)
       end
     end
   end

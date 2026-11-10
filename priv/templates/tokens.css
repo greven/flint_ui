@@ -127,6 +127,14 @@
     --fl-avatar-size-lg: 3rem;
     --fl-avatar-size-xl: 3.5rem;
 
+    /* Flag widths (16/20/24/32/40px). A flag is wider than tall, so it keeps
+     * its own width scale rather than the square control icon scale. */
+    --fl-flag-size-xs: 1rem;
+    --fl-flag-size-sm: 1.25rem;
+    --fl-flag-size-md: 1.5rem;
+    --fl-flag-size-lg: 2rem;
+    --fl-flag-size-xl: 2.5rem;
+
     /* Unified radius scale. Change `--fl-radius` to retune every component. */
     --fl-radius: 0.25rem;
     --fl-radius-xs: calc(var(--fl-radius) * 0.5);

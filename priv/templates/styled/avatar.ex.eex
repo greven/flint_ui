@@ -27,7 +27,7 @@ def <%= @name %>(assigns) do
   root_attrs =
     %{
       "data-avatar" => true,
-      "data-size" => scale_size(assigns.size),
+      "data-size" => FlintUI.Styled.Size.scale(assigns.size),
       "data-radius" => assigns.radius,
       "data-shape" => assigns.shape,
       "data-color" => assigns.data_color
@@ -65,7 +65,7 @@ end
 defp initials_color(assigns), do: assigns
 
 defp avatar_style(assigns) do
-  [assigns.color_style, size_style(assigns.size)]
+  [assigns.color_style, FlintUI.Styled.Size.style(assigns.size, "--fl-avatar-size")]
   |> Enum.reject(&(is_nil(&1) or &1 == ""))
   |> Enum.join("; ")
   |> case do
@@ -73,22 +73,6 @@ defp avatar_style(assigns) do
     style -> style
   end
 end
-
-defp scale_size(size) when size in ~w(xs sm md lg xl), do: size
-defp scale_size(_size), do: nil
-
-defp size_style(size) when is_number(size) do
-  "--fl-avatar-size: #{Float.to_string(size / 16)}rem"
-end
-
-defp size_style(size) when is_binary(size) do
-  case Float.parse(size) do
-    {number, ""} -> "--fl-avatar-size: #{Float.to_string(number / 16)}rem"
-    _ -> nil
-  end
-end
-
-defp size_style(_size), do: nil
 
 defp blank?(value) when is_binary(value), do: String.trim(value) == ""
 defp blank?(value), do: is_nil(value)

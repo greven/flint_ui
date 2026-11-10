@@ -340,18 +340,48 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "flag page renders a FlintUI flag and its controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/flag")
 
-    assert has_element?(view, "#usage-flag-basic [data-element='flag'].flag-pt")
-    assert has_element?(view, "#usage-flag-basic-controls select[name='name']")
+    assert has_element?(
+             view,
+             "#usage-flag-basic [data-element='flag'][data-name='flag-pt'][style*='/images/flags/pt.svg']"
+           )
+
+    assert has_element?(view, "#usage-flag-basic-controls select[name='code']")
+    assert has_element?(view, "#usage-flag-basic-controls select[name='shape']")
     assert has_element?(view, "#usage-flag-basic-controls select[name='radius']")
 
     view
     |> element("#usage-flag-basic-controls")
-    |> render_change(%{"name" => "flag-us-square", "overlay" => "wave", "border" => "true"})
+    |> render_change(%{
+      "code" => "us",
+      "shape" => "square",
+      "overlay" => "wave",
+      "border" => "true"
+    })
 
     assert has_element?(
              view,
-             "#usage-flag-basic [data-element='flag'].flag-us-square" <>
-               "[data-overlay='wave'][data-border]"
+             "#usage-flag-basic [data-element='flag'][data-name='flag-us-square']" <>
+               "[data-shape='square'][data-overlay='wave'][data-border]" <>
+               "[style*='/images/flags/us-square.svg']"
+           )
+
+    view
+    |> element("#usage-flag-basic-controls")
+    |> render_change(%{"shape" => "round"})
+
+    assert has_element?(
+             view,
+             "#usage-flag-basic [data-element='flag'][data-name='flag-us-square'][data-shape='round']"
+           )
+
+    assert has_element?(
+             view,
+             "#shapes-flag-shapes [data-element='flag'][data-name='flag-pt-square'][data-shape='round']"
+           )
+
+    assert has_element?(
+             view,
+             "#overlays-flag-overlays [data-element='flag'][data-name='flag-us'][data-overlay='linear'][data-border]"
            )
   end
 

@@ -127,24 +127,30 @@ own token (`text-default`, `bg-surface`, `border-default`, `text-primary` vs
 ## Icons and flags
 
 `<.icon>` applies `name` verbatim as a class; FlintUI does not ship icon assets.
-Install an upstream set with `mix flint.icons`, choosing Tailwind or plain CSS:
+Icons install with Tailwind or plain CSS. Flags for `<.flag>` install as copied
+SVGs, so the code can be dynamic and works the same with either styling mode:
 
 ```sh
+mix flint.icons flags --assets
+mix flint.icons flags --assets --only pt,us,br
+
 mix flint.icons lucide --tailwind
 mix flint.icons lucide --css
-mix flint.icons --all --css --scan
+mix flint.icons lucide --css --scan
 ```
 
-The task adds an asset-only git dependency, runs `mix deps.get`, and wires the
-set in. Heroicons (`hero-*`), Lucide (`lucide-*`), Simple Icons (`si-*`), and
-Flag Icons (`flag-*`) are supported. Plain CSS mode writes
-`assets/css/flint-<set>.css`. Add `--scan` to emit only the classes found in
-your source and install the `:flint_icons` compiler; dynamic names can be
-passed with `--safelist`. See the docs guide for the class prefixes and usage.
+The task adds an asset-only git dependency and runs `mix deps.get`. Heroicons
+(`hero-*`), Lucide (`lucide-*`), Simple Icons (`si-*`), and Flag Icons
+(`flag-*`) are supported. Plain CSS mode writes `assets/css/flint-<set>.css`;
+add `--scan` to emit only the classes found in your source and install the
+`:flint_icons` compiler. `--assets` copies the flag SVGs to
+`priv/static/images/flags`, which is what `<.flag>` loads at runtime. See the docs
+guide for the class prefixes and usage.
 
 ```heex
 <.icon name="lucide-house" />
-<.flag name="flag-pt" label="Portugal" />
+<.flag code="pt" label="Portugal" />
+<.flag code={@country_code} shape="round" label={@country_name} />
 ```
 
 ## Documentation

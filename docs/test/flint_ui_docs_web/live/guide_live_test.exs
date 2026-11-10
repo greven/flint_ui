@@ -70,7 +70,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#section-getting-started[aria-current='page']")
   end
 
-  test "icons guide documents both install modes and every set", %{conn: conn} do
+  test "icons guide documents both install modes and every icon set", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/icons")
 
     assert has_element?(view, "#install")
@@ -90,6 +90,28 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert html =~ "hero-x-mark-mini"
     assert html =~ "lucide-house"
     assert html =~ "si-github"
+    refute html =~ "/images/flags/pt.svg"
+  end
+
+  test "flags guide documents assets, dynamic codes, shapes, and raw classes", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/flags")
+
+    assert has_element?(view, "#install")
+    assert has_element?(view, "#assets")
+    assert has_element?(view, "#dynamic")
+    assert has_element?(view, "#shapes")
+    assert has_element?(view, "#classes")
+    assert has_element?(view, "#accessibility")
+    assert has_element?(view, "#licenses")
+    assert has_element?(view, "#section-guides[aria-current='page']")
+    assert has_element?(view, "aside a[href='/guides/flags']")
+
+    html = render(view)
+    assert html =~ "--assets"
+    assert html =~ "flint.icons.copy_flags"
+    assert html =~ "/images/flags/pt.svg"
+    assert html =~ "/images/flags/pt-square.svg"
+    assert html =~ "flag-icons"
     assert html =~ "flag-pt-square"
   end
 

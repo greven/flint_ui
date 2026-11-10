@@ -53,6 +53,30 @@ defmodule Mix.Tasks.Flint.IconsTest do
            end)
   end
 
+  test "flags asset mode queues the SVG copy and skips class wiring" do
+    igniter = run(["flags", "--assets", "--only", "pt,us"])
+
+    assert content(igniter, "mix.exs") =~ ":flag_icons"
+    refute_creates(igniter, "assets/vendor/flag-icons.js")
+    refute_creates(igniter, "assets/css/flint-flags.css")
+    refute content(igniter, "assets/css/app.css") =~ "flag-icons"
+    refute content(igniter, "assets/css/app.css") =~ "flint-flags.css"
+
+    assert Enum.any?(igniter.tasks, fn {task, _args} -> task == "deps.get" end)
+
+    assert Enum.any?(igniter.tasks, fn {task, args} ->
+             task == "flint.icons.copy_flags" and args == ["--only", "pt,us"]
+           end)
+  end
+
+  test "flags asset mode rejects other sets" do
+    igniter = run(["lucide", "--assets"])
+
+    assert_has_issue(igniter, fn issue ->
+      String.contains?(issue, "`--assets` is only available for the `flags` set")
+    end)
+  end
+
   test "auto-detects Tailwind from app.css" do
     igniter = run(["lucide"], ~s(@import "tailwindcss";\n))
 

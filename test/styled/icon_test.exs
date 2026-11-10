@@ -21,6 +21,12 @@ defmodule FlintUI.Styled.IconTest do
         />
         """
       end
+
+      def numeric(assigns) do
+        ~H"""
+        <.icon name="lucide-star" size={40} style="opacity: 0.5" />
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -47,6 +53,18 @@ defmodule FlintUI.Styled.IconTest do
     assert attr(document, :icon, "role") == ["img"]
     assert attr(document, :icon, "aria-label") == ["Search"]
     assert attr(document, :icon, "data-role") == ["test"]
+  end
+
+  test "a numeric size writes the icon input instead of a data hook", %{wrapper: wrapper} do
+    document = render(wrapper, :numeric)
+
+    assert attr(document, :icon, "data-size") == []
+
+    assert attr(document, :icon, "style") == [
+             "--fl-icon-size: 2.5rem; opacity: 0.5"
+           ]
+
+    assert "lucide-star" in classes(document)
   end
 
   defp classes(document) do

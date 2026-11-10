@@ -10,21 +10,24 @@ defmodule FlintUI.Styled.Flag do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add flag",
       css: "styled/flag.css",
-      tokens: [:color, :radius, :shadow],
+      tokens: [:color, :flag, :radius, :shadow],
       slots: [],
       props: [
         Prop.new(
           name: :size,
-          values: ["sm", "md", "lg"],
+          values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
+          allow_custom: true,
+          type: :any,
           doc:
-            "The flag width. Height follows the flag's aspect ratio: 4:3 for `flag-<country>`, 1:1 for `flag-<country>-square`."
+            "The flag width, from `xs` to `xl`, or a number of pixels converted to rem (`40` becomes `2.5rem`). Height follows the flag's aspect ratio: 4:3 for `regular`, 1:1 for `square` and `round`."
         ),
         Prop.new(
           name: :radius,
-          values: ["none", "xs", "sm", "md", "lg", "full"],
+          values: ["none", "xs", "sm", "md", "lg", "xl", "full"],
           default: "xs",
-          doc: "The corner radius from the shared radius scale."
+          doc:
+            "The corner radius from the shared radius scale. `round` always uses a full radius."
         ),
         Prop.new(
           name: :overlay,
@@ -48,9 +51,9 @@ defmodule FlintUI.Styled.Flag do
       vars: [
         Var.new(
           name: "--fl-flag-size",
-          default: "1.5rem",
+          default: "var(--fl-flag-size-md)",
           doc:
-            "The flag width. The generated flag class follows this variable; height comes from the flag's aspect ratio."
+            "The flag width. Set by `size`; a numeric `size` writes this input directly. Height comes from the flag's aspect ratio."
         )
       ]
     }

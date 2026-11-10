@@ -12,7 +12,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
     {"mix flint.theme", "Refresh the generated theme stylesheet from the library."},
-    {"mix flint.icons <set>", "Install icon or flag assets with Tailwind or plain CSS."}
+    {"mix flint.icons <set>", "Install icon assets with Tailwind or plain CSS."},
+    {"mix flint.icons flags --assets", "Copy flag SVGs for the <.flag> component."}
   ]
 
   @impl true

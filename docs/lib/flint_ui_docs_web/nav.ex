@@ -63,7 +63,10 @@ defmodule FlintUIDocsWeb.Nav do
       %{
         label: "Assets",
         icon: "lucide-shapes",
-        pages: [%{id: :icons, label: "Icons & flags", path: "/guides/icons"}]
+        pages: [
+          %{id: :icons, label: "Icons", path: "/guides/icons"},
+          %{id: :flags, label: "Flags", path: "/guides/flags"}
+        ]
       }
     ]
   end

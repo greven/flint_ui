@@ -6,12 +6,10 @@ defmodule FlintUIDocsWeb.Docs.Flag do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
-  # Keep these names in source so the docs Tailwind plugin generates them.
-  @flags ~w(
-    flag-pt flag-pt-square
-    flag-us flag-us-square
-    flag-br flag-jp flag-fr flag-de
-  )
+  # These codes have SVGs copied to priv/static/images/flags by
+  # `mix flint.icons.copy_flags --only pt,us,br,jp,fr,de`.
+  @codes ~w(eu gb us pt br jp fr de)
+  @shapes ~w(regular square round)
 
   @impl true
   def base_docs, do: :all
@@ -25,7 +23,14 @@ defmodule FlintUIDocsWeb.Docs.Flag do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :name, type: :select, values: @flags, default: "flag-pt", label: "Flag"},
+          %{key: :code, type: :select, values: @codes, default: "pt", label: "ISO code"},
+          %{
+            key: :shape,
+            type: :select,
+            values: @shapes,
+            default: "regular",
+            label: "Shape"
+          },
           %{key: :label, type: :string, default: "", label: "Label (accessible name)"},
           %{key: :size, type: :select, default: "md", label: "Size"},
           %{key: :radius, type: :select, default: "xs", label: "Radius"},
@@ -33,6 +38,18 @@ defmodule FlintUIDocsWeb.Docs.Flag do
           %{key: :border, type: :boolean, default: false, label: "Border"},
           %{key: :shadow, type: :boolean, default: false, label: "Shadow"}
         ]
+      },
+      %{
+        tab: :styled,
+        section: :shapes,
+        id: :shapes,
+        title: "Shapes"
+      },
+      %{
+        tab: :styled,
+        section: :overlays,
+        id: :overlays,
+        title: "Overlays"
       }
     ]
   end
@@ -40,10 +57,11 @@ defmodule FlintUIDocsWeb.Docs.Flag do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="Flags use the generated `flag-*` classes. See the [Icons & flags guide](/guides/icons) to install Flag Icons with Tailwind or plain CSS." />
+    <.prose content="`code` is the ISO 3166-1 alpha-2 code and `shape` selects the asset: `regular` is 4:3, `square` is 1:1, and `round` is the square asset with a full radius. The component loads the copied SVG from `/images/flags/<code>.svg` or `/images/flags/<code>-square.svg`, so `code` can be dynamic and works the same with Tailwind or plain CSS. See the [Flags guide](/guides/flags) to install the flag assets." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.flag
-        name={props.name}
+        code={props.code}
+        shape={props.shape}
         size={props.size}
         radius={props.radius}
         overlay={props.overlay}
@@ -55,13 +73,53 @@ defmodule FlintUIDocsWeb.Docs.Flag do
     """
   end
 
+  def render_section(%{section: :shapes, id: :shapes} = assigns) do
+    ~H"""
+    <.prose content="`shape` chooses the asset rather than stretching it. `round` uses the square asset and sets the radius to `full`." />
+    <.preview
+      {assigns}
+      code={
+        ~s|<.flag code="pt" />\n<.flag code="pt" shape="square" />\n<.flag code="pt" shape="round" />|
+      }
+      canvas_class="gap-4"
+    >
+      <div class="flex items-center gap-4">
+        <Components.flag code="pt" label="Portugal" />
+        <Components.flag code="pt" shape="square" label="Portugal" />
+        <Components.flag code="pt" shape="round" label="Portugal" />
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :overlays, id: :overlays} = assigns) do
+    ~H"""
+    <.prose content="`linear` adds a soft vertical sheen; `wave` adds a diagonal glossy band. Pair either with `border` and `shadow` on light or busy surfaces." />
+    <.preview
+      {assigns}
+      code={
+        ~s|<.flag code="us" overlay="linear" border shadow />\n<.flag code="jp" overlay="wave" border shadow />|
+      }
+      canvas_class="gap-4"
+    >
+      <div class="flex items-center gap-4">
+        <Components.flag code="us" overlay="linear" border shadow label="United States" />
+        <Components.flag code="jp" overlay="wave" border shadow label="Japan" />
+      </div>
+    </.preview>
+    """
+  end
+
   defp main_code(props) do
+    radius = if props.shape == "round", do: nil, else: props.radius
+
     Snippet.component(
       ".flag",
       [
-        Snippet.attr("name", props.name),
+        Snippet.attr("code", props.code),
+        Snippet.attr("shape", props.shape, "regular"),
         Snippet.attr("size", props.size, "md"),
-        Snippet.attr("radius", props.radius, "xs"),
+        Snippet.attr("radius", radius, "xs"),
         Snippet.attr("overlay", props.overlay, "none"),
         Snippet.flag("border", props.border),
         Snippet.flag("shadow", props.shadow),

@@ -73,7 +73,10 @@ defmodule FlintUI.IconsTest do
                "lucide-wifi",
                "hero-x-mark-mini",
                "si-github",
-               "flag-pt-square"
+               "flag-pt-square",
+               "flag-us",
+               "flag-br-square",
+               "flag-de"
              ])
   end
 
@@ -130,6 +133,42 @@ defmodule FlintUI.IconsTest do
     assert css =~ "aspect-ratio: 4 / 3"
     assert css =~ "aspect-ratio: 1"
     assert css =~ "width: var(--fl-flag-size, 1.5rem)"
+  end
+
+  test "copies flag SVGs to a public directory" do
+    dir = Path.join(System.tmp_dir!(), "flint-flags-#{System.unique_integer([:positive])}")
+
+    paths =
+      Icons.copy_flag_assets!(
+        source: Path.join(@fixtures, "flags"),
+        dest: dir
+      )
+
+    assert length(paths) == 4
+    assert File.exists?(Path.join(dir, "pt.svg"))
+    assert File.exists?(Path.join(dir, "pt-square.svg"))
+    assert File.exists?(Path.join(dir, "us.svg"))
+    assert File.exists?(Path.join(dir, "us-square.svg"))
+
+    File.rm_rf!(dir)
+  end
+
+  test "copies only the requested flag codes" do
+    dir = Path.join(System.tmp_dir!(), "flint-flags-#{System.unique_integer([:positive])}")
+
+    paths =
+      Icons.copy_flag_assets!(
+        source: Path.join(@fixtures, "flags"),
+        dest: dir,
+        only: ["PT"]
+      )
+
+    assert length(paths) == 2
+    assert File.exists?(Path.join(dir, "pt.svg"))
+    assert File.exists?(Path.join(dir, "pt-square.svg"))
+    refute File.exists?(Path.join(dir, "us.svg"))
+
+    File.rm_rf!(dir)
   end
 
   test "ships a plugin for every set" do
