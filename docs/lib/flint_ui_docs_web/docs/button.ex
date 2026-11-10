@@ -19,7 +19,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         id: :variant,
         title: "Variant",
         controls: [
-          %{key: :variant, type: :select, default: "surface", label: "Variant"},
+          %{key: :variant, type: :select, default: "solid", label: "Variant"},
           %{key: :radius, type: :select, default: "md", label: "Radius"},
           %{key: :pill, type: :boolean, default: false, label: "Pill"}
         ]
@@ -29,7 +29,11 @@ defmodule FlintUIDocsWeb.Docs.Button do
         section: :usage,
         id: :color,
         title: "Color",
-        controls: [%{key: :color, type: :select, default: "neutral", label: "Color"}]
+        controls: [
+          %{key: :color, type: :select, default: "info", label: "Color"},
+          %{key: :variant, type: :select, default: "solid", label: "Variant"},
+          %{key: :dashed, type: :boolean, default: false, label: "Dashed"}
+        ]
       },
       %{tab: :styled, section: :usage, id: :icon, title: "Icon"},
       %{tab: :styled, section: :usage, id: :size, title: "Size"},
@@ -107,9 +111,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <Components.button>Button</Components.button>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
-    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)}>
-      <Components.button text="Button" />
-    </.preview>
+    <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)} code_only />
     """
   end
 
@@ -127,7 +129,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="Use the `color` attr to change the color of the button." />
     <.preview :let={props} {assigns} code={&code_color/1}>
-      <Components.button variant="solid" color={props.color}>Button</Components.button>
+      <Components.button variant={props.variant} color={props.color} dashed={props.dashed}>Button</Components.button>
     </.preview>
 
     <.prose content="Each `color` and `variant` compose freely: every variant is available in every role.
@@ -679,7 +681,23 @@ defmodule FlintUIDocsWeb.Docs.Button do
   defp code_color(props) do
     Snippet.tag(
       ".button",
-      [Snippet.attr("color", props.color, "neutral"), Snippet.attr("variant", "solid")],
+      [
+        Snippet.attr("color", props.color, "neutral"),
+        Snippet.attr("variant", props.variant, "surface"),
+        Snippet.flag("dashed", props.dashed)
+      ],
+      "Button"
+    )
+  end
+
+  defp code_variant(props) do
+    Snippet.tag(
+      ".button",
+      [
+        Snippet.attr("variant", props.variant, "surface"),
+        Snippet.attr("radius", props.radius, "md"),
+        Snippet.flag("pill", props.pill)
+      ],
       "Button"
     )
   end
@@ -699,18 +717,6 @@ defmodule FlintUIDocsWeb.Docs.Button do
       }
       """
     ]
-  end
-
-  defp code_variant(props) do
-    Snippet.tag(
-      ".button",
-      [
-        Snippet.attr("variant", props.variant, "surface"),
-        Snippet.attr("radius", props.radius, "md"),
-        Snippet.flag("pill", props.pill)
-      ],
-      "Button"
-    )
   end
 
   defp code_wide(_) do

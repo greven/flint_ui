@@ -79,12 +79,12 @@
         content: "";
         position: absolute;
         inset: 0;
+        mix-blend-mode: overlay;
         pointer-events: none;
         border-radius: inherit;
     }
 
     [data-element="flag"][data-overlay="linear"]::before {
-        mix-blend-mode: overlay;
         /*background-image: linear-gradient(to top, rgb(0 0 0 / 30%) 2%, rgb(255 255 255 / 70%) 98%);*/
         background-image: linear-gradient(to top, oklab(0 0 0 / 0.3) 0%, oklab(1 0 5.96046e-8 / 0.7) 100%);
     }

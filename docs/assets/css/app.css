@@ -362,3 +362,5 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         margin-block: 1.25rem;
     }
 }
+
+@import "./flint-flags.css";
