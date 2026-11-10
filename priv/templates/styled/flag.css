@@ -61,10 +61,6 @@
         border-radius: var(--fl-radius-xl);
     }
 
-    [data-element="flag"][data-radius="full"] {
-        border-radius: var(--fl-radius-full);
-    }
-
     /* `round` is a shape, not a radius value, so it wins over the radius prop. */
     [data-element="flag"][data-shape="round"] {
         border-radius: var(--fl-radius-full);

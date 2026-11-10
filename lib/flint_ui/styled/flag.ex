@@ -24,7 +24,7 @@ defmodule FlintUI.Styled.Flag do
         ),
         Prop.new(
           name: :radius,
-          values: ["none", "xs", "sm", "md", "lg", "xl", "full"],
+          values: ["none", "xs", "sm", "md", "lg", "xl"],
           default: "xs",
           doc:
             "The corner radius from the shared radius scale. `round` always uses a full radius."

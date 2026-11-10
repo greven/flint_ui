@@ -23,7 +23,7 @@ defmodule FlintUIDocsWeb.Docs.Flag do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :code, type: :select, values: @codes, default: "pt", label: "ISO code"},
+          %{key: :code, type: :select, values: @codes, default: "gb", label: "ISO Code"},
           %{
             key: :shape,
             type: :select,
@@ -31,7 +31,6 @@ defmodule FlintUIDocsWeb.Docs.Flag do
             default: "regular",
             label: "Shape"
           },
-          %{key: :label, type: :string, default: "", label: "Label (accessible name)"},
           %{key: :size, type: :select, default: "md", label: "Size"},
           %{key: :radius, type: :select, default: "xs", label: "Radius"},
           %{key: :overlay, type: :select, default: "none", label: "Overlay"},
@@ -57,7 +56,9 @@ defmodule FlintUIDocsWeb.Docs.Flag do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="`code` is the ISO 3166-1 alpha-2 code and `shape` selects the asset: `regular` is 4:3, `square` is 1:1, and `round` is the square asset with a full radius. The component loads the copied SVG from `/images/flags/<code>.svg` or `/images/flags/<code>-square.svg`, so `code` can be dynamic and works the same with Tailwind or plain CSS. See the [Flags guide](/guides/flags) to install the flag assets." />
+    <.prose content="`code` is the ISO 3166-1 alpha-2 code and `shape` selects the asset: `regular` is 4:3, `square` is 1:1, and `round` is the square asset with a full radius.
+      The component loads the copied SVG from `/images/flags/<code>.svg` or `/images/flags/<code>-square.svg`, so `code` can be dynamic and works the same with Tailwind or plain CSS.
+      See the [Flags guide](/guides/flags) to install the flag assets." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.flag
         code={props.code}
@@ -67,7 +68,6 @@ defmodule FlintUIDocsWeb.Docs.Flag do
         overlay={props.overlay}
         border={props.border}
         shadow={props.shadow}
-        label={blank_to_nil(props.label)}
       />
     </.preview>
     """
@@ -79,14 +79,14 @@ defmodule FlintUIDocsWeb.Docs.Flag do
     <.preview
       {assigns}
       code={
-        ~s|<.flag code="pt" />\n<.flag code="pt" shape="square" />\n<.flag code="pt" shape="round" />|
+        ~s|<.flag code="jp" />\n<.flag code="eu" shape="square" />\n<.flag code="pt" shape="round" />|
       }
       canvas_class="gap-4"
     >
       <div class="flex items-center gap-4">
-        <Components.flag code="pt" label="Portugal" />
-        <Components.flag code="pt" shape="square" label="Portugal" />
-        <Components.flag code="pt" shape="round" label="Portugal" />
+        <Components.flag code="jp" label="Japan" />
+        <Components.flag code="eu" shape="square" label="European Union" />
+        <Components.flag code="ch" shape="round" label="Switzerland" />
       </div>
     </.preview>
     """
@@ -98,13 +98,13 @@ defmodule FlintUIDocsWeb.Docs.Flag do
     <.preview
       {assigns}
       code={
-        ~s|<.flag code="us" overlay="linear" border shadow />\n<.flag code="jp" overlay="wave" border shadow />|
+        ~s|<.flag code="es" overlay="linear" border shadow />\n<.flag code="jp" overlay="wave" border shadow />|
       }
       canvas_class="gap-4"
     >
       <div class="flex items-center gap-4">
-        <Components.flag code="us" overlay="linear" border shadow label="United States" />
-        <Components.flag code="jp" overlay="wave" border shadow label="Japan" />
+        <Components.flag code="es" overlay="linear" border shadow label="Spain" />
+        <Components.flag code="br" overlay="wave" border shadow label="Brasil" />
       </div>
     </.preview>
     """
@@ -122,13 +122,8 @@ defmodule FlintUIDocsWeb.Docs.Flag do
         Snippet.attr("radius", radius, "xs"),
         Snippet.attr("overlay", props.overlay, "none"),
         Snippet.flag("border", props.border),
-        Snippet.flag("shadow", props.shadow),
-        Snippet.attr("label", blank_to_nil(props.label))
+        Snippet.flag("shadow", props.shadow)
       ]
     )
   end
-
-  defp blank_to_nil(nil), do: nil
-  defp blank_to_nil(""), do: nil
-  defp blank_to_nil(value), do: value
 end

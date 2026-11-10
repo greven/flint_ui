@@ -35,7 +35,6 @@ defmodule FlintUIDocsWeb.Docs.Icon do
         title: "Usage",
         controls: [
           %{key: :name, type: :select, values: @icons, default: "lucide-house", label: "Icon"},
-          %{key: :label, type: :string, default: "", label: "Label (accessible name)"},
           %{key: :size, type: :select, default: "md", label: "Size"}
         ]
       }
@@ -47,7 +46,7 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     ~H"""
     <.prose content="FlintUI does not ship icon assets. See the [Icons guide](/guides/icons) to install Lucide, Heroicons, or Simple Icons with Tailwind or plain CSS." />
     <.preview :let={props} {assigns} code={&main_code/1}>
-      <Components.icon name={props.name} label={blank_to_nil(props.label)} size={props.size} />
+      <Components.icon name={props.name} size={props.size} />
     </.preview>
     """
   end
@@ -57,13 +56,8 @@ defmodule FlintUIDocsWeb.Docs.Icon do
       ".icon",
       [
         Snippet.attr("name", props.name),
-        Snippet.attr("size", props.size, "md"),
-        Snippet.attr("label", blank_to_nil(props.label))
+        Snippet.attr("size", props.size, "md")
       ]
     )
   end
-
-  defp blank_to_nil(nil), do: nil
-  defp blank_to_nil(""), do: nil
-  defp blank_to_nil(value), do: value
 end
