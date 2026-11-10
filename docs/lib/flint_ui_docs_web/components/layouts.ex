@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def site_header(assigns) do
     ~H"""
-    <div class="sticky top-0 z-20 border-b border-default bg-default/85 backdrop-blur">
+    <div class="sticky top-0 z-20 border-b border-subtle bg-default/85 backdrop-blur">
       <header>
         <div class="mx-auto grid h-14 max-w-360 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
           <.link navigate={~p"/"} class="flex items-center gap-2 justify-self-start">
@@ -173,7 +173,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def section_nav(assigns) do
     ~H"""
-    <div class="border-t border-default">
+    <div class="border-t border-subtle">
       <nav
         aria-label="Documentation sections"
         class="mx-auto flex max-w-360 items-center gap-6 px-4 sm:px-6 lg:px-8"
@@ -227,7 +227,7 @@ defmodule FlintUIDocsWeb.Layouts do
             {group.label}
           </p>
         </div>
-        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-default">
+        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-subtle">
           <.sidebar_page
             :for={item <- group.pages}
             item={item}
@@ -318,7 +318,7 @@ defmodule FlintUIDocsWeb.Layouts do
       >
         <ol
           data-toc-list
-          class="flex flex-col gap-1.5 border-l border-default text-sm"
+          class="flex flex-col gap-1.5 border-l border-subtle text-sm"
         >
         </ol>
       </nav>

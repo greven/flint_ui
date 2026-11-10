@@ -307,7 +307,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         border: 1px solid var(--fl-color-border-strong);
         border-radius: 0.25rem;
         padding: 0.125rem 0.25rem;
-        color: var(--fl-color-text-highlighted);
+        color: var(--fl-color-text-toned);
         font-family: var(--fl-font-mono);
         font-size: var(--fl-font-size-sm);
     }
