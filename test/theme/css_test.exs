@@ -84,7 +84,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-disabled-opacity: 0.5;"
 
     assert css =~
-             ~r/--fl-color-border-subtle: light-dark\(\s*oklch\(0 0 0 \/ 5%\),\s*oklch\(1 0 0 \/ 5%\)\s*\)/
+             ~r/--fl-color-border-subtle: light-dark\(\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-200\) 50%,\s*var\(--fl-color-surface\)\s*\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-900\) 50%,\s*var\(--fl-color-neutral-800\)\s*\)\s*\)/
   end
 
   test "solid buttons darken their fill for the border", %{css: css} do
@@ -96,7 +96,7 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "the pure surface anchors the page and the tint steps", %{css: css} do
-    assert css =~ "--fl-surface-step: 1.5%;"
+    assert css =~ "--fl-surface-step: 1.75%;"
 
     assert css =~
              "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));"
@@ -395,12 +395,14 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "an attached group overlaps children onto an opaque surface fill", %{css: css} do
     # The later child's opaque fill covers the previous border at the seam, so
-    # only one line shows. Neutral borders can stay alpha because the fill under
-    # them does not change on hover.
+    # only one line shows. The neutral border ladder is opaque, so it reads the
+    # same over the fill at the seam.
     assert css =~ "margin-inline-start: -1px"
     assert css =~ "margin-block-start: -1px"
     assert css =~ "--fl-color-surface:"
-    assert css =~ "oklch(1 0 0 / 8%)"
+
+    assert css =~
+             "--fl-color-border: light-dark(var(--fl-color-neutral-200), var(--fl-color-neutral-800));"
 
     # Chromatic borders are opaque against the surface fill and share the soft
     # strength across subtle and surface.

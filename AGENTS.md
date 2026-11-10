@@ -143,8 +143,8 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 - **Chrome ladders share three levels.** `surface` is the pure anchor: white in
   light and `neutral-950` in dark. `background` is the page, one tint step off it
   toward the opposite neutral extreme; `surface-subtle` is two steps and
-  `surface-strong` four. `--fl-surface-step` sets one step; its 1.5% default
-  keeps the ladder at 1.5/3/6%. The tint order is the same in both schemes, so
+  `surface-strong` four. `--fl-surface-step` sets one step; its 1.75% default
+  keeps the ladder at 1.75/3.5/7%. The tint order is the same in both schemes, so
   the page is never pure and a card is never the page color. Chrome fills and
   edges name the amount of tint, not loudness: `subtle` is the faint step and
   `strong` the heavy step, because every rung sits above the pure anchor, so

@@ -122,6 +122,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#tokens")
     assert has_element?(view, "#focus")
     assert has_element?(view, "#surfaces")
+    assert has_element?(view, "#borders")
     assert has_element?(view, "#light-dark")
     assert has_element?(view, "#absolute")
     assert has_element?(view, "#custom")
@@ -133,6 +134,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     html = render(view)
     assert html =~ "--fl-color-primary"
     assert html =~ "--fl-color-surface-subtle"
+    assert html =~ "--fl-color-border-strong"
     assert html =~ "--fl-surface-step"
     assert html =~ "--fl-disabled-opacity"
     assert html =~ "data-theme"

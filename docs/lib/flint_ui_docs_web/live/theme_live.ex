@@ -164,16 +164,16 @@ defmodule FlintUIDocsWeb.ThemeLive do
             is one tint step: <code class="font-mono">background</code>
             is the page (one step), <code class="font-mono">surface-subtle</code>
             is a faint panel (two steps), and <code class="font-mono">surface-strong</code>
-            is the strong panel (four steps). The default 1.5% keeps the ladder at
-            1.5/3/6%; raise the step to strengthen every surface together. The same
+            is the strong panel (four steps). The default 1.75% keeps the ladder at
+            1.75/3.5/7%; raise the step to strengthen every surface together. The same
             tint order holds in both schemes, so the page is never pure and a card
             is never the page color. Chrome fills and edges name the amount of tint
             (<code class="font-mono">subtle</code>, default, <code class="font-mono">strong</code>),
             because every rung sits above the pure anchor; ink alone names loudness,
             which is why <code class="font-mono">muted</code>
             is reserved for <code class="font-mono">text-muted</code>. Bordered controls paint <code class="font-mono">surface</code>, an opaque fill
-            that matches the card, so attached-group seams stay single while the
-            neutral borders can stay semi-transparent. Disabled controls dim with
+            that matches the card, so attached-group seams stay single and the
+            border ladder reads the same over every control. Disabled controls dim with
             <code class="font-mono">--fl-disabled-opacity</code>
             instead of swapping in dedicated fills.
           </p>
@@ -190,6 +190,45 @@ defmodule FlintUIDocsWeb.ThemeLive do
             </Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:surfaces)} lang={:css} />
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Borders" id="borders">
+          <p class="mt-3 text-sm text-default">
+            Borders follow the same amount ladder as surfaces.
+            <code class="font-mono">border-subtle</code>
+            is the quiet edge for dividers and soft fills, <code class="font-mono">border</code>
+            is the default edge, and <code class="font-mono">border-strong</code>
+            is the heavier edge for inputs, hover targets, and emphasis. Each
+            edge is a neutral-ramp step — <code class="font-mono">surface</code>
+            → <code class="font-mono">neutral-200</code>
+            → <code class="font-mono">neutral-300</code>
+            in light, <code class="font-mono">neutral-900</code>
+            → <code class="font-mono">neutral-800</code>
+            → <code class="font-mono">neutral-700</code>
+            in dark — with a halfway
+            mix for the rungs the 100-step ramp leaves out, so retinting the
+            neutral ramp retints the borders. The boxes below keep a transparent
+            fill so only the edge shows, and use a 2px width so the steps are
+            easy to compare.
+          </p>
+          <div class="mt-4 grid gap-3 sm:grid-cols-3">
+            <div
+              :for={
+                {name, token, role} <-
+                  [
+                    {"border-subtle", "var(--fl-color-border-subtle)", "Dividers, soft fills"},
+                    {"border", "var(--fl-color-border)", "Cards, panels"},
+                    {"border-strong", "var(--fl-color-border-strong)", "Inputs, hover targets"}
+                  ]
+              }
+              class="rounded-xl border-2 bg-transparent p-4"
+              style={"border-color: #{token};"}
+            >
+              <p class="font-mono text-sm font-semibold">{name}</p>
+              <p class="mt-1 text-xs text-muted">{role}</p>
+            </div>
+          </div>
+          <DocsComponents.code_block code={snippet(:borders)} lang={:css} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Text" id="text">
@@ -233,7 +272,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
               labels. <code class="font-mono">text-muted</code>
               clears AA on <code class="font-mono">surface</code>, the page, and <code class="font-mono">surface-subtle</code>; on
               <code class="font-mono">surface-strong</code>
-              in light it is 4.28:1, so use <code class="font-mono">text-toned</code>
+              in light it is 4.17:1, so use <code class="font-mono">text-toned</code>
               there.
             </p>
           </div>
@@ -509,7 +548,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
   defp snippet(:surfaces) do
     """
     :root {
-      --fl-surface-step: 1.5%;
+      --fl-surface-step: 1.75%;
 
       --fl-color-surface: light-dark(
         white,
@@ -535,6 +574,37 @@ defmodule FlintUIDocsWeb.ThemeLive do
       );
 
       --fl-disabled-opacity: 0.5;
+    }
+    """
+  end
+
+  defp snippet(:borders) do
+    """
+    :root {
+      --fl-color-border: light-dark(
+        var(--fl-color-neutral-200),
+        var(--fl-color-neutral-800)
+      );
+      --fl-color-border-subtle: light-dark(
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-200) 50%,
+          var(--fl-color-surface)
+        ),
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-900) 50%,
+          var(--fl-color-neutral-800)
+        )
+      );
+      --fl-color-border-strong: light-dark(
+        var(--fl-color-neutral-300),
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-700) 50%,
+          var(--fl-color-neutral-800)
+        )
+      );
     }
     """
   end

@@ -7,7 +7,7 @@
     --fl-color-primary-content: oklch(0.98 0.012 290);
     --fl-color-border: light-dark(
         oklch(0.85 0.028 300),
-        oklch(1 0 0 / 8%)
+        var(--fl-color-neutral-800)
     );
     --fl-border-strength-soft: 25%;
     --fl-color-ring: oklch(0.74 0.13 290);
