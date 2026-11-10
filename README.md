@@ -89,13 +89,14 @@ do not use it for readable content.
 
 Neutral chrome is anchored on the pure `surface`: white in light and
 `neutral-950` in dark. The page (`background`) is a one-step tint toward the
-opposite neutral extreme, `surface-muted` is two steps, and `surface-accented`
+opposite neutral extreme, `surface-subtle` is two steps, and `surface-strong`
 is four. `--fl-surface-step` sets one step; the default 1.5% keeps the ladder at
 1.5/3/6%, and raising it strengthens every surface together. The tint order is
 the same in both schemes, so the page is never pure and a card is never the page
-color. `muted` always means the faint step and `accented` always means the strong
-one, so `bg-muted` / `bg-accented` and `border-muted` / `border-accented` read
-the same way.
+color. Chrome fills and edges name the amount of tint (`subtle` / default /
+`strong`), while ink names loudness (`text-muted` and friends): a surface only
+ever moves away from the pure anchor, so `bg-subtle` / `bg-strong` and
+`border-subtle` / `border-strong` read as amounts, not ranks against the page.
 
 For a full `50..950` scale, map the role shades to the palette you already
 have. With Tailwind, point them at the `--color-*` variables in `app.css`:

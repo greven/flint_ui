@@ -169,7 +169,7 @@ defmodule FlintUIDocsWeb.SoundLive do
           cues, then attach the name that fits. Sounds are off until you turn them on:
         </p>
 
-        <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-default bg-muted p-3">
+        <div class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-default bg-subtle p-3">
           <Components.toggle
             data-sound-enable
             aria-label="Toggle interface sounds"
@@ -208,7 +208,7 @@ defmodule FlintUIDocsWeb.SoundLive do
               :for={cue <- family.cues}
               type="button"
               data-sound={cue.name}
-              class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2.5 text-left transition-colors hover:border-accented hover:bg-muted"
+              class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2.5 text-left transition-colors hover:border-strong hover:bg-subtle"
             >
               <span class="min-w-0">
                 <span class="text-sm font-medium">{cue.name}</span>
@@ -332,7 +332,7 @@ defmodule FlintUIDocsWeb.SoundLive do
                 data-sound-type="thock"
                 placeholder="Type a few words…"
                 {FlintUI.Autofill.ignore_attributes()}
-                class="keeper-ignore mt-3 w-full rounded-lg border border-accented bg-surface px-3 py-2 text-sm"
+                class="keeper-ignore mt-3 w-full rounded-lg border border-strong bg-surface px-3 py-2 text-sm"
               />
               <DocsComponents.code_block code={snippet(:type)} />
             </div>
@@ -428,7 +428,7 @@ defmodule FlintUIDocsWeb.SoundLive do
                 <th class="py-2 font-medium">Default</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-muted">
+            <tbody class="divide-y divide-subtle">
               <tr :for={{attr, fires, cue} <- @sound_attrs}>
                 <td class="py-2 pr-4 align-top">
                   <code class="font-mono text-xs">{attr}</code>

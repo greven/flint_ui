@@ -126,16 +126,16 @@ defmodule FlintUI.Theme.ContrastTest do
   } do
     # Light mode scores dark role text against the pure surface (white). Dark
     # mode scores light role text against the lightest tinted step, so the
-    # reference must be at least as light as `surface-accented`.
+    # reference must be at least as light as `surface-strong`.
     assert (Contrast.luminance(Contrast.light_background()) || 0.0) >=
              (Contrast.luminance(eval_token(tokens, "surface", :light)) || 0.0)
 
     dark_surface = eval_token(tokens, "surface", :dark)
     dark_contrast = eval_token(tokens, "neutral-50", :dark)
-    accented_dark = Contrast.mix(dark_contrast, dark_surface, step * 4)
+    strong_dark = Contrast.mix(dark_contrast, dark_surface, step * 4)
 
     assert (Contrast.luminance(Contrast.dark_background()) || 0.0) >=
-             (Contrast.luminance(accented_dark) || 0.0)
+             (Contrast.luminance(strong_dark) || 0.0)
   end
 
   test "absolute tones stay pinned and readable", %{tokens: tokens} do

@@ -17,7 +17,7 @@
         block-size: var(--fl-avatar-size);
         overflow: hidden;
         vertical-align: middle;
-        background: var(--fl-color-surface-muted);
+        background: var(--fl-color-surface-subtle);
         color: var(--fl-avatar-color-content);
         font-family: var(--fl-font-sans);
         font-weight: var(--fl-font-weight-medium);

@@ -339,9 +339,6 @@
     --fl-color-text-highlighted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
     --fl-color-text: light-dark(var(--fl-color-neutral-700), var(--fl-color-neutral-200));
     --fl-color-text-toned: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-300));
-    /* `muted` clears AA on `surface` and on the 3% `surface-muted` step, so
-     * light mode blends the 500 shade a little toward 600 instead of sitting
-     * on the AA edge. */
     --fl-color-text-muted: light-dark(color-mix(in oklab, var(--fl-color-neutral-500) 90%, var(--fl-color-neutral-600)), var(--fl-color-neutral-400));
     --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
     --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
@@ -349,7 +346,7 @@
     /* Chrome surfaces. `surface` is the pure anchor: white in light and
      * neutral-950 in dark. Everything else is a tint of it toward the opposite
      * neutral extreme, so the same tint order holds in both schemes:
-     * background 1 step -> muted 2 steps -> accented 4 steps. */
+     * background 1 step -> subtle 2 steps -> strong 4 steps. */
     --fl-surface-step: 1.5%;
 
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
@@ -358,12 +355,12 @@
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) var(--fl-surface-step),
         var(--fl-color-surface)
     );
-    --fl-color-surface-muted: color-mix(
+    --fl-color-surface-subtle: color-mix(
         in oklab,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) calc(var(--fl-surface-step) * 2),
         var(--fl-color-surface)
     );
-    --fl-color-surface-accented: color-mix(
+    --fl-color-surface-strong: color-mix(
         in oklab,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) calc(var(--fl-surface-step) * 4),
         var(--fl-color-surface)
@@ -371,12 +368,12 @@
 
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
 
-    /* Chrome borders. `muted` is the quiet edge for dividers and muted
-     * surfaces, `border` is the default edge, and `accented` is the stronger
-     * edge for inputs and hover targets. */
+    /* Chrome borders. `subtle` is the quiet edge for dividers and soft
+     * surfaces, `border` is the default edge, and `strong` is the heavier edge
+     * for inputs and hover targets. */
     --fl-color-border: light-dark(var(--fl-color-neutral-200), oklch(1 0 0 / 8%));
-    --fl-color-border-muted: light-dark(oklch(0 0 0 / 5%), oklch(1 0 0 / 5%));
-    --fl-color-border-accented: light-dark(var(--fl-color-neutral-300), oklch(1 0 0 / 12%));
+    --fl-color-border-subtle: light-dark(oklch(0 0 0 / 5%), oklch(1 0 0 / 5%));
+    --fl-color-border-strong: light-dark(var(--fl-color-neutral-300), oklch(1 0 0 / 12%));
     --fl-color-ring: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
 
     /* Colored control borders. */

@@ -142,14 +142,15 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   `text-toned` over `text-muted`.
 - **Chrome ladders share three levels.** `surface` is the pure anchor: white in
   light and `neutral-950` in dark. `background` is the page, one tint step off it
-  toward the opposite neutral extreme; `surface-muted` is two steps and
-  `surface-accented` four. `--fl-surface-step` sets one step; its 1.5% default
+  toward the opposite neutral extreme; `surface-subtle` is two steps and
+  `surface-strong` four. `--fl-surface-step` sets one step; its 1.5% default
   keeps the ladder at 1.5/3/6%. The tint order is the same in both schemes, so
-  the page is never pure and a card is never the page color. `muted` is the
-  faint step and `accented` the strong step, so `border-muted` / `border` /
-  `border-accented` read the same way. Opaque bordered controls paint
-  `surface`, so attached-group seams stay single. Never use `muted` for a strong
-  fill.
+  the page is never pure and a card is never the page color. Chrome fills and
+  edges name the amount of tint, not loudness: `subtle` is the faint step and
+  `strong` the heavy step, because every rung sits above the pure anchor, so
+  `border-subtle` / `border` / `border-strong` read as amounts. `muted` belongs
+  to ink only (`text-muted`). Opaque bordered controls paint `surface`, so
+  attached-group seams stay single. Never use `subtle` for a strong fill.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.

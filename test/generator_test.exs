@@ -97,7 +97,7 @@ defmodule FlintUI.GeneratorTest do
              "include: ~w(as orientation padded title_id href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"
 
     assert source =~ "attr(:body, :string"
-    assert source =~ "values: ~w(solid soft accented ghost)"
+    assert source =~ "values: ~w(solid soft strong ghost)"
 
     assert source =~
              "values: ~w(seamless inset flush divided separated separated-header separated-footer)"
@@ -261,8 +261,8 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--text-color-muted: var(--fl-color-text-muted);"
     assert bridge =~ "--text-color-dimmed: var(--fl-color-text-dimmed);"
     assert bridge =~ "--background-color-default: var(--fl-color-background);"
-    assert bridge =~ "--background-color-muted: var(--fl-color-surface-muted);"
-    assert bridge =~ "--background-color-accented: var(--fl-color-surface-accented);"
+    assert bridge =~ "--background-color-subtle: var(--fl-color-surface-subtle);"
+    assert bridge =~ "--background-color-strong: var(--fl-color-surface-strong);"
     refute bridge =~ "--background-color-control"
     assert bridge =~ "--border-color-default: var(--fl-color-border);"
     assert bridge =~ "--divide-color-default: var(--fl-color-border);"

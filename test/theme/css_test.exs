@@ -59,12 +59,12 @@ defmodule FlintUI.Theme.CSSTest do
           text-inverted
           background
           surface
-          surface-muted
-          surface-accented
+          surface-subtle
+          surface-strong
           inverted
           border
-          border-muted
-          border-accented
+          border-subtle
+          border-strong
           ring
         ) do
       assert css =~ "--fl-color-#{token}:"
@@ -77,10 +77,14 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "--fl-color-surface-soft"
     refute css =~ "--fl-color-surface-foreground"
     refute css =~ "--fl-color-muted:"
+    refute css =~ "--fl-color-surface-muted"
+    refute css =~ "--fl-color-surface-accented"
+    refute css =~ "--fl-color-border-muted"
+    refute css =~ "--fl-color-border-accented"
     assert css =~ "--fl-disabled-opacity: 0.5;"
 
     assert css =~
-             ~r/--fl-color-border-muted: light-dark\(\s*oklch\(0 0 0 \/ 5%\),\s*oklch\(1 0 0 \/ 5%\)\s*\)/
+             ~r/--fl-color-border-subtle: light-dark\(\s*oklch\(0 0 0 \/ 5%\),\s*oklch\(1 0 0 \/ 5%\)\s*\)/
   end
 
   test "solid buttons darken their fill for the border", %{css: css} do
@@ -101,10 +105,10 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/--fl-color-background: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*var\(--fl-surface-step\),\s*var\(--fl-color-surface\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-surface-muted: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 2\),\s*var\(--fl-color-surface\)\s*\)/
+             ~r/--fl-color-surface-subtle: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 2\),\s*var\(--fl-color-surface\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-surface-accented: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 4\),\s*var\(--fl-color-surface\)\s*\)/
+             ~r/--fl-color-surface-strong: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 4\),\s*var\(--fl-color-surface\)\s*\)/
 
     refute css =~ "--fl-color-control:"
   end
@@ -128,19 +132,19 @@ defmodule FlintUI.Theme.CSSTest do
     end
 
     white = "oklch(100% 0 none)"
-    # Conservative proxies for the pure surface and the 6% accented step: use
+    # Conservative proxies for the pure surface and the 6% strong step: use
     # surfaces at least as dark as the real light steps and at least as light as
     # the real dark steps so the AA checks do not overstate contrast.
     light_surface = neutral.(100)
-    light_accented = neutral.(200)
+    light_strong = neutral.(200)
     dark_surface = neutral.(900)
-    dark_accented = neutral.(800)
+    dark_strong = neutral.(800)
 
     for {fg, surfaces} <- [
-          {neutral.(700), [light_surface, light_accented]},
-          {neutral.(200), [dark_surface, dark_accented]},
-          {neutral.(600), [light_surface, light_accented]},
-          {neutral.(300), [dark_surface, dark_accented]}
+          {neutral.(700), [light_surface, light_strong]},
+          {neutral.(200), [dark_surface, dark_strong]},
+          {neutral.(600), [light_surface, light_strong]},
+          {neutral.(300), [dark_surface, dark_strong]}
         ],
         surface <- surfaces do
       assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
@@ -151,7 +155,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert FlintUI.Palette.Contrast.ratio(white, neutral.(950)) >= 4.5
 
     # `text-muted` clears AA on the pure surface, the page tint, and the
-    # `surface-muted` step, but not on the stronger `surface-accented` step.
+    # `surface-subtle` step, but not on the stronger `surface-strong` step.
     text_muted = FlintUI.Palette.Contrast.mix(neutral.(500), neutral.(600), 0.9)
     assert FlintUI.Palette.Contrast.ratio(text_muted, white) >= 4.5
     assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(50)) >= 4.5
@@ -300,7 +304,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s{:is([data-element="icon"], [data-element="loading"])}
     assert css =~ ~s([data-element="card"][data-card])
     assert css =~ ~s([data-element="card"][data-variant="soft"])
-    assert css =~ ~s([data-element="card"][data-variant="accented"])
+    assert css =~ ~s([data-element="card"][data-variant="strong"])
     assert css =~ ~s([data-element="card"][data-variant="ghost"])
     assert css =~ "--fl-card-surface: transparent;"
     assert css =~ ~s([data-element="card"][data-inverted][data-variant="ghost"])
@@ -470,7 +474,7 @@ defmodule FlintUI.Theme.CSSTest do
     # Neutral's shared soft border is too quiet for a state change, so the
     # toggle strengthens it to match the colored role edges.
     assert css =~
-             "--fl-toggle-soft-border: color-mix(in oklab, var(--fl-toggle-color) 30%, var(--fl-color-surface));"
+             "--fl-toggle-soft-border: color-mix(in oklab, var(--fl-toggle-color) 32%, var(--fl-color-surface));"
   end
 
   test "dashed is an orthogonal border modifier, not a variant", %{css: css} do
@@ -510,7 +514,7 @@ defmodule FlintUI.Theme.CSSTest do
     # Subtle keeps the neutral off state; only the pressed state carries the
     # tinted surface.
     refute css =~
-             ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-accented\);/
+             ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-strong\);/
 
     assert css =~
              ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(\s*in oklab,\s*var\(\s*--fl-toggle-soft,/

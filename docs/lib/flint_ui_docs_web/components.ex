@@ -593,7 +593,7 @@ defmodule FlintUIDocsWeb.Components do
   headless component. Headless behavior comes from `FlintUI.card`.
   """
   attr(:variant, :string,
-    values: ~w(solid soft accented ghost),
+    values: ~w(solid soft strong ghost),
     default: "solid",
     doc:
       "The neutral surface treatment of the card. `ghost` drops the card's own surface and elevation, composing with `outline` for an outline-only card or a bare container."

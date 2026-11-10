@@ -36,7 +36,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </p>
           <DocsComponents.code_block code={snippet(:how)} lang={:css} />
 
-          <div class="mt-4 rounded-lg border border-default bg-muted p-4">
+          <div class="mt-4 rounded-lg border border-default bg-subtle p-4">
             <p class="text-sm font-medium text-default">
               The theme applies to the styled layer, not the base components.
             </p>
@@ -81,7 +81,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <ul class="mt-2 flex flex-wrap gap-2">
               <li
                 :for={token <- tokens}
-                class="rounded-md bg-accented px-2 py-1 font-mono text-xs"
+                class="rounded-md bg-strong px-2 py-1 font-mono text-xs"
               >
                 {token}
               </li>
@@ -162,19 +162,23 @@ defmodule FlintUIDocsWeb.ThemeLive do
             in dark. The page and the other surface steps are tints of it toward
             the opposite neutral extreme. <code class="font-mono">--fl-surface-step</code>
             is one tint step: <code class="font-mono">background</code>
-            is the page (one step), <code class="font-mono">surface-muted</code>
-            is a faint panel (two steps), and <code class="font-mono">surface-accented</code>
+            is the page (one step), <code class="font-mono">surface-subtle</code>
+            is a faint panel (two steps), and <code class="font-mono">surface-strong</code>
             is the strong panel (four steps). The default 1.5% keeps the ladder at
             1.5/3/6%; raise the step to strengthen every surface together. The same
             tint order holds in both schemes, so the page is never pure and a card
-            is never the page color. Bordered controls paint <code class="font-mono">surface</code>, an opaque fill
+            is never the page color. Chrome fills and edges name the amount of tint
+            (<code class="font-mono">subtle</code>, default, <code class="font-mono">strong</code>),
+            because every rung sits above the pure anchor; ink alone names loudness,
+            which is why <code class="font-mono">muted</code>
+            is reserved for <code class="font-mono">text-muted</code>. Bordered controls paint <code class="font-mono">surface</code>, an opaque fill
             that matches the card, so attached-group seams stay single while the
             neutral borders can stay semi-transparent. Disabled controls dim with
             <code class="font-mono">--fl-disabled-opacity</code>
             instead of swapping in dedicated fills.
           </p>
           <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Components.card :for={variant <- ~w(solid soft accented)} variant={variant}>
+            <Components.card :for={variant <- ~w(solid soft strong)} variant={variant}>
               <:title>{variant}</:title>
               <p class="text-sm text-toned">Body</p>
             </Components.card>
@@ -220,15 +224,15 @@ defmodule FlintUIDocsWeb.ThemeLive do
               <p class="mt-1 text-sm">The quick brown fox</p>
             </div>
           </div>
-          <div class="mt-4 rounded-lg border border-default bg-muted p-4 text-sm text-default">
+          <div class="mt-4 rounded-lg border border-default bg-subtle p-4 text-sm text-default">
             <p class="font-medium">Dimmed is below AA by design</p>
             <p class="mt-1">
               <code class="font-mono">text-dimmed</code>
               is 2.6:1 on white and 4.6:1 on the dark page. Use it for placeholders,
               disabled labels, and decoration — never for body copy or interactive
               labels. <code class="font-mono">text-muted</code>
-              clears AA on <code class="font-mono">surface</code>, the page, and <code class="font-mono">surface-muted</code>; on
-              <code class="font-mono">surface-accented</code>
+              clears AA on <code class="font-mono">surface</code>, the page, and <code class="font-mono">surface-subtle</code>; on
+              <code class="font-mono">surface-strong</code>
               in light it is 4.28:1, so use <code class="font-mono">text-toned</code>
               there.
             </p>
@@ -517,13 +521,13 @@ defmodule FlintUIDocsWeb.ThemeLive do
           var(--fl-surface-step),
         var(--fl-color-surface)
       );
-      --fl-color-surface-muted: color-mix(
+      --fl-color-surface-subtle: color-mix(
         in oklab,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
           calc(var(--fl-surface-step) * 2),
         var(--fl-color-surface)
       );
-      --fl-color-surface-accented: color-mix(
+      --fl-color-surface-strong: color-mix(
         in oklab,
         light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
           calc(var(--fl-surface-step) * 4),

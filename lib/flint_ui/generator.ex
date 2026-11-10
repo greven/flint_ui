@@ -124,8 +124,8 @@ defmodule FlintUI.Generator do
   @doc """
   The `@theme` mapping that exposes FlintUI tokens as Tailwind utilities.
 
-  Colors are mapped per utility family, so `text-muted`, `bg-muted`, and
-  `border-muted` resolve to the text, surface, and border tokens respectively
+  Colors are mapped per utility family, so `text-muted`, `bg-subtle`, and
+  `border-subtle` resolve to the ink, surface, and border ladders respectively
   instead of sharing one value. This needs Tailwind 4.1 or newer.
   """
   def tailwind_bridge_source do
@@ -161,27 +161,27 @@ defmodule FlintUI.Generator do
       /* Chrome surfaces */
       --background-color-default: var(--fl-color-background);
       --background-color-surface: var(--fl-color-surface);
-      --background-color-muted: var(--fl-color-surface-muted);
-      --background-color-accented: var(--fl-color-surface-accented);
+      --background-color-subtle: var(--fl-color-surface-subtle);
+      --background-color-strong: var(--fl-color-surface-strong);
       --background-color-inverted: var(--fl-color-inverted);
       --background-color-foreground: var(--fl-color-text);
       --color-inverted: var(--fl-color-inverted);
 
       /* Chrome borders and focus */
       --border-color-default: var(--fl-color-border);
-      --border-color-muted: var(--fl-color-border-muted);
-      --border-color-accented: var(--fl-color-border-accented);
+      --border-color-subtle: var(--fl-color-border-subtle);
+      --border-color-strong: var(--fl-color-border-strong);
       --border-color-inverted: var(--fl-color-inverted);
       --divide-color-default: var(--fl-color-border);
-      --divide-color-muted: var(--fl-color-border-muted);
-      --divide-color-accented: var(--fl-color-border-accented);
+      --divide-color-subtle: var(--fl-color-border-subtle);
+      --divide-color-strong: var(--fl-color-border-strong);
       --ring-color-default: var(--fl-color-ring);
-      --ring-color-muted: var(--fl-color-border-muted);
-      --ring-color-accented: var(--fl-color-border-accented);
+      --ring-color-subtle: var(--fl-color-border-subtle);
+      --ring-color-strong: var(--fl-color-border-strong);
       --ring-color-inverted: var(--fl-color-inverted);
       --outline-color-default: var(--fl-color-border);
-      --outline-color-muted: var(--fl-color-border-muted);
-      --outline-color-accented: var(--fl-color-border-accented);
+      --outline-color-subtle: var(--fl-color-border-subtle);
+      --outline-color-strong: var(--fl-color-border-strong);
       --outline-color-inverted: var(--fl-color-inverted);
 
       /* Semantic roles: fill, role text, and the label on the fill */

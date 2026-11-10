@@ -675,13 +675,13 @@ defmodule FlintUIDocsWeb.Preview do
   defp addon_shell(width) do
     [
       "flex min-w-0 items-stretch overflow-hidden rounded-md border border-default bg-surface text-left transition-colors",
-      "focus-within:border-accented focus-within:ring-2 focus-within:ring-accented focus-within:ring-inset focus-visible:outline-none",
+      "focus-within:border-strong focus-within:ring-2 focus-within:ring-strong focus-within:ring-inset focus-visible:outline-none",
       width
     ]
   end
 
   defp addon_label do
-    "flex shrink-0 items-center border-r border-default bg-muted px-2 text-xs font-medium whitespace-nowrap text-muted"
+    "flex shrink-0 items-center border-r border-default bg-subtle px-2 text-xs font-medium whitespace-nowrap text-muted"
   end
 
   defp input_class do

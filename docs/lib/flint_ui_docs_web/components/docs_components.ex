@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <dl class="mt-4 space-y-3">
       <div :for={part <- @architecture} class="grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-4">
         <dt>
-          <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
+          <code class="rounded bg-strong px-1 py-0.5 font-mono text-xs text-default">
             {part.name}
           </code>
         </dt>
@@ -142,7 +142,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <a
       :if={@id}
       href={"##{@id}"}
-      class="group inline-flex items-center gap-2 rounded-sm decoration-1 underline-offset-4 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accented"
+      class="group inline-flex items-center gap-2 rounded-sm decoration-1 underline-offset-4 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-strong"
     >
       {@title}
       <FlintUI.icon
@@ -240,7 +240,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <div class={[
       "grid place-items-center text-sm text-muted",
       @rounded && "rounded-md",
-      @border && "border border-dashed border-accented",
+      @border && "border border-dashed border-strong",
       "bg-[repeating-linear-gradient(45deg,var(--fl-color-border)_0,var(--fl-color-border)_1px,transparent_1px,transparent_8px)]",
       @class
     ]}>
@@ -347,7 +347,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
       <li :for={component <- @components}>
         <.link
           navigate={component.path}
-          class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2 text-sm font-medium transition-colors hover:border-accented hover:bg-muted"
+          class="group flex items-center justify-between gap-3 rounded-lg border border-default bg-surface px-3 py-2 text-sm font-medium transition-colors hover:border-strong hover:bg-subtle"
         >
           <span>{component.label}</span>
           <FlintUI.icon
@@ -510,7 +510,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         <tbody class="divide-y divide-default">
           <tr :for={selector <- @selectors} class="align-top">
             <td class="py-4 pr-6 leading-6">
-              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
+              <code class="rounded bg-strong px-1 py-0.5 font-mono text-xs text-default">
                 {selector.selector}
               </code>
             </td>
@@ -542,7 +542,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
         <tbody class="divide-y divide-default">
           <tr :for={kbd <- @keyboard} class="align-top">
             <td class="py-4 pr-6 whitespace-nowrap">
-              <code class="rounded bg-accented px-1 py-0.5 font-mono text-xs text-default">
+              <code class="rounded bg-strong px-1 py-0.5 font-mono text-xs text-default">
                 {kbd.keys}
               </code>
             </td>
@@ -645,7 +645,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   defp code_value_class do
-    "rounded bg-accented px-1.5 py-1 font-mono text-xs text-default"
+    "rounded bg-strong px-1.5 py-1 font-mono text-xs text-default"
   end
 
   defp default_label(value), do: inspect(value)
@@ -727,9 +727,9 @@ defmodule FlintUIDocsWeb.DocsComponents do
   defp source_badge_color(_source), do: "neutral"
 
   @tone_zinc %{
-    rail: "border-l-border-accented",
-    part: "bg-accented text-default ring-default",
-    selector: "bg-muted text-toned ring-default"
+    rail: "border-l-border-strong",
+    part: "bg-strong text-default ring-default",
+    selector: "bg-subtle text-toned ring-default"
   }
 
   @tone_blue %{

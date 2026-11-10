@@ -10,7 +10,7 @@
         width: var(--fl-flag-size);
         aspect-ratio: 4 / 3;
         border-radius: var(--fl-radius-xs);
-        background-color: var(--fl-color-surface-muted);
+        background-color: var(--fl-color-surface-subtle);
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;

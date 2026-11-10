@@ -23,8 +23,8 @@
 
 /* Expose FlintUI's semantic colors as Tailwind utilities so the docs shell and
    examples dogfood the same tokens as the components. Each utility family maps
-   to its own token, so `text-muted`, `bg-muted`, and `border-muted` differ.
-   This needs Tailwind 4.1+. */
+   to its own token, so `text-muted`, `bg-subtle`, and `border-subtle` come from
+   different ladders. This needs Tailwind 4.1+. */
 @theme inline {
     --text-color-highlighted: var(--fl-color-text-highlighted);
     --text-color-default: var(--fl-color-text);
@@ -35,26 +35,26 @@
 
     --background-color-default: var(--fl-color-background);
     --background-color-surface: var(--fl-color-surface);
-    --background-color-muted: var(--fl-color-surface-muted);
-    --background-color-accented: var(--fl-color-surface-accented);
+    --background-color-subtle: var(--fl-color-surface-subtle);
+    --background-color-strong: var(--fl-color-surface-strong);
     --background-color-inverted: var(--fl-color-inverted);
     --background-color-foreground: var(--fl-color-text);
     --color-inverted: var(--fl-color-inverted);
 
     --border-color-default: var(--fl-color-border);
-    --border-color-muted: var(--fl-color-border-muted);
-    --border-color-accented: var(--fl-color-border-accented);
+    --border-color-subtle: var(--fl-color-border-subtle);
+    --border-color-strong: var(--fl-color-border-strong);
     --border-color-inverted: var(--fl-color-inverted);
     --divide-color-default: var(--fl-color-border);
-    --divide-color-muted: var(--fl-color-border-muted);
-    --divide-color-accented: var(--fl-color-border-accented);
+    --divide-color-subtle: var(--fl-color-border-subtle);
+    --divide-color-strong: var(--fl-color-border-strong);
     --ring-color-default: var(--fl-color-ring);
-    --ring-color-muted: var(--fl-color-border-muted);
-    --ring-color-accented: var(--fl-color-border-accented);
+    --ring-color-subtle: var(--fl-color-border-subtle);
+    --ring-color-strong: var(--fl-color-border-strong);
     --ring-color-inverted: var(--fl-color-inverted);
     --outline-color-default: var(--fl-color-border);
-    --outline-color-muted: var(--fl-color-border-muted);
-    --outline-color-accented: var(--fl-color-border-accented);
+    --outline-color-subtle: var(--fl-color-border-subtle);
+    --outline-color-strong: var(--fl-color-border-strong);
     --outline-color-inverted: var(--fl-color-inverted);
 
     /* primary: Tailwind red */
@@ -291,7 +291,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 
     .docs-prose code {
         background-color: var(--fl-color-surface);
-        border: 1px solid var(--fl-color-border-accented);
+        border: 1px solid var(--fl-color-border-strong);
         border-radius: 0.25rem;
         padding: 0.125rem 0.25rem;
         color: var(--fl-color-text-highlighted);
@@ -322,7 +322,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     }
 
     .docs-prose blockquote {
-        border-left: 2px solid var(--fl-color-border-accented);
+        border-left: 2px solid var(--fl-color-border-strong);
         padding-left: 1rem;
         color: var(--fl-color-text-muted);
     }
@@ -344,7 +344,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     }
 
     .docs-prose td {
-        border-bottom: 1px solid var(--fl-color-border-muted);
+        border-bottom: 1px solid var(--fl-color-border-subtle);
         padding: 0.5rem 0.75rem 0.5rem 0;
         vertical-align: top;
     }
