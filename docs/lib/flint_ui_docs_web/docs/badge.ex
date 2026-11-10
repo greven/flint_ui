@@ -93,10 +93,12 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       <div class="flex items-center gap-3">
         <Components.badge variant="solid">Solid</Components.badge>
         <Components.badge variant="soft">Soft</Components.badge>
-        <Components.badge variant="soft" color="error">Destructive</Components.badge>
+        <Components.badge variant="soft" color="error">Soft Error</Components.badge>
+        <Components.badge variant="subtle" color="info">Subtle Info</Components.badge>
         <Components.badge variant="surface">Surface</Components.badge>
         <Components.badge variant="outline">Outline</Components.badge>
         <Components.badge variant="ghost">Ghost</Components.badge>
+        <Components.badge variant="dot" color="warning">Status</Components.badge>
       </div>
     </.preview>
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
