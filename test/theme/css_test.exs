@@ -275,7 +275,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-spacing-lg: calc(var(--fl-spacing) * 4);"
     assert css =~ "--fl-shadow-md:"
     assert css =~ "--fl-breakpoint-lg: 64rem;"
-    assert css =~ "--fl-container: 80rem;"
+    assert css =~ "--fl-container-7xl: 80rem;"
     assert css =~ "--fl-duration-fast: 150ms;"
     assert css =~ "--fl-ease-out:"
   end
@@ -426,6 +426,23 @@ defmodule FlintUI.Theme.CSSTest do
       source = File.read!(FlintUI.Generator.part_path(part))
       assert source =~ "calc(var(--fl-tint-opacity, 0.9) * 100%)"
     end
+  end
+
+  test "alert body text is slightly muted below a title", %{css: css} do
+    assert css =~
+             ~r/\[data-element="alert"\]:is\(\[data-variant="outline"\], \[data-variant="soft"\]\) \[data-part="title"\] \+ \[data-part="body"\],\s*\[data-element="alert"\]:not\(\[data-background\]\) \[data-part="title"\] \+ \[data-part="body"\] \{[^}]*color: color-mix\(\s*in oklab,\s*currentColor 88%,\s*transparent\s*\)/
+
+    assert css =~ ~r/\[data-element="alert"\] \[data-part="body"\] \{[^}]*color: currentColor/
+  end
+
+  test "background={false} removes the surface and keeps the role label", %{css: css} do
+    assert css =~
+             ~r/\[data-element="alert"\]:not\(\[data-background\]\) \{[^}]*background: transparent;[^}]*color: var\(--fl-alert-text/
+  end
+
+  test "border selects the edge style without changing the surface", %{css: css} do
+    assert css =~ ~r/\[data-element="alert"\]\[data-border="dashed"\] \{\s*border-style: dashed;/
+    assert css =~ ~r/\[data-element="alert"\]\[data-border="none"\] \{\s*border-style: none;/
   end
 
   test "every colored button variant uses the role text token", %{css: css} do

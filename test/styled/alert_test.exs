@@ -64,7 +64,23 @@ defmodule FlintUI.Styled.AlertTest do
 
       def layout(assigns) do
         ~H"""
-        <.alert orientation="horizontal" spacing="lg" bordered={false} shadow={false}>
+        <.alert orientation="horizontal" spacing="lg" border="none" shadow={false}>
+          Body.
+        </.alert>
+        """
+      end
+
+      def dashed_border(assigns) do
+        ~H"""
+        <.alert intent="info" border="dashed">
+          Body.
+        </.alert>
+        """
+      end
+
+      def no_background(assigns) do
+        ~H"""
+        <.alert intent="info" background={false}>
           Body.
         </.alert>
         """
@@ -97,7 +113,8 @@ defmodule FlintUI.Styled.AlertTest do
     assert attr(document, :alert, "data-color") == ["neutral"]
     assert attr(document, :alert, "data-spacing") == ["md"]
     assert attr(document, :alert, "data-shadow") == [""]
-    assert attr(document, :alert, "data-bordered") == [""]
+    assert attr(document, :alert, "data-border") == ["solid"]
+    assert attr(document, :alert, "data-background") == [""]
     assert attr(document, :alert, "data-intent") == []
     assert attr(document, :alert, "data-orientation") == ["vertical"]
     assert attr(document, :alert, "role") == ["status"]
@@ -187,8 +204,22 @@ defmodule FlintUI.Styled.AlertTest do
 
     assert attr(document, :alert, "data-orientation") == ["horizontal"]
     assert attr(document, :alert, "data-spacing") == ["lg"]
-    assert attr(document, :alert, "data-bordered") == []
+    assert attr(document, :alert, "data-border") == ["none"]
     assert attr(document, :alert, "data-shadow") == []
+  end
+
+  test "border=\"dashed\" maps onto the edge hook", %{wrapper: wrapper} do
+    document = render(wrapper, :dashed_border)
+
+    assert attr(document, :alert, "data-border") == ["dashed"]
+  end
+
+  test "background={false} omits the surface hook and keeps the others", %{wrapper: wrapper} do
+    document = render(wrapper, :no_background)
+
+    assert attr(document, :alert, "data-background") == []
+    assert attr(document, :alert, "data-border") == ["solid"]
+    assert attr(document, :alert, "data-shadow") == [""]
   end
 
   test "maps each variant onto the data hook", %{wrapper: wrapper} do

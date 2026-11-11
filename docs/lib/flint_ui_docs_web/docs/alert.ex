@@ -36,8 +36,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
             values: ["inherit" | @roles]
           },
           %{key: :spacing, type: :select, default: "md", label: "Spacing"},
-          %{key: :bordered, type: :boolean, default: true, label: "Bordered"},
-          %{key: :shadow, type: :boolean, default: true, label: "Shadow"},
+          %{key: :border, type: :select, default: "solid", label: "Border"},
+          %{key: :background, type: :boolean, default: true, label: "Background"},
           %{key: :show_icon, type: :boolean, default: true, label: "Show icon"},
           %{key: :with_close, type: :boolean, default: false, label: "Close button"}
         ]
@@ -62,7 +62,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         title: "Color",
         controls: [%{key: :color, type: :select, default: "info", label: "Color", values: @roles}]
       },
-      %{tab: :styled, section: :usage, id: :title, title: "Title and Body"},
+      %{tab: :styled, section: :usage, id: :title, title: "Title"},
       %{tab: :styled, section: :usage, id: :actions, title: "Actions"},
       %{
         tab: :styled,
@@ -83,9 +83,15 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       %{
         tab: :styled,
         section: :usage,
-        id: :bordered,
-        title: "Bordered",
-        controls: [%{key: :bordered, type: :boolean, default: true, label: "Bordered"}]
+        id: :border,
+        title: "Border"
+      },
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :background,
+        title: "Background",
+        controls: [%{key: :background, type: :boolean, default: true, label: "Background"}]
       },
       %{
         tab: :styled,
@@ -94,7 +100,13 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         title: "Closing",
         controls: [%{key: :with_close, type: :boolean, default: true, label: "Close button"}]
       },
-      %{tab: :styled, section: :examples, id: :server_close, title: "Server Close"},
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :server_close,
+        title: "Server Close",
+        group_title: "Examples"
+      },
       %{tab: :styled, section: :examples, id: :custom_color, title: "Custom Color"},
       %{tab: :styled, section: :examples, id: :icon_override, title: "Icon Override"},
       %{
@@ -118,8 +130,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         intent={props.intent}
         color={effective_color(props)}
         spacing={props.spacing}
-        bordered={props.bordered}
-        shadow={props.shadow}
+        border={props.border}
+        background={props.background}
         show_icon={props.show_icon}
         with_close={props.with_close}
         title="Heads up"
@@ -258,18 +270,37 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     """
   end
 
-  def render_section(%{section: :usage, id: :bordered} = assigns) do
+  def render_section(%{section: :usage, id: :border} = assigns) do
     ~H"""
-    <.prose content="`bordered={false}` removes the edge from any variant while keeping its surface. Solid still fills, and outline and soft keep their tint." />
-    <.preview :let={props} {assigns} code={&bordered_code/1}>
+    <.prose content="`border` sets the edge treatment. `solid` is the default; `dashed` keeps the variant's edge color with a dashed stroke; `none` removes the edge while keeping the surface." />
+    <.preview :let={_props} {assigns} code={border_code()}>
+      <div class="grid w-full max-w-xl gap-3">
+        <Components.alert
+          :for={border <- ~w(solid dashed none)}
+          intent="info"
+          variant="outline"
+          border={border}
+          title={String.capitalize(border)}
+        >
+          The edge is independent of the surface.
+        </Components.alert>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :background} = assigns) do
+    ~H"""
+    <.prose content={"`background={false}` removes the surface but keeps the border and elevation, so the alert can sit directly on the page. The label falls back to the role text so it stays readable. Set `border=\"none\"` or `shadow={false}` to drop those too."} />
+    <.preview :let={props} {assigns} code={&background_code/1}>
       <Components.alert
         intent="info"
         variant="outline"
-        bordered={props.bordered}
-        title="Bordered"
+        background={props.background}
+        title="No background"
         class="w-full max-w-xl"
       >
-        The edge is optional; the surface is not.
+        The surface is optional; the edge is not.
       </Components.alert>
     </.preview>
     """
@@ -368,8 +399,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         Snippet.attr("intent", props.intent),
         Snippet.attr("color", effective_color(props)),
         Snippet.attr("spacing", props.spacing, "md"),
-        Snippet.attr("bordered", props.bordered, true),
-        Snippet.attr("shadow", props.shadow, true),
+        Snippet.attr("border", props.border, "solid"),
         Snippet.attr("show_icon", props.show_icon, true),
         Snippet.flag("with_close", props.with_close),
         Snippet.attr("title", "Heads up")
@@ -462,16 +492,26 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     )
   end
 
-  defp bordered_code(props) do
+  defp border_code do
+    """
+    <.alert :for={border <- ~w(solid dashed none)} border={border}
+      intent="info" variant="outline" title={String.capitalize(border)}>
+      The edge is independent of the surface.
+    </.alert>
+    """
+    |> String.trim()
+  end
+
+  defp background_code(props) do
     Snippet.tag(
       ".alert",
       [
         Snippet.attr("intent", "info"),
         Snippet.attr("variant", "outline"),
-        Snippet.attr("bordered", props.bordered, true),
-        Snippet.attr("title", "Bordered")
+        Snippet.attr("background", props.background, true),
+        Snippet.attr("title", "No background")
       ],
-      "The edge is optional; the surface is not."
+      "The surface is optional; the edge is not."
     )
   end
 

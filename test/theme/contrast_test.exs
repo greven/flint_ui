@@ -70,6 +70,36 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
+  test "the muted alert body clears AA on its tinted surface", %{tokens: tokens} do
+    for role <- @roles do
+      {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
+      {text_light, text_dark} = resolve(tokens, "#{role}-text")
+
+      for {scheme, soft, text} <- [
+            {:light, soft_light, text_light},
+            {:dark, soft_dark, text_dark}
+          ] do
+        body = Contrast.mix(text, soft, 0.88)
+        ratio = Contrast.ratio(body, soft) || 0.0
+
+        assert ratio >= Contrast.aa(),
+               "#{role}/#{scheme} muted body #{body} on #{soft} is #{ratio}:1, below AA"
+      end
+    end
+  end
+
+  test "the muted alert body clears AA on a backgroundless surface", %{tokens: tokens} do
+    for role <- @roles, scheme <- [:light, :dark] do
+      text = eval_token(tokens, "#{role}-text", scheme)
+      surface = eval_token(tokens, "surface", scheme)
+      body = Contrast.mix(text, surface, 0.88)
+      ratio = Contrast.ratio(body, surface) || 0.0
+
+      assert ratio >= Contrast.aa(),
+             "#{role}/#{scheme} muted body #{body} on #{surface} is #{ratio}:1, below AA"
+    end
+  end
+
   test "soft surfaces stay visible and their border reads against them", %{
     tokens: tokens
   } do

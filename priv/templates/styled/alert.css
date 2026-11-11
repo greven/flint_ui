@@ -125,10 +125,23 @@
         color: var(--fl-alert-color-content, var(--fl-color-text-inverted));
     }
 
-    /* Bordered is on by default; `bordered={false}` removes the edge from
-     * every variant while keeping its surface. */
-    [data-element="alert"]:not([data-bordered]) {
-        border-color: transparent;
+    /* Background is on by default; `background={false}` removes only the
+     * surface. The border and elevation keep their own props, and the label
+     * falls back to the role text so it stays readable on the page. */
+    [data-element="alert"]:not([data-background]) {
+        background: transparent;
+        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    }
+
+    /* Border is solid by default; `border="dashed"` keeps the variant's
+     * edge color with a dashed stroke, and `border="none"` removes the edge
+     * while keeping the surface. */
+    [data-element="alert"][data-border="dashed"] {
+        border-style: dashed;
+    }
+
+    [data-element="alert"][data-border="none"] {
+        border-style: none;
     }
 
     /* Shadow is on by default; `shadow={false}` removes it. */
@@ -139,6 +152,7 @@
     [data-element="alert"]:not([data-shadow])[data-variant] {
         box-shadow: 0 0 #0000;
     }
+
 
     [data-element="alert"] > [data-part="icon"] {
         display: inline-flex;
@@ -176,6 +190,13 @@
     [data-element="alert"] [data-part="body"] {
         grid-column: 1;
         color: currentColor;
+    }
+
+    /* When a title is present, the body is slightly muted so the two
+     * lines read as a hierarchy outside the solid fill. */
+    [data-element="alert"]:is([data-variant="outline"], [data-variant="soft"]) [data-part="title"] + [data-part="body"],
+    [data-element="alert"]:not([data-background]) [data-part="title"] + [data-part="body"] {
+        color: color-mix(in oklab, currentColor 88%, transparent);
     }
 
     [data-element="alert"] [data-part="actions"] {

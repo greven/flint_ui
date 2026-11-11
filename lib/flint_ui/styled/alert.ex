@@ -42,11 +42,18 @@ defmodule FlintUI.Styled.Alert do
           doc: "Draws the alert's outer elevation."
         ),
         Prop.new(
-          name: :bordered,
+          name: :border,
+          values: ~w(solid dashed none),
+          default: "solid",
+          doc:
+            "The edge treatment. `solid` is the default, `dashed` keeps the variant's color with a dashed stroke, and `none` removes the edge while keeping the variant's surface."
+        ),
+        Prop.new(
+          name: :background,
           values: [true, false],
           default: true,
           doc:
-            "Whether the alert draws its border. Set false to keep the variant's surface without an edge."
+            "Whether the alert paints its surface. Set false to keep the border and elevation over a transparent background; the label falls back to the role text."
         )
       ],
       content_attrs: [
@@ -74,7 +81,7 @@ defmodule FlintUI.Styled.Alert do
           name: "--fl-alert-text",
           default: "var(--fl-alert-color)",
           doc:
-            "The label color on the tinted soft and outline variants; it maps to the role's `-text` token."
+            "The label color on tinted variants and alerts without a background; it maps to the role's `-text` token. The body derives a slightly muted mix from it."
         ),
         Var.new(
           name: "--fl-alert-soft",
