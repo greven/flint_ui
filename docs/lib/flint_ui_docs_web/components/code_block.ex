@@ -218,6 +218,9 @@ defmodule FlintUIDocsWeb.CodeBlock do
   attr :trigger_attrs, :any, default: nil
 
   defp code_header(assigns) do
+    {icon, icon_class} = Highlight.icon(assigns.lang)
+    assigns = assign(assigns, icon: icon, icon_class: icon_class)
+
     ~H"""
     <div
       id={"#{@id}-header"}
@@ -231,12 +234,13 @@ defmodule FlintUIDocsWeb.CodeBlock do
         "group-data-[state=closed]:cursor-pointer group-data-[state=closed]:border-b-0"
       ]}
     >
-      <div class="flex min-w-0 items-center gap-1.5">
+      <div class="flex min-w-0 items-center gap-2">
         <%= if @tabs != [] do %>
           {render_slot(@tabs)}
         <% else %>
+          <Components.icon name={@icon} class={["size-3.5 shrink-0", @icon_class]} />
           <span
-            class="truncate px-1 font-mono text-xs text-muted"
+            class="truncate pr-1 font-mono text-xs text-muted"
             title={@caption || Highlight.label(@lang)}
           >
             {@caption || Highlight.label(@lang)}

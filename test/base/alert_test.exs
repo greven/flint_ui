@@ -187,8 +187,8 @@ defmodule FlintUI.Base.AlertTest do
     assert FlintUI.Base.Alert.intent_icon("neutral") == "lucide-info"
     assert FlintUI.Base.Alert.intent_icon("info") == "lucide-info"
     assert FlintUI.Base.Alert.intent_icon("success") == "lucide-circle-check"
-    assert FlintUI.Base.Alert.intent_icon("warning") == "lucide-triangle-alert"
-    assert FlintUI.Base.Alert.intent_icon("error") == "lucide-circle-alert"
+    assert FlintUI.Base.Alert.intent_icon("warning") == "lucide-circle-exclamation-point"
+    assert FlintUI.Base.Alert.intent_icon("error") == "lucide-circle-x"
     assert FlintUI.Base.Alert.intent_icon(nil) == nil
   end
 

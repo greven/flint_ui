@@ -86,7 +86,7 @@ defmodule FlintUI.Styled.AlertTest do
     assert attr(document, :alert, "data-variant") == ["subtle"]
     assert attr(document, :alert, "data-color") == ["neutral"]
     assert attr(document, :alert, "data-radius") == ["lg"]
-    assert attr(document, :alert, "data-spacing") == ["md"]
+    assert attr(document, :alert, "data-spacing") == ["xs"]
     assert attr(document, :alert, "data-shadow") == []
     assert attr(document, :alert, "data-intent") == []
     assert attr(document, :alert, "data-orientation") == ["vertical"]
@@ -101,7 +101,7 @@ defmodule FlintUI.Styled.AlertTest do
     assert attr(document, :alert, "data-intent") == ["error"]
     assert attr(document, :alert, "data-color") == ["error"]
     assert attr(document, :alert, "role") == ["alert"]
-    assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-alert"]
+    assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-x"]
   end
 
   test "an explicit color overrides the intent color but keeps its icon", %{wrapper: wrapper} do
@@ -109,7 +109,7 @@ defmodule FlintUI.Styled.AlertTest do
 
     assert attr(document, :alert, "data-intent") == ["error"]
     assert attr(document, :alert, "data-color") == ["info"]
-    assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-alert"]
+    assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-x"]
   end
 
   test "a raw color sets the public alert inputs", %{wrapper: wrapper} do
@@ -120,7 +120,7 @@ defmodule FlintUI.Styled.AlertTest do
     assert style =~ "--fl-alert-color: #1D72FE"
     assert style =~ "--fl-alert-color-content:"
     assert style =~ "--fl-alert-text: light-dark("
-    assert icon(document) |> LazyHTML.attribute("class") == ["lucide-triangle-alert"]
+    assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-exclamation-point"]
   end
 
   test "show_icon hides the default icon", %{wrapper: wrapper} do

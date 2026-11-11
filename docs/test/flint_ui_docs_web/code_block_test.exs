@@ -34,6 +34,15 @@ defmodule FlintUIDocsWeb.CodeBlockTest do
     assert count(document, "button[aria-label='Copy code']") == 1
   end
 
+  test "leads a single-snippet caption with its language icon" do
+    css = render_code(%{lang: :css})
+
+    assert count(css, "[data-code-header] .lucide-palette") == 1
+
+    elixir = render_code(%{lang: :elixir})
+    assert count(elixir, "[data-code-header] .lucide-droplet") == 1
+  end
+
   test "shows the close footer only for tall collapsible panels" do
     tall_code = Enum.map_join(1..9, "\n", &"<.button>Save #{&1}</.button>")
 

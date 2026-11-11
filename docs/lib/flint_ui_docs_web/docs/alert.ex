@@ -35,7 +35,6 @@ defmodule FlintUIDocsWeb.Docs.Alert do
             label: "Color",
             values: ["auto" | @roles]
           },
-          %{key: :radius, type: :select, default: "lg", label: "Radius"},
           %{key: :spacing, type: :select, default: "md", label: "Spacing"},
           %{key: :padded, type: :boolean, default: true, label: "Padded"},
           %{key: :shadow, type: :boolean, default: false, label: "Shadow"},
@@ -77,16 +76,9 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       %{
         tab: :styled,
         section: :usage,
-        id: :radius,
-        title: "Radius",
-        controls: [%{key: :radius, type: :select, default: "lg", label: "Radius"}]
-      },
-      %{
-        tab: :styled,
-        section: :usage,
         id: :spacing,
         title: "Spacing",
-        controls: [%{key: :spacing, type: :select, default: "md", label: "Spacing"}]
+        controls: [%{key: :spacing, type: :select, default: "xs", label: "Spacing"}]
       },
       %{
         tab: :styled,
@@ -131,7 +123,6 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         variant={props.variant}
         intent={props.intent}
         color={effective_color(props)}
-        radius={props.radius}
         spacing={props.spacing}
         padded={props.padded}
         shadow={props.shadow}
@@ -249,22 +240,6 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         <:actions>
           <Components.button size="sm" variant="surface">View</Components.button>
         </:actions>
-      </Components.alert>
-    </.preview>
-    """
-  end
-
-  def render_section(%{section: :usage, id: :radius} = assigns) do
-    ~H"""
-    <.prose content="`radius` follows the shared radius scale from `none` to `xl`. The default is `lg`, matching the card." />
-    <.preview :let={props} {assigns} code={&radius_code/1}>
-      <Components.alert
-        intent="info"
-        radius={props.radius}
-        title="Rounded"
-        class="w-full max-w-xl"
-      >
-        The corner radius follows the shared scale.
       </Components.alert>
     </.preview>
     """
@@ -410,8 +385,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         Snippet.attr("variant", props.variant, "subtle"),
         Snippet.attr("intent", props.intent),
         Snippet.attr("color", effective_color(props)),
-        Snippet.attr("radius", props.radius, "lg"),
-        Snippet.attr("spacing", props.spacing, "md"),
+        Snippet.attr("spacing", props.spacing, "xs"),
         Snippet.attr("padded", props.padded, true),
         Snippet.flag("shadow", props.shadow),
         Snippet.attr("show_icon", props.show_icon, true),
@@ -493,24 +467,12 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     )
   end
 
-  defp radius_code(props) do
-    Snippet.tag(
-      ".alert",
-      [
-        Snippet.attr("intent", "info"),
-        Snippet.attr("radius", props.radius, "lg"),
-        Snippet.attr("title", "Rounded")
-      ],
-      "The corner radius follows the shared scale."
-    )
-  end
-
   defp spacing_code(props) do
     Snippet.tag(
       ".alert",
       [
         Snippet.attr("intent", "info"),
-        Snippet.attr("spacing", props.spacing, "md"),
+        Snippet.attr("spacing", props.spacing, "xs"),
         Snippet.attr("title", "Spacing")
       ],
       "The inset and gaps follow the selected step."

@@ -1190,7 +1190,7 @@ defmodule FlintUIDocsWeb.Components do
 
   attr(:spacing, :string,
     values: ~w(xs sm md lg xl),
-    default: "md",
+    default: "xs",
     doc: "The internal spacing of the alert."
   )
 

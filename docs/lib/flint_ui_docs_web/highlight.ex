@@ -73,5 +73,16 @@ defmodule FlintUIDocsWeb.Highlight do
   def label(:shell), do: "Shell"
   def label(_lang), do: "Code"
 
+  @doc """
+  Returns the Lucide icon name and colour classes for a code language.
+  """
+  def icon(:heex), do: {"lucide-code", "text-amber-500"}
+  def icon(:eex), do: {"lucide-file-code", "text-amber-500"}
+  def icon(:html), do: {"lucide-code-xml", "text-orange-500"}
+  def icon(:elixir), do: {"lucide-droplet", "text-purple-500"}
+  def icon(:css), do: {"lucide-ampersand", "text-blue-500"}
+  def icon(:shell), do: {"lucide-terminal", "text-emerald-500"}
+  def icon(_lang), do: {"lucide-file-code", "text-muted"}
+
   defp lexer(lang), do: Map.get(@lexers, lang, @default)
 end

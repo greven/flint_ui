@@ -29,13 +29,6 @@ defmodule FlintUI.Styled.Alert do
             "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Defaults to the `intent` when set, otherwise `neutral`."
         ),
         Prop.new(
-          name: :radius,
-          values: ~w(none xs sm md lg xl),
-          default: "lg",
-          doc:
-            "The corner radius, from `none` for square corners to `xl`, following the shared radius scale."
-        ),
-        Prop.new(
           name: :spacing,
           values: ~w(xs sm md lg xl),
           default: "xs",
