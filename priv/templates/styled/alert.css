@@ -151,7 +151,6 @@
         box-shadow: 0 0 #0000;
     }
 
-    /* Icon region. The icon is decorative and inherits the alert's label color. */
     [data-element="alert"] > [data-part="icon"] {
         display: inline-flex;
         flex: none;
@@ -159,7 +158,7 @@
         justify-content: center;
         margin-block-start: 0.0625rem;
         color: currentColor;
-        --fl-icon-size: 1.25rem;
+        --fl-icon-size: var(--fl-alert-close-icon-size, var(--fl-control-icon-lg));
     }
 
     [data-element="alert"] > [data-part="icon"] > [data-element="icon"] {
@@ -239,7 +238,7 @@
     }
 
     [data-element="alert"] > [data-part="close"] > [data-element="icon"] {
-        --fl-icon-size: 1rem;
+        --fl-icon-size: var(--fl-alert-close-icon-size, var(--fl-control-icon-md));
         width: var(--fl-icon-size);
         height: var(--fl-icon-size);
     }
@@ -254,7 +253,7 @@
     [data-element="alert"][data-spacing="xs"] {
         --fl-alert-padding-block: var(--fl-spacing-xs);
         --fl-alert-padding-inline: calc(var(--fl-spacing-xs) + 0.5rem);
-        --fl-alert-gap: calc(var(--fl-spacing) * 1.5);
+        --fl-alert-gap: calc(var(--fl-spacing) * 1);
     }
 
     [data-element="alert"][data-spacing="sm"] {

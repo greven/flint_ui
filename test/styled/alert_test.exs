@@ -64,7 +64,7 @@ defmodule FlintUI.Styled.AlertTest do
 
       def layout(assigns) do
         ~H"""
-        <.alert orientation="horizontal" radius="sm" spacing="lg" padded={false} shadow>
+        <.alert orientation="horizontal" spacing="lg" padded={false} shadow>
           Body.
         </.alert>
         """
@@ -85,7 +85,6 @@ defmodule FlintUI.Styled.AlertTest do
     assert attr(document, :alert, "data-alert") == [""]
     assert attr(document, :alert, "data-variant") == ["subtle"]
     assert attr(document, :alert, "data-color") == ["neutral"]
-    assert attr(document, :alert, "data-radius") == ["lg"]
     assert attr(document, :alert, "data-spacing") == ["xs"]
     assert attr(document, :alert, "data-shadow") == []
     assert attr(document, :alert, "data-intent") == []
@@ -177,7 +176,6 @@ defmodule FlintUI.Styled.AlertTest do
     document = render(wrapper, :layout)
 
     assert attr(document, :alert, "data-orientation") == ["horizontal"]
-    assert attr(document, :alert, "data-radius") == ["sm"]
     assert attr(document, :alert, "data-spacing") == ["lg"]
     assert attr(document, :alert, "data-padded") == []
     assert attr(document, :alert, "data-shadow") == [""]

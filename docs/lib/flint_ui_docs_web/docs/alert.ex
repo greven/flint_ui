@@ -247,7 +247,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :usage, id: :spacing} = assigns) do
     ~H"""
-    <.prose content="`spacing` sets the root inset and the gap between the parts. It follows the shared spacing scale." />
+    <.prose content="`spacing` sets the root inset, the gap between the parts, and the icon sizes. It follows the shared spacing scale." />
     <.preview :let={props} {assigns} code={&spacing_code/1}>
       <Components.alert
         intent="info"

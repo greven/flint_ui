@@ -1181,13 +1181,6 @@ defmodule FlintUIDocsWeb.Components do
       "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Defaults to the `intent` when set, otherwise `neutral`. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
-  attr(:radius, :string,
-    values: ~w(none xs sm md lg xl),
-    default: "lg",
-    doc:
-      "The corner radius, from `none` for square corners to `xl`, following the shared radius scale."
-  )
-
   attr(:spacing, :string,
     values: ~w(xs sm md lg xl),
     default: "xs",
@@ -1244,7 +1237,6 @@ defmodule FlintUIDocsWeb.Components do
       data-alert
       data-variant={@variant}
       data-color={@data_color}
-      data-radius={@radius}
       data-spacing={@spacing}
       data-shadow={@shadow}
       class={@class}
