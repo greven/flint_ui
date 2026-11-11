@@ -20,7 +20,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :variant, type: :select, default: "subtle", label: "Variant"},
+          %{key: :variant, type: :select, default: "outline", label: "Variant"},
           %{
             key: :intent,
             type: :select,
@@ -31,13 +31,13 @@ defmodule FlintUIDocsWeb.Docs.Alert do
           %{
             key: :color,
             type: :select,
-            default: "auto",
+            default: "inherit",
             label: "Color",
-            values: ["auto" | @roles]
+            values: ["inherit" | @roles]
           },
           %{key: :spacing, type: :select, default: "md", label: "Spacing"},
-          %{key: :padded, type: :boolean, default: true, label: "Padded"},
-          %{key: :shadow, type: :boolean, default: false, label: "Shadow"},
+          %{key: :bordered, type: :boolean, default: true, label: "Bordered"},
+          %{key: :shadow, type: :boolean, default: true, label: "Shadow"},
           %{key: :show_icon, type: :boolean, default: true, label: "Show icon"},
           %{key: :with_close, type: :boolean, default: false, label: "Close button"}
         ]
@@ -83,9 +83,9 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       %{
         tab: :styled,
         section: :usage,
-        id: :padded,
-        title: "Padded",
-        controls: [%{key: :padded, type: :boolean, default: true, label: "Padded"}]
+        id: :bordered,
+        title: "Bordered",
+        controls: [%{key: :bordered, type: :boolean, default: true, label: "Bordered"}]
       },
       %{
         tab: :styled,
@@ -111,14 +111,14 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.prose content="Use `title` for the message and the default slot for its body. `intent` selects the theme color and a default icon; `color` overrides only the color.
-      The default variant is `subtle`." />
+      The default variant is `outline`." />
     <.preview :let={props} {assigns} code={&basic_code/1}>
       <Components.alert
         variant={props.variant}
         intent={props.intent}
         color={effective_color(props)}
         spacing={props.spacing}
-        padded={props.padded}
+        bordered={props.bordered}
         shadow={props.shadow}
         show_icon={props.show_icon}
         with_close={props.with_close}
@@ -132,12 +132,12 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :usage, id: :variant} = assigns) do
     ~H"""
-    <.prose content="`variant` sets the visual emphasis. `subtle` is the default tinted surface with a matching border; `soft` drops the border; `solid` fills the alert with the role color;
-      `outline` keeps only the role edge; `ghost` removes the surface." />
+    <.prose content="`variant` sets the visual emphasis. `outline` is the default tinted surface with the role's full-strength edge; `soft` keeps the tint with the faint matching edge;
+      `solid` fills the alert with the role color." />
     <.preview :let={_props} {assigns} code={&variant_code/1}>
       <div class="grid w-full max-w-xl gap-3">
         <Components.alert
-          :for={variant <- ~w(subtle soft solid outline ghost)}
+          :for={variant <- ~w(solid outline soft)}
           variant={variant}
           color="info"
           title={String.capitalize(variant)}
@@ -258,19 +258,18 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     """
   end
 
-  def render_section(%{section: :usage, id: :padded} = assigns) do
+  def render_section(%{section: :usage, id: :bordered} = assigns) do
     ~H"""
-    <.prose content="`padded={false}` removes the root inset so the content can reach the edge. The gap between the parts remains." />
-    <.preview :let={props} {assigns} code={&padded_code/1}>
+    <.prose content="`bordered={false}` removes the edge from any variant while keeping its surface. Solid still fills, and outline and soft keep their tint." />
+    <.preview :let={props} {assigns} code={&bordered_code/1}>
       <Components.alert
-        intent="neutral"
-        variant="soft"
-        padded={props.padded}
+        intent="info"
+        variant="outline"
+        bordered={props.bordered}
+        title="Bordered"
         class="w-full max-w-xl"
       >
-        <div class="rounded-md bg-surface/60 p-4">
-          Full-bleed content sits in its own padded container.
-        </div>
+        The edge is optional; the surface is not.
       </Components.alert>
     </.preview>
     """
@@ -316,24 +315,24 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         <%!-- <Components.alert variant="solid" color="#B45309"> --%>
         <%!-- A raw color keeps its exact fill. --%>
         <%!-- </Components.alert> --%>
-        <Components.alert variant="subtle" color="tw:zinc">Zinc</Components.alert>
-        <Components.alert variant="subtle" color="tw:red">Red</Components.alert>
-        <Components.alert variant="subtle" color="tw:orange">Orange</Components.alert>
-        <Components.alert variant="subtle" color="tw:amber">Amber</Components.alert>
-        <Components.alert variant="subtle" color="tw:yellow">Yellow</Components.alert>
-        <Components.alert variant="subtle" color="tw:lime">Lime</Components.alert>
-        <Components.alert variant="subtle" color="tw:green">Green</Components.alert>
-        <Components.alert variant="subtle" color="tw:emerald">Emerald</Components.alert>
-        <Components.alert variant="subtle" color="tw:teal">Teal</Components.alert>
-        <Components.alert variant="subtle" color="tw:cyan">Cyan</Components.alert>
-        <Components.alert variant="subtle" color="tw:sky">Sky</Components.alert>
-        <Components.alert variant="subtle" color="tw:blue">Blue</Components.alert>
-        <Components.alert variant="subtle" color="tw:indigo">Indigo</Components.alert>
-        <Components.alert variant="subtle" color="tw:violet">Violet</Components.alert>
-        <Components.alert variant="subtle" color="tw:purple">Purple</Components.alert>
-        <Components.alert variant="subtle" color="tw:fuchsia">Fuchsia</Components.alert>
-        <Components.alert variant="subtle" color="tw:pink">Pink</Components.alert>
-        <Components.alert variant="subtle" color="tw:rose">Rose</Components.alert>
+        <Components.alert variant="soft" color="tw:zinc">Zinc</Components.alert>
+        <Components.alert variant="soft" color="tw:red">Red</Components.alert>
+        <Components.alert variant="soft" color="tw:orange">Orange</Components.alert>
+        <Components.alert variant="soft" color="tw:amber">Amber</Components.alert>
+        <Components.alert variant="soft" color="tw:yellow">Yellow</Components.alert>
+        <Components.alert variant="soft" color="tw:lime">Lime</Components.alert>
+        <Components.alert variant="soft" color="tw:green">Green</Components.alert>
+        <Components.alert variant="soft" color="tw:emerald">Emerald</Components.alert>
+        <Components.alert variant="soft" color="tw:teal">Teal</Components.alert>
+        <Components.alert variant="soft" color="tw:cyan">Cyan</Components.alert>
+        <Components.alert variant="soft" color="tw:sky">Sky</Components.alert>
+        <Components.alert variant="soft" color="tw:blue">Blue</Components.alert>
+        <Components.alert variant="soft" color="tw:indigo">Indigo</Components.alert>
+        <Components.alert variant="soft" color="tw:violet">Violet</Components.alert>
+        <Components.alert variant="soft" color="tw:purple">Purple</Components.alert>
+        <Components.alert variant="soft" color="tw:fuchsia">Fuchsia</Components.alert>
+        <Components.alert variant="soft" color="tw:pink">Pink</Components.alert>
+        <Components.alert variant="soft" color="tw:rose">Rose</Components.alert>
       </div>
     </.preview>
     """
@@ -359,18 +358,18 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     """
   end
 
-  defp effective_color(props), do: if(props.color == "auto", do: nil, else: props.color)
+  defp effective_color(props), do: if(props.color == "inherit", do: nil, else: props.color)
 
   defp basic_code(props) do
     Snippet.tag(
       ".alert",
       [
-        Snippet.attr("variant", props.variant, "subtle"),
+        Snippet.attr("variant", props.variant, "outline"),
         Snippet.attr("intent", props.intent),
         Snippet.attr("color", effective_color(props)),
         Snippet.attr("spacing", props.spacing, "md"),
-        Snippet.attr("padded", props.padded, true),
-        Snippet.flag("shadow", props.shadow),
+        Snippet.attr("bordered", props.bordered, true),
+        Snippet.attr("shadow", props.shadow, true),
         Snippet.attr("show_icon", props.show_icon, true),
         Snippet.flag("with_close", props.with_close),
         Snippet.attr("title", "Heads up")
@@ -381,7 +380,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   defp variant_code(_props) do
     """
-    <.alert :for={variant <- ~w(subtle soft solid outline ghost)} variant={variant}
+    <.alert :for={variant <- ~w(solid outline soft)} variant={variant}
       color="info" title={String.capitalize(variant)}>
       Lorem ipsum dolor sit amet.
     </.alert>
@@ -463,19 +462,16 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     )
   end
 
-  defp padded_code(props) do
+  defp bordered_code(props) do
     Snippet.tag(
       ".alert",
       [
-        Snippet.attr("intent", "neutral"),
-        Snippet.attr("variant", "soft"),
-        Snippet.attr("padded", props.padded, true)
+        Snippet.attr("intent", "info"),
+        Snippet.attr("variant", "outline"),
+        Snippet.attr("bordered", props.bordered, true),
+        Snippet.attr("title", "Bordered")
       ],
-      """
-      <div class="rounded-md bg-surface/60 p-4">
-        Full-bleed content sits in its own padded container.
-      </div>
-      """
+      "The edge is optional; the surface is not."
     )
   end
 
@@ -521,7 +517,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   defp custom_color_code do
     """
     <.alert variant="solid" color="#B45309" title="Amber">A raw color keeps its exact fill.</.alert>
-    <.alert variant="subtle" color="tw:indigo-600" title="Indigo">A `tw:` color comes from the bundled palette.</.alert>
+    <.alert variant="soft" color="tw:indigo-600" title="Indigo">A `tw:` color comes from the bundled palette.</.alert>
     """
     |> String.trim()
   end

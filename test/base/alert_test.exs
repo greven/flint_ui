@@ -55,7 +55,7 @@ defmodule FlintUI.Base.AlertTest do
 
     def horizontal(assigns) do
       ~H"""
-      <.alert orientation="horizontal" padded={false}>
+      <.alert orientation="horizontal">
         Body
       </.alert>
       """
@@ -96,7 +96,6 @@ defmodule FlintUI.Base.AlertTest do
     assert attr(document, "data-part") == ["root"]
     assert attr(document, "data-intent") == []
     assert attr(document, "data-orientation") == ["vertical"]
-    assert attr(document, "data-padded") == [""]
     assert attr(document, "role") == ["status"]
 
     assert part(document, "title") |> LazyHTML.text() |> String.trim() == "Heads up"
@@ -155,11 +154,10 @@ defmodule FlintUI.Base.AlertTest do
     assert attr(document, "id") == ["billing-alert"]
   end
 
-  test "orientation and padding are forwarded to the root hooks" do
+  test "orientation is forwarded to the root hook" do
     document = render(&TestComponent.horizontal/1)
 
     assert attr(document, "data-orientation") == ["horizontal"]
-    assert attr(document, "data-padded") == []
   end
 
   test "renders a title without a body" do
@@ -178,7 +176,6 @@ defmodule FlintUI.Base.AlertTest do
     assert Enum.any?(parts.root, &(&1.name == "[data-element]"))
     assert Enum.any?(parts.root, &(&1.name == "[data-intent]"))
     assert Enum.any?(parts.root, &(&1.name == "[data-orientation]"))
-    assert Enum.any?(parts.root, &(&1.name == "[data-padded]"))
     assert Enum.any?(parts.close, &(&1.name == "aria-label"))
     assert Enum.any?(parts.close, &(&1.name == "phx-click"))
   end

@@ -18,10 +18,6 @@
         line-height: 1.375;
     }
 
-    [data-element="alert"][data-variant]:not([data-padded]) {
-        padding: 0;
-    }
-
     /* Each color sets the public inputs. */
     [data-element="alert"][data-color="primary"] {
         --fl-alert-color: var(--fl-color-primary);
@@ -96,30 +92,30 @@
         --fl-alert-soft-border: var(--fl-color-light-soft-border);
     }
 
-    /* Variants. Subtle is the default: a tinted surface with a matching border. */
-    [data-element="alert"][data-variant="subtle"] {
+    /* Variants. Outline is the default: the shared tint with the role's
+     * full-strength edge. Soft keeps the same tint with the faint matching
+     * edge, and solid fills the alert with the role color. */
+    [data-element="alert"]:is([data-variant="outline"], [data-variant="soft"]) {
         background: color-mix(
             in oklab,
             var(--fl-alert-soft, color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
                 calc(var(--fl-tint-opacity, 0.9) * 100%),
             transparent
-        );
-        border-color: var(
-            --fl-alert-soft-border,
-            color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
         color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
     }
 
-    /* Soft: a tinted surface with no border. */
+    /* Soft: the tint with the role's faint matching edge. */
     [data-element="alert"][data-variant="soft"] {
-        background: color-mix(
-            in oklab,
-            var(--fl-alert-soft, color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
-                calc(var(--fl-tint-opacity, 0.9) * 100%),
-            transparent
+        border-color: var(
+            --fl-alert-soft-border,
+            color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
-        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    }
+
+    /* Outline: the tint with the role's full-strength edge. */
+    [data-element="alert"][data-variant="outline"] {
+        border-color: var(--fl-alert-color, var(--fl-color-inverted));
     }
 
     /* Solid: the color fills the alert with a darker edge line. */
@@ -129,20 +125,13 @@
         color: var(--fl-alert-color-content, var(--fl-color-text-inverted));
     }
 
-    /* Outline: a full-strength role edge and label with no fill. */
-    [data-element="alert"][data-variant="outline"] {
-        background: transparent;
-        border-color: var(--fl-alert-color, var(--fl-color-inverted));
-        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    /* Bordered is on by default; `bordered={false}` removes the edge from
+     * every variant while keeping its surface. */
+    [data-element="alert"]:not([data-bordered]) {
+        border-color: transparent;
     }
 
-    /* Ghost: no surface and no border. */
-    [data-element="alert"][data-variant="ghost"] {
-        background: transparent;
-        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
-    }
-
-    /* Shadow is an opt-in boolean; the default is flat. */
+    /* Shadow is on by default; `shadow={false}` removes it. */
     [data-element="alert"][data-shadow] {
         box-shadow: var(--fl-shadow-base);
     }

@@ -112,11 +112,6 @@ defmodule FlintUI.Base.Alert do
           description: "Where the actions sit relative to the content."
         },
         %Meta.PartAttr{
-          name: "[data-padded]",
-          value: "boolean",
-          description: "Present when the alert carries its root inset."
-        },
-        %Meta.PartAttr{
           name: "id",
           value: "string",
           description:
@@ -239,7 +234,6 @@ defmodule FlintUI.Base.Alert do
         "id" => assigns.id,
         "data-intent" => assigns.intent,
         "data-orientation" => assigns.orientation,
-        "data-padded" => assigns.padded,
         "role" => assigns.role || alert_role(assigns)
       },
       icon: %{"data-part" => "icon"},
@@ -295,10 +289,6 @@ defmodule FlintUI.Base.Alert do
     values: ~w(vertical horizontal),
     default: "vertical",
     doc: "Where the actions sit relative to the content."
-
-  attr :padded, :boolean,
-    default: true,
-    doc: "Whether the alert carries its root inset. Set false for full-bleed content."
 
   attr :id, :string,
     default: nil,

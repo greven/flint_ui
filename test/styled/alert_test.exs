@@ -64,9 +64,19 @@ defmodule FlintUI.Styled.AlertTest do
 
       def layout(assigns) do
         ~H"""
-        <.alert orientation="horizontal" spacing="lg" padded={false} shadow>
+        <.alert orientation="horizontal" spacing="lg" bordered={false} shadow={false}>
           Body.
         </.alert>
+        """
+      end
+
+      def variants(assigns) do
+        ~H"""
+        <div>
+          <.alert variant="solid">Solid.</.alert>
+          <.alert variant="outline">Outline.</.alert>
+          <.alert variant="soft">Soft.</.alert>
+        </div>
         """
       end
       ''')
@@ -83,13 +93,13 @@ defmodule FlintUI.Styled.AlertTest do
 
     assert LazyHTML.tag(root(document, :alert)) == ["div"]
     assert attr(document, :alert, "data-alert") == [""]
-    assert attr(document, :alert, "data-variant") == ["subtle"]
+    assert attr(document, :alert, "data-variant") == ["outline"]
     assert attr(document, :alert, "data-color") == ["neutral"]
-    assert attr(document, :alert, "data-spacing") == ["xs"]
-    assert attr(document, :alert, "data-shadow") == []
+    assert attr(document, :alert, "data-spacing") == ["md"]
+    assert attr(document, :alert, "data-shadow") == [""]
+    assert attr(document, :alert, "data-bordered") == [""]
     assert attr(document, :alert, "data-intent") == []
     assert attr(document, :alert, "data-orientation") == ["vertical"]
-    assert attr(document, :alert, "data-padded") == [""]
     assert attr(document, :alert, "role") == ["status"]
     assert icon(document) |> LazyHTML.to_html() == ""
   end
@@ -177,7 +187,18 @@ defmodule FlintUI.Styled.AlertTest do
 
     assert attr(document, :alert, "data-orientation") == ["horizontal"]
     assert attr(document, :alert, "data-spacing") == ["lg"]
-    assert attr(document, :alert, "data-padded") == []
-    assert attr(document, :alert, "data-shadow") == [""]
+    assert attr(document, :alert, "data-bordered") == []
+    assert attr(document, :alert, "data-shadow") == []
+  end
+
+  test "maps each variant onto the data hook", %{wrapper: wrapper} do
+    document = render(wrapper, :variants)
+
+    variants =
+      document
+      |> LazyHTML.query(~s([data-element="alert"]))
+      |> LazyHTML.attribute("data-variant")
+
+    assert variants == ["solid", "outline", "soft"]
   end
 end
