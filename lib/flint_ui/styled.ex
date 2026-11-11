@@ -14,6 +14,7 @@ defmodule FlintUI.Styled do
   alias FlintUI.Styled.Entry
 
   @modules [
+    FlintUI.Styled.Alert,
     FlintUI.Styled.Avatar,
     FlintUI.Styled.AvatarGroup,
     FlintUI.Styled.Badge,

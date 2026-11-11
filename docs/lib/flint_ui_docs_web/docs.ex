@@ -13,6 +13,7 @@ defmodule FlintUIDocsWeb.Docs do
   use Phoenix.Component
 
   alias FlintUIDocsWeb.Docs.{
+    Alert,
     Avatar,
     AvatarGroup,
     Badge,
@@ -32,6 +33,7 @@ defmodule FlintUIDocsWeb.Docs do
   }
 
   @modules %{
+    alert: Alert,
     avatar: Avatar,
     avatar_group: AvatarGroup,
     badge: Badge,

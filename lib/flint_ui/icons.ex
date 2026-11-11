@@ -43,7 +43,7 @@ defmodule FlintUI.Icons do
         {:lucide_icons,
          [
            github: "lucide-icons/lucide",
-           tag: "1.70.0",
+           tag: "1.71.0",
            sparse: "icons",
            app: false,
            compile: false,
@@ -52,7 +52,7 @@ defmodule FlintUI.Icons do
       label: "Lucide",
       license: "ISC",
       source: "https://github.com/lucide-icons/lucide",
-      version: "1.70.0",
+      version: "1.71.0",
       plugin: "lucide.js",
       css: "flint-lucide.css",
       dir: "icons"

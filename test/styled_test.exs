@@ -7,6 +7,7 @@ defmodule FlintUI.StyledTest do
   test "names/0 covers every component that ships a styled entry" do
     assert Enum.sort(Styled.names()) ==
              Enum.sort([
+               :alert,
                :avatar,
                :avatar_group,
                :badge,
@@ -123,7 +124,7 @@ defmodule FlintUI.StyledTest do
   end
 
   test "raw color props declare the public inputs they populate" do
-    for name <- [:avatar, :badge, :button, :toggle, :tabs, :loading, :loading_text] do
+    for name <- [:alert, :avatar, :badge, :button, :toggle, :tabs, :loading, :loading_text] do
       entry = Styled.get(name)
       color = Entry.prop(entry, :color)
 
@@ -171,6 +172,17 @@ defmodule FlintUI.StyledTest do
   test "Prop.new/1 allows a false default for a multi prop" do
     assert %Prop{default: false} =
              Prop.new(name: :inset, values: ["top", "bottom"], default: false, multi: true)
+  end
+
+  test "Prop.new/1 allows a nil default for a custom prop" do
+    assert %Prop{default: nil} =
+             Prop.new(name: :color, values: ["neutral"], default: nil, allow_custom: true)
+  end
+
+  test "Prop.new/1 rejects a nil default for a non-custom prop" do
+    assert_raise ArgumentError, fn ->
+      Prop.new(name: :color, values: ["neutral"], default: nil)
+    end
   end
 
   test "Prop.new/1 rejects a default outside its values" do

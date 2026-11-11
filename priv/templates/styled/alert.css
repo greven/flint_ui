@@ -1,0 +1,302 @@
+@layer components {
+    /* Alert. Public inputs: `--fl-alert-color`, `-color-content`, `-text`,
+     * `-soft`, and `-soft-border`. Layout, spacing, radius, and elevation stay
+     * on the prop hooks and the shared scales. */
+    [data-element="alert"][data-variant] {
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fl-alert-gap, var(--fl-spacing-sm));
+        padding: var(--fl-alert-spacing, calc(var(--fl-spacing) * 3));
+        border: 1px solid transparent;
+        border-radius: var(--fl-radius-lg);
+        background: transparent;
+        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: 1.375;
+    }
+
+    [data-element="alert"][data-variant]:not([data-padded]) {
+        padding: 0;
+    }
+
+    /* Each color sets the public inputs. */
+    [data-element="alert"][data-color="primary"] {
+        --fl-alert-color: var(--fl-color-primary);
+        --fl-alert-color-content: var(--fl-color-primary-content);
+        --fl-alert-text: var(--fl-color-primary-text);
+        --fl-alert-soft: var(--fl-color-primary-soft);
+        --fl-alert-soft-border: var(--fl-color-primary-soft-border);
+    }
+
+    [data-element="alert"][data-color="success"] {
+        --fl-alert-color: var(--fl-color-success);
+        --fl-alert-color-content: var(--fl-color-success-content);
+        --fl-alert-text: var(--fl-color-success-text);
+        --fl-alert-soft: var(--fl-color-success-soft);
+        --fl-alert-soft-border: var(--fl-color-success-soft-border);
+    }
+
+    [data-element="alert"][data-color="info"] {
+        --fl-alert-color: var(--fl-color-info);
+        --fl-alert-color-content: var(--fl-color-info-content);
+        --fl-alert-text: var(--fl-color-info-text);
+        --fl-alert-soft: var(--fl-color-info-soft);
+        --fl-alert-soft-border: var(--fl-color-info-soft-border);
+    }
+
+    [data-element="alert"][data-color="warning"] {
+        --fl-alert-color: var(--fl-color-warning);
+        --fl-alert-color-content: var(--fl-color-warning-content);
+        --fl-alert-text: var(--fl-color-warning-text);
+        --fl-alert-soft: var(--fl-color-warning-soft);
+        --fl-alert-soft-border: var(--fl-color-warning-soft-border);
+    }
+
+    [data-element="alert"][data-color="error"] {
+        --fl-alert-color: var(--fl-color-error);
+        --fl-alert-color-content: var(--fl-color-error-content);
+        --fl-alert-text: var(--fl-color-error-text);
+        --fl-alert-soft: var(--fl-color-error-soft);
+        --fl-alert-soft-border: var(--fl-color-error-soft-border);
+    }
+
+    [data-element="alert"][data-color="secondary"] {
+        --fl-alert-color: var(--fl-color-secondary);
+        --fl-alert-color-content: var(--fl-color-secondary-content);
+        --fl-alert-text: var(--fl-color-secondary-text);
+        --fl-alert-soft: var(--fl-color-secondary-soft);
+        --fl-alert-soft-border: var(--fl-color-secondary-soft-border);
+    }
+
+    [data-element="alert"][data-color="neutral"] {
+        --fl-alert-color: var(--fl-color-inverted);
+        --fl-alert-color-content: var(--fl-color-text-inverted);
+        --fl-alert-text: var(--fl-color-text-toned);
+        --fl-alert-soft: var(--fl-color-neutral-soft);
+        --fl-alert-soft-border: var(--fl-color-neutral-soft-border);
+    }
+
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-element="alert"][data-color="dark"] {
+        --fl-alert-color: var(--fl-color-dark);
+        --fl-alert-color-content: var(--fl-color-dark-content);
+        --fl-alert-text: var(--fl-color-dark-text);
+        --fl-alert-soft: var(--fl-color-dark-soft);
+        --fl-alert-soft-border: var(--fl-color-dark-soft-border);
+    }
+
+    [data-element="alert"][data-color="light"] {
+        --fl-alert-color: var(--fl-color-light);
+        --fl-alert-color-content: var(--fl-color-light-content);
+        --fl-alert-text: var(--fl-color-light-text);
+        --fl-alert-soft: var(--fl-color-light-soft);
+        --fl-alert-soft-border: var(--fl-color-light-soft-border);
+    }
+
+    /* Variants. Subtle is the default: a tinted surface with a matching border. */
+    [data-element="alert"][data-variant="subtle"] {
+        background: color-mix(
+            in oklab,
+            var(--fl-alert-soft, color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
+        );
+        border-color: var(
+            --fl-alert-soft-border,
+            color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
+        );
+        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    }
+
+    /* Soft: a tinted surface with no border. */
+    [data-element="alert"][data-variant="soft"] {
+        background: color-mix(
+            in oklab,
+            var(--fl-alert-soft, color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)))
+                calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
+        );
+        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    }
+
+    /* Solid: the color fills the alert with a darker edge line. */
+    [data-element="alert"][data-variant="solid"] {
+        background: var(--fl-alert-color, var(--fl-color-inverted));
+        border-color: color-mix(in oklab, var(--fl-alert-color, var(--fl-color-inverted)), oklch(0% 0 0) var(--fl-border-strength-solid));
+        color: var(--fl-alert-color-content, var(--fl-color-text-inverted));
+    }
+
+    /* Outline: a full-strength role edge and label with no fill. */
+    [data-element="alert"][data-variant="outline"] {
+        background: transparent;
+        border-color: var(--fl-alert-color, var(--fl-color-inverted));
+        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    }
+
+    /* Ghost: no surface and no border. */
+    [data-element="alert"][data-variant="ghost"] {
+        background: transparent;
+        color: var(--fl-alert-text, var(--fl-alert-color, var(--fl-color-inverted)));
+    }
+
+    /* Shadow is an opt-in boolean; the default is flat. */
+    [data-element="alert"][data-shadow] {
+        box-shadow: var(--fl-shadow-base);
+    }
+
+    [data-element="alert"]:not([data-shadow])[data-variant] {
+        box-shadow: 0 0 #0000;
+    }
+
+    /* Icon region. The icon is decorative and inherits the alert's label color. */
+    [data-element="alert"] > [data-part="icon"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        margin-block-start: 0.0625rem;
+        color: currentColor;
+        --fl-icon-size: 1.25rem;
+    }
+
+    [data-element="alert"] > [data-part="icon"] > [data-element="icon"] {
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+    }
+
+    /* Content is a grid so the title and body share a column and actions can
+     * move beside them without an extra wrapper. */
+    [data-element="alert"] [data-part="content"] {
+        display: grid;
+        flex: 1 1 auto;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--fl-alert-gap, var(--fl-spacing-sm));
+        align-content: start;
+        min-width: 0;
+    }
+
+    [data-element="alert"] [data-part="title"] {
+        grid-column: 1;
+        color: currentColor;
+        font-weight: var(--fl-font-weight-semibold);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="alert"] [data-part="body"] {
+        grid-column: 1;
+        color: currentColor;
+    }
+
+    [data-element="alert"] [data-part="actions"] {
+        display: flex;
+        flex-wrap: wrap;
+        grid-column: 1;
+        align-items: center;
+        gap: var(--fl-spacing-sm);
+    }
+
+    [data-element="alert"][data-orientation="horizontal"] [data-part="content"] {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: var(--fl-spacing-md);
+    }
+
+    [data-element="alert"][data-orientation="horizontal"] [data-part="actions"] {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    /* Close button. It is a native control, so the shared focus outline in
+     * base.css applies through its `data-part`. */
+    [data-element="alert"] > [data-part="close"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        align-self: flex-start;
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0;
+        border: 0;
+        border-radius: var(--fl-radius-sm);
+        background: transparent;
+        color: currentColor;
+        cursor: pointer;
+        transition: background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="alert"] > [data-part="close"]:hover {
+        background: color-mix(in oklab, currentColor 10%, transparent);
+    }
+
+    [data-element="alert"] > [data-part="close"] > [data-part="close-icon"] {
+        font-size: 1.125rem;
+        line-height: 1;
+    }
+
+    [data-element="alert"] > [data-part="close"] > [data-element="icon"] {
+        --fl-icon-size: 1rem;
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="alert"] > [data-part="close"] {
+            transition: none;
+        }
+    }
+
+    /* Radius overrides use the shared scale. */
+    [data-element="alert"][data-radius="none"] {
+        border-radius: 0;
+    }
+
+    [data-element="alert"][data-radius="xs"] {
+        border-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="alert"][data-radius="sm"] {
+        border-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="alert"][data-radius="md"] {
+        border-radius: var(--fl-radius-md);
+    }
+
+    [data-element="alert"][data-radius="lg"] {
+        border-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="alert"][data-radius="xl"] {
+        border-radius: var(--fl-radius-xl);
+    }
+
+    /* Spacing sets the root inset and the gap between the parts. */
+    [data-element="alert"][data-spacing="xs"] {
+        --fl-alert-spacing: calc(var(--fl-spacing) * 3.5);
+        --fl-alert-gap: var(--fl-spacing-xs);
+    }
+
+    [data-element="alert"][data-spacing="sm"] {
+        --fl-alert-spacing: var(--fl-spacing-lg);
+        --fl-alert-gap: calc(var(--fl-spacing) * 1.5);
+    }
+
+    [data-element="alert"][data-spacing="md"] {
+        --fl-alert-spacing: calc(var(--fl-spacing) * 5);
+        --fl-alert-gap: var(--fl-spacing-sm);
+    }
+
+    [data-element="alert"][data-spacing="lg"] {
+        --fl-alert-spacing: var(--fl-spacing-xl);
+        --fl-alert-gap: var(--fl-spacing-md);
+    }
+
+    [data-element="alert"][data-spacing="xl"] {
+        --fl-alert-spacing: var(--fl-spacing-2xl);
+        --fl-alert-gap: var(--fl-spacing-lg);
+    }
+}

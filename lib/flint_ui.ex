@@ -12,6 +12,7 @@ defmodule FlintUI do
 
   ## Available Components
 
+  - `alert`
   - `avatar`
   - `avatar_group`
   - `badge`
@@ -37,6 +38,7 @@ defmodule FlintUI do
   require FlintUI.API
 
   @components [
+    {:alert, [:close_alert]},
     {:avatar, []},
     {:avatar_group, []},
     {:badge, []},

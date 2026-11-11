@@ -9,7 +9,8 @@ defmodule FlintUI.Styled.Prop do
   wrapper then omits `values:` from its `attr/3` declaration, so the prop accepts
   any string. `values` still lists the documented presets and keeps driving the
   theme contract; the wrapper is responsible for validating the extra values
-  (see `FlintUI.Styled.Color` for `:color`).
+  (see `FlintUI.Styled.Color` for `:color`). A free-form prop may default to
+  `nil` when another prop supplies the fallback value.
 
   A prop can also accept a space-separated combination of its values with
   `multi: true` (see `multi?/1`). Its default is `false` to mean "none selected".
@@ -56,7 +57,9 @@ defmodule FlintUI.Styled.Prop do
   def new(fields) do
     prop = struct!(__MODULE__, fields)
 
-    unless prop.default in prop.values or (prop.multi and prop.default == false) do
+    unless prop.default in prop.values or
+             (prop.multi and prop.default == false) or
+             (prop.allow_custom and is_nil(prop.default)) do
       raise ArgumentError,
             "prop #{inspect(prop.name)} default #{inspect(prop.default)} is not one of #{inspect(prop.values)}"
     end

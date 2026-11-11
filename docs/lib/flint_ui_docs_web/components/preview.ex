@@ -488,8 +488,6 @@ defmodule FlintUIDocsWeb.Preview do
       data-preview-controls
       class={[
         "overflow-x-auto border-x border-b border-default bg-foreground/1 px-3 py-2.5",
-        "bg-[repeating-linear-gradient(135deg,rgba(0,0,0,0.03)_0,rgba(0,0,0,0.03)_1px,transparent_1px,transparent_6px)]",
-        "dark:bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.03)_0,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_6px)]",
         @last && "rounded-b-lg"
       ]}
     >

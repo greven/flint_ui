@@ -65,7 +65,7 @@ defmodule FlintUIDocs.MixProject do
       {:mdex, "~> 0.14"},
       {:lucide,
        github: "lucide-icons/lucide",
-       tag: "1.70.0",
+       tag: "1.71.0",
        sparse: "icons",
        app: false,
        compile: false,
