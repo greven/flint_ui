@@ -153,7 +153,6 @@
         box-shadow: 0 0 #0000;
     }
 
-
     [data-element="alert"] > [data-part="icon"] {
         display: inline-flex;
         flex: none;
@@ -196,7 +195,7 @@
      * lines read as a hierarchy outside the solid fill. */
     [data-element="alert"]:is([data-variant="outline"], [data-variant="soft"]) [data-part="title"] + [data-part="body"],
     [data-element="alert"]:not([data-background]) [data-part="title"] + [data-part="body"] {
-        color: color-mix(in oklab, currentColor 88%, transparent);
+        color: light-dark(color-mix(in oklab, currentColor 88%, black), color-mix(in oklab, currentColor 78%, white));
     }
 
     [data-element="alert"] [data-part="actions"] {
