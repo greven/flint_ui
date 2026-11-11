@@ -82,4 +82,16 @@ defmodule FlintUI.Theme.ContractTest do
              "expected flint.css to define --fl-#{namespace}-* (used by #{entry.name})"
     end
   end
+
+  test "tinted alerts elevate every role's soft token for nested controls" do
+    source = File.read!(FlintUI.Generator.part_path("styled/alert.css"))
+
+    for role <- ~w(primary secondary neutral success info warning error dark light) do
+      assert source =~ ~s([data-color="#{role}"] > *),
+             "expected a #{role} alert to elevate its nested soft token"
+
+      assert source =~ "--fl-color-#{role}-soft: color-mix(",
+             "expected a #{role} alert to elevate --fl-color-#{role}-soft"
+    end
+  end
 end

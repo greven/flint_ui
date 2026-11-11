@@ -218,7 +218,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   def render_section(%{section: :usage, id: :actions} = assigns) do
     ~H"""
     <.prose content="The `:actions` slot renders below the body and spaces its children. It usually holds buttons, but any inline content works.
-      Actions are regular controls; keep their labels distinct and meaningful." />
+      Give an action the alert's `color` with a `subtle` or `soft` variant so it gains the alert's elevated tint; `ghost` stays borderless,
+      while `surface` is the page-surface chip that contrasts instead of blending. Actions are regular controls; keep their labels distinct and meaningful." />
     <.preview {assigns} code={actions_code()}>
       <Components.alert
         intent="warning"
@@ -247,7 +248,10 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       >
         Version 1.4 is ready.
         <:actions>
-          <Components.button size="sm" variant="surface">View</Components.button>
+          <Components.button size="sm" variant="subtle" color="info"><:trailing>
+            <.icon name="lucide-arrow-right" />
+          </:trailing>
+          View</Components.button>
         </:actions>
       </Components.alert>
     </.preview>
@@ -455,8 +459,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.alert intent="warning" title="Storage almost full">
       You have used 90% of your plan.
       <:actions>
-        <.button size="sm" variant="subtle">Upgrade</.button>
-        <.button size="sm" variant="ghost">Not now</.button>
+        <.button size="sm" variant="subtle" color="warning">Upgrade</.button>
+        <.button size="sm" variant="ghost" color="warning">Not now</.button>
       </:actions>
     </.alert>
     """
@@ -474,7 +478,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       """
       Version 1.4 is ready.
       <:actions>
-        <.button size="sm" variant="surface">View</.button>
+        <.button size="sm" variant="subtle" color="info">View</.button>
       </:actions>
       """
     )

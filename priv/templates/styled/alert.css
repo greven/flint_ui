@@ -92,6 +92,85 @@
         --fl-alert-soft-border: var(--fl-color-light-soft-border);
     }
 
+    /* A control sitting on a tinted alert needs one more tint step to stay
+     * distinct from the surface. The alert root keeps the base soft; its direct
+     * children resolve an elevated value that inherits into the content and
+     * actions. A matching `soft` or `subtle` control reads the same role token,
+     * so it gains the step without any alert-specific control styling. The 12%
+     * step keeps every role's `-text` token above AA on the elevated fill. Raw
+     * colors have no role token to elevate and keep the base soft. */
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="primary"] > * {
+        --fl-color-primary-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="secondary"] > * {
+        --fl-color-secondary-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="success"] > * {
+        --fl-color-success-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="info"] > * {
+        --fl-color-info-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="warning"] > * {
+        --fl-color-warning-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="error"] > * {
+        --fl-color-error-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="neutral"] > * {
+        --fl-color-neutral-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="dark"] > * {
+        --fl-color-dark-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="light"] > * {
+        --fl-color-light-soft: color-mix(
+            in oklab,
+            var(--fl-alert-color) 12%,
+            var(--fl-alert-soft)
+        );
+    }
+
     /* Variants. Outline is the default: the shared tint with the role's
      * full-strength edge. Soft keeps the same tint with the faint matching
      * edge, and solid fills the alert with the role color. */

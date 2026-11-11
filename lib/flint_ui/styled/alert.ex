@@ -87,7 +87,7 @@ defmodule FlintUI.Styled.Alert do
           name: "--fl-alert-soft",
           default: "color-mix(in oklab, var(--fl-alert-color) 10%, var(--fl-color-surface))",
           doc:
-            "The tinted surface behind soft and outline alerts; roles map it to the role's `-soft` token."
+            "The tinted surface behind soft and outline alerts; roles map it to the role's `-soft` token. Matching-color controls nested in the alert read one elevated step of the same token."
         ),
         Var.new(
           name: "--fl-alert-soft-border",

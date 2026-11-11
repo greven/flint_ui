@@ -11,7 +11,7 @@ defmodule FlintUI.Base.Alert do
       <FlintUI.alert intent="warning" title="Storage almost full">
         You have used 90% of your plan.
         <:actions>
-          <FlintUI.button size="sm" variant="surface">Upgrade</FlintUI.button>
+          <FlintUI.button size="sm" variant="subtle" color="warning">Upgrade</FlintUI.button>
         </:actions>
       </FlintUI.alert>
 
