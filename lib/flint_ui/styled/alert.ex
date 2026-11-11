@@ -31,7 +31,7 @@ defmodule FlintUI.Styled.Alert do
         Prop.new(
           name: :spacing,
           values: ~w(xs sm md lg xl),
-          default: "xs",
+          default: "md",
           doc: "The internal spacing of the alert."
         ),
         Prop.new(

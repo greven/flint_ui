@@ -78,7 +78,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         section: :usage,
         id: :spacing,
         title: "Spacing",
-        controls: [%{key: :spacing, type: :select, default: "xs", label: "Spacing"}]
+        controls: [%{key: :spacing, type: :select, default: "md", label: "Spacing"}]
       },
       %{
         tab: :styled,
@@ -86,13 +86,6 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         id: :padded,
         title: "Padded",
         controls: [%{key: :padded, type: :boolean, default: true, label: "Padded"}]
-      },
-      %{
-        tab: :styled,
-        section: :usage,
-        id: :shadow,
-        title: "Shadow",
-        controls: [%{key: :shadow, type: :boolean, default: true, label: "Shadow"}]
       },
       %{
         tab: :styled,
@@ -117,7 +110,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="Use `title` for the message and the default slot for its body. `intent` selects the theme color and a default icon; `color` overrides only the color. The default variant is `subtle`." />
+    <.prose content="Use `title` for the message and the default slot for its body. `intent` selects the theme color and a default icon; `color` overrides only the color.
+      The default variant is `subtle`." />
     <.preview :let={props} {assigns} code={&basic_code/1}>
       <Components.alert
         variant={props.variant}
@@ -138,7 +132,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :usage, id: :variant} = assigns) do
     ~H"""
-    <.prose content="`variant` sets the visual emphasis. `subtle` is the default tinted surface with a matching border; `soft` drops the border; `solid` fills the alert with the role color; `outline` keeps only the role edge; `ghost` removes the surface." />
+    <.prose content="`variant` sets the visual emphasis. `subtle` is the default tinted surface with a matching border; `soft` drops the border; `solid` fills the alert with the role color;
+      `outline` keeps only the role edge; `ghost` removes the surface." />
     <.preview :let={_props} {assigns} code={&variant_code/1}>
       <div class="grid w-full max-w-xl gap-3">
         <Components.alert
@@ -147,7 +142,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
           color="info"
           title={String.capitalize(variant)}
         >
-          The same message in every treatment.
+          Lorem ipsum dolor sit amet.
         </Components.alert>
       </div>
     </.preview>
@@ -157,7 +152,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   def render_section(%{section: :usage, id: :intent} = assigns) do
     ~H"""
     <.prose content="`intent` gives the message a semantic meaning. It selects the default icon and is the fallback color. The five intents are `neutral`, `info`, `success`, `warning`, and `error`." />
-    <.prose content={"`warning` and `error` default to `role=\"alert\"`, so they interrupt. The other intents default to the polite `role=\"status\"`. Set `role` yourself when the surrounding flow needs a different announcement."} />
+    <.prose content={"`warning` and `error` default to `role=\"alert\"`, so they interrupt. The other intents default to the polite `role=\"status\"`.
+      Set `role` yourself when the surrounding flow needs a different announcement."} />
     <.preview :let={props} {assigns} code={intent_code()}>
       <div class="grid w-full max-w-xl gap-3">
         <Components.alert
@@ -209,7 +205,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :usage, id: :actions} = assigns) do
     ~H"""
-    <.prose content="The `:actions` slot renders below the body and spaces its children. It usually holds buttons, but any inline content works. Actions are regular controls; keep their labels distinct and meaningful." />
+    <.prose content="The `:actions` slot renders below the body and spaces its children. It usually holds buttons, but any inline content works.
+      Actions are regular controls; keep their labels distinct and meaningful." />
     <.preview {assigns} code={actions_code()}>
       <Components.alert
         intent="warning"
@@ -279,22 +276,6 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     """
   end
 
-  def render_section(%{section: :usage, id: :shadow} = assigns) do
-    ~H"""
-    <.prose content="Alerts are flat by default. Set `shadow` to add the shared base elevation when the alert needs to float above the page." />
-    <.preview :let={props} {assigns} code={&shadow_code/1}>
-      <Components.alert
-        intent="info"
-        shadow={props.shadow}
-        title="Elevated"
-        class="w-full max-w-xl"
-      >
-        The elevation is opt-in.
-      </Components.alert>
-    </.preview>
-    """
-  end
-
   def render_section(%{section: :usage, id: :closing} = assigns) do
     ~H"""
     <.prose content="Set `with_close` to render a close button. It hides the alert in the browser and pushes `close_event` when set, so the server can remove it from state." />
@@ -328,7 +309,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :examples, id: :custom_color} = assigns) do
     ~H"""
-    <.prose content="Pass a raw CSS color or a bundled Tailwind palette color to `color` for a one-off accent. The fill is used exactly and the label is derived for contrast. Prefer a semantic role or a theme override for anything app-wide." />
+    <.prose content="Pass a raw CSS color or a bundled Tailwind palette color to `color` for a one-off accent. The fill is used exactly and the label is derived for contrast.
+      Prefer a semantic role or a theme override for anything app-wide." />
     <.preview {assigns} code={custom_color_code()} collapsed>
       <div class="grid w-full max-w-xl gap-3">
         <%!-- <Components.alert variant="solid" color="#B45309"> --%>
@@ -371,7 +353,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :styling, id: :tokens} = assigns) do
     ~H"""
-    <.prose content="The alert reads five public color inputs: `--fl-alert-color`, `--fl-alert-color-content`, `--fl-alert-text`, `--fl-alert-soft`, and `--fl-alert-soft-border`. Each role maps them to its fill, label, text, soft, and soft-border tokens." />
+    <.prose content="The alert reads five public color inputs: `--fl-alert-color`, `--fl-alert-color-content`, `--fl-alert-text`, `--fl-alert-soft`, and `--fl-alert-soft-border`.
+      Each role maps them to its fill, label, text, soft, and soft-border tokens." />
     <.preview {assigns} code={styling_code()} code_only />
     """
   end
@@ -385,7 +368,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         Snippet.attr("variant", props.variant, "subtle"),
         Snippet.attr("intent", props.intent),
         Snippet.attr("color", effective_color(props)),
-        Snippet.attr("spacing", props.spacing, "xs"),
+        Snippet.attr("spacing", props.spacing, "md"),
         Snippet.attr("padded", props.padded, true),
         Snippet.flag("shadow", props.shadow),
         Snippet.attr("show_icon", props.show_icon, true),
@@ -398,8 +381,9 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   defp variant_code(_props) do
     """
-    <.alert :for={variant <- ~w(subtle soft solid outline ghost)} variant={variant} color="info" title={String.capitalize(variant)}>
-      The same message in every treatment.
+    <.alert :for={variant <- ~w(subtle soft solid outline ghost)} variant={variant}
+      color="info" title={String.capitalize(variant)}>
+      Lorem ipsum dolor sit amet.
     </.alert>
     """
     |> String.trim()
@@ -472,7 +456,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       ".alert",
       [
         Snippet.attr("intent", "info"),
-        Snippet.attr("spacing", props.spacing, "xs"),
+        Snippet.attr("spacing", props.spacing, "md"),
         Snippet.attr("title", "Spacing")
       ],
       "The inset and gaps follow the selected step."
@@ -492,18 +476,6 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         Full-bleed content sits in its own padded container.
       </div>
       """
-    )
-  end
-
-  defp shadow_code(props) do
-    Snippet.tag(
-      ".alert",
-      [
-        Snippet.attr("intent", "info"),
-        Snippet.flag("shadow", props.shadow),
-        Snippet.attr("title", "Elevated")
-      ],
-      "The elevation is opt-in."
     )
   end
 

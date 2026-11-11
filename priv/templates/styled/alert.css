@@ -8,7 +8,7 @@
         align-items: flex-start;
         gap: var(--fl-alert-gap, var(--fl-spacing-sm));
         padding-block: var(--fl-alert-padding-block, var(--fl-spacing-md));
-        padding-inline: var(--fl-alert-padding-inline, calc(var(--fl-spacing-md) + 0.5rem));
+        padding-inline: var(--fl-alert-padding-inline, calc(var(--fl-spacing-md) + var(--fl-spacing)));
         border: 1px solid transparent;
         border-radius: var(--fl-radius-lg);
         background: transparent;
@@ -252,31 +252,31 @@
     /* Spacing sets the root inset (block and inline) and the gap between the parts. */
     [data-element="alert"][data-spacing="xs"] {
         --fl-alert-padding-block: var(--fl-spacing-xs);
-        --fl-alert-padding-inline: calc(var(--fl-spacing-xs) + 0.5rem);
+        --fl-alert-padding-inline: calc(var(--fl-spacing-xs));
         --fl-alert-gap: calc(var(--fl-spacing) * 1);
     }
 
     [data-element="alert"][data-spacing="sm"] {
         --fl-alert-padding-block: var(--fl-spacing-sm);
-        --fl-alert-padding-inline: calc(var(--fl-spacing-sm) + 0.5rem);
+        --fl-alert-padding-inline: calc(var(--fl-spacing-sm) + var(--fl-spacing));
         --fl-alert-gap: calc(var(--fl-spacing) * 1.5);
     }
 
     [data-element="alert"][data-spacing="md"] {
         --fl-alert-padding-block: var(--fl-spacing-md);
-        --fl-alert-padding-inline: calc(var(--fl-spacing-md) + 0.5rem);
+        --fl-alert-padding-inline: calc(var(--fl-spacing-md) + var(--fl-spacing));
         --fl-alert-gap: calc(var(--fl-spacing) * 2);
     }
 
     [data-element="alert"][data-spacing="lg"] {
         --fl-alert-padding-block: var(--fl-spacing-lg);
-        --fl-alert-padding-inline: calc(var(--fl-spacing-lg) + 0.5rem);
-        --fl-alert-gap: calc(var(--fl-spacing) * 2);
+        --fl-alert-padding-inline: calc(var(--fl-spacing-lg) + var(--fl-spacing));
+        --fl-alert-gap: calc(var(--fl-spacing) * 2.5);
     }
 
     [data-element="alert"][data-spacing="xl"] {
         --fl-alert-padding-block: var(--fl-spacing-xl);
-        --fl-alert-padding-inline: calc(var(--fl-spacing-xl) + 0.5rem);
+        --fl-alert-padding-inline: calc(var(--fl-spacing-xl) + var(--fl-spacing));
         --fl-alert-gap: calc(var(--fl-spacing) * 3);
     }
 }

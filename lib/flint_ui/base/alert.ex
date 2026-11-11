@@ -126,7 +126,7 @@ defmodule FlintUI.Base.Alert do
           name: "role",
           value: ~s("alert" | "status" | "none"),
           description:
-            "The live-region role. `warning`/`error` default to `alert`; the other intents default to `status`. A caller-supplied role wins."
+            "The live-region role. `warning`/`error` default to `alert`, the other intents default to `status`. A caller-supplied role wins."
         }
       ],
       icon: [
@@ -378,9 +378,6 @@ defmodule FlintUI.Base.Alert do
     |> JS.hide(to: "##{id}")
   end
 
-  defp alert_role(%{intent: intent}) when intent in ["warning", "error"], do: "alert"
-  defp alert_role(_assigns), do: "status"
-
   defp close_click(assigns) do
     %JS{}
     |> maybe_push_close(assigns)
@@ -403,4 +400,7 @@ defmodule FlintUI.Base.Alert do
   defp present?(rendered) do
     rendered |> Phoenix.HTML.Safe.to_iodata() |> IO.iodata_to_binary() |> String.trim() != ""
   end
+
+  defp alert_role(%{intent: intent}) when intent in ["warning", "error"], do: "alert"
+  defp alert_role(_assigns), do: "status"
 end
