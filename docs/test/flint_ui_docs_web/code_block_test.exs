@@ -37,7 +37,7 @@ defmodule FlintUIDocsWeb.CodeBlockTest do
   test "leads a single-snippet caption with its language icon" do
     css = render_code(%{lang: :css})
 
-    assert count(css, "[data-code-header] .lucide-palette") == 1
+    assert count(css, "[data-code-header] .lucide-ampersand") == 1
 
     elixir = render_code(%{lang: :elixir})
     assert count(elixir, "[data-code-header] .lucide-droplet") == 1

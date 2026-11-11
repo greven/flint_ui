@@ -227,7 +227,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       >
         You have used 90% of your plan.
         <:actions>
-          <Components.button size="sm" color="warning">Upgrade</Components.button>
+          <Components.button size="sm" variant="subtle" color="warning">Upgrade</Components.button>
           <Components.button size="sm" variant="ghost" color="warning">Not now</Components.button>
         </:actions>
       </Components.alert>
@@ -455,7 +455,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.alert intent="warning" title="Storage almost full">
       You have used 90% of your plan.
       <:actions>
-        <.button size="sm" variant="surface">Upgrade</.button>
+        <.button size="sm" variant="subtle">Upgrade</.button>
         <.button size="sm" variant="ghost">Not now</.button>
       </:actions>
     </.alert>

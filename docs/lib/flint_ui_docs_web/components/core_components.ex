@@ -67,7 +67,7 @@ defmodule FlintUIDocsWeb.CoreComponents do
         @kind == :error && "alert-error"
       ]}>
         <.icon :if={@kind == :info} name="lucide-info" class="size-5 shrink-0" />
-        <.icon :if={@kind == :error} name="lucide-circle-alert" class="size-5 shrink-0" />
+        <.icon :if={@kind == :error} name="lucide-circle-exclamation-point" class="size-5 shrink-0" />
         <div>
           <p :if={@title} class="font-semibold">{@title}</p>
           <p>{msg}</p>
@@ -267,7 +267,7 @@ defmodule FlintUIDocsWeb.CoreComponents do
   defp error(assigns) do
     ~H"""
     <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
-      <.icon name="lucide-circle-alert" class="size-5" />
+      <.icon name="lucide-circle-exclamation-point" class="size-5" />
       {render_slot(@inner_block)}
     </p>
     """

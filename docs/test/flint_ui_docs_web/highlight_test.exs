@@ -43,10 +43,10 @@ defmodule FlintUIDocsWeb.HighlightTest do
   end
 
   test "icon/1 pairs each language with a Lucide icon and colour" do
-    assert {"lucide-code-xml", "text-orange-600 dark:text-orange-400"} = Highlight.icon(:heex)
-    assert {"lucide-droplet", "text-purple-600 dark:text-purple-400"} = Highlight.icon(:elixir)
-    assert {"lucide-palette", "text-blue-600 dark:text-blue-400"} = Highlight.icon(:css)
-    assert {"lucide-terminal", "text-emerald-600 dark:text-emerald-400"} = Highlight.icon(:shell)
+    assert {"lucide-code", "text-amber-500"} = Highlight.icon(:heex)
+    assert {"lucide-droplet", "text-purple-500"} = Highlight.icon(:elixir)
+    assert {"lucide-ampersand", "text-blue-500"} = Highlight.icon(:css)
+    assert {"lucide-terminal", "text-emerald-500"} = Highlight.icon(:shell)
     assert {"lucide-file-code", "text-muted"} = Highlight.icon(:unknown)
   end
 end

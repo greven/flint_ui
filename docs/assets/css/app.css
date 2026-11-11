@@ -10,6 +10,11 @@
 @source "../js";
 @source "../../lib/flint_ui_docs_web";
 
+/* The alert's default intent icons are selected at runtime in
+   `FlintUI.Base.Alert.intent_icon/1`, so Tailwind never sees the class names
+   while scanning source and would omit their CSS. Safelist the four defaults. */
+@source inline("lucide-info lucide-circle-check lucide-circle-exclamation-point lucide-circle-x");
+
 @import "./flint.css";
 
 @import "./highlight.css";

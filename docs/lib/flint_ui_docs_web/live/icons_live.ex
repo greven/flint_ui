@@ -210,7 +210,7 @@ defmodule FlintUIDocsWeb.IconsLive do
 
   defp snippet(:accessibility) do
     """
-    <.icon name="lucide-circle-alert" label="Error" />
+    <.icon name="lucide-circle-exclamation-point" label="Error" />
     """
     |> String.trim()
   end

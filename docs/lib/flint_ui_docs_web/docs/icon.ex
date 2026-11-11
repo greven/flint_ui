@@ -13,8 +13,8 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     lucide-house lucide-wifi lucide-mail lucide-bell lucide-search lucide-user
     lucide-users lucide-settings lucide-heart lucide-star lucide-check lucide-x
     lucide-plus lucide-minus lucide-arrow-left lucide-arrow-right
-    lucide-chevron-down lucide-circle-alert lucide-circle-check lucide-info
-    lucide-triangle-alert lucide-calendar-days lucide-clock lucide-download
+    lucide-chevron-down lucide-circle-exclamation-point lucide-circle-check lucide-info
+    lucide-triangle-exclamation-point lucide-calendar-days lucide-clock lucide-download
     lucide-upload lucide-trash lucide-pencil lucide-copy lucide-link lucide-lock
     lucide-eye lucide-sun lucide-moon lucide-volume-2 lucide-play lucide-pause
     lucide-refresh-cw lucide-loader-circle lucide-palette lucide-code-xml

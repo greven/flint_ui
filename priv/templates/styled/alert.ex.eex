@@ -16,6 +16,9 @@ def <%= @name %>(assigns) do
   assigns = assign(assigns, :color, assigns.color || intent || "neutral")
 
 <%= @color %>
+  # `intent_icon/1` picks these at runtime, so Tailwind cannot discover them by
+  # scanning the wrapper. Keep the class names literal for the scanner:
+  # lucide-info lucide-circle-check lucide-circle-exclamation-point lucide-circle-x
   intent_icon =
     if assigns.icon == [] and assigns.show_icon do
       FlintUI.Base.Alert.intent_icon(intent)

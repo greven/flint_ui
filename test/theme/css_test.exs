@@ -430,7 +430,7 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "alert body text is slightly muted below a title", %{css: css} do
     assert css =~
-             ~r/\[data-element="alert"\]:is\(\[data-variant="outline"\], \[data-variant="soft"\]\) \[data-part="title"\] \+ \[data-part="body"\],\s*\[data-element="alert"\]:not\(\[data-background\]\) \[data-part="title"\] \+ \[data-part="body"\] \{[^}]*color: color-mix\(\s*in oklab,\s*currentColor 88%,\s*transparent\s*\)/
+             ~r/\[data-element="alert"\]:is\(\[data-variant="outline"\], \[data-variant="soft"\]\) \[data-part="title"\] \+ \[data-part="body"\],\s*\[data-element="alert"\]:not\(\[data-background\]\) \[data-part="title"\] \+ \[data-part="body"\] \{[^}]*color: light-dark\(\s*color-mix\(\s*in oklab,\s*currentColor 88%,\s*black\s*\),\s*color-mix\(\s*in oklab,\s*currentColor 78%,\s*white\s*\)\s*\)/
 
     assert css =~ ~r/\[data-element="alert"\] \[data-part="body"\] \{[^}]*color: currentColor/
   end

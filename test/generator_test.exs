@@ -288,6 +288,14 @@ defmodule FlintUI.GeneratorTest do
     assert File.read!(Generator.aggregate_path()) == Generator.theme_source()
   end
 
+  test "the alert wrapper keeps the runtime intent icon names literal for Tailwind" do
+    source = Generator.component_source(:alert)
+
+    for intent <- ~w(neutral info success warning error) do
+      assert source =~ FlintUI.Base.Alert.intent_icon(intent)
+    end
+  end
+
   test "the combined generated module compiles" do
     functions =
       Styled.names()
