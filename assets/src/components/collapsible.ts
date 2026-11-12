@@ -8,6 +8,7 @@ enum Events {
   Close = "fl:collapsible:close",
   Toggle = "fl:collapsible:toggle",
   Change = "fl:collapsible:change",
+  BeforeClose = "fl:collapsible:before-close",
 }
 
 type CollapsibleState = "open" | "closed";
@@ -69,8 +70,14 @@ export class Collapsible extends FlintHook {
     const content = this.parts.content;
     if (!content) return;
 
-    content.style.setProperty(`--_fl-${CSS_VAR_PREFIX}-height`, `${content.scrollHeight}px`);
-    content.style.setProperty(`--_fl-${CSS_VAR_PREFIX}-width`, `${content.scrollWidth}px`);
+    content.style.setProperty(
+      `--_fl-${CSS_VAR_PREFIX}-height`,
+      `${content.scrollHeight}px`,
+    );
+    content.style.setProperty(
+      `--_fl-${CSS_VAR_PREFIX}-width`,
+      `${content.scrollWidth}px`,
+    );
   }
 
   /**
@@ -105,6 +112,20 @@ export class Collapsible extends FlintHook {
     );
   }
 
+  /**
+   * Dispatches the cancelable guard before a close.
+   * `dispatchEvent` returns false when a listener
+   * called `preventDefault()`.
+   */
+  private beforeClose(): boolean {
+    return this.el.dispatchEvent(
+      new CustomEvent(Events.BeforeClose, {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
   private pushStateEvents(state: CollapsibleState): void {
     const isOpen = state === "open";
     const payload = { id: this.el.id, open: isOpen };
@@ -120,6 +141,11 @@ export class Collapsible extends FlintHook {
    */
   private setState(state: CollapsibleState, emit = true): void {
     if (state === this.currentState) return;
+
+    // User-initiated and JS-command closes can be cancelled before the state
+    // changes. Server-driven updates pass `emit = false`, so the server always
+    // wins and no guard loops back into the patch.
+    if (emit && state === "closed" && !this.beforeClose()) return;
 
     const isOpen = state === "open";
     const { trigger, content } = this.parts;
@@ -159,7 +185,11 @@ export class Collapsible extends FlintHook {
       if (!isOpen) {
         const hide = () => {
           if (this.animationGeneration !== gen) return;
-          this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
+          this.js().setAttribute(
+            content,
+            "hidden",
+            this.hiddenUntilFound ? "until-found" : "",
+          );
         };
         done.then(hide).catch(hide);
       }
@@ -235,7 +265,10 @@ export class Collapsible extends FlintHook {
     this.el.removeEventListener(Events.Close, this.handleClose);
     this.el.removeEventListener(Events.Toggle, this.handleToggle);
     this.boundTrigger?.removeEventListener("click", this.handleTriggerClick);
-    this.boundContent?.removeEventListener("beforematch", this.handleBeforeMatch);
+    this.boundContent?.removeEventListener(
+      "beforematch",
+      this.handleBeforeMatch,
+    );
     this.resizeObserver?.disconnect();
   }
 }

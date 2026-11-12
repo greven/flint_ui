@@ -296,6 +296,31 @@ defmodule FlintUI.GeneratorTest do
     end
   end
 
+  test "accordion maps its layout props and duration" do
+    source = Generator.component_source(:accordion)
+
+    assert source =~ "attr(:variant, :string"
+    assert source =~ "values: ~w(simple contained separated)"
+    assert source =~ "data-variant={@variant}"
+    assert source =~ "attr(:surface, :string"
+    assert source =~ "values: ~w(solid soft strong ghost)"
+    assert source =~ "data-surface={@surface}"
+    assert source =~ "data-indicator-position={@indicator_position}"
+    assert source =~ "data-transition={@transition}"
+    assert source =~ "attr(:duration, :integer"
+  end
+
+  test "accordion item keeps its permissive header and indicator slots" do
+    source = Generator.component_source(:accordion_item)
+
+    assert source =~ "slot(:header,"
+    assert source =~ "slot(:indicator,"
+    assert source =~ "slot(:panel, required: true"
+    assert source =~ "validate_attrs: false"
+    assert source =~ "Map.drop(header"
+    assert source =~ "Map.get(panel, :class)"
+  end
+
   test "the combined generated module compiles" do
     functions =
       Styled.names()

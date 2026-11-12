@@ -251,4 +251,23 @@ describe("Collapsible hook", () => {
 
     expect(el.getAttribute("data-state")).toBe("closed");
   });
+
+  it("cancels a user-initiated close when before-close is prevented", () => {
+    const { el, trigger } = setup({ state: "open" });
+    el.addEventListener("fl:collapsible:before-close", (event) => event.preventDefault());
+
+    trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(el.getAttribute("data-state")).toBe("open");
+  });
+
+  it("does not guard server-driven closes", () => {
+    const { el, hook } = setup({ state: "open" });
+    el.addEventListener("fl:collapsible:before-close", (event) => event.preventDefault());
+
+    el.setAttribute("data-state", "closed");
+    hook.updated();
+
+    expect(el.getAttribute("data-state")).toBe("closed");
+  });
 });

@@ -1,0 +1,126 @@
+@layer components {
+    /* Accordion item. The item root is also the collapsible root: the hook sets
+     * `data-state` and writes `--_fl-collapsible-height` on the content while it
+     * animates. The styled layer adds the header, indicator, and panel anatomy. */
+    [data-element="accordion_item"][data-accordion_item] {
+        min-width: 0;
+        color: inherit;
+    }
+
+    /* The heading is semantic only; the design system controls the type. */
+    [data-element="accordion_item"][data-accordion_item] [data-part="heading"] {
+        margin: 0;
+        font: inherit;
+    }
+
+    [data-element="accordion_item"][data-accordion_item] [data-part="trigger"] {
+        display: flex;
+        align-items: center;
+        gap: var(--fl-spacing-md);
+        width: 100%;
+        padding: var(--fl-spacing-lg) var(--fl-spacing-md);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-line-height-md);
+        text-align: start;
+        cursor: pointer;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Simple highlights the header only. */
+    [data-element="accordion"][data-variant="simple"]:not([data-disabled])
+        [data-element="accordion_item"][data-accordion_item]
+        [data-part="trigger"]:not([data-disabled]):hover {
+        background: light-dark(
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 50%), transparent),
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 40%), transparent)
+        );
+    }
+
+    [data-element="accordion_item"][data-accordion_item] [data-part="trigger"][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+    }
+
+    [data-element="accordion_item"][data-accordion_item] [data-part="header"] {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    [data-element="accordion_item"][data-accordion_item] [data-part="indicator"] {
+        flex: 0 0 auto;
+        width: var(--fl-control-icon-md);
+        height: var(--fl-control-icon-md);
+        color: var(--fl-color-text-muted);
+    }
+
+    [data-element="accordion_item"][data-accordion_item] [data-part="trigger"]:hover [data-part="indicator"] {
+        color: var(--fl-color-text-toned);
+    }
+
+    /* The content clips its own reveal; padding and borders live on the panel
+     * body so the collapsed height can reach zero. */
+    [data-element="accordion_item"][data-accordion_item] [data-part="content"] {
+        overflow: hidden;
+        border-radius: inherit;
+    }
+
+    [data-element="accordion_item"][data-accordion_item] [data-part="panel"] {
+        padding: var(--fl-spacing-sm) var(--fl-spacing-md) var(--fl-spacing-md);
+        color: var(--fl-color-text-muted);
+        font-size: var(--fl-font-size-md);
+        line-height: 1.5;
+    }
+
+    /* The default chevron rotates only when the accordion allows transitions. */
+    [data-element="accordion"][data-transition] [data-element="accordion_item"] [data-part="indicator"][data-default] {
+        transition: transform var(--fl-accordion-duration, var(--fl-duration-base)) var(--fl-ease-in-out);
+    }
+
+    [data-element="accordion"][data-transition] [data-element="accordion_item"][data-state="open"] [data-part="indicator"][data-default] {
+        transform: rotate(180deg);
+    }
+
+    [data-element="accordion"][data-transition] [data-element="accordion_item"][data-animate] [data-part="content"][data-state="open"] {
+        animation: fl-accordion-expand var(--fl-accordion-duration, var(--fl-duration-base)) var(--fl-ease-in-out);
+    }
+
+    [data-element="accordion"][data-transition] [data-element="accordion_item"][data-animate] [data-part="content"][data-state="closed"] {
+        animation: fl-accordion-collapse var(--fl-accordion-duration, var(--fl-duration-base)) var(--fl-ease-in-out);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="accordion"] [data-element="accordion_item"] [data-part="content"],
+        [data-element="accordion"] [data-element="accordion_item"] [data-part="indicator"] {
+            animation: none;
+            transition: none;
+        }
+    }
+}
+
+@keyframes fl-accordion-expand {
+    from {
+        height: 0;
+    }
+
+    to {
+        height: var(--_fl-collapsible-height, auto);
+    }
+}
+
+@keyframes fl-accordion-collapse {
+    from {
+        height: var(--_fl-collapsible-height, auto);
+    }
+
+    to {
+        height: 0;
+    }
+}

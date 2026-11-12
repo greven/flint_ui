@@ -23,6 +23,13 @@ defmodule FlintUI.Base.Collapsible do
   the resulting state to the server, or use `open_collapsible/2`, `close_collapsible/2`
   and `toggle_collapsible/2` to drive it from a `Phoenix.LiveView.JS` command.
 
+  ## Guarding a close
+
+  Before a user-initiated or JS-command close, the hook dispatches a cancelable
+  `fl:collapsible:before-close` event on the root. Calling `preventDefault()`
+  keeps the content open. Server-driven state changes do not dispatch it, so a
+  patch can always close the content.
+
   ## Accessibility
 
   The trigger is a native `<button>`, exposed with an implicit `button` role. The
@@ -235,6 +242,12 @@ defmodule FlintUI.Base.Collapsible do
         source: :client,
         doc:
           "Dispatched on the root whenever the state changes. Bubbles up the DOM. The event `detail` is a map with a `state` key (`\"open\"` or `\"closed\"`)."
+      },
+      %Meta.Event{
+        name: "fl:collapsible:before-close",
+        source: :client,
+        doc:
+          "Cancelable event dispatched on the root before a user-initiated or JS-command close. Call `preventDefault()` to keep the content open. Server-driven state changes do not dispatch it."
       }
     ]
   end

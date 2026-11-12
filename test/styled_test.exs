@@ -7,6 +7,8 @@ defmodule FlintUI.StyledTest do
   test "names/0 covers every component that ships a styled entry" do
     assert Enum.sort(Styled.names()) ==
              Enum.sort([
+               :accordion,
+               :accordion_item,
                :alert,
                :avatar,
                :avatar_group,

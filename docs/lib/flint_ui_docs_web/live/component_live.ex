@@ -8,7 +8,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Markdown
 
-  @part_order [:root, :tablist, :tab, :panel, :trigger, :content]
+  @part_order [:root, :heading, :header, :indicator, :tablist, :tab, :panel, :trigger, :content]
 
   @impl true
   def render(assigns) do

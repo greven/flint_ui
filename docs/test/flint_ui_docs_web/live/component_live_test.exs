@@ -288,6 +288,33 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#usage-collapsible-basic [data-part='trigger'][disabled]")
   end
 
+  test "accordion playground switches layout variants", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/accordion")
+
+    assert has_element?(view, "#usage-accordion-basic-controls select[name='variant']")
+
+    assert has_element?(
+             view,
+             "#usage-accordion-basic [data-element='accordion'][data-variant='simple']"
+           )
+
+    view
+    |> element("#usage-accordion-basic-controls")
+    |> render_change(%{"variant" => "contained"})
+
+    assert has_element?(
+             view,
+             "#usage-accordion-basic [data-element='accordion'][data-variant='contained']"
+           )
+  end
+
+  test "accordion item docs are API-only and link to the accordion", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/accordion_item")
+
+    assert has_element?(view, "a[href='/components/accordion']", "Accordion docs")
+    refute has_element?(view, "[data-preview]")
+  end
+
   test "card page renders the generated card", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/card")
 
@@ -707,12 +734,18 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
   test "every component renders its styled, base, and css tabs", %{conn: conn} do
     for name <- FlintUI.components() do
+      api_only? = FlintUIDocsWeb.Docs.api_only?(name)
+
       {:ok, docs, _html} = live(conn, ~p"/components/#{name}")
       assert has_element?(docs, "#component-sections-panel-styled")
       refute has_element?(docs, "#component-sections-panel-styled[hidden]")
       assert has_element?(docs, "#component-sections-panel-base[hidden]")
-      assert has_element?(docs, "[data-preview]")
-      assert has_element?(docs, "[data-preview] [data-element]")
+
+      unless api_only? do
+        assert has_element?(docs, "[data-preview]")
+        assert has_element?(docs, "[data-preview] [data-element]")
+      end
+
       assert has_element?(docs, "#api")
       assert has_element?(docs, "#setup")
 
@@ -720,7 +753,11 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
       assert has_element?(base, "#component-sections-panel-base")
       refute has_element?(base, "#component-sections-panel-base[hidden]")
       assert has_element?(base, "#component-sections-panel-styled[hidden]")
-      assert has_element?(base, "#accessibility")
+
+      if Enum.any?(FlintUIDocsWeb.Docs.base_groups(name), &(&1.section == :accessibility)) do
+        assert has_element?(base, "#accessibility")
+      end
+
       assert has_element?(base, "#api")
       refute has_element?(base, "[data-preview]")
 

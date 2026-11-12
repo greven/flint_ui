@@ -372,6 +372,11 @@ defmodule FlintUI.Generator do
     opts = if slot.required, do: opts ++ [required: true], else: opts
     opts = if slot.doc, do: opts ++ [doc: slot.doc], else: opts
 
+    opts =
+      if Map.get(slot, :validate_attrs) == false,
+        do: opts ++ [validate_attrs: false],
+        else: opts
+
     case opts do
       [] -> "slot(:#{slot.name})"
       opts -> "slot(:#{slot.name}, #{Enum.map_join(opts, ", ", &opt/1)})"

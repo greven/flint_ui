@@ -156,9 +156,14 @@ defmodule FlintUI.API do
 
   # Converts a list of slot definitions into quoted code
   defp component_slots(slots) do
-    for %{name: name, required: required, attrs: slot_attrs, opts: opts, doc: doc} <- slots do
+    for %{name: name, required: required, attrs: slot_attrs, opts: opts, doc: doc} = slot <- slots do
       opts = if required, do: [{:required, true} | opts], else: opts
       opts = if doc, do: [{:doc, doc} | opts], else: opts
+
+      opts =
+        if Map.get(slot, :validate_attrs) == false,
+          do: [{:validate_attrs, false} | opts],
+          else: opts
 
       inner =
         for %{name: sname, type: stype, required: srequired, opts: sopts, doc: sdoc} <- slot_attrs do

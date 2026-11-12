@@ -12,6 +12,8 @@ defmodule FlintUI do
 
   ## Available Components
 
+  - `accordion`
+  - `accordion_item`
   - `alert`
   - `avatar`
   - `avatar_group`
@@ -38,6 +40,8 @@ defmodule FlintUI do
   require FlintUI.API
 
   @components [
+    {:accordion, [:open_accordion_item, :close_accordion_item, :toggle_accordion_item]},
+    {:accordion_item, []},
     {:alert, [:close_alert]},
     {:avatar, []},
     {:avatar_group, []},

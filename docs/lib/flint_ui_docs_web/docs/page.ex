@@ -146,6 +146,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
   @callback render_section(assigns :: map()) :: Phoenix.LiveView.Rendered.t() | nil
   @callback anatomy() :: map() | nil
   @callback styling() :: map() | nil
+  @callback api_only?() :: boolean()
 
   defmacro __using__(opts) do
     component = Keyword.fetch!(opts, :component)
@@ -188,6 +189,15 @@ defmodule FlintUIDocsWeb.Docs.Page do
       @doc "Plain-CSS recipes for the Styling guide, or `nil`."
       def styling, do: nil
 
+      @doc """
+      Whether the page is an API-only companion page.
+
+      An API-only page keeps the Styled Usage callout, the generated API and
+      setup sections, and the CSS contract tables, but it renders no preview and
+      may select `base_docs: [:api]`.
+      """
+      def api_only?, do: false
+
       defoverridable component: 0,
                      title: 0,
                      subtitle: 0,
@@ -195,7 +205,8 @@ defmodule FlintUIDocsWeb.Docs.Page do
                      sections: 0,
                      render_section: 1,
                      anatomy: 0,
-                     styling: 0
+                     styling: 0,
+                     api_only?: 0
     end
   end
 end

@@ -399,7 +399,7 @@
     --fl-disabled-opacity: 0.5;
 
     --fl-focus-ring-width: 3px;
-    --fl-focus-ring-offset: 0;
+    --fl-focus-ring-offset: 0px;
     --fl-focus-ring-style: solid;
     --fl-focus-ring-color: var(--fl-color-primary);
     --fl-focus-ring-alpha: 25%;
@@ -414,7 +414,7 @@
  * layouts. Set `data-focus` on <html> or any container to switch the subtree. */
 [data-focus="ring"] {
     --fl-focus-ring-width: 3px;
-    --fl-focus-ring-offset: 0;
+    --fl-focus-ring-offset: 0px;
     --fl-focus-ring-alpha: 25%;
     --fl-focus-border-color: var(--fl-focus-ring-color);
 }

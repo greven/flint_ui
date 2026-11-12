@@ -1,0 +1,126 @@
+@layer components {
+    /* Accordion. Public inputs: `--fl-accordion-surface`, `-border`,
+     * `-shadow`, `-gap`, and `-duration`. The stack and dividers live here;
+     * the item's header/panel anatomy lives in `accordion_item.css`. */
+    [data-element="accordion"][data-accordion] {
+        --fl-accordion-surface: var(--fl-color-surface);
+        --fl-accordion-border: var(--fl-color-border);
+        --fl-accordion-shadow: var(--fl-shadow-base);
+        --fl-accordion-gap: var(--fl-spacing-sm);
+        --fl-accordion-duration: var(--fl-duration-base);
+        --fl-accordion-highlight-opacity: var(--fl-control-hover-opacity);
+
+        display: flex;
+        flex-direction: column;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+    }
+
+    /* Simple: the stack is transparent and items are separated by a hairline.
+     * `surface` selects the divider strength; the overrides below adjust
+     * `--fl-accordion-border` before this rule reads it. */
+    [data-element="accordion"][data-variant="simple"] > [data-element="accordion_item"] + [data-element="accordion_item"] {
+        border-block-start: 1px solid var(--fl-accordion-border);
+    }
+
+    /* Contained: one surface shell owns the border, radius, and elevation. */
+    [data-element="accordion"][data-variant="contained"] {
+        border: 1px solid var(--fl-accordion-border);
+        border-radius: var(--fl-radius-lg);
+        background: var(--fl-accordion-surface);
+        box-shadow: var(--fl-accordion-shadow);
+        overflow: hidden;
+    }
+
+    [data-element="accordion"][data-variant="contained"] > [data-element="accordion_item"] + [data-element="accordion_item"] {
+        border-block-start: 1px solid var(--fl-accordion-border);
+    }
+
+    /* Separated: every item is its own surface card. */
+    [data-element="accordion"][data-variant="separated"] {
+        gap: var(--fl-accordion-gap);
+    }
+
+    [data-element="accordion"][data-variant="separated"] > [data-element="accordion_item"] {
+        border: 1px solid var(--fl-accordion-border);
+        border-radius: var(--fl-radius-lg);
+        background: var(--fl-accordion-surface);
+        box-shadow: var(--fl-accordion-shadow);
+        overflow: hidden;
+    }
+
+    /* Surface treatments mirror the card variants without rendering a card. */
+    [data-element="accordion"][data-surface="soft"] {
+        --fl-accordion-surface: var(--fl-color-surface-subtle);
+        --fl-accordion-border: var(--fl-color-border-subtle);
+    }
+
+    [data-element="accordion"][data-surface="strong"] {
+        --fl-accordion-surface: var(--fl-color-surface-strong);
+    }
+
+    [data-element="accordion"][data-surface="ghost"] {
+        --fl-accordion-surface: transparent;
+        --fl-accordion-shadow: 0 0 #0000;
+    }
+
+    [data-element="accordion"][data-variant="simple"][data-surface="strong"] {
+        --fl-accordion-border: var(--fl-color-border-strong);
+    }
+
+    [data-element="accordion"][data-variant="simple"][data-surface="ghost"] {
+        --fl-accordion-border: transparent;
+    }
+
+    [data-element="accordion"]:is([data-variant="contained"], [data-variant="separated"]):not([data-disabled])
+        > [data-element="accordion_item"]:not([data-disabled]):is(:hover, [data-state="open"]) {
+            background: light-dark(
+                color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 50%), transparent),
+                color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 40%), transparent)
+    }
+
+    /* The hover fill and focus ring follow the item's shape. */
+    [data-element="accordion"][data-variant="contained"] > [data-element="accordion_item"]:first-child > [data-part="trigger"],
+    [data-element="accordion"][data-variant="contained"] > [data-element="accordion_item"]:first-child > [data-part="heading"] > [data-part="trigger"] {
+        border-start-start-radius: var(--fl-radius-lg);
+        border-start-end-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="accordion"][data-variant="contained"] > [data-element="accordion_item"]:last-child > [data-part="trigger"],
+    [data-element="accordion"][data-variant="contained"] > [data-element="accordion_item"]:last-child > [data-part="heading"] > [data-part="trigger"] {
+        border-end-start-radius: var(--fl-radius-lg);
+        border-end-end-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="accordion"][data-variant="separated"] > [data-element="accordion_item"] > [data-part="trigger"],
+    [data-element="accordion"][data-variant="separated"] > [data-element="accordion_item"] > [data-part="heading"] > [data-part="trigger"] {
+        border-radius: var(--fl-radius-lg);
+    }
+
+    /* Put the indicator before the label without moving it in the DOM. */
+    [data-element="accordion"][data-indicator-position="left"] [data-element="accordion_item"] [data-part="indicator"] {
+        order: -1;
+    }
+
+    /* An instant toggle removes the indicator transition. The content
+     * keyframes are gated on `[data-transition]` in accordion_item.css. */
+    [data-element="accordion"]:not([data-transition]) [data-element="accordion_item"] [data-part="indicator"] {
+        transition: none;
+    }
+
+    /* A contained or separated header sits flush with a clipped surface, so
+     * the ring has to fit inside it. Inset it by at least its own width, which
+     * keeps every focus preset fully visible without moving the trigger. */
+    [data-element="accordion"]:is([data-variant="contained"], [data-variant="separated"]) [data-part="trigger"]:focus-visible {
+        outline-offset: calc(
+            min(var(--fl-focus-ring-offset), 0px) - var(--fl-focus-ring-width)
+        );
+    }
+
+    /* The root disabled state dims every header. The hook also disables the
+     * native buttons; panel content stays interactive. */
+    [data-element="accordion"][data-disabled] [data-part="trigger"] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+    }
+}

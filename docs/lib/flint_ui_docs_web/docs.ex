@@ -13,6 +13,8 @@ defmodule FlintUIDocsWeb.Docs do
   use Phoenix.Component
 
   alias FlintUIDocsWeb.Docs.{
+    Accordion,
+    AccordionItem,
     Alert,
     Avatar,
     AvatarGroup,
@@ -33,6 +35,8 @@ defmodule FlintUIDocsWeb.Docs do
   }
 
   @modules %{
+    accordion: Accordion,
+    accordion_item: AccordionItem,
     alert: Alert,
     avatar: Avatar,
     avatar_group: AvatarGroup,
@@ -242,6 +246,9 @@ defmodule FlintUIDocsWeb.Docs do
 
   @doc "Plain-CSS recipes for the Styling guide."
   def styling(name), do: page(name).styling()
+
+  @doc "Whether a page is an API-only companion page."
+  def api_only?(name), do: page(name).api_only?()
 
   @doc "Structured anatomy for the Base tab."
   def anatomy(name) do
