@@ -95,6 +95,11 @@
         --fl-control-active-opacity: 0.22;
     }
 
+    [data-element="button"]:is([data-variant="surface"], [data-variant="outline"]) {
+        --fl-control-hover-opacity: 0.08;
+        --fl-control-active-opacity: 0.11;
+    }
+
     /* Press feedback: the button sinks. */
     [data-element="button"][data-variant]:not([data-disabled]):not([data-loading]):active {
         transform: var(--fl-control-press, none);
@@ -301,6 +306,10 @@
     [data-element="button"][data-variant="link"]:not([data-disabled]):not([data-loading]):hover {
         color: color-mix(in oklab, var(--fl-button-text, var(--fl-button-color, var(--fl-color-inverted))) 75%, transparent);
         text-decoration-thickness: 2px;
+    }
+
+    [data-element="button"][data-dashed]:is([data-variant="subtle"], [data-variant="surface"]):not([data-disabled]):not([data-loading]):hover {
+        border-color: var(--fl-button-color, var(--fl-color-inverted));
     }
 
     [data-element="button"][data-size="xs"] {

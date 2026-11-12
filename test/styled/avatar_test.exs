@@ -6,49 +6,55 @@ defmodule FlintUI.Styled.AvatarTest do
       compile_wrapper!(:avatar, ~S'''
       def defaults(assigns) do
         ~H"""
-        <.avatar src="https://example.com/jane.jpg" name="Jane Doe" />
+        <.avatar src="https://example.com/jane.jpg" alt="Jane Doe" />
         """
       end
 
       def numeric_size(assigns) do
         ~H"""
-        <.avatar name="Jane Doe" size={40} />
+        <.avatar alt="Jane Doe" size={40} />
         """
       end
 
       def square(assigns) do
         ~H"""
-        <.avatar name="Jane Doe" shape="square" radius="lg" color="primary" />
+        <.avatar alt="Jane Doe" shape="square" radius="lg" color="primary" />
         """
       end
 
       def initials(assigns) do
         ~H"""
-        <.avatar name="Jane Doe" color="initials" />
+        <.avatar alt="Jane Doe" color="initials" />
         """
       end
 
       def initials_again(assigns) do
         ~H"""
-        <.avatar name="Jane Doe" color="initials" />
+        <.avatar alt="Jane Doe" color="initials" />
         """
       end
 
       def initials_light_fill(assigns) do
         ~H"""
-        <.avatar name="Green" color="initials" />
+        <.avatar alt="Green" color="initials" />
         """
       end
 
       def raw_color(assigns) do
         ~H"""
-        <.avatar name="Jane Doe" color="#1D72FE" />
+        <.avatar alt="Jane Doe" color="#1D72FE" />
         """
       end
 
       def nameless(assigns) do
         ~H"""
         <.avatar />
+        """
+      end
+
+      def text_only(assigns) do
+        ~H"""
+        <.avatar text="+3" />
         """
       end
 
@@ -60,7 +66,7 @@ defmodule FlintUI.Styled.AvatarTest do
 
       def custom_fallback(assigns) do
         ~H"""
-        <.avatar name="Jane Doe">
+        <.avatar alt="Jane Doe">
           <:fallback><span id="custom">Custom</span></:fallback>
         </.avatar>
         """
@@ -70,7 +76,7 @@ defmodule FlintUI.Styled.AvatarTest do
         ~H"""
         <.avatar
           src="https://example.com/jane.jpg"
-          name="Jane Doe"
+          alt="Jane Doe"
           class="extra"
           loading="lazy"
           data-role="test"
@@ -141,13 +147,22 @@ defmodule FlintUI.Styled.AvatarTest do
     assert style(document) =~ "--fl-avatar-color-content:"
   end
 
-  test "renders the user icon when no name is available", %{wrapper: wrapper} do
+  test "renders the user icon when no alt or text is available", %{wrapper: wrapper} do
     document = render(wrapper, :nameless)
 
     assert attr(fallback(document), "data-fallback") == ["slot"]
 
     assert LazyHTML.attribute(LazyHTML.query(document, ~s([data-element="icon"])), "class") ==
              ["lucide-user"]
+  end
+
+  test "renders text instead of initials and suppresses the default icon", %{wrapper: wrapper} do
+    document = render(wrapper, :text_only)
+
+    assert attr(fallback(document), "data-fallback") == ["text"]
+    assert attr(fallback(document), "aria-label") == ["+3"]
+    assert LazyHTML.text(fallback(document)) |> String.trim() == "+3"
+    assert document |> LazyHTML.query(~s([data-element="icon"])) |> LazyHTML.to_html() == ""
   end
 
   test "fallback_icon replaces the default icon", %{wrapper: wrapper} do

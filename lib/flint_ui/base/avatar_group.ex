@@ -7,13 +7,14 @@ defmodule FlintUI.Base.AvatarGroup do
   children:
 
       <FlintUI.avatar_group label="Project members">
-        <FlintUI.avatar src={@ana.avatar_url} name={@ana.name} />
-        <FlintUI.avatar src={@bo.avatar_url} name={@bo.name} />
+        <FlintUI.avatar src={@ana.avatar_url} alt={@ana.name} />
+        <FlintUI.avatar src={@bo.avatar_url} alt={@bo.name} />
       </FlintUI.avatar_group>
 
   The generated styled component adds the overlap, size cascade, and optional
-  surface ring. Overflow is caller-controlled: render an extra avatar with an
-  overflow label, such as `name="+3"`, when there are more people than fit.
+  surface ring. Overflow is caller-controlled: render an extra avatar with
+  fixed text, such as `text="+3"` and an `alt` such as `"3 more members"`, when
+  there are more people than fit.
 
   ## Accessibility
 

@@ -34,26 +34,34 @@ defmodule FlintUIDocsWeb.Docs.Avatar do
     assigns = Map.put(assigns, :image, @image)
 
     ~H"""
-    <.prose content="Use `src` to load an image. When it is missing or fails to load, the avatar falls back to initials from `name`, or to a user icon when there is no name." />
+    <.prose content="Use `src` to load an image. When it is missing or fails to load, the avatar falls back to initials from `alt`, to fixed `text`, or to a user icon when neither is set." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.avatar
           src={@image}
-          name="Chris McCord"
+          alt="Chris McCord"
           size={props.size}
           shape={props.shape}
           radius={props.radius}
           color={props.color}
         />
         <Components.avatar
-          name="Clark Kent"
+          alt="Clark Kent"
           color="initials"
           size={props.size}
           shape={props.shape}
           radius={props.radius}
         />
         <Components.avatar
-          name="José Valim"
+          alt="José Valim"
+          size={props.size}
+          shape={props.shape}
+          radius={props.radius}
+          color={props.color}
+        />
+        <Components.avatar
+          alt="3 more members"
+          text="+3"
           size={props.size}
           shape={props.shape}
           radius={props.radius}
@@ -74,7 +82,7 @@ defmodule FlintUIDocsWeb.Docs.Avatar do
     attrs =
       [
         ~s(src="#{@image}"),
-        ~s(name="Jane Smith"),
+        ~s(alt="Jane Smith"),
         Snippet.attr("size", props.size, "md"),
         Snippet.attr("shape", props.shape, "circle"),
         Snippet.attr("radius", props.radius, "none"),
@@ -86,8 +94,9 @@ defmodule FlintUIDocsWeb.Docs.Avatar do
     """
     <.avatar #{attrs} />
 
-    <.avatar name="Clark Kent" color="initials" />
-    <.avatar name="José Valim" />
+    <.avatar alt="Clark Kent" color="initials" />
+    <.avatar alt="José Valim" />
+    <.avatar alt="3 more members" text="+3" />
     <.avatar />
     """
     |> String.trim()

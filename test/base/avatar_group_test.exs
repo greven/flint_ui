@@ -9,8 +9,8 @@ defmodule FlintUI.Base.AvatarGroupTest do
     def plain(assigns) do
       ~H"""
       <FlintUI.avatar_group>
-        <FlintUI.avatar name="Jane Doe" />
-        <FlintUI.avatar name="John Smith" />
+        <FlintUI.avatar alt="Jane Doe" />
+        <FlintUI.avatar alt="John Smith" />
       </FlintUI.avatar_group>
       """
     end
@@ -18,7 +18,7 @@ defmodule FlintUI.Base.AvatarGroupTest do
     def labelled(assigns) do
       ~H"""
       <FlintUI.avatar_group label="Project members" as="div">
-        <FlintUI.avatar name="Jane Doe" />
+        <FlintUI.avatar alt="Jane Doe" />
       </FlintUI.avatar_group>
       """
     end
@@ -26,7 +26,7 @@ defmodule FlintUI.Base.AvatarGroupTest do
     def role_wins(assigns) do
       ~H"""
       <FlintUI.avatar_group label="Project members" role="list">
-        <FlintUI.avatar name="Jane Doe" />
+        <FlintUI.avatar alt="Jane Doe" />
       </FlintUI.avatar_group>
       """
     end

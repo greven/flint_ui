@@ -23,7 +23,7 @@ defmodule FlintUI.Base.Alert do
   on the styled wrapper to keep the intent color without the icon, or supply a
   `:icon` slot to replace the default. An explicit icon always renders.
 
-  The alert root is a plain region. `with_close` adds only the close button; the
+  The alert root is a plain region. `show_close` adds only the close button; the
   rest of the alert keeps its content semantics.
 
   ## Accessibility
@@ -40,7 +40,7 @@ defmodule FlintUI.Base.Alert do
   inserted or updated dynamically, the live region announces the change; a
   static callout still reads correctly without an announcement.
 
-  `with_close` renders a native close button named by `close_label`. Dismissing
+  `show_close` renders a native close button named by `close_label`. Dismissing
   hides the alert in the browser and removes it from the accessibility tree. If
   the alert is rendered from server state, set `close_event` so your handler can
   remove it and show the next state; hiding alone returns on the next render.
@@ -51,7 +51,7 @@ defmodule FlintUI.Base.Alert do
   nearest alert. When `close_event` is set, it also pushes that server event with
   `%{"id" => id}` so the server can remove the alert from its assigns.
 
-      <FlintUI.alert id="billing-alert" with_close close_event="dismiss_alert">
+      <FlintUI.alert id="billing-alert" show_close close_event="dismiss_alert">
         Your trial ends in three days.
       </FlintUI.alert>
 
@@ -271,7 +271,7 @@ defmodule FlintUI.Base.Alert do
     default: nil,
     doc: "A title line rendered above the body. The default slot is the body."
 
-  attr :with_close, :boolean,
+  attr :show_close, :boolean,
     default: false,
     doc:
       "Whether to render a close button. It hides the alert in the browser and pushes `close_event` when set."
@@ -329,7 +329,7 @@ defmodule FlintUI.Base.Alert do
         <div :if={present?(body)} {@flint_parts[:body]}>{body}</div>
         <div :if={present?(actions)} {@flint_parts[:actions]}>{actions}</div>
       </div>
-      <button :if={@with_close} {@flint_parts[:close]}>
+      <button :if={@show_close} {@flint_parts[:close]}>
         <%= if present?(close) do %>
           {close}
         <% else %>

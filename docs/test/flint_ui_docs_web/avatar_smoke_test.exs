@@ -15,6 +15,12 @@ defmodule FlintUIDocsWeb.AvatarSmokeTest do
 
     assert has_element?(
              view,
+             "#usage-avatar-basic [data-part='fallback'][data-fallback='text']",
+             "+3"
+           )
+
+    assert has_element?(
+             view,
              "#usage-avatar-basic [data-part='fallback'] [data-element='icon'].lucide-user"
            )
 

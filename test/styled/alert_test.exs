@@ -56,7 +56,7 @@ defmodule FlintUI.Styled.AlertTest do
 
       def closable(assigns) do
         ~H"""
-        <.alert id="billing-alert" with_close close_event="dismiss_alert">
+        <.alert id="billing-alert" show_close close_event="dismiss_alert">
           Your trial ends in three days.
         </.alert>
         """

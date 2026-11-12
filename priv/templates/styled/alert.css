@@ -100,75 +100,39 @@
      * step keeps every role's `-text` token above AA on the elevated fill. Raw
      * colors have no role token to elevate and keep the base soft. */
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="primary"] > * {
-        --fl-color-primary-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-primary-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="secondary"] > * {
-        --fl-color-secondary-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-secondary-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="success"] > * {
-        --fl-color-success-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-success-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="info"] > * {
-        --fl-color-info-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-info-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="warning"] > * {
-        --fl-color-warning-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-warning-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="error"] > * {
-        --fl-color-error-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-error-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="neutral"] > * {
-        --fl-color-neutral-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-neutral-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="dark"] > * {
-        --fl-color-dark-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-dark-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="light"] > * {
-        --fl-color-light-soft: color-mix(
-            in oklab,
-            var(--fl-alert-color) 12%,
-            var(--fl-alert-soft)
-        );
+        --fl-color-light-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
     /* Variants. Outline is the default: the shared tint with the role's
@@ -194,6 +158,7 @@
 
     /* Outline: the tint with the role's full-strength edge. */
     [data-element="alert"][data-variant="outline"] {
+        --fl-icon-color: var(--fl-alert-color);
         border-color: var(--fl-alert-color, var(--fl-color-inverted));
     }
 
@@ -238,7 +203,7 @@
         align-items: center;
         justify-content: center;
         margin-block-start: 0.0625rem;
-        color: currentColor;
+        color: var(--fl-icon-color, currentColor);
         --fl-icon-size: var(--fl-alert-close-icon-size, var(--fl-control-icon-lg));
     }
 

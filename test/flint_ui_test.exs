@@ -31,7 +31,7 @@ defmodule FlintUITest do
   describe "Docs.description/1" do
     test "returns the first sentence, joining a description wrapped across lines" do
       assert FlintUI.Docs.description(:avatar) ==
-               "Shows a person or entity as an image, falling back to initials or custom content."
+               "Shows a person or entity as an image, falling back to initials, fixed text, or custom content."
 
       assert FlintUI.Docs.description(:card) ==
                "A container that groups related content into an optional header, sections and an optional footer."

@@ -13,8 +13,8 @@ defmodule FlintUI.Styled.AvatarGroupTest do
           def defaults(assigns) do
             ~H"""
             <.avatar_group>
-              <.avatar name="Jane Doe" />
-              <.avatar name="John Smith" />
+              <.avatar alt="Jane Doe" />
+              <.avatar alt="John Smith" />
             </.avatar_group>
             """
           end
@@ -28,7 +28,7 @@ defmodule FlintUI.Styled.AvatarGroupTest do
               label={@label}
               class={@class}
             >
-              <.avatar name="Jane Doe" />
+              <.avatar alt="Jane Doe" />
             </.avatar_group>
             """
           end

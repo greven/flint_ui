@@ -64,7 +64,7 @@
         color: var(--fl-avatar-color-content);
         font-size: calc(var(--fl-avatar-size) * 0.4);
         letter-spacing: 0.01em;
-        text-transform: uppercase;
+        /* Initials are upcased by the component; leave `text` as authored. */
     }
 
     /* The component toggles `hidden` from JS. Keep it authoritative over the

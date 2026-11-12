@@ -10,8 +10,7 @@ defmodule FlintUI.Base.AvatarTest do
       ~H"""
       <FlintUI.avatar
         src="https://example.com/jane.jpg"
-        name="Jane Doe"
-        alt="Jane"
+        alt="Jane Doe"
         loading="lazy"
         width="80"
         class="extra"
@@ -22,13 +21,13 @@ defmodule FlintUI.Base.AvatarTest do
 
     def no_src(assigns) do
       ~H"""
-      <FlintUI.avatar name="Cher" />
+      <FlintUI.avatar alt="Cher" />
       """
     end
 
     def custom_fallback(assigns) do
       ~H"""
-      <FlintUI.avatar name="Jane Doe">
+      <FlintUI.avatar alt="Jane Doe">
         <:fallback><span id="custom">X</span></:fallback>
       </FlintUI.avatar>
       """
@@ -36,7 +35,19 @@ defmodule FlintUI.Base.AvatarTest do
 
     def decorative(assigns) do
       ~H"""
-      <FlintUI.avatar name="Jane Doe" alt="" />
+      <FlintUI.avatar alt="" text="JD" />
+      """
+    end
+
+    def text_fallback(assigns) do
+      ~H"""
+      <FlintUI.avatar alt="Jane Doe" text="+3" />
+      """
+    end
+
+    def text_only(assigns) do
+      ~H"""
+      <FlintUI.avatar text="+3" />
       """
     end
 
@@ -65,7 +76,7 @@ defmodule FlintUI.Base.AvatarTest do
     assert attr(root(document), "class") == ["extra"]
 
     assert attr(image(document), "src") == ["https://example.com/jane.jpg"]
-    assert attr(image(document), "alt") == ["Jane"]
+    assert attr(image(document), "alt") == ["Jane Doe"]
     assert attr(image(document), "loading") == ["lazy"]
     assert attr(image(document), "width") == ["80"]
     assert attr(image(document), "data-role") == ["test"]
@@ -78,8 +89,8 @@ defmodule FlintUI.Base.AvatarTest do
     assert attr(fallback(document), "hidden") == []
     assert attr(fallback(document), "aria-hidden") == ["true"]
     assert attr(fallback(document), "role") == ["img"]
-    assert attr(fallback(document), "aria-label") == ["Jane"]
-    assert attr(fallback(document), "title") == ["Jane"]
+    assert attr(fallback(document), "aria-label") == ["Jane Doe"]
+    assert attr(fallback(document), "title") == ["Jane Doe"]
     assert text(fallback(document)) == "JD"
 
     html = LazyHTML.to_html(document)
@@ -101,6 +112,25 @@ defmodule FlintUI.Base.AvatarTest do
     assert text(fallback(document)) == "C"
   end
 
+  test "renders fixed text instead of initials" do
+    document = render(&TestComponent.text_fallback/1)
+
+    assert attr(fallback(document), "data-fallback") == ["text"]
+    assert attr(fallback(document), "aria-label") == ["Jane Doe"]
+    assert attr(fallback(document), "title") == ["Jane Doe"]
+    assert text(fallback(document)) == "+3"
+  end
+
+  test "text labels the fallback when alt is omitted" do
+    document = render(&TestComponent.text_only/1)
+
+    assert attr(fallback(document), "data-fallback") == ["text"]
+    assert attr(fallback(document), "aria-label") == ["+3"]
+    assert attr(fallback(document), "role") == ["img"]
+    assert attr(fallback(document), "aria-hidden") == []
+    assert text(fallback(document)) == "+3"
+  end
+
   test "a fallback slot replaces initials" do
     document = render(&TestComponent.custom_fallback/1)
 
@@ -119,7 +149,7 @@ defmodule FlintUI.Base.AvatarTest do
     assert text(fallback(document)) == "JD"
   end
 
-  test "an avatar with no name or image renders an empty fallback" do
+  test "an avatar with no alt, text, or image renders an empty fallback" do
     document = render(&TestComponent.nameless/1)
 
     assert attr(fallback(document), "data-fallback") == ["none"]

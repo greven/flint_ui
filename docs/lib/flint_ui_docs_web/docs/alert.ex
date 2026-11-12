@@ -39,7 +39,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
           %{key: :border, type: :select, default: "solid", label: "Border"},
           %{key: :background, type: :boolean, default: true, label: "Background"},
           %{key: :show_icon, type: :boolean, default: true, label: "Show icon"},
-          %{key: :with_close, type: :boolean, default: false, label: "Close button"}
+          %{key: :show_close, type: :boolean, default: false, label: "Close button"}
         ]
       },
       %{
@@ -98,7 +98,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         section: :usage,
         id: :closing,
         title: "Closing",
-        controls: [%{key: :with_close, type: :boolean, default: true, label: "Close button"}]
+        controls: [%{key: :show_close, type: :boolean, default: true, label: "Close button"}]
       },
       %{
         tab: :styled,
@@ -124,7 +124,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     ~H"""
     <.prose content="Use `title` for the message and the default slot for its body. `intent` selects the theme color and a default icon; `color` overrides only the color.
       The default variant is `outline`." />
-    <.preview :let={props} {assigns} code={&basic_code/1}>
+    <.preview :let={props} {assigns} code={&basic_code/1} resizable>
       <Components.alert
         variant={props.variant}
         intent={props.intent}
@@ -133,7 +133,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         border={props.border}
         background={props.background}
         show_icon={props.show_icon}
-        with_close={props.with_close}
+        show_close={props.show_close}
         title="Heads up"
       >
         Your trial ends in three days.
@@ -312,14 +312,14 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :usage, id: :closing} = assigns) do
     ~H"""
-    <.prose content="Set `with_close` to render a close button. It hides the alert in the browser and pushes `close_event` when set, so the server can remove it from state." />
+    <.prose content="Set `show_close` to render a close button. It hides the alert in the browser and pushes `close_event` when set, so the server can remove it from state." />
     <.prose content="Give the alert an `id` and use `close_alert/2` to close it from a server-rendered control. The helper dispatches `fl:alert:close` and hides the alert." />
     <.preview :let={props} {assigns} code={&closing_code/1}>
       <div class="grid w-full max-w-xl gap-3">
         <Components.alert
           id="docs-close-alert"
           intent="success"
-          with_close={props.with_close}
+          show_close={props.show_close}
           title="Dismissible"
         >
           Close this alert with its button.
@@ -405,7 +405,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         Snippet.attr("spacing", props.spacing, "md"),
         Snippet.attr("border", props.border, "solid"),
         Snippet.attr("show_icon", props.show_icon, true),
-        Snippet.flag("with_close", props.with_close),
+        Snippet.flag("show_close", props.show_close),
         Snippet.attr("title", "Heads up")
       ],
       "Your trial ends in three days."
@@ -526,8 +526,8 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         [
           Snippet.attr("id", "docs-close-alert"),
           Snippet.attr("intent", "success"),
-          Snippet.flag("with_close", props.with_close),
-          Snippet.attr("close_event", if(props.with_close, do: "dismiss_alert")),
+          Snippet.flag("show_close", props.show_close),
+          Snippet.attr("close_event", if(props.show_close, do: "dismiss_alert")),
           Snippet.attr("title", "Dismissible")
         ],
         "Close this alert with its button."
@@ -547,7 +547,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   defp server_close_code do
     """
-    <.alert id="billing-alert" intent="success" with_close close_event="dismiss_alert" title="Dismissible">
+    <.alert id="billing-alert" intent="success" show_close close_event="dismiss_alert" title="Dismissible">
       Close this alert with its button.
     </.alert>
 

@@ -1,28 +1,33 @@
 defmodule FlintUI.Base.Avatar do
   @moduledoc """
-  Shows a person or entity as an image, falling back to initials or custom
-  content.
+  Shows a person or entity as an image, falling back to initials, fixed text,
+  or custom content.
 
   ## Examples
 
-      <.avatar src={@user.avatar_url} name={@user.name} />
+      <.avatar src={@user.avatar_url} alt={@user.name} />
 
-      <.avatar name="Jane Doe" />
+      <.avatar alt="Jane Doe" />
+
+      <.avatar alt="Jane Doe" text="JD" />
+
+      <.avatar alt="3 more members" text="+3" />
 
       <.avatar src={@user.avatar_url} alt="" />
 
   The image is rendered when `src` is set. If the URL is missing or the image
   fails to load, the fallback is shown instead. While a set image loads, the
-  fallback stays behind it, so initials or a custom fallback act as the
+  fallback stays behind it, so initials, text, or a custom fallback act as the
   placeholder until the image paints over them. With no `src`, the fallback is
   server-rendered; a failed URL needs the bundled `flint.js`, which watches the
   image and reveals the fallback on error. Without the bundle, the browser's
   broken-image UI remains.
 
-  Pass `name` to render initials: the first grapheme of the first and last
-  whitespace-separated parts. The styled wrapper draws a generic user icon when
-  no name is available. Pass a `:fallback` slot to replace both with your own
-  content.
+  Pass `alt` to render initials: the first grapheme of the first and last
+  whitespace-separated parts. Pass `text` to replace the initials with fixed
+  content, such as `+3` for an overflow avatar. The styled wrapper draws a
+  generic user icon when neither `alt` nor `text` is available. Pass a
+  `:fallback` slot to replace all of them with your own content.
 
   `class` applies to the avatar root. `rest` applies to the `<img>`, so any
   image attribute such as `loading`, `decoding`, `fetchpriority`, `srcset`, or
@@ -30,14 +35,15 @@ defmodule FlintUI.Base.Avatar do
 
   ## Accessibility
 
-  The image gets `alt`, which defaults to `name`; pass `alt=""` for a decorative
-  avatar. While an image loads, its fallback is a visual placeholder and stays
-  out of the accessibility tree; the image's `alt` is the accessible name. If
-  the image fails, the fallback is revealed to assistive technology when it has
-  a label. The fallback uses the same text as its accessible label and title, and
-  is exposed as an image only when that label is present. Initials alone are
-  not a useful accessible name, so give the avatar a name or an alt label when
-  it conveys identity.
+  The image gets `alt`; pass `alt=""` for a decorative avatar. `alt` is also the
+  avatar's accessible name: it labels the fallback and is its title. When `alt`
+  is omitted, `text` labels the fallback instead. While an image loads, its
+  fallback is a visual placeholder and stays out of the accessibility tree; the
+  image's `alt` is the accessible name. If the image fails, the fallback is
+  revealed to assistive technology when it has a label. The fallback label is
+  also its title, and the fallback is exposed as an image only when that label
+  is present. Initials alone are not a useful accessible name, so give the
+  avatar an `alt` label when it conveys identity.
 
   ## Keyboard
 
@@ -91,7 +97,7 @@ defmodule FlintUI.Base.Avatar do
         %Meta.PartAttr{
           name: "alt",
           value: "string",
-          description: "The image alternative text, defaulting to `name`."
+          description: "The image alternative text from `alt`."
         }
       ],
       fallback: [
@@ -102,13 +108,13 @@ defmodule FlintUI.Base.Avatar do
         },
         %Meta.PartAttr{
           name: "[data-fallback]",
-          value: ~s("initials" | "slot" | "none"),
+          value: ~s("initials" | "text" | "slot" | "none"),
           description: "What the fallback is rendering."
         },
         %Meta.PartAttr{
           name: "title",
           value: "string",
-          description: "The alt text, or the name when alt is not set."
+          description: "The `alt` text, or the `text` when alt is not set."
         },
         %Meta.PartAttr{
           name: "role",
@@ -118,7 +124,7 @@ defmodule FlintUI.Base.Avatar do
         %Meta.PartAttr{
           name: "aria-label",
           value: "string",
-          description: "The accessible label, taken from alt or name."
+          description: "The accessible label, taken from `alt` or `text`."
         },
         %Meta.PartAttr{
           name: "hidden",
@@ -153,12 +159,12 @@ defmodule FlintUI.Base.Avatar do
   attr :alt, :string,
     default: nil,
     doc:
-      "The image alternative text. Defaults to `name`; pass `\"\"` for a decorative avatar. Also used as the fallback title."
+      "The image alternative text and the avatar's accessible name. Initials are derived from it. Pass `\"\"` for a decorative avatar."
 
-  attr :name, :string,
+  attr :text, :string,
     default: nil,
     doc:
-      "The name used to render initials and, in the styled wrapper, to derive a color when `color=\"initials\"`."
+      "Fallback text shown instead of initials, such as `\"+3\"` for an overflow avatar. Labels the fallback when `alt` is not set."
 
   attr :class, :any,
     default: nil,
@@ -176,18 +182,20 @@ defmodule FlintUI.Base.Avatar do
 
   slot :fallback,
     doc:
-      "Custom fallback content. Takes precedence over initials. The styled wrapper supplies a user icon when `name` is blank."
+      "Custom fallback content. Takes precedence over `text` and initials. The styled wrapper supplies a user icon when both `alt` and `text` are blank."
 
   @impl true
   def render(assigns) do
     label = fallback_label(assigns)
-    initials = initials(assigns.name)
+    initials = initials(assigns.alt)
+    text = fallback_text(assigns)
 
     assigns =
       assigns
       |> assign(:initials, initials)
+      |> assign(:fallback_text, text)
       |> assign(:fallback_label, label)
-      |> assign(:fallback_kind, fallback_kind(assigns, initials))
+      |> assign(:fallback_kind, fallback_kind(assigns, initials, text))
 
     ~H"""
     <span {@flint_parts[:root]} {@root_attrs} class={@class} style={@root_style}>
@@ -199,13 +207,13 @@ defmodule FlintUI.Base.Avatar do
         aria-label={@fallback_label}
         aria-hidden={fallback_aria_hidden(@src, @fallback_label)}
       >
-        {render_slot(@fallback) || @initials}
+        {render_slot(@fallback) || @fallback_text || @initials}
       </span>
       <img
         :if={image?(@src)}
         {@flint_parts[:image]}
         src={@src}
-        alt={@fallback_label || ""}
+        alt={@alt || ""}
         {@rest}
       />
     </span>
@@ -215,18 +223,23 @@ defmodule FlintUI.Base.Avatar do
   defp image?(src), do: src not in [nil, ""]
 
   defp fallback_label(assigns) do
-    value = if is_nil(assigns.alt), do: assigns.name, else: assigns.alt
-
-    case value do
-      nil -> nil
+    case assigns.alt do
+      nil -> fallback_text(assigns)
       "" -> nil
-      value -> value
+      alt -> alt
     end
   end
 
-  defp fallback_kind(assigns, initials) do
+  defp fallback_text(%{text: text}) when is_binary(text) do
+    if String.trim(text) == "", do: nil, else: text
+  end
+
+  defp fallback_text(_assigns), do: nil
+
+  defp fallback_kind(assigns, initials, text) do
     cond do
       Map.get(assigns, :fallback, []) != [] -> "slot"
+      not is_nil(text) -> "text"
       not is_nil(initials) -> "initials"
       true -> "none"
     end

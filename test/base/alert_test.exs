@@ -43,7 +43,7 @@ defmodule FlintUI.Base.AlertTest do
       ~H"""
       <.alert
         id="billing-alert"
-        with_close
+        show_close
         close_event="dismiss_alert"
         close_label="Close billing notice"
         title="Billing"

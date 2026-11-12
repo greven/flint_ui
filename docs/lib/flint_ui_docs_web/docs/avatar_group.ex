@@ -7,10 +7,11 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
   alias FlintUIDocsWeb.Docs.Snippet
 
   @avatars [
-    %{src: "https://i.pravatar.cc/160?img=12", name: "John Smith"},
-    %{src: "https://i.pravatar.cc/160?img=32", name: "Jane Doe"},
-    %{src: "https://i.pravatar.cc/160?img=5", name: "Joan Wood"},
-    %{name: "Chris McCord"}
+    %{src: "https://i.pravatar.cc/160?img=12", alt: "John Smith"},
+    %{src: "https://i.pravatar.cc/160?img=32", alt: "Jane Doe"},
+    %{src: "https://i.pravatar.cc/160?img=5", alt: "Joan Wood"},
+    %{alt: "Chris McCord"},
+    %{alt: "3 more members", text: "+3"}
   ]
 
   @impl true
@@ -39,7 +40,7 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
 
     ~H"""
     <.prose content="Pass [avatars](/components/avatar) directly as children. The group handles the overlap, size cascade, and optional surface ring.
-      Overflow is caller-controlled, for example with a final avatar named `+3`." />
+      Overflow is caller-controlled, for example with a final avatar using `text` set to `+3` and an `alt` such as `3 more members`." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.avatar_group
         label="Project members"
@@ -47,7 +48,12 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
         overlap={props.overlap}
         ring={props.ring}
       >
-        <Components.avatar :for={avatar <- @avatars} src={avatar[:src]} name={avatar[:name]} />
+        <Components.avatar
+          :for={avatar <- @avatars}
+          src={avatar[:src]}
+          alt={avatar[:alt]}
+          text={avatar[:text]}
+        />
       </Components.avatar_group>
     </.preview>
     """
@@ -67,7 +73,8 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
         attrs =
           [
             avatar[:src] && ~s(src="#{avatar[:src]}"),
-            ~s(name="#{avatar[:name]}")
+            ~s(alt="#{avatar[:alt]}"),
+            avatar[:text] && ~s(text="#{avatar[:text]}")
           ]
 
         Snippet.component(".avatar", attrs)
