@@ -17,7 +17,11 @@ defmodule FlintUIDocsWeb.ComponentsLive do
         />
 
         <section :for={group <- @groups} id={"components-#{group.type}"} class="mt-10">
-          <h2 data-toc="section" class="text-xl font-semibold tracking-tight">
+          <h2
+            data-toc="section"
+            class="flex items-center gap-2.5 text-xl font-semibold tracking-tight"
+          >
+            <.icon name={group.icon} class="size-5 shrink-0 text-muted" />
             <DocsComponents.heading_link
               title={group.label}
               id={"components-#{group.type}"}
@@ -57,6 +61,7 @@ defmodule FlintUIDocsWeb.ComponentsLive do
         %{
           type: type,
           label: FlintUIDocsWeb.Nav.type_label(type),
+          icon: FlintUIDocsWeb.Nav.type_icon(type),
           components:
             Enum.map(names, fn name ->
               %{
