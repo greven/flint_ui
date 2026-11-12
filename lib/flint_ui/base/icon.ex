@@ -30,7 +30,7 @@ defmodule FlintUI.Base.Icon do
       name: :icon,
       type: :element,
       since: "0.1",
-      status: :stable
+      status: :draft
     }
   end
 

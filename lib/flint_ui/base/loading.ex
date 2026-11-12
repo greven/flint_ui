@@ -51,7 +51,7 @@ defmodule FlintUI.Base.Loading do
       name: :loading,
       type: :feedback,
       since: "0.1",
-      status: :stable
+      status: :draft
     }
   end
 
