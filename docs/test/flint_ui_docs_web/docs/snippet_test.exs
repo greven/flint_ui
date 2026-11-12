@@ -38,6 +38,36 @@ defmodule FlintUIDocsWeb.Docs.SnippetTest do
                </.group>
                """)
     end
+
+    test "keeps a short opening tag on one line above a multi-line body" do
+      assert Snippet.tag(
+               ".accordion",
+               [Snippet.attr("id", "faq"), Snippet.attr("variant", "contained")],
+               """
+               <.accordion_item id="shipping" label="Shipping" />
+               """
+             ) ==
+               String.trim("""
+               <.accordion id="faq" variant="contained">
+                 <.accordion_item id="shipping" label="Shipping" />
+               </.accordion>
+               """)
+    end
+
+    test "breaks attributes out when the opening tag does not fit on one line" do
+      long_class = String.duplicate("a", 80)
+
+      assert Snippet.tag(".group", [Snippet.attr("class", long_class)], """
+             <.button>Copy</.button>
+             """) ==
+               String.trim("""
+               <.group
+                 class="#{long_class}"
+               >
+                 <.button>Copy</.button>
+               </.group>
+               """)
+    end
   end
 
   describe "component/2" do

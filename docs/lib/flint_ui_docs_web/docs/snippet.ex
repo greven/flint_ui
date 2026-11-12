@@ -30,9 +30,11 @@ defmodule FlintUIDocsWeb.Docs.Snippet do
   @doc """
   Renders a component with attributes and an inner body.
 
-  A short, single-line body stays inline (`<.button>Button</.button>`). A body
-  with multiple lines, or a tag that would not fit on one line, is indented on
-  its own lines.
+  A short, single-line body stays inline (`<.button>Button</.button>`). An
+  opening tag also stays on one line when it fits, even for a multi-line body
+  (`<.accordion id="faq">`); its attributes break onto their own lines only when
+  the tag itself is too long. A body with multiple lines is indented on its own
+  lines.
   """
   def tag(name, attrs, body) do
     body = String.trim(body)
@@ -83,9 +85,22 @@ defmodule FlintUIDocsWeb.Docs.Snippet do
       |> String.split("\n")
       |> Enum.map_join("\n", &("  " <> &1))
 
-    case lines(attrs) do
-      "" -> "<#{name}>\n#{body}\n</#{name}>"
-      lines -> "<#{name}\n#{lines}\n>\n#{body}\n</#{name}>"
+    "#{opening_tag(name, attrs)}\n#{body}\n</#{name}>"
+  end
+
+  # Keeps the opening tag on one line whenever it fits, so a multi-line body
+  # does not push a short tag's attributes apart.
+  defp opening_tag(name, []) do
+    "<#{name}>"
+  end
+
+  defp opening_tag(name, attrs) do
+    inline = "<#{name} #{Enum.join(attrs, " ")}>"
+
+    if String.length(inline) <= @inline_width do
+      inline
+    else
+      "<#{name}\n#{lines(attrs)}\n>"
     end
   end
 

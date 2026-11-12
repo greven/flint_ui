@@ -339,6 +339,10 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         margin-block: 1rem;
     }
 
+    .docs-prose p + pre {
+        margin-top: 0.75rem;
+    }
+
     .docs-prose blockquote {
         border-left: 2px solid var(--fl-color-border-strong);
         padding-left: 1rem;
