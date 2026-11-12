@@ -74,9 +74,10 @@
 
     [data-element="accordion"]:is([data-variant="contained"], [data-variant="separated"]):not([data-disabled])
         > [data-element="accordion_item"]:not([data-disabled]):is(:hover, [data-state="open"]) {
-            background: light-dark(
-                color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 50%), transparent),
-                color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 40%), transparent)
+        background: light-dark(
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 50%), transparent),
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 40%), transparent)
+        );
     }
 
     /* The hover fill and focus ring follow the item's shape. */
@@ -108,13 +109,9 @@
         transition: none;
     }
 
-    /* A contained or separated header sits flush with a clipped surface, so
-     * the ring has to fit inside it. Inset it by at least its own width, which
-     * keeps every focus preset fully visible without moving the trigger. */
+    /* Inset focus ring. */
     [data-element="accordion"]:is([data-variant="contained"], [data-variant="separated"]) [data-part="trigger"]:focus-visible {
-        outline-offset: calc(
-            min(var(--fl-focus-ring-offset), 0px) - var(--fl-focus-ring-width)
-        );
+        outline-offset: calc(min(var(--fl-focus-ring-offset), 0px) - var(--fl-focus-ring-width));
     }
 
     /* The root disabled state dims every header. The hook also disables the
