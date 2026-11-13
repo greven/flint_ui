@@ -98,8 +98,12 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   only in prose. Use React Aria and the WAI-ARIA Authoring Practices as the
   reference.
 - **Metadata is part of the API.** Implement `meta/0`; add `parts_attrs/0`,
-  `keyboard/0`, `events/0`, and `css_vars/0` when the component has them. They
-  drive the docs tables.
+  `keyboard/0`, `events/0`, `css_vars/0`, and `states/0` when the component has
+  them. They drive the docs tables. `parts_attrs/0` is an ordered list in DOM
+  order — root first, a wrapper before its children — because the docs render
+  the data-attribute and CSS-part tables in that order. `states/0` returns the
+  `data-*` selectors the component exposes; FlintUI has no custom-element
+  `:state()` pseudo-class.
 - **Declare `flint_parts`.** A component with a `:global` attribute (usually
   `:rest`) must declare `attr :flint_parts, :map, default: nil, doc: false`
   immediately before `render/1`; compilation fails otherwise.
@@ -171,9 +175,9 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 ### Add or change a base component
 
 1. `lib/flint_ui/base/<name>.ex`: `use FlintUI.Component`, implement `meta/0`,
-   `build_attrs/1`, and `render/1`, plus `parts_attrs/0` and `keyboard/0` when
-   applicable. Declare attrs/slots and a moduledoc with `## Accessibility` and
-   `## Keyboard`.
+   `build_attrs/1`, and `render/1`, plus `parts_attrs/0`, `keyboard/0`, and
+   `states/0` when applicable. Declare attrs/slots and a moduledoc with
+   `## Accessibility` and `## Keyboard`.
 2. Register the component in `@components` in `lib/flint_ui.ex`, including any
    helper functions to delegate.
 3. Add `test/base/<name>_test.exs` covering markup, states, and ARIA.
@@ -217,6 +221,15 @@ A page module implements `FlintUIDocsWeb.Docs.Page`:
   preview: `<.preview {assigns} code={...}>...</.preview>`. Use
   `<Markdown.prose content="..." />` for prose; it renders CommonMark/GFM with
   links, emphasis, lists, tables, and highlighted code.
+- `parts_demo/1` returns the component markup rendered above the generated CSS
+  parts table. It receives `:name` and `:parts_id`; use `@parts_id` for the
+  component's DOM ids so the interactive preview scopes its part targets. The
+  generated CSS tab renders CSS Parts (hover-linked preview and table; the
+  preview is inert so component hover states never fire), one CSS
+  Variables table that merges styled inputs with runtime values (runtime rows
+  carry a badge), root/prop selectors, and a State Selectors table when the
+  component declares `states/0`. There is no theme-token table; link to the
+  Theming guide instead.
 
 A section without a `render_section/1` clause renders an empty section. The docs
 test fails when a public base attribute or styled prop has no doc, so document

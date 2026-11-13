@@ -101,7 +101,7 @@ defmodule FlintUI.Base.GroupTest do
     assert %FlintUI.Meta{name: :group, type: :action, status: :draft} = FlintUI.Base.Group.meta()
 
     parts = FlintUI.Base.Group.parts_attrs()
-    assert parts.root |> Enum.any?(&(&1.name == "[data-element]"))
-    assert parts.root |> Enum.any?(&(&1.name == "[data-orientation]"))
+    assert parts[:root] |> Enum.any?(&(&1.name == "[data-element]"))
+    assert parts[:root] |> Enum.any?(&(&1.name == "[data-orientation]"))
   end
 end

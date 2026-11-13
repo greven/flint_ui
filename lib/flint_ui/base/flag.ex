@@ -65,7 +65,7 @@ defmodule FlintUI.Base.Flag do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -88,7 +88,7 @@ defmodule FlintUI.Base.Flag do
           description: "The resolved flag shape."
         }
       ]
-    }
+    ]
   end
 
   @impl true

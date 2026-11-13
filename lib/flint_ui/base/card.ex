@@ -81,7 +81,7 @@ defmodule FlintUI.Base.Card do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -182,7 +182,7 @@ defmodule FlintUI.Base.Card do
           description: "Identifies the actions at the end of the footer."
         }
       ]
-    }
+    ]
   end
 
   @impl true

@@ -53,11 +53,16 @@ defmodule FlintUI.Component do
   @callback render(assigns :: map()) :: Phoenix.LiveView.Rendered.t()
 
   @doc """
-  Returns a map where each key is a part name (atom) and the value is a list of
-  `FlintUI.Meta.PartAttr` structs describing the HTML/data attributes applied to
-  that part's DOM element.
+  Returns the component's parts as an ordered list of `{part, attrs}` tuples,
+  where each part name (atom) maps to a list of `FlintUI.Meta.PartAttr` structs
+  describing the HTML/data attributes applied to that part's DOM element.
+
+  Declare the parts in DOM order, root first and a wrapper before its children.
+  The docs render the data-attribute and CSS-part tables in this order, so the
+  list is the component's anatomy. Keep it in step with `build_attrs/1`, which
+  declares the same parts; a list keeps their order, a map does not.
   """
-  @callback parts_attrs :: %{atom() => [FlintUI.Meta.PartAttr.t()]}
+  @callback parts_attrs :: [{atom(), [FlintUI.Meta.PartAttr.t()]}]
 
   @doc """
   Returns a list of `FlintUI.Meta.CSSVar` structs describing CSS custom properties
@@ -72,7 +77,13 @@ defmodule FlintUI.Component do
   """
   @callback keyboard :: [FlintUI.Meta.Keyboard.t()]
 
-  @optional_callbacks events: 0, parts_attrs: 0, css_vars: 0, keyboard: 0
+  @doc """
+  Returns a list of `FlintUI.Meta.State` structs describing the state selectors
+  the component exposes. States are `data-*` hooks, not `:state()` custom states.
+  """
+  @callback states :: [FlintUI.Meta.State.t()]
+
+  @optional_callbacks events: 0, parts_attrs: 0, css_vars: 0, keyboard: 0, states: 0
 
   defmacro __using__(_opts) do
     quote do

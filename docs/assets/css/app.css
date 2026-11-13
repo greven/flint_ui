@@ -385,4 +385,49 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     }
 }
 
+/* CSS parts. */
+@layer components {
+    [data-parts-preview] {
+        pointer-events: none;
+        user-select: none;
+    }
+
+    [data-parts-overlay] {
+        background-color: color-mix(in oklab, var(--fl-color-primary) 10%, transparent);
+        border: 2px solid var(--fl-color-primary);
+        border-radius: 0.375rem;
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--fl-color-primary) 16%, transparent);
+        transition:
+            top 100ms var(--fl-ease-out),
+            left 100ms var(--fl-ease-out),
+            width 100ms var(--fl-ease-out),
+            height 100ms var(--fl-ease-out);
+    }
+
+    [data-parts-overlay][hidden] {
+        display: none;
+    }
+
+    [data-parts-overlay-label] {
+        background-color: var(--fl-color-primary);
+        color: var(--fl-color-primary-content);
+    }
+
+    [data-parts-overlay-label][hidden] {
+        display: none;
+    }
+
+    [data-part-row] {
+        cursor: default;
+    }
+
+    [data-part-row][data-active] {
+        background-color: color-mix(in oklab, var(--fl-color-primary) 7%, transparent);
+    }
+
+    [data-part-row][data-active] td:first-child {
+        box-shadow: inset 3px 0 0 var(--fl-color-primary);
+    }
+}
+
 @import "./flint-flags.css";

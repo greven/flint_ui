@@ -57,6 +57,20 @@ defmodule FlintUIDocsWeb.Docs.Accordion do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.accordion id={"#{@parts_id}-accordion"} class="w-full max-w-md">
+      <Components.accordion_item id={"#{@parts_id}-shipping"} label="Shipping" expanded>
+        <:panel>Orders leave the warehouse in one business day.</:panel>
+      </Components.accordion_item>
+      <Components.accordion_item id={"#{@parts_id}-returns"} label="Returns">
+        <:panel>Return any item within 30 days.</:panel>
+      </Components.accordion_item>
+    </Components.accordion>
+    """
+  end
+
   defp main_code(props) do
     Snippet.tag(
       ".accordion",

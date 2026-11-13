@@ -57,7 +57,7 @@ defmodule FlintUI.Base.Loading do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -125,7 +125,7 @@ defmodule FlintUI.Base.Loading do
           description: "The dashed infinity path, rendered by `infinity`."
         }
       ]
-    }
+    ]
   end
 
   @impl true

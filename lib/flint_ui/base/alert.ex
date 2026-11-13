@@ -89,7 +89,7 @@ defmodule FlintUI.Base.Alert do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -190,7 +190,7 @@ defmodule FlintUI.Base.Alert do
             "Identifies the fallback close glyph. The styled wrapper replaces it with an icon."
         }
       ]
-    }
+    ]
   end
 
   @impl true

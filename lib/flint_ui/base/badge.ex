@@ -39,7 +39,7 @@ defmodule FlintUI.Base.Badge do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -52,7 +52,7 @@ defmodule FlintUI.Base.Badge do
           description: "Identifies the badge root element."
         }
       ]
-    }
+    ]
   end
 
   @impl true

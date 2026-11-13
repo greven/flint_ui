@@ -166,7 +166,7 @@ defmodule FlintUI.Base.Tabs do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "id",
@@ -397,7 +397,7 @@ defmodule FlintUI.Base.Tabs do
             "Present while the panel is inactive. `until-found` when `findable` is set."
         }
       ]
-    }
+    ]
   end
 
   @impl true
@@ -440,6 +440,52 @@ defmodule FlintUI.Base.Tabs do
         source: :client,
         doc:
           "Client command event that selects a tab. Dispatch it with `select_tab/3` or `Phoenix.LiveView.JS.dispatch/3`. Carries a `value` detail and bypasses `fl:tabs:before-change`."
+      }
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "active",
+        description: "The tab is selected.",
+        selector: ~s([data-element="tabs"] [data-part="tab"][data-state="active"])
+      },
+      %Meta.State{
+        name: "inactive",
+        description: "The tab is not selected.",
+        selector: ~s([data-element="tabs"] [data-part="tab"][data-state="inactive"])
+      },
+      %Meta.State{
+        name: "active",
+        description: "The panel is visible.",
+        selector: ~s([data-element="tabs"] [data-part="panel"][data-state="active"])
+      },
+      %Meta.State{
+        name: "inactive",
+        description: "The panel is hidden.",
+        selector: ~s([data-element="tabs"] [data-part="panel"][data-state="inactive"])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The tab is disabled.",
+        selector: ~s([data-element="tabs"] [data-part="tab"][data-disabled])
+      },
+      %Meta.State{
+        name: "fade-start",
+        description: "The tab list can scroll toward its start edge.",
+        selector: ~s([data-element="tabs"] [data-part="tablist"][data-fade-start])
+      },
+      %Meta.State{
+        name: "fade-end",
+        description: "The tab list can scroll toward its end edge.",
+        selector: ~s([data-element="tabs"] [data-part="tablist"][data-fade-end])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The tab list is disabled.",
+        selector: ~s([data-element="tabs"][data-disabled])
       }
     ]
   end

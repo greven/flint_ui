@@ -8,8 +8,6 @@ defmodule FlintUIDocsWeb.ComponentLive do
   alias FlintUIDocsWeb.DocsComponents
   alias FlintUIDocsWeb.Markdown
 
-  @part_order [:root, :heading, :header, :indicator, :tablist, :tab, :panel, :trigger, :content]
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -91,12 +89,17 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
               <DocsComponents.section title="API" id="api">
                 <DocsComponents.content_paragraph class="mt-4">
-                  The generated wrapper exposes these attributes and slots. Data attributes,
-                  events, and runtime CSS variables are documented on the <.link
-                    patch={"#{~p"/components/#{@active}?tab=base"}#data-attributes"}
+                  The generated wrapper exposes these attributes and slots. Data attributes
+                  and events are documented on the <.link
+                    patch={~p"/components/#{@active}?tab=base#data-attributes"}
                     class="docs-link"
                   >
                 Base tab
+              </.link>; CSS variables and parts on the <.link
+                    patch={~p"/components/#{@active}?tab=css"}
+                    class="docs-link"
+                  >
+                CSS tab
               </.link>.
                 </DocsComponents.content_paragraph>
 
@@ -187,48 +190,72 @@ defmodule FlintUIDocsWeb.ComponentLive do
                 previews={@previews}
               />
 
+              <DocsComponents.css_parts
+                :if={@parts != []}
+                id="css-parts"
+                preview_id={"css-parts-#{@active}"}
+                component={@active}
+                parts={@parts}
+                preview={@parts_preview}
+              />
+
               <DocsComponents.section title="CSS Variables" id="css-variables">
-                <p :if={@style_vars != []} class="mt-2 text-sm text-toned">
-                  Public CSS variables exposed by this component.
+                <p :if={@css_vars != []} class="mt-2 text-sm text-toned">
+                  The styled layer exposes these <code class="docs-code font-mono">--fl-*</code>
+                  CSS variables. Rows marked as runtime are values published by the component's JavaScript,
+                  not inputs you set.
                 </p>
-                <p :if={@style_vars == []} class="mt-2 text-sm text-muted">
-                  This component has no public CSS variables. Its appearance is
-                  controlled by its props and the surrounding theme.
+                <p :if={@css_vars == []} class="mt-2 text-sm text-muted">
+                  This component has no CSS variables. Its appearance is controlled
+                  by its props and the surrounding theme.
                 </p>
                 <DocsComponents.css_vars_table
-                  :if={@style_vars != []}
-                  css_vars={@style_vars}
-                  show_default={false}
+                  :if={@css_vars != []}
+                  css_vars={@css_vars}
+                  show_default={true}
+                />
+                <p class="mt-4 text-sm text-muted">
+                  Theme tokens and scales are shared by every component; see <.link
+                    navigate={~p"/guides/theming"}
+                    class="docs-link"
+                  >Theming</.link>.
+                  For the headless layer, see <.link
+                    navigate={~p"/getting-started/styling"}
+                    class="docs-link"
+                  >Styling</.link>.
+                </p>
+              </DocsComponents.section>
+
+              <DocsComponents.section title="Selectors" id="selectors">
+                <p class="mt-2 text-sm text-toned">
+                  Root, prop, and state hooks. The styled theme targets the component
+                  through these selectors. The headless base sets the same
+                  <code class="docs-code font-mono">data-*</code>
+                  attributes, so they work without the generated wrapper too. Part
+                  selectors live in <.link href="#css-parts" class="docs-link">CSS Parts</.link>.
+                </p>
+                <p :if={@css_selectors == []} class="mt-2 text-sm text-muted">
+                  This component has no styled selectors.
+                </p>
+                <DocsComponents.selectors_table
+                  :if={@css_selectors != []}
+                  selectors={@css_selectors}
                 />
               </DocsComponents.section>
 
-              <DocsComponents.section title="Selectors and State Hooks" id="selectors">
+              <DocsComponents.section
+                :if={@state_selectors != []}
+                title="State Selectors"
+                id="state-selectors"
+              >
                 <p class="mt-2 text-sm text-toned">
-                  The styled theme targets the component through these hooks. The headless
-                  base sets the same <code class="docs-code font-mono">data-*</code>
-                  attributes, so the selectors work without the generated wrapper too.
+                  State is exposed as <code class="docs-code font-mono">data-*</code>
+                  hooks, not a custom-element <code class="docs-code font-mono">:state()</code>
+                  pseudo-class. Use these attribute selectors to target the component
+                  while it is in a given state. The styled theme uses the same selectors,
+                  and the headless base sets the same attributes.
                 </p>
-                <DocsComponents.selectors_table selectors={@css_selectors} />
-              </DocsComponents.section>
-
-              <DocsComponents.section title="Theme Tokens" id="theme">
-                <p class="mt-2 text-sm text-toned">
-                  This component reads these token namespaces:
-                </p>
-                <ul :if={@entry && @entry.tokens != []} class="mt-3 flex flex-wrap gap-2">
-                  <li
-                    :for={token <- @entry.tokens}
-                    class="rounded-md bg-strong px-2 py-1 font-mono text-xs"
-                  >
-                    --fl-{token}-*
-                  </li>
-                </ul>
-                <p class="mt-3 text-sm text-muted">
-                  See <.link navigate={~p"/guides/theming"} class="docs-link">Theming</.link>
-                  for tokens and custom themes. For the headless base, see
-                  <.link navigate={~p"/getting-started/styling"} class="docs-link">Styling</.link>
-                  and this component's Base tab.
-                </p>
+                <DocsComponents.states_table states={@state_selectors} />
               </DocsComponents.section>
 
               <.doc_group
@@ -348,21 +375,14 @@ defmodule FlintUIDocsWeb.ComponentLive do
     </DocsComponents.subsection>
 
     <DocsComponents.subsection title="Data Attributes" id="data-attributes">
-      <p :if={@parts == []} class="mt-2 text-sm text-muted">
+      <p :if={@part_attrs == []} class="mt-2 text-sm text-muted">
         No data attributes documented.
       </p>
       <DocsComponents.parts_tables
-        :if={@parts != []}
+        :if={@part_attrs != []}
         component_name={component_name(@active)}
-        parts={@parts}
+        parts={@part_attrs}
       />
-    </DocsComponents.subsection>
-
-    <DocsComponents.subsection title="CSS Variables" id="css-variables">
-      <p :if={@css_vars == []} class="mt-2 text-sm text-muted">
-        No runtime CSS variables documented.
-      </p>
-      <DocsComponents.css_vars_table :if={@css_vars != []} css_vars={@css_vars} />
     </DocsComponents.subsection>
     """
   end
@@ -446,13 +466,14 @@ defmodule FlintUIDocsWeb.ComponentLive do
       links: Docs.links(name),
       meta: Docs.meta(name),
       slots: slots,
-      parts: order_parts(FlintUI.Docs.parts_attrs(name)),
+      parts: FlintUI.Docs.parts(name),
+      part_attrs: FlintUI.Docs.parts_attrs(name),
+      parts_preview: Docs.parts_demo(name, %{parts_id: "css-parts-#{name}"}),
       events: FlintUI.Docs.events(name),
       keyboard: FlintUI.Docs.keyboard(name),
-      css_vars: public_css_vars(FlintUI.Docs.css_vars(name)),
-      entry: entry,
-      style_vars: if(entry, do: public_css_vars(entry.vars), else: []),
+      css_vars: css_var_rows(entry, name),
       css_selectors: css_selectors(entry),
+      state_selectors: FlintUI.Docs.states(name),
       install_command: (entry && entry.install) || "mix flint.add #{name}",
       styled_attributes: styled_attribute_rows(attrs, entry),
       base_attributes: base_attribute_rows(attrs),
@@ -497,12 +518,6 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
   defp tab_variant(tab, value), do: if(tab == value, do: "solid", else: "surface")
   defp tab_depth(tab, value), do: if(tab == value, do: true, else: false)
-
-  defp order_parts(parts) do
-    Enum.sort_by(parts, fn {part, _} ->
-      Enum.find_index(@part_order, &(&1 == part)) || length(@part_order)
-    end)
-  end
 
   defp base_attribute_rows(attrs) do
     attrs
@@ -558,8 +573,32 @@ defmodule FlintUIDocsWeb.ComponentLive do
     end
   end
 
-  defp public_css_vars(vars) do
-    Enum.reject(vars, fn var -> String.starts_with?(var.name, "--_") end)
+  defp css_var_rows(entry, name) do
+    inputs =
+      if entry do
+        Enum.map(entry.vars, fn var ->
+          %{
+            name: var.name,
+            default: var.default,
+            description: var.doc,
+            runtime: false
+          }
+        end)
+      else
+        []
+      end
+
+    runtime =
+      Enum.map(FlintUI.Docs.css_vars(name), fn var ->
+        %{
+          name: var.name,
+          default: nil,
+          description: var.description,
+          runtime: true
+        }
+      end)
+
+    inputs ++ runtime
   end
 
   defp css_selectors(nil), do: []
@@ -579,7 +618,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
 
     state_selectors =
       attrs
-      |> Map.get(:root, [])
+      |> Keyword.get(:root, [])
       |> Enum.filter(&String.starts_with?(&1.name, "[data-"))
       |> Enum.reject(&(&1.name in ["[data-element]", "[data-part]"]))
       |> Enum.map(fn attr ->
@@ -589,20 +628,9 @@ defmodule FlintUIDocsWeb.ComponentLive do
         }
       end)
 
-    part_selectors =
-      attrs
-      |> Map.keys()
-      |> Enum.reject(&(&1 == :root))
-      |> Enum.map(fn part ->
-        %{
-          selector: root <> ~s( [data-part="#{part}"]),
-          description: "Targets the #{part} part."
-        }
-      end)
-
     [
       %{selector: root, description: "Targets the component root."}
-      | prop_selectors ++ state_selectors ++ part_selectors
+      | prop_selectors ++ state_selectors
     ]
   end
 

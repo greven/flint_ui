@@ -21,10 +21,36 @@ defmodule FlintUITest do
 
       assert is_list(FlintUI.Docs.attrs(name))
       assert is_list(FlintUI.Docs.slots(name))
-      assert is_map(FlintUI.Docs.parts_attrs(name))
+      assert is_list(FlintUI.Docs.parts_attrs(name))
       assert is_list(FlintUI.Docs.events(name))
       assert is_list(FlintUI.Docs.keyboard(name))
       assert is_list(FlintUI.Docs.css_vars(name))
+      assert is_list(FlintUI.Docs.states(name))
+    end
+  end
+
+  test "every component declares its parts once, in a documented order" do
+    for name <- FlintUI.components() do
+      parts = FlintUI.Docs.parts_attrs(name)
+      part_names = Enum.map(parts, &elem(&1, 0))
+
+      assert length(part_names) == length(Enum.uniq(part_names)),
+             "#{name} declares a part twice: #{inspect(part_names -- Enum.uniq(part_names))}"
+
+      assert part_names != [] and hd(part_names) == :root,
+             "#{name} must declare :root first: #{inspect(part_names)}"
+
+      for {part, attrs} <- parts do
+        assert is_atom(part) and is_list(attrs), "#{name}.#{part} is not an attribute list"
+
+        assert Enum.any?(attrs, &(&1.name == "[data-part]")),
+               "#{name}.#{part} declares no [data-part] hook"
+      end
+
+      hooks = name |> FlintUI.Docs.parts() |> Enum.map(& &1.hook)
+
+      assert length(hooks) == length(Enum.uniq(hooks)),
+             "#{name} exposes duplicate data-part hooks: #{inspect(hooks)}"
     end
   end
 

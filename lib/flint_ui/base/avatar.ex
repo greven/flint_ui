@@ -64,7 +64,7 @@ defmodule FlintUI.Base.Avatar do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -132,7 +132,33 @@ defmodule FlintUI.Base.Avatar do
           description: "Set by the bundled script once the image loads, hiding the placeholder."
         }
       ]
-    }
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "loading",
+        description: "The image is loading.",
+        selector: ~s([data-element="avatar"][data-status="loading"])
+      },
+      %Meta.State{
+        name: "loaded",
+        description: "The image has loaded.",
+        selector: ~s([data-element="avatar"][data-status="loaded"])
+      },
+      %Meta.State{
+        name: "error",
+        description: "The image failed to load.",
+        selector: ~s([data-element="avatar"][data-status="error"])
+      },
+      %Meta.State{
+        name: "fallback",
+        description: "The fallback is rendered because no image source was provided.",
+        selector: ~s([data-element="avatar"][data-status="fallback"])
+      }
+    ]
   end
 
   @impl true

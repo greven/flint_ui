@@ -109,9 +109,9 @@ defmodule FlintUI.Base.BadgeTest do
       parts = FlintUI.Base.Badge.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "badge"} =
-               Enum.find(parts.root, &(&1.name == "[data-element]"))
+               Enum.find(parts[:root], &(&1.name == "[data-element]"))
 
-      assert Enum.any?(parts.root, &(&1.name == "[data-part]"))
+      assert Enum.any?(parts[:root], &(&1.name == "[data-part]"))
     end
   end
 end

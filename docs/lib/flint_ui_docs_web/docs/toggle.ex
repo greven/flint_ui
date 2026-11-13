@@ -49,6 +49,15 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.toggle pressed>
+      <Components.icon name="lucide-bold" /> Bold
+    </Components.toggle>
+    """
+  end
+
   defp main_code(props) do
     Snippet.tag(
       ".toggle",

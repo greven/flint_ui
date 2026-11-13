@@ -322,6 +322,17 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.indicator label="3">
+      <Components.button variant="subtle" square aria-label="Inbox, 3 unread">
+        <Components.icon name="lucide-mail" />
+      </Components.button>
+    </Components.indicator>
+    """
+  end
+
   defp code_basic(_) do
     """
     <.indicator label="3">

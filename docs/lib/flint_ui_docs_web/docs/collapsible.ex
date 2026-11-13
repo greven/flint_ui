@@ -59,6 +59,32 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.collapsible
+      id={"#{@parts_id}-collapsible"}
+      open
+      class="flex w-full max-w-md flex-col gap-2"
+    >
+      <:trigger :let={attrs}>
+        <Components.button {attrs} variant="surface" wide justify="between" class="group">
+          Details
+          <Components.icon
+            name="lucide-chevron-down"
+            class="size-4 transition-transform group-aria-expanded:rotate-180"
+          />
+        </Components.button>
+      </:trigger>
+      <:content :let={attrs}>
+        <div {attrs} class="p-3 text-sm text-toned">
+          The content part animates open and closed.
+        </div>
+      </:content>
+    </Components.collapsible>
+    """
+  end
+
   defp main_code(props) do
     Snippet.tag(".collapsible", code_attrs(props), styled_code_body())
   end

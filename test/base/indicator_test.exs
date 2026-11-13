@@ -162,8 +162,8 @@ defmodule FlintUI.Base.IndicatorTest do
              FlintUI.Base.Indicator.meta()
 
     parts = FlintUI.Base.Indicator.parts_attrs()
-    assert parts.root |> Enum.any?(&(&1.name == "[data-element]"))
-    assert parts.badge |> Enum.any?(&(&1.name == "[data-part]"))
-    assert parts.badge |> Enum.any?(&(&1.name == "[data-dot]"))
+    assert parts[:root] |> Enum.any?(&(&1.name == "[data-element]"))
+    assert parts[:badge] |> Enum.any?(&(&1.name == "[data-part]"))
+    assert parts[:badge] |> Enum.any?(&(&1.name == "[data-dot]"))
   end
 end

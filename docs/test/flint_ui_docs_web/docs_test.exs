@@ -195,6 +195,47 @@ defmodule FlintUIDocsWeb.DocsTest do
     end
   end
 
+  test "every CSS part has a hook, description, and selector" do
+    for name <- FlintUI.components() do
+      parts = FlintUI.Docs.parts(name)
+
+      assert parts != [], "expected #{name} to document at least one CSS part"
+
+      for part <- parts do
+        assert is_atom(part.name)
+        assert is_binary(part.hook) and part.hook != ""
+        assert is_binary(part.description) and part.description != ""
+        assert part.description != "The part element."
+        assert String.starts_with?(part.selector, ~s([data-element="#{name}"]))
+      end
+    end
+  end
+
+  test "every state selector is scoped and described" do
+    for name <- FlintUI.components() do
+      for state <- FlintUI.Docs.states(name) do
+        assert is_binary(state.name) and state.name != ""
+        assert is_binary(state.description) and state.description != ""
+        assert String.starts_with?(state.selector, ~s([data-element="#{name}"]))
+      end
+    end
+
+    assert Enum.any?(
+             FlintUI.Docs.states(:accordion_item),
+             &(&1.name == "animating" and &1.selector =~ "data-animate")
+           )
+
+    assert Enum.any?(FlintUI.Docs.states(:tabs), &(&1.selector =~ ~s([data-part="tab"])))
+    assert FlintUI.Docs.states(:badge) == []
+  end
+
+  test "every component page has a CSS parts demo" do
+    for {name, _module} <- Docs.modules() do
+      assert Docs.parts_demo(name, %{parts_id: "css-parts-#{name}"}) != nil,
+             "expected #{name} to define parts_demo/1"
+    end
+  end
+
   defp base_attrs(name) do
     name
     |> FlintUI.Docs.attrs()

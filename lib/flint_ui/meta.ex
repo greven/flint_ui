@@ -4,8 +4,9 @@ defmodule FlintUI.Meta do
 
   `name` is the component's atom identifier (e.g. `:button`), matching the names
   returned by `FlintUI.components/0` and accepted by `FlintUI.API.component_module/1`.
-  The nested `Event`, `PartAttr`, `CSSVar`, and `Keyboard` structs use strings,
-  since they name HTML attributes, events, and CSS properties.
+  The nested `Event`, `PartAttr`, `CSSVar`, `Keyboard`, and `State` structs use
+  strings, since they name HTML attributes, events, CSS properties, and state
+  hooks.
   """
 
   defmodule Event do
@@ -63,6 +64,25 @@ defmodule FlintUI.Meta do
 
     @enforce_keys [:keys, :description]
     defstruct [:keys, :description]
+  end
+
+  defmodule State do
+    @moduledoc """
+    Describes a state selector a component exposes.
+
+    FlintUI renders ordinary HTML, so a state is a `data-*` hook rather than the
+    `:state()` pseudo-class a custom element would expose. `selector` is the full
+    selector that matches the component or one of its parts in that state.
+    """
+
+    @type t :: %__MODULE__{
+            name: String.t(),
+            description: String.t(),
+            selector: String.t()
+          }
+
+    @enforce_keys [:name, :description, :selector]
+    defstruct [:name, :description, :selector]
   end
 
   # Meta

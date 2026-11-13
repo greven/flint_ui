@@ -259,6 +259,20 @@ defmodule FlintUIDocsWeb.Docs do
     end
   end
 
+  @doc """
+  The demo a page renders above its CSS parts table.
+
+  Returns `nil` when the page has no demo, which lets the CSS tab fall back to a
+  placeholder instead of failing the page.
+  """
+  def parts_demo(name, assigns) do
+    module = page(name)
+
+    if Code.ensure_loaded?(module) and function_exported?(module, :parts_demo, 1) do
+      module.parts_demo(Map.put(assigns, :name, name))
+    end
+  end
+
   @doc "The repository URL for a component's source file."
   def source_url(name) do
     base =

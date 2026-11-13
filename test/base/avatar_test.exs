@@ -170,10 +170,10 @@ defmodule FlintUI.Base.AvatarTest do
                FlintUI.Base.Avatar.meta()
 
       parts = FlintUI.Base.Avatar.parts_attrs()
-      assert Enum.any?(parts.root, &(&1.name == "[data-element]"))
-      assert Enum.any?(parts.root, &(&1.name == "[data-status]"))
-      assert Enum.any?(parts.image, &(&1.name == "src"))
-      assert Enum.any?(parts.fallback, &(&1.name == "[data-fallback]"))
+      assert Enum.any?(parts[:root], &(&1.name == "[data-element]"))
+      assert Enum.any?(parts[:root], &(&1.name == "[data-status]"))
+      assert Enum.any?(parts[:image], &(&1.name == "src"))
+      assert Enum.any?(parts[:fallback], &(&1.name == "[data-fallback]"))
     end
   end
 end

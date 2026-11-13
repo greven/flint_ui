@@ -160,12 +160,12 @@ defmodule FlintUI.Base.CollapsibleTest do
       parts = FlintUI.Base.Collapsible.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "FlintUI.Collapsible"} =
-               Enum.find(parts.root, &(&1.name == "phx-hook"))
+               Enum.find(parts[:root], &(&1.name == "phx-hook"))
 
       assert %FlintUI.Meta.PartAttr{value: "button"} =
-               Enum.find(parts.trigger, &(&1.name == "type"))
+               Enum.find(parts[:trigger], &(&1.name == "type"))
 
-      refute Enum.any?(parts.trigger, &(&1.name == "aria-role"))
+      refute Enum.any?(parts[:trigger], &(&1.name == "aria-role"))
     end
 
     test "documents keyboard interactions" do

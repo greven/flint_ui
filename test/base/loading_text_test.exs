@@ -176,13 +176,13 @@ defmodule FlintUI.Base.LoadingTextTest do
     parts = FlintUI.Base.LoadingText.parts_attrs()
 
     assert %FlintUI.Meta.PartAttr{value: "loading_text"} =
-             Enum.find(parts.root, &(&1.name == "[data-element]"))
+             Enum.find(parts[:root], &(&1.name == "[data-element]"))
 
     assert %FlintUI.Meta.PartAttr{name: "[data-variant]"} =
-             Enum.find(parts.root, &(&1.name == "[data-variant]"))
+             Enum.find(parts[:root], &(&1.name == "[data-variant]"))
 
     assert %FlintUI.Meta.PartAttr{name: "[data-loading-indicator]"} =
-             Enum.find(parts.root, &(&1.name == "[data-loading-indicator]"))
+             Enum.find(parts[:root], &(&1.name == "[data-loading-indicator]"))
 
     for part <- [:text, :dots, :dot, :char] do
       assert %FlintUI.Meta.PartAttr{name: "[data-part]"} =

@@ -228,16 +228,47 @@ defmodule FlintUI.Docs do
 
   @doc """
   Fetches the documentation for a component's part attributes (`:parts_attrs`).
-  Returns a map of part names to lists of `FlintUI.Meta.PartAttr` structs.
+  Returns the parts as an ordered list of `{part, attrs}` tuples, where `attrs`
+  is a list of `FlintUI.Meta.PartAttr` structs. The order is the component's DOM
+  order, as declared by the component.
   """
   def parts_attrs(component) when is_atom(component) do
     component_module = component_module(component)
 
-    if function_exported?(component_module, :parts_attrs, 0) do
+    if exported?(component_module, :parts_attrs, 0) do
       component_module.parts_attrs()
     else
-      %{}
+      []
     end
+  end
+
+  @doc """
+  Fetches a component's styling parts as normalized CSS-part rows.
+
+  Each row names the part (`:root`, `:panel`, …), the `data-part` hook it
+  carries, a human description, and the selector that targets it in the styled
+  layer. The description comes from the part's `[data-part]` attribute metadata,
+  so a component only declares its parts once.
+
+  The rows keep the component's declared part order, so the CSS-parts table and
+  the data-attribute table list the parts the same way, in anatomy order.
+
+  A part whose `[data-part]` metadata is absent still appears, using its name as
+  the hook and a generic description.
+  """
+  def parts(component) when is_atom(component) do
+    component
+    |> parts_attrs()
+    |> Enum.map(fn {name, attrs} ->
+      hook = part_hook(name, attrs)
+
+      %{
+        name: name,
+        hook: hook,
+        description: part_description(name, attrs),
+        selector: part_selector(component, hook)
+      }
+    end)
   end
 
   @doc """
@@ -247,7 +278,7 @@ defmodule FlintUI.Docs do
   def css_vars(component) when is_atom(component) do
     component_module = component_module(component)
 
-    if function_exported?(component_module, :css_vars, 0) do
+    if exported?(component_module, :css_vars, 0) do
       component_module.css_vars()
     else
       []
@@ -255,11 +286,13 @@ defmodule FlintUI.Docs do
   end
 
   @doc """
+  Fetches the events a component emits (`:events`).
+  Returns a list of `FlintUI.Meta.Event` structs.
   """
   def events(component) when is_atom(component) do
     component_module = component_module(component)
 
-    if function_exported?(component_module, :events, 0) do
+    if exported?(component_module, :events, 0) do
       component_module.events()
     else
       []
@@ -273,12 +306,72 @@ defmodule FlintUI.Docs do
   def keyboard(component) when is_atom(component) do
     component_module = component_module(component)
 
-    if function_exported?(component_module, :keyboard, 0) do
+    if exported?(component_module, :keyboard, 0) do
       component_module.keyboard()
     else
       []
     end
   end
+
+  @doc """
+  Fetches the state selectors a component exposes (`:states`).
+  Returns a list of `FlintUI.Meta.State` structs.
+  """
+  def states(component) when is_atom(component) do
+    component_module = component_module(component)
+
+    if exported?(component_module, :states, 0) do
+      component_module.states()
+    else
+      []
+    end
+  end
+
+  # `function_exported?/3` does not load a module, and the docs compute their
+  # metadata before the page renders any component. Without this the first page
+  # load would treat every optional callback as missing.
+  defp exported?(module, function, arity) do
+    Code.ensure_loaded?(module) and function_exported?(module, function, arity)
+  end
+
+  defp part_hook(name, attrs) do
+    case Enum.find(attrs, &(&1.name == "[data-part]")) do
+      %{value: value} when is_binary(value) and value != "" -> value
+      _ -> to_string(name)
+    end
+  end
+
+  defp part_description(:root, attrs), do: root_description(attrs)
+  defp part_description(_name, attrs), do: attr_part_description(attrs)
+
+  # Most root parts carry the same "Identifies the root element" note, which is
+  # useful in the data-attribute table but says nothing about a CSS part. Keep a
+  # root description that adds information and replace the generic one.
+  defp root_description(attrs) do
+    description = attr_part_description(attrs)
+
+    if generic_root_description?(description) do
+      "The component's outer wrapper."
+    else
+      description
+    end
+  end
+
+  defp generic_root_description?(description) do
+    String.starts_with?(description, "Identifies the ") and
+      (String.ends_with?(description, "root.") or
+         String.ends_with?(description, "root element."))
+  end
+
+  defp attr_part_description(attrs) do
+    case Enum.find(attrs, &(&1.name == "[data-part]")) do
+      %{description: description} when is_binary(description) and description != "" -> description
+      _ -> "The part element."
+    end
+  end
+
+  defp part_selector(component, "root"), do: ~s([data-element="#{component}"])
+  defp part_selector(component, hook), do: ~s([data-element="#{component}"] [data-part="#{hook}"])
 
   @doc """
   Returns the components closely related to a component, as declared by its

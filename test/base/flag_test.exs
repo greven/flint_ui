@@ -137,10 +137,10 @@ defmodule FlintUI.Base.FlagTest do
       parts = FlintUI.Base.Flag.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "flag"} =
-               Enum.find(parts.root, &(&1.name == "[data-element]"))
+               Enum.find(parts[:root], &(&1.name == "[data-element]"))
 
       assert %FlintUI.Meta.PartAttr{name: "[data-name]"} =
-               Enum.find(parts.root, &(&1.name == "[data-name]"))
+               Enum.find(parts[:root], &(&1.name == "[data-name]"))
     end
   end
 end

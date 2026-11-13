@@ -42,6 +42,16 @@ defmodule FlintUIDocsWeb.Docs.Group do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.group>
+      <Components.button variant="surface">Copy</Components.button>
+      <Components.button variant="surface">Paste</Components.button>
+    </Components.group>
+    """
+  end
+
   defp main_code(props) do
     Snippet.tag(
       ".group",

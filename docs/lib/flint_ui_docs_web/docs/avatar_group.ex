@@ -59,6 +59,22 @@ defmodule FlintUIDocsWeb.Docs.AvatarGroup do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    assigns = Map.put(assigns, :avatars, @avatars)
+
+    ~H"""
+    <Components.avatar_group label="Project members">
+      <Components.avatar
+        :for={avatar <- @avatars}
+        src={avatar[:src]}
+        alt={avatar[:alt]}
+        text={avatar[:text]}
+      />
+    </Components.avatar_group>
+    """
+  end
+
   defp main_code(props) do
     attrs =
       [

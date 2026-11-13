@@ -173,11 +173,11 @@ defmodule FlintUI.Base.AlertTest do
 
     parts = FlintUI.Base.Alert.parts_attrs()
 
-    assert Enum.any?(parts.root, &(&1.name == "[data-element]"))
-    assert Enum.any?(parts.root, &(&1.name == "[data-intent]"))
-    assert Enum.any?(parts.root, &(&1.name == "[data-orientation]"))
-    assert Enum.any?(parts.close, &(&1.name == "aria-label"))
-    assert Enum.any?(parts.close, &(&1.name == "phx-click"))
+    assert Enum.any?(parts[:root], &(&1.name == "[data-element]"))
+    assert Enum.any?(parts[:root], &(&1.name == "[data-intent]"))
+    assert Enum.any?(parts[:root], &(&1.name == "[data-orientation]"))
+    assert Enum.any?(parts[:close], &(&1.name == "aria-label"))
+    assert Enum.any?(parts[:close], &(&1.name == "phx-click"))
   end
 
   test "maps each intent to its default icon" do

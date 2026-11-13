@@ -90,7 +90,7 @@ defmodule FlintUI.Base.IconTest do
       parts = FlintUI.Base.Icon.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "icon"} =
-               Enum.find(parts.root, &(&1.name == "[data-element]"))
+               Enum.find(parts[:root], &(&1.name == "[data-element]"))
     end
   end
 end

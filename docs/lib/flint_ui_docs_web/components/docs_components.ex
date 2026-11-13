@@ -291,7 +291,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   end
 
   @doc false
-  attr :layout, :atom, required: true, values: [:three, :two]
+  attr :layout, :atom, required: true, values: [:parts, :states, :three, :two]
 
   def reference_colgroup(assigns) do
     ~H"""
@@ -301,6 +301,8 @@ defmodule FlintUIDocsWeb.DocsComponents do
     """
   end
 
+  defp reference_widths(:parts), do: ["w-[16%]", "w-[38%]", "w-[46%]"]
+  defp reference_widths(:states), do: ["w-[20%]", "w-[34%]", "w-[46%]"]
   defp reference_widths(:three), do: ["w-[38%]", "w-[22%]", "w-[40%]"]
   defp reference_widths(:two), do: ["w-[60%]", "w-[40%]"]
 
@@ -438,7 +440,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   def parts_tables(assigns) do
     ~H"""
-    <div :for={{part, part_attrs} <- @parts} class="mt-8 first:mt-4">
+    <div :for={{part, part_attrs} <- @parts} data-part-key={part} class="mt-24 first:mt-4">
       <Components.badge
         class="font-mono text-lg leading-tight bg-sky-200/30 dark:bg-sky-100"
         variant="soft"
@@ -487,6 +489,293 @@ defmodule FlintUIDocsWeb.DocsComponents do
 
   defp part_attr_label(name), do: name
 
+  @doc """
+  Renders the interactive CSS parts reference.
+
+  The demo above the table is the component itself, rendered inert so its own
+  hover and focus states never fire. Hovering a row outlines the matching
+  `data-part` in the demo; hovering a part in the demo highlights its row.
+  `preview_id` scopes the client hook and must be unique on the page.
+  """
+
+  attr :id, :string, required: true
+  attr :preview_id, :string, required: true
+  attr :component, :string, required: true
+  attr :parts, :list, required: true
+  attr :preview, :any, default: nil
+
+  def css_parts(assigns) do
+    ~H"""
+    <.section id={@id} title="CSS Parts">
+      <Markdown.prose content="Every part carries a `data-part` hook. Hover a row to outline the part in the preview, or hover a part to find its row. The preview is inert, so the component's own hover and focus states stay off. The selectors target the styled layer; the headless base renders the same hooks." />
+
+      <div
+        id={@preview_id}
+        data-css-parts
+        data-parts-component={@component}
+        phx-hook=".CssParts"
+        class="mt-4"
+      >
+        <div
+          data-parts-canvas
+          class="relative grid min-h-56 place-items-center overflow-auto rounded-lg border border-default p-8"
+        >
+          <div data-parts-preview inert class="grid w-full place-items-center">
+            <%= if @preview do %>
+              {@preview}
+            <% else %>
+              <p class="text-sm text-muted">This component has no CSS parts preview.</p>
+            <% end %>
+          </div>
+
+          <div
+            data-parts-overlays
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 z-20"
+          >
+          </div>
+
+          <div
+            data-parts-labels
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 z-30"
+          >
+          </div>
+
+          <div
+            data-parts-overlay
+            data-parts-overlay-template
+            hidden
+            aria-hidden="true"
+            class="pointer-events-none absolute z-20"
+          >
+          </div>
+
+          <span
+            data-parts-overlay-label
+            data-parts-overlay-label-template
+            hidden
+            aria-hidden="true"
+            class="pointer-events-none absolute z-30 rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide uppercase shadow-sm"
+          ></span>
+        </div>
+
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full min-w-xl table-fixed text-left text-sm">
+            <.reference_colgroup layout={:parts} />
+            <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+              <tr>
+                <th class="py-3 pr-6 font-medium">Part</th>
+                <th class="py-3 pr-6 font-medium">Description</th>
+                <th class="py-3 font-medium">CSS selector</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-default">
+              <tr
+                :for={part <- @parts}
+                data-part-row
+                data-part-name={part.hook}
+                data-part-key={part.name}
+                data-part-hook={part.hook}
+                tabindex="0"
+                class="align-top transition-colors focus-visible:bg-subtle focus-visible:outline-none"
+              >
+                <td class="py-4 pl-2.5 pr-6 whitespace-nowrap">
+                  <code class={code_class()}>{part.hook}</code>
+                </td>
+                <td class="py-4 pr-6 leading-6 text-toned">{part.description}</td>
+                <td class="py-4 leading-6">
+                  <code class={code_value_class()}>{part.selector}</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".CssParts">
+        export default {
+          mounted() {
+            this.canvas = this.el.querySelector("[data-parts-canvas]")
+            this.overlays = this.el.querySelector("[data-parts-overlays]")
+            this.labels = this.el.querySelector("[data-parts-labels]")
+            this.template = this.el.querySelector("[data-parts-overlay-template]")
+            this.labelTemplate = this.el.querySelector("[data-parts-overlay-label-template]")
+            this.rows = Array.from(this.el.querySelectorAll("[data-part-row]"))
+            this.byHook = new Map()
+
+            for (const row of this.rows) {
+              this.byHook.set(row.dataset.partHook, row)
+              row.addEventListener("mouseenter", () => this.activate(row.dataset.partHook))
+              row.addEventListener("focus", () => this.activate(row.dataset.partHook))
+              row.addEventListener("mouseleave", () => this.clear())
+              row.addEventListener("blur", () => this.clear())
+            }
+
+            this.preview = this.el.querySelector("[data-parts-preview]")
+            this.component = this.el.dataset.partsComponent
+            this.activeHook = null
+            this.boxes = []
+
+            // The preview is inert and pointer-events:none, so pointer events
+            // land on the canvas instead of the parts. Hit-test the measured
+            // boxes rather than walking event targets, which would always be
+            // the canvas.
+            this.onMove = (event) => {
+              const hook = this.hitTest(event.clientX, event.clientY)
+              if (hook) this.activate(hook)
+              else this.clear()
+            }
+
+            this.onKeydown = (event) => {
+              if (event.key === "Escape") this.clear()
+            }
+
+            this.canvas.addEventListener("mousemove", this.onMove)
+            this.canvas.addEventListener("mouseleave", () => this.clear())
+            this.el.addEventListener("keydown", this.onKeydown)
+
+            this.measure = () => {
+              const canvasRect = this.canvas.getBoundingClientRect()
+              const baseTop = canvasRect.top + this.canvas.clientTop - this.canvas.scrollTop
+              const baseLeft = canvasRect.left + this.canvas.clientLeft - this.canvas.scrollLeft
+
+              this.boxes = []
+              for (const element of this.canvas.querySelectorAll("[data-part]")) {
+                const hook = element.dataset.part
+                if (!hook || !this.byHook.has(hook)) continue
+
+                const owner = element.closest("[data-element]")
+                if (hook === "root" && owner && owner.dataset.element !== this.component) continue
+
+                const rect = element.getBoundingClientRect()
+                if (rect.width === 0 && rect.height === 0) continue
+
+                this.boxes.push({
+                  hook,
+                  left: rect.left - baseLeft,
+                  top: rect.top - baseTop,
+                  width: rect.width,
+                  height: rect.height,
+                  area: rect.width * rect.height,
+                  depth: this.depthOf(element)
+                })
+              }
+
+              this.render()
+            }
+
+            this.resize = () => this.measure()
+            window.addEventListener("resize", this.resize)
+            this.observer = new ResizeObserver(this.resize)
+            this.observer.observe(this.preview)
+            this.measure()
+          },
+
+          destroyed() {
+            window.removeEventListener("resize", this.resize)
+            this.observer.disconnect()
+          },
+
+          hitTest(clientX, clientY) {
+            const canvasRect = this.canvas.getBoundingClientRect()
+            const x = clientX - canvasRect.left - this.canvas.clientLeft + this.canvas.scrollLeft
+            const y = clientY - canvasRect.top - this.canvas.clientTop + this.canvas.scrollTop
+
+            let best = null
+
+            for (const box of this.boxes) {
+              if (x < box.left || x > box.left + box.width) continue
+              if (y < box.top || y > box.top + box.height) continue
+
+              // Prefer the smallest part. A control that fills its wrapper (the
+              // trigger inside the heading) has the same area, so break ties by
+              // depth and pick the descendant.
+              if (
+                !best ||
+                box.area < best.area ||
+                (box.area === best.area && box.depth > best.depth)
+              ) {
+                best = box
+              }
+            }
+
+            return best && best.hook
+          },
+
+          depthOf(element) {
+            let depth = 0
+            let node = element
+
+            while (node && node !== this.canvas) {
+              depth += 1
+              node = node.parentElement
+            }
+
+            return depth
+          },
+
+          activate(hook) {
+            if (hook === this.activeHook) return
+
+            const row = this.byHook.get(hook)
+            if (!row) return
+
+            for (const active of this.rows) active.removeAttribute("data-active")
+            row.setAttribute("data-active", "")
+
+            this.activeHook = hook
+            this.currentName = row.dataset.partName
+            this.render()
+          },
+
+          render() {
+            this.overlays.replaceChildren()
+            this.labels.replaceChildren()
+            if (!this.activeHook) return
+
+            let labelled = false
+
+            for (const data of this.boxes) {
+              if (data.hook !== this.activeHook) continue
+
+              const box = this.template.cloneNode(true)
+
+              box.hidden = false
+              box.style.top = data.top + "px"
+              box.style.left = data.left + "px"
+              box.style.width = data.width + "px"
+              box.style.height = data.height + "px"
+
+              this.overlays.appendChild(box)
+
+              if (labelled) continue
+
+              const label = this.labelTemplate.cloneNode(true)
+              label.hidden = false
+              label.textContent = this.currentName
+              label.style.top = data.top - 8 + "px"
+              label.style.left = data.left + 10 + "px"
+              this.labels.appendChild(label)
+              labelled = true
+            }
+          },
+
+          clear() {
+            if (!this.activeHook) return
+
+            this.activeHook = null
+            this.currentName = null
+            this.overlays.replaceChildren()
+            this.labels.replaceChildren()
+            for (const row of this.rows) row.removeAttribute("data-active")
+          }
+        }
+      </script>
+    </.section>
+    """
+  end
+
   @doc false
 
   attr :css_vars, :list, required: true
@@ -505,9 +794,14 @@ defmodule FlintUIDocsWeb.DocsComponents do
           </tr>
         </thead>
         <tbody class="divide-y divide-default">
-          <tr :for={css_var <- @css_vars} class="align-top">
+          <tr
+            :for={css_var <- @css_vars}
+            data-runtime={Map.get(css_var, :runtime, false)}
+            class="align-top"
+          >
             <td class="py-4 pr-6 whitespace-nowrap">
               <code class={code_class()}>{css_var.name}</code>
+              <.runtime_badge :if={Map.get(css_var, :runtime, false)} />
             </td>
             <td :if={@show_default} class="py-4 pr-6 leading-6">
               <code class={code_value_class()}>{css_var_default(css_var)}</code>
@@ -519,6 +813,22 @@ defmodule FlintUIDocsWeb.DocsComponents do
         </tbody>
       </table>
     </div>
+    """
+  end
+
+  @doc false
+
+  def runtime_badge(assigns) do
+    ~H"""
+    <Components.badge
+      class="ml-1.5"
+      variant="outline"
+      color="tw:sky"
+      radius="sm"
+      size="sm"
+    >
+      runtime
+    </Components.badge>
     """
   end
 
@@ -557,6 +867,38 @@ defmodule FlintUIDocsWeb.DocsComponents do
             </td>
             <td class="py-4 leading-6 text-toned">
               {selector.description}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    """
+  end
+
+  @doc false
+
+  attr :states, :list, required: true
+
+  def states_table(assigns) do
+    ~H"""
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-xl table-fixed text-left text-sm">
+        <.reference_colgroup layout={:states} />
+        <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+          <tr>
+            <th class="py-3 pr-6 font-medium">State</th>
+            <th class="py-3 pr-6 font-medium">Description</th>
+            <th class="py-3 font-medium">CSS selector</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-default">
+          <tr :for={state <- @states} class="align-top">
+            <td class="py-4 pr-6 whitespace-nowrap">
+              <code class={code_class()}>{state.name}</code>
+            </td>
+            <td class="py-4 pr-6 leading-6 text-toned">{state.description}</td>
+            <td class="py-4 leading-6">
+              <code class={code_value_class()}>{state.selector}</code>
             </td>
           </tr>
         </tbody>

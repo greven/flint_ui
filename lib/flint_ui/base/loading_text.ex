@@ -53,7 +53,7 @@ defmodule FlintUI.Base.LoadingText do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -116,7 +116,7 @@ defmodule FlintUI.Base.LoadingText do
           description: "The character's position in the copy; drives its animation delay."
         }
       ]
-    }
+    ]
   end
 
   @impl true

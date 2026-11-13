@@ -122,6 +122,27 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.tabs
+      id={"#{@parts_id}-tabs"}
+      value="overview"
+      label="Workspace sections"
+      class="w-full max-w-md"
+    >
+      <:tab value="overview">Overview</:tab>
+      <:tab value="activity">Activity</:tab>
+      <:panel value="overview">
+        <p class="text-sm text-toned">A snapshot of the workspace.</p>
+      </:panel>
+      <:panel value="activity">
+        <p class="text-sm text-toned">Recent edits and comments.</p>
+      </:panel>
+    </Components.tabs>
+    """
+  end
+
   defp main_code(props) do
     Snippet.tag(
       ".tabs",

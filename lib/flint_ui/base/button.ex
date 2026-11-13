@@ -105,7 +105,7 @@ defmodule FlintUI.Base.Button do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -172,7 +172,7 @@ defmodule FlintUI.Base.Button do
           description: "Disables the action button. Rendered only for an action button."
         }
       ]
-    }
+    ]
   end
 
   @impl true
@@ -191,6 +191,28 @@ defmodule FlintUI.Base.Button do
         keys: "Space",
         description:
           "Activates an action button. Does not activate a link; the browser scrolls the page. Ignored while pending."
+      }
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "disabled",
+        description: "The button is disabled.",
+        selector: ~s([data-element="button"][data-disabled])
+      },
+      %Meta.State{
+        name: "loading",
+        description: "The button is loading and cannot be activated.",
+        selector: ~s([data-element="button"][data-loading])
+      },
+      %Meta.State{
+        name: "pending-submit",
+        description:
+          "Applied while a submit button is pending; implicit form submission is blocked.",
+        selector: ~s([data-element="button"][data-pending-submit])
       }
     ]
   end

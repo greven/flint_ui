@@ -208,13 +208,13 @@ defmodule FlintUI.Base.LoadingTest do
     parts = FlintUI.Base.Loading.parts_attrs()
 
     assert %FlintUI.Meta.PartAttr{value: "loading"} =
-             Enum.find(parts.root, &(&1.name == "[data-element]"))
+             Enum.find(parts[:root], &(&1.name == "[data-element]"))
 
     assert %FlintUI.Meta.PartAttr{name: "[data-variant]"} =
-             Enum.find(parts.root, &(&1.name == "[data-variant]"))
+             Enum.find(parts[:root], &(&1.name == "[data-variant]"))
 
     assert %FlintUI.Meta.PartAttr{name: "[data-loading-indicator]"} =
-             Enum.find(parts.root, &(&1.name == "[data-loading-indicator]"))
+             Enum.find(parts[:root], &(&1.name == "[data-loading-indicator]"))
 
     for part <- [:track, :arc, :dot, :bar, :loop] do
       assert %FlintUI.Meta.PartAttr{name: "[data-part]"} =

@@ -358,16 +358,16 @@ defmodule FlintUI.Base.TabsTest do
 
       parts = FlintUI.Base.Tabs.parts_attrs()
 
-      assert Enum.sort(Map.keys(parts)) == [:panel, :root, :tab, :tablist]
+      assert Enum.map(parts, &elem(&1, 0)) == [:root, :tablist, :tab, :panel]
 
       assert %FlintUI.Meta.PartAttr{value: "FlintUI.Tabs"} =
-               Enum.find(parts.root, &(&1.name == "phx-hook"))
+               Enum.find(parts[:root], &(&1.name == "phx-hook"))
 
       assert %FlintUI.Meta.PartAttr{value: ~s("tab")} =
-               Enum.find(parts.tab, &(&1.name == "role"))
+               Enum.find(parts[:tab], &(&1.name == "role"))
 
       assert %FlintUI.Meta.PartAttr{value: ~s("tabpanel")} =
-               Enum.find(parts.panel, &(&1.name == "role"))
+               Enum.find(parts[:panel], &(&1.name == "role"))
     end
 
     test "documents the keyboard and client events" do

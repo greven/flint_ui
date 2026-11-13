@@ -95,7 +95,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#keyboard h2[data-toc='section']", "Keyboard")
     assert has_element?(view, "#api")
     assert has_element?(view, "#data-attributes")
-    assert has_element?(view, "#css-variables")
+    refute has_element?(view, "#css-variables")
     assert has_element?(view, "#component-sections-panel-styled[hidden]")
   end
 
@@ -111,17 +111,125 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(base, "#keyboard h2 a[href='#keyboard']", "Keyboard")
   end
 
-  test "the css tab holds the styled contract tables", %{conn: conn} do
+  test "the css tab holds the styling contract tables", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=css")
 
     assert has_element?(view, "#component-sections-tab-css[aria-selected='true']")
     assert has_element?(view, "#component-sections-panel-css")
+    assert has_element?(view, "#css-parts")
     assert has_element?(view, "#css-variables")
     assert has_element?(view, "#selectors")
-    assert has_element?(view, "#theme")
+    assert has_element?(view, "#state-selectors")
+    refute has_element?(view, "#theme")
     assert has_element?(view, "#css-variables code", "--fl-collapsible-duration")
+
+    assert has_element?(
+             view,
+             "#state-selectors code",
+             ~s([data-element="collapsible"][data-animate])
+           )
+
     refute has_element?(view, "#styling-contract")
     refute has_element?(view, "#setup")
+  end
+
+  test "the css tab lists state selectors only for stateful components", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/accordion_item?tab=css")
+
+    assert has_element?(view, "#state-selectors tr", "animating")
+
+    assert has_element?(
+             view,
+             "#state-selectors code",
+             ~s([data-element="accordion_item"][data-state="open"])
+           )
+
+    assert has_element?(
+             view,
+             "#state-selectors code",
+             ~s([data-element="accordion_item"][data-animate])
+           )
+
+    {:ok, view, _html} = live(conn, ~p"/components/tabs?tab=css")
+
+    assert has_element?(
+             view,
+             "#state-selectors code",
+             ~s([data-element="tabs"] [data-part="tab"][data-state="active"])
+           )
+
+    {:ok, view, _html} = live(conn, ~p"/components/badge?tab=css")
+    refute has_element?(view, "#state-selectors")
+  end
+
+  test "the css tab lists every part with its selector", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/accordion_item?tab=css")
+
+    assert has_element?(
+             view,
+             "#css-parts-accordion_item[phx-hook='FlintUIDocsWeb.DocsComponents.CssParts'][data-parts-component='accordion_item']"
+           )
+
+    assert has_element?(view, "#css-parts [data-parts-canvas] [data-element='accordion_item']")
+
+    assert has_element?(view, "#css-parts [data-parts-canvas] [data-parts-preview][inert]")
+    assert has_element?(view, "#css-parts [data-parts-labels]")
+    assert has_element?(view, "#css-parts [data-parts-overlay-label-template][hidden]")
+
+    assert has_element?(
+             view,
+             "#css-parts [data-part-row][data-part-name='panel'][data-part-hook='panel']"
+           )
+
+    assert has_element?(
+             view,
+             "#css-parts [data-part-row] code",
+             ~s([data-element="accordion_item"] [data-part="panel"])
+           )
+
+    assert has_element?(
+             view,
+             "#css-parts [data-part-row][data-part-key='header'][data-part-name='trigger']"
+           )
+
+    assert has_element?(view, "#css-parts [data-part-row] code", "heading")
+  end
+
+  test "both part tables follow the component's anatomy order", %{conn: conn} do
+    anatomy =
+      ~w(root header title description header_actions header_content body section footer
+         footer_content footer_actions)
+
+    {:ok, css, _html} = live(conn, ~p"/components/card?tab=css")
+    {:ok, base, _html} = live(conn, ~p"/components/card?tab=base")
+
+    # The parts table is the card's anatomy: the order its markup nests the
+    # parts in, root first and the header wrapper before its own children. The
+    # data-attribute table uses the same order.
+    assert part_keys(css, "#css-parts [data-part-row]") == anatomy
+    assert part_keys(base, "#data-attributes [data-part-key]") == anatomy
+
+    # A part whose `data-part` hook differs from its name is ordered by its
+    # position in the anatomy, not by either name.
+    item_anatomy = ~w(root heading header indicator content panel)
+
+    {:ok, css, _html} = live(conn, ~p"/components/accordion_item?tab=css")
+    {:ok, base, _html} = live(conn, ~p"/components/accordion_item?tab=base")
+
+    assert part_keys(css, "#css-parts [data-part-row]") == item_anatomy
+    assert part_keys(base, "#data-attributes [data-part-key]") == item_anatomy
+  end
+
+  test "the css tab folds runtime variables into the public table", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/collapsible?tab=css")
+
+    assert has_element?(
+             view,
+             "#css-variables tr[data-runtime] code",
+             "--_fl-collapsible-height"
+           )
+
+    assert has_element?(view, "#css-variables tr[data-runtime]", "runtime")
   end
 
   test "the css tab lists the component's state hooks", %{conn: conn} do
@@ -764,8 +872,19 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
       {:ok, css, _html} = live(conn, ~p"/components/#{name}?tab=css")
       assert has_element?(css, "#component-sections-panel-css")
       refute has_element?(css, "#component-sections-panel-css[hidden]")
-      assert has_element?(css, "#theme")
+      assert has_element?(css, "#css-parts")
+      assert has_element?(css, "#css-parts [data-parts-canvas] [data-element]")
       assert has_element?(css, "#css-variables")
+      refute has_element?(css, "#theme")
     end
+  end
+
+  # The named attribute of every match, in document order.
+  defp part_keys(view, selector) do
+    view
+    |> render()
+    |> LazyHTML.from_fragment()
+    |> LazyHTML.query(selector)
+    |> LazyHTML.attribute("data-part-key")
   end
 end

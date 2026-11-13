@@ -72,6 +72,27 @@ defmodule FlintUIDocsWeb.Docs.Card do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.card class="w-full max-w-sm">
+      <:title>Starred repositories</:title>
+      <:description>Updated just now</:description>
+      <:header_actions>
+        <Components.button variant="ghost" size="sm">Edit</Components.button>
+      </:header_actions>
+      <:header>
+        <p class="text-xs text-muted">Synced from GitHub</p>
+      </:header>
+      <p>Reorder or remove the repositories you follow.</p>
+      <:footer>3 repositories</:footer>
+      <:footer_actions>
+        <Components.button variant="surface" size="sm">View logs</Components.button>
+      </:footer_actions>
+    </Components.card>
+    """
+  end
+
   defp link_code do
     """
     <.card href="/components" title_id="card-link-title">

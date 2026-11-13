@@ -71,10 +71,10 @@ defmodule FlintUI.Base.AccordionTest do
       parts = FlintUI.Base.Accordion.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "FlintUI.Accordion"} =
-               Enum.find(parts.root, &(&1.name == "phx-hook"))
+               Enum.find(parts[:root], &(&1.name == "phx-hook"))
 
       assert %FlintUI.Meta.PartAttr{value: "accordion"} =
-               Enum.find(parts.root, &(&1.name == "[data-element]"))
+               Enum.find(parts[:root], &(&1.name == "[data-element]"))
     end
 
     test "documents keyboard interactions" do

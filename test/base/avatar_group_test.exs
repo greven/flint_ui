@@ -75,7 +75,7 @@ defmodule FlintUI.Base.AvatarGroupTest do
              FlintUI.Base.AvatarGroup.meta()
 
     parts = FlintUI.Base.AvatarGroup.parts_attrs()
-    assert Enum.any?(parts.root, &(&1.name == "[data-element]"))
-    assert Enum.any?(parts.root, &(&1.name == "role"))
+    assert Enum.any?(parts[:root], &(&1.name == "[data-element]"))
+    assert Enum.any?(parts[:root], &(&1.name == "role"))
   end
 end

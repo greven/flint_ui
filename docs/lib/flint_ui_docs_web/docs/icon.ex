@@ -51,6 +51,13 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.icon name="lucide-sparkles" size="xl" />
+    """
+  end
+
   defp main_code(props) do
     Snippet.component(
       ".icon",

@@ -56,7 +56,7 @@ defmodule FlintUI.Base.Indicator do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -83,7 +83,7 @@ defmodule FlintUI.Base.Indicator do
             "Present on the nested badge when `label` is empty. The theme renders it as a compact dot instead of a full badge."
         }
       ]
-    }
+    ]
   end
 
   @impl true

@@ -601,6 +601,16 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.badge variant="soft" color="info" icon="lucide-sparkles">Badge</Components.badge>
+      <Components.badge variant="solid" color="success">Active</Components.badge>
+    </div>
+    """
+  end
+
   defp code_variant(props) do
     Snippet.tag(
       ".badge",

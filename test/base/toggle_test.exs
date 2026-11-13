@@ -110,12 +110,12 @@ defmodule FlintUI.Base.ToggleTest do
       parts = FlintUI.Base.Toggle.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "toggle"} =
-               Enum.find(parts.root, &(&1.name == "[data-element]"))
+               Enum.find(parts[:root], &(&1.name == "[data-element]"))
 
       assert %FlintUI.Meta.PartAttr{value: ~s("on" | "off")} =
-               Enum.find(parts.root, &(&1.name == "[data-state]"))
+               Enum.find(parts[:root], &(&1.name == "[data-state]"))
 
-      assert Enum.any?(parts.root, &(&1.name == "aria-pressed"))
+      assert Enum.any?(parts[:root], &(&1.name == "aria-pressed"))
     end
 
     test "documents keyboard interactions" do

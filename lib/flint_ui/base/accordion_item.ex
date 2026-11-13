@@ -56,7 +56,7 @@ defmodule FlintUI.Base.AccordionItem do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "id",
@@ -82,6 +82,11 @@ defmodule FlintUI.Base.AccordionItem do
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description: "Current open/closed state."
+        },
+        %Meta.PartAttr{
+          name: "[data-animate]",
+          value: "boolean",
+          description: "Present while the panel is animating."
         },
         %Meta.PartAttr{
           name: "[data-disabled]",
@@ -199,7 +204,7 @@ defmodule FlintUI.Base.AccordionItem do
           description: "The padded panel body; the `:panel` slot class applies here."
         }
       ]
-    }
+    ]
   end
 
   @impl true
@@ -207,6 +212,32 @@ defmodule FlintUI.Base.AccordionItem do
     [
       %Meta.Keyboard{keys: "Enter", description: "Toggles the focused header."},
       %Meta.Keyboard{keys: "Space", description: "Toggles the focused header."}
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "open",
+        description: "The item is expanded.",
+        selector: ~s([data-element="accordion_item"][data-state="open"])
+      },
+      %Meta.State{
+        name: "closed",
+        description: "The item is collapsed.",
+        selector: ~s([data-element="accordion_item"][data-state="closed"])
+      },
+      %Meta.State{
+        name: "animating",
+        description: "Applied while the panel is animating.",
+        selector: ~s([data-element="accordion_item"][data-animate])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The item is disabled.",
+        selector: ~s([data-element="accordion_item"][data-disabled])
+      }
     ]
   end
 

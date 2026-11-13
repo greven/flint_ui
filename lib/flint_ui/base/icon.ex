@@ -36,7 +36,7 @@ defmodule FlintUI.Base.Icon do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -49,7 +49,7 @@ defmodule FlintUI.Base.Icon do
           description: "Identifies the root element."
         }
       ]
-    }
+    ]
   end
 
   @impl true

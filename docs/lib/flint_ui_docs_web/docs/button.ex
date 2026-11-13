@@ -611,6 +611,16 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center gap-3">
+      <Components.button icon="lucide-save">Save changes</Components.button>
+      <Components.button variant="subtle" color="info">Preview</Components.button>
+    </div>
+    """
+  end
+
   defp code_as_link(_) do
     """
     <.button navigate="/components">Navigate</.button>

@@ -43,6 +43,18 @@ defmodule FlintUIDocsWeb.Docs.Loading do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <div class="flex flex-wrap items-center justify-center gap-8">
+      <Components.loading variant="ring-bg" size="lg" />
+      <Components.loading variant="dots-fade" size="lg" />
+      <Components.loading variant="bars-scale" size="lg" />
+      <Components.loading variant="infinity" size="lg" />
+    </div>
+    """
+  end
+
   defp main_code(props) do
     variant = variant(props)
 

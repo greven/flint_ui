@@ -78,6 +78,18 @@ defmodule FlintUIDocsWeb.Docs.Avatar do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    assigns = Map.put(assigns, :image, @image)
+
+    ~H"""
+    <div class="flex items-center gap-3">
+      <Components.avatar src={@image} alt="Chris McCord" size="lg" />
+      <Components.avatar alt="Jane Doe" size="lg" />
+    </div>
+    """
+  end
+
   defp main_code(props) do
     attrs =
       [

@@ -65,7 +65,7 @@ defmodule FlintUI.Base.Collapsible do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "id",
@@ -91,6 +91,11 @@ defmodule FlintUI.Base.Collapsible do
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description: "Current open/closed state."
+        },
+        %Meta.PartAttr{
+          name: "[data-animate]",
+          value: "boolean",
+          description: "Present while the panel is animating."
         },
         %Meta.PartAttr{
           name: "[data-disabled]",
@@ -189,7 +194,7 @@ defmodule FlintUI.Base.Collapsible do
           description: "Present when interactions are suppressed."
         }
       ]
-    }
+    ]
   end
 
   @impl true
@@ -248,6 +253,32 @@ defmodule FlintUI.Base.Collapsible do
         source: :client,
         doc:
           "Cancelable event dispatched on the root before a user-initiated or JS-command close. Call `preventDefault()` to keep the content open. Server-driven state changes do not dispatch it."
+      }
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "open",
+        description: "The collapsible is expanded.",
+        selector: ~s([data-element="collapsible"][data-state="open"])
+      },
+      %Meta.State{
+        name: "closed",
+        description: "The collapsible is collapsed.",
+        selector: ~s([data-element="collapsible"][data-state="closed"])
+      },
+      %Meta.State{
+        name: "animating",
+        description: "Applied while the panel is animating.",
+        selector: ~s([data-element="collapsible"][data-animate])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The collapsible is disabled.",
+        selector: ~s([data-element="collapsible"][data-disabled])
       }
     ]
   end

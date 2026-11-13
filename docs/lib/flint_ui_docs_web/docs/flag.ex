@@ -110,6 +110,13 @@ defmodule FlintUIDocsWeb.Docs.Flag do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.flag code="jp" label="Japan" shadow />
+    """
+  end
+
   defp main_code(props) do
     radius = if props.shape == "round", do: nil, else: props.radius
 

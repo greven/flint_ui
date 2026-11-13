@@ -78,7 +78,7 @@ defmodule FlintUI.Base.Accordion do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "id",
@@ -116,7 +116,7 @@ defmodule FlintUI.Base.Accordion do
           description: "Present when interactions are suppressed."
         }
       ]
-    }
+    ]
   end
 
   @impl true
@@ -137,6 +137,17 @@ defmodule FlintUI.Base.Accordion do
       %Meta.Keyboard{
         keys: "Enter / Space",
         description: "Toggles the focused header."
+      }
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "disabled",
+        description: "The accordion is disabled.",
+        selector: ~s([data-element="accordion"][data-disabled])
       }
     ]
   end

@@ -198,10 +198,10 @@ defmodule FlintUI.Base.AccordionItemTest do
       parts = FlintUI.Base.AccordionItem.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "FlintUI.Collapsible"} =
-               Enum.find(parts.root, &(&1.name == "phx-hook"))
+               Enum.find(parts[:root], &(&1.name == "phx-hook"))
 
       assert %FlintUI.Meta.PartAttr{value: "region"} =
-               Enum.find(parts.content, &(&1.name == "role"))
+               Enum.find(parts[:content], &(&1.name == "role"))
     end
 
     test "documents keyboard interactions" do

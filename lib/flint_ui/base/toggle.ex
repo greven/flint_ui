@@ -48,7 +48,7 @@ defmodule FlintUI.Base.Toggle do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -92,7 +92,7 @@ defmodule FlintUI.Base.Toggle do
             "Toggles `aria-pressed` and `data-state` client-side, then runs `on_click` when set."
         }
       ]
-    }
+    ]
   end
 
   @impl true
@@ -100,6 +100,27 @@ defmodule FlintUI.Base.Toggle do
     [
       %Meta.Keyboard{keys: "Enter", description: "Toggles the button."},
       %Meta.Keyboard{keys: "Space", description: "Toggles the button."}
+    ]
+  end
+
+  @impl true
+  def states do
+    [
+      %Meta.State{
+        name: "on",
+        description: "The toggle is pressed.",
+        selector: ~s([data-element="toggle"][data-state="on"])
+      },
+      %Meta.State{
+        name: "off",
+        description: "The toggle is not pressed.",
+        selector: ~s([data-element="toggle"][data-state="off"])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The toggle is disabled.",
+        selector: ~s([data-element="toggle"][data-disabled])
+      }
     ]
   end
 

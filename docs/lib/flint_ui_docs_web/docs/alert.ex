@@ -393,6 +393,24 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     """
   end
 
+  @impl true
+  def parts_demo(assigns) do
+    ~H"""
+    <Components.alert
+      id={"#{@parts_id}-alert"}
+      intent="info"
+      title="Heads up"
+      show_close
+      class="w-full max-w-md"
+    >
+      Your trial ends in three days.
+      <:actions>
+        <Components.button size="sm" variant="subtle" color="info">Upgrade</Components.button>
+      </:actions>
+    </Components.alert>
+    """
+  end
+
   defp effective_color(props), do: if(props.color == "inherit", do: nil, else: props.color)
 
   defp basic_code(props) do

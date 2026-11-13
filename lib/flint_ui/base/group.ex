@@ -49,7 +49,7 @@ defmodule FlintUI.Base.Group do
 
   @impl true
   def parts_attrs do
-    %{
+    [
       root: [
         %Meta.PartAttr{
           name: "[data-element]",
@@ -78,7 +78,7 @@ defmodule FlintUI.Base.Group do
           description: "The accessible name, present when `label` is set."
         }
       ]
-    }
+    ]
   end
 
   @impl true

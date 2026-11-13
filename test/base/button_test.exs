@@ -297,13 +297,13 @@ defmodule FlintUI.Base.ButtonTest do
       parts = FlintUI.Base.Button.parts_attrs()
 
       assert %FlintUI.Meta.PartAttr{value: "button"} =
-               Enum.find(parts.root, &(&1.name == "[data-element]"))
+               Enum.find(parts[:root], &(&1.name == "[data-element]"))
 
-      assert Enum.any?(parts.root, &(&1.name == "aria-busy"))
-      assert Enum.any?(parts.root, &(&1.name == "aria-disabled"))
-      assert Enum.any?(parts.root, &(&1.name == "role"))
-      assert Enum.any?(parts.root, &(&1.name == "tabindex"))
-      assert Enum.any?(parts.root, &(&1.name == "[data-pending-submit]"))
+      assert Enum.any?(parts[:root], &(&1.name == "aria-busy"))
+      assert Enum.any?(parts[:root], &(&1.name == "aria-disabled"))
+      assert Enum.any?(parts[:root], &(&1.name == "role"))
+      assert Enum.any?(parts[:root], &(&1.name == "tabindex"))
+      assert Enum.any?(parts[:root], &(&1.name == "[data-pending-submit]"))
     end
 
     test "documents keyboard interactions" do

@@ -78,8 +78,9 @@ defmodule FlintUIDocsWeb.BadgeSmokeTest do
   test "badge css tab renders the contract", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/badge?tab=css")
 
+    assert has_element?(view, "#css-parts")
     assert has_element?(view, "#css-variables")
     assert has_element?(view, "#selectors")
-    assert has_element?(view, "#theme")
+    refute has_element?(view, "#theme")
   end
 end

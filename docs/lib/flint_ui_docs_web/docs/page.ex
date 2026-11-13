@@ -15,8 +15,11 @@ defmodule FlintUIDocsWeb.Docs.Page do
       reference and setup.
     * **Base**: the moduledoc sections selected by `base_docs/0`, plus any
       authored `tab: :base` sections, then the generated API reference.
-    * **CSS**: authored `tab: :css` sections around the generated CSS variables,
-      selectors, and theme-token tables.
+    * **CSS**: authored `tab: :css` sections around the generated CSS parts,
+      CSS variables, selector, and state-selector tables. The CSS parts table is
+      interactive: hovering a part in the preview highlights its row and vice
+      versa, using the demo returned by `parts_demo/1`. State selectors are
+      rendered only when the component declares `states/0`.
 
   ## Section outline
 
@@ -145,6 +148,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
   @callback sections() :: [section()]
   @callback render_section(assigns :: map()) :: Phoenix.LiveView.Rendered.t() | nil
   @callback anatomy() :: map() | nil
+  @callback parts_demo(assigns :: map()) :: Phoenix.LiveView.Rendered.t() | nil
   @callback styling() :: map() | nil
   @callback api_only?() :: boolean()
 
@@ -186,6 +190,16 @@ defmodule FlintUIDocsWeb.Docs.Page do
       @doc "Structured anatomy for the Base tab, or `nil`."
       def anatomy, do: nil
 
+      @doc """
+      The demo rendered above the CSS parts table.
+
+      Return the component markup with the parts this page documents. The
+      generated CSS tab wraps it in the interactive parts canvas, so the demo
+      needs no preview card or controls. `assigns` carries `:name` and
+      `:parts_id`, a unique DOM id prefix for the rendered component.
+      """
+      def parts_demo(_assigns), do: nil
+
       @doc "Plain-CSS recipes for the Styling guide, or `nil`."
       def styling, do: nil
 
@@ -205,6 +219,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
                      sections: 0,
                      render_section: 1,
                      anatomy: 0,
+                     parts_demo: 1,
                      styling: 0,
                      api_only?: 0
     end
