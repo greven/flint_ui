@@ -71,11 +71,23 @@ defmodule FlintUIDocsWeb.Docs.Separator do
           size={props.size}
           class="my-3"
         />
-        <p class="text-sm">Some</p>
-        <Components.separator orientation="vertical" />
-        <p class="text-sm">Other</p>
-        <Components.separator orientation="vertical" />
-        <p class="text-sm">Item</p>
+        <div class="w-full flex h-5 items-center space-x-4 text-sm">
+          <div class="text-sm">Some</div>
+          <Components.separator
+            orientation="vertical"
+            type={props.type}
+            variant={props.variant}
+            size={props.size}
+          />
+          <div class="text-sm">Other</div>
+          <Components.separator
+            orientation="vertical"
+            type={props.type}
+            variant={props.variant}
+            size={props.size}
+          />
+          <div class="text-sm">Item</div>
+        </div>
       </div>
     </.preview>
     """
