@@ -20,6 +20,7 @@ defmodule FlintUI.StyledTest do
                :group,
                :icon,
                :indicator,
+               :kbd,
                :loading,
                :loading_text,
                :tabs,

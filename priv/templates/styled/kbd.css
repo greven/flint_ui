@@ -1,0 +1,81 @@
+@layer components {
+    /* Kbd. A key is a label, not a control: it has no focus ring, press
+     * feedback, or hover state. Sizes scale the font and the cap together, so
+     * the `em` padding stays proportional at every step. */
+    [data-element="kbd"][data-variant] {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: 1.5em;
+        padding: 0.12em 0.45em;
+        border: 1px solid var(--fl-color-border);
+        border-radius: var(--fl-radius-sm);
+        font-family: var(--fl-font-mono);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        font-style: normal;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Raised: a keycap. */
+    [data-element="kbd"][data-variant="raised"] {
+        border-color: var(--fl-color-border);
+        border-bottom-width: 3px;
+        background: linear-gradient(
+            to bottom,
+            light-dark(var(--fl-color-neutral-50), var(--fl-color-neutral-900)),
+            light-dark(var(--fl-color-neutral-100), var(--fl-color-neutral-950))
+        );
+        box-shadow:
+            inset 0 1px 0 light-dark(oklch(1 0 0 / 0.6), oklch(1 0 0 / 0.04)),
+            var(--fl-shadow-base);
+        color: var(--fl-color-text-toned);
+        font-weight: var(--fl-font-weight-bold);
+    }
+
+    /* Subtle: the badge's soft treatment. A faint neutral tint with the
+     * matching soft edge, so the key sits beside text without reading as an
+     * outlined control. */
+    [data-element="kbd"][data-variant="subtle"] {
+        padding-block: calc(0.12em + 1px);
+        border-color: var(--fl-color-neutral-soft-border);
+        background: color-mix(
+            in oklab,
+            var(--fl-color-neutral-soft) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
+        );
+        color: var(--fl-color-text-toned);
+    }
+
+    /* Outline: a flat key with a full 1px border and the surface behind it. */
+    [data-element="kbd"][data-variant="outline"] {
+        padding-block: calc(0.12em + 1px);
+        background: var(--fl-color-surface);
+        color: var(--fl-color-text-toned);
+    }
+
+    /* Sizes: 10/12/14/16/20px. */
+    [data-element="kbd"][data-size="xs"] {
+        font-size: 0.625rem;
+    }
+
+    [data-element="kbd"][data-size="sm"] {
+        font-size: var(--fl-font-size-xs);
+    }
+
+    [data-element="kbd"][data-size="md"] {
+        font-size: var(--fl-control-font-size-md);
+    }
+
+    [data-element="kbd"][data-size="lg"] {
+        font-size: var(--fl-font-size-md);
+    }
+
+    [data-element="kbd"][data-size="xl"] {
+        font-size: var(--fl-font-size-xl);
+    }
+}

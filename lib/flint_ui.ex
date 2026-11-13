@@ -21,8 +21,11 @@ defmodule FlintUI do
   - `button`
   - `card`
   - `collapsible`
+  - `flag`
   - `group`
   - `icon`
+  - `indicator`
+  - `kbd`
   - `loading`
   - `loading_text`
   - `tabs`
@@ -53,6 +56,7 @@ defmodule FlintUI do
     {:group, []},
     {:icon, []},
     {:indicator, []},
+    {:kbd, []},
     {:loading, []},
     {:loading_text, []},
     {:tabs, [:select_tab]},

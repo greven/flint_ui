@@ -269,7 +269,15 @@ defmodule FlintUI.Generator do
       |> Kernel.++(rest_include(attrs) || [])
       |> Enum.uniq()
 
-    "attr(:rest, :global, include: ~w(#{Enum.join(include, " ")}), doc: \"Additional HTML attributes, forwarded to the headless component.\")"
+    doc = "Additional HTML attributes, forwarded to the headless component."
+
+    case include do
+      [] ->
+        "attr(:rest, :global, doc: #{inspect(doc)})"
+
+      include ->
+        "attr(:rest, :global, include: ~w(#{Enum.join(include, " ")}), doc: #{inspect(doc)})"
+    end
   end
 
   defp rest_include(attrs) do

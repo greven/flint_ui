@@ -27,6 +27,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Group,
     FlintUI.Styled.Icon,
     FlintUI.Styled.Indicator,
+    FlintUI.Styled.Kbd,
     FlintUI.Styled.Loading,
     FlintUI.Styled.LoadingText,
     FlintUI.Styled.Tabs,

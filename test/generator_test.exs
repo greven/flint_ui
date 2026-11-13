@@ -194,6 +194,19 @@ defmodule FlintUI.GeneratorTest do
     refute source =~ "data-icon={@icon}"
   end
 
+  test "a base without extra attributes omits the rest include" do
+    source = Generator.component_source(:kbd)
+
+    assert source =~ "def kbd(assigns) do"
+    assert source =~ "data-variant={@variant}"
+    assert source =~ "data-size={@size}"
+
+    assert source =~
+             ~s{attr(:rest, :global, doc: "Additional HTML attributes, forwarded to the headless component.")}
+
+    refute source =~ "include:"
+  end
+
   test "badge maps its label props and forwards the polymorphic root" do
     source = Generator.component_source(:badge)
 
