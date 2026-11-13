@@ -30,13 +30,6 @@ defmodule FlintUIDocsWeb.Docs.Separator do
         title: "Content",
         controls: [%{key: :position, type: :select, default: "center", label: "Position"}]
       },
-      %{
-        tab: :styled,
-        section: :usage,
-        id: :color,
-        title: "Color",
-        controls: [%{key: :color, type: :select, default: "neutral", label: "Color"}]
-      },
       %{tab: :styled, section: :usage, id: :orientation, title: "Orientation"},
       %{
         tab: :styled,
@@ -52,7 +45,14 @@ defmodule FlintUIDocsWeb.Docs.Separator do
         title: "Between Sections",
         group_title: "Examples"
       },
-      %{tab: :styled, section: :examples, id: :toolbar, title: "In a Toolbar"}
+      %{tab: :styled, section: :examples, id: :toolbar, title: "In a Toolbar"},
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :color,
+        title: "Color",
+        controls: [%{key: :color, type: :select, default: "neutral", label: "Color"}]
+      }
     ]
   end
 
