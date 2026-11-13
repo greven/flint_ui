@@ -84,7 +84,7 @@ defmodule FlintUI.Icons do
       cli: "phosphor",
       license: "MIT",
       source: "https://github.com/phosphor-icons/core",
-      version: "2.1.1 (2b75f3a)",
+      version: "2.1.1",
       classes: "ph-<name> (regular) and ph-<name>-{thin,light,bold,fill,duotone}",
       plugin: "phosphor.js",
       css: "flint-phosphor.css",
@@ -169,19 +169,29 @@ defmodule FlintUI.Icons do
   @doc """
   The upstream page for exactly the assets the task installs.
 
-  A tag-pinned set links to its tag; a commit-pinned set links to the commit.
-  The version shown next to the link therefore always resolves to the same code.
+  A tag-pinned set links to its tag. A set pinned to a commit has no tag to
+  link to, so it links to the repository root and is labelled "latest" by
+  `version_label/1`.
   """
   @spec source_url(set()) :: String.t()
   def source_url(set) do
     meta = get!(set)
     opts = elem(meta.dep_spec, 1)
 
-    cond do
-      tag = opts[:tag] -> "#{meta.source}/tree/#{tag}"
-      ref = opts[:ref] -> "#{meta.source}/commit/#{ref}"
-      true -> meta.source
-    end
+    if tag = opts[:tag], do: "#{meta.source}/tree/#{tag}", else: meta.source
+  end
+
+  @doc """
+  The version label the docs table shows beside the source link.
+
+  Tag-pinned sets show their tag; a set that links to the repository root has
+  no tag to name and is labelled `latest`.
+  """
+  @spec version_label(set()) :: String.t()
+  def version_label(set) do
+    meta = get!(set)
+
+    if source_url(set) == meta.source, do: "latest", else: meta.version
   end
 
   @doc "The `mix flint.icons` name for a set."

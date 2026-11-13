@@ -48,8 +48,8 @@ defmodule FlintUIDocsWeb.IconsLive do
         <DocsComponents.section title="Supported sets" id="sets">
           <DocsComponents.content_paragraph>
             These are the class prefixes and upstream versions the task installs.
-            Each source link points at the exact tag or commit, so the version
-            beside it always resolves to the code you get.
+            Each link points at the exact tag the task installs, or at the
+            repository root for a set that tracks an untagged commit.
           </DocsComponents.content_paragraph>
           <div class="mt-3 overflow-x-auto">
             <table class="w-full text-left text-sm">
@@ -71,7 +71,7 @@ defmodule FlintUIDocsWeb.IconsLive do
                       rel="noopener"
                       class="docs-link"
                     >
-                      {meta.label} {meta.version}
+                      {meta.label} {Icons.version_label(set)}
                     </a>
                   </td>
                 </tr>

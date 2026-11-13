@@ -199,11 +199,11 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.preview id={@id} code={&code_icon/1} collapsed>
       <div class="grid grid-rows-2 gap-3">
         <div class="flex flex-wrap justify-center gap-3">
-          <Components.badge color="neutral" icon="lucide-bookmark">Saved</Components.badge>
-          <Components.badge color="success" icon="lucide-badge-check">Success</Components.badge>
-          <Components.badge color="info" icon="lucide-info">Info</Components.badge>
-          <Components.badge color="warning" icon="lucide-clock">Pending</Components.badge>
-          <Components.badge color="error" icon="lucide-circle-x">Failure</Components.badge>
+          <Components.badge color="neutral" icon="ph-bookmark-duotone">Saved</Components.badge>
+          <Components.badge color="success" icon="ph-seal-check-duotone">Success</Components.badge>
+          <Components.badge color="info" icon="ph-info-duotone">Info</Components.badge>
+          <Components.badge color="warning" icon="ph-clock-duotone">Pending</Components.badge>
+          <Components.badge color="error" icon="ph-x-circle-duotone">Failure</Components.badge>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
           <Components.badge variant="solid" color="neutral">
@@ -212,16 +212,16 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           </Components.badge>
           <Components.badge variant="solid" color="primary">
             Synced
-            <:trailing><Components.icon name="lucide-cloud-check" /></:trailing>
+            <:trailing><Components.icon name="hero-cloud-mini" /></:trailing>
           </Components.badge>
-          <Components.badge color="warning" variant="soft" icon="lucide-ticket-percent">
+          <Components.badge color="warning" variant="soft" icon="ph-seal-percent-duotone">
             50% off
           </Components.badge>
           <Components.badge variant="soft" color="neutral">
             Files
             <:trailing><Components.icon name="lucide-files" /></:trailing>
           </Components.badge>
-          <Components.badge variant="ghost" icon="lucide-ghost">
+          <Components.badge variant="ghost" icon="ph-ghost-duotone">
             Removed
           </Components.badge>
         </div>

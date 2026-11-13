@@ -432,3 +432,5 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 }
 
 @import "./flint-flags.css";
+
+@plugin "../vendor/heroicons";

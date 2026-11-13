@@ -99,7 +99,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
       assert has_element?(
                view,
                "#sets a[href='#{FlintUI.Icons.source_url(set)}'][target='_blank'][rel='noopener']",
-               "#{meta.label} #{meta.version}"
+               "#{meta.label} #{FlintUI.Icons.version_label(set)}"
              )
     end
 

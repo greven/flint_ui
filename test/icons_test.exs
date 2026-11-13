@@ -18,25 +18,33 @@ defmodule FlintUI.IconsTest do
     assert Icons.normalize("nope") == nil
   end
 
-  test "source_url points at the pinned tag or commit" do
+  test "source_url points at the pinned tag, or the repo root when untagged" do
     assert Icons.source_url(:heroicons) ==
              "https://github.com/tailwindlabs/heroicons/tree/v2.2.0"
 
     assert Icons.source_url(:lucide_icons) ==
              "https://github.com/lucide-icons/lucide/tree/1.72.0"
 
-    assert Icons.source_url(:phosphor_icons) ==
-             "https://github.com/phosphor-icons/core/commit/" <>
-               "2b75f3ad12b420c9504ef05df8d2564a28f8500e"
+    assert Icons.source_url(:phosphor_icons) == "https://github.com/phosphor-icons/core"
 
     assert Icons.source_url(:simple_icons) ==
              "https://github.com/simple-icons/simple-icons/tree/16.37.0"
 
     for set <- Icons.sets() do
-      url = Icons.source_url(set)
+      assert String.starts_with?(Icons.source_url(set), Icons.get!(set).source)
+    end
+  end
 
-      assert String.starts_with?(url, Icons.get!(set).source)
-      refute url == Icons.get!(set).source
+  test "version_label shows the tag, or latest when the link is the repo root" do
+    assert Icons.version_label(:heroicons) == "v2.2.0"
+    assert Icons.version_label(:lucide_icons) == "1.72.0"
+    assert Icons.version_label(:simple_icons) == "16.37.0"
+    assert Icons.version_label(:phosphor_icons) == "latest"
+
+    for set <- Icons.sets() do
+      tag? = Icons.source_url(set) != Icons.get!(set).source
+
+      assert Icons.version_label(set) == if(tag?, do: Icons.get!(set).version, else: "latest")
     end
   end
 
