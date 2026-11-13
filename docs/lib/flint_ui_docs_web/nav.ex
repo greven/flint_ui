@@ -146,10 +146,13 @@ defmodule FlintUIDocsWeb.Nav do
 
   @doc """
   Returns the breadcrumb trail for a page as `[%{label: label, path: path}]`.
+
+  Every crumb points at a LiveView route, not a section-root redirect, so
+  clicking one keeps the current LiveView session alive.
   """
   def breadcrumbs(section_id, page_id \\ nil) do
     section = get!(section_id)
-    [%{label: section.label, path: section_path(section)} | group_crumbs(section, page_id)]
+    [%{label: section.label, path: first_page_path(section)} | group_crumbs(section, page_id)]
   end
 
   defp section_path(section) do

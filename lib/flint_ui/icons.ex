@@ -12,8 +12,15 @@ defmodule FlintUI.Icons do
     * Heroicons — `hero-<name>`, `hero-<name>-solid`, `hero-<name>-mini`,
       `hero-<name>-micro`
     * Lucide — `lucide-<name>`
+    * Phosphor — `ph-<name>`, `ph-<name>-thin`, `ph-<name>-light`,
+      `ph-<name>-bold`, `ph-<name>-fill`, `ph-<name>-duotone`
     * Simple Icons — `si-<name>`
     * Flag Icons — `flag-<country>` and `flag-<country>-square`
+
+  Phosphor ships every weight as its own SVG geometry, not as a configurable
+  stroke. All six weights are installed from one checkout and share the
+  upstream file names, so `fill` and `duotone` are separate classes rather than
+  a modifier on `ph-<name>`.
   """
 
   @sets %{
@@ -56,6 +63,26 @@ defmodule FlintUI.Icons do
       plugin: "lucide.js",
       css: "flint-lucide.css",
       dir: "icons"
+    },
+    phosphor_icons: %{
+      dep: :phosphor_icons,
+      dep_spec:
+        {:phosphor_icons,
+         [
+           github: "phosphor-icons/core",
+           ref: "2b75f3ad12b420c9504ef05df8d2564a28f8500e",
+           sparse: "assets",
+           app: false,
+           compile: false,
+           depth: 1
+         ]},
+      label: "Phosphor",
+      license: "MIT",
+      source: "https://github.com/phosphor-icons/core",
+      version: "2.1.1",
+      plugin: "phosphor.js",
+      css: "flint-phosphor.css",
+      dir: "assets"
     },
     simple_icons: %{
       dep: :simple_icons,
@@ -105,6 +132,9 @@ defmodule FlintUI.Icons do
     "lucide" => :lucide_icons,
     "lucide_icons" => :lucide_icons,
     "lucide-icons" => :lucide_icons,
+    "phosphor" => :phosphor_icons,
+    "phosphor_icons" => :phosphor_icons,
+    "phosphor-icons" => :phosphor_icons,
     "simple" => :simple_icons,
     "simple_icons" => :simple_icons,
     "simple-icons" => :simple_icons,
@@ -114,11 +144,12 @@ defmodule FlintUI.Icons do
     "flag-icons" => :flag_icons
   }
 
-  @type set :: :heroicons | :lucide_icons | :simple_icons | :flag_icons
+  @type set ::
+          :heroicons | :lucide_icons | :phosphor_icons | :simple_icons | :flag_icons
 
   @doc "Every supported set, in a stable order."
   @spec sets() :: [set()]
-  def sets, do: [:heroicons, :lucide_icons, :simple_icons, :flag_icons]
+  def sets, do: [:heroicons, :lucide_icons, :phosphor_icons, :simple_icons, :flag_icons]
 
   @doc "Returns a set's metadata."
   @spec get!(set()) :: map()
@@ -302,6 +333,24 @@ defmodule FlintUI.Icons do
     end)
   end
 
+  defp rules(:phosphor_icons, dir, classes) do
+    phosphor_weights()
+    |> Enum.flat_map(fn weight ->
+      dir
+      |> Path.join(weight)
+      |> svg_files()
+      |> Enum.flat_map(fn {name, file} ->
+        # Upstream file names already carry the weight suffix ("acorn.svg" vs
+        # "acorn-duotone.svg"), so the class is the upstream file name.
+        class = "ph-#{name}"
+
+        if keep?(class, classes),
+          do: [icon_rule(class, file |> File.read!() |> clean_phosphor(), "1.5rem")],
+          else: []
+      end)
+    end)
+  end
+
   defp rules(:simple_icons, dir, classes) do
     dir
     |> svg_files()
@@ -342,6 +391,8 @@ defmodule FlintUI.Icons do
       {:micro, "16/solid", "1rem"}
     ]
   end
+
+  defp phosphor_weights, do: ~w(regular thin light bold fill duotone)
 
   defp icon_rule(class, svg, size) do
     """
@@ -394,6 +445,16 @@ defmodule FlintUI.Icons do
     |> String.replace(~r/\s(?:width|height)="24"/, "")
     |> String.replace(~r/stroke-width="2"/, ~s(stroke-width="1.5"))
     |> String.replace(~r/stroke="[^"]+"/, ~s(stroke="currentColor"))
+  end
+
+  # Phosphor already inherits `fill="currentColor"` from the root element and
+  # carries its second tone as a path-level `opacity`, which the mask keeps as
+  # alpha. Only normalize the box and any hard-coded fill.
+  defp clean_phosphor(svg) do
+    svg
+    |> strip_newlines()
+    |> String.replace(~r/\s(?:width|height)="\d+"/, "")
+    |> String.replace(~r/fill="[^"]+"/, ~s(fill="currentColor"))
   end
 
   defp clean_simple_icon(svg) do

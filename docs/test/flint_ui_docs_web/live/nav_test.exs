@@ -52,12 +52,12 @@ defmodule FlintUIDocsWeb.NavTest do
 
   test "breadcrumbs/2 builds the section and group trail", %{} do
     assert Nav.breadcrumbs(:getting_started, :installation) == [
-             %{label: "Get Started", path: "/getting-started"},
+             %{label: "Get Started", path: "/getting-started/introduction"},
              %{label: "Overview", path: "/getting-started/introduction"}
            ]
 
     assert Nav.breadcrumbs(:guides, :theming) == [
-             %{label: "Guides", path: "/guides"},
+             %{label: "Guides", path: "/guides/theming"},
              %{label: "Theming", path: "/guides/theming"}
            ]
   end

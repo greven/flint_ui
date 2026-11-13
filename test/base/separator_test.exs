@@ -97,7 +97,7 @@ defmodule FlintUI.Base.SeparatorTest do
 
   describe "metadata" do
     test "declares a documented contract" do
-      assert %FlintUI.Meta{name: :separator, type: :element, status: :draft} =
+      assert %FlintUI.Meta{name: :separator, type: :layout, status: :draft} =
                FlintUI.Base.Separator.meta()
 
       parts = FlintUI.Base.Separator.parts_attrs()

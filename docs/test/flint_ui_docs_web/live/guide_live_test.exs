@@ -156,7 +156,13 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     {:ok, view, _html} = live(conn, ~p"/getting-started/installation")
 
     breadcrumb = "nav[aria-label='Breadcrumb']"
-    assert has_element?(view, "#{breadcrumb} a[href='/getting-started']", "Get Started")
+
+    assert has_element?(
+             view,
+             "#{breadcrumb} a[href='/getting-started/introduction']",
+             "Get Started"
+           )
+
     assert has_element?(view, "#{breadcrumb} span", "Overview")
   end
 

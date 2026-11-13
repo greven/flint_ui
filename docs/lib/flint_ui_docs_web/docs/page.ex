@@ -80,8 +80,11 @@ defmodule FlintUIDocsWeb.Docs.Page do
 
   `<Markdown.prose content="..." />` renders CommonMark/GFM prose with links,
   emphasis, lists, tables, autolinks, and highlighted code. Raw HTML is not
-  passed through. When prose needs live components or route-checked `~p` links,
-  use the component's inner block; it is rendered as HEEx, not Markdown.
+  passed through. Root-relative links such as `[Card](/components/card)` are
+  rendered as LiveView navigations; external URLs and `#fragment` jumps keep
+  native browser navigation. When prose needs live components or route-checked
+  `~p` links, use the component's inner block; it is rendered as HEEx, not
+  Markdown.
 
   ## Base docs
 
