@@ -138,11 +138,13 @@ mix flint.icons flags --assets --only pt,us,br
 mix flint.icons lucide --tailwind
 mix flint.icons lucide --css
 mix flint.icons lucide --css --scan
+mix flint.icons phosphor --tailwind
 ```
 
 The task adds an asset-only git dependency and runs `mix deps.get`. Heroicons
-(`hero-*`), Lucide (`lucide-*`), Simple Icons (`si-*`), and Flag Icons
-(`flag-*`) are supported. Plain CSS mode writes `assets/css/flint-<set>.css`;
+(`hero-*`), Lucide (`lucide-*`), Phosphor (`ph-*`, including the `-fill` and
+`-duotone` weights), Simple Icons (`si-*`), and Flag Icons (`flag-*`) are
+supported. Plain CSS mode writes `assets/css/flint-<set>.css`;
 add `--scan` to emit only the classes found in your source and install the
 `:flint_icons` compiler. `--assets` copies the flag SVGs to
 `priv/static/images/flags`, which is what `<.flag>` loads at runtime. See the docs

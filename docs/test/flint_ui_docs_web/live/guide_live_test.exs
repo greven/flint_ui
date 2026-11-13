@@ -91,6 +91,18 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#section-guides[aria-current='page']")
     assert has_element?(view, "aside a[href='/guides/icons']")
 
+    # Every class-based set links to its upstream source, straight from the
+    # set metadata so the table cannot drift from what the task installs.
+    for set <- FlintUI.Icons.sets(), set != :flag_icons do
+      meta = FlintUI.Icons.get!(set)
+
+      assert has_element?(
+               view,
+               "#sets a[href='#{FlintUI.Icons.source_url(set)}'][target='_blank'][rel='noopener']",
+               "#{meta.label} #{meta.version}"
+             )
+    end
+
     html = render(view)
     assert html =~ "flint.icons"
     assert html =~ "--tailwind"

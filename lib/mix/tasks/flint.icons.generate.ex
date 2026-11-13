@@ -145,7 +145,7 @@ defmodule Mix.Tasks.Flint.Icons.Generate do
     if unknown != [] do
       Mix.raise(
         "Unknown icon set(s): #{Enum.join(unknown, ", ")}. " <>
-          "Available: #{Enum.map_join(Icons.sets(), ", ", &Atom.to_string/1)}."
+          "Available: #{Enum.map_join(Icons.sets(), ", ", &Icons.cli_name/1)}."
       )
     end
 

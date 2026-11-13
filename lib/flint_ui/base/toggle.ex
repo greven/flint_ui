@@ -10,7 +10,7 @@ defmodule FlintUI.Base.Toggle do
       <.toggle>Bold</.toggle>
 
       <.toggle pressed>
-        <.icon name="lucide-bold" class="size-4" /> Bold
+        <.icon name="lucide-letter-b" class="size-4" /> Bold
       </.toggle>
 
   The button always updates its own `aria-pressed` and `data-state` attributes

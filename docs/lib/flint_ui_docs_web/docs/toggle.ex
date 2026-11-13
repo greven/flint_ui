@@ -53,7 +53,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   def parts_demo(assigns) do
     ~H"""
     <Components.toggle pressed>
-      <Components.icon name="lucide-bold" /> Bold
+      <Components.icon name="lucide-letter-b" /> Bold
     </Components.toggle>
     """
   end
@@ -70,7 +70,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         Snippet.flag("pressed", props.pressed),
         Snippet.flag("disabled", props.disabled)
       ],
-      ~s(<.icon name="lucide-bold" /> Bold)
+      ~s(<.icon name="lucide-letter-b" /> Bold)
     )
   end
 end

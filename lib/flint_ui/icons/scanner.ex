@@ -7,7 +7,7 @@ defmodule FlintUI.Icons.Scanner do
     "priv/**/*.{heex,eex}"
   ]
 
-  @icon_re ~r/\b(?:hero|lucide|si|flag)-[a-z0-9-]+\b/
+  @icon_re ~r/\b(?:hero|lucide|ph|si|flag)-[a-z0-9-]+\b/
 
   @doc "The source globs scanned when no explicit globs are given."
   def default_globs, do: @default_globs

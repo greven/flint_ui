@@ -3,6 +3,7 @@ defmodule FlintUIDocsWeb.IconsLive do
 
   use FlintUIDocsWeb, :live_view
 
+  alias FlintUI.Icons
   alias FlintUIDocsWeb.DocsComponents
 
   @impl true
@@ -47,6 +48,8 @@ defmodule FlintUIDocsWeb.IconsLive do
         <DocsComponents.section title="Supported sets" id="sets">
           <DocsComponents.content_paragraph>
             These are the class prefixes and upstream versions the task installs.
+            Each source link points at the exact tag or commit, so the version
+            beside it always resolves to the code you get.
           </DocsComponents.content_paragraph>
           <div class="mt-3 overflow-x-auto">
             <table class="w-full text-left text-sm">
@@ -58,26 +61,65 @@ defmodule FlintUIDocsWeb.IconsLive do
                 </tr>
               </thead>
               <tbody class="divide-y divide-default">
-                <tr>
-                  <td class="py-2 pr-4 font-mono">heroicons</td>
-                  <td class="py-2 pr-4 font-mono">
-                    hero-&lt;name&gt;, hero-&lt;name&gt;-solid, hero-&lt;name&gt;-mini, hero-&lt;name&gt;-micro
+                <tr :for={{set, meta} <- icon_sets()}>
+                  <td class="py-2 pr-4 font-mono">{meta.cli}</td>
+                  <td class="py-2 pr-4 font-mono">{meta.classes}</td>
+                  <td class="py-2 whitespace-nowrap">
+                    <a
+                      href={Icons.source_url(set)}
+                      target="_blank"
+                      rel="noopener"
+                      class="docs-link"
+                    >
+                      {meta.label} {meta.version}
+                    </a>
                   </td>
-                  <td class="py-2 text-toned">Heroicons v2.2.0</td>
-                </tr>
-                <tr>
-                  <td class="py-2 pr-4 font-mono">lucide</td>
-                  <td class="py-2 pr-4 font-mono">lucide-&lt;name&gt;</td>
-                  <td class="py-2 text-toned">Lucide 1.30.0</td>
-                </tr>
-                <tr>
-                  <td class="py-2 pr-4 font-mono">simple_icons</td>
-                  <td class="py-2 pr-4 font-mono">si-&lt;name&gt;</td>
-                  <td class="py-2 text-toned">Simple Icons 16.9.0</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Phosphor weights" id="weights">
+          <DocsComponents.content_paragraph>
+            Phosphor draws each weight as its own SVG geometry, so the weight is
+            part of the class name rather than a stroke setting. The regular
+            weight has no suffix; the other five do. All six share the 24px box
+            and read <code class="docs-code font-mono">--fl-icon-size</code> like every other set.
+          </DocsComponents.content_paragraph>
+          <div class="mt-4 flex flex-wrap items-end gap-6 [--fl-icon-size:2rem]">
+            <div class="flex flex-col items-center gap-2">
+              <span class="ph-house text-primary"></span>
+              <span class="text-xs text-muted">regular</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="ph-house-thin text-primary"></span>
+              <span class="text-xs text-muted">thin</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="ph-house-light text-primary"></span>
+              <span class="text-xs text-muted">light</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="ph-house-bold text-primary"></span>
+              <span class="text-xs text-muted">bold</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="ph-house-fill text-primary"></span>
+              <span class="text-xs text-muted">fill</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="ph-house-duotone text-primary"></span>
+              <span class="text-xs text-muted">duotone</span>
+            </div>
+          </div>
+          <DocsComponents.code_block code={snippet(:weights)} />
+          <DocsComponents.content_paragraph class="mt-3">
+            A duotone icon keeps its second tone because the mask reads the
+            path's opacity as alpha, so the fill is a translucent <code class="docs-code font-mono">currentColor</code>. Tint it like
+            any other icon:
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:duotone)} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Tailwind" id="tailwind">
@@ -123,7 +165,8 @@ defmodule FlintUIDocsWeb.IconsLive do
           <DocsComponents.content_paragraph class="mt-3">
             Scanned CSS stays small because only used classes are written. Full-set
             CSS embeds every SVG as a data URI; that is convenient but heavy for
-            Heroicons and Simple Icons. Prefer <code class="docs-code font-mono">--scan</code>
+            Heroicons, Phosphor, and Simple Icons. Prefer
+            <code class="docs-code font-mono">--scan</code>
             for production, or use Tailwind mode.
           </DocsComponents.content_paragraph>
         </DocsComponents.section>
@@ -149,8 +192,8 @@ defmodule FlintUIDocsWeb.IconsLive do
         <DocsComponents.section title="Licenses" id="licenses">
           <DocsComponents.content_paragraph>
             The assets are fetched from their upstream repositories and keep
-            their original licenses: Heroicons (MIT), Lucide (ISC), and Simple
-            Icons (CC0-1.0). Review the upstream notice before redistributing
+            their original licenses: Heroicons (MIT), Lucide (ISC), Phosphor
+            (MIT), and Simple Icons (CC0-1.0). Review the upstream notice before redistributing
             them.
           </DocsComponents.content_paragraph>
         </DocsComponents.section>
@@ -159,10 +202,17 @@ defmodule FlintUIDocsWeb.IconsLive do
     """
   end
 
+  # The sets this guide installs as classes; flags have their own guide because
+  # they copy SVGs instead of generating mask rules.
+  defp icon_sets do
+    for set <- Icons.sets(), set != :flag_icons, do: {set, Icons.get!(set)}
+  end
+
   defp snippet(:install) do
     """
     # Tailwind
     mix flint.icons lucide --tailwind
+    mix flint.icons phosphor --tailwind
     mix flint.icons heroicons simple_icons --tailwind
 
     # Plain CSS
@@ -180,6 +230,7 @@ defmodule FlintUIDocsWeb.IconsLive do
 
     @plugin "../vendor/heroicons";
     @plugin "../vendor/lucide";
+    @plugin "../vendor/phosphor";
     @plugin "../vendor/simple-icons";
     """
     |> String.trim()
@@ -190,6 +241,7 @@ defmodule FlintUIDocsWeb.IconsLive do
     @import "./flint.css";
     @import "./flint-heroicons.css";
     @import "./flint-lucide.css";
+    @import "./flint-phosphor.css";
     @import "./flint-simple-icons.css";
     """
     |> String.trim()
@@ -203,7 +255,28 @@ defmodule FlintUIDocsWeb.IconsLive do
     <.icon name="hero-x-mark-micro" />
 
     <.icon name="lucide-house" />
+    <.icon name="ph-house" />
+    <.icon name="ph-house-duotone" />
     <.icon name="si-github" />
+    """
+    |> String.trim()
+  end
+
+  defp snippet(:weights) do
+    """
+    <.icon name="ph-house" />
+    <.icon name="ph-house-thin" />
+    <.icon name="ph-house-light" />
+    <.icon name="ph-house-bold" />
+    <.icon name="ph-house-fill" />
+    <.icon name="ph-house-duotone" />
+    """
+    |> String.trim()
+  end
+
+  defp snippet(:duotone) do
+    """
+    <.icon name="ph-shield-check-duotone" class="size-5 text-info" />
     """
     |> String.trim()
   end

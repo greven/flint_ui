@@ -11,9 +11,50 @@ defmodule FlintUI.IconsTest do
     assert Icons.normalize("hero") == :heroicons
     assert Icons.normalize("lucide") == :lucide_icons
     assert Icons.normalize("lucide_icons") == :lucide_icons
+    assert Icons.normalize("phosphor") == :phosphor_icons
+    assert Icons.normalize("phosphor-icons") == :phosphor_icons
     assert Icons.normalize("simple-icons") == :simple_icons
     assert Icons.normalize("flags") == :flag_icons
     assert Icons.normalize("nope") == nil
+  end
+
+  test "source_url points at the pinned tag or commit" do
+    assert Icons.source_url(:heroicons) ==
+             "https://github.com/tailwindlabs/heroicons/tree/v2.2.0"
+
+    assert Icons.source_url(:lucide_icons) ==
+             "https://github.com/lucide-icons/lucide/tree/1.72.0"
+
+    assert Icons.source_url(:phosphor_icons) ==
+             "https://github.com/phosphor-icons/core/commit/" <>
+               "2b75f3ad12b420c9504ef05df8d2564a28f8500e"
+
+    assert Icons.source_url(:simple_icons) ==
+             "https://github.com/simple-icons/simple-icons/tree/16.37.0"
+
+    for set <- Icons.sets() do
+      url = Icons.source_url(set)
+
+      assert String.starts_with?(url, Icons.get!(set).source)
+      refute url == Icons.get!(set).source
+    end
+  end
+
+  test "every set carries the metadata the CLI and the docs table render" do
+    for set <- Icons.sets() do
+      meta = Icons.get!(set)
+
+      assert is_binary(meta.cli) and meta.cli != ""
+      assert is_binary(meta.classes) and meta.classes != ""
+      assert is_binary(meta.label) and meta.label != ""
+      assert meta.source =~ ~r{\Ahttps://}
+    end
+
+    cli_names = Enum.map(Icons.sets(), &Icons.cli_name/1)
+
+    assert Enum.uniq(cli_names) == cli_names
+    assert Icons.cli_name(:lucide_icons) == "lucide"
+    assert Icons.cli_name(:flag_icons) == "flags"
   end
 
   test "generates Lucide CSS with the component size hook" do
@@ -72,6 +113,7 @@ defmodule FlintUI.IconsTest do
                "lucide-house",
                "lucide-wifi",
                "hero-x-mark-mini",
+               "ph-house-duotone",
                "si-github",
                "flag-pt-square",
                "flag-us",
@@ -114,6 +156,35 @@ defmodule FlintUI.IconsTest do
     assert css =~ "width: var(--fl-icon-size, 1.5rem)"
     assert css =~ "width: var(--fl-icon-size, 1.25rem)"
     assert css =~ "width: var(--fl-icon-size, 1rem)"
+  end
+
+  test "generates every Phosphor weight from one checkout" do
+    css = Icons.generate_css(:phosphor_icons, source_dir: Path.join(@fixtures, "phosphor/assets"))
+
+    for class <-
+          ~w(ph-house ph-house-thin ph-house-light ph-house-bold ph-house-fill ph-house-duotone) do
+      assert css =~ ".#{class} {"
+    end
+
+    assert css =~ ".ph-wifi-high"
+    assert css =~ "width: var(--fl-icon-size, 1.5rem)"
+    assert css =~ "mask: var(--ph-house) center / contain no-repeat"
+
+    # The duotone second tone survives as alpha in the mask.
+    assert css =~ "opacity%3D%220.2%22"
+    refute css =~ "width%3D%22256%22"
+  end
+
+  test "filters Phosphor weights independently" do
+    css =
+      Icons.generate_css(:phosphor_icons,
+        source_dir: Path.join(@fixtures, "phosphor/assets"),
+        classes: MapSet.new(["ph-house-duotone"])
+      )
+
+    assert css =~ ".ph-house-duotone {"
+    refute css =~ ".ph-house {"
+    refute css =~ ".ph-house-fill"
   end
 
   test "generates Simple Icons CSS" do
@@ -174,6 +245,7 @@ defmodule FlintUI.IconsTest do
   test "ships a plugin for every set" do
     assert Icons.plugin_source(:heroicons) =~ "deps/heroicons/optimized"
     assert Icons.plugin_source(:lucide_icons) =~ "deps/lucide_icons/icons"
+    assert Icons.plugin_source(:phosphor_icons) =~ "deps/phosphor_icons/assets"
     assert Icons.plugin_source(:simple_icons) =~ "deps/simple_icons/icons"
     assert Icons.plugin_source(:flag_icons) =~ "deps/flag_icons/flags"
   end

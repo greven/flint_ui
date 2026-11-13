@@ -37,9 +37,11 @@ defmodule FlintUI.Icons do
            depth: 1
          ]},
       label: "Heroicons",
+      cli: "heroicons",
       license: "MIT",
       source: "https://github.com/tailwindlabs/heroicons",
       version: "v2.2.0",
+      classes: "hero-<name>, hero-<name>-solid, hero-<name>-mini, hero-<name>-micro",
       plugin: "heroicons.js",
       css: "flint-heroicons.css",
       dir: "optimized"
@@ -50,16 +52,18 @@ defmodule FlintUI.Icons do
         {:lucide_icons,
          [
            github: "lucide-icons/lucide",
-           tag: "1.71.0",
+           tag: "1.72.0",
            sparse: "icons",
            app: false,
            compile: false,
            depth: 1
          ]},
       label: "Lucide",
+      cli: "lucide",
       license: "ISC",
       source: "https://github.com/lucide-icons/lucide",
-      version: "1.71.0",
+      version: "1.72.0",
+      classes: "lucide-<name>",
       plugin: "lucide.js",
       css: "flint-lucide.css",
       dir: "icons"
@@ -77,9 +81,11 @@ defmodule FlintUI.Icons do
            depth: 1
          ]},
       label: "Phosphor",
+      cli: "phosphor",
       license: "MIT",
       source: "https://github.com/phosphor-icons/core",
-      version: "2.1.1",
+      version: "2.1.1 (2b75f3a)",
+      classes: "ph-<name> (regular) and ph-<name>-{thin,light,bold,fill,duotone}",
       plugin: "phosphor.js",
       css: "flint-phosphor.css",
       dir: "assets"
@@ -97,9 +103,11 @@ defmodule FlintUI.Icons do
            depth: 1
          ]},
       label: "Simple Icons",
+      cli: "simple_icons",
       license: "CC0-1.0",
       source: "https://github.com/simple-icons/simple-icons",
       version: "16.37.0",
+      classes: "si-<name>",
       plugin: "simple-icons.js",
       css: "flint-simple-icons.css",
       dir: "icons"
@@ -117,9 +125,11 @@ defmodule FlintUI.Icons do
            depth: 1
          ]},
       label: "Flag Icons",
+      cli: "flags",
       license: "MIT",
       source: "https://github.com/lipis/flag-icons",
       version: "v7.6.0",
+      classes: "flag-<country>, flag-<country>-square",
       plugin: "flag-icons.js",
       css: "flint-flags.css",
       dir: "flags"
@@ -155,6 +165,28 @@ defmodule FlintUI.Icons do
   @spec get!(set()) :: map()
   def get!(set) when is_map_key(@sets, set), do: Map.fetch!(@sets, set)
   def get!(set), do: raise(ArgumentError, "unknown icon set: #{inspect(set)}")
+
+  @doc """
+  The upstream page for exactly the assets the task installs.
+
+  A tag-pinned set links to its tag; a commit-pinned set links to the commit.
+  The version shown next to the link therefore always resolves to the same code.
+  """
+  @spec source_url(set()) :: String.t()
+  def source_url(set) do
+    meta = get!(set)
+    opts = elem(meta.dep_spec, 1)
+
+    cond do
+      tag = opts[:tag] -> "#{meta.source}/tree/#{tag}"
+      ref = opts[:ref] -> "#{meta.source}/commit/#{ref}"
+      true -> meta.source
+    end
+  end
+
+  @doc "The `mix flint.icons` name for a set."
+  @spec cli_name(set()) :: String.t()
+  def cli_name(set), do: get!(set).cli
 
   @doc "Normalizes a CLI name or alias to a set."
   @spec normalize(String.t() | atom()) :: set() | nil

@@ -229,8 +229,8 @@ defmodule FlintUIDocsWeb.CodeBlock do
       class={[
         "relative flex items-center justify-between gap-3 px-3 py-1.5",
         "bg-neutral-400/8 dark:bg-neutral-700/8 border-b border-default",
-        "bg-[repeating-linear-gradient(135deg,rgba(0,0,0,0.03)_0,rgba(0,0,0,0.03)_1px,transparent_1px,transparent_6px)]",
-        "dark:bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.03)_0,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_6px)]",
+        "bg-[repeating-linear-gradient(135deg,rgba(0,0,0,0.025)_0,rgba(0,0,0,0.025)_1px,transparent_1px,transparent_6px)]",
+        "dark:bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.025)_0,rgba(255,255,255,0.025)_1px,transparent_1px,transparent_6px)]",
         "group-data-[state=closed]:cursor-pointer group-data-[state=closed]:border-b-0"
       ]}
     >

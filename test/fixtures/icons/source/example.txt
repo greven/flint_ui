@@ -4,6 +4,7 @@ defmodule Example do
     <.icon name="lucide-house" />
     <Components.icon name="hero-x-mark-mini" class="size-4" />
     <span class="si-github"></span>
+    <span class="ph-house-duotone"></span>
     <span class="flag-pt-square"></span>
     <span class="flag-us"></span>
     <span class="flag-br-square"></span>

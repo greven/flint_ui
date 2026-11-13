@@ -274,7 +274,7 @@ core and Flint components, so a duplicate name is a compile-time conflict.
 
 | CoreComponents function                     | FlintUI equivalent  | Status                                                                                                                                                             |
 | ------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `icon/1`                                    | `FlintUI.Base.Icon` | Shipped. Class-based (`name` is a CSS class); the docs wire Lucide via a Tailwind `matchComponents` plugin. Core `icon` deleted and usages migrated to `lucide-*`. |
+| `icon/1`                                    | `FlintUI.Base.Icon` | Shipped. Class-based (`name` is a CSS class); the docs wire Lucide and Phosphor via Tailwind `matchComponents` plugins. Core `icon` deleted and usages migrated to `lucide-*`. |
 | `flash/1` + bespoke `Layouts.flash_group/1` | none                | Future. Cover with a FlintUI flash/toast, then delete core `flash`, replace `flash_group/1`, and drop `show/2`/`hide/2` if unused.                                 |
 | `input/1`                                   | none                | Future. Cover with a FlintUI field/input, then delete core `input`.                                                                                                |
 | `header/1`, `table/1`, `list/1`             | none                | Future, only if FlintUI ships equivalents.                                                                                                                         |

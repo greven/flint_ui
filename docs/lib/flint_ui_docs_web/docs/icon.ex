@@ -20,6 +20,8 @@ defmodule FlintUIDocsWeb.Docs.Icon do
     lucide-refresh-cw lucide-loader-circle lucide-palette lucide-code-xml
     lucide-image lucide-file lucide-folder lucide-shopping-cart
     lucide-credit-card lucide-map-pin lucide-phone
+    ph-house ph-house-duotone ph-shield-check-duotone ph-rocket-launch-fill
+    ph-heart-fill ph-bell-duotone
   )
 
   @impl true
@@ -44,7 +46,7 @@ defmodule FlintUIDocsWeb.Docs.Icon do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="FlintUI does not ship icon assets. See the [Icons guide](/guides/icons) to install Lucide, Heroicons, or Simple Icons with Tailwind or plain CSS." />
+    <.prose content="FlintUI does not ship icon assets. See the [Icons guide](/guides/icons) to install Lucide, Phosphor, Heroicons, or Simple Icons with Tailwind or plain CSS." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.icon name={props.name} size={props.size} />
     </.preview>

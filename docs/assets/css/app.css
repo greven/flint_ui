@@ -178,6 +178,7 @@
 /* A Tailwind plugin that makes the `lucide-*` classes available.
    The icon installation is managed by your mix.exs. */
 @plugin "../vendor/lucide";
+@plugin "../vendor/phosphor";
 
 /* Add variants based on LiveView classes */
 @custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);

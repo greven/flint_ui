@@ -9,7 +9,8 @@ if Code.ensure_loaded?(Igniter) do
         mix flint.icons lucide flags --tailwind
         mix flint.icons --all --css
 
-    Supported sets: `heroicons`, `lucide`, `simple_icons`, and `flags`.
+    Supported sets: `heroicons`, `lucide`, `phosphor`, `simple_icons`, and
+    `flags`.
 
     The task adds an asset-only dependency (no app, no compilation), then wires
     the assets in one of three ways:
@@ -49,12 +50,14 @@ if Code.ensure_loaded?(Igniter) do
       * `heroicons` — `hero-<name>`, `hero-<name>-solid`, `hero-<name>-mini`,
         `hero-<name>-micro`
       * `lucide` — `lucide-<name>`
+      * `phosphor` — `ph-<name>` for the regular weight, plus `-thin`,
+        `-light`, `-bold`, `-fill`, and `-duotone` for the other five
       * `simple_icons` — `si-<name>`
       * `flags` — `flag-<country>` and `flag-<country>-square`; `--assets`
         instead copies the SVGs for the `<.flag>` component
 
     Assets keep their upstream licenses: Heroicons (MIT), Lucide (ISC),
-    Simple Icons (CC0-1.0), and Flag Icons (MIT).
+    Phosphor (MIT), Simple Icons (CC0-1.0), and Flag Icons (MIT).
     """
 
     use Igniter.Mix.Task
@@ -117,7 +120,7 @@ if Code.ensure_loaded?(Igniter) do
         unknown != [] ->
           {:error,
            "Unknown icon set(s): #{Enum.join(unknown, ", ")}. " <>
-             "Available: #{Enum.map_join(Icons.sets(), ", ", &set_name/1)}."}
+             "Available: #{Enum.map_join(Icons.sets(), ", ", &Icons.cli_name/1)}."}
 
         true ->
           {:ok, Enum.uniq(sets)}
@@ -224,7 +227,7 @@ if Code.ensure_loaded?(Igniter) do
 
     defp maybe_generate(igniter, sets, :css, options) do
       args =
-        Enum.map(sets, &set_name/1) ++
+        Enum.map(sets, &Icons.cli_name/1) ++
           if(options[:scan], do: ["--scan"], else: []) ++
           flag_args(options)
 
@@ -299,15 +302,6 @@ if Code.ensure_loaded?(Igniter) do
           `mix flint.icons.copy_flags` after updating the dependency; pass \
           `--only pt,us` to copy a subset.
           """
-      end
-    end
-
-    defp set_name(set) do
-      case set do
-        :heroicons -> "heroicons"
-        :lucide_icons -> "lucide"
-        :simple_icons -> "simple_icons"
-        :flag_icons -> "flags"
       end
     end
   end
