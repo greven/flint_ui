@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
 
   def render_section(%{section: :usage, id: :orientation} = assigns) do
     ~H"""
-    <.prose content={"Use `orientation=\"vertical\"` for a column layout. A vertical separator stretches to the block size of its container, so place it in a flex or grid row and give that row a height."} />
+    <.prose content={"Use `orientation=\"vertical\"` for a column layout. In a flex or grid row it stretches to the row's height; outside one it falls back to a 1.5rem minimum. Set a height class when you need a specific length, as the `h-16` row below does."} />
     <.preview {assigns} code={orientation_code()}>
       <div class="flex h-16 items-stretch gap-4 text-sm text-toned">
         <span class="flex items-center">Components</span>
@@ -167,7 +167,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
 
   def render_section(%{section: :examples, id: :toolbar} = assigns) do
     ~H"""
-    <.prose content="A vertical separator can group actions in a toolbar without adding a wrapper around each group. The separator is not a toolbar role, so keep the toolbar itself keyboard accessible." />
+    <.prose content="A vertical separator can group actions in a toolbar without adding a wrapper around each group. It stretches to the row height, so the toolbar needs no explicit separator height. The separator is not a toolbar role, so keep the toolbar itself keyboard accessible." />
     <.preview {assigns} code={toolbar_code()}>
       <div class="flex items-stretch gap-2 rounded-lg border border-default bg-surface p-2">
         <Components.button variant="ghost" size="sm" icon="lucide-undo-2">Undo</Components.button>

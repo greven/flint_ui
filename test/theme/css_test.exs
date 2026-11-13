@@ -671,6 +671,17 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));"
   end
 
+  test "a vertical separator stretches in flex and keeps a fallback length", %{css: css} do
+    vertical = ~r/\[data-element="separator"\]\[data-orientation="vertical"\]\[data-separator\]/
+
+    # `block-size: 100%` resolves to zero in an indefinite-height flex row and
+    # prevents the item from stretching; `align-self` plus a minimum length
+    # fills the row and still renders outside one.
+    assert css =~ ~r/#{vertical.source} \{[^}]*align-self: stretch;/s
+    assert css =~ ~r/#{vertical.source} \{[^}]*min-block-size: var\(--fl-spacing-xl\);/s
+    refute css =~ ~r/#{vertical.source} \{[^}]*block-size: 100%;/s
+  end
+
   test "boolean styling hooks are presence/absence, never string values", %{css: css} do
     for hook <- ~w(square wide depth outline shadow inverted padded) do
       refute css =~ ~r/\[data-#{hook}="(true|false)"\]/

@@ -30,11 +30,15 @@
         border-block-start: var(--_separator-border);
     }
 
+    /* A vertical separator has no intrinsic length. `align-self: stretch` lets
+     * it fill a flex or grid row without an explicit height; outside one, the
+     * minimum keeps it visible. Never set `block-size: 100%` here: an
+     * indefinite parent height resolves that to zero and defeats the stretch. */
     [data-element="separator"][data-orientation="vertical"][data-separator] {
         flex-direction: column;
         align-self: stretch;
-        block-size: 100%;
-        inline-size: auto;
+        inline-size: max-content;
+        min-block-size: var(--fl-spacing-xl);
         gap: var(--fl-separator-gap);
         border-inline-start: var(--_separator-border);
     }

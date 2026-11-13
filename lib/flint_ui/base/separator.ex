@@ -55,7 +55,7 @@ defmodule FlintUI.Base.Separator do
   def meta do
     %Meta{
       name: :separator,
-      type: :layout,
+      type: :element,
       since: "0.1",
       status: :draft
     }
