@@ -1,0 +1,252 @@
+@layer components {
+    /* Separator. Public inputs: `--fl-separator-color`, `-size`, and `-gap`.
+     * The root is the line when it has no content; with content it becomes a
+     * flex row or column and draws the two segments as pseudo-elements, so an
+     * `as="hr"` separator never needs children. */
+    [data-element="separator"][data-separator] {
+        --fl-separator-color: var(--fl-color-border);
+        --fl-separator-size: 1px;
+        --fl-separator-gap: var(--fl-spacing-md);
+        --_separator-style: solid;
+        --_separator-line: var(--fl-separator-color);
+        --_separator-border: var(--fl-separator-size) var(--_separator-style) var(--_separator-line);
+
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--fl-color-text-muted);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+        text-align: center;
+    }
+
+    [data-element="separator"][data-orientation="horizontal"][data-separator] {
+        gap: var(--fl-separator-gap);
+        border-block-start: var(--_separator-border);
+    }
+
+    [data-element="separator"][data-orientation="vertical"][data-separator] {
+        flex-direction: column;
+        align-self: stretch;
+        block-size: 100%;
+        inline-size: auto;
+        gap: var(--fl-separator-gap);
+        border-inline-start: var(--_separator-border);
+    }
+
+    /* Content replaces the root line with two pseudo-element segments. */
+    [data-element="separator"][data-orientation="horizontal"][data-separator]:has(> [data-part="content"]) {
+        border-block-start-width: 0;
+    }
+
+    [data-element="separator"][data-orientation="vertical"][data-separator]:has(> [data-part="content"]) {
+        border-inline-start-width: 0;
+    }
+
+    [data-element="separator"][data-separator]:has(> [data-part="content"])::before,
+    [data-element="separator"][data-separator]:has(> [data-part="content"])::after {
+        content: "";
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
+    [data-element="separator"][data-orientation="horizontal"][data-separator]:has(> [data-part="content"])::before,
+    [data-element="separator"][data-orientation="horizontal"][data-separator]:has(> [data-part="content"])::after {
+        border-block-start: var(--_separator-border);
+    }
+
+    [data-element="separator"][data-orientation="vertical"][data-separator]:has(> [data-part="content"])::before,
+    [data-element="separator"][data-orientation="vertical"][data-separator]:has(> [data-part="content"])::after {
+        border-inline-start: var(--_separator-border);
+    }
+
+    /* Position drops the segment on the side the content owns. */
+    [data-element="separator"][data-position="start"][data-separator]:has(> [data-part="content"])::before {
+        content: none;
+    }
+
+    [data-element="separator"][data-position="end"][data-separator]:has(> [data-part="content"])::after {
+        content: none;
+    }
+
+    [data-element="separator"][data-separator] > [data-part="content"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        gap: var(--fl-spacing-xs);
+        max-inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    /* The icon follows the label's text size. */
+    [data-element="separator"][data-separator] > [data-part="content"] > [data-element="icon"] {
+        flex: none;
+        --fl-icon-size: 1em;
+    }
+
+    /* Type is orthogonal to color and size. */
+    [data-element="separator"][data-type="dashed"][data-separator] {
+        --_separator-style: dashed;
+    }
+
+    [data-element="separator"][data-type="dotted"][data-separator] {
+        --_separator-style: dotted;
+    }
+
+    /* Sizes are line thicknesses: 1/2/3/4/5px. A numeric `size` writes the
+     * public input inline instead and omits `data-size`. */
+    [data-element="separator"][data-size="xs"][data-separator] {
+        --fl-separator-size: 1px;
+    }
+
+    [data-element="separator"][data-size="sm"][data-separator] {
+        --fl-separator-size: 2px;
+    }
+
+    [data-element="separator"][data-size="md"][data-separator] {
+        --fl-separator-size: 3px;
+    }
+
+    [data-element="separator"][data-size="lg"][data-separator] {
+        --fl-separator-size: 4px;
+    }
+
+    [data-element="separator"][data-size="xl"][data-separator] {
+        --fl-separator-size: 5px;
+    }
+
+    /* Variant is the neutral border ladder. A role color overrides the source
+     * color; the same steps resolve to the role's soft border, fill, and text
+     * tokens. */
+    [data-element="separator"][data-color="neutral"][data-separator] {
+        --fl-separator-color: var(--fl-color-border);
+    }
+
+    [data-element="separator"][data-color="neutral"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-border-subtle);
+    }
+
+    [data-element="separator"][data-color="neutral"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-border-strong);
+    }
+
+    [data-element="separator"][data-color="primary"][data-separator] {
+        --fl-separator-color: var(--fl-color-primary);
+    }
+
+    [data-element="separator"][data-color="primary"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-primary-soft-border);
+    }
+
+    [data-element="separator"][data-color="primary"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-primary-text);
+    }
+
+    [data-element="separator"][data-color="success"][data-separator] {
+        --fl-separator-color: var(--fl-color-success);
+    }
+
+    [data-element="separator"][data-color="success"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-success-soft-border);
+    }
+
+    [data-element="separator"][data-color="success"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-success-text);
+    }
+
+    [data-element="separator"][data-color="info"][data-separator] {
+        --fl-separator-color: var(--fl-color-info);
+    }
+
+    [data-element="separator"][data-color="info"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-info-soft-border);
+    }
+
+    [data-element="separator"][data-color="info"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-info-text);
+    }
+
+    [data-element="separator"][data-color="warning"][data-separator] {
+        --fl-separator-color: var(--fl-color-warning);
+    }
+
+    [data-element="separator"][data-color="warning"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-warning-soft-border);
+    }
+
+    [data-element="separator"][data-color="warning"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-warning-text);
+    }
+
+    [data-element="separator"][data-color="error"][data-separator] {
+        --fl-separator-color: var(--fl-color-error);
+    }
+
+    [data-element="separator"][data-color="error"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-error-soft-border);
+    }
+
+    [data-element="separator"][data-color="error"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-error-text);
+    }
+
+    [data-element="separator"][data-color="secondary"][data-separator] {
+        --fl-separator-color: var(--fl-color-secondary);
+    }
+
+    [data-element="separator"][data-color="secondary"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-secondary-soft-border);
+    }
+
+    [data-element="separator"][data-color="secondary"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-secondary-text);
+    }
+
+    /* Absolute tones stay dark or light in either scheme. */
+    [data-element="separator"][data-color="dark"][data-separator] {
+        --fl-separator-color: var(--fl-color-dark);
+    }
+
+    [data-element="separator"][data-color="dark"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-dark-soft-border);
+    }
+
+    [data-element="separator"][data-color="dark"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-dark-text);
+    }
+
+    [data-element="separator"][data-color="light"][data-separator] {
+        --fl-separator-color: var(--fl-color-light);
+    }
+
+    [data-element="separator"][data-color="light"][data-variant="subtle"][data-separator] {
+        --_separator-line: var(--fl-color-light-soft-border);
+    }
+
+    [data-element="separator"][data-color="light"][data-variant="strong"][data-separator] {
+        --_separator-line: var(--fl-color-light-text);
+    }
+
+    /* A raw color has no `data-color` hook, so derive the same steps from the
+     * inline public input. */
+    [data-element="separator"][data-variant="subtle"]:not([data-color])[data-separator] {
+        --_separator-line: color-mix(
+            in oklab,
+            var(--fl-separator-color) 50%,
+            var(--fl-color-surface)
+        );
+    }
+
+    [data-element="separator"][data-variant="strong"]:not([data-color])[data-separator] {
+        --_separator-line: color-mix(
+            in oklab,
+            var(--fl-separator-color) 80%,
+            var(--fl-color-text-highlighted)
+        );
+    }
+}

@@ -10,6 +10,7 @@ defmodule FlintUITest do
     assert :icon in FlintUI.components()
     assert :loading in FlintUI.components()
     assert :loading_text in FlintUI.components()
+    assert :separator in FlintUI.components()
     assert :tabs in FlintUI.components()
     assert :toggle in FlintUI.components()
   end

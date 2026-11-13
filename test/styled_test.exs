@@ -23,6 +23,7 @@ defmodule FlintUI.StyledTest do
                :kbd,
                :loading,
                :loading_text,
+               :separator,
                :tabs,
                :toggle
              ])
@@ -127,7 +128,17 @@ defmodule FlintUI.StyledTest do
   end
 
   test "raw color props declare the public inputs they populate" do
-    for name <- [:alert, :avatar, :badge, :button, :toggle, :tabs, :loading, :loading_text] do
+    for name <- [
+          :alert,
+          :avatar,
+          :badge,
+          :button,
+          :separator,
+          :toggle,
+          :tabs,
+          :loading,
+          :loading_text
+        ] do
       entry = Styled.get(name)
       color = Entry.prop(entry, :color)
 

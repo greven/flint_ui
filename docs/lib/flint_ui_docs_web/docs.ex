@@ -30,6 +30,7 @@ defmodule FlintUIDocsWeb.Docs do
     Kbd,
     Loading,
     LoadingText,
+    Separator,
     Source,
     Tabs,
     Toggle
@@ -52,6 +53,7 @@ defmodule FlintUIDocsWeb.Docs do
     kbd: Kbd,
     loading: Loading,
     loading_text: LoadingText,
+    separator: Separator,
     tabs: Tabs,
     toggle: Toggle
   }

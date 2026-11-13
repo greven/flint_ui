@@ -334,6 +334,23 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "Map.get(panel, :class)"
   end
 
+  test "separator maps its props and converts a numeric size" do
+    source = Generator.component_source(:separator)
+
+    assert source =~ "values: ~w(solid dashed dotted)"
+    assert source =~ "values: ~w(subtle default strong)"
+    assert source =~ "values: ~w(center start end)"
+    assert source =~ "attr(:size, :any"
+    assert source =~ "FlintUI.Styled.Size.scale(assigns.size)"
+    assert source =~ "FlintUI.Styled.Size.style(assigns.size, \"--fl-separator-size\")"
+    assert source =~ "data-size={@data_size}"
+    assert source =~ "attr(:label, :string, default: nil"
+    assert source =~ "attr(:icon, :string, default: nil"
+    assert source =~ "{render_slot(@inner_block) || @label}"
+    assert source =~ "<FlintUI.icon :if={@icon && is_nil(@label) && @inner_block == []}"
+    assert source =~ "include: ~w(as decorative orientation)"
+  end
+
   test "the combined generated module compiles" do
     functions =
       Styled.names()

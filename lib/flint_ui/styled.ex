@@ -30,6 +30,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Kbd,
     FlintUI.Styled.Loading,
     FlintUI.Styled.LoadingText,
+    FlintUI.Styled.Separator,
     FlintUI.Styled.Tabs,
     FlintUI.Styled.Toggle
   ]
