@@ -18,8 +18,8 @@ defmodule FlintUIDocsWeb.Docs.Group do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :orientation, type: :select, default: "horizontal", label: "Orientation"},
           %{key: :variant, type: :select, default: "attached", label: "Variant"},
+          %{key: :orientation, type: :select, default: "horizontal", label: "Orientation"},
           %{key: :size, type: :select, default: "md", label: "Size"}
         ]
       }

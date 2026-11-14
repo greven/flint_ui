@@ -124,7 +124,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     ~H"""
     <.prose content="Use the `icon` attr to render a decorative icon before the content. The
       `:leading` and `:trailing` slots place any content before or after it. For an icon-only toggle,
-      combine `square` with an `aria-label` so it keeps an accessible name." />
+      combine `square` with an `aria-label` so it keeps an accessible name. " />
 
     <.preview {assigns} code={&code_icon/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
@@ -190,7 +190,9 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
 
   def render_section(%{section: :examples, id: :group} = assigns) do
     ~H"""
-    <.prose content="A toggle composes with `<.group>` like a button, so a row of toggles reads as a single control." />
+    <.prose content="A toggle composes with `<.group>` like a button, so a row of toggles reads as a single control.
+      The toggles are icon-only, so each one is `square`; the glyph keeps the full-strength label color
+      instead of the muted icon tint." />
     <.preview {assigns} code={&code_group/1}>
       <Components.group variant="attached">
         <Components.toggle
@@ -198,18 +200,21 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           active_variant="subtle"
           aria-label="Bold"
           icon="lucide-letter-b"
+          square
         />
         <Components.toggle
           variant="surface"
           active_variant="subtle"
           aria-label="Italic"
           icon="lucide-italic"
+          square
         />
         <Components.toggle
           variant="surface"
           active_variant="subtle"
           aria-label="Underline"
           icon="lucide-underline"
+          square
         />
       </Components.group>
     </.preview>
@@ -316,9 +321,9 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   defp code_group(_) do
     """
     <.group variant="attached">
-      <.toggle variant="surface" active_variant="subtle" aria-label="Bold" icon="lucide-letter-b" />
-      <.toggle variant="surface" active_variant="subtle" aria-label="Italic" icon="lucide-italic" />
-      <.toggle variant="surface" active_variant="subtle" aria-label="Underline" icon="lucide-underline" />
+      <.toggle variant="surface" active_variant="subtle" aria-label="Bold" icon="lucide-letter-b" square />
+      <.toggle variant="surface" active_variant="subtle" aria-label="Italic" icon="lucide-italic" square />
+      <.toggle variant="surface" active_variant="subtle" aria-label="Underline" icon="lucide-underline" square />
     </.group>
     """
   end

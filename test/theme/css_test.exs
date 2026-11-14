@@ -97,18 +97,27 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "the pure surface anchors the page and the tint steps", %{css: css} do
     assert css =~ "--fl-surface-step: 1.75%;"
+    assert css =~ "--fl-surface-step-dark: 2.5%;"
 
     assert css =~
              "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));"
 
-    assert css =~
-             ~r/--fl-color-background: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*var\(--fl-surface-step\),\s*var\(--fl-color-surface\)\s*\)/
+    # Each rung tints the pure surface toward the opposite neutral extreme, one
+    # branch per scheme. The dark branch reads its own step so both ladders keep
+    # comparable separation against their anchor.
+    for {name, light, dark} <- [
+          {"background", "var(--fl-surface-step)", "var(--fl-surface-step-dark)"},
+          {"surface-subtle", "calc(var(--fl-surface-step) * 2)",
+           "calc(var(--fl-surface-step-dark) * 2)"},
+          {"surface-strong", "calc(var(--fl-surface-step) * 4)",
+           "calc(var(--fl-surface-step-dark) * 4)"}
+        ] do
+      light = Regex.escape(light)
+      dark = Regex.escape(dark)
 
-    assert css =~
-             ~r/--fl-color-surface-subtle: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 2\),\s*var\(--fl-color-surface\)\s*\)/
-
-    assert css =~
-             ~r/--fl-color-surface-strong: color-mix\(\s*in oklab,\s*light-dark\(var\(--fl-color-neutral-950\),\s*var\(--fl-color-neutral-50\)\)\s*calc\(var\(--fl-surface-step\) \* 4\),\s*var\(--fl-color-surface\)\s*\)/
+      assert css =~
+               ~r/--fl-color-#{name}: light-dark\(\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-950\)\s*#{light},\s*var\(--fl-color-surface\)\s*\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-50\)\s*#{dark},\s*var\(--fl-color-surface\)\s*\)\s*\)/
+    end
 
     refute css =~ "--fl-color-control:"
   end
@@ -502,10 +511,20 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~r/\[data-element="toggle"\]\[data-active-variant="surface"\]\[data-state="on"\] \{[^}]*border-color: var\(--fl-toggle-active-soft-border\)/
 
-    # Neutral's shared soft border is too quiet for a state change, so the
-    # toggle strengthens it to match the colored role edges.
+    # Neutral's untoggled edge follows the button's soft role token. Only a
+    # neutral active surface, which keeps the same fill, strengthens its edge
+    # so the state change reads.
     assert css =~
-             "--fl-toggle-soft-border: color-mix(in oklab, var(--fl-toggle-color) 32%, var(--fl-color-surface));"
+             "--fl-toggle-soft-border: var(--fl-color-neutral-soft-border);"
+
+    assert css =~
+             "--fl-toggle-active-soft-border: var(--fl-color-neutral-soft-border);"
+
+    assert css =~
+             ~s|[data-element="toggle"][data-active-variant="surface"][data-state="on"]:is([data-color="neutral"]:not([data-active-color]), [data-active-color="neutral"]) {|
+
+    assert css =~
+             "--fl-toggle-active-soft-border: color-mix(in oklab, var(--fl-toggle-active-color) 32%, var(--fl-color-surface));"
   end
 
   test "dashed is an orthogonal border modifier, not a variant", %{css: css} do

@@ -227,7 +227,7 @@ defmodule FlintUIDocsWeb.Layouts do
             {group.label}
           </p>
         </div>
-        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-subtle">
+        <nav class="mt-2 ml-2 mr-2 flex flex-col gap-px border-l border-default">
           <.sidebar_page
             :for={item <- group.pages}
             item={item}
@@ -318,7 +318,7 @@ defmodule FlintUIDocsWeb.Layouts do
       >
         <ol
           data-toc-list
-          class="flex flex-col gap-1.5 border-l border-subtle text-sm"
+          class="flex flex-col gap-1.5 border-l border-default text-sm"
         >
         </ol>
       </nav>

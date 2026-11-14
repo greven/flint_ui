@@ -20,7 +20,7 @@ defmodule FlintUI.Theme.ContrastTest do
 
   setup_all do
     css = File.read!(FlintUI.Generator.part_path("tokens.css"))
-    %{tokens: parse_tokens(css), scales: parse_scales(css), step: parse_surface_step(css)}
+    %{tokens: parse_tokens(css), scales: parse_scales(css), steps: parse_surface_steps(css)}
   end
 
   test "every shipped role label clears AA on its fill", %{tokens: tokens} do
@@ -152,17 +152,17 @@ defmodule FlintUI.Theme.ContrastTest do
 
   test "the contrast reference is conservative against the shipped surfaces", %{
     tokens: tokens,
-    step: step
+    steps: steps
   } do
     # Light mode scores dark role text against the pure surface (white). Dark
     # mode scores light role text against the lightest tinted step, so the
-    # reference must be at least as light as `surface-strong`.
+    # reference must be at least as light as `surface-strong` in each scheme.
     assert (Contrast.luminance(Contrast.light_background()) || 0.0) >=
              (Contrast.luminance(eval_token(tokens, "surface", :light)) || 0.0)
 
     dark_surface = eval_token(tokens, "surface", :dark)
     dark_contrast = eval_token(tokens, "neutral-50", :dark)
-    strong_dark = Contrast.mix(dark_contrast, dark_surface, step * 4)
+    strong_dark = Contrast.mix(dark_contrast, dark_surface, steps.dark * 4)
 
     assert (Contrast.luminance(Contrast.dark_background()) || 0.0) >=
              (Contrast.luminance(strong_dark) || 0.0)
@@ -197,8 +197,17 @@ defmodule FlintUI.Theme.ContrastTest do
     |> Map.new(fn [name, value] -> {name, String.trim(value)} end)
   end
 
-  defp parse_surface_step(css) do
-    [_, percent] = Regex.run(~r/--fl-surface-step:\s*([\d.]+)%/, css)
+  # Each scheme carries its own step: the dark anchor needs a larger one to keep
+  # comparable separation against the pure surface.
+  defp parse_surface_steps(css) do
+    %{
+      light: parse_surface_step(css, "--fl-surface-step"),
+      dark: parse_surface_step(css, "--fl-surface-step-dark")
+    }
+  end
+
+  defp parse_surface_step(css, name) do
+    [_, percent] = Regex.run(~r/#{name}:\s*([\d.]+)%/, css)
     {step, _} = Float.parse(percent)
     step / 100
   end

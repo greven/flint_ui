@@ -296,8 +296,14 @@
         --fl-toggle-color-content: var(--fl-color-text-inverted);
         --fl-toggle-text: var(--fl-color-text-toned);
         --fl-toggle-soft: var(--fl-color-neutral-soft);
-        /* A solid neutral needs a stronger edge than the shared soft mix. */
-        --fl-toggle-soft-border: color-mix(in oklab, var(--fl-toggle-color) 32%, var(--fl-color-surface));
+        --fl-toggle-soft-border: var(--fl-color-neutral-soft-border);
+    }
+
+    /* The untoggled neutral edge matches the button's soft role token. A
+     * neutral active surface keeps the same fill, so its border carries the
+     * state change; the other active variants change fill or border already. */
+    [data-element="toggle"][data-active-variant="surface"][data-state="on"]:is([data-color="neutral"]:not([data-active-color]), [data-active-color="neutral"]) {
+        --fl-toggle-active-soft-border: color-mix(in oklab, var(--fl-toggle-active-color) 32%, var(--fl-color-surface));
     }
 
     /* Absolute tones stay dark/light in either scheme. */
@@ -372,7 +378,7 @@
         --fl-toggle-active-color-content: var(--fl-color-text-inverted);
         --fl-toggle-active-text: var(--fl-color-text-toned);
         --fl-toggle-active-soft: var(--fl-color-neutral-soft);
-        --fl-toggle-active-soft-border: color-mix(in oklab, var(--fl-toggle-active-color) 32%, var(--fl-color-surface));
+        --fl-toggle-active-soft-border: var(--fl-color-neutral-soft-border);
     }
 
     [data-element="toggle"][data-active-color="dark"] {

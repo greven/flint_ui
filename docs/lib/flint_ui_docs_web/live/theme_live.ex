@@ -163,8 +163,14 @@ defmodule FlintUIDocsWeb.ThemeLive do
             is one tint step: <code class="docs-code font-mono">background</code>
             is the page (one step), <code class="docs-code font-mono">surface-subtle</code>
             is a faint panel (two steps), and <code class="docs-code font-mono">surface-strong</code>
-            is the strong panel (four steps). The default 1.75% keeps the ladder at
-            1.75/3.5/7%; raise the step to strengthen every surface together. The same
+            is the strong panel (four steps). The step is per scheme:
+            <code class="docs-code font-mono">--fl-surface-step</code>
+            defaults to 1.75% (a 1.75/3.5/7% ladder) and
+            <code class="docs-code font-mono">--fl-surface-step-dark</code>
+            to 2.5% (2.5/5/10%). Dark takes the larger step because the same oklab
+            step buys less contrast separation against a near-black anchor, and a
+            dark elevation has no drop shadow to fall back on. Raising either step
+            strengthens every surface in that scheme together. The same
             tint order holds in both schemes, so the page is never pure and a card
             is never the page color. Chrome fills and edges name the amount of tint
             (<code class="docs-code font-mono">subtle</code>, default, <code class="docs-code font-mono">strong</code>),
@@ -557,28 +563,47 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     :root {
       --fl-surface-step: 1.75%;
+      --fl-surface-step-dark: 2.5%;
 
       --fl-color-surface: light-dark(
         white,
         var(--fl-color-neutral-950)
       );
-      --fl-color-background: color-mix(
-        in oklab,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
-          var(--fl-surface-step),
-        var(--fl-color-surface)
+      --fl-color-background: light-dark(
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-950) var(--fl-surface-step),
+          var(--fl-color-surface)
+        ),
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-50) var(--fl-surface-step-dark),
+          var(--fl-color-surface)
+        )
       );
-      --fl-color-surface-subtle: color-mix(
-        in oklab,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
-          calc(var(--fl-surface-step) * 2),
-        var(--fl-color-surface)
+      --fl-color-surface-subtle: light-dark(
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-950) calc(var(--fl-surface-step) * 2),
+          var(--fl-color-surface)
+        ),
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-50) calc(var(--fl-surface-step-dark) * 2),
+          var(--fl-color-surface)
+        )
       );
-      --fl-color-surface-strong: color-mix(
-        in oklab,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50))
-          calc(var(--fl-surface-step) * 4),
-        var(--fl-color-surface)
+      --fl-color-surface-strong: light-dark(
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-950) calc(var(--fl-surface-step) * 4),
+          var(--fl-color-surface)
+        ),
+        color-mix(
+          in oklab,
+          var(--fl-color-neutral-50) calc(var(--fl-surface-step-dark) * 4),
+          var(--fl-color-surface)
+        )
       );
 
       --fl-disabled-opacity: 0.5;

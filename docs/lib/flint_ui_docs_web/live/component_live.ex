@@ -95,7 +95,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
                     class="docs-link"
                   >
                 Base tab
-              </.link>; CSS variables and parts on the <.link
+              </.link>, CSS variables and parts on the <.link
                     patch={~p"/components/#{@active}?tab=css"}
                     class="docs-link"
                   >

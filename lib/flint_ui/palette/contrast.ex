@@ -20,9 +20,10 @@ defmodule FlintUI.Palette.Contrast do
   # Reference surfaces for role text: light is the pure surface (white); dark
   # approximates `--fl-color-surface-strong`, the lightest dark backdrop a
   # role text token sits on in outline/soft. Scoring against the darker pure
-  # surface would overstate contrast.
+  # surface would overstate contrast. Keep it >= the resolved dark
+  # `surface-strong` (4 dark surface steps over neutral-950).
   @light_background "oklch(100% 0 none)"
-  @dark_background "oklch(20.5% 0 none)"
+  @dark_background "oklch(23% 0 none)"
 
   @pattern ~r/^\s*oklch\(\s*([0-9.]+)(%?)\s+([0-9.]+|none)(?:\s+([0-9.]+|none))?\s*\)\s*$/
 

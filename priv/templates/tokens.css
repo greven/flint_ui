@@ -268,7 +268,7 @@
     --fl-color-neutral-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
     --fl-color-neutral-soft: light-dark(
         color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-neutral) 12%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-neutral) 14%, var(--fl-color-surface))
     );
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 18%, var(--fl-color-surface));
 
@@ -358,22 +358,20 @@
      * neutral extreme, so the same tint order holds in both schemes:
      * background 1 step -> subtle 2 steps -> strong 4 steps. */
     --fl-surface-step: 1.75%;
+    --fl-surface-step-dark: 2.5%;
 
     --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));
-    --fl-color-background: color-mix(
-        in oklab,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) var(--fl-surface-step),
-        var(--fl-color-surface)
+    --fl-color-background: light-dark(
+        color-mix(in oklab, var(--fl-color-neutral-950) var(--fl-surface-step), var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-neutral-50) var(--fl-surface-step-dark), var(--fl-color-surface))
     );
-    --fl-color-surface-subtle: color-mix(
-        in oklab,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) calc(var(--fl-surface-step) * 2),
-        var(--fl-color-surface)
+    --fl-color-surface-subtle: light-dark(
+        color-mix(in oklab, var(--fl-color-neutral-950) calc(var(--fl-surface-step) * 2), var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-neutral-50) calc(var(--fl-surface-step-dark) * 2), var(--fl-color-surface))
     );
-    --fl-color-surface-strong: color-mix(
-        in oklab,
-        light-dark(var(--fl-color-neutral-950), var(--fl-color-neutral-50)) calc(var(--fl-surface-step) * 4),
-        var(--fl-color-surface)
+    --fl-color-surface-strong: light-dark(
+        color-mix(in oklab, var(--fl-color-neutral-950) calc(var(--fl-surface-step) * 4), var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-neutral-50) calc(var(--fl-surface-step-dark) * 4), var(--fl-color-surface))
     );
 
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
