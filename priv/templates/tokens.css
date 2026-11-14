@@ -267,8 +267,8 @@
     --fl-color-neutral-content: light-dark(var(--fl-color-neutral-50), var(--fl-color-neutral-950));
     --fl-color-neutral-text: light-dark(var(--fl-color-neutral-900), var(--fl-color-neutral-200));
     --fl-color-neutral-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-neutral) 6%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-neutral) 12%, var(--fl-color-surface))
     );
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 18%, var(--fl-color-surface));
 
@@ -293,7 +293,7 @@
     --fl-color-primary-content: light-dark(var(--fl-color-primary-50), var(--fl-color-primary-50));
     --fl-color-primary-text: light-dark(var(--fl-color-primary-600), var(--fl-color-primary-400));
     --fl-color-primary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-primary) 8%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-primary) 10%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-primary) 20%, var(--fl-color-surface))
     );
     --fl-color-primary-soft-border: color-mix(in oklab, var(--fl-color-primary) 50%, var(--fl-color-surface));
@@ -302,7 +302,7 @@
     --fl-color-secondary-content: light-dark(var(--fl-color-secondary-50), var(--fl-color-secondary-50));
     --fl-color-secondary-text: light-dark(var(--fl-color-secondary-600), var(--fl-color-secondary-400));
     --fl-color-secondary-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-secondary) 8%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-secondary) 10%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-secondary) 20%, var(--fl-color-surface))
     );
     --fl-color-secondary-soft-border: color-mix(in oklab, var(--fl-color-secondary) 50%, var(--fl-color-surface));
@@ -312,7 +312,7 @@
     --fl-color-info-text: light-dark(var(--fl-color-info-800), var(--fl-color-info-400));
     --fl-color-info-soft: light-dark(
         color-mix(in oklab, var(--fl-color-info) 10%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-info) 15%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-info) 18%, var(--fl-color-surface))
     );
     --fl-color-info-soft-border: color-mix(in oklab, var(--fl-color-info) 50%, var(--fl-color-surface));
 
@@ -321,7 +321,7 @@
     --fl-color-success-text: light-dark(var(--fl-color-success-800), var(--fl-color-success-400));
     --fl-color-success-soft: light-dark(
         color-mix(in oklab, var(--fl-color-success) 10%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-success) 15%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-success) 18%, var(--fl-color-surface))
     );
     --fl-color-success-soft-border: color-mix(in oklab, var(--fl-color-success) 50%, var(--fl-color-surface));
 
@@ -330,7 +330,7 @@
     --fl-color-warning-text: light-dark(var(--fl-color-warning-800), var(--fl-color-warning-400));
     --fl-color-warning-soft: light-dark(
         color-mix(in oklab, var(--fl-color-warning) 20%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-warning) 9%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-warning) 12%, var(--fl-color-surface))
     );
     --fl-color-warning-soft-border: color-mix(in oklab, var(--fl-color-warning) 50%, var(--fl-color-surface));
 
@@ -339,7 +339,7 @@
     --fl-color-error-text: light-dark(var(--fl-color-error-800), var(--fl-color-error-400));
     --fl-color-error-soft: light-dark(
         color-mix(in oklab, var(--fl-color-error) 10%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-error) 15%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-error) 18%, var(--fl-color-surface))
     );
     --fl-color-error-soft-border: color-mix(in oklab, var(--fl-color-error) 50%, var(--fl-color-surface));
 

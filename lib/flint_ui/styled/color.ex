@@ -63,12 +63,18 @@ defmodule FlintUI.Styled.Color do
   def valid?(_value), do: false
 
   @doc false
-  # Expands a raw `color` into the wrapper's assigns. Known values only set the
-  # presence hook; raw values also merge the derived style into `rest`. The
+  # Expands a raw color prop into the wrapper's assigns. Known values only set
+  # the presence hook; raw values also merge the derived style into `rest`. The
   # absolute tones are known everywhere, even when an entry omits them from its
   # public value list.
-  def apply(assigns, roles, vars) do
-    value = assigns.color
+  #
+  # `:prop` names the prop to read (default `:color`) and `:data` names the hook
+  # assign it produces (default `:data_color`), so a component can resolve a
+  # second, state-specific color such as the toggle's `active_color`.
+  def apply(assigns, roles, vars, opts \\ []) do
+    prop = Keyword.get(opts, :prop, :color)
+    data = Keyword.get(opts, :data, :data_color)
+    value = Map.fetch!(assigns, prop)
 
     {data_color, rest} =
       case resolve(value, roles) do
@@ -79,19 +85,24 @@ defmodule FlintUI.Styled.Color do
           {nil, merge_style(Map.get(assigns, :rest), style(source, color, vars))}
 
         :error ->
-          raise ArgumentError, invalid_message(value, roles)
+          raise ArgumentError, invalid_message(prop, value, roles)
       end
 
-    # Both assigns are derived from `color`, and a previous raw value may have
+    # Both assigns are derived from the color, and a previous raw value may have
     # added a style to `rest`. Mark them changed so switching between a role and
     # a raw color always updates the rendered attributes.
     assigns
-    |> put_assign(:data_color, data_color)
+    |> put_assign(data, data_color)
     |> put_assign(:rest, rest)
   end
 
   @doc false
-  # Like `apply/3`, but leaves `rest` alone and returns the raw color's inputs
+  # Marks a color hook absent, for a sentinel value such as `inherit`. The theme
+  # then falls back to the base color inputs, so no style is written.
+  def clear(assigns, data), do: put_assign(assigns, data, nil)
+
+  @doc false
+  # Like `apply/4`, but leaves `rest` alone and returns the raw color's inputs
   # as a `:color_style` assign. A wrapper whose root owns the color variables
   # (while `rest` belongs to a nested image) can place that style on the root.
   def apply_style(assigns, roles, vars, opts \\ []) do
@@ -104,7 +115,7 @@ defmodule FlintUI.Styled.Color do
           {nil, style(source, color, vars, opts)}
 
         :error ->
-          raise ArgumentError, invalid_message(assigns.color, roles)
+          raise ArgumentError, invalid_message(:color, assigns.color, roles)
       end
 
     assigns
@@ -214,6 +225,10 @@ defmodule FlintUI.Styled.Color do
   # The derived values for a raw color. Text values are `{light, dark}` pairs;
   # the label on a fill is a single scheme-independent color. The role text is
   # scored against the tinted surface, the stricter background in both schemes.
+  #
+  # `:soft` and `:soft_border` mirror the theme's tinted-input fallbacks, so a
+  # component whose pressed state carries its own raw color can write the tinted
+  # pair for that color instead of reusing the untoggled one.
   def derive(source, color, opts \\ []) do
     target = Contrast.aa()
     light = Contrast.light_background()
@@ -225,7 +240,10 @@ defmodule FlintUI.Styled.Color do
       on_text: {
         readable(source, color, tint(color, light), target),
         readable(source, color, tint(color, dark), target)
-      }
+      },
+      soft: "color-mix(in oklab, #{source} 10%, var(--fl-color-surface))",
+      soft_border:
+        "color-mix(in oklab, #{source} var(--fl-border-strength-soft), var(--fl-color-surface))"
     }
   end
 
@@ -314,9 +332,9 @@ defmodule FlintUI.Styled.Color do
 
   defp merge_style(_rest, derived), do: %{style: derived}
 
-  defp invalid_message(value, roles) do
+  defp invalid_message(prop, value, roles) do
     """
-    invalid color #{inspect(value)} for the `color` prop.
+    invalid color #{inspect(value)} for the `#{prop}` prop.
 
     Use a semantic role (#{Enum.join(roles, ", ")}), an absolute tone
     (#{Enum.join(@absolute, ", ")}), a Tailwind palette color, or a raw color:

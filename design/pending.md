@@ -66,11 +66,21 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 - A pending `type="submit"` button renders `type="button"` and
   `data-pending-submit`; it returns to `type="submit"` when loading clears.
 
+**Toggle (`FlintUI.Base.Toggle`).**
+
+- `loading` mirrors the button contract: `aria-busy`, `aria-disabled`, and
+  `data-loading`, never the native `disabled` attribute.
+- A pending submit toggle renders `type="button"` and `data-pending-submit`.
+- A pending toggle must not flip its own `aria-pressed`/`data-state` while it
+  waits, so the guard cancels the click before the client-side state update.
+
 **Browser guard (`flint.js`).**
 
 - Installed once when the core bundle loads; no hook or DOM id needed.
-- Capture-phase `click` on `document` cancels pending and disabled buttons and
-  links.
+- Capture-phase `click` on `document` cancels pending and disabled buttons,
+  toggles, and links.
+- A toggle updates its own state client-side, so cancelling its click is the
+  only thing that keeps a pending toggle from appearing to change state.
 - Capture-phase `submit` on `document` cancels when the submitter is pending, or
   when the submitter is absent and the form contains a pending submit button
   (including a type-swapped one marked `data-pending-submit`).
@@ -140,6 +150,7 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 ### Shipped
 
 - [x] Button pending semantics (`aria-busy`, `aria-disabled`, `data-loading`).
+- [x] Toggle pending semantics, sharing the button contract and the guard.
 - [x] Loading links drop navigation and stay focusable.
 - [x] Disabled links drop navigation, stay focusable, and are blocked by the guard.
 - [x] Pending submit buttons render `type="button"` and `data-pending-submit`.

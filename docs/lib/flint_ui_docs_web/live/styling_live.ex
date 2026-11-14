@@ -265,7 +265,9 @@ defmodule FlintUIDocsWeb.StylingLive do
           </DocsComponents.content_paragraph>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button color="#1D72FE" variant="solid">Raw color</Components.button>
-            <Components.toggle color="#1D72FE" pressed>Bold</Components.toggle>
+            <Components.toggle variant="ghost" active_variant="solid" color="#1D72FE" toggled>
+              Bold
+            </Components.toggle>
           </div>
           <DocsComponents.code_block code={snippet(:raw_color)} />
         </DocsComponents.section>
@@ -407,7 +409,7 @@ defmodule FlintUIDocsWeb.StylingLive do
   defp snippet(:raw_color) do
     """
     <.button color="#1D72FE" variant="solid">Deploy</.button>
-    <.toggle color="#1D72FE" pressed>Bold</.toggle>
+    <.toggle variant="ghost" active_variant="solid" color="#1D72FE" toggled>Bold</.toggle>
     """
   end
 

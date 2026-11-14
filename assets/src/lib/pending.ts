@@ -1,21 +1,24 @@
 /**
  * Pending FlintUI controls stay focusable, but must not activate. Disabled
  * links also keep their click handlers in the markup, so the guard blocks them
- * too.
+ * too. Buttons and toggles are the activation controls: a toggle updates its
+ * own `aria-pressed`/`data-state` client-side, so a pending toggle must have
+ * that click cancelled as well.
  *
  * The guard is installed once when the core bundle loads. It is progressive
  * enhancement: server handlers must still guard, because requests can bypass
  * the button and the bundle can be absent.
  */
 
-const PENDING_SELECTOR = '[data-element="button"][data-loading]';
-const DISABLED_SELECTOR = '[data-element="button"][data-disabled]';
+const CONTROL_SELECTOR = ':is([data-element="button"], [data-element="toggle"])';
+const PENDING_SELECTOR = `${CONTROL_SELECTOR}[data-loading]`;
+const DISABLED_SELECTOR = `${CONTROL_SELECTOR}[data-disabled]`;
 const CLICK_SELECTOR = `${PENDING_SELECTOR}, ${DISABLED_SELECTOR}`;
 
 const PENDING_SUBMIT_SELECTOR = [
-  '[data-element="button"][data-loading][type="submit"]',
-  '[data-element="button"][data-loading]:not([type])',
-  '[data-element="button"][data-loading][data-pending-submit]',
+  `${PENDING_SELECTOR}[type="submit"]`,
+  `${PENDING_SELECTOR}:not([type])`,
+  `${PENDING_SELECTOR}[data-pending-submit]`,
 ].join(",");
 
 let installed = false;

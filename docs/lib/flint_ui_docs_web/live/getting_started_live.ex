@@ -154,7 +154,7 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     """
     <.button variant="solid" phx-click="save">Save</.button>
 
-    <.toggle pressed>Bold</.toggle>
+    <.toggle toggled>Bold</.toggle>
     """
   end
 

@@ -175,7 +175,10 @@ defmodule FlintUIDocsWeb.SoundLive do
           <Components.toggle
             data-sound-enable
             aria-label="Toggle interface sounds"
-            on_click={JS.dispatch("fl:sound:toggle")}
+            variant="surface"
+            active_variant="solid"
+            active_color="primary"
+            phx-click={JS.dispatch("fl:sound:toggle")}
           >
             <span data-sound-icon="on" class="inline-flex items-center gap-2">
               <Components.icon name="lucide-volume-2" class="size-4" /> Sound on
@@ -190,11 +193,13 @@ defmodule FlintUIDocsWeb.SoundLive do
             <Components.toggle
               :for={theme <- @themes}
               data-sound-theme-option={theme}
-              pressed={theme == "default"}
-              variant="surface"
+              toggled={theme == "default"}
+              variant="ghost"
+              active_variant="solid"
+              active_color="primary"
               size="xs"
               pill
-              on_click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
+              phx-click={JS.dispatch("fl:sound:theme", detail: %{theme: theme})}
             >
               {String.capitalize(theme)}
             </Components.toggle>

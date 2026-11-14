@@ -27,7 +27,8 @@ defmodule FlintUI.Theme.ContractTest do
     for entry <- Styled.entries(),
         prop <- entry.props,
         value <- prop.values,
-        value != prop.default do
+        value != prop.default,
+        value not in prop.resolved do
       selector = prop_selector(entry, prop, value)
 
       assert css =~ selector,

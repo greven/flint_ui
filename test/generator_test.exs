@@ -54,18 +54,54 @@ defmodule FlintUI.GeneratorTest do
     refute source =~ "to_string(@"
   end
 
-  test "toggle maps its variant, size, radius, and depth props" do
+  test "toggle maps its untoggled and toggled props" do
     source = Generator.component_source(:toggle)
 
-    assert source =~ "values: ~w(solid subtle surface outline ghost)"
+    assert source =~ "values: ~w(solid soft subtle surface outline ghost link)"
     assert source =~ "data-variant={@variant}"
+
+    assert source =~
+             ~s(data-active-variant={if @active_variant == "inherit", do: @variant, else: @active_variant})
+
     assert source =~ "data-dashed={@dashed}"
     assert source =~ "data-color={@data_color}"
+    assert source =~ "data-active-color={@data_active_color}"
     assert source =~ "data-size={@size}"
     assert source =~ "data-radius={@radius}"
     assert source =~ "data-pill={@pill}"
+    assert source =~ "data-square={@square}"
+    assert source =~ "data-wide={@wide}"
+    assert source =~ "data-justify={@justify}"
     assert source =~ "data-depth={@depth}"
+    assert source =~ "data-inset={@inset}"
+    assert source =~ "attr(:active_variant, :string"
+    assert source =~ "attr(:active_color, :string, default: \"inherit\""
+    assert source =~ "attr(:square, :boolean"
+    assert source =~ "attr(:wide, :boolean"
+    assert source =~ "attr(:inset, :any"
     assert source =~ "attr(:depth, :boolean"
+  end
+
+  test "toggle resolves an inheriting active color without a hook" do
+    source = Generator.component_source(:toggle)
+
+    assert source =~ ~s(if assigns.active_color == "inherit" do)
+    assert source =~ "FlintUI.Styled.Color.clear(assigns, :data_active_color)"
+
+    assert source =~ "~w(neutral info success warning error primary secondary),"
+    assert source =~ ~s([fill: "--fl-toggle-active-color")
+
+    assert source =~ "prop: :active_color"
+    assert source =~ "data: :data_active_color"
+  end
+
+  test "toggle renders state content slots the theme reveals" do
+    source = Generator.component_source(:toggle)
+
+    assert source =~ ~s|<span :if={@on != []} data-part="on-state">{render_slot(@on)}</span>|
+    assert source =~ ~s|<span :if={@off != []} data-part="off-state">{render_slot(@off)}</span>|
+    assert source =~ "slot(:on,"
+    assert source =~ "slot(:off,"
   end
 
   test "free-form color props omit the enum and resolve at runtime" do
@@ -170,7 +206,8 @@ defmodule FlintUI.GeneratorTest do
              |> Generator.wrapper_slots()
              |> Enum.find(&(&1.name == :inner_block))
 
-    assert %{required: true} =
+    # The toggle offers icon/text shortcuts too, so its default slot is optional.
+    assert %{required: false} =
              :toggle
              |> Generator.wrapper_slots()
              |> Enum.find(&(&1.name == :inner_block))

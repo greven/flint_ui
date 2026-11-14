@@ -80,6 +80,9 @@ defmodule FlintUI.Styled do
       custom_color_without_vars?(entry) ->
         {:error, {:missing_color_vars, entry.name}}
 
+      active_color_without_vars?(entry) ->
+        {:error, {:missing_active_color_vars, entry.name}}
+
       invalid_relations(entry) != [] ->
         {:error, {:unknown_relation, entry.name, invalid_relations(entry)}}
 
@@ -100,6 +103,24 @@ defmodule FlintUI.Styled do
     case Entry.prop(entry, :color) do
       %{allow_custom: true} -> entry.color_vars == []
       _ -> false
+    end
+  end
+
+  # An active color is only actionable when the wrapper knows where to write a
+  # raw value and what to do with the "follow the base color" sentinel.
+  defp active_color_without_vars?(entry) do
+    case entry.active_color do
+      %{prop: prop, vars: [_ | _]} ->
+        case Entry.prop(entry, prop) do
+          %{allow_custom: true} -> false
+          _ -> true
+        end
+
+      nil ->
+        false
+
+      _ ->
+        true
     end
   end
 end

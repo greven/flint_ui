@@ -89,6 +89,60 @@ defmodule FlintUI.Styled.ColorTest do
       assert assigns.__changed__[:rest]
     end
 
+    test "resolves a second color prop into its own hook and inputs" do
+      assigns = %{
+        color: "primary",
+        active_color: "#1D72FE",
+        rest: %{},
+        __changed__: %{}
+      }
+
+      assigns =
+        StyledColor.apply(
+          assigns,
+          @roles,
+          [fill: "--fl-active-color"],
+          prop: :active_color,
+          data: :data_active_color
+        )
+
+      assert assigns.data_active_color == nil
+      assert assigns.rest.style =~ "--fl-active-color: #1D72FE"
+
+      assigns =
+        StyledColor.apply(
+          %{color: "primary", active_color: "success", rest: %{}, __changed__: %{}},
+          @roles,
+          [fill: "--fl-active-color"],
+          prop: :active_color,
+          data: :data_active_color
+        )
+
+      assert assigns.data_active_color == "success"
+    end
+
+    test "clear/2 marks a color hook absent on updates" do
+      assigns = StyledColor.clear(%{rest: %{}, __changed__: %{}}, :data_active_color)
+
+      assert assigns.data_active_color == nil
+      assert assigns.__changed__[:data_active_color]
+    end
+
+    test "invalid values name the prop that failed" do
+      error =
+        assert_raise ArgumentError, fn ->
+          StyledColor.apply(
+            %{color: "primary", active_color: "not-a-color", rest: %{}, __changed__: %{}},
+            @roles,
+            [fill: "--fl-active-color"],
+            prop: :active_color,
+            data: :data_active_color
+          )
+        end
+
+      assert error.message =~ "`active_color`"
+    end
+
     test "invalid values raise with the accepted forms" do
       error =
         assert_raise ArgumentError, fn ->
@@ -205,6 +259,16 @@ defmodule FlintUI.Styled.ColorTest do
   end
 
   describe "derive/2" do
+    test "derives the tinted pair for the same raw color" do
+      {:ok, color} = Color.parse("#1D72FE")
+      derived = StyledColor.derive("#1D72FE", color)
+
+      assert derived.soft == "color-mix(in oklab, #1D72FE 10%, var(--fl-color-surface))"
+
+      assert derived.soft_border ==
+               "color-mix(in oklab, #1D72FE var(--fl-border-strength-soft), var(--fl-color-surface))"
+    end
+
     test "uses the exact fill and the best available label" do
       {:ok, color} = Color.parse("#1D72FE")
       derived = StyledColor.derive("#1D72FE", color)

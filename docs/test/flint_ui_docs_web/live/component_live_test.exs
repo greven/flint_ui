@@ -557,7 +557,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     view
     |> element("#usage-toggle-basic-controls")
-    |> render_change(%{"pressed" => "true"})
+    |> render_change(%{"toggled" => "true"})
 
     assert has_element?(view, "#usage-toggle-basic [data-element='toggle'][aria-pressed='true']")
   end

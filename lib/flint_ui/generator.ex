@@ -248,7 +248,8 @@ defmodule FlintUI.Generator do
   defp attr_block(entry) do
     attrs = FlintUI.Docs.attrs(entry.name)
     content_lines = Enum.map(entry.content_attrs, &content_attr/1)
-    prop_lines = Enum.map(entry.props, &prop_attr/1)
+    sentinels = color_sentinels(entry)
+    prop_lines = Enum.map(entry.props, &prop_attr(&1, sentinels))
 
     common = [
       ~s{attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")},
@@ -292,7 +293,7 @@ defmodule FlintUI.Generator do
     "attr(:#{attr.name}, #{inspect(attr.type)}, #{Enum.map_join(opts, ", ", &opt/1)})"
   end
 
-  defp prop_attr(prop) do
+  defp prop_attr(prop, sentinels) do
     cond do
       FlintUI.Styled.Prop.boolean?(prop) ->
         "attr(:#{prop.name}, :boolean, " <>
@@ -303,12 +304,10 @@ defmodule FlintUI.Generator do
           "default: #{inspect(prop.default)}, doc: #{inspect(prop.doc)})"
 
       prop.allow_custom ->
+        roles = custom_roles(prop, sentinels)
+
         doc =
-          if prop.name == :color do
-            "#{prop.doc} Semantic roles: #{Enum.join(prop.values, ", ")}."
-          else
-            prop.doc
-          end
+          if roles, do: "#{prop.doc} Semantic roles: #{Enum.join(roles, ", ")}.", else: prop.doc
 
         type = prop.type || :string
 
@@ -323,23 +322,97 @@ defmodule FlintUI.Generator do
     end
   end
 
+  # A free-form color prop documents its semantic roles in the wrapper's attr
+  # doc; other free-form props, such as a numeric `size`, keep the author's doc.
+  # A component that gives a color prop a sentinel value (the toggle's `inherit`)
+  # filters that value out: it is not a role and never reaches the theme as a
+  # `data-*` hook.
+  defp custom_roles(prop, sentinels) do
+    if prop.name == :color or Map.has_key?(sentinels, prop.name) do
+      case reject_sentinel(prop.values, Map.get(sentinels, prop.name)) do
+        [] -> nil
+        roles -> roles
+      end
+    end
+  end
+
+  defp color_sentinels(%{active_color: %{prop: prop, inherit: inherit}}) when not is_nil(inherit),
+    do: %{prop => inherit}
+
+  defp color_sentinels(_entry), do: %{}
+
+  defp reject_sentinel(values, nil), do: values
+  defp reject_sentinel(values, sentinel), do: Enum.reject(values, &(&1 == sentinel))
+
   # A free-form `color` prop needs the wrapper to resolve roles vs raw values
   # before rendering. The call is emitted literally so the generated wrapper
   # keeps no dependency on the registry at runtime.
   defp color_block(entry) do
-    with %{allow_custom: true} = prop <- FlintUI.Styled.Entry.prop(entry, :color),
-         [_ | _] = vars <- entry.color_vars do
-      """
-        assigns =
-          FlintUI.Styled.Color.apply(
-            assigns,
-            ~w(#{Enum.join(prop.values, " ")}),
-            #{inspect(vars)}
-          )
-      """
+    [color_call(entry, :color, entry.color_vars, :data_color, nil), active_color_call(entry)]
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join("\n\n")
+  end
+
+  defp active_color_call(%{active_color: %{prop: prop_name, vars: vars} = spec} = entry) do
+    color_call(entry, prop_name, vars, :data_active_color, Map.get(spec, :inherit))
+  end
+
+  defp active_color_call(_entry), do: nil
+
+  defp color_call(entry, prop_name, vars, data, inherit) do
+    with %{} = prop <- FlintUI.Styled.Entry.prop(entry, prop_name),
+         true <- prop.allow_custom,
+         [_ | _] <- vars do
+      roles = reject_sentinel(prop.values, inherit)
+
+      # The default prop and hook need no options, so the common case keeps the
+      # same call shape it always had.
+      args =
+        ["assigns", "~w(#{Enum.join(roles, " ")})", inspect(vars)] ++
+          if prop_name == :color and data == :data_color do
+            []
+          else
+            ["prop: #{inspect(prop_name)}", "data: #{inspect(data)}"]
+          end
+
+      last = length(args) - 1
+
+      arguments =
+        args
+        |> Enum.with_index()
+        |> Enum.map(fn {arg, index} -> "  " <> arg <> if(index == last, do: "", else: ",") end)
+
+      call = ["FlintUI.Styled.Color.apply("] ++ arguments ++ [")"]
+
+      body =
+        case inherit do
+          nil ->
+            ["assigns ="] ++ indent(call, 1)
+
+          sentinel ->
+            [
+              "assigns =",
+              "  if assigns.#{prop_name} == #{inspect(sentinel)} do",
+              "    FlintUI.Styled.Color.clear(assigns, #{inspect(data)})",
+              "  else"
+            ] ++
+              indent(call, 2) ++
+              [
+                "  end"
+              ]
+        end
+
+      body
+      |> indent(1)
+      |> Enum.join("\n")
     else
-      _ -> ""
+      _ -> nil
     end
+  end
+
+  defp indent(lines, levels) do
+    prefix = String.duplicate("  ", levels)
+    Enum.map(lines, &(prefix <> &1))
   end
 
   defp slot_block(entry) do

@@ -15,6 +15,11 @@ defmodule FlintUI.Styled.Prop do
   A prop can also accept a space-separated combination of its values with
   `multi: true` (see `multi?/1`). Its default is `false` to mean "none selected".
 
+  `resolved` lists values the wrapper maps to another value before rendering,
+  such as the toggle's `inherit`, which follows `variant`. A resolved value
+  never reaches a `data-*` hook, so the theme contract does not require a
+  selector for it.
+
   `forwarded_to` names a nested component's `data-element` when the wrapper
   renders the prop on that component instead of on its own root. The theme
   contract then checks the nested component's selectors, for example the
@@ -32,6 +37,7 @@ defmodule FlintUI.Styled.Prop do
           doc: String.t() | nil,
           allow_custom: boolean(),
           multi: boolean(),
+          resolved: [term()],
           forwarded_to: atom() | nil,
           type: atom() | nil
         }
@@ -45,7 +51,8 @@ defmodule FlintUI.Styled.Prop do
     :forwarded_to,
     :type,
     allow_custom: false,
-    multi: false
+    multi: false,
+    resolved: []
   ]
 
   @doc """
@@ -62,6 +69,11 @@ defmodule FlintUI.Styled.Prop do
              (prop.allow_custom and is_nil(prop.default)) do
       raise ArgumentError,
             "prop #{inspect(prop.name)} default #{inspect(prop.default)} is not one of #{inspect(prop.values)}"
+    end
+
+    unless Enum.all?(prop.resolved, &(&1 in prop.values)) do
+      raise ArgumentError,
+            "prop #{inspect(prop.name)} resolves values outside its list: #{inspect(prop.resolved -- prop.values)}"
     end
 
     prop

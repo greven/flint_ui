@@ -58,6 +58,45 @@ describe("pending guard", () => {
     controller.abort();
   });
 
+  it("cancels a click on a pending toggle before it flips its state", () => {
+    document.body.innerHTML = `
+      <button data-element="toggle" data-state="off" data-loading>
+        <span id="label">Bold</span>
+      </button>
+    `;
+    const { spy, controller } = listen(document, "click");
+
+    const event = click(document.getElementById("label")!);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
+    controller.abort();
+  });
+
+  it("allows a click on an active toggle", () => {
+    document.body.innerHTML = `<button data-element="toggle" data-state="off">Bold</button>`;
+    const { spy, controller } = listen(document, "click");
+
+    const event = click(document.querySelector("button")!);
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(spy).toHaveBeenCalledTimes(1);
+    controller.abort();
+  });
+
+  it("cancels a click on a disabled toggle", () => {
+    document.body.innerHTML = `
+      <button data-element="toggle" data-disabled>Bold</button>
+    `;
+    const { spy, controller } = listen(document, "click");
+
+    const event = click(document.querySelector("button")!);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
+    controller.abort();
+  });
+
   it("cancels a click on a pending link", () => {
     document.body.innerHTML = `<a data-element="button" data-loading href="/x">Save</a>`;
 
@@ -148,6 +187,23 @@ describe("pending guard", () => {
     const event = submit(form);
 
     expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("cancels a submit whose submitter is a pending toggle", () => {
+    document.body.innerHTML = `
+      <form id="form">
+        <button id="submit" type="submit" data-element="toggle" data-loading>Save</button>
+      </form>
+    `;
+    const form = document.getElementById("form") as HTMLFormElement;
+    const submitter = document.getElementById("submit") as HTMLButtonElement;
+    const { spy, controller } = listen(form, "submit");
+
+    const event = submit(form, submitter);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
+    controller.abort();
   });
 
   it("does not block a submit for a pending non-submit button", () => {

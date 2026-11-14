@@ -21,6 +21,16 @@ defmodule FlintUI.Styled.Entry do
   `color` property directly instead of a custom variable. Entries without a
   customizable `color` prop leave this empty.
 
+  `:active_color` declares a second, free-form color prop for components whose
+  pressed state can carry a different color, such as the toggle's
+  `active_color`. It is a map with the prop name (`:prop`), the variables a raw
+  value writes (`:vars`, same shape as `:color_vars`), and the sentinel value
+  that means "follow the base color" (`:inherit`, optional). The wrapper
+  resolves the prop into the `data-active-color` hook, or the inset values plus
+  the variables for a raw value, and omits both for the sentinel. The theme then
+  derives the pressed color's variables from the base ones when the hook is
+  absent.
+
   `:related` names components that are closely connected to this one, such as
   `:avatar` and `:avatar_group`. It is not a dependency: both components stand
   on their own and merely link to each other in the docs. A relation may also be
@@ -38,6 +48,12 @@ defmodule FlintUI.Styled.Entry do
 
   @type relation :: atom() | {atom(), keyword()}
 
+  @type active_color :: %{
+          prop: atom(),
+          vars: keyword(),
+          inherit: term()
+        }
+
   @type t :: %__MODULE__{
           name: atom(),
           base: module(),
@@ -50,6 +66,7 @@ defmodule FlintUI.Styled.Entry do
           slots: [FlintUI.Styled.Slot.t()],
           vars: [FlintUI.Styled.Var.t()],
           color_vars: keyword(),
+          active_color: active_color() | nil,
           related: [relation()],
           dependencies: [atom()]
         }
@@ -66,6 +83,7 @@ defmodule FlintUI.Styled.Entry do
             slots: [],
             vars: [],
             color_vars: [],
+            active_color: nil,
             related: [],
             dependencies: []
 

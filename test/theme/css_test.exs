@@ -312,8 +312,13 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="group"][data-variant="framed"])
     assert css =~ "--fl-color-primary:"
     assert css =~ ~s([data-element="toggle"][data-variant])
-    assert css =~ ~s([data-element="toggle"][data-variant] > [data-element="icon"])
+
+    assert css =~
+             ~s|[data-element="toggle"][data-variant] > :is([data-element="icon"], [data-element="loading"])|
+
     assert css =~ ~s([data-element="toggle"][data-color="neutral"])
+    assert css =~ ~s([data-element="toggle"][data-active-variant="soft"][data-state="on"])
+    assert css =~ ~s([data-element="toggle"][data-active-color="primary"])
     assert css =~ ~s([data-element="loading"][data-size])
     assert css =~ ~s([data-element="loading_text"][data-variant="dots"])
     assert css =~ ~s([data-element="loading_text"][data-variant="blink"])
@@ -487,8 +492,12 @@ defmodule FlintUI.Theme.CSSTest do
                ~r/\[data-element="#{name}"\]\[data-variant="surface"\] \{[^}]*border-color: var\(\s*--fl-#{name}-soft-border,/
     end
 
+    # The toggle has two treatments, so each state names its own input.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="on"\] \{[^}]*border-color: var\(\s*--fl-toggle-soft-border,/
+             ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="off"\] \{[^}]*border-color: var\(\s*--fl-toggle-soft-border,/
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-active-variant="surface"\]\[data-state="on"\] \{[^}]*border-color: var\(--fl-toggle-active-soft-border\)/
 
     # Neutral's shared soft border is too quiet for a state change, so the
     # toggle strengthens it to match the colored role edges.
@@ -518,32 +527,42 @@ defmodule FlintUI.Theme.CSSTest do
     end
   end
 
-  test "toggle variants mirror the button's depth and pressed treatments", %{css: css} do
-    # Solid pressed darkens its fill for the border and wears the top rim light.
+  test "toggle applies the button treatments in both states", %{css: css} do
+    # Untoggled solid fills with the role color and a darker edge line.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="on"\] \{[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-toggle-color, var\(--fl-color-inverted\)\),\s*oklch\(0% 0 0\) var\(--fl-border-strength-solid\)/
+             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="off"\] \{[^}]*background: var\(--fl-toggle-color, var\(--fl-color-inverted\)\);[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-toggle-color, var\(--fl-color-inverted\)\),/
+
+    # Toggled solid mirrors it from the active inputs.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-active-variant="solid"\]\[data-state="on"\] \{[^}]*background: var\(--fl-toggle-active-color\);[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-toggle-active-color\),/
+
+    # The toggled inputs follow the untoggled ones until `active-color` says
+    # otherwise, and each carries the raw-color fallback.
+    assert css =~ "--fl-toggle-active-color: var(--fl-toggle-color, var(--fl-color-inverted));"
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="on"\]::before \{\s*border-color: rgb\(255 255 255 \/ calc\(12% \* var\(--fl-control-depth, 1\)\)\);/
+             "--fl-toggle-active-text: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));"
 
-    # Surface carries the button's inner line and elevation.
+    assert css =~ "--fl-toggle-active-soft: var("
+
+    # Solid wears the top rim light in either state.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="surface"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
+             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="off"\]::before,\s*\[data-element="toggle"\]\[data-active-variant="solid"\]\[data-state="on"\]::before \{\s*border-color: rgb\(255 255 255 \/ calc\(12% \* var\(--fl-control-depth, 1\)\)\);/
 
-    # Subtle keeps the neutral off state; only the pressed state carries the
-    # tinted surface.
-    refute css =~
-             ~r/\[data-element="toggle"\]\[data-variant="subtle"\] \{\s*background: var\(--fl-color-surface-strong\);/
+    # Surface carries the button's inner line and elevation, in both states.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="off"\],\s*\[data-element="toggle"\]\[data-active-variant="surface"\]\[data-state="on"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
+
+    # Soft and subtle share the tinted surface in each state.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-variant="soft"\]\[data-state="off"\],\s*\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="off"\] \{[^}]*background: color-mix\(/
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(\s*in oklab,\s*var\(\s*--fl-toggle-soft,/
+             ~r/\[data-element="toggle"\]\[data-active-variant="soft"\]\[data-state="on"\],\s*\[data-element="toggle"\]\[data-active-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(/
 
     # Both controls expose the depth flattening hook.
     assert css =~
              ~r/\[data-element="toggle"\]:not\(\[data-depth\]\)\[data-variant\] \{\s*--fl-control-depth: 0;/
-
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
   end
 
   test "button and toggle expose only public color inputs", %{css: css} do
