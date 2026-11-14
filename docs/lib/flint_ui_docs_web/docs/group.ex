@@ -45,7 +45,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <Components.group>
+    <Components.group variant="attached">
       <Components.button variant="surface">Copy</Components.button>
       <Components.button variant="surface">Paste</Components.button>
     </Components.group>

@@ -190,33 +190,39 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
 
   def render_section(%{section: :examples, id: :group} = assigns) do
     ~H"""
-    <.prose content="A toggle composes with `<.group>` like a button, so a row of toggles reads as a single control.
-      The toggles are icon-only, so each one is `square`; the glyph keeps the full-strength label color
-      instead of the muted icon tint." />
+    <.prose content="A toggle composes with `<.group>` like a button, so a row of toggles reads as a single control." />
     <.preview {assigns} code={&code_group/1}>
-      <Components.group variant="attached">
-        <Components.toggle
-          variant="surface"
-          active_variant="subtle"
-          aria-label="Bold"
-          icon="lucide-letter-b"
-          square
-        />
-        <Components.toggle
-          variant="surface"
-          active_variant="subtle"
-          aria-label="Italic"
-          icon="lucide-italic"
-          square
-        />
-        <Components.toggle
-          variant="surface"
-          active_variant="subtle"
-          aria-label="Underline"
-          icon="lucide-underline"
-          square
-        />
-      </Components.group>
+      <div class="flex flex-wrap items-center gap-8">
+        <Components.group variant="attached">
+          <Components.toggle
+            variant="surface"
+            active_variant="subtle"
+            aria-label="Bold"
+            icon="lucide-letter-b"
+            square
+          />
+          <Components.toggle
+            variant="surface"
+            active_variant="subtle"
+            aria-label="Italic"
+            icon="lucide-italic"
+            square
+          />
+          <Components.toggle
+            variant="surface"
+            active_variant="subtle"
+            aria-label="Underline"
+            icon="lucide-underline"
+            square
+          />
+        </Components.group>
+
+        <Components.group variant="attached">
+          <Components.toggle active_color="tw:green">Day</Components.toggle>
+          <Components.toggle active_color="tw:green">Month</Components.toggle>
+          <Components.toggle active_color="tw:green">Year</Components.toggle>
+        </Components.group>
+      </div>
     </.preview>
     """
   end
