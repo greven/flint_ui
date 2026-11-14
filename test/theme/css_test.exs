@@ -317,10 +317,11 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="card"][data-variant="ghost"])
     assert css =~ "--fl-card-surface: transparent;"
     assert css =~ ~s([data-element="card"][data-inverted][data-variant="ghost"])
-    assert css =~ ~s([data-element="group"][data-variant="attached"])
-    assert css =~ ~s([data-element="group"][data-variant="framed"])
+    assert css =~ ~s([data-element="group"][data-attached])
+    assert css =~ ~s([data-element="group"][data-surface] {)
     assert css =~ "--fl-group-surface: var(--fl-color-surface);"
     assert css =~ "background: var(--fl-group-surface);"
+    assert css =~ ~s([data-element="group"][data-surface="solid"])
     assert css =~ ~s([data-element="group"][data-surface="soft"])
     assert css =~ ~s([data-element="group"][data-surface="strong"])
     assert css =~ ~s([data-element="group"][data-surface="ghost"])

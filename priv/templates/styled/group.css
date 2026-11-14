@@ -32,10 +32,10 @@
     }
 
     /* `size` sets the spacing metrics and cascades onto known controls; new
-   * controls opt in by adding their `data-element` below. `spaced` (the default)
-   * uses the gap and paints no shell, so the controls read as one set without
-   * touching. The `framed` shell stays near segmented-control density
-   * (2/2/3/4/4px) rather than tracking the scale. */
+   * controls opt in by adding their `data-element` below. A bare group uses the
+   * gap and paints no shell, so the controls read as one set without touching.
+   * The `surface` shell stays near segmented-control density (2/2/3/4/4px)
+   * rather than tracking the scale. */
     [data-element="group"][data-size="xs"] {
         --fl-group-gap: calc(var(--fl-spacing) * 0.5);
         --fl-group-padding: calc(var(--fl-spacing) * 0.5);
@@ -91,78 +91,79 @@
         line-height: var(--fl-control-line-height-xl);
     }
 
-    /* Attached: collapse the children into a single block. The boxes overlap by
-   * 1px, so the later child's opaque border covers the previous child's border
-   * in the shared column and only one seam shows. This holds regardless of the
-   * child's fill because the border itself is opaque. Hover is an in-border
-   * overlay, keeping the alpha border's backdrop stable. Raising the hovered or
-   * focused child lets its complete border win the seam. */
-    [data-element="group"][data-variant="attached"] {
+    /* Attached (`attached`): collapse the children into a single block. The
+   * boxes overlap by 1px, so the later child's opaque border covers the
+   * previous child's border in the shared column and only one seam shows. This
+   * holds regardless of the child's fill because the border itself is opaque.
+   * Hover is an in-border overlay, keeping the alpha border's backdrop stable.
+   * Raising the hovered or focused child lets its complete border win the seam.
+   * Joined children still fit inside a shell when a `surface` is also set. */
+    [data-element="group"][data-attached] {
         --fl-group-gap: 0;
-        --fl-group-padding: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="horizontal"] > * + * {
+    [data-element="group"][data-attached][data-orientation="horizontal"] > * + * {
         margin-inline-start: -1px;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="vertical"] > * + * {
+    [data-element="group"][data-attached][data-orientation="vertical"] > * + * {
         margin-block-start: -1px;
     }
 
-    [data-element="group"][data-variant="attached"] > *:is(:hover, :focus-visible) {
+    [data-element="group"][data-attached] > *:is(:hover, :focus-visible) {
         position: relative;
         z-index: 1;
     }
 
     /* The rim is a pseudo-element border: inherit the joined radii and drop the
    * edges that meet at an internal seam. */
-    [data-element="group"][data-variant="attached"] > *::before {
+    [data-element="group"][data-attached] > *::before {
         border-radius: inherit;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="horizontal"] > * + *::before {
+    [data-element="group"][data-attached][data-orientation="horizontal"] > * + *::before {
         border-inline-start-width: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="horizontal"] > *:not(:last-child)::before {
+    [data-element="group"][data-attached][data-orientation="horizontal"] > *:not(:last-child)::before {
         border-inline-end-width: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="vertical"] > * + *::before {
+    [data-element="group"][data-attached][data-orientation="vertical"] > * + *::before {
         border-block-start-width: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="vertical"] > *:not(:last-child)::before {
+    [data-element="group"][data-attached][data-orientation="vertical"] > *:not(:last-child)::before {
         border-block-end-width: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="horizontal"] > :first-child:not(:last-child) {
+    [data-element="group"][data-attached][data-orientation="horizontal"] > :first-child:not(:last-child) {
         border-start-end-radius: 0;
         border-end-end-radius: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="horizontal"] > :last-child:not(:first-child) {
+    [data-element="group"][data-attached][data-orientation="horizontal"] > :last-child:not(:first-child) {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="vertical"] > :first-child:not(:last-child) {
+    [data-element="group"][data-attached][data-orientation="vertical"] > :first-child:not(:last-child) {
         border-end-start-radius: 0;
         border-end-end-radius: 0;
     }
 
-    [data-element="group"][data-variant="attached"][data-orientation="vertical"] > :last-child:not(:first-child) {
+    [data-element="group"][data-attached][data-orientation="vertical"] > :last-child:not(:first-child) {
         border-start-start-radius: 0;
         border-start-end-radius: 0;
     }
 
-    [data-element="group"][data-variant="attached"] > :not(:first-child):not(:last-child) {
+    [data-element="group"][data-attached] > :not(:first-child):not(:last-child) {
         border-radius: 0;
     }
 
-    /* Framed: a padded, bordered shell around detached children. */
-    [data-element="group"][data-variant="framed"] {
+    /* Surface: a padded, bordered shell around the children. Setting any
+   * surface value turns it on; `none` omits the hook. */
+    [data-element="group"][data-surface] {
         padding: var(--fl-group-padding);
         border: 1px solid var(--fl-color-border);
         border-radius: var(--fl-radius-lg);
@@ -170,9 +171,13 @@
         color: var(--fl-color-text);
     }
 
-    /* Surface strength. Only the framed shell paints a surface; the other
-     * variants leave the input unused. `soft` and `strong` step up the neutral
-     * ladder, and `ghost` keeps the frame while removing its fill. */
+    /* Surface strength. Only the shell paints a surface; a bare group leaves
+     * the input unused. `soft` and `strong` step up the neutral ladder, and
+     * `ghost` keeps the frame while removing its fill. */
+    [data-element="group"][data-surface="solid"] {
+        --fl-group-surface: var(--fl-color-surface);
+    }
+
     [data-element="group"][data-surface="soft"] {
         --fl-group-surface: var(--fl-color-surface-subtle);
     }

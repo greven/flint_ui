@@ -18,35 +18,35 @@ defmodule FlintUI.Styled.Group do
           name: "--fl-group-gap",
           default: "0",
           doc:
-            "The gap between children; `attached` sets it to `0`, while `spaced` and `framed` derive it from `size`."
+            "The gap between children; `attached` sets it to `0`, while every other group derives it from `size`."
         ),
         Var.new(
           name: "--fl-group-padding",
           default: "0",
-          doc:
-            "The `framed` shell padding; derived from `size` and `0` for `spaced` and `attached` groups."
+          doc: "The shell padding; derived from `size` and `0` when the group has no `surface`."
         ),
         Var.new(
           name: "--fl-group-surface",
           default: "var(--fl-color-surface)",
           doc:
-            "The `framed` shell surface; `surface` selects it. Set it to `transparent` for an outline-only frame."
+            "The shell surface; `surface` selects it. Set it to `transparent` for an outline-only frame."
         )
       ],
       props: [
         Prop.new(
-          name: :variant,
-          values: ["spaced", "attached", "framed"],
-          default: "spaced",
+          name: :attached,
+          values: [true, false],
+          default: false,
           doc:
-            "How the children are joined. `spaced` keeps a gap between them without a shell; `attached` collapses their seams into one block; `framed` wraps them in a padded, bordered shell."
+            "Whether the children are joined into one block, sharing a seam. The group still only arranges them; each control keeps its own behavior."
         ),
         Prop.new(
           name: :surface,
-          values: ["solid", "soft", "strong", "ghost"],
-          default: "solid",
+          values: ["none", "solid", "soft", "strong", "ghost"],
+          default: "none",
+          resolved: ["none"],
           doc:
-            "The `framed` shell surface. `solid` is the base surface, `soft` and `strong` step up the neutral ladder, and `ghost` keeps the frame but removes the fill. The shell-less variants have no surface, so the value has no effect there."
+            "Set a surface to wrap the group in a padded, bordered shell; `none` (the default) leaves it bare. `solid` is the base surface, `soft` and `strong` step up the neutral ladder, and `ghost` keeps the frame without a fill. The shell composes with `attached`."
         ),
         Prop.new(
           name: :size,

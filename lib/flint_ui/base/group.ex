@@ -3,19 +3,19 @@ defmodule FlintUI.Base.Group do
   Lays out related controls as a single unit.
 
   A group is structural: it renders a root element and arranges its children, but
-  it never changes their behavior and it does not care what they are.
-  Buttons, toggles, inputs and selects can all be grouped together.
+  it never changes their behavior and it does not care what they are, so any
+  control can sit inside.
 
       <FlintUI.group>
         <FlintUI.button>Copy</FlintUI.button>
         <FlintUI.button>Paste</FlintUI.button>
       </FlintUI.group>
 
-  The generated styled component adds the visual treatment through the `variant`
-  hook: `spaced` keeps a gap between the children without a shell (the default),
-  `attached` joins them into one block (buttons that share a seam), while `framed`
-  wraps them in a padded, bordered shell. Use `orientation` to stack them
-  vertically.
+  The generated styled component adds the visual treatment through the
+  `attached` and `surface` hooks. By default the children keep a gap between
+  them; `attached` joins them into one block that shares a seam, and setting a
+  `surface` wraps them in a padded, bordered shell. The two compose, and
+  `orientation` stacks them vertically.
 
   The group is a plain container and carries no implicit role. Pass `label` to
   expose it as a named `group`. A group that is only visual needs neither.
@@ -44,7 +44,7 @@ defmodule FlintUI.Base.Group do
       name: :group,
       type: :action,
       since: "0.1",
-      status: :draft
+      status: :stable
     }
   end
 

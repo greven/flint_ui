@@ -56,7 +56,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="A toggle is a two-state button: it flips content on and off in place.
+    <.prose content="A toggle is a two-state button: it flips a setting on and off in place.
       Use it in place of a `<.button>` when the control reflects state rather than firing an action,
       and in place of a checkbox when there is no form to submit." />
     <.prose content="This component supports all of the same `attrs` and `slots` as `<.button>` so use
@@ -194,7 +194,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     <.prose content="A toggle composes with `<.group>` like a button, so a row of toggles reads as a single control." />
     <.preview {assigns} code={&code_group/1}>
       <div class="flex flex-wrap items-center gap-8">
-        <Components.group variant="attached">
+        <Components.group attached>
           <Components.toggle
             variant="surface"
             active_variant="subtle"
@@ -218,7 +218,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           />
         </Components.group>
 
-        <Components.group variant="attached">
+        <Components.group attached>
           <Components.toggle active_color="tw:green">Day</Components.toggle>
           <Components.toggle active_color="tw:green">Month</Components.toggle>
           <Components.toggle active_color="tw:green">Year</Components.toggle>
@@ -327,7 +327,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
 
   defp code_group(_) do
     """
-    <.group variant="attached">
+    <.group attached>
       <.toggle variant="surface" active_variant="subtle" aria-label="Bold" icon="lucide-letter-b" square />
       <.toggle variant="surface" active_variant="subtle" aria-label="Italic" icon="lucide-italic" square />
       <.toggle variant="surface" active_variant="subtle" aria-label="Underline" icon="lucide-underline" square />

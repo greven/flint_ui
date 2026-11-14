@@ -195,3 +195,32 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 - LiveView 1.2: `assets/js/phoenix_live_view/view.js` (`disableForm/3`,
   `putRef/4`), `live_socket.js` (`bindClicks/0`, `bindForms/0`),
   `element_ref.js` (`undoLoading/2`).
+
+## Group and input groups
+
+Status: `deferred`. No form controls are shipped yet; this split decides where the
+Input/Field work lands.
+
+### Decision
+
+- **Group stays child-agnostic.** A future Input can join an attached group or
+  sit inside a group with a `surface` as a peer of buttons and toggles: it reads
+  the shared `--fl-control-*` size and radius tokens, so it only needs an entry in
+  the `size` cascade and a `flex: 1` sizing rule to share a seam. Group does not
+  take on input anatomy.
+- **The compound input group belongs to the field.** Addons (prefix or unit text,
+  leading and trailing icons, clear or visibility buttons), the single border and
+  focus ring around them, and validation state belong with the Input/Field
+  component. The field also owns `<label for>`, `aria-describedby`, and
+  `aria-invalid`; a group `label` exposes `role="group"` and cannot name the
+  input.
+- **Copy names no unshipped controls.** The group docs and moduledoc say any
+  control can sit inside instead of listing inputs and selects. Name a control in
+  the copy when it ships.
+
+### Open questions
+
+- Does the field shell reuse the control height tokens, or does an input need its
+  own height? Inputs want more inline padding than an icon button.
+- Should a native `<input>` inherit the group `size`, or only a FlintUI input
+  that carries `data-element="input"`?

@@ -488,18 +488,18 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="You can [group](/components/group) related buttons with `<.group>`, so a row of buttons reads as a single control." />
     <.preview {assigns} code={&code_group/1}>
       <div class="flex flex-wrap items-center gap-3">
-        <Components.group variant="attached">
+        <Components.group attached>
           <Components.button variant="surface">Button</Components.button>
           <Components.button icon="lucide-chevron-down" aria-label="Menu" square />
         </Components.group>
 
-        <Components.group variant="framed">
+        <Components.group surface="solid">
           <Components.button variant="subtle" icon="hero-sparkles-mini">New</Components.button>
           <Components.button variant="subtle" icon="hero-trophy-mini">Best</Components.button>
           <Components.button variant="subtle" icon="hero-fire-mini">Hot</Components.button>
         </Components.group>
 
-        <Components.group variant="framed">
+        <Components.group surface="solid">
           <Components.button
             variant="soft"
             icon="lucide-text-align-start"
@@ -948,7 +948,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   defp code_group(_) do
     """
-    <.group variant="attached">
+    <.group attached>
       <.button variant="surface">Button</.button>
       <.button icon="lucide-chevron-down" aria-label="Menu" square />
     </.group>

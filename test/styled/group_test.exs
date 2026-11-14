@@ -15,17 +15,17 @@ defmodule FlintUI.Styled.GroupTest do
 
       def attached(assigns) do
         ~H"""
-        <.group variant="attached">
+        <.group attached>
           <button type="button">Copy</button>
           <button type="button">Paste</button>
         </.group>
         """
       end
 
-      def framed(assigns) do
+      def surface(assigns) do
         ~H"""
         <.group
-          variant="framed"
+          attached
           surface="soft"
           size="lg"
           orientation="vertical"
@@ -55,25 +55,24 @@ defmodule FlintUI.Styled.GroupTest do
 
     assert LazyHTML.tag(root(document, :group)) == ["div"]
     assert attr(document, :group, "data-group") == [""]
-    assert attr(document, :group, "data-variant") == ["spaced"]
-    assert attr(document, :group, "data-surface") == ["solid"]
+    assert attr(document, :group, "data-attached") == []
+    assert attr(document, :group, "data-surface") == []
     assert attr(document, :group, "data-size") == ["md"]
     assert attr(document, :group, "data-orientation") == ["horizontal"]
     assert root(document, :group) |> LazyHTML.text() |> String.split() == ["Copy", "Paste"]
   end
 
-  test "maps the attached variant", %{wrapper: wrapper} do
+  test "maps the attached attribute", %{wrapper: wrapper} do
     document = render(wrapper, :attached)
 
-    assert attr(document, :group, "data-variant") == ["attached"]
+    assert attr(document, :group, "data-attached") == [""]
+    assert attr(document, :group, "data-surface") == []
   end
 
-  test "maps the variant, surface, and size overrides and forwards the label", %{
-    wrapper: wrapper
-  } do
-    document = render(wrapper, :framed)
+  test "maps the surface and size overrides and forwards the label", %{wrapper: wrapper} do
+    document = render(wrapper, :surface)
 
-    assert attr(document, :group, "data-variant") == ["framed"]
+    assert attr(document, :group, "data-attached") == [""]
     assert attr(document, :group, "data-surface") == ["soft"]
     assert attr(document, :group, "data-size") == ["lg"]
     assert attr(document, :group, "data-orientation") == ["vertical"]
