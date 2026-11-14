@@ -20,21 +20,10 @@
         --fl-toggle-active-color-content: var(--fl-toggle-color-content, var(--fl-color-text-inverted));
         --fl-toggle-active-text: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
 
-        --fl-toggle-active-soft: var(
-            --fl-toggle-soft,
-            color-mix(
-                in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) 10%,
-                var(--fl-color-surface)
-            )
-        );
+        --fl-toggle-active-soft: var(--fl-toggle-soft, color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) 10%, var(--fl-color-surface)));
         --fl-toggle-active-soft-border: var(
             --fl-toggle-soft-border,
-            color-mix(
-                in oklab,
-                var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft),
-                var(--fl-color-surface)
-            )
+            color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
 
         display: inline-flex;
@@ -73,15 +62,28 @@
         transition: color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
+    /* State content joins the layout, so its icons take the same box. */
+    [data-element="toggle"][data-variant] > :is([data-part="on-state"], [data-part="off-state"]) :is([data-element="icon"], [data-element="loading"]) {
+        flex-shrink: 0;
+        width: var(--fl-icon-size, var(--fl-control-icon-md));
+        height: var(--fl-icon-size, var(--fl-control-icon-md));
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
     /* Add transparency to the icon beside the label, except square
      * (icon-only) toggles. */
+    [data-element="toggle"][data-variant]:not([data-square]) > :is([data-element="icon"], [data-element="loading"]),
     [data-element="toggle"][data-variant]:not([data-square])
-        > :is([data-element="icon"], [data-element="loading"]) {
+        > :is([data-part="on-state"], [data-part="off-state"])
+        :is([data-element="icon"], [data-element="loading"]) {
         color: color-mix(in oklab, currentColor 70%, transparent);
     }
 
     [data-element="toggle"][data-variant]:not([data-square]):not([data-disabled]):not([data-loading]):hover
-        > :is([data-element="icon"], [data-element="loading"]) {
+        > :is([data-element="icon"], [data-element="loading"]),
+    [data-element="toggle"][data-variant]:not([data-square]):not([data-disabled]):not([data-loading]):hover
+        > :is([data-part="on-state"], [data-part="off-state"])
+        :is([data-element="icon"], [data-element="loading"]) {
         color: currentColor;
     }
 
@@ -228,11 +230,11 @@
     }
 
     /* State content. Both slots are in the DOM so the client-side state flip
-     * can reveal the other one without a server round trip. */
+     * can reveal the other one without a server round trip. `display: contents`
+     * keeps the state content in the toggle's flex layout, so the gap,
+     * justification, and icon rules treat it like the default slot. */
     [data-element="toggle"] > :is([data-part="on-state"], [data-part="off-state"]) {
-        display: inline-flex;
-        align-items: center;
-        gap: inherit;
+        display: contents;
     }
 
     [data-element="toggle"][data-state="on"] > [data-part="off-state"],
@@ -389,15 +391,10 @@
         --fl-toggle-active-soft-border: var(--fl-color-light-soft-border);
     }
 
-    /* Untoggled variants, matching the button. Solid fills with the role color
-     * and a darker edge line. */
+    /* Untoggled variants, matching the button. Solid fills with the role color  and a darker edge line. */
     [data-element="toggle"][data-variant="solid"][data-state="off"] {
         background: var(--fl-toggle-color, var(--fl-color-inverted));
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-color, var(--fl-color-inverted)),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-toggle-color, var(--fl-color-inverted)), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-toggle-color-content, var(--fl-color-text-inverted));
     }
 
@@ -449,21 +446,13 @@
      * inputs, which follow the untoggled inputs unless `active-color` is set. */
     [data-element="toggle"][data-active-variant="solid"][data-state="on"] {
         background: var(--fl-toggle-active-color);
-        border-color: color-mix(
-            in oklab,
-            var(--fl-toggle-active-color),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-toggle-active-color), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-toggle-active-color-content);
     }
 
     [data-element="toggle"][data-active-variant="soft"][data-state="on"],
     [data-element="toggle"][data-active-variant="subtle"][data-state="on"] {
-        background: color-mix(
-            in oklab,
-            var(--fl-toggle-active-soft) calc(var(--fl-tint-opacity, 0.9) * 100%),
-            transparent
-        );
+        background: color-mix(in oklab, var(--fl-toggle-active-soft) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
         border-color: transparent;
         color: var(--fl-toggle-active-text);
     }
@@ -499,11 +488,7 @@
     }
 
     [data-element="toggle"][data-variant="link"][data-state="off"]:not([data-disabled]):not([data-loading]):hover {
-        color: color-mix(
-            in oklab,
-            var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted))) 75%,
-            transparent
-        );
+        color: color-mix(in oklab, var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted))) 75%, transparent);
         text-decoration-thickness: 2px;
     }
 
@@ -631,14 +616,11 @@
     }
 
     /* Square: equal width and height for icon-only toggles. A link has no box,
-     * so it keeps its text metrics in either state. */
-    [data-element="toggle"][data-square]:not(:is(
-            [data-variant="link"][data-state="off"],
-            [data-active-variant="link"][data-state="on"]
-        )) {
+     * so it keeps its text metrics in either state. The content gap is a size
+     * concern, so `square` does not remove it. */
+    [data-element="toggle"][data-square]:not(:is([data-variant="link"][data-state="off"], [data-active-variant="link"][data-state="on"])) {
         aspect-ratio: 1;
         padding-inline: 0;
-        gap: 0;
     }
 
     /* Wide: fills the container. */

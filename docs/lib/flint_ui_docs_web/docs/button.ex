@@ -85,6 +85,12 @@ defmodule FlintUIDocsWeb.Docs.Button do
       %{
         tab: :styled,
         section: :examples,
+        id: :group,
+        title: "Button Group"
+      },
+      %{
+        tab: :styled,
+        section: :examples,
         id: :custom_color,
         title: "Custom Color"
       },
@@ -199,7 +205,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     >
       <div class="flex flex-wrap items-center gap-3">
         <Components.button variant="subtle" color="success" dashed>Subtle</Components.button>
-        <Components.button variant="surface" color="neutral" dashed>And</Components.button>
+        <Components.button variant="outline" dashed>And</Components.button>
         <Components.button variant="outline" color="info" dashed>Dashing</Components.button>
       </div>
     </.preview>
@@ -472,6 +478,47 @@ defmodule FlintUIDocsWeb.Docs.Button do
         >
           <.icon name="lucide-panda" class="text-cyan-100" /> Panda
         </Components.button>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :examples, id: :group} = assigns) do
+    ~H"""
+    <.prose content="You can [group](/components/group) related buttons with `<.group>`, so a row of buttons reads as a single control." />
+    <.preview {assigns} code={&code_group/1}>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.group variant="attached">
+          <Components.button variant="surface">Button</Components.button>
+          <Components.button icon="lucide-chevron-down" aria-label="Menu" square />
+        </Components.group>
+
+        <Components.group variant="framed">
+          <Components.button variant="subtle" icon="hero-sparkles-mini">New</Components.button>
+          <Components.button variant="subtle" icon="hero-trophy-mini">Best</Components.button>
+          <Components.button variant="subtle" icon="hero-fire-mini">Hot</Components.button>
+        </Components.group>
+
+        <Components.group variant="framed">
+          <Components.button
+            variant="soft"
+            icon="lucide-text-align-start"
+            aria-label="Align Start"
+            square
+          />
+          <Components.button
+            variant="soft"
+            icon="lucide-text-align-center"
+            aria-label="Align Center"
+            square
+          />
+          <Components.button
+            variant="soft"
+            icon="lucide-text-align-end"
+            aria-label="Align End"
+            square
+          />
+        </Components.group>
       </div>
     </.preview>
     """
@@ -896,6 +943,15 @@ defmodule FlintUIDocsWeb.Docs.Button do
       background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
       <.icon name="lucide-panda" class="text-cyan-100" /> Panda
     </.button>
+    """
+  end
+
+  defp code_group(_) do
+    """
+    <.group variant="attached">
+      <.button variant="surface">Button</.button>
+      <.button icon="lucide-chevron-down" aria-label="Menu" square />
+    </.group>
     """
   end
 

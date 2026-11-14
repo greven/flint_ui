@@ -316,6 +316,9 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~s|[data-element="toggle"][data-variant] > :is([data-element="icon"], [data-element="loading"])|
 
+    assert css =~
+             ~s|[data-element="toggle"] > :is([data-part="on-state"], [data-part="off-state"]) {\n        display: contents;|
+
     assert css =~ ~s([data-element="toggle"][data-color="neutral"])
     assert css =~ ~s([data-element="toggle"][data-active-variant="soft"][data-state="on"])
     assert css =~ ~s([data-element="toggle"][data-active-color="primary"])

@@ -309,7 +309,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 
     .docs-prose code,
     .docs-code {
-        background-color: var(--fl-color-surface-strong);
+        background-color: var(--fl-color-surface-subtle);
         border: 1px solid var(--fl-color-border-strong);
         border-radius: 0.25rem;
         padding: 0.125rem 0.25rem;

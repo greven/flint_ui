@@ -404,11 +404,11 @@
         --fl-icon-size: var(--fl-control-icon-xl);
     }
 
-    /* Square: equal width and height for icon-only buttons. */
+    /* Square: equal width and height for icon-only buttons. The content gap is
+     * a size concern, so `square` does not remove it. */
     [data-element="button"][data-square]:not([data-variant="link"]) {
         aspect-ratio: 1;
         padding-inline: 0;
-        gap: 0;
     }
 
     /* Wide: fills the container. */

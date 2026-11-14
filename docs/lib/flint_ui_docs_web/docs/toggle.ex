@@ -12,7 +12,13 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   @impl true
   def sections do
     [
-      %{tab: :styled, section: :usage, id: :basic, title: "Usage"},
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :basic,
+        title: "Usage",
+        controls: [%{key: :toggled, type: :boolean, default: false, label: "Toggled"}]
+      },
       %{
         tab: :styled,
         section: :usage,
@@ -55,8 +61,8 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     <.prose content="Use the `inner_block` (default) slot to set the content of the toggle and `toggled` to
       set its state from the server." />
 
-    <.preview code={&main_code/1}>
-      <Components.toggle active_color="success">
+    <.preview :let={props} {assigns} code={&main_code/1}>
+      <Components.toggle active_color="success" toggled={props.toggled}>
         <.icon name="lucide-letter-b" /> Bold
       </Components.toggle>
     </.preview>
@@ -120,7 +126,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       `:leading` and `:trailing` slots place any content before or after it. For an icon-only toggle,
       combine `square` with an `aria-label` so it keeps an accessible name." />
 
-    <.preview id={@id} code={&code_icon/1} collapsed>
+    <.preview {assigns} code={&code_icon/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.toggle active_variant="soft" icon="lucide-letter-b">Bold</Components.toggle>
         <Components.toggle active_variant="subtle" color="success" icon="lucide-leaf">
@@ -130,7 +136,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
           <:trailing><.icon name="lucide-bookmark" /></:trailing>
           Saved
         </Components.toggle>
-        <Components.toggle aria-label="Like" active_variant="ghost" square>
+        <Components.toggle active_variant="ghost">
           <:off><.icon name="ph-heart" />Like</:off>
           <:on><.icon name="ph-heart-duotone" class="text-rose-600" />Like</:on>
         </Components.toggle>
@@ -141,11 +147,13 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
 
   def render_section(%{section: :usage, id: :content} = assigns) do
     ~H"""
-    <.prose content="Use the `:on` and `:off` slots to render different content per state." />
+    <.prose content="Use the `:on` and `:off` slots to render different content per state. The
+      state content joins the toggle's layout, so its labels and icons get the same gap and icon
+      treatment as the default slot." />
     <.prose content={"Keep the accessible name stable. An `aria-pressed` toggle already announces
       its state, so a label that also changes (\"Mute\" to \"Unmute\") makes the announcement
       ambiguous."} />
-    <.preview id={@id} code={&code_content/1}>
+    <.preview {assigns} code={&code_content/1}>
       <Components.toggle
         active_color="primary"
         class="data-[state=on]:ring data-[state=on]:ring-primary"
@@ -163,7 +171,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     ~H"""
     <.prose content="Set `disabled` to prevent activation. A toggle always renders a button, so it
       uses the native `disabled` attribute and leaves the tab order." />
-    <.preview id={@id} code={&code_disabled/1}>
+    <.preview {assigns} code={&code_disabled/1}>
       <div class="flex flex-wrap items-center gap-3">
         <Components.toggle
           :for={variant <- variants()}
@@ -183,7 +191,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   def render_section(%{section: :examples, id: :group} = assigns) do
     ~H"""
     <.prose content="A toggle composes with `<.group>` like a button, so a row of toggles reads as a single control." />
-    <.preview id={@id} code={&code_group/1}>
+    <.preview {assigns} code={&code_group/1}>
       <Components.group variant="attached">
         <Components.toggle
           variant="surface"
@@ -214,7 +222,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       when the toggle is clicked. The toggle runs its own state update first, then your `phx-click`,
       so the client state and `aria-pressed` change on the same click and reconcile with `toggled`
       on the next render." />
-    <.preview id={@id} code={&code_event/1}>
+    <.preview {assigns} code={&code_event/1}>
       <Components.toggle
         active_variant="soft"
         active_color="primary"
@@ -239,9 +247,9 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
 
   defp variants, do: ~w(solid soft subtle surface outline ghost link)
 
-  defp main_code(_) do
+  defp main_code(props) do
     """
-    <.toggle active_color="success">
+    <.toggle active_color="success"#{if props.toggled, do: " toggled"}>
       <.icon name="lucide-letter-b" /> Bold
     </.toggle>
     """
@@ -271,9 +279,14 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
 
   defp code_content(_) do
     """
-    <.toggle active_variant="soft" active_color="primary" aria-label="Mute">
-      <:on><.icon name="lucide-volume-x" /></:on>
-      <:off><.icon name="lucide-volume-2" /></:off>
+    <.toggle
+      active_color="primary"
+      class="data-[state=on]:ring data-[state=on]:ring-primary"
+      aria-label="Mute"
+      square
+    >
+      <:on><.icon name="lucide-volume-2" /></:on>
+      <:off><.icon name="lucide-volume-x" /></:off>
     </.toggle>
     """
   end
@@ -286,7 +299,10 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       <:trailing><.icon name="lucide-bookmark" /></:trailing>
       Saved
     </.toggle>
-    <.toggle active_variant="solid" active_color="primary" icon="lucide-heart" aria-label="Like" square />
+    <.toggle active_variant="ghost">
+      <:off><.icon name="ph-heart" />Like</:off>
+      <:on><.icon name="ph-heart-duotone" class="text-rose-600" />Like</:on>
+    </.toggle>
     """
   end
 
