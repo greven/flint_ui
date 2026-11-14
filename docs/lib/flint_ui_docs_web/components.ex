@@ -150,7 +150,7 @@ defmodule FlintUIDocsWeb.Components do
 
   attr(:variant, :string,
     values: ~w(solid soft subtle surface outline ghost link),
-    default: "subtle",
+    default: "surface",
     doc: "The visual emphasis of the button."
   )
 

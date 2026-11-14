@@ -123,7 +123,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   def render_section(%{section: :usage, id: :variant} = assigns) do
     ~H"""
-    <.prose content="Use the `variant` attr to change the visual style of the button. Default variant is subtle.
+    <.prose content="Use the `variant` attr to change the visual style of the button. Default variant is surface.
       Pass `dashed` to make the border dashed on any variant that has one; combine it with `outline` for an outlined dashed button." />
     <.preview :let={props} {assigns} code={&code_variant/1}>
       <Components.button variant={props.variant} radius={props.radius} pill={props.pill}>Button</Components.button>
@@ -744,7 +744,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       ".button",
       [
         Snippet.attr("color", props.color, "neutral"),
-        Snippet.attr("variant", props.variant, "subtle"),
+        Snippet.attr("variant", props.variant, "surface"),
         Snippet.flag("dashed", props.dashed)
       ],
       "Button"
@@ -755,7 +755,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     Snippet.tag(
       ".button",
       [
-        Snippet.attr("variant", props.variant, "subtle"),
+        Snippet.attr("variant", props.variant, "surface"),
         Snippet.attr("radius", props.radius, "md"),
         Snippet.flag("pill", props.pill)
       ],
