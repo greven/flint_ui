@@ -18,7 +18,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :variant, type: :select, default: "attached", label: "Variant"},
+          %{key: :variant, type: :select, default: "framed", label: "Variant"},
           %{key: :orientation, type: :select, default: "horizontal", label: "Orientation"},
           %{key: :size, type: :select, default: "md", label: "Size"}
         ]
@@ -38,12 +38,15 @@ defmodule FlintUIDocsWeb.Docs.Group do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.group
+        label="Text formatting"
         orientation={props.orientation}
         variant={props.variant}
         size={props.size}
       >
-        <Components.button>Copy</Components.button>
-        <Components.button>Paste</Components.button>
+        <Components.toggle icon="lucide-letter-b" aria-label="Bold" toggled />
+        <Components.toggle icon="lucide-italic" aria-label="Italic" />
+        <Components.toggle icon="lucide-underline" aria-label="Underline" />
+        <Components.toggle icon="lucide-strikethrough" aria-label="Strikethrough" />
       </Components.group>
     </.preview>
     """
@@ -69,13 +72,16 @@ defmodule FlintUIDocsWeb.Docs.Group do
     Snippet.tag(
       ".group",
       [
+        ~s(label="Text formatting"),
         Snippet.attr("orientation", props.orientation, "horizontal"),
         Snippet.attr("variant", props.variant, "spaced"),
         Snippet.attr("size", props.size, "md")
       ],
       """
-      <.button>Copy</.button>
-      <.button>Paste</.button>
+      <.toggle icon="lucide-letter-b" aria-label="Bold" toggled />
+      <.toggle icon="lucide-italic" aria-label="Italic" />
+      <.toggle icon="lucide-underline" aria-label="Underline" />
+      <.toggle icon="lucide-strikethrough" aria-label="Strikethrough" />
       """
       |> String.trim()
     )

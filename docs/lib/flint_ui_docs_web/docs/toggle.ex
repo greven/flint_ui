@@ -56,10 +56,11 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
+    <.prose content="A toggle is a two-state button: it flips content on and off in place.
+      Use it in place of a `<.button>` when the control reflects state rather than firing an action,
+      and in place of a checkbox when there is no form to submit." />
     <.prose content="This component supports all of the same `attrs` and `slots` as `<.button>` so use
       the [button docs](/components/button) as a reference." />
-    <.prose content="Use the `inner_block` (default) slot to set the content of the toggle and `toggled` to
-      set its state from the server." />
 
     <.preview :let={props} {assigns} code={&main_code/1}>
       <Components.toggle active_color="success" toggled={props.toggled}>
