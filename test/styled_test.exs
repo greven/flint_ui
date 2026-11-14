@@ -61,7 +61,7 @@ defmodule FlintUI.StyledTest do
 
     variant = Entry.prop(entry, :variant)
     assert variant.values == ["solid", "soft", "subtle", "surface", "outline", "ghost", "link"]
-    assert variant.default == "subtle"
+    assert variant.default == "surface"
     assert variant.default in variant.values
 
     color = Entry.prop(entry, :color)

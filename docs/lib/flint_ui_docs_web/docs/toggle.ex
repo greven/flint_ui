@@ -133,13 +133,22 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         <Components.toggle active_variant="subtle" color="success" icon="lucide-leaf">
           Organic
         </Components.toggle>
+
         <Components.toggle active_variant="soft">
           <:trailing><.icon name="lucide-bookmark" /></:trailing>
           Saved
         </Components.toggle>
-        <Components.toggle active_variant="ghost">
-          <:off><.icon name="ph-heart" />Like</:off>
-          <:on><.icon name="ph-heart-duotone" class="text-rose-600" />Like</:on>
+
+        <Components.toggle active_variant="ghost" class="group/heart">
+          <:off>
+            <.icon name="ph-heart" class="group-hover/heart:hidden" />
+            <.icon name="ph-heart-duotone" class="hidden text-rose-300 group-hover/heart:block" />Like
+          </:off>
+          <:on>
+            <.icon name="ph-heart-duotone" class="text-rose-600 group-hover/heart:hidden" />
+            <.icon name="ph-heart-break-duotone" class="hidden text-rose-600 group-hover/heart:block" />
+            Like
+          </:on>
         </Components.toggle>
       </div>
     </.preview>
@@ -311,9 +320,16 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       <:trailing><.icon name="lucide-bookmark" /></:trailing>
       Saved
     </.toggle>
-    <.toggle active_variant="ghost">
-      <:off><.icon name="ph-heart" />Like</:off>
-      <:on><.icon name="ph-heart-duotone" class="text-rose-600" />Like</:on>
+    <.toggle active_variant="ghost" class="group/heart">
+      <:off>
+        <.icon name="ph-heart" class="group-hover/heart:hidden" />
+        <.icon name="ph-heart-duotone" class="hidden text-rose-300 group-hover/heart:block" />Like
+      </:off>
+      <:on>
+        <.icon name="ph-heart-duotone" class="text-rose-600 group-hover/heart:hidden" />
+        <.icon name="ph-heart-break-duotone" class="hidden text-rose-600 group-hover/heart:block" />
+        Like
+      </:on>
     </.toggle>
     """
   end

@@ -194,6 +194,14 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-button-text: var(--fl-color-text-toned);"
     assert css =~ "--fl-button-color-content: var(--fl-color-text-inverted);"
     assert css =~ "--fl-toggle-text: var(--fl-color-text-toned);"
+
+    # A toggled neutral label takes the strongest ink so the state still reads
+    # on the faint soft fill; the untoggled label stays toned.
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-color="neutral"\] \{[^}]*--fl-toggle-active-text: var\(--fl-color-text-highlighted\);/
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-active-color="neutral"\] \{[^}]*--fl-toggle-active-text: var\(--fl-color-text-highlighted\);/
   end
 
   test "role text clears AA on surface and tinted surfaces", %{css: css} do

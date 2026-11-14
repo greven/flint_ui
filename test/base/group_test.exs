@@ -98,7 +98,8 @@ defmodule FlintUI.Base.GroupTest do
   end
 
   test "declares its type and documented parts" do
-    assert %FlintUI.Meta{name: :group, type: :action, status: :draft} = FlintUI.Base.Group.meta()
+    assert %FlintUI.Meta{name: :group, type: :action, status: :stable} =
+             FlintUI.Base.Group.meta()
 
     parts = FlintUI.Base.Group.parts_attrs()
     assert parts[:root] |> Enum.any?(&(&1.name == "[data-element]"))

@@ -10,12 +10,13 @@
      * Public inputs: `--fl-toggle-color`, `-color-content`, `-text`, `-soft`,
      * and `-soft-border` for the untoggled control. The toggled control reads
      * the matching `--fl-toggle-active-*` input, derived from the untoggled one
-     * here unless `active-color` sets it. Shared depth, elevation, and press
-     * behavior come from `--fl-control-*`. */
+     * here unless the color or `active-color` sets it. Shared depth, elevation,
+     * and press behavior come from `--fl-control-*`. */
     [data-element="toggle"][data-variant] {
         /* The toggled inputs follow the untoggled ones. Each carries the raw
          * color fallback too, because a raw color writes the base input inline
-         * and leaves its role absent. */
+         * and leaves its role absent. The color rules below override the
+         * toggled label where the untoggled value is too soft for an on state. */
         --fl-toggle-active-color: var(--fl-toggle-color, var(--fl-color-inverted));
         --fl-toggle-active-color-content: var(--fl-toggle-color-content, var(--fl-color-text-inverted));
         --fl-toggle-active-text: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));
@@ -295,6 +296,7 @@
         --fl-toggle-color: var(--fl-color-inverted);
         --fl-toggle-color-content: var(--fl-color-text-inverted);
         --fl-toggle-text: var(--fl-color-text-toned);
+        --fl-toggle-active-text: var(--fl-color-text-highlighted);
         --fl-toggle-soft: var(--fl-color-neutral-soft);
         --fl-toggle-soft-border: var(--fl-color-neutral-soft-border);
     }
@@ -376,7 +378,7 @@
     [data-element="toggle"][data-active-color="neutral"] {
         --fl-toggle-active-color: var(--fl-color-inverted);
         --fl-toggle-active-color-content: var(--fl-color-text-inverted);
-        --fl-toggle-active-text: var(--fl-color-text-toned);
+        --fl-toggle-active-text: var(--fl-color-text-highlighted);
         --fl-toggle-active-soft: var(--fl-color-neutral-soft);
         --fl-toggle-active-soft-border: var(--fl-color-neutral-soft-border);
     }
