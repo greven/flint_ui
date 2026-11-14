@@ -319,6 +319,11 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="card"][data-inverted][data-variant="ghost"])
     assert css =~ ~s([data-element="group"][data-variant="attached"])
     assert css =~ ~s([data-element="group"][data-variant="framed"])
+    assert css =~ "--fl-group-surface: var(--fl-color-surface);"
+    assert css =~ "background: var(--fl-group-surface);"
+    assert css =~ ~s([data-element="group"][data-surface="soft"])
+    assert css =~ ~s([data-element="group"][data-surface="strong"])
+    assert css =~ ~s([data-element="group"][data-surface="ghost"])
     assert css =~ "--fl-color-primary:"
     assert css =~ ~s([data-element="toggle"][data-variant])
 
@@ -410,10 +415,9 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~r/>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]/
   end
 
-  test "an attached group overlaps children onto an opaque surface fill", %{css: css} do
-    # The later child's opaque fill covers the previous border at the seam, so
-    # only one line shows. The neutral border ladder is opaque, so it reads the
-    # same over the fill at the seam.
+  test "an attached group overlaps children into a single seam", %{css: css} do
+    # The later child's opaque border covers the previous child's border at the
+    # seam, so only one line shows whatever the child's fill.
     assert css =~ "margin-inline-start: -1px"
     assert css =~ "margin-block-start: -1px"
     assert css =~ "--fl-color-surface:"
@@ -421,8 +425,8 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              "--fl-color-border: light-dark(var(--fl-color-neutral-200), var(--fl-color-neutral-800));"
 
-    # Chromatic borders are opaque against the surface fill and share the soft
-    # strength across subtle and surface.
+    # Chromatic borders are opaque and share the soft strength across subtle and
+    # surface.
     assert css =~ ~r/var\(--fl-border-strength-soft\),\s+var\(--fl-color-surface\)/
     refute css =~ ~r/var\(--fl-border-strength\),\s+var\(--fl-color-surface\)/
   end

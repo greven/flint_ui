@@ -22,6 +22,13 @@ defmodule FlintUIDocsWeb.Docs.Group do
           %{key: :orientation, type: :select, default: "horizontal", label: "Orientation"},
           %{key: :size, type: :select, default: "md", label: "Size"}
         ]
+      },
+      %{
+        tab: :styled,
+        section: :examples,
+        id: :icons,
+        title: "Icons Only",
+        group_title: "Examples"
       }
     ]
   end
@@ -35,20 +42,26 @@ defmodule FlintUIDocsWeb.Docs.Group do
         variant={props.variant}
         size={props.size}
       >
-        <Components.button variant="surface">Copy</Components.button>
-        <Components.button variant="surface">Paste</Components.button>
+        <Components.button>Copy</Components.button>
+        <Components.button>Paste</Components.button>
       </Components.group>
     </.preview>
     """
   end
 
   @impl true
-  def parts_demo(assigns) do
+  def render_section(%{section: :examples, id: :icons} = assigns) do
     ~H"""
-    <Components.group variant="attached">
-      <Components.button variant="surface">Copy</Components.button>
-      <Components.button variant="surface">Paste</Components.button>
-    </Components.group>
+    <.prose content="For an icon-only group, combine `square` with an `aria-label` so it keeps an accessible name. " />
+
+    <.preview code={&icons_code/1}>
+      <Components.group variant="attached">
+        <Components.button icon="ph-copy" aria-label="Copy" square />
+        <Components.button icon="ph-clipboard" aria-label="Paste" square />
+        <Components.button icon="ph-pencil" aria-label="Edit" square />
+        <Components.button icon="ph-trash" aria-label="Delete" square />
+      </Components.group>
+    </.preview>
     """
   end
 
@@ -57,14 +70,19 @@ defmodule FlintUIDocsWeb.Docs.Group do
       ".group",
       [
         Snippet.attr("orientation", props.orientation, "horizontal"),
-        Snippet.attr("variant", props.variant, "attached"),
+        Snippet.attr("variant", props.variant, "spaced"),
         Snippet.attr("size", props.size, "md")
       ],
       """
-      <.button variant="surface">Copy</.button>
-      <.button variant="surface">Paste</.button>
+      <.button>Copy</.button>
+      <.button>Paste</.button>
       """
       |> String.trim()
     )
+  end
+
+  defp icons_code(_) do
+    """
+    """
   end
 end

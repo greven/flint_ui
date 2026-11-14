@@ -12,9 +12,10 @@ defmodule FlintUI.Base.Group do
       </FlintUI.group>
 
   The generated styled component adds the visual treatment through the `variant`
-  hook: `attached` joins the children into one block (buttons that share a seam),
-  while `framed` wraps them in a padded, bordered shell. Use `orientation` to
-  stack them vertically.
+  hook: `spaced` keeps a gap between the children without a shell (the default),
+  `attached` joins them into one block (buttons that share a seam), while `framed`
+  wraps them in a padded, bordered shell. Use `orientation` to stack them
+  vertically.
 
   The group is a plain container and carries no implicit role. Pass `label` to
   expose it as a named `group`. A group that is only visual needs neither.

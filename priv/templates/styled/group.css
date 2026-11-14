@@ -1,10 +1,12 @@
 @layer components {
     /* Group: a child-agnostic container that joins related controls. Geometry
    * targets `> *`; only the size cascade names known controls. Public inputs are
-   * `--fl-group-gap` and `--fl-group-padding` (set by `size`). */
+   * `--fl-group-gap`, `--fl-group-padding` (set by `size`), and
+   * `--fl-group-surface` (set by `surface`). */
     [data-element="group"][data-group] {
         --fl-group-gap: 0;
         --fl-group-padding: 0;
+        --fl-group-surface: var(--fl-color-surface);
         display: inline-flex;
         gap: var(--fl-group-gap);
         vertical-align: middle;
@@ -29,9 +31,11 @@
         --fl-control-press: none;
     }
 
-    /* `size` sets the shell metrics and cascades onto known controls; new controls
-   * opt in by adding their `data-element` below. The framed shell stays near
-   * segmented-control density (2/2/3/4/4px) rather than tracking the scale. */
+    /* `size` sets the spacing metrics and cascades onto known controls; new
+   * controls opt in by adding their `data-element` below. `spaced` (the default)
+   * uses the gap and paints no shell, so the controls read as one set without
+   * touching. The `framed` shell stays near segmented-control density
+   * (2/2/3/4/4px) rather than tracking the scale. */
     [data-element="group"][data-size="xs"] {
         --fl-group-gap: calc(var(--fl-spacing) * 0.5);
         --fl-group-padding: calc(var(--fl-spacing) * 0.5);
@@ -87,11 +91,12 @@
         line-height: var(--fl-control-line-height-xl);
     }
 
-    /* Attached: collapse the children into a single block. Bordered controls
-   * paint an opaque surface fill, so the later child's fill covers
-   * the previous child's border in the shared column and only one seam shows.
-   * Hover is an in-border overlay, keeping the alpha border's backdrop stable.
-   * Raising the hovered/focused child lets its complete border win the seam. */
+    /* Attached: collapse the children into a single block. The boxes overlap by
+   * 1px, so the later child's opaque border covers the previous child's border
+   * in the shared column and only one seam shows. This holds regardless of the
+   * child's fill because the border itself is opaque. Hover is an in-border
+   * overlay, keeping the alpha border's backdrop stable. Raising the hovered or
+   * focused child lets its complete border win the seam. */
     [data-element="group"][data-variant="attached"] {
         --fl-group-gap: 0;
         --fl-group-padding: 0;
@@ -161,7 +166,22 @@
         padding: var(--fl-group-padding);
         border: 1px solid var(--fl-color-border);
         border-radius: var(--fl-radius-lg);
-        background: var(--fl-color-surface);
+        background: var(--fl-group-surface);
         color: var(--fl-color-text);
+    }
+
+    /* Surface strength. Only the framed shell paints a surface; the other
+     * variants leave the input unused. `soft` and `strong` step up the neutral
+     * ladder, and `ghost` keeps the frame while removing its fill. */
+    [data-element="group"][data-surface="soft"] {
+        --fl-group-surface: var(--fl-color-surface-subtle);
+    }
+
+    [data-element="group"][data-surface="strong"] {
+        --fl-group-surface: var(--fl-color-surface-strong);
+    }
+
+    [data-element="group"][data-surface="ghost"] {
+        --fl-group-surface: transparent;
     }
 }

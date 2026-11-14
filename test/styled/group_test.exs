@@ -13,10 +13,20 @@ defmodule FlintUI.Styled.GroupTest do
         """
       end
 
+      def attached(assigns) do
+        ~H"""
+        <.group variant="attached">
+          <button type="button">Copy</button>
+          <button type="button">Paste</button>
+        </.group>
+        """
+      end
+
       def framed(assigns) do
         ~H"""
         <.group
           variant="framed"
+          surface="soft"
           size="lg"
           orientation="vertical"
           label="Actions"
@@ -45,16 +55,26 @@ defmodule FlintUI.Styled.GroupTest do
 
     assert LazyHTML.tag(root(document, :group)) == ["div"]
     assert attr(document, :group, "data-group") == [""]
-    assert attr(document, :group, "data-variant") == ["attached"]
+    assert attr(document, :group, "data-variant") == ["spaced"]
+    assert attr(document, :group, "data-surface") == ["solid"]
     assert attr(document, :group, "data-size") == ["md"]
     assert attr(document, :group, "data-orientation") == ["horizontal"]
     assert root(document, :group) |> LazyHTML.text() |> String.split() == ["Copy", "Paste"]
   end
 
-  test "maps the variant and size overrides and forwards the label", %{wrapper: wrapper} do
+  test "maps the attached variant", %{wrapper: wrapper} do
+    document = render(wrapper, :attached)
+
+    assert attr(document, :group, "data-variant") == ["attached"]
+  end
+
+  test "maps the variant, surface, and size overrides and forwards the label", %{
+    wrapper: wrapper
+  } do
     document = render(wrapper, :framed)
 
     assert attr(document, :group, "data-variant") == ["framed"]
+    assert attr(document, :group, "data-surface") == ["soft"]
     assert attr(document, :group, "data-size") == ["lg"]
     assert attr(document, :group, "data-orientation") == ["vertical"]
     assert attr(document, :group, "role") == ["group"]
