@@ -23,5 +23,8 @@
   "peerDependencies": {
     "phoenix": "*",
     "phoenix_live_view": "*"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.8.0"
   }
 }

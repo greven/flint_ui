@@ -25,7 +25,8 @@ defmodule FlintUI.StyledTest do
                :loading_text,
                :separator,
                :tabs,
-               :toggle
+               :toggle,
+               :tooltip
              ])
   end
 

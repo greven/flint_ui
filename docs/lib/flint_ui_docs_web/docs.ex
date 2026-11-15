@@ -33,7 +33,8 @@ defmodule FlintUIDocsWeb.Docs do
     Separator,
     Source,
     Tabs,
-    Toggle
+    Toggle,
+    Tooltip
   }
 
   @modules %{
@@ -55,7 +56,8 @@ defmodule FlintUIDocsWeb.Docs do
     loading_text: LoadingText,
     separator: Separator,
     tabs: Tabs,
-    toggle: Toggle
+    toggle: Toggle,
+    tooltip: Tooltip
   }
 
   @doc "Returns the registered `{name, module}` page modules."

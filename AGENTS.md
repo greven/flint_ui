@@ -121,7 +121,11 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   arrow keys), so do not document it as one.
 - **No dependencies by accident.** Tailwind is never a library dependency.
   Elixir's built-in `JSON` is the JSON library; never add Jason. Prefer the
-  standard library before adding a package.
+  standard library before adding a package. Floating UI is the one JS runtime
+  dependency; it is bundled into `priv/static/flint.js`, so consumers never
+  install it, and only `assets/src/lib/position.ts` may import it. Everything
+  else reads the positioner from there, which keeps the geometry engine
+  swappable (for example for CSS anchor positioning).
 
 ## Styling contract
 

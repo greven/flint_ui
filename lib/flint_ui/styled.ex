@@ -32,7 +32,8 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.LoadingText,
     FlintUI.Styled.Separator,
     FlintUI.Styled.Tabs,
-    FlintUI.Styled.Toggle
+    FlintUI.Styled.Toggle,
+    FlintUI.Styled.Tooltip
   ]
 
   @doc """

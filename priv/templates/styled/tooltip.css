@@ -1,0 +1,113 @@
+@layer components {
+    /* Tooltip. The wrapper is layout-neutral: `display: contents` keeps the
+     * trigger exactly where it would sit without the tooltip, and the content
+     * is a manual popover, so the browser renders it in the top layer instead
+     * of letting an `overflow` ancestor clip it. The hook anchors the content at
+     * the viewport origin and translates it next to the trigger. */
+    [data-element="tooltip"][data-tooltip] {
+        display: contents;
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"] {
+        box-sizing: border-box;
+        inset: auto;
+        margin: 0;
+        width: max-content;
+        max-width: var(--fl-tooltip-max-width, 18rem);
+        padding: var(--fl-spacing-sm) var(--fl-spacing-md);
+        border: 0;
+        border-radius: var(--fl-radius-md);
+        background-color: var(--fl-color-inverted);
+        color: var(--fl-color-text-inverted);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-xs);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: 1.375;
+        text-align: start;
+        text-wrap: balance;
+        overflow: visible;
+        --_fl-tooltip-ring: color-mix(in oklab, var(--fl-color-text-inverted) 22%, transparent);
+        box-shadow:
+            var(--fl-shadow-md),
+            inset 0 0 0 1px var(--fl-color-inverted),
+            inset 0 0 0 2px var(--_fl-tooltip-ring);
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"][data-state="open"] {
+        opacity: 1;
+        animation: fl-tooltip-in var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"][data-state="closed"] {
+        animation: fl-tooltip-out var(--fl-duration-fast) var(--fl-ease-in-out);
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="arrow"] {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        background-color: inherit;
+        box-shadow:
+            inset 0 0 0 1px var(--fl-color-inverted),
+            inset 0 0 0 2px var(--_fl-tooltip-ring);
+        transform: rotate(45deg);
+        pointer-events: none;
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="top"] [data-part="arrow"] {
+        bottom: -3px;
+        left: var(--_fl-tooltip-arrow-x, calc(50% - 4px));
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="bottom"] [data-part="arrow"] {
+        top: -4px;
+        left: var(--_fl-tooltip-arrow-x, calc(50% - 4px));
+        clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="left"] [data-part="arrow"] {
+        right: -4px;
+        top: var(--_fl-tooltip-arrow-y, calc(50% - 4px));
+        clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="right"] [data-part="arrow"] {
+        left: -4px;
+        top: var(--_fl-tooltip-arrow-y, calc(50% - 4px));
+        clip-path: polygon(0 0, 0 100%, 100% 100%);
+    }
+}
+
+@keyframes fl-tooltip-in {
+    from {
+        opacity: 0;
+        translate: 0 2px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fl-tooltip-out {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: 0 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-element="tooltip"][data-tooltip] [data-part="content"] {
+        animation: none;
+    }
+}

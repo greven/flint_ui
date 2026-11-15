@@ -31,6 +31,7 @@ defmodule FlintUI do
   - `separator`
   - `tabs`
   - `toggle`
+  - `tooltip`
 
   ## Sounds
 
@@ -62,7 +63,8 @@ defmodule FlintUI do
     {:loading_text, []},
     {:separator, []},
     {:tabs, [:select_tab]},
-    {:toggle, []}
+    {:toggle, []},
+    {:tooltip, []}
   ]
 
   defmacro __using__(opts) do
