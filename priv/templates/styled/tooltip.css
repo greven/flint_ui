@@ -26,7 +26,7 @@
         text-align: start;
         text-wrap: balance;
         overflow: visible;
-        --_fl-tooltip-ring: color-mix(in oklab, var(--fl-color-text-inverted) 22%, var(--fl-color-inverted));
+        --_fl-tooltip-ring: color-mix(in oklab, var(--fl-color-text-inverted) 40%, var(--fl-color-inverted));
         box-shadow:
             var(--fl-shadow-md),
             inset 0 0 0 1px var(--_fl-tooltip-ring);

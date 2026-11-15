@@ -71,12 +71,15 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
         <Components.tooltip>
           <Components.button variant="ghost" size="xs" icon="lucide-info" square />
           <:content>
-            <p>Save often to not <u><strong>LOSE PROGRESS</strong></u>!</p>
-            <p>
-              Save by pressing
-              <Components.kbd size="xs" variant="outline">Alt</Components.kbd>
-              + <Components.kbd size="xs" variant="outline">F4</Components.kbd>.
-            </p>
+            <div class="w-full flex items-center justify-between">
+              <p class="text-sm">Save Now!</p>
+              <div>
+                <Components.kbd size="xs" variant="outline">Alt</Components.kbd>
+                +
+                <Components.kbd size="xs" variant="outline">F4</Components.kbd>
+              </div>
+            </div>
+            <p class="mt-2">Remember that save scumming saves lifes!</p>
           </:content>
         </Components.tooltip>
       </div>
