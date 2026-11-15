@@ -1,0 +1,131 @@
+@layer components {
+    /* Popover. The wrapper is layout-neutral: `display: contents` keeps the
+     * trigger exactly where it would sit without the popover, and the content
+     * is a manual popover, so the browser renders it in the top layer instead
+     * of letting an `overflow` ancestor clip it. The hook anchors the content at
+     * the viewport origin and translates it next to the trigger. Content styles
+     * key on the content's own hook so they survive a Phoenix portal, which
+     * moves the content out of the root's subtree. */
+    [data-element="popover"][data-popover] {
+        display: contents;
+    }
+
+    [data-part="content"][data-popover-content] {
+        box-sizing: border-box;
+        inset: auto;
+        margin: 0;
+        width: max-content;
+        max-width: var(--fl-popover-max-width, 20rem);
+        padding: var(--fl-popover-padding, var(--fl-spacing-md));
+        border: 1px solid var(--fl-popover-border, var(--fl-color-border));
+        border-radius: var(--fl-radius-lg);
+        background-color: var(--fl-popover-surface, var(--fl-color-surface));
+        color: var(--fl-popover-text, var(--fl-color-text));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: 1.5;
+        text-align: start;
+        overflow: visible;
+        box-shadow: var(--fl-shadow-lg);
+        opacity: 0;
+    }
+
+    /* The content joins the open state only after the hook has positioned it,
+     * so the enter animation never starts from the top-layer default corner. */
+    [data-part="content"][data-popover-content][data-state="open"] {
+        opacity: 1;
+        animation: fl-popover-in var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-part="content"][data-popover-content][data-state="closed"] {
+        animation: fl-popover-out var(--fl-duration-fast) var(--fl-ease-in-out);
+    }
+
+    /* A modal popover isolates the page, so give the isolation a visible edge:
+     * a deeper shadow and a quiet backdrop. The hook owns the inert behavior. */
+    [data-part="content"][data-popover-content][data-modal] {
+        box-shadow: var(--fl-shadow-xl);
+    }
+
+    [data-part="content"][data-popover-content][data-modal]::backdrop {
+        background-color: color-mix(in oklab, var(--fl-color-text) 18%, transparent);
+    }
+
+    [data-part="content"][data-popover-content] [data-part="arrow"] {
+        position: absolute;
+        box-sizing: border-box;
+        width: 8px;
+        height: 8px;
+        border: 0 solid var(--_fl-popover-ring);
+        border-radius: 2px;
+        background-color: inherit;
+        transform: rotate(45deg);
+        pointer-events: none;
+        --_fl-popover-ring: color-mix(
+            in oklab,
+            var(--fl-popover-border, var(--fl-color-border)) 80%,
+            var(--fl-popover-surface, var(--fl-color-surface))
+        );
+    }
+
+    [data-part="content"][data-popover-content][data-side="top"] [data-part="arrow"] {
+        bottom: -4px;
+        left: var(--_fl-popover-arrow-x, calc(50% - 4px));
+        border-right-width: 1px;
+        border-bottom-width: 1px;
+    }
+
+    [data-part="content"][data-popover-content][data-side="bottom"] [data-part="arrow"] {
+        top: -4px;
+        left: var(--_fl-popover-arrow-x, calc(50% - 4px));
+        border-top-width: 1px;
+        border-left-width: 1px;
+    }
+
+    [data-part="content"][data-popover-content][data-side="left"] [data-part="arrow"] {
+        right: -4px;
+        top: var(--_fl-popover-arrow-y, calc(50% - 4px));
+        border-top-width: 1px;
+        border-right-width: 1px;
+    }
+
+    [data-part="content"][data-popover-content][data-side="right"] [data-part="arrow"] {
+        left: -4px;
+        top: var(--_fl-popover-arrow-y, calc(50% - 4px));
+        border-left-width: 1px;
+        border-bottom-width: 1px;
+    }
+}
+
+/* Keep the enter/leave animation on `translate` and `opacity`, like the
+ * tooltip. The positioner owns the content's inline `transform`, so the
+ * keyframes must not take it over with a `scale` or a `transform` function. */
+@keyframes fl-popover-in {
+    from {
+        opacity: 0;
+        translate: 0 2px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fl-popover-out {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: 0 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-part="content"][data-popover-content] {
+        animation: none;
+    }
+}

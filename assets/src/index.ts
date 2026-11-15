@@ -6,6 +6,7 @@ installAvatarFallback();
 
 export { Accordion } from "./components/accordion";
 export { Collapsible } from "./components/collapsible";
+export { Popover } from "./components/popover";
 export { Tabs } from "./components/tabs";
 export { Tooltip } from "./components/tooltip";
 export { hooks } from "./hooks";

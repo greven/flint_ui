@@ -20,7 +20,7 @@ defmodule FlintUI.Styled.TooltipTest do
           align="start"
           offset={12}
           delay={0}
-          arrow={false}
+          arrow={true}
           disabled
           class="extra"
           data-role="test"
@@ -109,8 +109,8 @@ defmodule FlintUI.Styled.TooltipTest do
     assert part_attr(document, "content", "id") == ["#{root_id}-content"]
   end
 
-  test "renders the arrow by default and omits it when disabled", %{wrapper: wrapper} do
-    assert count_part(render(wrapper, :defaults), "arrow") == 1
-    assert count_part(render(wrapper, :configured), "arrow") == 0
+  test "omits the arrow by default and renders it when enabled", %{wrapper: wrapper} do
+    assert count_part(render(wrapper, :defaults), "arrow") == 0
+    assert count_part(render(wrapper, :configured), "arrow") == 1
   end
 end

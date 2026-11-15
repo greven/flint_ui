@@ -48,7 +48,8 @@ defmodule FlintUI.Base.Tooltip do
 
   `offset` is the gap between the trigger and the content in pixels, `delay` is
   how long the pointer must rest on the trigger before the tooltip appears
-  (`0` opens immediately), and `arrow` toggles the pointing arrow.
+  (`0` opens immediately), and `arrow` adds the pointing arrow (off by
+  default).
 
   The content is rendered in the browser's top layer with the
   [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API),
@@ -371,8 +372,8 @@ defmodule FlintUI.Base.Tooltip do
     doc: "Delay in milliseconds before the tooltip opens on hover. `0` opens immediately."
 
   attr :arrow, :boolean,
-    default: true,
-    doc: "Whether to render the arrow pointing at the trigger."
+    default: false,
+    doc: "Whether to render the arrow pointing at the trigger. Off by default."
 
   attr :disabled, :boolean,
     default: false,

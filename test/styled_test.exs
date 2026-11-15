@@ -23,6 +23,7 @@ defmodule FlintUI.StyledTest do
                :kbd,
                :loading,
                :loading_text,
+               :popover,
                :separator,
                :tabs,
                :toggle,

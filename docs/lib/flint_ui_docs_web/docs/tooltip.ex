@@ -20,7 +20,7 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
         controls: [
           %{key: :placement, type: :select, default: "top", label: "Placement"},
           %{key: :align, type: :select, default: "center", label: "Align"},
-          %{key: :arrow, type: :boolean, default: true, label: "Arrow"},
+          %{key: :arrow, type: :boolean, default: false, label: "Arrow"},
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"}
         ]
       },
@@ -51,7 +51,8 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
     ~H"""
     <.prose content="Wrap the tooltip around the element that should trigger it and pass a short label with `text`. The first element in
       the default slot becomes the trigger; the hook marks it and wires its description, so there are no attributes to spread. The component generates its own DOM id, so pass `id` only when you need a stable handle from your own CSS or JS. `placement` and `align`
-      pick the preferred position, and the content flips and shifts on its own when it would leave the viewport." />
+      pick the preferred position, and the content flips and shifts on its own when it would leave the viewport. The arrow is off by default; set `arrow` to draw one. The hairline follows it:
+      without an arrow it sits 1px inside the edge, with one it moves to the edge so it can continue onto the arrow." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
       <Components.tooltip
         text="Save changes"

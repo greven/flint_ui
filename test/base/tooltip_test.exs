@@ -14,7 +14,7 @@ defmodule FlintUI.Base.TooltipTest do
         |> assign_new(:align, fn -> "center" end)
         |> assign_new(:offset, fn -> 6 end)
         |> assign_new(:delay, fn -> 200 end)
-        |> assign_new(:arrow, fn -> true end)
+        |> assign_new(:arrow, fn -> false end)
         |> assign_new(:disabled, fn -> false end)
 
       ~H"""
@@ -210,16 +210,18 @@ defmodule FlintUI.Base.TooltipTest do
   end
 
   describe "arrow" do
-    test "renders a decorative arrow by default" do
-      doc = render()
-
-      assert part_attr(doc, "arrow", "aria-hidden") == ["true"]
-    end
-
-    test "omits the arrow when disabled" do
-      doc = render(arrow: false)
+    test "omits the arrow by default" do
+      doc =
+        render_component(&TestComponent.slot_example/1, %{})
+        |> LazyHTML.from_fragment()
 
       assert count_part(doc, "arrow") == 0
+    end
+
+    test "renders a decorative arrow when enabled" do
+      doc = render(arrow: true)
+
+      assert part_attr(doc, "arrow", "aria-hidden") == ["true"]
     end
   end
 

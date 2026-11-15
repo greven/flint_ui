@@ -28,6 +28,7 @@ defmodule FlintUI do
   - `kbd`
   - `loading`
   - `loading_text`
+  - `popover`
   - `separator`
   - `tabs`
   - `toggle`
@@ -61,6 +62,7 @@ defmodule FlintUI do
     {:kbd, []},
     {:loading, []},
     {:loading_text, []},
+    {:popover, [:open_popover, :close_popover, :toggle_popover]},
     {:separator, []},
     {:tabs, [:select_tab]},
     {:toggle, []},

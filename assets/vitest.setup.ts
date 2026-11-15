@@ -24,3 +24,12 @@ if (typeof HTMLElement !== "undefined" && !HTMLElement.prototype.showPopover) {
     delete this.dataset.popover;
   };
 }
+
+// jsdom's default stylesheet hides `[popover]` elements that are not in the
+// `:popover-open` state. The stub cannot enter that state, so keep the content
+// visible for focus and layout assertions.
+if (typeof document !== "undefined") {
+  const style = document.createElement("style");
+  style.textContent = "[popover] { display: block !important; }";
+  document.head.appendChild(style);
+}
