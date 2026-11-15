@@ -1,0 +1,10 @@
+@layer components {
+    /* A group is a named collection. It stacks rows and adds no surface of its
+     * own; the menu and separators own the visual structure. */
+    [data-element="dropdown_group"][data-dropdown_group] {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-inline-size: 0;
+    }
+}

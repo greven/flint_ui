@@ -21,6 +21,12 @@ defmodule FlintUI do
   - `button`
   - `card`
   - `collapsible`
+  - `dropdown`
+  - `dropdown_group`
+  - `dropdown_heading`
+  - `dropdown_item`
+  - `dropdown_separator`
+  - `dropdown_sub`
   - `flag`
   - `group`
   - `icon`
@@ -55,6 +61,12 @@ defmodule FlintUI do
     {:button, []},
     {:card, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
+    {:dropdown, [:open_dropdown, :close_dropdown, :toggle_dropdown]},
+    {:dropdown_group, []},
+    {:dropdown_heading, []},
+    {:dropdown_item, []},
+    {:dropdown_separator, []},
+    {:dropdown_sub, []},
     {:flag, []},
     {:group, []},
     {:icon, []},

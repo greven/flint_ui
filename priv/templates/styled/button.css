@@ -96,8 +96,8 @@
     }
 
     [data-element="button"]:is([data-variant="surface"], [data-variant="outline"]) {
-        --fl-control-hover-opacity: 0.08;
-        --fl-control-active-opacity: 0.11;
+        --fl-control-hover-opacity: 0.09;
+        --fl-control-active-opacity: 0.12;
     }
 
     /* Press feedback: the button sinks. */

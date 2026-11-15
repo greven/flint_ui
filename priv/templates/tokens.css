@@ -343,16 +343,6 @@
     );
     --fl-color-error-soft-border: color-mix(in oklab, var(--fl-color-error) 50%, var(--fl-color-surface));
 
-    /* Chrome text. `highlighted` is for headings and strong labels; `text` is
-     * the default ink; `toned` is softened copy; `muted` is meta; `dimmed` is
-     * for placeholders and decoration. `dimmed` is intentionally below AA. */
-    --fl-color-text-highlighted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
-    --fl-color-text: light-dark(var(--fl-color-neutral-700), var(--fl-color-neutral-200));
-    --fl-color-text-toned: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-300));
-    --fl-color-text-muted: light-dark(color-mix(in oklab, var(--fl-color-neutral-500) 90%, var(--fl-color-neutral-600)), var(--fl-color-neutral-400));
-    --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
-    --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
-
     /* Chrome surfaces. `surface` is the pure anchor: white in light and
      * neutral-950 in dark. Everything else is a tint of it toward the opposite
      * neutral extreme, so the same tint order holds in both schemes:
@@ -375,6 +365,16 @@
     );
 
     --fl-color-inverted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
+
+    /* Chrome text. `highlighted` is for headings and strong labels; `text` is
+     * the default ink; `toned` is softened copy; `muted` is meta; `dimmed` is
+     * for placeholders and decoration. `dimmed` is intentionally below AA. */
+    --fl-color-text-highlighted: light-dark(var(--fl-color-neutral-900), oklch(1 0 0));
+    --fl-color-text: light-dark(var(--fl-color-neutral-700), var(--fl-color-neutral-200));
+    --fl-color-text-toned: light-dark(var(--fl-color-neutral-600), var(--fl-color-neutral-300));
+    --fl-color-text-muted: light-dark(color-mix(in oklab, var(--fl-color-neutral-500) 90%, var(--fl-color-neutral-600)), var(--fl-color-neutral-400));
+    --fl-color-text-dimmed: light-dark(var(--fl-color-neutral-400), var(--fl-color-neutral-500));
+    --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-neutral-800));
 
     /* Chrome borders. `subtle` is the quiet edge for dividers and soft
      * surfaces, `border` is the default edge, and `strong` is the heavier edge

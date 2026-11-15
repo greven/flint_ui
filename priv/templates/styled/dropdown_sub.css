@@ -1,0 +1,27 @@
+@layer components {
+    /* The submenu trigger inherits the item row from dropdown_item.css. This
+     * file owns the trailing chevron that marks it as a submenu. */
+    [data-element="dropdown_sub"][data-dropdown_sub] {
+        justify-content: space-between;
+    }
+
+    [data-element="dropdown_sub"][data-dropdown_sub] > [data-part="submenu-indicator"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--fl-control-icon-md);
+        block-size: var(--fl-control-icon-md);
+        color: var(--fl-color-text-muted);
+        transition: transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="dropdown_sub"][data-dropdown_sub] > [data-part="submenu-indicator"] svg {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    [data-element="dropdown_sub"][data-dropdown_sub][aria-expanded="true"] > [data-part="submenu-indicator"] {
+        color: var(--fl-color-text);
+    }
+}

@@ -1,0 +1,200 @@
+@layer components {
+    /* Dropdown. The root is layout-neutral: `display: contents` keeps the
+     * trigger exactly where it would sit without the dropdown. The menu is a
+     * manual popover, so the browser renders it in the top layer instead of
+     * letting an `overflow` ancestor clip it. The hook anchors the menu at the
+     * viewport origin and translates it next to the trigger. */
+    [data-element="dropdown"][data-dropdown] {
+        display: contents;
+    }
+
+    /* The built-in trigger. A custom trigger keeps its own component styles;
+     * only the default one carries `data-dropdown-trigger`. */
+    [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger] {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fl-control-gap-md);
+        min-block-size: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-md);
+        padding-block: 0;
+        border: 1px solid var(--fl-dropdown-border, var(--fl-color-border));
+        border-radius: var(--fl-control-radius);
+        background-color: var(--fl-dropdown-surface, var(--fl-color-surface));
+        color: var(--fl-dropdown-text, var(--fl-color-text));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        white-space: nowrap;
+        cursor: pointer;
+        box-shadow:
+            inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
+            var(--fl-control-shadow, 0 0 #0000);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger]:not([data-disabled]):hover {
+        background-color: color-mix(
+            in oklab,
+            var(--fl-dropdown-text, var(--fl-color-text)) 6%,
+            var(--fl-dropdown-surface, var(--fl-color-surface))
+        );
+    }
+
+    [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger][data-state="open"] {
+        background-color: var(--fl-color-surface-subtle);
+    }
+
+    [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger] > [data-part="indicator"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--fl-control-icon-md);
+        block-size: var(--fl-control-icon-md);
+        color: var(--fl-color-text-muted);
+        transition: transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger] > [data-part="indicator"] svg {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger][data-state="open"] > [data-part="indicator"] {
+        transform: rotate(180deg);
+    }
+
+    /* The menu surface. Submenus share it, so a nested menu looks like the
+     * menu that opened it. The surface owns the border, shadow, and arrow; the
+     * inner list owns the padding and the scroll cap so the arrow is never
+     * clipped by the scroll area. */
+    [data-part="content"][data-dropdown-content],
+    [data-part="submenu"][data-dropdown-submenu] {
+        box-sizing: border-box;
+        inset: auto;
+        margin: 0;
+        width: max-content;
+        min-inline-size: var(--fl-dropdown-min-width, 12rem);
+        max-inline-size: min(22rem, calc(100vw - 1rem));
+        padding: 0;
+        border: 1px solid var(--fl-dropdown-border, var(--fl-color-border));
+        border-radius: var(--fl-radius-lg);
+        background-color: var(--fl-dropdown-surface, var(--fl-color-surface));
+        color: var(--fl-dropdown-text, var(--fl-color-text));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: 1.5;
+        text-align: start;
+        overflow: visible;
+        box-shadow: var(--fl-shadow-lg);
+        opacity: 0;
+    }
+
+    [data-part="content"][data-dropdown-content] > [data-part="list"],
+    [data-part="submenu"][data-dropdown-submenu] > [data-part="list"] {
+        box-sizing: border-box;
+        max-block-size: var(--fl-dropdown-max-height, none);
+        padding: var(--fl-spacing-xs);
+        border-radius: inherit;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    /* The menu joins the open state only after the hook has positioned it, so
+     * the enter animation never starts from the top-layer default corner. */
+    [data-part="content"][data-dropdown-content][data-state="open"],
+    [data-part="submenu"][data-dropdown-submenu][data-state="open"] {
+        opacity: 1;
+        animation: fl-dropdown-in var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-part="content"][data-dropdown-content][data-state="closed"],
+    [data-part="submenu"][data-dropdown-submenu][data-state="closed"] {
+        animation: fl-dropdown-out var(--fl-duration-fast) var(--fl-ease-in-out);
+    }
+
+    [data-part="content"][data-dropdown-content] [data-part="arrow"] {
+        position: absolute;
+        box-sizing: border-box;
+        inline-size: 8px;
+        block-size: 8px;
+        border: 0 solid var(--_fl-dropdown-ring);
+        border-radius: 2px;
+        background-color: inherit;
+        transform: rotate(45deg);
+        pointer-events: none;
+        --_fl-dropdown-ring: color-mix(
+            in oklab,
+            var(--fl-dropdown-border, var(--fl-color-border)) 80%,
+            var(--fl-dropdown-surface, var(--fl-color-surface))
+        );
+    }
+
+    [data-part="content"][data-dropdown-content][data-side="top"] [data-part="arrow"] {
+        inset-block-end: -4px;
+        inset-inline-start: var(--_fl-dropdown-arrow-x, calc(50% - 4px));
+        border-inline-end-width: 1px;
+        border-block-end-width: 1px;
+    }
+
+    [data-part="content"][data-dropdown-content][data-side="bottom"] [data-part="arrow"] {
+        inset-block-start: -4px;
+        inset-inline-start: var(--_fl-dropdown-arrow-x, calc(50% - 4px));
+        border-block-start-width: 1px;
+        border-inline-start-width: 1px;
+    }
+
+    [data-part="content"][data-dropdown-content][data-side="left"] [data-part="arrow"] {
+        inset-inline-end: -4px;
+        inset-block-start: var(--_fl-dropdown-arrow-y, calc(50% - 4px));
+        border-block-start-width: 1px;
+        border-inline-end-width: 1px;
+    }
+
+    [data-part="content"][data-dropdown-content][data-side="right"] [data-part="arrow"] {
+        inset-inline-start: -4px;
+        inset-block-start: var(--_fl-dropdown-arrow-y, calc(50% - 4px));
+        border-inline-start-width: 1px;
+        border-block-end-width: 1px;
+    }
+}
+
+/* Keep the enter/leave animation on `translate` and `opacity`; the positioner
+ * owns the menu's inline `transform`, so the keyframes must not take it over. */
+@keyframes fl-dropdown-in {
+    from {
+        opacity: 0;
+        translate: 0 -2px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fl-dropdown-out {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: 0 -2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-part="content"][data-dropdown-content],
+    [data-part="submenu"][data-dropdown-submenu] {
+        animation: none;
+    }
+}

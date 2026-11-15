@@ -1,0 +1,11 @@
+@layer components {
+    /* The line spans the menu padding box and inherits the menu surface on
+     * both sides, so it reads as a divider rather than a bordered control. */
+    [data-element="dropdown_separator"][data-dropdown_separator] {
+        block-size: 1px;
+        margin-block: var(--fl-spacing-xs);
+        margin-inline: calc(var(--fl-spacing-xs) * -1);
+        border: 0;
+        background-color: var(--fl-dropdown-separator-color, var(--fl-color-border-subtle));
+    }
+}

@@ -1,0 +1,108 @@
+@layer components {
+    /* Dropdown item. Public inputs: `--fl-dropdown-item-text`, `-highlight`,
+     * and `-accent`. The item and the submenu trigger share one row shape, so
+     * a submenu sits in the menu exactly like an action. */
+    [data-element="dropdown_item"][data-dropdown_item],
+    [data-element="dropdown_sub"][data-dropdown_sub] {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        gap: var(--fl-control-gap-md);
+        inline-size: 100%;
+        min-block-size: var(--fl-control-height-md);
+        margin: 0;
+        padding: var(--fl-spacing-xs) var(--fl-spacing-sm);
+        border: 0;
+        border-radius: var(--fl-radius-sm);
+        background-color: transparent;
+        color: var(--fl-dropdown-item-text, var(--fl-color-text));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        font-weight: var(--fl-font-weight-normal);
+        line-height: var(--fl-line-height-sm);
+        text-align: start;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item] > [data-element="icon"] {
+        flex: none;
+        --fl-icon-size: var(--fl-control-icon-md);
+        color: var(--fl-dropdown-item-accent, var(--fl-color-text-muted));
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item]:not([data-disabled]):is(:hover, :focus-visible, [data-active]),
+    [data-element="dropdown_sub"][data-dropdown_sub]:not([data-disabled]):is(:hover, :focus-visible, [data-active]),
+    [data-element="dropdown_sub"][data-dropdown_sub][aria-expanded="true"] {
+        background-color: var(--fl-dropdown-item-highlight, var(--fl-color-surface-subtle));
+        color: var(--fl-dropdown-item-text, var(--fl-color-text));
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item]:not([data-disabled]):is(:hover, :focus-visible, [data-active])
+        > [data-element="icon"] {
+        color: var(--fl-dropdown-item-text, var(--fl-color-text));
+    }
+
+    /* A destructive or otherwise intentional item keeps its intent color on
+     * the label and its soft fill behind the hover state. */
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="info"] {
+        --fl-dropdown-item-text: var(--fl-color-info-text);
+        --fl-dropdown-item-highlight: var(--fl-color-info-soft);
+        --fl-dropdown-item-accent: var(--fl-color-info-text);
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="success"] {
+        --fl-dropdown-item-text: var(--fl-color-success-text);
+        --fl-dropdown-item-highlight: var(--fl-color-success-soft);
+        --fl-dropdown-item-accent: var(--fl-color-success-text);
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="warning"] {
+        --fl-dropdown-item-text: var(--fl-color-warning-text);
+        --fl-dropdown-item-highlight: var(--fl-color-warning-soft);
+        --fl-dropdown-item-accent: var(--fl-color-warning-text);
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="error"] {
+        --fl-dropdown-item-text: var(--fl-color-error-text);
+        --fl-dropdown-item-highlight: var(--fl-color-error-soft);
+        --fl-dropdown-item-accent: var(--fl-color-error-text);
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="primary"] {
+        --fl-dropdown-item-text: var(--fl-color-primary-text);
+        --fl-dropdown-item-highlight: var(--fl-color-primary-soft);
+        --fl-dropdown-item-accent: var(--fl-color-primary-text);
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="secondary"] {
+        --fl-dropdown-item-text: var(--fl-color-secondary-text);
+        --fl-dropdown-item-highlight: var(--fl-color-secondary-soft);
+        --fl-dropdown-item-accent: var(--fl-color-secondary-text);
+    }
+
+    /* A custom item is a content block, not a row. It keeps the caller's own
+     * layout and only owns the menu's horizontal inset. */
+    [data-element="dropdown_item"][data-dropdown_item][data-custom] {
+        display: block;
+        min-block-size: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: inherit;
+        cursor: default;
+        white-space: normal;
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item][data-disabled],
+    [data-element="dropdown_sub"][data-dropdown_sub][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
