@@ -13,7 +13,7 @@
         inset: auto;
         margin: 0;
         width: max-content;
-        max-width: var(--fl-tooltip-max-width, 18rem);
+        max-width: var(--fl-tooltip-max-width, 20rem);
         padding: var(--fl-spacing-sm) var(--fl-spacing-md);
         border: 0;
         border-radius: var(--fl-radius-md);

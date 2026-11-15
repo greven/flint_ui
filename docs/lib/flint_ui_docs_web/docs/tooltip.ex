@@ -26,6 +26,12 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
       },
       %{
         tab: :styled,
+        section: :usage,
+        id: :position,
+        title: "Position"
+      },
+      %{
+        tab: :styled,
         section: :examples,
         id: :rich,
         title: "Rich Content",
@@ -56,6 +62,36 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
       >
         <Components.button variant="surface" size="sm">Save</Components.button>
       </Components.tooltip>
+    </.preview>
+    """
+  end
+
+  @impl true
+  def render_section(%{section: :usage, id: :position} = assigns) do
+    ~H"""
+    <.prose content="`placement` picks the preferred side of the trigger: `top` (the default), `right`, `bottom`, or `left`. `align` picks the alignment along that side.
+      Both are preferences, not promises: the content flips to the opposite side when the preferred one would leave the viewport, and shifts along the trigger so it stays readable.
+      Hover or focus a button to see it open on its preferred side." />
+    <.preview {assigns} code={position_code()}>
+      <div class="flex flex-col items-center gap-6">
+        <Components.tooltip text="Top" placement="top">
+          <Components.button variant="surface" size="sm">Top</Components.button>
+        </Components.tooltip>
+
+        <div class="flex items-center gap-16">
+          <Components.tooltip text="Left" placement="left">
+            <Components.button variant="surface" size="sm">Left</Components.button>
+          </Components.tooltip>
+
+          <Components.tooltip text="Right" placement="right">
+            <Components.button variant="surface" size="sm">Right</Components.button>
+          </Components.tooltip>
+        </div>
+
+        <Components.tooltip text="Bottom" placement="bottom">
+          <Components.button variant="surface" size="sm">Bottom</Components.button>
+        </Components.tooltip>
+      </div>
     </.preview>
     """
   end
@@ -157,6 +193,31 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
 
   defp trigger_body do
     ~s(<.button variant="surface" size="sm">Save</.button>)
+  end
+
+  defp position_code do
+    """
+    <div class="flex flex-col items-center gap-6">
+      <.tooltip text="Top" placement="top">
+        <.button variant="surface" size="sm">Top</.button>
+      </.tooltip>
+
+      <div class="flex items-center gap-16">
+        <.tooltip text="Left" placement="left">
+          <.button variant="surface" size="sm">Left</.button>
+        </.tooltip>
+
+        <.tooltip text="Right" placement="right">
+          <.button variant="surface" size="sm">Right</.button>
+        </.tooltip>
+      </div>
+
+      <.tooltip text="Bottom" placement="bottom">
+        <.button variant="surface" size="sm">Bottom</.button>
+      </.tooltip>
+    </div>
+    """
+    |> String.trim()
   end
 
   defp rich_code do
