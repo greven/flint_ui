@@ -13,7 +13,7 @@ defmodule FlintUI.Base.Popover do
   Wrap the popover around the element that should trigger it. The first element
   in the default slot becomes the trigger:
 
-      <FlintUI.popover id="account">
+      <FlintUI.popover>
         <FlintUI.button>Account</FlintUI.button>
         <:content>
           <FlintUI.button variant="ghost">Sign out</FlintUI.button>
@@ -22,8 +22,9 @@ defmodule FlintUI.Base.Popover do
 
   The hook needs a DOM id, so the component generates one when `id` is omitted.
   A generated id changes on every render while the `data-part` hooks do not, so
-  pass `id` only when you need a stable handle from your own CSS or JS. The
-  content id is derived as `<id>-content`.
+  pass `id` only when you need a stable handle — for example to target the
+  popover with `open_popover/2` from a control inside its content. The content
+  id is derived as `<id>-content`.
 
   Only the first element in the default slot becomes the trigger — wrap a group
   in one element when the popover should describe the group. The trigger keeps
@@ -498,7 +499,7 @@ defmodule FlintUI.Base.Popover do
   attr :id, :string,
     default: nil,
     doc:
-      "The DOM id. Generated when omitted; pass one only when you need a stable handle from your own CSS or JS."
+      "The DOM id. Generated when omitted; pass one only when you need a stable handle from your own CSS or JS, such as targeting the popover with `open_popover/2`."
 
   attr :placement, :string,
     default: "bottom",

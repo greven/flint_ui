@@ -32,13 +32,13 @@ defmodule FlintUIDocsWeb.Docs.Popover do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.prose content="Wrap the popover around the element that should trigger it. The first element in the default slot becomes the trigger.
-      The hook marks it and wires `aria-haspopup`, `aria-expanded`, and `aria-controls`, so there are no attributes to spread. Pass a stable `id`
-      when the content contains a control that has to close the popover. The content is a dialog named after the trigger unless you pass `aria_label`
-      or `aria_labelledby`. `placement`, `align`, and `offset` position it; it flips and shifts on its own near the viewport edge." />
+      The hook marks it and wires `aria-haspopup`, `aria-expanded`, and `aria-controls`, so there are no attributes to spread. The component
+      generates its own DOM id, so pass `id` only when you need a stable handle — for example to close the popover from a control inside its
+      content, or to target it with `open_popover/2`. The content is a dialog named after the trigger unless you pass `aria_label` or
+      `aria_labelledby`. `placement`, `align`, and `offset` position it; it flips and shifts on its own near the viewport edge." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
       <div class="w-full max-w-74 flex justify-center">
         <Components.popover
-          id={"#{@preview_id}-popover"}
           placement={props.placement}
           align={props.align}
           arrow={props.arrow}
@@ -89,7 +89,6 @@ defmodule FlintUIDocsWeb.Docs.Popover do
     Snippet.tag(
       ".popover",
       [
-        ~s(id="account"),
         ~s(aria_label="Account actions"),
         Snippet.attr("placement", props.placement, "bottom"),
         Snippet.attr("align", props.align, "center"),

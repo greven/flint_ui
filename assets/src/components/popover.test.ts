@@ -474,6 +474,33 @@ describe("Popover hook", () => {
     expect(replacement.dataset.state).toBe("open");
   });
 
+  it("follows a generated id that changed on the server", async () => {
+    const { el, trigger, content } = setup();
+
+    click(trigger);
+    await flush();
+    expect(content.dataset.state).toBe("open");
+
+    // A generated id changes on every render, so LiveView re-keys the hook and
+    // never calls `updated/0`; the page update is the only notification.
+    const replacementId = "pop-2-content";
+    const replacement = document.createElement("div");
+    replacement.id = replacementId;
+    replacement.setAttribute("data-part", "content");
+    replacement.setAttribute("data-popover-content", "");
+    replacement.setAttribute("popover", "manual");
+    replacement.setAttribute("data-state", "closed");
+    replacement.innerHTML = '<button id="inside-2">Inside</button>';
+    content.replaceWith(replacement);
+    el.id = "pop-2";
+
+    document.dispatchEvent(new CustomEvent("phx:update"));
+    await flush();
+
+    expect(replacement.dataset.state).toBe("open");
+    expect(trigger.getAttribute("aria-controls")).toBe(replacementId);
+  });
+
   it("pushes configured server events on open and close", async () => {
     const { trigger, hook } = setup({
       openEvent: "opened",
