@@ -28,7 +28,8 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
         tab: :styled,
         section: :examples,
         id: :rich,
-        title: "Rich Content"
+        title: "Rich Content",
+        group_title: "Examples"
       },
       %{
         tab: :styled,
@@ -66,11 +67,16 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
       When the content needs to be reachable or interactive, reach for a popover instead." />
     <.preview {assigns} code={rich_code()}>
       <div class="flex items-center gap-2 text-sm font-medium text-default">
-        Warranty Policy
+        Save Warning
         <Components.tooltip>
           <Components.button variant="ghost" size="xs" icon="lucide-info" square />
           <:content>
-            Our products have LIFETIME warranty!
+            <p>Save often to not <u><strong>LOSE PROGRESS</strong></u>!</p>
+            <p>
+              Save by pressing
+              <Components.kbd size="xs" variant="outline">Alt</Components.kbd>
+              + <Components.kbd size="xs" variant="outline">F4</Components.kbd>.
+            </p>
           </:content>
         </Components.tooltip>
       </div>
@@ -81,7 +87,8 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
   @impl true
   def render_section(%{section: :examples, id: :delay} = assigns) do
     ~H"""
-    <.prose content="The default `200` ms delay stops a quick cursor sweep across a row of icon buttons from flashing a tooltip on every one. Raise it for dense toolbars, or set `0` to open immediately." />
+    <.prose content="The default `200` ms delay stops a quick cursor sweep across a row of icon buttons from flashing a tooltip on every one.
+      Raise it for dense toolbars, or set `0` to open immediately." />
     <.preview {assigns} code={delay_code()}>
       <div class="flex items-center gap-4">
         <Components.tooltip text="Opens immediately" delay={0}>
@@ -102,10 +109,6 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
     <div class="flex flex-col items-center gap-3 py-6">
       <span class="text-xs text-muted">Static preview of the parts</span>
       <div class="flex flex-col items-center gap-4">
-        <%!-- The styled CSS keys on the wrapper's `data-tooltip`, so the parts
-        render with the same fill, ring, and arrow as the real component. The
-        demo has no hook, so the content stays in flow and keeps `relative` for
-        the arrow. --%>
         <span
           data-element="tooltip"
           data-part="root"
@@ -156,13 +159,18 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
   defp rich_code do
     """
     <div class="flex items-center gap-2 text-sm font-medium text-default">
-      Warranty Policy
-      <.tooltip>
-        <.button variant="ghost" size="xs" icon="lucide-info" square />
-        <:content>
-          Our products have LIFETIME warranty!
-        </:content>
-      </.tooltip>
+    Save Warning
+    <.tooltip>
+      <.button variant="ghost" size="xs" icon="lucide-info" square />
+      <:content>
+        <p>Save often to not <u><strong>LOSE PROGRESS</strong></u>!</p>
+        <p>
+          Save by pressing
+          <.kbd size="xs" variant="outline">Alt</.kbd>
+          + <.kbd size="xs" variant="outline">F4</.kbd>.
+        </p>
+      </:content>
+    </.tooltip>
     </div>
     """
     |> String.trim()

@@ -1,5 +1,10 @@
 import { FlintHook } from "../lib/core";
-import { createPositioner, type Align, type Positioner, type Side } from "../lib/position";
+import {
+  createPositioner,
+  type Align,
+  type Positioner,
+  type Side,
+} from "../lib/position";
 import { awaitAnimationsPromise } from "../lib/util";
 
 enum Events {
@@ -47,8 +52,7 @@ export class Tooltip extends FlintHook {
   // can be swapped instead of piling up dead references.
   private describedWith: string | null = null;
 
-  // The ids seen by the last sync, used to tell whether a page update touched
-  // this tooltip at all.
+  // The ids seen by the last sync, used to tell whether a page update touched this tooltip at all.
   private syncedRootId = "";
   private syncedContentId = "";
 
@@ -102,7 +106,9 @@ export class Tooltip extends FlintHook {
 
     const ids = (trigger.getAttribute("aria-describedby") ?? "")
       .split(/\s+/)
-      .filter((id) => id.length > 0 && id !== contentId && id !== this.describedWith);
+      .filter(
+        (id) => id.length > 0 && id !== contentId && id !== this.describedWith,
+      );
 
     if (published) ids.push(published);
 
@@ -191,7 +197,8 @@ export class Tooltip extends FlintHook {
     // The content only joins the state once it has been positioned, so it is
     // never painted at the top-layer default position.
     const content = this.parts.content;
-    if (includeContent && content) this.js().setAttribute(content, "data-state", state);
+    if (includeContent && content)
+      this.js().setAttribute(content, "data-state", state);
   }
 
   private dispatch(event: Events): void {

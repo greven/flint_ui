@@ -18,7 +18,7 @@
         border: 0;
         border-radius: var(--fl-radius-md);
         background-color: var(--fl-color-inverted);
-        color: var(--fl-color-text-inverted);
+        color: color-mix(in oklab, var(--fl-color-text-inverted) 90%, transparent);
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-xs);
         font-weight: var(--fl-font-weight-medium);
@@ -26,11 +26,10 @@
         text-align: start;
         text-wrap: balance;
         overflow: visible;
-        --_fl-tooltip-ring: color-mix(in oklab, var(--fl-color-text-inverted) 22%, transparent);
+        --_fl-tooltip-ring: color-mix(in oklab, var(--fl-color-text-inverted) 22%, var(--fl-color-inverted));
         box-shadow:
             var(--fl-shadow-md),
-            inset 0 0 0 1px var(--fl-color-inverted),
-            inset 0 0 0 2px var(--_fl-tooltip-ring);
+            inset 0 0 0 1px var(--_fl-tooltip-ring);
         pointer-events: none;
         opacity: 0;
     }
@@ -46,39 +45,42 @@
 
     [data-element="tooltip"][data-tooltip] [data-part="arrow"] {
         position: absolute;
+        box-sizing: border-box;
         width: 8px;
         height: 8px;
+        border: 0 solid var(--_fl-tooltip-ring);
         border-radius: 2px;
         background-color: inherit;
-        box-shadow:
-            inset 0 0 0 1px var(--fl-color-inverted),
-            inset 0 0 0 2px var(--_fl-tooltip-ring);
         transform: rotate(45deg);
         pointer-events: none;
     }
 
     [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="top"] [data-part="arrow"] {
-        bottom: -3px;
+        bottom: -4px;
         left: var(--_fl-tooltip-arrow-x, calc(50% - 4px));
-        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        border-right-width: 1px;
+        border-bottom-width: 1px;
     }
 
     [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="bottom"] [data-part="arrow"] {
         top: -4px;
         left: var(--_fl-tooltip-arrow-x, calc(50% - 4px));
-        clip-path: polygon(0 0, 100% 0, 0 100%);
+        border-top-width: 1px;
+        border-left-width: 1px;
     }
 
     [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="left"] [data-part="arrow"] {
         right: -4px;
         top: var(--_fl-tooltip-arrow-y, calc(50% - 4px));
-        clip-path: polygon(0 0, 100% 0, 100% 100%);
+        border-top-width: 1px;
+        border-right-width: 1px;
     }
 
     [data-element="tooltip"][data-tooltip] [data-part="content"][data-side="right"] [data-part="arrow"] {
         left: -4px;
         top: var(--_fl-tooltip-arrow-y, calc(50% - 4px));
-        clip-path: polygon(0 0, 0 100%, 100% 100%);
+        border-left-width: 1px;
+        border-bottom-width: 1px;
     }
 }
 
