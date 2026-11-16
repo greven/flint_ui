@@ -2,7 +2,15 @@
     /* Flag. The copied SVG is applied inline as the background image; this
      * layer owns the box, sizing, radius, and decorative treatments. */
     [data-element="flag"] {
+        /* Flag widths (16/20/24/32/40px). */
+        --fl-flag-size-xs: 1rem;
+        --fl-flag-size-sm: 1.25rem;
+        --fl-flag-size-md: 1.5rem;
+        --fl-flag-size-lg: 2rem;
+        --fl-flag-size-xl: 2.5rem;
+
         --fl-flag-size: var(--fl-flag-size-md);
+
         display: inline-block;
         position: relative;
         overflow: hidden;

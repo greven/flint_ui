@@ -83,12 +83,12 @@
     --fl-control-hover-opacity: 0.04;
     --fl-control-active-opacity: 0.07;
 
-    /* Control metrics (24/28/32/36/40px heights). */
-    --fl-control-height-xs: 1.5rem;
-    --fl-control-height-sm: 1.75rem;
-    --fl-control-height-md: 2rem;
-    --fl-control-height-lg: 2.25rem;
-    --fl-control-height-xl: 2.5rem;
+    /* Control metrics (26/30/34/38/42px heights). */
+    --fl-control-height-xs: 1.625rem;
+    --fl-control-height-sm: 1.875rem;
+    --fl-control-height-md: 2.125rem;
+    --fl-control-height-lg: 2.375rem;
+    --fl-control-height-xl: 2.625rem;
 
     --fl-control-padding-x-xs: 0.5rem;
     --fl-control-padding-x-sm: 0.625rem;
@@ -128,22 +128,6 @@
     --fl-badge-height-md: 1.375rem;
     --fl-badge-height-lg: 1.5rem;
     --fl-badge-height-xl: 1.75rem;
-
-    /* Avatar sizes (24/32/40/48/56px). The avatar is its own anatomy, so it
-     * reads this scale rather than the shorter control or badge heights. */
-    --fl-avatar-size-xs: 1.5rem;
-    --fl-avatar-size-sm: 2rem;
-    --fl-avatar-size-md: 2.5rem;
-    --fl-avatar-size-lg: 3rem;
-    --fl-avatar-size-xl: 3.5rem;
-
-    /* Flag widths (16/20/24/32/40px). A flag is wider than tall, so it keeps
-     * its own width scale rather than the square control icon scale. */
-    --fl-flag-size-xs: 1rem;
-    --fl-flag-size-sm: 1.25rem;
-    --fl-flag-size-md: 1.5rem;
-    --fl-flag-size-lg: 2rem;
-    --fl-flag-size-xl: 2.5rem;
 
     /* Unified radius scale. Change `--fl-radius` to retune every component. */
     --fl-radius: 0.25rem;

@@ -3,6 +3,13 @@
      * `--fl-avatar-color-content`. The root owns the size and color so the
      * image and fallback can swap without losing the inline inputs. */
     [data-element="avatar"][data-avatar] {
+        /* Avatar sizes (24/32/40/48/56px). */
+        --fl-avatar-size-xs: 1.5rem;
+        --fl-avatar-size-sm: 2rem;
+        --fl-avatar-size-md: 2.5rem;
+        --fl-avatar-size-lg: 3rem;
+        --fl-avatar-size-xl: 3.5rem;
+
         --fl-avatar-color: var(--fl-color-inverted);
         --fl-avatar-color-content: var(--fl-color-text-inverted);
         --fl-avatar-size: var(--fl-avatar-size-md);
