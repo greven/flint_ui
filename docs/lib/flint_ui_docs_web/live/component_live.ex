@@ -103,6 +103,13 @@ defmodule FlintUIDocsWeb.ComponentLive do
               </.link>.
                 </DocsComponents.content_paragraph>
 
+                <DocsComponents.subsection title="Slots" id="slots">
+                  <p :if={@merged_slots == []} class="mt-2 text-sm text-muted">
+                    No slots documented.
+                  </p>
+                  <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
+                </DocsComponents.subsection>
+
                 <DocsComponents.subsection title="Attributes" id="attributes">
                   <p :if={@styled_attributes == []} class="mt-2 text-sm text-muted">
                     No attributes documented.
@@ -111,13 +118,6 @@ defmodule FlintUIDocsWeb.ComponentLive do
                     :if={@styled_attributes != []}
                     rows={@styled_attributes}
                   />
-                </DocsComponents.subsection>
-
-                <DocsComponents.subsection title="Slots" id="slots">
-                  <p :if={@merged_slots == []} class="mt-2 text-sm text-muted">
-                    No slots documented.
-                  </p>
-                  <DocsComponents.slot_table :if={@merged_slots != []} slots={@merged_slots} />
                 </DocsComponents.subsection>
 
                 <DocsComponents.subsection
