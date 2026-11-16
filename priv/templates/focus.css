@@ -5,7 +5,12 @@
         > [data-part="trigger"][data-dropdown-trigger]:focus-visible,
     [data-element="toggle"][data-variant]:focus-visible:not([data-disabled]),
     [data-element="badge"][data-part][data-variant]:focus-visible,
-    [data-element="card"][data-card][data-link][data-outline]:focus-visible {
+    [data-element="card"][data-card][data-link][data-outline]:focus-visible,
+    /* A trigger that keeps its ring while a menu owns focus gets the same
+     * border treatment. */
+    [data-element="button"][data-variant][data-focus-ring]:not([data-disabled]),
+    [data-element="dropdown"][data-dropdown]
+        > [data-part="trigger"][data-dropdown-trigger][data-focus-ring] {
         border-color: var(--fl-focus-border-color, revert-layer);
     }
 }

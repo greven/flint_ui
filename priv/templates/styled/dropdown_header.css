@@ -7,9 +7,9 @@
         color: var(--fl-dropdown-header-text, var(--fl-color-text-muted));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-xs);
-        font-weight: var(--fl-font-weight-medium);
+        font-weight: var(--fl-font-weight-light);
         line-height: var(--fl-line-height-xs);
-        letter-spacing: 0.04em;
+        letter-spacing: 0.05em;
         white-space: nowrap;
     }
 

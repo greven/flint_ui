@@ -86,8 +86,9 @@ defmodule FlintUI.Base.Dropdown do
 
   A pointer click focuses the menu surface, so no item looks selected until you
   move with the arrow keys. Opening from the keyboard focuses the first item
-  (or the last, with `ArrowUp`). The active item is marked with a fill, not a
-  focus ring.
+  (or the last, with `ArrowUp`) and keeps the trigger's focus ring while the
+  menu is open, so the control that owns the menu stays visible. The active
+  item is marked with a fill, not a focus ring.
 
   Selecting an item closes the menu and returns focus to the trigger. Links keep
   their link behavior: `Enter` follows the link, and `Space` does not.
@@ -211,6 +212,12 @@ defmodule FlintUI.Base.Dropdown do
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description: "Current open/closed state, applied by the hook."
+        },
+        %Meta.PartAttr{
+          name: "[data-focus-ring]",
+          value: "boolean",
+          description:
+            "Present while the menu is open after a keyboard open. The trigger keeps its focus ring after focus moves into the menu."
         },
         %Meta.PartAttr{
           name: "aria-haspopup",
@@ -444,6 +451,12 @@ defmodule FlintUI.Base.Dropdown do
         name: "submenu-open",
         description: "A submenu is open.",
         selector: ~s([data-element="dropdown"] [data-part="submenu"][data-state="open"])
+      },
+      %Meta.State{
+        name: "keyboard",
+        description:
+          "The trigger keeps its focus ring because the open menu was activated from the keyboard.",
+        selector: ~s([data-element="dropdown"] > [data-part="trigger"][data-focus-ring])
       }
     ]
   end

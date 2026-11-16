@@ -26,7 +26,7 @@ interface HideOptions {
 const DEFAULT_OFFSET = 4;
 const DEFAULT_PLACEMENT: Side = "bottom";
 const DEFAULT_ALIGN: Align = "start";
-const SUBMENU_OFFSET = 2;
+const SUBMENU_OFFSET = 10;
 const TYPEAHEAD_TIMEOUT = 500;
 
 function readNumber(value: string | undefined, fallback: number): number {
@@ -83,6 +83,7 @@ export class Dropdown extends FlintHook {
   private closeTimer: number | null = null;
   private generation = 0;
   private openedByHover = false;
+  private keyboardOpen = false;
 
   private typeahead = "";
   private typeaheadTimer: number | null = null;
@@ -237,6 +238,14 @@ export class Dropdown extends FlintHook {
     if (trigger) {
       this.js().setAttribute(trigger, "data-state", state);
       this.js().setAttribute(trigger, "aria-expanded", state === "open" ? "true" : "false");
+
+      // Focus moved into the menu, but a keyboard open leaves the trigger
+      // looking focused so the menu still has a visible owner.
+      if (state === "open" && this.keyboardOpen) {
+        this.js().setAttribute(trigger, "data-focus-ring", "");
+      } else {
+        this.js().removeAttribute(trigger, "data-focus-ring");
+      }
     }
 
     // The menu only joins the state once it has been positioned, so it is never
@@ -363,6 +372,15 @@ export class Dropdown extends FlintHook {
 
     this.state = "open";
     this.openedByHover = source === "pointer";
+
+    // A server patch re-opens a menu that is already open, so it keeps the
+    // interaction that opened it. Every other source settles the indicator.
+    if (source === "keyboard") {
+      this.keyboardOpen = true;
+    } else if (source !== "server") {
+      this.keyboardOpen = false;
+    }
+
     const generation = ++this.generation;
 
     try {
@@ -412,6 +430,7 @@ export class Dropdown extends FlintHook {
 
     this.state = "closed";
     this.openedByHover = false;
+    this.keyboardOpen = false;
     const generation = ++this.generation;
 
     this.closeAllSubmenus();

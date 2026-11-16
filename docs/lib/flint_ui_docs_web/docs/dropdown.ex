@@ -49,12 +49,10 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
           <Components.dropdown_item navigate="/account">Account</Components.dropdown_item>
           <Components.dropdown_item href="https://example.com">Billing</Components.dropdown_item>
           <Components.dropdown_item disabled>Referrals</Components.dropdown_item>
-          <:submenu id="more">
-            <Components.dropdown_item icon="lucide-book-open">Documentation</Components.dropdown_item>
-            <Components.dropdown_item icon="lucide-git-branch">Changelog</Components.dropdown_item>
-          </:submenu>
           <Components.dropdown_sub menu="more">More</Components.dropdown_sub>
+
           <Components.dropdown_separator />
+
           <Components.dropdown_group aria-label="Session">
             <Components.dropdown_item icon="lucide-arrow-left-right">
               Switch user
@@ -63,6 +61,11 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
               Log out
             </Components.dropdown_item>
           </Components.dropdown_group>
+
+          <:submenu id="more">
+            <Components.dropdown_item icon="lucide-book-open">Documentation</Components.dropdown_item>
+            <Components.dropdown_item icon="lucide-git-branch">Changelog</Components.dropdown_item>
+          </:submenu>
         </Components.dropdown>
       </div>
     </.preview>
@@ -168,16 +171,24 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
     <.dropdown_item navigate="/account">Account</.dropdown_item>
     <.dropdown_item href="https://example.com">Billing</.dropdown_item>
     <.dropdown_item disabled>Referrals</.dropdown_item>
+    <.dropdown_sub menu="more">More</.dropdown_sub>
+
+    <.dropdown_separator />
+
+    <.dropdown_group aria-label="Session">
+      <.dropdown_item icon="lucide-arrow-left-right">
+        Switch user
+      </.dropdown_item>
+      <.dropdown_item icon="lucide-log-out" intent="error">
+        Log out
+      </.dropdown_item>
+    </.dropdown_group>
+
     <:submenu id="more">
       <.dropdown_item icon="lucide-book-open">Documentation</.dropdown_item>
       <.dropdown_item icon="lucide-git-branch">Changelog</.dropdown_item>
     </:submenu>
-    <.dropdown_sub menu="more">More</.dropdown_sub>
-    <.dropdown_separator />
-    <.dropdown_group aria-label="Session">
-      <.dropdown_item icon="lucide-arrow-left-right">Switch user</.dropdown_item>
-      <.dropdown_item icon="lucide-log-out" intent="error">Log out</.dropdown_item>
-    </.dropdown_group>
+    </.dropdown>
     """
     |> String.trim()
   end

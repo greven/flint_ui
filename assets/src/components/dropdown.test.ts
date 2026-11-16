@@ -272,6 +272,40 @@ describe("Dropdown hook", () => {
     expect(settings.hasAttribute("data-active")).toBe(true);
   });
 
+  it("keeps the trigger's focus ring when the menu opens from the keyboard", async () => {
+    const { trigger, content } = setup();
+
+    key(trigger, "ArrowDown");
+    await flush();
+
+    expect(content.dataset.state).toBe("open");
+    expect(trigger.hasAttribute("data-focus-ring")).toBe(true);
+
+    key(document, "Escape");
+    await flush();
+
+    expect(content.dataset.state).toBe("closed");
+    expect(trigger.hasAttribute("data-focus-ring")).toBe(false);
+  });
+
+  it("marks a trigger click from the keyboard as a focus-ring open", async () => {
+    const { trigger } = setup();
+
+    click(trigger, 0);
+    await flush();
+
+    expect(trigger.hasAttribute("data-focus-ring")).toBe(true);
+  });
+
+  it("does not keep the trigger's focus ring when the menu opens from a pointer", async () => {
+    const { trigger } = setup();
+
+    click(trigger);
+    await flush();
+
+    expect(trigger.hasAttribute("data-focus-ring")).toBe(false);
+  });
+
   it("closes on a second trigger click and returns focus to the trigger", async () => {
     const { trigger, content } = setup();
 
@@ -464,7 +498,7 @@ describe("Dropdown hook", () => {
     expect(create).toHaveBeenLastCalledWith(
       more,
       submenu,
-      expect.objectContaining({ placement: "right", align: "start", offset: 2 }),
+      expect.objectContaining({ placement: "right", align: "start", offset: 10 }),
     );
 
     key(submenu, "ArrowDown");
