@@ -1,24 +1,24 @@
-defmodule FlintUI.Styled.DropdownHeading do
+defmodule FlintUI.Styled.DropdownHeader do
   @moduledoc false
 
   alias FlintUI.Styled.{Entry, Var}
 
   def entry do
     %Entry{
-      name: :dropdown_heading,
-      base: FlintUI.Base.DropdownHeading,
+      name: :dropdown_header,
+      base: FlintUI.Base.DropdownHeader,
       target: "lib/my_app_web/components.ex",
-      install: "mix flint.add dropdown_heading",
-      css: "styled/dropdown_heading.css",
+      install: "mix flint.add dropdown_header",
+      css: "styled/dropdown_header.css",
       tokens: [:color, :spacing, :font],
       related: [:dropdown],
       slots: [],
       props: [],
       vars: [
         Var.new(
-          name: "--fl-dropdown-heading-text",
+          name: "--fl-dropdown-header-text",
           default: "var(--fl-color-text-muted)",
-          doc: "The heading label color. The default is the muted ink tier."
+          doc: "The header label color. The default is the muted ink tier."
         )
       ]
     }

@@ -23,7 +23,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownGroup do
         ~s(<.dropdown_group aria-label="Session">\n  <.dropdown_item>Switch user</.dropdown_item>\n  <.dropdown_item intent="error">Log out</.dropdown_item>\n</.dropdown_group>)
       }
     >
-      <div class="flex min-h-80 w-full items-start justify-center pt-4">
+      <div class="flex min-h-40 w-full items-center justify-center">
         <Components.dropdown label="Actions">
           <Components.dropdown_item>Settings</Components.dropdown_item>
           <Components.dropdown_group aria-label="Session">

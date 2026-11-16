@@ -18,7 +18,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownSub do
     ~H"""
     <.prose content="Declare the submenu content in a `:submenu` slot with an `id`, then point a `dropdown_sub` at it with `menu`. The submenu opens to the right, flips when it does not fit, and closes back to its trigger with `ArrowLeft` or `Escape`." />
     <.preview {assigns} code={sub_code()}>
-      <div class="flex min-h-80 w-full items-start justify-center pt-4">
+      <div class="flex min-h-40 w-full items-center justify-center">
         <Components.dropdown label="Actions">
           <Components.dropdown_item>Settings</Components.dropdown_item>
           <:submenu id="more">

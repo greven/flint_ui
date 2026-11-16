@@ -297,6 +297,49 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "aside a[href='/components/group'][data-nav-depth='0']")
   end
 
+  test "sidebar subpages are collapsed until their parent holds the active page", %{
+    conn: conn
+  } do
+    {:ok, view, _html} = live(conn, ~p"/components")
+
+    refute has_element?(view, "aside details[data-nav-group][open]")
+
+    # A shared component leaves every group closed, but the children stay in the
+    # markup so deep links still resolve.
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(
+             view,
+             "aside details[data-nav-group]:not([open]):has(> summary a[href='/components/dropdown'])"
+           )
+
+    assert has_element?(
+             view,
+             "aside details[data-nav-group]:not([open]) a[href='/components/dropdown_item']"
+           )
+
+    # The parent page opens its own group.
+    {:ok, view, _html} = live(conn, ~p"/components/dropdown")
+
+    assert has_element?(
+             view,
+             "aside details[data-nav-group][open]:has(> summary a[href='/components/dropdown'])"
+           )
+
+    assert has_element?(
+             view,
+             "aside details[data-nav-group][open] > summary a[href='/components/dropdown'][aria-current='page']"
+           )
+
+    # A subpage opens the group that contains it.
+    {:ok, view, _html} = live(conn, ~p"/components/dropdown_item")
+
+    assert has_element?(
+             view,
+             "aside details[data-nav-group][open] a[href='/components/dropdown_item'][aria-current='page']"
+           )
+  end
+
   test "the styled API documents text and icon", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 

@@ -1,7 +1,7 @@
-defmodule FlintUIDocsWeb.Docs.DropdownHeading do
+defmodule FlintUIDocsWeb.Docs.DropdownHeader do
   @moduledoc false
 
-  use FlintUIDocsWeb.Docs.Page, component: :dropdown_heading
+  use FlintUIDocsWeb.Docs.Page, component: :dropdown_header
 
   alias FlintUIDocsWeb.Components
 
@@ -16,11 +16,11 @@ defmodule FlintUIDocsWeb.Docs.DropdownHeading do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="A heading labels a section of items. It is presentational and muted by default, so it adds no heading level to the page outline. Use `color` when the section needs a semantic accent." />
-    <.preview {assigns} code={~s(<.dropdown_heading>Account</.dropdown_heading>)}>
-      <div class="flex min-h-80 w-full items-start justify-center pt-4">
+    <.prose content="A header labels a section of items. It is presentational and muted by default: the native `<header>` carries a presentational role, so it adds neither a heading level nor a banner landmark to the page outline. Use `color` when the section needs a semantic accent." />
+    <.preview {assigns} code={~s(<.dropdown_header>Account</.dropdown_header>)}>
+      <div class="flex min-h-40 w-full items-center justify-center">
         <Components.dropdown label="Actions">
-          <Components.dropdown_heading>Account</Components.dropdown_heading>
+          <Components.dropdown_header>Account</Components.dropdown_header>
           <Components.dropdown_item icon="lucide-settings">Settings</Components.dropdown_item>
           <Components.dropdown_item icon="lucide-user">Profile</Components.dropdown_item>
         </Components.dropdown>
@@ -34,15 +34,15 @@ defmodule FlintUIDocsWeb.Docs.DropdownHeading do
     ~H"""
     <div class="flex min-h-52 w-full items-start justify-center py-6">
       <div class="flex w-64 flex-col gap-1">
-        <div
-          data-element="dropdown_heading"
-          data-part="heading"
-          data-dropdown_heading
+        <header
+          data-element="dropdown_header"
+          data-part="header"
+          data-dropdown_header
           data-color="neutral"
           role="presentation"
         >
           Account
-        </div>
+        </header>
         <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="neutral">
           Settings
         </div>

@@ -40,7 +40,8 @@ defmodule FlintUI.Styled.DropdownItem do
         Var.new(
           name: "--fl-dropdown-item-highlight",
           default: "var(--fl-color-surface-subtle)",
-          doc: "The hover and active background behind the item."
+          doc:
+            "The hover and active background behind the item, shared by every intent so a row's intent color never spreads into its fill."
         ),
         Var.new(
           name: "--fl-dropdown-item-accent",

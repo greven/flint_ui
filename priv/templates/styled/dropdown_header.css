@@ -1,0 +1,39 @@
+@layer components {
+    /* The header is a muted section label, not a heading level. Its padding
+     * lines up with the item label while sitting a step above the row's
+     * scale. */
+    [data-element="dropdown_header"][data-dropdown_header] {
+        padding: var(--fl-spacing-sm) var(--fl-spacing-sm) var(--fl-spacing-xs);
+        color: var(--fl-dropdown-header-text, var(--fl-color-text-muted));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-xs);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-line-height-xs);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    [data-element="dropdown_header"][data-dropdown_header][data-color="info"] {
+        --fl-dropdown-header-text: var(--fl-color-info-text);
+    }
+
+    [data-element="dropdown_header"][data-dropdown_header][data-color="success"] {
+        --fl-dropdown-header-text: var(--fl-color-success-text);
+    }
+
+    [data-element="dropdown_header"][data-dropdown_header][data-color="warning"] {
+        --fl-dropdown-header-text: var(--fl-color-warning-text);
+    }
+
+    [data-element="dropdown_header"][data-dropdown_header][data-color="error"] {
+        --fl-dropdown-header-text: var(--fl-color-error-text);
+    }
+
+    [data-element="dropdown_header"][data-dropdown_header][data-color="primary"] {
+        --fl-dropdown-header-text: var(--fl-color-primary-text);
+    }
+
+    [data-element="dropdown_header"][data-dropdown_header][data-color="secondary"] {
+        --fl-dropdown-header-text: var(--fl-color-secondary-text);
+    }
+}

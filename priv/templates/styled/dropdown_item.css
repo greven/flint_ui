@@ -15,7 +15,7 @@
         border: 0;
         border-radius: var(--fl-radius-sm);
         background-color: transparent;
-        color: var(--fl-dropdown-item-text, var(--fl-color-text));
+        color: var(--fl-dropdown-item-text, var(--fl-color-text-toned));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-sm);
         font-weight: var(--fl-font-weight-normal);
@@ -32,7 +32,12 @@
     [data-element="dropdown_item"][data-dropdown_item] > [data-element="icon"] {
         flex: none;
         --fl-icon-size: var(--fl-control-icon-md);
-        color: var(--fl-dropdown-item-accent, var(--fl-color-text-muted));
+        color: var(--fl-dropdown-item-accent, color-mix(in oklab, currentcolor 70%, transparent));
+    }
+
+    [data-element="dropdown_item"][data-dropdown_item]:focus-visible,
+    [data-element="dropdown_sub"][data-dropdown_sub]:focus-visible {
+        outline: none;
     }
 
     [data-element="dropdown_item"][data-dropdown_item]:not([data-disabled]):is(:hover, :focus-visible, [data-active]),
@@ -42,46 +47,37 @@
         color: var(--fl-dropdown-item-text, var(--fl-color-text));
     }
 
-    [data-element="dropdown_item"][data-dropdown_item]:not([data-disabled]):is(:hover, :focus-visible, [data-active])
-        > [data-element="icon"] {
+    [data-element="dropdown_item"][data-dropdown_item]:not([data-disabled]):is(:hover, :focus-visible, [data-active]) > [data-element="icon"] {
         color: var(--fl-dropdown-item-text, var(--fl-color-text));
     }
 
-    /* A destructive or otherwise intentional item keeps its intent color on
-     * the label and its soft fill behind the hover state. */
     [data-element="dropdown_item"][data-dropdown_item][data-intent="info"] {
         --fl-dropdown-item-text: var(--fl-color-info-text);
-        --fl-dropdown-item-highlight: var(--fl-color-info-soft);
         --fl-dropdown-item-accent: var(--fl-color-info-text);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="success"] {
         --fl-dropdown-item-text: var(--fl-color-success-text);
-        --fl-dropdown-item-highlight: var(--fl-color-success-soft);
         --fl-dropdown-item-accent: var(--fl-color-success-text);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="warning"] {
         --fl-dropdown-item-text: var(--fl-color-warning-text);
-        --fl-dropdown-item-highlight: var(--fl-color-warning-soft);
         --fl-dropdown-item-accent: var(--fl-color-warning-text);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="error"] {
         --fl-dropdown-item-text: var(--fl-color-error-text);
-        --fl-dropdown-item-highlight: var(--fl-color-error-soft);
         --fl-dropdown-item-accent: var(--fl-color-error-text);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="primary"] {
         --fl-dropdown-item-text: var(--fl-color-primary-text);
-        --fl-dropdown-item-highlight: var(--fl-color-primary-soft);
         --fl-dropdown-item-accent: var(--fl-color-primary-text);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="secondary"] {
         --fl-dropdown-item-text: var(--fl-color-secondary-text);
-        --fl-dropdown-item-highlight: var(--fl-color-secondary-soft);
         --fl-dropdown-item-accent: var(--fl-color-secondary-text);
     }
 
@@ -101,7 +97,7 @@
 
     [data-element="dropdown_item"][data-dropdown_item][data-disabled],
     [data-element="dropdown_sub"][data-dropdown_sub][data-disabled] {
-        opacity: var(--fl-disabled-opacity, 0.5);
+        opacity: var(--fl-disabled-opacity, 0.4);
         cursor: not-allowed;
         pointer-events: none;
     }

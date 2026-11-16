@@ -18,7 +18,7 @@ defmodule FlintUI.StyledTest do
                :collapsible,
                :dropdown,
                :dropdown_group,
-               :dropdown_heading,
+               :dropdown_header,
                :dropdown_item,
                :dropdown_separator,
                :dropdown_sub,

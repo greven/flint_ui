@@ -64,7 +64,7 @@ function setup(options: SetupOptions = {}) {
           data-state="closed"
         >
           ${arrow ? '<span data-part="arrow"></span>' : ""}
-          <div data-element="dropdown_heading" data-part="heading" role="presentation">Account</div>
+          <header data-element="dropdown_header" data-part="header" role="presentation">Account</header>
           <button
             id="settings"
             data-element="dropdown_item"
@@ -221,7 +221,7 @@ describe("Dropdown hook", () => {
     expect(content.getAttribute("role")).toBe("menu");
   });
 
-  it("opens on click, positions the menu, and focuses the first item", async () => {
+  it("opens on click, positions the menu, and focuses the menu surface", async () => {
     const { trigger, content } = setup();
     const settings = document.getElementById("settings") as HTMLElement;
 
@@ -231,9 +231,9 @@ describe("Dropdown hook", () => {
     expect(content.dataset.state).toBe("open");
     expect(content.dataset.popover).toBe("open");
     expect(trigger.getAttribute("aria-expanded")).toBe("true");
-    expect(document.activeElement).toBe(settings);
-    expect(settings.getAttribute("tabindex")).toBe("0");
-    expect(settings.hasAttribute("data-active")).toBe(true);
+    expect(document.activeElement).toBe(content);
+    expect(settings.getAttribute("tabindex")).toBe("-1");
+    expect(settings.hasAttribute("data-active")).toBe(false);
 
     expect(create).toHaveBeenCalledWith(
       trigger,
@@ -245,6 +245,31 @@ describe("Dropdown hook", () => {
         arrowVarPrefix: "dropdown",
       }),
     );
+  });
+
+  it("marks the first item active only once the keyboard moves into the menu", async () => {
+    const { trigger, content } = setup();
+    const settings = document.getElementById("settings") as HTMLElement;
+
+    click(trigger);
+    await flush();
+    key(content, "ArrowDown");
+
+    expect(document.activeElement).toBe(settings);
+    expect(settings.getAttribute("tabindex")).toBe("0");
+    expect(settings.hasAttribute("data-active")).toBe(true);
+  });
+
+  it("focuses the first item when the trigger click comes from the keyboard", async () => {
+    const { trigger, content } = setup();
+    const settings = document.getElementById("settings") as HTMLElement;
+
+    click(trigger, 0);
+    await flush();
+
+    expect(content.dataset.state).toBe("open");
+    expect(document.activeElement).toBe(settings);
+    expect(settings.hasAttribute("data-active")).toBe(true);
   });
 
   it("closes on a second trigger click and returns focus to the trigger", async () => {
@@ -285,7 +310,7 @@ describe("Dropdown hook", () => {
     const logout = document.getElementById("logout") as HTMLElement;
     const more = document.getElementById("more-trigger") as HTMLElement;
 
-    click(trigger);
+    key(trigger, "ArrowDown");
     await flush();
 
     key(settings, "ArrowDown");
@@ -332,7 +357,7 @@ describe("Dropdown hook", () => {
   it("closes on Tab and lets focus leave", async () => {
     const { trigger, content } = setup();
 
-    click(trigger);
+    key(trigger, "ArrowDown");
     await flush();
     key(document, "Tab");
 
@@ -423,7 +448,7 @@ describe("Dropdown hook", () => {
     expect(content.dataset.state).toBe("closed");
   });
 
-  it("opens a submenu and closes it back to its trigger", async () => {
+  it("opens a submenu on click and closes it back to its trigger", async () => {
     const { trigger, submenu } = setup();
     const more = document.getElementById("more-trigger") as HTMLElement;
     const docs = document.getElementById("docs") as HTMLElement;
@@ -435,12 +460,15 @@ describe("Dropdown hook", () => {
 
     expect(submenu.dataset.state).toBe("open");
     expect(more.getAttribute("aria-expanded")).toBe("true");
-    expect(document.activeElement).toBe(docs);
+    expect(document.activeElement).toBe(submenu);
     expect(create).toHaveBeenLastCalledWith(
       more,
       submenu,
       expect.objectContaining({ placement: "right", align: "start", offset: 2 }),
     );
+
+    key(submenu, "ArrowDown");
+    expect(document.activeElement).toBe(docs);
 
     key(docs, "ArrowLeft");
     await flush();
@@ -448,6 +476,21 @@ describe("Dropdown hook", () => {
     expect(submenu.dataset.state).toBe("closed");
     expect(more.getAttribute("aria-expanded")).toBe("false");
     expect(document.activeElement).toBe(more);
+  });
+
+  it("focuses the first submenu item when the trigger click comes from the keyboard", async () => {
+    const { trigger, submenu } = setup();
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const docs = document.getElementById("docs") as HTMLElement;
+
+    key(trigger, "ArrowDown");
+    await flush();
+    click(more, 0);
+    await flush();
+
+    expect(submenu.dataset.state).toBe("open");
+    expect(document.activeElement).toBe(docs);
+    expect(docs.hasAttribute("data-active")).toBe(true);
   });
 
   it("opens a submenu with ArrowRight", async () => {

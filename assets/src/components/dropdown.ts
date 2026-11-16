@@ -10,7 +10,7 @@ enum Events {
 }
 
 type DropdownState = "open" | "closed";
-type FocusTarget = "first" | "last" | "none";
+type FocusTarget = "first" | "last" | "menu" | "none";
 type OpenSource = "pointer" | "click" | "keyboard" | "command" | "server" | "select";
 
 interface ShowOptions {
@@ -381,7 +381,11 @@ export class Dropdown extends FlintHook {
       this.js().setAttribute(content, "data-state", "open");
 
       if (focus !== "none" && !this.openedByHover) {
-        this.focusMenu(content, focus);
+        if (focus === "menu") {
+          this.focusMenuContainer(content);
+        } else {
+          this.focusMenu(content, focus);
+        }
       }
 
       this.emitChange("open");
@@ -446,7 +450,22 @@ export class Dropdown extends FlintHook {
     }
   }
 
-  private focusMenu(menu: HTMLElement, target: Exclude<FocusTarget, "none">): void {
+  /**
+   * Focuses the menu surface itself and leaves every item inactive. A pointer
+   * open uses this: keyboard navigation then starts at the top of the list,
+   * while no row looks hovered just because the menu opened.
+   */
+  private focusMenuContainer(menu: HTMLElement): void {
+    this.clearActive();
+
+    try {
+      menu.focus();
+    } catch {
+      // The menu may have been removed between the check and the call.
+    }
+  }
+
+  private focusMenu(menu: HTMLElement, target: Exclude<FocusTarget, "none" | "menu">): void {
     const items = this.items(menu);
     const item = target === "last" ? items[items.length - 1] : items[0];
 
@@ -579,7 +598,7 @@ export class Dropdown extends FlintHook {
     return triggers.find((trigger) => trigger.dataset.menu === menu.id) ?? null;
   }
 
-  private openSubmenu(trigger: HTMLElement): void {
+  private openSubmenu(trigger: HTMLElement, focus: "first" | "menu" = "first"): void {
     if (isDisabled(trigger)) return;
 
     const menu = this.submenuFor(trigger);
@@ -594,7 +613,7 @@ export class Dropdown extends FlintHook {
     }
 
     if (this.submenuStack.includes(menu)) {
-      this.focusMenu(menu, "first");
+      this.focusSubmenu(menu, focus);
       return;
     }
 
@@ -630,10 +649,19 @@ export class Dropdown extends FlintHook {
 
       this.js().setAttribute(menu, "data-state", "open");
       this.js().setAttribute(trigger, "aria-expanded", "true");
-      this.focusMenu(menu, "first");
+      this.focusSubmenu(menu, focus);
     };
 
     positioner.start().then(reveal, reveal);
+  }
+
+  private focusSubmenu(menu: HTMLElement, focus: "first" | "menu"): void {
+    if (focus === "menu") {
+      this.focusMenuContainer(menu);
+      return;
+    }
+
+    this.focusMenu(menu, "first");
   }
 
   private closeSubmenu(menu: HTMLElement, returnFocus: boolean): void {
@@ -704,7 +732,7 @@ export class Dropdown extends FlintHook {
       if (this.openedByHover) {
         this.openedByHover = false;
         this.clearTimers();
-        this.focusMenu(this.content ?? this.findContent() ?? this.el, "first");
+        this.focusMenuContainer(this.content ?? this.findContent() ?? this.el);
         return;
       }
 
@@ -712,9 +740,14 @@ export class Dropdown extends FlintHook {
       return;
     }
 
+    // `detail` is 0 for the click the browser synthesizes from `Enter` or
+    // `Space` on the trigger, which is keyboard intent. A real pointer click
+    // focuses the menu surface so the first row does not look selected.
+    const keyboard = event.detail === 0;
+
     this.show({
-      focus: "first",
-      source: event.detail === 0 ? "keyboard" : "click",
+      focus: keyboard ? "first" : "menu",
+      source: keyboard ? "keyboard" : "click",
     });
   };
 
@@ -753,7 +786,7 @@ export class Dropdown extends FlintHook {
 
     if (item.getAttribute("data-element") === "dropdown_sub") {
       event.preventDefault();
-      this.openSubmenu(item);
+      this.openSubmenu(item, event.detail === 0 ? "first" : "menu");
       return;
     }
 
@@ -840,11 +873,15 @@ export class Dropdown extends FlintHook {
     const target = event.target;
     if (!(target instanceof Element)) return;
 
-    const item = target.closest<HTMLElement>('[role="menuitem"]');
-    if (!item || !this.el.contains(item)) return;
+    const menu = target.closest<HTMLElement>('[data-part="content"], [data-part="submenu"]');
+    if (!menu || !this.el.contains(menu)) return;
 
-    const menu = item.closest<HTMLElement>('[data-part="content"], [data-part="submenu"]');
-    if (!menu) return;
+    // Custom content owns its own keys, so an input inside it keeps typing and
+    // its cursor keys. A pointer open leaves focus on the menu surface, so the
+    // navigation keys must still work from there.
+    if (target.closest("[data-custom]")) return;
+
+    const item = target.closest<HTMLElement>('[role="menuitem"]');
 
     switch (event.key) {
       case "ArrowDown":
@@ -868,7 +905,7 @@ export class Dropdown extends FlintHook {
         return;
 
       case "ArrowRight": {
-        if (item.getAttribute("data-element") !== "dropdown_sub") return;
+        if (!item || item.getAttribute("data-element") !== "dropdown_sub") return;
 
         event.preventDefault();
         this.openSubmenu(item);
@@ -884,6 +921,7 @@ export class Dropdown extends FlintHook {
 
       case "Enter":
       case " ": {
+        if (!item) return;
         if (item instanceof HTMLButtonElement || item instanceof HTMLAnchorElement) return;
         if (isDisabled(item)) return;
 

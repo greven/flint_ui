@@ -15,7 +15,7 @@ defmodule FlintUI.Base.DropdownSub do
       </FlintUI.dropdown>
 
   The submenu opens to the right of the item, flips when it does not fit, and is
-  managed by the dropdown's hook. A submenu can contain items, groups, headings,
+  managed by the dropdown's hook. A submenu can contain items, groups, headers,
   and separators.
 
   ## Accessibility

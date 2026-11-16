@@ -9,12 +9,12 @@ defmodule FlintUI.Styled.Dropdown do
       base: FlintUI.Base.Dropdown,
       target: "lib/my_app_web/components.ex",
       install:
-        "mix flint.add dropdown dropdown_group dropdown_heading dropdown_item dropdown_separator dropdown_sub",
+        "mix flint.add dropdown dropdown_group dropdown_header dropdown_item dropdown_separator dropdown_sub",
       css: "styled/dropdown.css",
       tokens: [:color, :radius, :spacing, :font, :shadow, :duration, :ease, :control],
       related: [
         {:dropdown_group, nav: true},
-        {:dropdown_heading, nav: true},
+        {:dropdown_header, nav: true},
         {:dropdown_item, nav: true},
         {:dropdown_separator, nav: true},
         {:dropdown_sub, nav: true}

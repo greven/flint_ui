@@ -235,6 +235,30 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     transform: rotate(-90deg);
 }
 
+/* Sidebar groups are native disclosures: drop the default marker, keep the row
+   compact, and turn the chevron from "closed" to "open". */
+[data-nav-group] > summary {
+    list-style: none;
+}
+
+[data-nav-group] > summary::-webkit-details-marker {
+    display: none;
+}
+
+[data-nav-group] > summary .lucide-chevron-right {
+    transition: transform 150ms var(--fl-ease-out);
+}
+
+[data-nav-group][open] > summary .lucide-chevron-right {
+    transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-nav-group] > summary .lucide-chevron-right {
+        transition: none;
+    }
+}
+
 /* Authored prose rendered by `FlintUIDocsWeb.Markdown.prose/1`. */
 @layer components {
     .docs-prose {

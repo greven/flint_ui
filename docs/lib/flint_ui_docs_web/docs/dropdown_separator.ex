@@ -18,7 +18,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownSeparator do
     ~H"""
     <.prose content={"A separator divides unrelated actions. It is a static `role=\"separator\"`, not focusable, and adds no keyboard behavior. Use a group instead when the items need a shared accessible name."} />
     <.preview {assigns} code="<.dropdown_separator />">
-      <div class="flex min-h-80 w-full items-start justify-center pt-4">
+      <div class="flex min-h-40 w-full items-center justify-center">
         <Components.dropdown label="Actions">
           <Components.dropdown_item>Settings</Components.dropdown_item>
           <Components.dropdown_separator />

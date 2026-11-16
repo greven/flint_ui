@@ -25,7 +25,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Collapsible,
     FlintUI.Styled.Dropdown,
     FlintUI.Styled.DropdownGroup,
-    FlintUI.Styled.DropdownHeading,
+    FlintUI.Styled.DropdownHeader,
     FlintUI.Styled.DropdownItem,
     FlintUI.Styled.DropdownSeparator,
     FlintUI.Styled.DropdownSub,

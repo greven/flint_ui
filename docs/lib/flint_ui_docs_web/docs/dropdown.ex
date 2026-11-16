@@ -20,9 +20,8 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
         controls: [
           %{key: :placement, type: :select, default: "bottom", label: "Placement"},
           %{key: :align, type: :select, default: "start", label: "Align"},
-          %{key: :arrow, type: :boolean, default: false, label: "Arrow"},
-          %{key: :max_height, type: :number, default: 280, label: "Max height"},
-          %{key: :open_on_hover, type: :boolean, default: false, label: "Open on hover"}
+          %{key: :open_on_hover, type: :boolean, default: false, label: "Open on hover"},
+          %{key: :arrow, type: :boolean, default: false, label: "Arrow"}
         ]
       }
     ]
@@ -31,19 +30,20 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
   @impl true
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
-    <.prose content="`label` renders the default trigger and the default slot is the menu content. Use `dropdown_heading` for a muted label, `dropdown_item` for actions and links, `dropdown_separator` for a visual break, and `dropdown_group` to name a related set of items.
-      The menu opens on click, `Enter`, `Space`, or `ArrowDown`; set `open_on_hover` to open it on hover. `placement`, `align`, and `offset` position it, and `max_height` caps its height so long menus scroll." />
+    <.prose content="`label` renders the default trigger and the default slot is the menu content. Use `dropdown_header` for a
+      muted section label, `dropdown_item` for actions and links, `dropdown_separator` for a visual break, and `dropdown_group` to name a related set
+      of items.The menu opens on click, `Enter`, `Space`, or `ArrowDown`; set `open_on_hover` to open it on hover. `placement`, `align`,
+      and `offset` position it, and `max_height` caps its height so long menus scroll." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
-      <div class="flex min-h-80 w-full items-start justify-center pt-4">
+      <div class="flex min-h-40 w-full items-center justify-center">
         <Components.dropdown
           label="Actions"
           placement={props.placement}
+          open_on_hover={props.open_on_hover}
           align={props.align}
           arrow={props.arrow}
-          max_height={props.max_height}
-          open_on_hover={props.open_on_hover}
         >
-          <Components.dropdown_heading>Account</Components.dropdown_heading>
+          <Components.dropdown_header>Account</Components.dropdown_header>
           <Components.dropdown_item icon="lucide-settings">Settings</Components.dropdown_item>
           <Components.dropdown_item icon="lucide-user">Profile</Components.dropdown_item>
           <Components.dropdown_item navigate="/account">Account</Components.dropdown_item>
@@ -72,7 +72,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex min-h-80 w-full items-start justify-center py-6">
+    <div class="flex min-h-64 w-full items-start justify-center py-6">
       <div class={["relative flex flex-col items-start gap-2"]}>
         <div data-element="dropdown" data-part="root" data-dropdown data-state="open">
           <button
@@ -96,9 +96,9 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
             class="relative mt-2 w-64"
           >
             <div data-part="list">
-              <div data-element="dropdown_heading" data-part="heading" data-dropdown_heading>
+              <header data-element="dropdown_header" data-part="header" data-dropdown_header>
                 Account
-              </div>
+              </header>
               <div
                 data-element="dropdown_item"
                 data-part="item"
@@ -127,7 +127,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
             data-dropdown-submenu
             data-state="open"
             role="menu"
-            class="absolute top-0 left-[17rem] w-56"
+            class="absolute top-0 left-68 w-56"
           >
             <div data-part="list">
               <div
@@ -154,7 +154,6 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
         Snippet.attr("placement", props.placement, "bottom"),
         Snippet.attr("align", props.align, "start"),
         Snippet.flag("arrow", props.arrow),
-        Snippet.attr("max_height", props.max_height, 280),
         Snippet.flag("open_on_hover", props.open_on_hover)
       ],
       usage_body()
@@ -163,7 +162,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
 
   defp usage_body do
     """
-    <.dropdown_heading>Account</.dropdown_heading>
+    <.dropdown_header>Account</.dropdown_header>
     <.dropdown_item icon="lucide-settings">Settings</.dropdown_item>
     <.dropdown_item icon="lucide-user">Profile</.dropdown_item>
     <.dropdown_item navigate="/account">Account</.dropdown_item>

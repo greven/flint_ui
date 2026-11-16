@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def site_header(assigns) do
     ~H"""
-    <div class="sticky top-0 z-20 border-b border-subtle bg-default/85 backdrop-blur">
+    <div class="sticky top-0 z-20 border-b border-default bg-default/85 backdrop-blur">
       <header>
         <div class="mx-auto grid h-14 max-w-360 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
           <.link navigate={~p"/"} class="flex items-center gap-2 justify-self-start">
@@ -173,7 +173,7 @@ defmodule FlintUIDocsWeb.Layouts do
 
   def section_nav(assigns) do
     ~H"""
-    <div class="border-t border-subtle">
+    <div class="border-t border-default">
       <nav
         aria-label="Documentation sections"
         class="mx-auto flex max-w-360 items-center gap-6 px-4 sm:px-6 lg:px-8"
@@ -245,15 +245,24 @@ defmodule FlintUIDocsWeb.Layouts do
   attr :page, :atom, default: nil
   attr :depth, :integer, default: 0
 
-  defp sidebar_page(assigns) do
+  defp sidebar_page(%{item: item} = assigns) do
+    case Map.get(item, :children, []) do
+      [] -> sidebar_link(assigns)
+      children -> sidebar_group(assign(assigns, :children, children))
+    end
+  end
+
+  defp sidebar_link(assigns) do
+    assigns = assign(assigns, :current?, page_active?(assigns.item, assigns.active, assigns.page))
+
     ~H"""
     <.link
       navigate={@item.path}
-      aria-current={if page_active?(@item, @active, @page), do: "page", else: nil}
+      aria-current={if @current?, do: "page", else: nil}
       data-nav-depth={@depth}
       class={[
         "group -ml-px pr-2 pl-1.5 border-l transition-colors hover:text-default",
-        sidebar_item_class(page_active?(@item, @active, @page))
+        sidebar_item_class(@current?)
       ]}
     >
       <div class={[
@@ -268,15 +277,60 @@ defmodule FlintUIDocsWeb.Layouts do
         <span class="truncate">{@item.label}</span>
       </div>
     </.link>
-
-    <.sidebar_page
-      :for={child <- Map.get(@item, :children, [])}
-      item={child}
-      active={@active}
-      page={@page}
-      depth={@depth + 1}
-    />
     """
+  end
+
+  # A page with subpages is a disclosure: the row still links to the parent
+  # page, and the chevron expands the group. `<details>` keeps the state in the
+  # browser, so a group the reader closed stays closed until the active page
+  # changes; the server only decides which group starts open.
+  defp sidebar_group(assigns) do
+    assigns =
+      assigns
+      |> assign(:current?, page_active?(assigns.item, assigns.active, assigns.page))
+      |> assign(:open?, group_open?(assigns.item, assigns.active, assigns.page))
+
+    ~H"""
+    <details open={@open?} data-nav-group>
+      <summary class={[
+        "-ml-px flex cursor-pointer border-l pr-2 pl-1.5 transition-colors hover:text-default",
+        sidebar_item_class(@current?)
+      ]}>
+        <div class="flex w-full min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium hover:bg-foreground/5">
+          <.link
+            navigate={@item.path}
+            aria-current={if @current?, do: "page", else: nil}
+            data-nav-depth={@depth}
+            class="min-w-0 flex-1 truncate capitalize"
+          >
+            {@item.label}
+          </.link>
+          <span class="grid size-5 shrink-0 place-items-center rounded text-muted">
+            <.icon name="lucide-chevron-right" class="size-3.5" />
+          </span>
+        </div>
+      </summary>
+
+      <div class="flex flex-col gap-px">
+        <.sidebar_page
+          :for={child <- @children}
+          item={child}
+          active={@active}
+          page={@page}
+          depth={@depth + 1}
+        />
+      </div>
+    </details>
+    """
+  end
+
+  # A group opens on its own page and on any of its descendants, so the reader
+  # can see where they are after a live redirect.
+  defp group_open?(item, active, page) do
+    page_active?(item, active, page) or
+      item
+      |> Map.get(:children, [])
+      |> Enum.any?(&group_open?(&1, active, page))
   end
 
   defp page_active?(%{name: name}, active, _page) when not is_nil(name), do: active == name

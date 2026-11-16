@@ -12,7 +12,7 @@ defmodule FlintUI.Base.Dropdown do
   `label` renders the default trigger. The default slot is the menu content:
 
       <FlintUI.dropdown label="Actions">
-        <FlintUI.dropdown_heading>Account</FlintUI.dropdown_heading>
+        <FlintUI.dropdown_header>Account</FlintUI.dropdown_header>
         <FlintUI.dropdown_item>Settings</FlintUI.dropdown_item>
         <FlintUI.dropdown_item navigate="/account">Account</FlintUI.dropdown_item>
         <FlintUI.dropdown_separator />
@@ -76,13 +76,18 @@ defmodule FlintUI.Base.Dropdown do
 
   The trigger carries `aria-haspopup="menu"`, `aria-expanded`, and
   `aria-controls`. The content is a `role="menu"` labelled by the trigger.
-  Items are `role="menuitem"`, groups are `role="group"`, headings are
+  Items are `role="menuitem"`, groups are `role="group"`, headers are
   presentational, and separators keep the `separator` role.
 
   Only one item is in the tab sequence at a time; the arrow keys move focus
   between enabled items. Disabled items are skipped. `custom` items are
   non-interactive content blocks: they carry no menu role and no menu item
   layout, so they can hold a footer or other arbitrary content.
+
+  A pointer click focuses the menu surface, so no item looks selected until you
+  move with the arrow keys. Opening from the keyboard focuses the first item
+  (or the last, with `ArrowUp`). The active item is marked with a fill, not a
+  focus ring.
 
   Selecting an item closes the menu and returns focus to the trigger. Links keep
   their link behavior: `Enter` follows the link, and `Space` does not.
@@ -562,7 +567,7 @@ defmodule FlintUI.Base.Dropdown do
 
   slot :inner_block,
     required: true,
-    doc: "The menu content: items, groups, headings, and separators."
+    doc: "The menu content: items, groups, headers, and separators."
 
   slot :trigger,
     doc:

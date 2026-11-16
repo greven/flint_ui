@@ -23,7 +23,7 @@ defmodule FlintUI do
   - `collapsible`
   - `dropdown`
   - `dropdown_group`
-  - `dropdown_heading`
+  - `dropdown_header`
   - `dropdown_item`
   - `dropdown_separator`
   - `dropdown_sub`
@@ -63,7 +63,7 @@ defmodule FlintUI do
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
     {:dropdown, [:open_dropdown, :close_dropdown, :toggle_dropdown]},
     {:dropdown_group, []},
-    {:dropdown_heading, []},
+    {:dropdown_header, []},
     {:dropdown_item, []},
     {:dropdown_separator, []},
     {:dropdown_sub, []},
