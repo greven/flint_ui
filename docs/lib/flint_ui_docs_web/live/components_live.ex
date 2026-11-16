@@ -63,7 +63,9 @@ defmodule FlintUIDocsWeb.ComponentsLive do
           label: FlintUIDocsWeb.Nav.type_label(type),
           icon: FlintUIDocsWeb.Nav.type_icon(type),
           components:
-            Enum.map(names, fn name ->
+            names
+            |> Enum.reject(&FlintUIDocsWeb.Nav.sub_component?/1)
+            |> Enum.map(fn name ->
               %{
                 name: name,
                 label: humanize(name),

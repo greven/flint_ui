@@ -126,6 +126,33 @@ defmodule FlintUIDocsWeb.Nav do
     }
   end
 
+  # Sub-components, one that only renders inside a parent,
+  # stay out of the components page listing.
+  @sub_components [
+    :accordion_item,
+    :dropdown_group,
+    :dropdown_header,
+    :dropdown_item,
+    :dropdown_separator,
+    :dropdown_sub
+  ]
+
+  @doc """
+  Returns the components that only render inside a parent component.
+
+  The components catalog hides them; the sidebar still nests them under their
+  parent. This is docs information architecture rather than component metadata,
+  so the components stay unaware of it. `NavTest` asserts every entry is nested
+  under a parent in the sidebar, so a re-parented component cannot stay here
+  unnoticed.
+  """
+  def sub_components, do: @sub_components
+
+  @doc """
+  Returns true when the components catalog hides the component.
+  """
+  def sub_component?(component), do: component in @sub_components
+
   @doc """
   Fetches a section by id.
   """

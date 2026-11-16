@@ -16,10 +16,27 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
                "#components-#{type} h2 a[href='#components-#{type}']"
              )
 
-      for name <- components do
+      for name <- components, not FlintUIDocsWeb.Nav.sub_component?(name) do
         assert has_element?(view, "#components-#{type} a[href='/components/#{name}']")
       end
+
+      for name <- components, FlintUIDocsWeb.Nav.sub_component?(name) do
+        refute has_element?(view, "#components-#{type} a[href='/components/#{name}']")
+      end
     end
+  end
+
+  test "components index hides sub-components but keeps standalone companions", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components")
+
+    # A part is reached from its parent's page and sidebar entry, not the catalog.
+    refute has_element?(view, "main a[href='/components/accordion_item']")
+    refute has_element?(view, "main a[href='/components/dropdown_item']")
+    assert has_element?(view, "main a[href='/components/accordion']")
+    assert has_element?(view, "main a[href='/components/dropdown']")
+
+    # Nested in the sidebar, but a component a reader can start from.
+    assert has_element?(view, "main a[href='/components/avatar_group']")
   end
 
   test "the components section link points at the landing page", %{conn: conn} do

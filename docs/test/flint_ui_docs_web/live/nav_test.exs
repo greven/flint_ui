@@ -20,16 +20,18 @@ defmodule FlintUIDocsWeb.NavTest do
     end
   end
 
+  # The sidebar covers the whole registry; the order inside a type group follows
+  # each component's `related` list, which is a docs choice, not a contract.
   test "the components section mirrors the component registry" do
     groups =
       Nav.get!(:components).groups
       |> Map.new(fn group ->
-        {group.label, group.pages |> flatten_pages() |> Enum.map(& &1.name)}
+        {group.label, group.pages |> flatten_pages() |> Enum.map(& &1.name) |> Enum.sort()}
       end)
 
     expected =
       FlintUI.Docs.grouped_components()
-      |> Map.new(fn {type, names} -> {type_label(type), names} end)
+      |> Map.new(fn {type, names} -> {type_label(type), Enum.sort(names)} end)
 
     assert groups == expected
   end
@@ -48,6 +50,22 @@ defmodule FlintUIDocsWeb.NavTest do
 
     assert button.children == []
     assert Enum.any?(action.pages, &(&1.name == :group))
+  end
+
+  test "catalog sub-components are all nested, but nesting alone does not hide one" do
+    nested =
+      Nav.get!(:components).groups
+      |> Enum.flat_map(& &1.pages)
+      |> Enum.flat_map(&Map.get(&1, :children, []))
+      |> flatten_pages()
+      |> Enum.map(& &1.name)
+      |> MapSet.new()
+
+    assert MapSet.subset?(MapSet.new(Nav.sub_components()), nested)
+
+    # Avatar Group nests under Avatar yet is a component a reader can start from.
+    assert MapSet.member?(nested, :avatar_group)
+    refute Nav.sub_component?(:avatar_group)
   end
 
   test "breadcrumbs/2 builds the section and group trail", %{} do
