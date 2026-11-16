@@ -13,9 +13,9 @@ defmodule FlintUI.Styled.Dropdown do
       css: "styled/dropdown.css",
       tokens: [:color, :radius, :spacing, :font, :shadow, :duration, :ease, :control],
       related: [
+        {:dropdown_item, nav: true},
         {:dropdown_group, nav: true},
         {:dropdown_header, nav: true},
-        {:dropdown_item, nav: true},
         {:dropdown_separator, nav: true},
         {:dropdown_sub, nav: true}
       ],

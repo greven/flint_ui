@@ -199,6 +199,10 @@ defmodule FlintUIDocsWeb.Layouts do
     "section-" <> (id |> Atom.to_string() |> String.replace("_", "-"))
   end
 
+  defp navigation_id(id) do
+    "nav-" <> (id |> Atom.to_string() |> String.replace("_", "-"))
+  end
+
   defp section_class(true) do
     "border-inverted text-default"
   end
@@ -280,23 +284,29 @@ defmodule FlintUIDocsWeb.Layouts do
     """
   end
 
-  # A page with subpages is a disclosure: the row still links to the parent
-  # page, and the chevron expands the group. `<details>` keeps the state in the
-  # browser, so a group the reader closed stays closed until the active page
-  # changes; the server only decides which group starts open.
   defp sidebar_group(assigns) do
     assigns =
       assigns
       |> assign(:current?, page_active?(assigns.item, assigns.active, assigns.page))
       |> assign(:open?, group_open?(assigns.item, assigns.active, assigns.page))
+      |> assign(:group_id, navigation_id(assigns.item.id))
+      |> assign(:panel_id, navigation_id(assigns.item.id) <> "-subpages")
 
     ~H"""
-    <details open={@open?} data-nav-group>
-      <summary class={[
-        "-ml-px flex cursor-pointer border-l pr-2 pl-1.5 transition-colors hover:text-default",
-        sidebar_item_class(@current?)
-      ]}>
-        <div class="flex w-full min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium hover:bg-foreground/5">
+    <div
+      id={@group_id}
+      data-nav-group
+      data-nav-open={to_string(@open?)}
+      phx-hook=".NavGroup"
+    >
+      <div
+        data-nav-row
+        class={[
+          "-ml-px flex border-l pr-2 pl-1.5 transition-colors hover:text-default",
+          sidebar_item_class(@current?)
+        ]}
+      >
+        <div class="flex w-full min-w-0 items-center gap-2 rounded-md py-1 pl-2 pr-1 text-sm font-medium hover:bg-foreground/5">
           <.link
             navigate={@item.path}
             aria-current={if @current?, do: "page", else: nil}
@@ -305,13 +315,20 @@ defmodule FlintUIDocsWeb.Layouts do
           >
             {@item.label}
           </.link>
-          <span class="grid size-5 shrink-0 place-items-center rounded text-muted">
+          <button
+            type="button"
+            data-nav-toggle
+            aria-controls={@panel_id}
+            aria-expanded={to_string(@open?)}
+            aria-label={"Toggle #{@item.label} subpages"}
+            class="grid size-6 shrink-0 place-items-center rounded text-muted transition-colors hover:text-default focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-strong"
+          >
             <.icon name="lucide-chevron-right" class="size-3.5" />
-          </span>
+          </button>
         </div>
-      </summary>
+      </div>
 
-      <div class="flex flex-col gap-px">
+      <div id={@panel_id} data-nav-panel class="flex flex-col gap-px">
         <.sidebar_page
           :for={child <- @children}
           item={child}
@@ -320,7 +337,21 @@ defmodule FlintUIDocsWeb.Layouts do
           depth={@depth + 1}
         />
       </div>
-    </details>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".NavGroup">
+        export default {
+          mounted() {
+            this.button = this.el.querySelector(":scope > [data-nav-row] [data-nav-toggle]")
+            this.button.addEventListener("click", () => this.setOpen(this.el.dataset.navOpen !== "true"))
+          },
+
+          setOpen(open) {
+            this.el.dataset.navOpen = open ? "true" : "false"
+            this.button.setAttribute("aria-expanded", String(open))
+          },
+        }
+      </script>
+    </div>
     """
   end
 

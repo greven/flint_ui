@@ -302,7 +302,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   } do
     {:ok, view, _html} = live(conn, ~p"/components")
 
-    refute has_element?(view, "aside details[data-nav-group][open]")
+    refute has_element?(view, "aside [data-nav-group][data-nav-open='true']")
 
     # A shared component leaves every group closed, but the children stay in the
     # markup so deep links still resolve.
@@ -310,12 +310,17 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "aside details[data-nav-group]:not([open]):has(> summary a[href='/components/dropdown'])"
+             "aside [data-nav-group][data-nav-open='false'] [data-nav-row] a[href='/components/dropdown']"
            )
 
     assert has_element?(
              view,
-             "aside details[data-nav-group]:not([open]) a[href='/components/dropdown_item']"
+             "aside [data-nav-group][data-nav-open='false'] [data-nav-panel] a[href='/components/dropdown_item']"
+           )
+
+    assert has_element?(
+             view,
+             "aside [data-nav-group] button[data-nav-toggle][aria-expanded='false'][aria-controls='nav-dropdown-subpages']"
            )
 
     # The parent page opens its own group.
@@ -323,12 +328,17 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "aside details[data-nav-group][open]:has(> summary a[href='/components/dropdown'])"
+             "aside [data-nav-group][data-nav-open='true'] [data-nav-row] a[href='/components/dropdown']"
            )
 
     assert has_element?(
              view,
-             "aside details[data-nav-group][open] > summary a[href='/components/dropdown'][aria-current='page']"
+             "aside [data-nav-group][data-nav-open='true'] [data-nav-row] a[href='/components/dropdown'][aria-current='page']"
+           )
+
+    assert has_element?(
+             view,
+             "aside [data-nav-group][data-nav-open='true'] button[data-nav-toggle][aria-expanded='true'][aria-controls='nav-dropdown-subpages']"
            )
 
     # A subpage opens the group that contains it.
@@ -336,7 +346,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
     assert has_element?(
              view,
-             "aside details[data-nav-group][open] a[href='/components/dropdown_item'][aria-current='page']"
+             "aside [data-nav-group][data-nav-open='true'] a[href='/components/dropdown_item'][aria-current='page']"
            )
   end
 
