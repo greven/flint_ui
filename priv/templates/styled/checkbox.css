@@ -1,0 +1,419 @@
+@layer components {
+    /* Checkbox. Public inputs: `--fl-checkbox-fill`, `--fl-checkbox-border`,
+     * `--fl-checkbox-color`, and `--fl-checkbox-color-content`. The native input
+     * is the control; the indicator paints the box above it so focus, forced
+     * colors, and assistive technology see a real checkbox. */
+    [data-element="checkbox"][data-variant] {
+        --fl-checkbox-fill: var(--fl-color-surface);
+        --fl-checkbox-border: var(--fl-color-border-strong);
+        --fl-checkbox-color: var(--fl-color-primary);
+        --fl-checkbox-color-content: var(--fl-color-neutral-50);
+        --fl-control-radius: var(--fl-radius-sm);
+        display: grid;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-element="checkbox"][data-variant] > [data-part="label"] {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fl-control-gap-md);
+        min-inline-size: 0;
+        cursor: pointer;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="label-text"] {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+    }
+
+    [data-element="checkbox"][data-variant] [data-part="sublabel"] {
+        color: var(--fl-color-text-muted);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        position: relative;
+        display: inline-grid;
+        flex: none;
+        place-content: center;
+        inline-size: var(--fl-control-icon-md);
+        block-size: var(--fl-control-icon-md);
+        border: 1px solid var(--fl-checkbox-border);
+        border-radius: var(--fl-control-radius);
+        background-color: var(--fl-checkbox-fill);
+        color: var(--fl-checkbox-color-content);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="control"] {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked) {
+        border-color: var(--fl-checkbox-color);
+        background-color: var(--fl-checkbox-color);
+    }
+
+    /* Indeterminate is a dash, not a check. */
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:indeterminate) {
+        border-color: var(--fl-checkbox-color);
+        background-color: var(--fl-checkbox-color);
+    }
+
+    /* The check and the dash share one inline SVG so their strokes stay crisp
+     * at every size; the native state picks which one shows. Absolutely
+     * positioning the SVG lets the percentage size resolve against the box
+     * instead of its own content. */
+    [data-element="checkbox"][data-variant] > [data-part="label"] > [data-part="indicator"] > [data-part="check"] {
+        display: none;
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        pointer-events: none;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:is(
+            :has(> [data-part="control"]:checked),
+            :has(> [data-part="control"]:indeterminate)
+        )
+        > [data-part="check"] {
+        display: block;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="check"]
+        > [data-mark="dash"] {
+        display: none;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:indeterminate)
+        > [data-part="check"]
+        > [data-mark="dash"] {
+        display: block;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:indeterminate)
+        > [data-part="check"]
+        > [data-mark="check"] {
+        display: none;
+    }
+
+    /* The server-rendered `data-indeterminate` hook paints the same mixed state
+     * without JavaScript. It is visual only; the native `:indeterminate` rules
+     * above remain for a component that sets the DOM property itself. */
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"][data-indeterminate]) {
+        border-color: var(--fl-checkbox-color);
+        background-color: var(--fl-checkbox-color);
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"][data-indeterminate])
+        > [data-part="check"] {
+        display: block;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"][data-indeterminate])
+        > [data-part="check"]
+        > [data-mark="dash"] {
+        display: block;
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"][data-indeterminate])
+        > [data-part="check"]
+        > [data-mark="check"] {
+        display: none;
+    }
+
+    [data-element="checkbox"][data-variant] > [data-part="hint"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    /* Errors stack with a warning icon on the first text line. The icon is
+     * inline SVG, so it needs no icon set, and follows the message color. */
+    [data-element="checkbox"][data-variant] > [data-part="error"] {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fl-spacing-xs);
+        margin: 0;
+        color: var(--fl-color-error-text);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="checkbox"][data-variant]
+        > [data-part="error"]
+        > [data-part="error_icon"] {
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        /* Center the icon on the first line box, not at the paragraph's top. */
+        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
+    }
+
+    /* Disabled dims the field as a unit; the native control keeps its state. */
+    [data-element="checkbox"][data-variant][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+    }
+
+    [data-element="checkbox"][data-variant][data-disabled] > [data-part="label"],
+    [data-element="checkbox"][data-variant]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="control"]:disabled {
+        cursor: not-allowed;
+    }
+
+    /* Invalid is announced through ARIA and reinforced on the box. */
+    [data-element="checkbox"][data-variant][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        border-color: var(--fl-color-error);
+    }
+
+    [data-element="checkbox"][data-variant][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked) {
+        border-color: var(--fl-color-error);
+        background-color: var(--fl-color-error);
+        color: var(--fl-color-error-content);
+    }
+
+    [data-element="checkbox"][data-variant][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+        --fl-focus-ring-color: var(--fl-focus-color-error);
+        --fl-focus-border-color: var(--fl-focus-color-error);
+    }
+
+    /* Card: the field itself becomes the selectable surface. A stretched label
+     * overlay makes the whole card, including the hint, a click target;
+     * errors sit above it so helper text stays selectable. The surface rounds
+     * to twice the box radius, so the default lands on the theme's card radius
+     * instead of the tighter control radius. */
+    [data-element="checkbox"][data-variant="card"] {
+        position: relative;
+        gap: var(--fl-spacing-sm);
+        padding: var(--fl-spacing-md);
+        border: 1px solid var(--fl-color-border);
+        border-radius: calc(var(--fl-control-radius) * 2);
+        background: var(--fl-color-surface);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="checkbox"][data-variant="card"] > [data-part="label"] {
+        align-items: flex-start;
+    }
+
+    [data-element="checkbox"][data-variant="card"]
+        > [data-part="label"]::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+    }
+
+    [data-element="checkbox"][data-variant="card"]:hover {
+        border-color: var(--fl-color-border-strong);
+        background: var(--fl-color-surface-subtle);
+    }
+
+    [data-element="checkbox"][data-variant="card"]:has(
+            > [data-part="label"] > [data-part="indicator"] > [data-part="control"]:checked
+        ) {
+        border-color: var(--fl-checkbox-color);
+        background: color-mix(in oklab, var(--fl-checkbox-color) 8%, var(--fl-color-surface));
+    }
+
+    [data-element="checkbox"][data-variant="card"][data-invalid] {
+        border-color: var(--fl-color-error);
+    }
+
+    [data-element="checkbox"][data-variant="card"][data-invalid]:has(
+            > [data-part="label"] > [data-part="indicator"] > [data-part="control"]:checked
+        ) {
+        border-color: var(--fl-color-error);
+        background: color-mix(in oklab, var(--fl-color-error) 8%, var(--fl-color-surface));
+    }
+
+    [data-element="checkbox"][data-variant="card"] > [data-part="error"] {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Sizes drive the label type, the gap, and the box from the control scale. */
+    [data-element="checkbox"][data-size="xs"][data-checkbox] {
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="checkbox"][data-size="xs"][data-checkbox] > [data-part="label"] {
+        gap: var(--fl-control-gap-xs);
+    }
+
+    [data-element="checkbox"][data-size="xs"][data-checkbox]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-xs);
+        block-size: var(--fl-control-icon-xs);
+    }
+
+    [data-element="checkbox"][data-size="sm"][data-checkbox] {
+        font-size: var(--fl-control-font-size-sm);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-element="checkbox"][data-size="sm"][data-checkbox] > [data-part="label"] {
+        gap: var(--fl-control-gap-sm);
+    }
+
+    [data-element="checkbox"][data-size="sm"][data-checkbox]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-sm);
+        block-size: var(--fl-control-icon-sm);
+    }
+
+    [data-element="checkbox"][data-size="lg"][data-checkbox] {
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="checkbox"][data-size="lg"][data-checkbox] > [data-part="label"] {
+        gap: var(--fl-control-gap-lg);
+    }
+
+    [data-element="checkbox"][data-size="lg"][data-checkbox]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-lg);
+        block-size: var(--fl-control-icon-lg);
+    }
+
+    [data-element="checkbox"][data-size="xl"][data-checkbox] {
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    [data-element="checkbox"][data-size="xl"][data-checkbox] > [data-part="label"] {
+        gap: var(--fl-control-gap-xl);
+    }
+
+    [data-element="checkbox"][data-size="xl"][data-checkbox]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-xl);
+        block-size: var(--fl-control-icon-xl);
+    }
+
+    /* Radius overrides use the shared scale for the box and the card. */
+    [data-element="checkbox"][data-radius="none"][data-checkbox] {
+        --fl-control-radius: 0;
+    }
+
+    [data-element="checkbox"][data-radius="xs"][data-checkbox] {
+        --fl-control-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="checkbox"][data-radius="md"][data-checkbox] {
+        --fl-control-radius: var(--fl-radius-md);
+    }
+
+    [data-element="checkbox"][data-radius="lg"][data-checkbox] {
+        --fl-control-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="checkbox"][data-radius="xl"][data-checkbox] {
+        --fl-control-radius: var(--fl-radius-xl);
+    }
+
+    /* Each color sets the fill. The mark is a neutral ink by default; only the
+     * light fills and the scheme-inverting neutral need a different one. */
+    [data-element="checkbox"][data-color="primary"] {
+        --fl-checkbox-color: var(--fl-color-primary);
+    }
+
+    [data-element="checkbox"][data-color="success"] {
+        --fl-checkbox-color: var(--fl-color-success);
+    }
+
+    [data-element="checkbox"][data-color="info"] {
+        --fl-checkbox-color: var(--fl-color-info);
+    }
+
+    [data-element="checkbox"][data-color="error"] {
+        --fl-checkbox-color: var(--fl-color-error);
+    }
+
+    [data-element="checkbox"][data-color="secondary"] {
+        --fl-checkbox-color: var(--fl-color-secondary);
+    }
+
+    [data-element="checkbox"][data-color="dark"] {
+        --fl-checkbox-color: var(--fl-color-dark);
+    }
+
+    [data-element="checkbox"][data-color="warning"] {
+        --fl-checkbox-color: var(--fl-color-warning);
+        --fl-checkbox-color-content: var(--fl-color-warning-content);
+    }
+
+    [data-element="checkbox"][data-color="light"] {
+        --fl-checkbox-color: var(--fl-color-light);
+        --fl-checkbox-color-content: var(--fl-color-light-content);
+    }
+
+    /* The neutral fill inverts with the scheme, so its mark follows. */
+    [data-element="checkbox"][data-color="neutral"] {
+        --fl-checkbox-color: var(--fl-color-inverted);
+        --fl-checkbox-color-content: var(--fl-color-text-inverted);
+    }
+}

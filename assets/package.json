@@ -11,6 +11,9 @@
     "lint": "oxlint",
     "format": "oxfmt"
   },
+  "dependencies": {
+    "@floating-ui/dom": "^1.8.0"
+  },
   "devDependencies": {
     "@preact/signals-core": "^1.14",
     "esbuild": "^0.28",
@@ -23,8 +26,5 @@
   "peerDependencies": {
     "phoenix": "*",
     "phoenix_live_view": "*"
-  },
-  "dependencies": {
-    "@floating-ui/dom": "^1.8.0"
   }
 }

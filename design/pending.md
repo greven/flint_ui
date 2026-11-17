@@ -12,8 +12,9 @@ Status values: `deferred`, `in progress`, `shipped`.
 
 ## Pending state for actions and forms
 
-Status: `in progress`. The Button contract and the browser guard are implemented;
-the forms guide, focus restoration, and the Form/Status components are deferred.
+Status: `in progress`. The Button contract and the browser guard are implemented,
+and `FlintUI.Base.Input` ships the form controls; the forms guide, focus
+restoration, and the Form/Status components are deferred.
 
 ### Decision
 
@@ -198,16 +199,17 @@ the forms guide, focus restoration, and the Form/Status components are deferred.
 
 ## Group and input groups
 
-Status: `deferred`. No form controls are shipped yet; this split decides where the
-Input/Field work lands.
+Status: `deferred`. `FlintUI.Base.Input` ships, but joining a group is not wired
+yet. The input is a field wrapper with a label, hint, and errors, while
+Group's geometry targets direct children, so the group work has to decide how a
+nested control shares a seam.
 
 ### Decision
 
-- **Group stays child-agnostic.** A future Input can join an attached group or
-  sit inside a group with a `surface` as a peer of buttons and toggles: it reads
-  the shared `--fl-control-*` size and radius tokens, so it only needs an entry in
-  the `size` cascade and a `flex: 1` sizing rule to share a seam. Group does not
-  take on input anatomy.
+- **Group stays child-agnostic.** An Input can join an attached group or sit
+  inside a group with a `surface` as a peer of buttons and toggles: it reads the
+  shared `--fl-control-*` size and radius tokens. Group does not take on field
+  anatomy.
 - **The compound input group belongs to the field.** Addons (prefix or unit text,
   leading and trailing icons, clear or visibility buttons), the single border and
   focus ring around them, and validation state belong with the Input/Field
@@ -217,10 +219,15 @@ Input/Field work lands.
 - **Copy names no unshipped controls.** The group docs and moduledoc say any
   control can sit inside instead of listing inputs and selects. Name a control in
   the copy when it ships.
+- **The field reuses the control heights and gets its own inline padding.** The
+  `--fl-field-padding-x-*` scale sits beside `--fl-control-*`, so text fields are
+  roomier without changing the height every control shares.
 
 ### Open questions
 
-- Does the field shell reuse the control height tokens, or does an input need its
-  own height? Inputs want more inline padding than an icon button.
+- How does a field root join an attached group when the border lives on the
+  nested control rather than on the root? A `display: contents` root would expose
+  the control to the `> *` seam rules, but it also removes the box that holds the
+  label, hint, and errors.
 - Should a native `<input>` inherit the group `size`, or only a FlintUI input
   that carries `data-element="input"`?

@@ -14,9 +14,8 @@ This is a web application written using the Phoenix web framework.
   - **Always** fix the `current_scope` error by moving your routes to the proper `live_session` and ensure you pass `current_scope` as needed
 - Phoenix v1.8 moved the `<.flash_group>` component to the `Layouts` module. You are **forbidden** from calling `<.flash_group>` outside of the `layouts.ex` module
 - Icons use the FlintUI `<.icon>` component with [Lucide](https://lucide.dev) names, e.g. `<.icon name="lucide-x" class="size-5"/>`. **Always** use `<.icon>` for icons, **never** vendor icon modules or inline `<svg>` directly
-- **Always** use the imported `<.input>` component for form inputs from `core_components.ex` when available. `<.input>` is imported and using it will save steps and prevent errors
-- If you override the default input classes (`<.input class="myclass px-2 py-1 rounded-lg">)`) class with your own values, no default classes are inherited, so your
-custom classes must fully style the input
+- **Always** use the FlintUI input for form fields: `Components.input` in docs pages (the core `input/1` was removed; the generated `<.input>` is imported in a consuming app). It accepts the same `field`, `type`, `options`, and error API.
+- `class="..."` on the input adds classes to the native control on top of the theme. The themed defaults stay; override tokens with `style` or the component's CSS variables when you need a different look.
 
 ### JS and CSS guidelines
 

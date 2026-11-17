@@ -374,7 +374,9 @@ defmodule FlintUIDocsWeb.ThemeLive do
             or <code class="docs-code font-mono">--fl-radius</code>
             retunes density and roundness across every component. Form controls
             share a <code class="docs-code font-mono">--fl-control-*</code>
-            scale so buttons, inputs, and toggles line up.
+            scale so buttons, inputs, and toggles line up. Text fields add
+            <code class="docs-code font-mono">--fl-field-padding-x-*</code>
+            so their inline padding is roomier at the same height.
           </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:scaling)} lang={:css} />
         </DocsComponents.section>
@@ -383,7 +385,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.content_paragraph class="mt-3">
             Roundness starts from <code class="docs-code font-mono">--fl-radius</code>
             and its
-            scale steps. Buttons, toggles, and future form controls share
+            scale steps. Buttons, toggles, and inputs share
             <code class="docs-code font-mono">--fl-control-radius</code>
             (default <code class="docs-code font-mono">var(--fl-radius-md)</code>). Components with
             their own shape, such as cards, badges, avatars, and switches, read the
@@ -870,6 +872,9 @@ defmodule FlintUIDocsWeb.ThemeLive do
       /* Shared across form controls */
       --fl-control-height-md: 2rem;
       --fl-control-font-size-md: 0.875rem;
+
+      /* Text fields want a little more inline padding than a button. */
+      --fl-field-padding-x-md: 0.875rem;
     }
     """
   end

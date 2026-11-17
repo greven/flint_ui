@@ -20,6 +20,8 @@ defmodule FlintUI do
   - `badge`
   - `button`
   - `card`
+  - `checkbox`
+  - `checkbox_group`
   - `collapsible`
   - `dropdown`
   - `dropdown_group`
@@ -31,11 +33,16 @@ defmodule FlintUI do
   - `group`
   - `icon`
   - `indicator`
+  - `input`
   - `kbd`
+  - `label`
   - `loading`
   - `loading_text`
   - `popover`
+  - `radio`
+  - `radio_group`
   - `separator`
+  - `switch`
   - `tabs`
   - `toggle`
   - `tooltip`
@@ -60,6 +67,8 @@ defmodule FlintUI do
     {:badge, []},
     {:button, []},
     {:card, []},
+    {:checkbox, []},
+    {:checkbox_group, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
     {:dropdown, [:open_dropdown, :close_dropdown, :toggle_dropdown]},
     {:dropdown_group, []},
@@ -71,11 +80,16 @@ defmodule FlintUI do
     {:group, []},
     {:icon, []},
     {:indicator, []},
+    {:input, []},
     {:kbd, []},
+    {:label, []},
     {:loading, []},
     {:loading_text, []},
     {:popover, [:open_popover, :close_popover, :toggle_popover]},
+    {:radio, []},
+    {:radio_group, []},
     {:separator, []},
+    {:switch, []},
     {:tabs, [:select_tab]},
     {:toggle, []},
     {:tooltip, []}

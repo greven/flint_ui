@@ -43,7 +43,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-color-dark-text: light-dark("
     assert css =~ "--fl-color-light-text: light-dark("
 
-    for element <- ~w(button badge toggle tabs loading loading_text),
+    for element <- ~w(button badge toggle tabs loading loading_text checkbox radio),
         tone <- ~w(dark light) do
       assert css =~ ~s([data-element="#{element}"][data-color="#{tone}"])
     end

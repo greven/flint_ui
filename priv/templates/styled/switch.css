@@ -1,0 +1,272 @@
+@layer components {
+    /* Switch. Public inputs: `--fl-switch-fill`, `--fl-switch-border`,
+     * `--fl-switch-thumb`, `--fl-switch-color`, and
+     * `--fl-switch-color-content`. The native input is the control; the track
+     * and thumb paint above it so focus, forced colors, and assistive
+     * technology see a real switch. */
+    [data-element="switch"][data-switch] {
+        --fl-switch-fill: var(--fl-color-border-strong);
+        --fl-switch-border: var(--fl-color-border-strong);
+        --fl-switch-thumb: var(--fl-color-surface);
+        --fl-switch-color: var(--fl-color-primary);
+        --fl-switch-color-content: var(--fl-color-neutral-50);
+        display: grid;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-element="switch"][data-switch] > [data-part="label"] {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fl-control-gap-md);
+        min-inline-size: 0;
+        cursor: pointer;
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="label-text"] {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+    }
+
+    [data-element="switch"][data-switch] [data-part="sublabel"] {
+        color: var(--fl-color-text-muted);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    /* The track is sized in `em`, so the selected `size` scales it with the
+     * label. The padding subtracts the border, which leaves a one-em content
+     * box: exactly wide enough for the thumb to travel one em to the end. */
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex: none;
+        box-sizing: border-box;
+        inline-size: 2.5em;
+        block-size: 1.5em;
+        padding: calc(0.25em - 1px);
+        border: 1px solid var(--fl-switch-border);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-switch-fill);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="thumb"] {
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-switch-thumb);
+        box-shadow: var(--fl-shadow-xs);
+        transition:
+            margin-inline-start var(--fl-duration-base) var(--fl-ease-out),
+            background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="control"] {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked) {
+        border-color: var(--fl-switch-color);
+        background-color: var(--fl-switch-color);
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked)
+        > [data-part="thumb"] {
+        background-color: var(--fl-switch-color-content);
+        margin-inline-start: 1em;
+    }
+
+    [data-element="switch"][data-switch] > [data-part="hint"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    /* Errors stack with a warning icon on the first text line. The icon is
+     * inline SVG, so it needs no icon set, and follows the message color. */
+    [data-element="switch"][data-switch] > [data-part="error"] {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fl-spacing-xs);
+        margin: 0;
+        color: var(--fl-color-error-text);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="error"]
+        > [data-part="error_icon"] {
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        /* Center the icon on the first line box, not at the paragraph's top. */
+        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
+    }
+
+    /* Disabled dims the field as a unit; the native control keeps its state. */
+    [data-element="switch"][data-switch][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+    }
+
+    [data-element="switch"][data-switch][data-disabled] > [data-part="label"],
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="control"]:disabled {
+        cursor: not-allowed;
+    }
+
+    /* Invalid is announced through ARIA and reinforced on the track. */
+    [data-element="switch"][data-switch][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"] {
+        border-color: var(--fl-color-error);
+    }
+
+    [data-element="switch"][data-switch][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked) {
+        border-color: var(--fl-color-error);
+        background-color: var(--fl-color-error);
+    }
+
+    [data-element="switch"][data-switch][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked)
+        > [data-part="thumb"] {
+        background-color: var(--fl-color-error-content);
+    }
+
+    [data-element="switch"][data-switch][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+        --fl-focus-ring-color: var(--fl-focus-color-error);
+        --fl-focus-border-color: var(--fl-focus-color-error);
+    }
+
+    /* Sizes drive the label type and the gap; the `em` track follows. */
+    [data-element="switch"][data-size="xs"][data-switch] {
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="switch"][data-size="xs"][data-switch] > [data-part="label"] {
+        gap: var(--fl-control-gap-xs);
+    }
+
+    [data-element="switch"][data-size="sm"][data-switch] {
+        font-size: var(--fl-control-font-size-sm);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-element="switch"][data-size="sm"][data-switch] > [data-part="label"] {
+        gap: var(--fl-control-gap-sm);
+    }
+
+    [data-element="switch"][data-size="lg"][data-switch] {
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="switch"][data-size="lg"][data-switch] > [data-part="label"] {
+        gap: var(--fl-control-gap-lg);
+    }
+
+    [data-element="switch"][data-size="xl"][data-switch] {
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    [data-element="switch"][data-size="xl"][data-switch] > [data-part="label"] {
+        gap: var(--fl-control-gap-xl);
+    }
+
+    /* Each color sets the on track. The thumb is a neutral ink by default;
+     * only the light fills and the scheme-inverting neutral need a different
+     * one. */
+    [data-element="switch"][data-color="primary"] {
+        --fl-switch-color: var(--fl-color-primary);
+    }
+
+    [data-element="switch"][data-color="success"] {
+        --fl-switch-color: var(--fl-color-success);
+    }
+
+    [data-element="switch"][data-color="info"] {
+        --fl-switch-color: var(--fl-color-info);
+    }
+
+    [data-element="switch"][data-color="error"] {
+        --fl-switch-color: var(--fl-color-error);
+    }
+
+    [data-element="switch"][data-color="secondary"] {
+        --fl-switch-color: var(--fl-color-secondary);
+    }
+
+    [data-element="switch"][data-color="dark"] {
+        --fl-switch-color: var(--fl-color-dark);
+    }
+
+    [data-element="switch"][data-color="warning"] {
+        --fl-switch-color: var(--fl-color-warning);
+        --fl-switch-color-content: var(--fl-color-warning-content);
+    }
+
+    [data-element="switch"][data-color="light"] {
+        --fl-switch-color: var(--fl-color-light);
+        --fl-switch-color-content: var(--fl-color-light-content);
+    }
+
+    /* The neutral fill inverts with the scheme, so its thumb follows. */
+    [data-element="switch"][data-color="neutral"] {
+        --fl-switch-color: var(--fl-color-inverted);
+        --fl-switch-color-content: var(--fl-color-text-inverted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="switch"][data-switch]
+            > [data-part="label"]
+            > [data-part="indicator"],
+        [data-element="switch"][data-switch]
+            > [data-part="label"]
+            > [data-part="indicator"]
+            > [data-part="thumb"] {
+            transition: none;
+        }
+    }
+}

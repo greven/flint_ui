@@ -1,0 +1,73 @@
+@layer components {
+    /* Label. The native label names the control; the description stays outside
+     * it so it never joins the control's accessible name. Sizes follow the
+     * shared control type scale, while the qualifier and description stay at
+     * the small text scale like the other fields. */
+    [data-element="label"][data-label] {
+        display: grid;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-element="label"][data-label] > [data-part="label"] {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+    }
+
+    [data-element="label"][data-label] > [data-part="label"][for] {
+        cursor: pointer;
+    }
+
+    [data-element="label"][data-label] > [data-part="label"] > [data-part="label_text"] {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        font-weight: var(--fl-font-weight-medium);
+    }
+
+    [data-element="label"][data-label] [data-part="required"] {
+        color: var(--fl-color-error-text);
+        font-weight: var(--fl-font-weight-medium);
+    }
+
+    [data-element="label"][data-label] [data-part="sublabel"] {
+        color: var(--fl-color-text-muted);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="label"][data-label] > [data-part="description"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="label"][data-size="xs"][data-label] {
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="label"][data-size="sm"][data-label] {
+        font-size: var(--fl-control-font-size-sm);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-element="label"][data-size="lg"][data-label] {
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="label"][data-size="xl"][data-label] {
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+}

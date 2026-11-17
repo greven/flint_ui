@@ -27,6 +27,104 @@ defmodule FlintUI.GeneratorTest do
     end
   end
 
+  test "input maps its props onto the field root and forwards the control" do
+    source = Generator.component_source(:input)
+
+    assert source =~ "attr(:size, :any"
+    assert source =~ "attr(:radius, :string"
+    assert source =~ ~s("data-input" => true)
+    assert source =~ "FlintUI.Styled.Size.scale(assigns.size)"
+    assert source =~ ~s("data-size" => assigns.data_size)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ "Map.put(assigns.rest, :size, assigns.size)"
+    assert source =~ "root_attrs={@root_attrs}"
+    assert source =~ "<FlintUI.input"
+    assert source =~ "{@rest}"
+
+    for slot <- ~w(inner_prefix inner_suffix outer_prefix outer_suffix) do
+      assert source =~ "slot(:#{slot}"
+      assert source =~ "<:#{slot}>{render_slot(@#{slot})}</:#{slot}>"
+    end
+  end
+
+  test "checkbox maps its variant, size, radius, and color props" do
+    source = Generator.component_source(:checkbox)
+
+    assert source =~ "attr(:variant, :string"
+    assert source =~ "values: ~w(simple card)"
+    assert source =~ ~s("data-variant" => assigns.variant)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "label_content={@inner_block not in [nil, []] && render_slot(@inner_block)}"
+    assert source =~ "<FlintUI.checkbox"
+    assert source =~ "root_attrs={@root_attrs}"
+  end
+
+  test "switch maps its size and color props" do
+    source = Generator.component_source(:switch)
+
+    assert source =~ "attr(:size, :string"
+    assert source =~ "values: ~w(xs sm md lg xl)"
+    assert source =~ ~s("data-switch" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "label_content={@inner_block not in [nil, []] && render_slot(@inner_block)}"
+    assert source =~ "<FlintUI.switch"
+    assert source =~ "root_attrs={@root_attrs}"
+  end
+
+  test "checkbox group forwards its item props and slots" do
+    source = Generator.component_source(:checkbox_group)
+
+    assert source =~ "attr(:orientation, :string"
+    assert source =~ "values: ~w(vertical horizontal)"
+    assert source =~ "attr(:variant, :string"
+    assert source =~ ~s("data-orientation" => assigns.orientation)
+    assert source =~ ~s("data-variant" => assigns.variant)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ "item_attrs={@item_attrs}"
+    assert source =~ "root_attrs={@root_attrs}"
+    assert source =~ "<:checkbox"
+    assert source =~ "render_slot(item)"
+    assert source =~ "Map.get(item, :label)"
+  end
+
+  test "radio maps its variant, size, radius, and color props" do
+    source = Generator.component_source(:radio)
+
+    assert source =~ "attr(:variant, :string"
+    assert source =~ "values: ~w(simple card)"
+    assert source =~ ~s("data-variant" => assigns.variant)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "label_content={@inner_block not in [nil, []] && render_slot(@inner_block)}"
+    assert source =~ "<FlintUI.radio"
+    assert source =~ "root_attrs={@root_attrs}"
+  end
+
+  test "radio group forwards its item props and slots" do
+    source = Generator.component_source(:radio_group)
+
+    assert source =~ "attr(:orientation, :string"
+    assert source =~ "values: ~w(vertical horizontal)"
+    assert source =~ "attr(:variant, :string"
+    assert source =~ ~s("data-orientation" => assigns.orientation)
+    assert source =~ ~s("data-variant" => assigns.variant)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ "item_attrs={@item_attrs}"
+    assert source =~ "root_attrs={@root_attrs}"
+    assert source =~ "<:radio"
+    assert source =~ "render_slot(item)"
+    assert source =~ "Map.get(item, :label)"
+  end
+
   test "button maps its variant and size props" do
     source = Generator.component_source(:button)
 

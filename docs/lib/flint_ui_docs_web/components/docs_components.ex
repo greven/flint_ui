@@ -1001,6 +1001,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
   # A free-form size declared as `:any` takes a preset string or a number of
   # pixels, so document both alternatives rather than the internal type.
   defp type_label(%{number: true}), do: "string | number"
+  defp type_label(%{type: {:struct, module}}), do: inspect(module)
   defp type_label(item), do: item[:type] || :string
 
   defp with_number(values, %{number: true}), do: values ++ ["number"]

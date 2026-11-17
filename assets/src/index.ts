@@ -1,8 +1,10 @@
 import { installAvatarFallback } from "./lib/avatar-fallback";
+import { installIndeterminate } from "./lib/indeterminate";
 import { installPendingGuard } from "./lib/pending";
 
 installPendingGuard();
 installAvatarFallback();
+installIndeterminate();
 
 export { Accordion } from "./components/accordion";
 export { Collapsible } from "./components/collapsible";

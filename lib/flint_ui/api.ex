@@ -146,6 +146,9 @@ defmodule FlintUI.API do
   # Converts a list of attribute definitions into quoted code
   defp component_attrs(attrs) do
     for %{name: name, type: type, required: required, opts: opts, doc: doc} <- attrs do
+      # Phoenix stores a struct type as `{:struct, Module}`. The public function
+      # declares the attribute again, so unwrap it back into the module.
+      type = unwrap_attr_type(type)
       opts = if required, do: [{:required, true} | opts], else: opts
       # `doc: false` must survive too, so internal attributes stay undocumented.
       opts = if is_nil(doc), do: opts, else: [{:doc, doc} | opts]
@@ -180,6 +183,9 @@ defmodule FlintUI.API do
       end
     end
   end
+
+  defp unwrap_attr_type({:struct, module}), do: module
+  defp unwrap_attr_type(type), do: type
 
   # Fetches the moduledoc string from a module
   defp fetch_moduledoc(module) do
