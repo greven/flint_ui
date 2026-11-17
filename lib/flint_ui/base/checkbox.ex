@@ -1,6 +1,6 @@
 defmodule FlintUI.Base.Checkbox do
   @moduledoc """
-  Renders a single checkbox with a label, an optional sublabel, a hint, and
+  Renders a single checkbox with a label, an optional sublabel, a description, and
   errors.
 
   A checkbox is the native control for a boolean choice: opting in to terms,
@@ -10,7 +10,7 @@ defmodule FlintUI.Base.Checkbox do
         name="notifications"
         label="Enable notifications"
         sublabel="Recommended"
-        hint="We'll send you important updates about your account status and security."
+        description="We'll send you important updates about your account status and security."
       />
 
   Pass a `Phoenix.HTML.FormField` to bind the checkbox to a form. The component
@@ -52,7 +52,7 @@ defmodule FlintUI.Base.Checkbox do
 
   The label wraps the native input, so the association works even without an
   `id`; the generated `id` also sets `for`. `sublabel` is rendered inside the
-  label and is announced with it. The hint and errors sit outside the label and
+  label and is announced with it. The description and errors sit outside the label and
   are linked with `aria-describedby`; an invalid field also carries
   `aria-invalid`.
 
@@ -196,7 +196,8 @@ defmodule FlintUI.Base.Checkbox do
         %Meta.PartAttr{
           name: "aria-describedby",
           value: "string",
-          description: "The hint and error message ids, appended to a caller-supplied value."
+          description:
+            "The description and error message ids, appended to a caller-supplied value."
         }
       ],
       label_text: [
@@ -213,16 +214,17 @@ defmodule FlintUI.Base.Checkbox do
           description: "A short qualifier shown beside the label, such as `Recommended`."
         }
       ],
-      hint: [
+      description: [
         %Meta.PartAttr{
           name: "[data-part]",
-          value: "hint",
-          description: "Hint text shown below the control and exposed through `aria-describedby`."
+          value: "description",
+          description:
+            "Explanatory text shown below the control and exposed through `aria-describedby`."
         },
         %Meta.PartAttr{
           name: "id",
           value: "string",
-          description: "The hint id, derived from the control id."
+          description: "The description id, derived from the control id."
         }
       ],
       error: [
@@ -328,8 +330,8 @@ defmodule FlintUI.Base.Checkbox do
       sublabel: %{
         "data-part" => "sublabel"
       },
-      hint: %{
-        "data-part" => "hint"
+      description: %{
+        "data-part" => "description"
       },
       error: %{
         "data-part" => "error"
@@ -393,9 +395,9 @@ defmodule FlintUI.Base.Checkbox do
     doc:
       "Error messages, as translated strings or raw `{message, options}` tuples. A field's own errors are used when `field` is given."
 
-  attr :hint, :string,
+  attr :description, :string,
     default: nil,
-    doc: "Hint text shown below the checkbox and linked with `aria-describedby`."
+    doc: "Explanatory text shown below the checkbox and linked with `aria-describedby`."
 
   attr :disabled, :boolean,
     default: false,
@@ -491,7 +493,7 @@ defmodule FlintUI.Base.Checkbox do
           <span :if={@sublabel} {@flint_parts[:sublabel]}>{@sublabel}</span>
         </span>
       </label>
-      <p :if={@hint} id={@hint_id} {@flint_parts[:hint]}>{@hint}</p>
+      <p :if={@description} id={@description_id} {@flint_parts[:description]}>{@description}</p>
       <p
         :for={{message, index} <- Enum.with_index(@errors, 1)}
         id={Field.error_id(@id, index)}
@@ -521,11 +523,11 @@ defmodule FlintUI.Base.Checkbox do
     errors = Field.translate_errors(Map.get(assigns, :errors) || [])
     invalid? = errors != []
     id = Map.get(assigns, :id)
-    hint_id = Field.hint_id(id, Map.get(assigns, :hint))
+    description_id = Field.description_id(id, Map.get(assigns, :description))
     error_ids = Field.error_ids(id, errors)
 
     described_by =
-      Field.described_by(Map.get(assigns, :rest, %{}), [hint_id, error_ids])
+      Field.described_by(Map.get(assigns, :rest, %{}), [description_id, error_ids])
 
     control_rest =
       Map.get(assigns, :rest, %{})
@@ -550,7 +552,7 @@ defmodule FlintUI.Base.Checkbox do
       inner_block: Map.get(assigns, :inner_block, []),
       errors: errors,
       invalid: invalid?,
-      hint_id: hint_id,
+      description_id: description_id,
       control_rest: control_rest
     )
   end

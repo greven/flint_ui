@@ -71,7 +71,7 @@ defmodule FlintUI.Base.InputTest do
       """
     end
 
-    def textarea(assigns) do
+    def textarea_input(assigns) do
       ~H"""
       <.input name="bio" label="Bio" type="textarea" value={@value} rows="4" />
       """
@@ -434,7 +434,7 @@ defmodule FlintUI.Base.InputTest do
   describe "textarea" do
     test "renders the value and native attributes" do
       html =
-        render_component(&TestComponent.textarea/1, %{value: "Hello"})
+        render_component(&TestComponent.textarea_input/1, %{value: "Hello"})
         |> LazyHTML.from_fragment()
 
       assert LazyHTML.tag(control(html)) == ["textarea"]

@@ -12,7 +12,7 @@ defmodule FlintUI.Styled.CheckboxGroupTest do
           id="languages"
           name="languages"
           label="Programming languages"
-          hint={@hint}
+          description={@description}
           value={@value}
           orientation={@orientation}
           variant={@variant}
@@ -53,7 +53,7 @@ defmodule FlintUI.Styled.CheckboxGroupTest do
   defp defaults(overrides \\ %{}) do
     Map.merge(
       %{
-        hint: nil,
+        description: nil,
         value: [],
         orientation: "vertical",
         variant: "simple",

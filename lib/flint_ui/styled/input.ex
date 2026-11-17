@@ -11,6 +11,7 @@ defmodule FlintUI.Styled.Input do
       install: "mix flint.add input",
       css: "styled/input.css",
       tokens: [:color, :radius, :font, :spacing, :control, :field, :duration, :ease],
+      related: [:textarea],
       props: [
         Prop.new(
           name: :size,

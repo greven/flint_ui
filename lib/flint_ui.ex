@@ -42,8 +42,11 @@ defmodule FlintUI do
   - `radio`
   - `radio_group`
   - `separator`
+  - `slider`
   - `switch`
+  - `switch_group`
   - `tabs`
+  - `textarea`
   - `toggle`
   - `tooltip`
 
@@ -89,8 +92,11 @@ defmodule FlintUI do
     {:radio, []},
     {:radio_group, []},
     {:separator, []},
+    {:slider, []},
     {:switch, []},
+    {:switch_group, []},
     {:tabs, [:select_tab]},
+    {:textarea, []},
     {:toggle, []},
     {:tooltip, []}
   ]

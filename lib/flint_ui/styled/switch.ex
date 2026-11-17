@@ -11,7 +11,7 @@ defmodule FlintUI.Styled.Switch do
       install: "mix flint.add switch",
       css: "styled/switch.css",
       tokens: [:color, :radius, :font, :spacing, :control, :duration, :ease],
-      related: [{:checkbox, nav: false}],
+      related: [{:checkbox, nav: false}, {:switch_group, nav: true}],
       props: [
         Prop.new(
           name: :size,

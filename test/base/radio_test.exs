@@ -15,7 +15,7 @@ defmodule FlintUI.Base.RadioTest do
         label={@label}
         sublabel={@sublabel}
         checked={@checked}
-        hint={@hint}
+        description={@description}
         errors={@errors}
         disabled={@disabled}
         required={@required}
@@ -30,7 +30,7 @@ defmodule FlintUI.Base.RadioTest do
         field={@field}
         value={@value}
         label={@label}
-        hint="Choose carefully."
+        description="Choose carefully."
       />
       """
     end
@@ -55,7 +55,7 @@ defmodule FlintUI.Base.RadioTest do
         id={@id}
         name={@name}
         label={@label}
-        hint={@hint}
+        description={@description}
         value={@value}
         errors={@errors}
         disabled={@disabled}
@@ -70,7 +70,7 @@ defmodule FlintUI.Base.RadioTest do
 
     def group_field(assigns) do
       ~H"""
-      <.radio_group field={@field} label="Plan" hint="Pick one.">
+      <.radio_group field={@field} label="Plan" description="Pick one.">
         <:radio value="free" label="Free" />
         <:radio value="pro" label="Pro" />
       </.radio_group>
@@ -104,7 +104,7 @@ defmodule FlintUI.Base.RadioTest do
     label: "Pro",
     sublabel: nil,
     checked: nil,
-    hint: nil,
+    description: nil,
     errors: [],
     disabled: false,
     required: false,
@@ -265,19 +265,19 @@ defmodule FlintUI.Base.RadioTest do
       assert control_attr(html, "aria-invalid") == ["true"]
 
       assert control_attr(html, "aria-describedby") == [
-               "user_plan-pro-hint user_plan-pro-error-1"
+               "user_plan-pro-description user_plan-pro-error-1"
              ]
 
       assert LazyHTML.text(LazyHTML.query(html, ~s([data-part="error"]))) =~ "is required"
     end
   end
 
-  describe "errors and hint" do
-    test "links every message and the hint to the control" do
+  describe "errors and description" do
+    test "links every message and the description to the control" do
       html =
         render(
           errors: ["is invalid", "is not available"],
-          hint: "Choose the plan that fits."
+          description: "Choose the plan that fits."
         )
 
       errors = LazyHTML.query(html, ~s([data-part="error"]))
@@ -290,11 +290,11 @@ defmodule FlintUI.Base.RadioTest do
                "plan-pro-error-1"
              ]
 
-      hint = LazyHTML.query(html, ~s([data-part="hint"]))
-      assert LazyHTML.attribute(hint, "id") == ["plan-pro-hint"]
+      description = LazyHTML.query(html, ~s([data-part="description"]))
+      assert LazyHTML.attribute(description, "id") == ["plan-pro-description"]
 
       assert control_attr(html, "aria-describedby") == [
-               "plan-pro-hint plan-pro-error-1 plan-pro-error-2"
+               "plan-pro-description plan-pro-error-1 plan-pro-error-2"
              ]
 
       assert control_attr(html, "aria-invalid") == ["true"]
@@ -327,7 +327,7 @@ defmodule FlintUI.Base.RadioTest do
             id: "plan",
             name: "plan",
             label: "Plan",
-            hint: nil,
+            description: nil,
             value: nil,
             errors: [],
             disabled: false,
@@ -426,13 +426,13 @@ defmodule FlintUI.Base.RadioTest do
     end
 
     test "renders group errors and links them to the fieldset" do
-      html = render_group(errors: ["pick a plan"], hint: "Choose one.")
+      html = render_group(errors: ["pick a plan"], description: "Choose one.")
 
       fieldset = LazyHTML.query(html, "fieldset")
       assert LazyHTML.attribute(fieldset, "aria-invalid") == ["true"]
 
       assert LazyHTML.attribute(fieldset, "aria-describedby") == [
-               "plan-hint plan-error-1"
+               "plan-description plan-error-1"
              ]
 
       assert LazyHTML.text(LazyHTML.query(html, "#plan-error-1")) |> String.trim() ==
@@ -491,7 +491,7 @@ defmodule FlintUI.Base.RadioTest do
       assert parts |> hd() |> elem(0) == :root
 
       assert Enum.map(parts, &elem(&1, 0)) ==
-               [:root, :label, :options, :hint, :error, :error_icon]
+               [:root, :label, :options, :description, :error, :error_icon]
     end
   end
 end

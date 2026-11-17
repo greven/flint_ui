@@ -1,6 +1,6 @@
 defmodule FlintUI.Base.Switch do
   @moduledoc """
-  Renders a switch with a label, an optional sublabel, a hint, and errors.
+  Renders a switch with a label, an optional sublabel, a description, and errors.
 
   A switch is a binary control for turning a setting on or off, such as
   notifications, two-factor authentication, or a feature flag. It uses the
@@ -11,7 +11,7 @@ defmodule FlintUI.Base.Switch do
         name="notifications"
         label="Enable notifications"
         sublabel="Recommended"
-        hint="We'll send you important updates about your account status and security."
+        description="We'll send you important updates about your account status and security."
       />
 
   Pass a `Phoenix.HTML.FormField` to bind the switch to a form. The component
@@ -30,11 +30,26 @@ defmodule FlintUI.Base.Switch do
   `value` is the current value the switch compares with `checked_value`. Pass
   `checked` to set the state directly; it wins over `value`.
 
+  ## State labels
+
+  The `:on` and `:off` slots render short decorative text inside the track,
+  opposite the thumb. Both render in the DOM; the theme hides the one that does
+  not match the checked state, so a headless consumer hides it from
+  `:checked` themselves:
+
+      <.switch name="wifi" label="Wi-Fi">
+        <:on>ON</:on>
+        <:off>OFF</:off>
+      </.switch>
+
+  Keep the labels short and leave the accessible name to `label`. They are
+  `aria-hidden`, because `role="switch"` already announces the on/off state.
+
   ## Accessibility
 
   The label wraps the native input, so the association works even without an
   `id`; the generated `id` also sets `for`. `sublabel` is rendered inside the
-  label and is announced with it. The hint and errors sit outside the label and
+  label and is announced with it. The description and errors sit outside the label and
   are linked with `aria-describedby`; an invalid field also carries
   `aria-invalid`.
 
@@ -135,6 +150,34 @@ defmodule FlintUI.Base.Switch do
           description: "The thumb is decorative; the native switch carries the state."
         }
       ],
+      on_state: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "on-state",
+          description:
+            "The decorative `:on` label inside the track, shown beside the thumb while the switch is on."
+        },
+        %Meta.PartAttr{
+          name: "aria-hidden",
+          value: "true",
+          description:
+            "The label is decorative; `role=\"switch\"` already announces the on/off state."
+        }
+      ],
+      off_state: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "off-state",
+          description:
+            "The decorative `:off` label inside the track, shown beside the thumb while the switch is off."
+        },
+        %Meta.PartAttr{
+          name: "aria-hidden",
+          value: "true",
+          description:
+            "The label is decorative; `role=\"switch\"` already announces the on/off state."
+        }
+      ],
       control: [
         %Meta.PartAttr{
           name: "[data-part]",
@@ -180,7 +223,8 @@ defmodule FlintUI.Base.Switch do
         %Meta.PartAttr{
           name: "aria-describedby",
           value: "string",
-          description: "The hint and error message ids, appended to a caller-supplied value."
+          description:
+            "The description and error message ids, appended to a caller-supplied value."
         }
       ],
       label_text: [
@@ -197,16 +241,17 @@ defmodule FlintUI.Base.Switch do
           description: "A short qualifier shown beside the label, such as `Recommended`."
         }
       ],
-      hint: [
+      description: [
         %Meta.PartAttr{
           name: "[data-part]",
-          value: "hint",
-          description: "Hint text shown below the control and exposed through `aria-describedby`."
+          value: "description",
+          description:
+            "Explanatory text shown below the control and exposed through `aria-describedby`."
         },
         %Meta.PartAttr{
           name: "id",
           value: "string",
-          description: "The hint id, derived from the control id."
+          description: "The description id, derived from the control id."
         }
       ],
       error: [
@@ -295,6 +340,14 @@ defmodule FlintUI.Base.Switch do
         "data-part" => "thumb",
         "aria-hidden" => "true"
       },
+      on_state: %{
+        "data-part" => "on-state",
+        "aria-hidden" => "true"
+      },
+      off_state: %{
+        "data-part" => "off-state",
+        "aria-hidden" => "true"
+      },
       control: %{
         "data-part" => "control",
         "role" => "switch"
@@ -305,8 +358,8 @@ defmodule FlintUI.Base.Switch do
       sublabel: %{
         "data-part" => "sublabel"
       },
-      hint: %{
-        "data-part" => "hint"
+      description: %{
+        "data-part" => "description"
       },
       error: %{
         "data-part" => "error"
@@ -365,9 +418,9 @@ defmodule FlintUI.Base.Switch do
     doc:
       "Error messages, as translated strings or raw `{message, options}` tuples. A field's own errors are used when `field` is given."
 
-  attr :hint, :string,
+  attr :description, :string,
     default: nil,
-    doc: "Hint text shown below the switch and linked with `aria-describedby`."
+    doc: "Explanatory text shown below the switch and linked with `aria-describedby`."
 
   attr :disabled, :boolean,
     default: false,
@@ -386,20 +439,32 @@ defmodule FlintUI.Base.Switch do
   slot :inner_block,
     doc: "Custom label content. Takes precedence over `label`."
 
+  slot :on,
+    doc:
+      "Decorative text inside the track shown while the switch is on, opposite the thumb. Hidden from assistive technology; the switch already announces its state."
+
+  slot :off,
+    doc:
+      "Decorative text inside the track shown while the switch is off, opposite the thumb. Hidden from assistive technology; the switch already announces its state."
+
   @impl true
-  def render(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+  def render(assigns), do: switch(assigns)
+
+  @doc false
+  # Also renders a single option for `FlintUI.Base.SwitchGroup`. The group
+  # supplies the same public assigns and no `flint_parts`, so the shared markup
+  # stays one implementation.
+  def switch(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
 
     assigns
     |> assign(field: nil, id: assigns[:id] || field.id, errors: errors)
     |> assign_new(:name, fn -> field.name end)
     |> assign_new(:value, fn -> field.value end)
-    |> render()
+    |> switch()
   end
 
-  def render(assigns), do: switch(assigns)
-
-  defp switch(assigns) do
+  def switch(assigns) do
     assigns = prepare(assigns)
     assigns = assign(assigns, :checked, checked?(assigns))
 
@@ -419,6 +484,8 @@ defmodule FlintUI.Base.Switch do
       <label {@flint_parts[:label]}>
         <span {@flint_parts[:indicator]}>
           <span {@flint_parts[:thumb]}></span>
+          <span :if={@on != []} {@flint_parts[:on_state]}>{render_slot(@on)}</span>
+          <span :if={@off != []} {@flint_parts[:off_state]}>{render_slot(@off)}</span>
           <input
             type="checkbox"
             id={@id}
@@ -436,7 +503,7 @@ defmodule FlintUI.Base.Switch do
           <span :if={@sublabel} {@flint_parts[:sublabel]}>{@sublabel}</span>
         </span>
       </label>
-      <p :if={@hint} id={@hint_id} {@flint_parts[:hint]}>{@hint}</p>
+      <p :if={@description} id={@description_id} {@flint_parts[:description]}>{@description}</p>
       <p
         :for={{message, index} <- Enum.with_index(@errors, 1)}
         id={Field.error_id(@id, index)}
@@ -454,23 +521,31 @@ defmodule FlintUI.Base.Switch do
   end
 
   # Custom label content wins only when it renders something. An empty or
-  # whitespace-only block falls back to `label`.
-  defp content_or_label(content, label) when is_binary(content) do
-    if String.trim(content) == "", do: label, else: content
+  # whitespace-only block falls back to `label`; a call that only passes named
+  # slots still sends the whitespace around them as the default block.
+  defp content_or_label(content, label) do
+    if blank?(content), do: label, else: content
   end
 
-  defp content_or_label(nil, label), do: label
-  defp content_or_label(content, _label), do: content
+  defp blank?(nil), do: true
+  defp blank?(content) when is_binary(content), do: String.trim(content) == ""
+
+  defp blank?(content) do
+    content
+    |> Phoenix.HTML.Safe.to_iodata()
+    |> IO.iodata_to_binary()
+    |> String.trim() == ""
+  end
 
   defp prepare(assigns) do
     errors = Field.translate_errors(Map.get(assigns, :errors) || [])
     invalid? = errors != []
     id = Map.get(assigns, :id)
-    hint_id = Field.hint_id(id, Map.get(assigns, :hint))
+    description_id = Field.description_id(id, Map.get(assigns, :description))
     error_ids = Field.error_ids(id, errors)
 
     described_by =
-      Field.described_by(Map.get(assigns, :rest, %{}), [hint_id, error_ids])
+      Field.described_by(Map.get(assigns, :rest, %{}), [description_id, error_ids])
 
     control_rest =
       Map.get(assigns, :rest, %{})
@@ -479,10 +554,12 @@ defmodule FlintUI.Base.Switch do
       |> Field.put_present(:"aria-invalid", invalid? && "true")
 
     assign(assigns,
+      id: id,
       name: Map.get(assigns, :name),
       value: Map.get(assigns, :value),
       label: Map.get(assigns, :label),
       sublabel: Map.get(assigns, :sublabel),
+      description: Map.get(assigns, :description),
       checked_value: Map.get(assigns, :checked_value, "true"),
       unchecked_value: Map.get(assigns, :unchecked_value, "false"),
       disabled: Map.get(assigns, :disabled, false),
@@ -492,9 +569,11 @@ defmodule FlintUI.Base.Switch do
       root_attrs: Map.get(assigns, :root_attrs, %{}),
       label_content: Map.get(assigns, :label_content),
       inner_block: Map.get(assigns, :inner_block, []),
+      on: Map.get(assigns, :on, []),
+      off: Map.get(assigns, :off, []),
       errors: errors,
       invalid: invalid?,
-      hint_id: hint_id,
+      description_id: description_id,
       control_rest: control_rest
     )
   end

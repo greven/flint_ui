@@ -44,8 +44,11 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Radio,
     FlintUI.Styled.RadioGroup,
     FlintUI.Styled.Separator,
+    FlintUI.Styled.Slider,
     FlintUI.Styled.Switch,
+    FlintUI.Styled.SwitchGroup,
     FlintUI.Styled.Tabs,
+    FlintUI.Styled.Textarea,
     FlintUI.Styled.Toggle,
     FlintUI.Styled.Tooltip
   ]

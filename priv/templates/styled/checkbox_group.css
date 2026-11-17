@@ -1,5 +1,5 @@
 @layer components {
-    /* Checkbox group. The group owns the fieldset, legend, hint, errors, and
+    /* Checkbox group. The group owns the fieldset, legend, description, errors, and
      * option layout; each option is a nested Checkbox and reads its own
      * public inputs. */
     [data-element="checkbox_group"][data-orientation] {
@@ -42,7 +42,7 @@
         gap: var(--fl-spacing-md);
     }
 
-    [data-element="checkbox_group"][data-orientation] > [data-part="hint"] {
+    [data-element="checkbox_group"][data-orientation] > [data-part="description"] {
         margin: 0;
         color: var(--fl-color-text-toned);
         font-size: var(--fl-font-size-sm);
@@ -72,7 +72,7 @@
     }
 
     /* A disabled fieldset already disables the options natively; dim the whole
-     * field so the label and hint read as unavailable too. */
+     * field so the label and description read as unavailable too. */
     [data-element="checkbox_group"][data-orientation][data-disabled] {
         opacity: var(--fl-disabled-opacity, 0.5);
     }

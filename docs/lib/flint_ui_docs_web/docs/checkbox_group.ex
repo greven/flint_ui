@@ -24,7 +24,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
           %{key: :radius, type: :select, default: "sm", label: "Radius"}
         ]
       },
-      %{tab: :styled, section: :usage, id: :validation, title: "Hint and Validation"},
+      %{tab: :styled, section: :usage, id: :validation, title: "Description and Validation"},
       %{tab: :styled, section: :usage, id: :disabled, title: "Disabled"},
       %{tab: :styled, section: :usage, id: :field, title: "Form Fields"},
       %{
@@ -55,7 +55,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
           id="languages"
           name="languages"
           label="Programming languages"
-          hint="Pick the languages you reach for first."
+          description="Pick the languages you reach for first."
           value={["elixir"]}
           orientation={props.orientation}
           variant={props.variant}
@@ -85,7 +85,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
     <.preview {assigns} code={~S|<.checkbox_group
       name="languages"
       label="Programming languages"
-      hint="Pick at least one language."
+      description="Pick at least one language."
       required
       errors={["must select at least one"]}
     >
@@ -96,7 +96,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
         <Components.checkbox_group
           name="languages"
           label="Programming languages"
-          hint="Pick at least one language."
+          description="Pick at least one language."
           required
           errors={["must select at least one"]}
         >
@@ -195,7 +195,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
   def render_section(%{section: :examples, id: :cards} = assigns) do
     ~H"""
     <.prose content={~S|Set `variant="card"` to make every option a selectable surface. The
-      orientation still controls the layout, and each option can carry its own hint.|} />
+      orientation still controls the layout, and each option can carry its own description.|} />
 
     <.preview {assigns} code={~S|<.checkbox_group
       name="plan"
@@ -203,9 +203,9 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       label="Choose a plan"
       value={["pro"]}
     >
-      <:checkbox value="free" label="Free" sublabel="$0" hint="One project." />
-      <:checkbox value="pro" label="Pro" sublabel="$19" hint="Unlimited projects." />
-      <:checkbox value="team" label="Team" sublabel="$49" hint="Everything in Pro, plus roles." />
+      <:checkbox value="free" label="Free" sublabel="$0" description="One project." />
+      <:checkbox value="pro" label="Pro" sublabel="$19" description="Unlimited projects." />
+      <:checkbox value="team" label="Team" sublabel="$49" description="Everything in Pro, plus roles." />
     </.checkbox_group>|}>
       <div class="w-full max-w-md">
         <Components.checkbox_group
@@ -214,18 +214,18 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
           label="Choose a plan"
           value={["pro"]}
         >
-          <:checkbox value="free" label="Free" sublabel="$0" hint="One project." />
+          <:checkbox value="free" label="Free" sublabel="$0" description="One project." />
           <:checkbox
             value="pro"
             label="Pro"
             sublabel="$19"
-            hint="Unlimited projects and priority support."
+            description="Unlimited projects and priority support."
           />
           <:checkbox
             value="team"
             label="Team"
             sublabel="$49"
-            hint="Everything in Pro, plus roles and permissions."
+            description="Everything in Pro, plus roles and permissions."
           />
         </Components.checkbox_group>
       </div>
@@ -241,7 +241,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
         id={"#{@parts_id}-languages"}
         name={"#{@parts_id}-languages"}
         label="Programming languages"
-        hint="Pick the languages you reach for first."
+        description="Pick the languages you reach for first."
         value={["elixir"]}
       >
         <:checkbox value="elixir" label="Elixir" sublabel="Recommended" />
@@ -257,7 +257,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       ~s(id="languages"),
       ~s(name="languages"),
       ~s(label="Programming languages"),
-      ~s(hint="Pick the languages you reach for first."),
+      ~s(description="Pick the languages you reach for first."),
       ~s(value={["elixir"]}),
       Snippet.attr("orientation", props.orientation, "vertical"),
       Snippet.attr("variant", props.variant, "simple"),

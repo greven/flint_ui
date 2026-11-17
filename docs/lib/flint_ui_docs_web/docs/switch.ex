@@ -22,7 +22,8 @@ defmodule FlintUIDocsWeb.Docs.Switch do
           %{key: :color, type: :select, default: "primary", label: "Color"}
         ]
       },
-      %{tab: :styled, section: :usage, id: :validation, title: "Hint and Validation"},
+      %{tab: :styled, section: :usage, id: :labels, title: "State Labels"},
+      %{tab: :styled, section: :usage, id: :validation, title: "Description and Validation"},
       %{tab: :styled, section: :usage, id: :disabled, title: "Disabled"},
       %{tab: :styled, section: :usage, id: :field, title: "Form Fields"},
       %{
@@ -44,7 +45,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       rather than a checkbox. The label wraps the control, and clicking the label or the track
       toggles it.|} />
 
-    <.prose content="Use `sublabel` for a short qualifier, `hint` for linked helper text, and
+    <.prose content="Use `sublabel` for a short qualifier, `description` for linked helper text, and
       `color` for the on track. `size` follows the shared control scale; the track and thumb scale
       with it." />
 
@@ -55,7 +56,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
           name="notifications"
           label="Enable notifications"
           sublabel="Recommended"
-          hint="We'll send you important updates about your account status and security."
+          description="We'll send you important updates about your account status and security."
           checked
           size={props.size}
           color={props.color}
@@ -65,9 +66,41 @@ defmodule FlintUIDocsWeb.Docs.Switch do
     """
   end
 
+  def render_section(%{section: :usage, id: :labels} = assigns) do
+    ~H"""
+    <.prose content={~S|The `:on` and `:off` slots render short text inside the track, opposite
+      the thumb. Both render in the DOM; the theme keeps the one that matches the checked state.
+      The labels are decorative and hidden from assistive technology, because the native switch
+      already announces whether it is on or off. Keep the accessible name in `label`.|} />
+
+    <.prose content="The labels are sized in `em`, so they scale with `size`: about 7px at the
+      `md` size." />
+
+    <.preview {assigns} code={~S|<.switch name="wifi" label="Wi-Fi">
+      <:on>ON</:on>
+      <:off>OFF</:off>
+    </.switch>
+    <.switch name="bluetooth" label="Bluetooth" checked>
+      <:on>ON</:on>
+      <:off>OFF</:off>
+    </.switch>|}>
+      <div class="grid w-full max-w-sm gap-3">
+        <Components.switch name="wifi" label="Wi-Fi">
+          <:on>ON</:on>
+          <:off>OFF</:off>
+        </Components.switch>
+        <Components.switch name="bluetooth" label="Bluetooth" checked>
+          <:on>ON</:on>
+          <:off>OFF</:off>
+        </Components.switch>
+      </div>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :usage, id: :validation} = assigns) do
     ~H"""
-    <.prose content="`hint` renders helper text below the switch and links it with
+    <.prose content="`description` renders explanatory text below the switch and links it with
       `aria-describedby`. `errors` renders one message per entry and marks the control invalid. A
       `field` carries its own errors once the field has been used." />
 
@@ -75,7 +108,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       id="two-factor"
       name="two_factor"
       label="Two-factor authentication"
-      hint="Required for administrator accounts."
+      description="Required for administrator accounts."
       errors={["must be enabled for admin accounts"]}
     />|}>
       <div class="w-full max-w-sm">
@@ -83,7 +116,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
           id="two-factor-switch"
           name="two_factor"
           label="Two-factor authentication"
-          hint="Required for administrator accounts."
+          description="Required for administrator accounts."
           errors={["must be enabled for admin accounts"]}
         />
       </div>
@@ -133,27 +166,30 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       the label stable between states: the switch already announces whether it is on or off, so a
       label that also changes makes the announcement ambiguous." />
 
+    <.prose content="Use a [switch group](/components/switch_group) when related settings belong
+      under one legend; each switch keeps its own field." />
+
     <.preview {assigns} code={~S|<div class="grid gap-4">
       <.switch
         name="notifications"
         label="Notifications"
-        hint="Account and security updates."
+        description="Account updates."
         checked
       />
-      <.switch name="marketing" label="Product news" hint="No more than one email a month." />
+      <.switch name="marketing" label="Product news" description="No more than one email a month." />
       <.switch name="two_factor" label="Two-factor authentication" checked />
     </div>|}>
       <div class="grid w-full max-w-md gap-4">
         <Components.switch
           name="notifications"
           label="Notifications"
-          hint="Account and security updates."
+          description="Account updates."
           checked
         />
         <Components.switch
           name="marketing"
           label="Product news"
-          hint="No more than one email a month."
+          description="No more than one email a month."
         />
         <Components.switch name="two_factor" label="Two-factor authentication" checked />
       </div>
@@ -173,7 +209,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       <.switch
         field={f[:updates]}
         label="Product updates"
-        hint="No more than one email a month."
+        description="No more than one email a month."
       />
       <.button type="button" variant="solid">Create account</.button>
     </.form>|}>
@@ -184,7 +220,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
           <Components.switch
             field={f[:updates]}
             label="Product updates"
-            hint="No more than one email a month."
+            description="No more than one email a month."
           />
           <Components.button type="button" variant="solid">Create account</Components.button>
         </div>
@@ -202,15 +238,18 @@ defmodule FlintUIDocsWeb.Docs.Switch do
         name={"#{@parts_id}-notifications"}
         label="Enable notifications"
         sublabel="Recommended"
-        hint="Account and security updates."
+        description="Account updates."
         checked
-      />
+      >
+        <:on>ON</:on>
+        <:off>OFF</:off>
+      </Components.switch>
 
       <Components.switch
         id={"#{@parts_id}-two-factor"}
         name={"#{@parts_id}-two-factor"}
         label="Two-factor authentication"
-        hint="Required for administrator accounts."
+        description="Required for administrator accounts."
         errors={["must be enabled for admin accounts"]}
       />
     </div>
@@ -223,7 +262,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       ~s(name="notifications"),
       ~s(label="Enable notifications"),
       ~s(sublabel="Recommended"),
-      ~s(hint="We'll send you important updates about your account status and security."),
+      ~s(description="We'll send you important updates about your account status and security."),
       "checked",
       Snippet.attr("size", props.size, "md"),
       Snippet.attr("color", props.color, "primary")

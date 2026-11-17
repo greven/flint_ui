@@ -4,9 +4,9 @@ defmodule FlintUI.Field do
   use Phoenix.Component
 
   # Shared plumbing for form fields: error translation, the ids that link a
-  # hint and its errors, `aria-describedby` assembly, the decorative error icon,
-  # and the small attribute helpers every field uses. The component modules keep
-  # the markup and the field-specific state derivation.
+  # hint or description and its errors, `aria-describedby` assembly, the
+  # decorative error icon, and the small attribute helpers every field uses. The
+  # component modules keep the markup and the field-specific state derivation.
 
   @doc """
   The decorative warning icon that precedes every field error.
@@ -95,6 +95,13 @@ defmodule FlintUI.Field do
   """
   def hint_id(id, hint) do
     if present?(id) and present?(hint), do: "#{id}-hint"
+  end
+
+  @doc """
+  The id of a field's description, or `nil` when there is nothing to link.
+  """
+  def description_id(id, description) do
+    if present?(id) and present?(description), do: "#{id}-description"
   end
 
   @doc """

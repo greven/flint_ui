@@ -228,6 +228,8 @@ defmodule FlintUIDocsWeb.Docs.Input do
     <.prose content="`textarea` takes `rows` like any textarea and grows with its content. The theme keeps the
       value and padding in step with the other controls and leaves `resize` native." />
 
+    <.prose content={"For a standalone textarea field with `sublabel`, `description`, and `hint`, use\n      [Textarea](/components/textarea). `type=\"textarea\"` stays for `CoreComponents` parity and for the\n      prefix and suffix slots."} />
+
     <.preview
       {assigns}
       code={

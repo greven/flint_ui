@@ -1,0 +1,74 @@
+@layer components {
+    /* Switch group. The group owns the fieldset, legend, description, errors,
+     * and option layout; each option is a nested Switch and reads its own
+     * public inputs. */
+    [data-element="switch_group"][data-orientation] {
+        display: grid;
+        gap: var(--fl-spacing-sm);
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-element="switch_group"][data-orientation] > [data-part="label"] {
+        padding: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-element="switch_group"][data-orientation] > [data-part="options"] {
+        display: grid;
+        gap: var(--fl-spacing-md);
+        min-inline-size: 0;
+    }
+
+    [data-element="switch_group"][data-orientation="horizontal"]
+        > [data-part="options"] {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: var(--fl-spacing-md);
+    }
+
+    [data-element="switch_group"][data-orientation] > [data-part="description"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    /* Errors stack with a warning icon on the first text line. The icon is
+     * inline SVG, so it needs no icon set, and follows the message color. */
+    [data-element="switch_group"][data-orientation] > [data-part="error"] {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fl-spacing-xs);
+        margin: 0;
+        color: var(--fl-color-error-text);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="switch_group"][data-orientation]
+        > [data-part="error"]
+        > [data-part="error_icon"] {
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        /* Center the icon on the first line box, not at the paragraph's top. */
+        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
+    }
+
+    /* A disabled fieldset already disables the options natively; dim the whole
+     * field so the legend and description read as unavailable too. */
+    [data-element="switch_group"][data-orientation][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+    }
+}

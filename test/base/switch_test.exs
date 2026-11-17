@@ -17,7 +17,7 @@ defmodule FlintUI.Base.SwitchTest do
         checked={@checked}
         checked_value={@checked_value}
         unchecked_value={@unchecked_value}
-        hint={@hint}
+        description={@description}
         errors={@errors}
         disabled={@disabled}
         required={@required}
@@ -40,7 +40,7 @@ defmodule FlintUI.Base.SwitchTest do
 
     def field_switch(assigns) do
       ~H"""
-      <.switch field={@field} label="Notifications" hint="Account and security updates." />
+      <.switch field={@field} label="Notifications" description="Account updates." />
       """
     end
 
@@ -63,6 +63,15 @@ defmodule FlintUI.Base.SwitchTest do
       </.switch>
       """
     end
+
+    def state_labels(assigns) do
+      ~H"""
+      <.switch name="wifi" label="Wi-Fi">
+        <:on>ON</:on>
+        <:off>OFF</:off>
+      </.switch>
+      """
+    end
   end
 
   @defaults %{
@@ -74,7 +83,7 @@ defmodule FlintUI.Base.SwitchTest do
     checked: nil,
     checked_value: "true",
     unchecked_value: "false",
-    hint: nil,
+    description: nil,
     errors: [],
     disabled: false,
     required: false,
@@ -210,6 +219,42 @@ defmodule FlintUI.Base.SwitchTest do
     end
   end
 
+  describe "state labels" do
+    test "renders both labels inside the track" do
+      html =
+        render_component(&TestComponent.state_labels/1, %{}) |> LazyHTML.from_fragment()
+
+      on_state = LazyHTML.query(html, ~s([data-part="indicator"] > [data-part="on-state"]))
+      off_state = LazyHTML.query(html, ~s([data-part="indicator"] > [data-part="off-state"]))
+
+      assert LazyHTML.text(on_state) |> String.trim() == "ON"
+      assert LazyHTML.text(off_state) |> String.trim() == "OFF"
+    end
+
+    test "hides both labels from assistive technology" do
+      html =
+        render_component(&TestComponent.state_labels/1, %{}) |> LazyHTML.from_fragment()
+
+      assert LazyHTML.attribute(LazyHTML.query(html, ~s([data-part="on-state"])), "aria-hidden") ==
+               ["true"]
+
+      assert LazyHTML.attribute(LazyHTML.query(html, ~s([data-part="off-state"])), "aria-hidden") ==
+               ["true"]
+    end
+
+    test "omits the labels when the slots are not passed" do
+      html = render()
+
+      assert Enum.count(
+               LazyHTML.query(html, ~s([data-part="indicator"] > [data-part="on-state"]))
+             ) == 0
+
+      assert Enum.count(
+               LazyHTML.query(html, ~s([data-part="indicator"] > [data-part="off-state"]))
+             ) == 0
+    end
+  end
+
   describe "field structs" do
     test "derives the id and hides unused errors" do
       form =
@@ -242,7 +287,7 @@ defmodule FlintUI.Base.SwitchTest do
       assert LazyHTML.attribute(control(html), "aria-invalid") == ["true"]
 
       assert LazyHTML.attribute(control(html), "aria-describedby") == [
-               "user_notifications-hint user_notifications-error-1"
+               "user_notifications-description user_notifications-error-1"
              ]
 
       assert LazyHTML.text(LazyHTML.query(html, ~s([data-part="error"]))) =~
@@ -250,12 +295,12 @@ defmodule FlintUI.Base.SwitchTest do
     end
   end
 
-  describe "errors and hint" do
-    test "links every message and the hint to the control" do
+  describe "errors and description" do
+    test "links every message and the description to the control" do
       html =
         render(
           errors: ["must be enabled", "is not available"],
-          hint: "Only administrators can change this."
+          description: "Only administrators can change this."
         )
 
       errors = LazyHTML.query(html, ~s([data-part="error"]))
@@ -268,11 +313,11 @@ defmodule FlintUI.Base.SwitchTest do
                "notifications-error-1"
              ]
 
-      hint = LazyHTML.query(html, ~s([data-part="hint"]))
-      assert LazyHTML.attribute(hint, "id") == ["notifications-hint"]
+      description = LazyHTML.query(html, ~s([data-part="description"]))
+      assert LazyHTML.attribute(description, "id") == ["notifications-description"]
 
       assert control_attr(html, "aria-describedby") == [
-               "notifications-hint notifications-error-1 notifications-error-2"
+               "notifications-description notifications-error-1 notifications-error-2"
              ]
 
       assert control_attr(html, "aria-invalid") == ["true"]
@@ -311,6 +356,8 @@ defmodule FlintUI.Base.SwitchTest do
       assert Enum.any?(parts[:control], &(&1.name == "role" and &1.value == ~s("switch")))
       assert Enum.any?(parts[:control], &(&1.name == "aria-describedby"))
       assert Enum.any?(parts[:thumb], &(&1.name == "aria-hidden"))
+      assert Enum.any?(parts[:on_state], &(&1.name == "[data-part]"))
+      assert Enum.any?(parts[:off_state], &(&1.name == "aria-hidden"))
       assert Enum.any?(parts[:sublabel], &(&1.name == "[data-part]"))
     end
 

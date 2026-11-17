@@ -5,7 +5,7 @@ defmodule FlintUI.Base.RadioGroup do
       <.radio_group
         field={f[:plan]}
         label="Plan"
-        hint="Choose the plan that fits your team."
+        description="Choose the plan that fits your team."
       >
         <:radio value="free" label="Free" sublabel="$0" />
         <:radio value="pro" label="Pro" sublabel="$19 per month" />
@@ -22,7 +22,7 @@ defmodule FlintUI.Base.RadioGroup do
   used (`Phoenix.Component.used_input?/1`). Group-level `disabled` disables the
   whole fieldset; an option can also be disabled on its own.
 
-  Each `:radio` slot takes `value`, `label`, `sublabel`, `hint`,
+  Each `:radio` slot takes `value`, `label`, `sublabel`, `description`,
   `disabled`, `checked`, and `class`, plus an optional inner block that replaces
   the default label content. An option is selected when its `value` matches the
   group's `value`, or when its own `checked` attribute is set.
@@ -30,7 +30,7 @@ defmodule FlintUI.Base.RadioGroup do
   ## Accessibility
 
   The group renders a native `<fieldset>` with a `<legend>`, so assistive
-  technology announces the group's name with every option. The hint and errors
+  technology announces the group's name with every option. The description and errors
   are linked to the group with `aria-describedby`, and `required` is
   exposed with `aria-required` and on the native radios.
 
@@ -103,16 +103,17 @@ defmodule FlintUI.Base.RadioGroup do
           description: "The wrapper that lays out the radio options."
         }
       ],
-      hint: [
+      description: [
         %Meta.PartAttr{
           name: "[data-part]",
-          value: "hint",
-          description: "Hint text shown below the label and exposed through `aria-describedby`."
+          value: "description",
+          description:
+            "Explanatory text shown below the label and exposed through `aria-describedby`."
         },
         %Meta.PartAttr{
           name: "id",
           value: "string",
-          description: "The hint id, derived from the group id."
+          description: "The description id, derived from the group id."
         }
       ],
       error: [
@@ -196,7 +197,7 @@ defmodule FlintUI.Base.RadioGroup do
       },
       label: %{"data-part" => "label"},
       options: %{"data-part" => "options"},
-      hint: %{"data-part" => "hint"},
+      description: %{"data-part" => "description"},
       error: %{"data-part" => "error"},
       error_icon: %{"data-part" => "error_icon", "aria-hidden" => "true"}
     }
@@ -231,9 +232,9 @@ defmodule FlintUI.Base.RadioGroup do
     doc:
       "Error messages, as translated strings or raw `{message, options}` tuples. A field's own errors are used when `field` is given."
 
-  attr :hint, :string,
+  attr :description, :string,
     default: nil,
-    doc: "Hint text shown below the group label and linked with `aria-describedby`."
+    doc: "Explanatory text shown below the group label and linked with `aria-describedby`."
 
   attr :disabled, :boolean,
     default: false,
@@ -263,7 +264,7 @@ defmodule FlintUI.Base.RadioGroup do
     attr :sublabel, :string,
       doc: "A short qualifier shown beside the option label, such as `Recommended`."
 
-    attr :hint, :string, doc: "Hint text shown below the option."
+    attr :description, :string, doc: "Explanatory text shown below the option."
 
     attr :disabled, :boolean, doc: "Whether this option alone is disabled."
 
@@ -301,7 +302,7 @@ defmodule FlintUI.Base.RadioGroup do
     >
       <legend :if={@label} {@flint_parts[:label]}>{@label}</legend>
 
-      <p :if={@hint} id={@hint_id} {@flint_parts[:hint]}>{@hint}</p>
+      <p :if={@description} id={@description_id} {@flint_parts[:description]}>{@description}</p>
 
       <div {@flint_parts[:options]}>
         <FlintUI.Base.Radio.radio
@@ -312,7 +313,7 @@ defmodule FlintUI.Base.RadioGroup do
           checked={option_checked?(item, @selected_value)}
           label={Map.get(item, :label)}
           sublabel={Map.get(item, :sublabel)}
-          hint={Map.get(item, :hint)}
+          description={Map.get(item, :description)}
           disabled={Map.get(item, :disabled, false)}
           required={@required}
           class={Map.get(item, :class)}
@@ -338,11 +339,11 @@ defmodule FlintUI.Base.RadioGroup do
     errors = Field.translate_errors(Map.get(assigns, :errors) || [])
     invalid? = errors != []
     id = Map.get(assigns, :id)
-    hint_id = Field.hint_id(id, Map.get(assigns, :hint))
+    description_id = Field.description_id(id, Map.get(assigns, :description))
     rest = Map.get(assigns, :rest, %{})
 
     described_by =
-      Field.described_by(rest, [hint_id, Field.error_ids(id, errors)])
+      Field.described_by(rest, [description_id, Field.error_ids(id, errors)])
 
     root_rest =
       rest
@@ -364,14 +365,14 @@ defmodule FlintUI.Base.RadioGroup do
       name: Map.get(assigns, :name),
       value: Map.get(assigns, :value),
       label: Map.get(assigns, :label),
-      hint: Map.get(assigns, :hint),
+      description: Map.get(assigns, :description),
       disabled: Map.get(assigns, :disabled, false),
       required: Map.get(assigns, :required, false),
       root_attrs: Map.get(assigns, :root_attrs, %{}),
       item_attrs: Map.get(assigns, :item_attrs, %{}),
       errors: errors,
       invalid: invalid?,
-      hint_id: hint_id,
+      description_id: description_id,
       described_by: if(described_by == "", do: nil, else: described_by),
       group_name: Map.get(assigns, :name),
       selected_value: selected_value(Map.get(assigns, :value)),

@@ -11,7 +11,7 @@ defmodule FlintUI.Styled.SwitchTest do
           name="notifications"
           label="Enable notifications"
           sublabel={@sublabel}
-          hint={@hint}
+          description={@description}
           checked={@checked}
           errors={@errors}
           size={@size}
@@ -34,6 +34,15 @@ defmodule FlintUI.Styled.SwitchTest do
         </.switch>
         """
       end
+
+      def state_labels(assigns) do
+        ~H"""
+        <.switch name="wifi" label="Wi-Fi" checked={@checked}>
+          <:on>ON</:on>
+          <:off>OFF</:off>
+        </.switch>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -43,7 +52,7 @@ defmodule FlintUI.Styled.SwitchTest do
     Map.merge(
       %{
         sublabel: "Recommended",
-        hint: nil,
+        description: nil,
         checked: nil,
         errors: [],
         size: "md",
@@ -100,6 +109,17 @@ defmodule FlintUI.Styled.SwitchTest do
     refute LazyHTML.text(part(document, "label")) =~ "Ignored"
   end
 
+  test "forwards the on and off labels into the track", %{wrapper: wrapper} do
+    document = render(wrapper, :state_labels, %{checked: true})
+
+    assert LazyHTML.text(part(document, "on-state")) |> String.trim() == "ON"
+    assert LazyHTML.text(part(document, "off-state")) |> String.trim() == "OFF"
+    assert LazyHTML.attribute(part(document, "on-state"), "aria-hidden") == ["true"]
+    assert LazyHTML.attribute(part(document, "off-state"), "aria-hidden") == ["true"]
+
+    assert LazyHTML.query(document, ~s([data-part="indicator"] > [data-part="on-state"])) != []
+  end
+
   test "writes a raw color to the root inputs", %{wrapper: wrapper} do
     document = render(wrapper, :basic, defaults(color: "#1D72FE"))
 
@@ -123,15 +143,18 @@ defmodule FlintUI.Styled.SwitchTest do
     assert attr(document, :switch, "data-invalid") == [""]
   end
 
-  test "renders a hint and errors", %{wrapper: wrapper} do
+  test "renders a description and errors", %{wrapper: wrapper} do
     document =
       render(
         wrapper,
         :basic,
-        defaults(hint: "Only administrators can change this.", errors: ["is not available"])
+        defaults(
+          description: "Only administrators can change this.",
+          errors: ["is not available"]
+        )
       )
 
-    assert LazyHTML.text(part(document, "hint")) |> String.trim() ==
+    assert LazyHTML.text(part(document, "description")) |> String.trim() ==
              "Only administrators can change this."
 
     assert LazyHTML.text(part(document, "error")) |> String.trim() == "is not available"

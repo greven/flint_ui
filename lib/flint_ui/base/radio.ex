@@ -1,6 +1,6 @@
 defmodule FlintUI.Base.Radio do
   @moduledoc """
-  Renders a single radio with a label, an optional sublabel, a hint, and errors.
+  Renders a single radio with a label, an optional sublabel, a description, and errors.
 
   A radio is a native control for one choice among mutually exclusive options.
   Options that share a `name` form one group: checking one unchecks the others,
@@ -11,14 +11,14 @@ defmodule FlintUI.Base.Radio do
         value="pro"
         label="Pro"
         sublabel="$19 per month"
-        hint="Unlimited projects and priority support."
+        description="Unlimited projects and priority support."
         checked
       />
 
   A standalone radio can bind to a form field. The field supplies the current
   selection, and this radio checks itself when its `value` matches. The control
   id appends the option value to the field id, so radios that share a field keep
-  distinct label and hint ids:
+  distinct label and description ids:
 
       <.radio field={@form[:plan]} value="free" label="Free" />
       <.radio field={@form[:plan]} value="pro" label="Pro" />
@@ -34,14 +34,14 @@ defmodule FlintUI.Base.Radio do
   ## Groups
 
   Use `<.radio_group>` to render a related set of radios from one form field,
-  including the fieldset, legend, hint, and errors. A bare `<.radio>` is
+  including the fieldset, legend, description, and errors. A bare `<.radio>` is
   one option, usually rendered by the group.
 
   ## Accessibility
 
   The label wraps the native input, so the association works even without an
   `id`; the generated `id` also sets `for`. `sublabel` is rendered inside the
-  label and is announced with it. The hint and errors sit outside the label and
+  label and is announced with it. The description and errors sit outside the label and
   are linked with `aria-describedby`; an invalid field also carries
   `aria-invalid`.
 
@@ -168,7 +168,8 @@ defmodule FlintUI.Base.Radio do
         %Meta.PartAttr{
           name: "aria-describedby",
           value: "string",
-          description: "The hint and error message ids, appended to a caller-supplied value."
+          description:
+            "The description and error message ids, appended to a caller-supplied value."
         }
       ],
       label_text: [
@@ -185,16 +186,17 @@ defmodule FlintUI.Base.Radio do
           description: "A short qualifier shown beside the label, such as `Recommended`."
         }
       ],
-      hint: [
+      description: [
         %Meta.PartAttr{
           name: "[data-part]",
-          value: "hint",
-          description: "Hint text shown below the control and exposed through `aria-describedby`."
+          value: "description",
+          description:
+            "Explanatory text shown below the control and exposed through `aria-describedby`."
         },
         %Meta.PartAttr{
           name: "id",
           value: "string",
-          description: "The hint id, derived from the control id."
+          description: "The description id, derived from the control id."
         }
       ],
       error: [
@@ -294,8 +296,8 @@ defmodule FlintUI.Base.Radio do
       sublabel: %{
         "data-part" => "sublabel"
       },
-      hint: %{
-        "data-part" => "hint"
+      description: %{
+        "data-part" => "description"
       },
       error: %{
         "data-part" => "error"
@@ -347,9 +349,9 @@ defmodule FlintUI.Base.Radio do
     doc:
       "Error messages, as translated strings or raw `{message, options}` tuples. A field's own errors are used when `field` is given."
 
-  attr :hint, :string,
+  attr :description, :string,
     default: nil,
-    doc: "Hint text shown below the radio and linked with `aria-describedby`."
+    doc: "Explanatory text shown below the radio and linked with `aria-describedby`."
 
   attr :disabled, :boolean,
     default: false,
@@ -417,7 +419,7 @@ defmodule FlintUI.Base.Radio do
           <span :if={@sublabel} {@flint_parts[:sublabel]}>{@sublabel}</span>
         </span>
       </label>
-      <p :if={@hint} id={@hint_id} {@flint_parts[:hint]}>{@hint}</p>
+      <p :if={@description} id={@description_id} {@flint_parts[:description]}>{@description}</p>
       <p
         :for={{message, index} <- Enum.with_index(@errors, 1)}
         id={Field.error_id(@id, index)}
@@ -431,7 +433,7 @@ defmodule FlintUI.Base.Radio do
   end
 
   # Options that share a field still need distinct ids so each label and
-  # hint targets its own radio.
+  # description targets its own radio.
   defp option_id(%{id: id}, value) when is_binary(id) and value not in [nil, ""] do
     "#{id}-#{value}"
   end
@@ -451,11 +453,11 @@ defmodule FlintUI.Base.Radio do
     errors = Field.translate_errors(Map.get(assigns, :errors) || [])
     invalid? = errors != []
     id = Map.get(assigns, :id)
-    hint_id = Field.hint_id(id, Map.get(assigns, :hint))
+    description_id = Field.description_id(id, Map.get(assigns, :description))
     error_ids = Field.error_ids(id, errors)
 
     described_by =
-      Field.described_by(Map.get(assigns, :rest, %{}), [hint_id, error_ids])
+      Field.described_by(Map.get(assigns, :rest, %{}), [description_id, error_ids])
 
     control_rest =
       Map.get(assigns, :rest, %{})
@@ -477,7 +479,7 @@ defmodule FlintUI.Base.Radio do
       inner_block: Map.get(assigns, :inner_block, []),
       errors: errors,
       invalid: invalid?,
-      hint_id: hint_id,
+      description_id: description_id,
       control_rest: control_rest,
       current_value: Map.get(assigns, :current_value)
     )

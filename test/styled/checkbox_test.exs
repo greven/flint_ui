@@ -11,7 +11,7 @@ defmodule FlintUI.Styled.CheckboxTest do
           name="notifications"
           label="Enable notifications"
           sublabel={@sublabel}
-          hint={@hint}
+          description={@description}
           checked={@checked}
           errors={@errors}
           variant={@variant}
@@ -56,7 +56,7 @@ defmodule FlintUI.Styled.CheckboxTest do
     Map.merge(
       %{
         sublabel: "Recommended",
-        hint: nil,
+        description: nil,
         checked: nil,
         errors: [],
         variant: "simple",
@@ -151,15 +151,15 @@ defmodule FlintUI.Styled.CheckboxTest do
     assert attr(document, :checkbox, "data-invalid") == [""]
   end
 
-  test "renders a hint and errors", %{wrapper: wrapper} do
+  test "renders a description and errors", %{wrapper: wrapper} do
     document =
       render(
         wrapper,
         :basic,
-        defaults(hint: "We only use this for receipts.", errors: ["is invalid"])
+        defaults(description: "We only use this for receipts.", errors: ["is invalid"])
       )
 
-    assert LazyHTML.text(part(document, "hint")) |> String.trim() ==
+    assert LazyHTML.text(part(document, "description")) |> String.trim() ==
              "We only use this for receipts."
 
     assert LazyHTML.text(part(document, "error")) |> String.trim() == "is invalid"

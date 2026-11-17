@@ -10,6 +10,7 @@ export { Accordion } from "./components/accordion";
 export { Collapsible } from "./components/collapsible";
 export { Dropdown } from "./components/dropdown";
 export { Popover } from "./components/popover";
+export { Slider } from "./components/slider";
 export { Tabs } from "./components/tabs";
 export { Tooltip } from "./components/tooltip";
 export { hooks } from "./hooks";

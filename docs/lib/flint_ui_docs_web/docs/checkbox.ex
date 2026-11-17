@@ -29,7 +29,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
         tab: :styled,
         section: :usage,
         id: :validation,
-        title: "Hint and Validation"
+        title: "Description and Validation"
       },
       %{tab: :styled, section: :usage, id: :disabled, title: "Disabled"},
       %{tab: :styled, section: :usage, id: :indeterminate, title: "Indeterminate"},
@@ -50,7 +50,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
     ~H"""
     <.prose content="A checkbox is the native control for a boolean choice. The label wraps the
       native input, so clicking the label or the box toggles it. `sublabel` adds a short qualifier
-      and `hint` adds a linked hint." />
+      and `description` adds a linked description." />
 
     <.prose content={~S|Use `variant="card"` when the field should read as a selectable surface.
       The `size` and `radius` props follow the shared control and radius scales, and `color` sets
@@ -62,7 +62,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
           name="notifications"
           label="Enable notifications"
           sublabel="Recommended"
-          hint="We'll send you important updates about your account status and security."
+          description="We'll send you important updates about your account status and security."
           variant={props.variant}
           size={props.size}
           radius={props.radius}
@@ -75,7 +75,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
 
   def render_section(%{section: :usage, id: :card} = assigns) do
     ~H"""
-    <.prose content="The card variant makes the whole field a clickable surface. The hint
+    <.prose content="The card variant makes the whole field a clickable surface. The description
       stays inside the card, and the checked state tints the border and background with the
       checkbox `color`." />
 
@@ -84,7 +84,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       variant="card"
       label="Pro plan"
       sublabel="$19 per month"
-      hint="Everything in Free, plus unlimited projects and priority support."
+      description="Everything in Free, plus unlimited projects and priority support."
       color="primary"
       checked
     />|}>
@@ -94,7 +94,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
           variant="card"
           label="Free plan"
           sublabel="$0"
-          hint="One project and community support."
+          description="One project and community support."
         />
 
         <Components.checkbox
@@ -102,7 +102,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
           variant="card"
           label="Pro plan"
           sublabel="$19 per month"
-          hint="Everything in Free, plus unlimited projects and priority support."
+          description="Everything in Free, plus unlimited projects and priority support."
           checked
         />
       </div>
@@ -112,7 +112,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
 
   def render_section(%{section: :usage, id: :validation} = assigns) do
     ~H"""
-    <.prose content="`hint` renders hint text below the checkbox and links it with
+    <.prose content="`description` renders explanatory text below the checkbox and links it with
       `aria-describedby`. `errors` renders one message per entry and marks the control invalid. A
       `field` carries its own errors once the field has been used." />
 
@@ -120,7 +120,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       id="terms"
       name="terms"
       label="I accept the terms"
-      hint="You must accept the terms to create an account."
+      description="You must accept the terms to create an account."
       errors={["must be accepted"]}
     />|}>
       <div class="w-full max-w-sm">
@@ -128,7 +128,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
           id="terms-checkbox"
           name="terms"
           label="I accept the terms"
-          hint="You must accept the terms to create an account."
+          description="You must accept the terms to create an account."
           errors={["must be accepted"]}
         />
       </div>
@@ -171,7 +171,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       name="select_all"
       label="Select all"
       indeterminate
-      hint="One or more items are selected."
+      description="One or more items are selected."
     />|}>
       <div class="w-full max-w-sm">
         <Components.checkbox
@@ -179,7 +179,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
           name="select_all"
           label="Select all"
           indeterminate
-          hint="One or more items are selected."
+          description="One or more items are selected."
         />
       </div>
     </.preview>
@@ -214,7 +214,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
     <.preview {assigns} code={~S|<.form :let={f} for={%{}} as={:user} id="signup-form">
       <.checkbox field={f[:terms]} label="I accept the terms" />
       <.checkbox field={f[:newsletter]} label="Send me the newsletter" checked />
-      <.checkbox field={f[:updates]} label="Product updates" hint="No more than one email a month." />
+      <.checkbox field={f[:updates]} label="Product updates" description="No more than one email a month." />
       <.button type="button" variant="solid">Create account</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="checkbox-form-example">
@@ -224,7 +224,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
           <Components.checkbox
             field={f[:updates]}
             label="Product updates"
-            hint="No more than one email a month."
+            description="No more than one email a month."
           />
           <Components.button type="button" variant="solid">Create account</Components.button>
         </div>
@@ -263,7 +263,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
         name={"#{@parts_id}-terms"}
         label="I accept the terms"
         sublabel="Required"
-        hint="You must accept the terms to continue."
+        description="You must accept the terms to continue."
         errors={["must be accepted"]}
       />
 
@@ -273,7 +273,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
         variant="card"
         label="Pro plan"
         sublabel="$19 per month"
-        hint="Unlimited projects."
+        description="Unlimited projects."
         checked
       />
     </div>
@@ -285,7 +285,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       ~s(name="notifications"),
       ~s(label="Enable notifications"),
       ~s(sublabel="Recommended"),
-      ~s(hint="We'll send you important updates about your account status and security."),
+      ~s(description="We'll send you important updates about your account status and security."),
       Snippet.attr("variant", props.variant, "simple"),
       Snippet.attr("size", props.size, "md"),
       Snippet.attr("radius", props.radius, "sm"),

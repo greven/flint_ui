@@ -12,7 +12,7 @@ defmodule FlintUI.Styled.RadioTest do
           value="pro"
           label="Pro"
           sublabel={@sublabel}
-          hint={@hint}
+          description={@description}
           checked={@checked}
           errors={@errors}
           variant={@variant}
@@ -46,7 +46,7 @@ defmodule FlintUI.Styled.RadioTest do
     Map.merge(
       %{
         sublabel: "Recommended",
-        hint: nil,
+        description: nil,
         checked: nil,
         errors: [],
         variant: "simple",
@@ -135,15 +135,15 @@ defmodule FlintUI.Styled.RadioTest do
     assert attr(document, :radio, "data-invalid") == [""]
   end
 
-  test "renders a hint and errors", %{wrapper: wrapper} do
+  test "renders a description and errors", %{wrapper: wrapper} do
     document =
       render(
         wrapper,
         :basic,
-        defaults(hint: "Choose the plan that fits.", errors: ["is invalid"])
+        defaults(description: "Choose the plan that fits.", errors: ["is invalid"])
       )
 
-    assert LazyHTML.text(part(document, "hint")) |> String.trim() ==
+    assert LazyHTML.text(part(document, "description")) |> String.trim() ==
              "Choose the plan that fits."
 
     assert LazyHTML.text(part(document, "error")) |> String.trim() == "is invalid"

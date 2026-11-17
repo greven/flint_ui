@@ -62,6 +62,20 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "root_attrs={@root_attrs}"
   end
 
+  test "slider maps its size and color props onto the field root" do
+    source = Generator.component_source(:slider)
+
+    assert source =~ "attr(:size, :string"
+    assert source =~ "values: ~w(xs sm md lg xl)"
+    assert source =~ "attr(:color, :string"
+    assert source =~ ~s("data-slider" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "--fl-slider-color"
+    assert source =~ "<FlintUI.slider root_attrs={@root_attrs} class={@class} {@rest} />"
+  end
+
   test "switch maps its size and color props" do
     source = Generator.component_source(:switch)
 
@@ -74,6 +88,49 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "label_content={@inner_block not in [nil, []] && render_slot(@inner_block)}"
     assert source =~ "<FlintUI.switch"
     assert source =~ "root_attrs={@root_attrs}"
+    assert source =~ "slot(:on,"
+    assert source =~ "slot(:off,"
+    assert source =~ ~s|<:on :if={@on != []}>{render_slot(@on)}</:on>|
+    assert source =~ ~s|<:off :if={@off != []}>{render_slot(@off)}</:off>|
+  end
+
+  test "switch group raises its own hooks and forwards every option" do
+    source = Generator.component_source(:switch_group)
+
+    assert source =~ "attr(:orientation, :string"
+    assert source =~ "values: ~w(vertical horizontal)"
+    assert source =~ ~s("data-switch_group" => true)
+    assert source =~ ~s("data-orientation" => assigns.orientation)
+    assert source =~ ~s("data-switch" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "<FlintUI.switch_group"
+    assert source =~ "slot(:switch,"
+    assert source =~ "field={Map.get(item, :field)}"
+    assert source =~ "description={Map.get(item, :description)}"
+  end
+
+  test "textarea maps its presentational props onto the field root" do
+    source = Generator.component_source(:textarea)
+
+    assert source =~ "attr(:size, :string"
+    assert source =~ "values: ~w(xs sm md lg xl)"
+    assert source =~ "attr(:radius, :string"
+    assert source =~ "values: ~w(none xs sm md lg xl)"
+    assert source =~ "attr(:resize, :string"
+    assert source =~ "values: ~w(none vertical horizontal both)"
+    assert source =~ "attr(:autogrow, :boolean"
+    assert source =~ "attr(:min_rows, :integer"
+    assert source =~ "attr(:max_rows, :integer"
+    assert source =~ ~s("data-textarea" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ ~s("data-resize" => assigns.resize)
+    assert source =~ ~s("data-autogrow" => assigns.autogrow)
+    assert source =~ "--fl-textarea-min-rows"
+    assert source =~ "--fl-textarea-max-rows"
+    assert source =~ "<FlintUI.textarea root_attrs={@root_attrs} class={@class} {@rest} />"
   end
 
   test "checkbox group forwards its item props and slots" do

@@ -41,6 +41,10 @@ defmodule FlintUI.Base.Input do
   the shape `options_for_select/2` accepts, an optional `prompt`, and supports
   `multiple`. `hidden` renders only the input; it has no label or errors.
 
+  For a standalone textarea with `sublabel`, `description`, and `hint`, use
+  `FlintUI.textarea`. The `textarea` type stays for `CoreComponents` parity and
+  for the prefix and suffix slots.
+
   FlintUI keeps the native `<select>` appearance. A separate, richer Select
   component will cover custom option lists; this one stays progressive and
   usable without JavaScript.

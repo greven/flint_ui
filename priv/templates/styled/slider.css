@@ -1,0 +1,473 @@
+@layer components {
+    /* Slider. Public inputs: `--fl-slider-color`, `--fl-slider-track`,
+     * `--fl-slider-thumb`, `--fl-slider-thumb-border`, and `--fl-slider-marker`.
+     * The native range input is the control; the rail, fill, markers, and
+     * tooltips paint around it. The component publishes the thumb fractions as
+     * `--_fl-slider-start`, `--_fl-slider-end`, and `--_fl-slider-offset`. */
+    [data-element="slider"][data-slider] {
+        --fl-slider-color: var(--fl-color-primary);
+        --fl-slider-track: var(--fl-color-surface-strong);
+        --fl-slider-thumb: var(--fl-color-surface);
+        --fl-slider-thumb-border: var(--fl-slider-color);
+        --fl-slider-marker: var(--fl-color-surface);
+        --_fl-slider-thumb-size: 1.125rem;
+        --_fl-slider-track-size: 0.375rem;
+        display: grid;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-element="slider"][data-slider] > [data-part="label"] {
+        display: grid;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="label"]
+        > [data-part="label_text"] {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: var(--fl-color-text-toned);
+        font-weight: var(--fl-font-weight-medium);
+    }
+
+    [data-element="slider"][data-slider] [data-part="sublabel"] {
+        color: var(--fl-color-text-muted);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="slider"][data-slider] > [data-part="description"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    /* The control stacks the rail, the native inputs, and the tooltips. The
+     * inputs are transparent and sit above the rail; their thumbs are the
+     * visible handles, so the browser keeps the pointer and keyboard targets. */
+    [data-element="slider"][data-slider] > [data-part="control"] {
+        --_fl-slider-control-size: calc(
+            var(--_fl-slider-thumb-size) + var(--fl-spacing-sm)
+        );
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        block-size: var(--_fl-slider-control-size);
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="track"] {
+        position: absolute;
+        inset-block-start: calc(50% - var(--_fl-slider-track-size) / 2);
+        inset-inline: calc(var(--_fl-slider-thumb-size) / 2);
+        block-size: var(--_fl-slider-track-size);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-slider-track);
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="track"]
+        > [data-part="indicator"] {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(100% * var(--_fl-slider-start, 0));
+        inset-inline-end: calc(100% - 100% * var(--_fl-slider-end, 0));
+        border-radius: inherit;
+        background-color: var(--fl-slider-color);
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="track"]
+        > [data-part="markers"] {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="track"]
+        > [data-part="markers"]
+        > [data-part="marker"] {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% * var(--_fl-slider-offset, 0));
+        box-sizing: border-box;
+        inline-size: 0.25rem;
+        block-size: 0.25rem;
+        border: 1px solid var(--fl-color-border-strong);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-slider-marker);
+        transform: translate(-50%, -50%);
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"] {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: transparent;
+        cursor: pointer;
+        /* Both range inputs overlap in range mode, so only the thumbs receive
+         * pointer events. Dragging each thumb still works without JavaScript;
+         * clicking the rail is an enhancement in the hook. */
+        pointer-events: none;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]::-webkit-slider-runnable-track {
+        block-size: 100%;
+        border: 0;
+        background-color: transparent;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]::-moz-range-track {
+        block-size: 100%;
+        border: 0;
+        background-color: transparent;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]::-moz-range-progress {
+        background-color: transparent;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]::-webkit-slider-thumb {
+        box-sizing: border-box;
+        inline-size: var(--_fl-slider-thumb-size);
+        block-size: var(--_fl-slider-thumb-size);
+        margin-block-start: calc(
+            (var(--_fl-slider-control-size) - var(--_fl-slider-thumb-size)) / 2
+        );
+        border: 2px solid var(--fl-slider-thumb-border);
+        border-radius: var(--fl-radius-full);
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: var(--fl-slider-thumb);
+        box-shadow: var(--fl-shadow-xs);
+        cursor: grab;
+        pointer-events: auto;
+        transition:
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]::-moz-range-thumb {
+        box-sizing: border-box;
+        inline-size: var(--_fl-slider-thumb-size);
+        block-size: var(--_fl-slider-thumb-size);
+        border: 2px solid var(--fl-slider-thumb-border);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-slider-thumb);
+        box-shadow: var(--fl-shadow-xs);
+        cursor: grab;
+        pointer-events: auto;
+        transition:
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]:active::-webkit-slider-thumb {
+        cursor: grabbing;
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="input"]:active::-moz-range-thumb {
+        cursor: grabbing;
+    }
+
+    /* The tooltip sits above the thumb (or beside it when vertical) and shows
+     * while the control has focus or the hook marks the slider as dragging.
+     * The hook writes the position and the text; the server renders the first
+     * value so the tooltip is correct before hydration. */
+    [data-element="slider"][data-slider]
+        > [data-part="control"]
+        > [data-part="tooltip"] {
+        position: absolute;
+        inset-block-end: calc(100% + var(--fl-spacing-xs));
+        inset-inline-start: calc(
+            var(--_fl-slider-thumb-size) / 2 +
+                (100% - var(--_fl-slider-thumb-size)) *
+                var(--_fl-slider-offset, 0)
+        );
+        z-index: 1;
+        padding: 0.125rem var(--fl-spacing-xs);
+        border-radius: var(--fl-radius-sm);
+        background-color: var(--fl-color-inverted);
+        color: var(--fl-color-text-inverted);
+        font-size: var(--fl-font-size-xs);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-line-height-xs);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-50%);
+        transition:
+            opacity var(--fl-duration-fast) var(--fl-ease-out),
+            visibility var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="slider"][data-slider][data-show-tooltip]
+        > [data-part="control"]:focus-within
+        > [data-part="tooltip"],
+    [data-element="slider"][data-slider][data-show-tooltip][data-dragging]
+        > [data-part="control"]
+        > [data-part="tooltip"] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Vertical orientation. The native input uses `writing-mode` so the
+     * browser keeps its own thumb geometry; the rail and fill follow the same
+     * bottom-to-top direction. */
+    [data-element="slider"][data-slider][data-orientation="vertical"] {
+        justify-items: center;
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"] {
+        inline-size: var(--_fl-slider-control-size);
+        block-size: 10rem;
+        margin-block: var(--fl-spacing-xs);
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"]
+        > [data-part="track"] {
+        inset-block: calc(var(--_fl-slider-thumb-size) / 2);
+        inset-inline-start: calc(50% - var(--_fl-slider-track-size) / 2);
+        inset-inline-end: auto;
+        inline-size: var(--_fl-slider-track-size);
+        block-size: auto;
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"]
+        > [data-part="track"]
+        > [data-part="indicator"] {
+        inset-inline: 0;
+        inset-block-start: auto;
+        inset-block-end: calc(100% * var(--_fl-slider-start, 0));
+        block-size: calc(
+            100% * (var(--_fl-slider-end, 0) - var(--_fl-slider-start, 0))
+        );
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"]
+        > [data-part="track"]
+        > [data-part="markers"]
+        > [data-part="marker"] {
+        inset-block-start: auto;
+        inset-block-end: calc(100% * var(--_fl-slider-offset, 0));
+        inset-inline-start: 50%;
+        transform: translate(-50%, 50%);
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"]
+        > [data-part="input"] {
+        writing-mode: vertical-lr;
+        direction: rtl;
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"]
+        > [data-part="input"]::-webkit-slider-thumb {
+        /* The horizontal rule's block margin becomes an inline margin in
+         * vertical writing mode, so reset it and let the browser centre the
+         * thumb on the rail. */
+        margin-block-start: 0;
+    }
+
+    [data-element="slider"][data-slider][data-orientation="vertical"]
+        > [data-part="control"]
+        > [data-part="tooltip"] {
+        inset-block-end: calc(
+            var(--_fl-slider-thumb-size) / 2 +
+                (100% - var(--_fl-slider-thumb-size)) *
+                var(--_fl-slider-offset, 0)
+        );
+        inset-inline-start: calc(100% + var(--fl-spacing-xs));
+        transform: translateY(50%);
+    }
+
+    /* Read-only keeps the value legible and focusable. Native range inputs have
+     * no read-only attribute, so the hook blocks changes and restores the
+     * value; the pointer targets are off even before hydration. */
+    [data-element="slider"][data-slider][data-readonly]
+        > [data-part="control"]
+        > [data-part="input"] {
+        cursor: default;
+    }
+
+    [data-element="slider"][data-slider][data-readonly]
+        > [data-part="control"]
+        > [data-part="input"]::-webkit-slider-thumb {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    [data-element="slider"][data-slider][data-readonly]
+        > [data-part="control"]
+        > [data-part="input"]::-moz-range-thumb {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    [data-element="slider"][data-slider][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+    }
+
+    [data-element="slider"][data-slider][data-disabled]
+        > [data-part="control"]
+        > [data-part="input"] {
+        cursor: not-allowed;
+    }
+
+    [data-element="slider"][data-slider] > [data-part="hint"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="slider"][data-slider] > [data-part="error"] {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fl-spacing-xs);
+        margin: 0;
+        color: var(--fl-color-error-text);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="slider"][data-slider]
+        > [data-part="error"]
+        > [data-part="error_icon"] {
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
+    }
+
+    /* Sizes. The thumb and rail grow together, while the label follows the
+     * shared control type scale. */
+    [data-element="slider"][data-size="xs"][data-slider] {
+        --_fl-slider-thumb-size: 0.875rem;
+        --_fl-slider-track-size: 0.25rem;
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="slider"][data-size="sm"][data-slider] {
+        --_fl-slider-thumb-size: 1rem;
+        --_fl-slider-track-size: 0.25rem;
+        font-size: var(--fl-control-font-size-sm);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-element="slider"][data-size="lg"][data-slider] {
+        --_fl-slider-thumb-size: 1.25rem;
+        --_fl-slider-track-size: 0.375rem;
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="slider"][data-size="xl"][data-slider] {
+        --_fl-slider-thumb-size: 1.5rem;
+        --_fl-slider-track-size: 0.5rem;
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    /* Color roles. `primary` is the base treatment. `neutral` is the inverted
+     * surface, matching the other form controls. */
+    [data-element="slider"][data-color="secondary"][data-slider] {
+        --fl-slider-color: var(--fl-color-secondary);
+    }
+
+    [data-element="slider"][data-color="neutral"][data-slider] {
+        --fl-slider-color: var(--fl-color-inverted);
+    }
+
+    [data-element="slider"][data-color="info"][data-slider] {
+        --fl-slider-color: var(--fl-color-info);
+    }
+
+    [data-element="slider"][data-color="success"][data-slider] {
+        --fl-slider-color: var(--fl-color-success);
+    }
+
+    [data-element="slider"][data-color="warning"][data-slider] {
+        --fl-slider-color: var(--fl-color-warning);
+    }
+
+    [data-element="slider"][data-color="error"][data-slider] {
+        --fl-slider-color: var(--fl-color-error);
+    }
+
+    [data-element="slider"][data-color="dark"][data-slider] {
+        --fl-slider-color: var(--fl-color-dark);
+    }
+
+    [data-element="slider"][data-color="light"][data-slider] {
+        --fl-slider-color: var(--fl-color-light);
+    }
+
+    /* Validation wins over the chosen color role, so an invalid slider always
+     * reads as an error. Keep this after the color selectors. */
+    [data-element="slider"][data-slider][data-invalid] {
+        --fl-slider-color: var(--fl-color-error);
+        --fl-focus-ring-color: var(--fl-focus-color-error);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="slider"][data-slider]
+            > [data-part="control"]
+            > [data-part="input"]::-webkit-slider-thumb,
+        [data-element="slider"][data-slider]
+            > [data-part="control"]
+            > [data-part="input"]::-moz-range-thumb,
+        [data-element="slider"][data-slider]
+            > [data-part="control"]
+            > [data-part="tooltip"] {
+            transition: none;
+        }
+    }
+}

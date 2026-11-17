@@ -24,7 +24,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
           %{key: :radius, type: :select, default: "sm", label: "Radius"}
         ]
       },
-      %{tab: :styled, section: :usage, id: :validation, title: "Hint and Validation"},
+      %{tab: :styled, section: :usage, id: :validation, title: "Description and Validation"},
       %{tab: :styled, section: :usage, id: :disabled, title: "Disabled"},
       %{tab: :styled, section: :usage, id: :field, title: "Form Fields"},
       %{
@@ -56,7 +56,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
           id="plan"
           name="plan"
           label="Plan"
-          hint="Choose the plan that fits your team."
+          description="Choose the plan that fits your team."
           value="pro"
           orientation={props.orientation}
           variant={props.variant}
@@ -81,7 +81,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
     <.preview {assigns} code={~S|<.radio_group
       name="plan"
       label="Plan"
-      hint="Pick one plan to continue."
+      description="Pick one plan to continue."
       required
       errors={["must select a plan"]}
     >
@@ -92,7 +92,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
         <Components.radio_group
           name="plan"
           label="Plan"
-          hint="Pick one plan to continue."
+          description="Pick one plan to continue."
           required
           errors={["must select a plan"]}
         >
@@ -166,10 +166,10 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       [radio](/components/radio) only when you need one option without the group chrome." />
 
     <.preview {assigns} code={~S|<.form :let={f} for={%{}} as={:user} id="profile-form">
-      <.radio_group field={f[:plan]} label="Plan" hint="You can change this later.">
-        <:radio value="free" label="Free" hint="One project." />
-        <:radio value="pro" label="Pro" hint="Unlimited projects." />
-        <:radio value="team" label="Team" hint="Roles and permissions." />
+      <.radio_group field={f[:plan]} label="Plan" description="You can change this later.">
+        <:radio value="free" label="Free" description="One project." />
+        <:radio value="pro" label="Pro" description="Unlimited projects." />
+        <:radio value="team" label="Team" description="Roles and permissions." />
       </.radio_group>
       <.button type="button" variant="solid">Save profile</.button>
     </.form>|}>
@@ -178,11 +178,11 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
           <Components.radio_group
             field={f[:plan]}
             label="Plan"
-            hint="You can change this later."
+            description="You can change this later."
           >
-            <:radio value="free" label="Free" hint="One project." />
-            <:radio value="pro" label="Pro" hint="Unlimited projects." />
-            <:radio value="team" label="Team" hint="Roles and permissions." />
+            <:radio value="free" label="Free" description="One project." />
+            <:radio value="pro" label="Pro" description="Unlimited projects." />
+            <:radio value="team" label="Team" description="Roles and permissions." />
           </Components.radio_group>
           <Components.button type="button" variant="solid">Save profile</Components.button>
         </div>
@@ -194,7 +194,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
   def render_section(%{section: :examples, id: :cards} = assigns) do
     ~H"""
     <.prose content={~S|Set `variant="card"` to make every option a selectable surface. The
-      orientation still controls the layout, and each option can carry its own hint.|} />
+      orientation still controls the layout, and each option can carry its own description.|} />
 
     <.preview {assigns} code={~S|<.radio_group
       name="plan"
@@ -202,9 +202,9 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       label="Choose a plan"
       value="pro"
     >
-      <:radio value="free" label="Free" sublabel="$0" hint="One project." />
-      <:radio value="pro" label="Pro" sublabel="$19" hint="Unlimited projects." />
-      <:radio value="team" label="Team" sublabel="$49" hint="Everything in Pro, plus roles." />
+      <:radio value="free" label="Free" sublabel="$0" description="One project." />
+      <:radio value="pro" label="Pro" sublabel="$19" description="Unlimited projects." />
+      <:radio value="team" label="Team" sublabel="$49" description="Everything in Pro, plus roles." />
     </.radio_group>|}>
       <div class="w-full max-w-md">
         <Components.radio_group
@@ -213,18 +213,18 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
           label="Choose a plan"
           value="pro"
         >
-          <:radio value="free" label="Free" sublabel="$0" hint="One project." />
+          <:radio value="free" label="Free" sublabel="$0" description="One project." />
           <:radio
             value="pro"
             label="Pro"
             sublabel="$19"
-            hint="Unlimited projects and priority support."
+            description="Unlimited projects and priority support."
           />
           <:radio
             value="team"
             label="Team"
             sublabel="$49"
-            hint="Everything in Pro, plus roles and permissions."
+            description="Everything in Pro, plus roles and permissions."
           />
         </Components.radio_group>
       </div>
@@ -240,7 +240,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
         id={"#{@parts_id}-plan"}
         name={"#{@parts_id}-plan"}
         label="Plan"
-        hint="Choose the plan that fits your team."
+        description="Choose the plan that fits your team."
         value="pro"
       >
         <:radio value="free" label="Free" sublabel="$0" />
@@ -256,7 +256,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       ~s(id="plan"),
       ~s(name="plan"),
       ~s(label="Plan"),
-      ~s(hint="Choose the plan that fits your team."),
+      ~s(description="Choose the plan that fits your team."),
       ~s(value="pro"),
       Snippet.attr("orientation", props.orientation, "vertical"),
       Snippet.attr("variant", props.variant, "simple"),

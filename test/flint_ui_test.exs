@@ -17,8 +17,10 @@ defmodule FlintUITest do
     assert :radio in FlintUI.components()
     assert :radio_group in FlintUI.components()
     assert :separator in FlintUI.components()
+    assert :slider in FlintUI.components()
     assert :switch in FlintUI.components()
     assert :tabs in FlintUI.components()
+    assert :textarea in FlintUI.components()
     assert :toggle in FlintUI.components()
   end
 

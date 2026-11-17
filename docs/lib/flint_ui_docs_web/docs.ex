@@ -44,9 +44,12 @@ defmodule FlintUIDocsWeb.Docs do
     Radio,
     RadioGroup,
     Separator,
+    Slider,
     Source,
     Switch,
+    SwitchGroup,
     Tabs,
+    Textarea,
     Toggle,
     Tooltip
   }
@@ -82,8 +85,11 @@ defmodule FlintUIDocsWeb.Docs do
     radio: Radio,
     radio_group: RadioGroup,
     separator: Separator,
+    slider: Slider,
     switch: Switch,
+    switch_group: SwitchGroup,
     tabs: Tabs,
+    textarea: Textarea,
     toggle: Toggle,
     tooltip: Tooltip
   }

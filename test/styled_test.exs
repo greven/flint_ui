@@ -37,8 +37,11 @@ defmodule FlintUI.StyledTest do
                :radio,
                :radio_group,
                :separator,
+               :slider,
                :switch,
+               :switch_group,
                :tabs,
+               :textarea,
                :toggle,
                :tooltip
              ])

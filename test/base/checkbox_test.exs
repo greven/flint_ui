@@ -18,7 +18,7 @@ defmodule FlintUI.Base.CheckboxTest do
         indeterminate={@indeterminate}
         checked_value={@checked_value}
         unchecked_value={@unchecked_value}
-        hint={@hint}
+        description={@description}
         errors={@errors}
         disabled={@disabled}
         required={@required}
@@ -41,7 +41,7 @@ defmodule FlintUI.Base.CheckboxTest do
 
     def field(assigns) do
       ~H"""
-      <.checkbox field={@field} label="Terms" hint="The small print." />
+      <.checkbox field={@field} label="Terms" description="The small print." />
       """
     end
 
@@ -71,7 +71,7 @@ defmodule FlintUI.Base.CheckboxTest do
         id={@id}
         name={@name}
         label={@label}
-        hint={@hint}
+        description={@description}
         value={@value}
         errors={@errors}
         disabled={@disabled}
@@ -86,7 +86,7 @@ defmodule FlintUI.Base.CheckboxTest do
 
     def group_field(assigns) do
       ~H"""
-      <.checkbox_group field={@field} label="Languages" hint="Pick a few.">
+      <.checkbox_group field={@field} label="Languages" description="Pick a few.">
         <:checkbox value="elixir" label="Elixir" />
         <:checkbox value="rust" label="Rust" />
       </.checkbox_group>
@@ -123,7 +123,7 @@ defmodule FlintUI.Base.CheckboxTest do
     indeterminate: false,
     checked_value: "true",
     unchecked_value: "false",
-    hint: nil,
+    description: nil,
     errors: [],
     disabled: false,
     required: false,
@@ -316,19 +316,19 @@ defmodule FlintUI.Base.CheckboxTest do
       assert LazyHTML.attribute(control(html), "aria-invalid") == ["true"]
 
       assert LazyHTML.attribute(control(html), "aria-describedby") == [
-               "user_terms-hint user_terms-error-1"
+               "user_terms-description user_terms-error-1"
              ]
 
       assert LazyHTML.text(LazyHTML.query(html, ~s([data-part="error"]))) =~ "must be accepted"
     end
   end
 
-  describe "errors and hint" do
-    test "links every message and the hint to the control" do
+  describe "errors and description" do
+    test "links every message and the description to the control" do
       html =
         render(
           errors: ["is invalid", "is already taken"],
-          hint: "We only use this for receipts."
+          description: "We only use this for receipts."
         )
 
       errors = LazyHTML.query(html, ~s([data-part="error"]))
@@ -339,11 +339,11 @@ defmodule FlintUI.Base.CheckboxTest do
 
       assert LazyHTML.attribute(LazyHTML.query(html, "#terms-error-1"), "id") == ["terms-error-1"]
 
-      hint = LazyHTML.query(html, ~s([data-part="hint"]))
-      assert LazyHTML.attribute(hint, "id") == ["terms-hint"]
+      description = LazyHTML.query(html, ~s([data-part="description"]))
+      assert LazyHTML.attribute(description, "id") == ["terms-description"]
 
       assert control_attr(html, "aria-describedby") == [
-               "terms-hint terms-error-1 terms-error-2"
+               "terms-description terms-error-1 terms-error-2"
              ]
 
       assert control_attr(html, "aria-invalid") == ["true"]
@@ -377,7 +377,7 @@ defmodule FlintUI.Base.CheckboxTest do
             id: "languages",
             name: "languages",
             label: "Programming languages",
-            hint: nil,
+            description: nil,
             value: [],
             errors: [],
             disabled: false,
@@ -477,13 +477,13 @@ defmodule FlintUI.Base.CheckboxTest do
     end
 
     test "renders group errors and links them to the fieldset" do
-      html = render_group(errors: ["pick at least one"], hint: "Pick a few.")
+      html = render_group(errors: ["pick at least one"], description: "Pick a few.")
 
       fieldset = LazyHTML.query(html, "fieldset")
       assert LazyHTML.attribute(fieldset, "aria-invalid") == ["true"]
 
       assert LazyHTML.attribute(fieldset, "aria-describedby") == [
-               "languages-hint languages-error-1"
+               "languages-description languages-error-1"
              ]
 
       assert LazyHTML.text(LazyHTML.query(html, "#languages-error-1")) |> String.trim() ==
@@ -549,7 +549,7 @@ defmodule FlintUI.Base.CheckboxTest do
       assert parts |> hd() |> elem(0) == :root
 
       assert Enum.map(parts, &elem(&1, 0)) ==
-               [:root, :label, :options, :hint, :error, :error_icon]
+               [:root, :label, :options, :description, :error, :error_icon]
     end
   end
 end

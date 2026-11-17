@@ -29,7 +29,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
         tab: :styled,
         section: :usage,
         id: :validation,
-        title: "Hint and Validation"
+        title: "Description and Validation"
       },
       %{tab: :styled, section: :usage, id: :disabled, title: "Disabled"},
       %{tab: :styled, section: :usage, id: :field, title: "Form Fields"},
@@ -63,7 +63,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
           value="on"
           label="Enable notifications"
           sublabel="Recommended"
-          hint="We'll send you important updates about your account status and security."
+          description="We'll send you important updates about your account status and security."
           checked
           variant={props.variant}
           size={props.size}
@@ -77,7 +77,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
 
   def render_section(%{section: :usage, id: :card} = assigns) do
     ~H"""
-    <.prose content="The card variant makes the whole field a clickable surface. The hint
+    <.prose content="The card variant makes the whole field a clickable surface. The description
       stays inside the card, and the selected state tints the border and background with the radio
       `color`." />
 
@@ -87,7 +87,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       variant="card"
       label="Free plan"
       sublabel="$0"
-      hint="One project and community support."
+      description="One project and community support."
     />
 
     <.radio
@@ -96,7 +96,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       variant="card"
       label="Pro plan"
       sublabel="$19 per month"
-      hint="Everything in Free, plus unlimited projects and priority support."
+      description="Everything in Free, plus unlimited projects and priority support."
       checked
     />|}>
       <div class="grid w-full max-w-md gap-3">
@@ -106,7 +106,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
           variant="card"
           label="Free plan"
           sublabel="$0"
-          hint="One project and community support."
+          description="One project and community support."
         />
 
         <Components.radio
@@ -115,7 +115,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
           variant="card"
           label="Pro plan"
           sublabel="$19 per month"
-          hint="Everything in Free, plus unlimited projects and priority support."
+          description="Everything in Free, plus unlimited projects and priority support."
           checked
         />
       </div>
@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
 
   def render_section(%{section: :usage, id: :validation} = assigns) do
     ~H"""
-    <.prose content="`hint` renders hint text below the radio and links it with
+    <.prose content="`description` renders explanatory text below the radio and links it with
       `aria-describedby`. `errors` renders one message per entry and marks the control invalid. A
       `field` carries its own errors once the field has been used." />
 
@@ -134,7 +134,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       name="plan"
       value="pro"
       label="Pro plan"
-      hint="Choose the plan that fits your team."
+      description="Choose the plan that fits your team."
       errors={["is not available in your region"]}
     />|}>
       <div class="w-full max-w-sm">
@@ -143,7 +143,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
           name="plan-errors"
           value="pro"
           label="Pro plan"
-          hint="Choose the plan that fits your team."
+          description="Choose the plan that fits your team."
           errors={["is not available in your region"]}
         />
       </div>
@@ -177,7 +177,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
     <.prose content="Pass a `Phoenix.HTML.FormField` to derive `id`, `name`, and errors. Every radio
       in the group should use the same field and its own `value`; the option whose value matches the
       field's current selection is checked. Each option's id is the field id with the option value
-      appended, so its label and hint stay unique." />
+      appended, so its label and description stay unique." />
 
     <.preview {assigns} code={~S|<.form :let={f} for={%{}} as={:user} id="plan-form">
       <.radio field={f[:plan]} value="free" label="Free plan" />
@@ -202,26 +202,26 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       field. Validate the field as required when a choice is mandatory.|} />
 
     <.preview {assigns} code={~S|<.form :let={f} for={%{}} as={:user} id="signup-form">
-      <.radio field={f[:plan]} value="free" label="Free" hint="One project." />
-      <.radio field={f[:plan]} value="pro" label="Pro" hint="Unlimited projects." checked />
-      <.radio field={f[:plan]} value="team" label="Team" hint="Roles and permissions." />
+      <.radio field={f[:plan]} value="free" label="Free" description="One project." />
+      <.radio field={f[:plan]} value="pro" label="Pro" description="Unlimited projects." checked />
+      <.radio field={f[:plan]} value="team" label="Team" description="Roles and permissions." />
       <.button type="button" variant="solid">Create account</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="radio-form-example">
         <div class="grid w-full max-w-md gap-4">
-          <Components.radio field={f[:plan]} value="free" label="Free" hint="One project." />
+          <Components.radio field={f[:plan]} value="free" label="Free" description="One project." />
           <Components.radio
             field={f[:plan]}
             value="pro"
             label="Pro"
-            hint="Unlimited projects."
+            description="Unlimited projects."
             checked
           />
           <Components.radio
             field={f[:plan]}
             value="team"
             label="Team"
-            hint="Roles and permissions."
+            description="Roles and permissions."
           />
           <Components.button type="button" variant="solid">Create account</Components.button>
         </div>
@@ -233,7 +233,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
   def render_section(%{section: :examples, id: :group} = assigns) do
     ~H"""
     <.prose content="Use the [radio group](/components/radio_group) when several radios collect one
-      form field. The group adds the fieldset, legend, hint, and errors around the options." />
+      form field. The group adds the fieldset, legend, description, and errors around the options." />
 
     <.preview {assigns} code={~S|<.radio_group name="plan" label="Plan">
       <:radio value="free" label="Free" />
@@ -261,7 +261,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
         value="pro"
         label="Pro plan"
         sublabel="Recommended"
-        hint="Unlimited projects and priority support."
+        description="Unlimited projects and priority support."
         errors={["is not available in your region"]}
       />
 
@@ -272,7 +272,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
         variant="card"
         label="Team plan"
         sublabel="$49 per month"
-        hint="Everything in Pro, plus roles."
+        description="Everything in Pro, plus roles."
         checked
       />
     </div>
@@ -286,7 +286,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       ~s(value="on"),
       ~s(label="Enable notifications"),
       ~s(sublabel="Recommended"),
-      ~s(hint="We'll send you important updates about your account status and security."),
+      ~s(description="We'll send you important updates about your account status and security."),
       "checked",
       Snippet.attr("variant", props.variant, "simple"),
       Snippet.attr("size", props.size, "md"),

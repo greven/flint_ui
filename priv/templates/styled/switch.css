@@ -108,7 +108,51 @@
         margin-inline-start: 1em;
     }
 
-    [data-element="switch"][data-switch] > [data-part="hint"] {
+    /* State labels sit inside the track, opposite the thumb. The track scales
+     * in `em`, so `0.5em` keeps the label proportional to the selected size
+     * (7px at the `md` control font size). Both slots render in the DOM; the
+     * native checked state reveals the matching one. */
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > :is([data-part="on-state"], [data-part="off-state"]) {
+        position: absolute;
+        inset-block: 0;
+        display: grid;
+        place-items: center;
+        font-size: 0.5em;
+        line-height: 1;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="on-state"] {
+        inset-inline: 0.25em 50%;
+        color: var(--fl-switch-color-content);
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]
+        > [data-part="off-state"] {
+        inset-inline: 50% 0.25em;
+    }
+
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked)
+        > [data-part="off-state"],
+    [data-element="switch"][data-switch]
+        > [data-part="label"]
+        > [data-part="indicator"]:not(:has(> [data-part="control"]:checked))
+        > [data-part="on-state"] {
+        display: none;
+    }
+
+    [data-element="switch"][data-switch] > [data-part="description"] {
         margin: 0;
         color: var(--fl-color-text-toned);
         font-size: var(--fl-font-size-sm);
@@ -169,6 +213,13 @@
         > [data-part="indicator"]:has(> [data-part="control"]:checked)
         > [data-part="thumb"] {
         background-color: var(--fl-color-error-content);
+    }
+
+    [data-element="switch"][data-switch][data-invalid]
+        > [data-part="label"]
+        > [data-part="indicator"]:has(> [data-part="control"]:checked)
+        > [data-part="on-state"] {
+        color: var(--fl-color-error-content);
     }
 
     [data-element="switch"][data-switch][data-invalid]

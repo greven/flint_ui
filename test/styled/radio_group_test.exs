@@ -12,7 +12,7 @@ defmodule FlintUI.Styled.RadioGroupTest do
           id="plan"
           name="plan"
           label="Plan"
-          hint={@hint}
+          description={@description}
           value={@value}
           orientation={@orientation}
           variant={@variant}
@@ -53,7 +53,7 @@ defmodule FlintUI.Styled.RadioGroupTest do
   defp defaults(overrides \\ %{}) do
     Map.merge(
       %{
-        hint: nil,
+        description: nil,
         value: nil,
         orientation: "vertical",
         variant: "simple",
