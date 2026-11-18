@@ -1,0 +1,296 @@
+@layer components {
+    /* Modal. The root is the native `<dialog>` and also the visual surface.
+     * The browser owns modality: `showModal()` puts the element in the top
+     * layer, makes the page inert, contains focus, and restores focus on close.
+     * This layer resets the user-agent dialog box, keeps the panel inside the
+     * viewport gutter, and drives enter/leave animation from `data-state`. */
+    [data-element="modal"][data-modal] {
+        position: fixed;
+        inset: 0;
+        box-sizing: border-box;
+        width: min(
+            var(--fl-modal-max-width, 32rem),
+            calc(100% - (2 * var(--fl-modal-gutter, var(--fl-spacing-lg))))
+        );
+        max-width: none;
+        max-height: calc(100dvh - (2 * var(--fl-modal-gutter, var(--fl-spacing-lg))));
+        margin: auto;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--fl-color-border);
+        border-radius: var(--fl-radius-xl);
+        background-color: var(--fl-color-surface);
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: 1.5;
+        box-shadow: var(--fl-shadow-xl);
+    }
+
+    [data-element="modal"][data-modal]:not([open]) {
+        display: none;
+    }
+
+    [data-element="modal"][data-modal]:focus {
+        outline: none;
+    }
+
+    [data-element="modal"][data-modal][open] {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* The content wrapper is the focus fallback when the dialog has no
+     * focusable child. It is not interactive, so it does not paint a ring. */
+    [data-element="modal"] [data-part="content"] {
+        display: flex;
+        position: relative;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        outline: none;
+    }
+
+    [data-element="modal"] [data-part="header"] {
+        display: grid;
+        flex: none;
+        gap: var(--fl-spacing-xs);
+        padding: var(--fl-spacing-md) var(--fl-modal-padding) var(--fl-spacing-sm);
+        border-block-end: 1px solid var(--fl-color-border-subtle);
+    }
+
+    [data-element="modal"] [data-part="content"]:has(> [data-part="close"]) [data-part="header"] {
+        padding-inline-end: calc(var(--fl-modal-padding) + 2rem);
+    }
+
+    [data-element="modal"] [data-part="title"] {
+        margin: 0;
+        color: var(--fl-color-text-highlighted);
+        font-size: var(--fl-font-size-lg);
+        font-weight: var(--fl-font-weight-semibold);
+        line-height: var(--fl-line-height-md);
+    }
+
+    [data-element="modal"] [data-part="description"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: 1.5;
+    }
+
+    [data-element="modal"] [data-part="body"] {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: var(--fl-spacing-md) var(--fl-modal-padding);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    [data-element="modal"] [data-part="footer"] {
+        display: flex;
+        flex: none;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--fl-spacing-sm);
+        padding: var(--fl-spacing-sm) var(--fl-modal-padding) var(--fl-spacing-md);
+        border-block-start: 1px solid var(--fl-color-border-subtle);
+    }
+
+    /* Close button. It is last in DOM order so the first focusable element is
+     * the first body or footer control, but it sits in the top-right corner. */
+    [data-element="modal"] [data-part="close"] {
+        display: inline-flex;
+        position: absolute;
+        inset-block-start: var(--fl-spacing-sm);
+        inset-inline-end: var(--fl-spacing-sm);
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 0;
+        border-radius: var(--fl-radius-sm);
+        background: transparent;
+        color: var(--fl-color-text-toned);
+        cursor: pointer;
+        transition: background-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="modal"] [data-part="close"]:hover {
+        background: color-mix(in oklab, currentColor 10%, transparent);
+        color: var(--fl-color-text);
+    }
+
+    [data-element="modal"] [data-part="close"] > [data-part="close-icon"] {
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    [data-element="modal"] [data-part="close"] > [data-element="icon"] {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+
+    /* Sizes. The default is `md`; the prop hook sets the maximum width. */
+    [data-element="modal"][data-size="sm"] {
+        --fl-modal-max-width: 24rem;
+    }
+
+    [data-element="modal"][data-size="md"] {
+        --fl-modal-max-width: 32rem;
+    }
+
+    [data-element="modal"][data-size="lg"] {
+        --fl-modal-max-width: 42rem;
+    }
+
+    [data-element="modal"][data-size="xl"] {
+        --fl-modal-max-width: 56rem;
+    }
+
+    [data-element="modal"][data-size="full"] {
+        --fl-modal-max-width: 100%;
+    }
+
+    /* Placement. The base margins stay `auto`; an edge placement pins one
+     * axis and lets the other remain centered. */
+    [data-element="modal"][data-placement="top"] {
+        margin-block-start: var(--fl-modal-gutter);
+        margin-block-end: auto;
+    }
+
+    [data-element="modal"][data-placement="bottom"] {
+        margin-block-start: auto;
+        margin-block-end: var(--fl-modal-gutter);
+    }
+
+    [data-element="modal"][data-placement="left"] {
+        margin-inline-start: var(--fl-modal-gutter);
+        margin-inline-end: auto;
+    }
+
+    [data-element="modal"][data-placement="right"] {
+        margin-inline-start: auto;
+        margin-inline-end: var(--fl-modal-gutter);
+    }
+
+    /* Backdrop. The browser keeps the page inert even when the backdrop is
+     * transparent. */
+    [data-element="modal"][data-modal]::backdrop {
+        background-color: var(--fl-modal-backdrop, light-dark(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.55)));
+    }
+
+    [data-element="modal"][data-backdrop="blur"]::backdrop {
+        backdrop-filter: blur(6px);
+    }
+
+    [data-element="modal"][data-backdrop="none"]::backdrop {
+        background-color: transparent;
+        backdrop-filter: none;
+    }
+
+    /* Enter and leave animation. `data-state` changes while the dialog is
+     * still open; the hook waits for the animation before calling `close()`.
+     * The placement only changes the direction of the small translate. */
+    [data-element="modal"][data-modal] {
+        --_fl-modal-enter-x: 0;
+        --_fl-modal-enter-y: 0;
+        --_fl-modal-enter-scale: 0.97;
+    }
+
+    [data-element="modal"][data-modal][data-placement="top"] {
+        --_fl-modal-enter-y: -0.5rem;
+        --_fl-modal-enter-scale: 1;
+    }
+
+    [data-element="modal"][data-modal][data-placement="bottom"] {
+        --_fl-modal-enter-y: 0.5rem;
+        --_fl-modal-enter-scale: 1;
+    }
+
+    [data-element="modal"][data-modal][data-placement="left"] {
+        --_fl-modal-enter-x: -0.5rem;
+        --_fl-modal-enter-scale: 1;
+    }
+
+    [data-element="modal"][data-modal][data-placement="right"] {
+        --_fl-modal-enter-x: 0.5rem;
+        --_fl-modal-enter-scale: 1;
+    }
+
+    [data-element="modal"][data-modal][open][data-state="open"] {
+        animation: fl-modal-in var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="modal"][data-modal][open][data-state="closed"] {
+        animation: fl-modal-out var(--fl-duration-base) var(--fl-ease-in-out);
+    }
+
+    [data-element="modal"][data-modal][open][data-state="open"]::backdrop {
+        animation: fl-modal-backdrop-in var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="modal"][data-modal][open][data-state="closed"]::backdrop {
+        animation: fl-modal-backdrop-out var(--fl-duration-base) var(--fl-ease-in-out);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="modal"] [data-part="close"] {
+            transition: none;
+        }
+
+        [data-element="modal"][data-modal],
+        [data-element="modal"][data-modal]::backdrop {
+            animation: none;
+        }
+    }
+}
+
+@keyframes fl-modal-in {
+    from {
+        opacity: 0;
+        scale: var(--_fl-modal-enter-scale, 0.97);
+        translate: var(--_fl-modal-enter-x, 0) var(--_fl-modal-enter-y, 0);
+    }
+
+    to {
+        opacity: 1;
+        scale: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fl-modal-out {
+    from {
+        opacity: 1;
+        scale: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        scale: var(--_fl-modal-enter-scale, 0.97);
+        translate: var(--_fl-modal-enter-x, 0) var(--_fl-modal-enter-y, 0);
+    }
+}
+
+@keyframes fl-modal-backdrop-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fl-modal-backdrop-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}

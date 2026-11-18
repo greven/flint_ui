@@ -41,16 +41,6 @@
         animation: fl-popover-out var(--fl-duration-fast) var(--fl-ease-in-out);
     }
 
-    /* A modal popover isolates the page, so give the isolation a visible edge:
-     * a deeper shadow and a quiet backdrop. The hook owns the inert behavior. */
-    [data-part="content"][data-popover-content][data-modal] {
-        box-shadow: var(--fl-shadow-xl);
-    }
-
-    [data-part="content"][data-popover-content][data-modal]::backdrop {
-        background-color: color-mix(in oklab, var(--fl-color-text) 18%, transparent);
-    }
-
     [data-part="content"][data-popover-content] [data-part="arrow"] {
         position: absolute;
         box-sizing: border-box;

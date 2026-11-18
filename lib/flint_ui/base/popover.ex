@@ -5,8 +5,8 @@ defmodule FlintUI.Base.Popover do
   until the user dismisses it or an application action closes it.
 
   Use a popover for menus, filters, account switchers, rich hints, and small
-  forms. Use a tooltip for a short, non-interactive description, and a dialog for
-  a task that needs the whole page.
+  forms. Use a tooltip for a short, non-interactive description, and
+  `FlintUI.modal` for a task that needs the whole page.
 
   ## Examples
 
@@ -87,17 +87,14 @@ defmodule FlintUI.Base.Popover do
 
   ## Accessibility
 
-  The content carries `role="dialog"`. For a modal popover, it also carries
-  `aria-modal="true"`, every outside element on the content's ancestor path is
-  made `inert`, and focus is trapped inside the content. Non-modal popovers leave
-  the rest of the page interactive.
+  The content carries `role="dialog"`. The trigger receives
+  `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls` pointing at the
+  content.
 
   The hook names the dialog after its trigger: it gives the trigger a DOM id when
   it has none and points the content's `aria-labelledby` at it. Pass `aria_label`
   (or `aria_labelledby` pointing at a heading inside the content) when the
-  trigger's name is not a good dialog name. The trigger receives
-  `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls` pointing at the
-  content.
+  trigger's name is not a good dialog name.
 
   Opening with a click, `Enter`, `Space`, or a JS command moves focus to the
   first focusable element in the content, or to the content itself when it has
@@ -118,8 +115,7 @@ defmodule FlintUI.Base.Popover do
   - `Space` - opens or closes the popover when the trigger is focused.
   - `Escape` - closes the popover and returns focus to the trigger, unless
     `dismissible` is `false`.
-  - `Tab` / `Shift+Tab` - moves focus through the content. In a modal popover,
-    focus wraps inside the content.
+  - `Tab` / `Shift+Tab` - moves focus through the content.
   """
 
   use FlintUI.Component
@@ -205,11 +201,6 @@ defmodule FlintUI.Base.Popover do
           description: "Present when outside clicks and `Escape` close the popover."
         },
         %Meta.PartAttr{
-          name: "[data-modal]",
-          value: "boolean",
-          description: "Present when the popover isolates outside content."
-        },
-        %Meta.PartAttr{
           name: "[data-portal]",
           value: "boolean",
           description: "Present when the content is rendered through a Phoenix portal."
@@ -276,11 +267,6 @@ defmodule FlintUI.Base.Popover do
           description: "The dialog role."
         },
         %Meta.PartAttr{
-          name: "aria-modal",
-          value: "true",
-          description: "Present when `modal` is set."
-        },
-        %Meta.PartAttr{
           name: "aria-label",
           value: "string",
           description: "An explicit accessible name from the `aria_label` attribute."
@@ -329,11 +315,6 @@ defmodule FlintUI.Base.Popover do
           name: "[data-align]",
           value: ~s("start" | "center" | "end"),
           description: "The resolved alignment after collision handling, published by the hook."
-        },
-        %Meta.PartAttr{
-          name: "[data-modal]",
-          value: "boolean",
-          description: "Present when `modal` is set."
         }
       ],
       arrow: [
@@ -369,8 +350,7 @@ defmodule FlintUI.Base.Popover do
       },
       %Meta.Keyboard{
         keys: "Tab | Shift+Tab",
-        description:
-          "Moves focus through the content. In a modal popover, focus wraps inside the content."
+        description: "Moves focus through the content."
       }
     ]
   end
@@ -433,11 +413,6 @@ defmodule FlintUI.Base.Popover do
         name: "closed",
         description: "The popover is closed.",
         selector: ~s([data-element="popover"][data-state="closed"])
-      },
-      %Meta.State{
-        name: "modal",
-        description: "The popover isolates content outside the dialog.",
-        selector: ~s([data-element="popover"][data-modal])
       }
     ]
   end
@@ -464,7 +439,6 @@ defmodule FlintUI.Base.Popover do
         "data-close-delay" => to_string(assigns.close_delay),
         "data-open-on-hover" => assigns.open_on_hover,
         "data-dismissible" => assigns.dismissible,
-        "data-modal" => assigns.modal,
         "data-portal" => assigns.portal,
         "data-open-event" => assigns.open_event,
         "data-close-event" => assigns.close_event,
@@ -473,7 +447,6 @@ defmodule FlintUI.Base.Popover do
       content: %{
         "id" => content_id,
         "role" => "dialog",
-        "aria-modal" => if(assigns.modal, do: "true", else: nil),
         "aria-label" => assigns.aria_label,
         "aria-labelledby" => assigns.aria_labelledby,
         "tabindex" => "-1",
@@ -482,8 +455,7 @@ defmodule FlintUI.Base.Popover do
         "data-popover-content" => true,
         "data-state" => "closed",
         "data-side" => assigns.placement,
-        "data-align" => assigns.align,
-        "data-modal" => assigns.modal
+        "data-align" => assigns.align
       },
       arrow: %{
         "data-part" => "arrow",
@@ -539,11 +511,6 @@ defmodule FlintUI.Base.Popover do
     default: true,
     doc:
       "Whether clicking outside or pressing `Escape` closes the popover. Set it to `false` to require an explicit close."
-
-  attr :modal, :boolean,
-    default: false,
-    doc:
-      "Whether the popover is modal. A modal popover makes outside content inert, hides it from assistive technology, and traps focus inside the content."
 
   attr :open_on_hover, :boolean,
     default: false,

@@ -10,7 +10,6 @@ defmodule FlintUI.Base.PopoverTest do
       assigns =
         assigns
         |> assign_new(:opened, fn -> false end)
-        |> assign_new(:modal, fn -> false end)
         |> assign_new(:dismissible, fn -> true end)
         |> assign_new(:open_on_hover, fn -> false end)
         |> assign_new(:placement, fn -> "bottom" end)
@@ -28,7 +27,6 @@ defmodule FlintUI.Base.PopoverTest do
       <.popover
         id="pop"
         opened={@opened}
-        modal={@modal}
         dismissible={@dismissible}
         open_on_hover={@open_on_hover}
         placement={@placement}
@@ -143,16 +141,14 @@ defmodule FlintUI.Base.PopoverTest do
       assert attr(doc, root(doc), "data-open-on-hover") == [""]
     end
 
-    test "marks dismissible and modal only when they are set" do
+    test "marks dismissible only when it is set" do
       doc = render()
 
       assert attr(doc, root(doc), "data-dismissible") == [""]
-      assert attr(doc, root(doc), "data-modal") == []
 
-      doc = render(modal: true, dismissible: false)
+      doc = render(dismissible: false)
 
       assert attr(doc, root(doc), "data-dismissible") == []
-      assert attr(doc, root(doc), "data-modal") == [""]
     end
 
     test "forwards class and rest attributes" do
@@ -180,12 +176,6 @@ defmodule FlintUI.Base.PopoverTest do
 
       assert part_attr(doc, "content", "data-side") == ["left"]
       assert part_attr(doc, "content", "data-align") == ["start"]
-    end
-
-    test "adds aria-modal only in modal mode" do
-      assert part_attr(render(), "content", "aria-modal") == []
-      assert part_attr(render(modal: true), "content", "aria-modal") == ["true"]
-      assert part_attr(render(modal: true), "content", "data-modal") == [""]
     end
 
     test "forwards explicit accessible names" do
@@ -263,7 +253,7 @@ defmodule FlintUI.Base.PopoverTest do
 
     test "describes the dialog states, events, and runtime variables" do
       assert Enum.any?(FlintUI.Base.Popover.states(), &(&1.name == "open"))
-      assert Enum.any?(FlintUI.Base.Popover.states(), &(&1.name == "modal"))
+      refute Enum.any?(FlintUI.Base.Popover.states(), &(&1.name == "modal"))
       assert Enum.any?(FlintUI.Base.Popover.events(), &(&1.name == "fl:popover:open"))
       assert Enum.any?(FlintUI.Base.Popover.events(), &(&1.name == "fl:popover:change"))
 

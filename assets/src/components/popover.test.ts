@@ -8,7 +8,6 @@ const create = vi.mocked(createPositioner);
 
 interface SetupOptions {
   opened?: boolean;
-  modal?: boolean;
   dismissible?: boolean;
   openOnHover?: boolean;
   openDelay?: number;
@@ -41,7 +40,6 @@ function makePositioner(start?: Mock): PositionerMock {
 function setup(options: SetupOptions = {}) {
   const {
     opened = false,
-    modal = false,
     dismissible = true,
     openOnHover = false,
     openDelay = 0,
@@ -67,7 +65,6 @@ function setup(options: SetupOptions = {}) {
         data-open-delay="${openDelay}"
         data-close-delay="${closeDelay}"
         ${dismissible ? "data-dismissible" : ""}
-        ${modal ? "data-modal" : ""}
         ${openOnHover ? "data-open-on-hover" : ""}
         ${openEvent ? `data-open-event="${openEvent}"` : ""}
         ${closeEvent ? `data-close-event="${closeEvent}"` : ""}
@@ -82,7 +79,6 @@ function setup(options: SetupOptions = {}) {
           tabindex="-1"
           popover="manual"
           data-state="closed"
-          ${modal ? 'aria-modal="true" data-modal' : ""}
         >
           ${arrow ? '<span data-part="arrow"></span>' : ""}
           <button id="inside">Inside</button>
@@ -355,47 +351,6 @@ describe("Popover hook", () => {
     expect(content.dataset.state).toBe("open");
   });
 
-  it("makes outside content inert while a modal popover is open", async () => {
-    const { trigger, content } = setup({ modal: true });
-
-    click(trigger);
-    await flush();
-
-    expect(trigger.hasAttribute("inert")).toBe(true);
-    expect(document.getElementById("outside")!.hasAttribute("inert")).toBe(true);
-    expect(content.hasAttribute("inert")).toBe(false);
-    expect(content.getAttribute("aria-modal")).toBe("true");
-  });
-
-  it("releases inert content when a modal popover closes", async () => {
-    const { trigger, content } = setup({ modal: true });
-
-    click(trigger);
-    await flush();
-    key("Escape");
-
-    expect(content.dataset.state).toBe("closed");
-    expect(trigger.hasAttribute("inert")).toBe(false);
-    expect(document.getElementById("outside")!.hasAttribute("inert")).toBe(false);
-  });
-
-  it("wraps Tab focus inside modal content", async () => {
-    const { trigger } = setup({ modal: true });
-    const inside = document.getElementById("inside") as HTMLElement;
-    const link = document.getElementById("link") as HTMLElement;
-
-    click(trigger);
-    await flush();
-
-    link.focus();
-    key("Tab");
-    expect(document.activeElement).toBe(inside);
-
-    inside.focus();
-    key("Tab", { shiftKey: true });
-    expect(document.activeElement).toBe(link);
-  });
-
   it("resolves portalled content by its derived id", async () => {
     const { trigger, content, arrowElement } = setup({ portal: true });
 
@@ -551,8 +506,8 @@ describe("Popover hook", () => {
     expect(content.dataset.state).toBe("open");
   });
 
-  it("stops tracking and releases modal isolation when destroyed", async () => {
-    const { trigger, content, hook } = setup({ modal: true });
+  it("stops tracking when destroyed", async () => {
+    const { trigger, content, hook } = setup();
 
     click(trigger);
     await flush();
@@ -560,7 +515,6 @@ describe("Popover hook", () => {
 
     expect(positioner.stop).toHaveBeenCalled();
     expect(content.dataset.popover).toBeUndefined();
-    expect(trigger.hasAttribute("inert")).toBe(false);
   });
 
   it("ignores a nested trigger inside the content", async () => {

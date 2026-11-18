@@ -40,6 +40,7 @@ defmodule FlintUI do
   - `label`
   - `loading`
   - `loading_text`
+  - `modal`
   - `popover`
   - `progress`
   - `progress_group`
@@ -94,6 +95,7 @@ defmodule FlintUI do
     {:label, []},
     {:loading, []},
     {:loading_text, []},
+    {:modal, [:open_modal, :close_modal, :toggle_modal]},
     {:popover, [:open_popover, :close_popover, :toggle_popover]},
     {:progress, []},
     {:progress_group, []},

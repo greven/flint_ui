@@ -16,6 +16,7 @@ defmodule FlintUITest do
     assert :label in FlintUI.components()
     assert :loading in FlintUI.components()
     assert :loading_text in FlintUI.components()
+    assert :modal in FlintUI.components()
     assert :progress in FlintUI.components()
     assert :radio in FlintUI.components()
     assert :radio_group in FlintUI.components()

@@ -25,6 +25,29 @@ if (typeof HTMLElement !== "undefined" && !HTMLElement.prototype.showPopover) {
   };
 }
 
+// jsdom does not implement the dialog methods the modal hook calls. Mirror the
+// observable part: `showModal()` sets the `open` attribute, and `close()`
+// clears it and fires the native `close` event.
+if (typeof HTMLElement !== "undefined") {
+  const dialog =
+    typeof HTMLDialogElement !== "undefined"
+      ? HTMLDialogElement.prototype
+      : HTMLElement.prototype;
+
+  if (!dialog.showModal) {
+    dialog.showModal = function showModal(this: HTMLElement) {
+      this.setAttribute("open", "");
+    };
+  }
+
+  if (!dialog.close) {
+    dialog.close = function close(this: HTMLElement) {
+      this.removeAttribute("open");
+      this.dispatchEvent(new Event("close"));
+    };
+  }
+}
+
 // jsdom's default stylesheet hides `[popover]` elements that are not in the
 // `:popover-open` state. The stub cannot enter that state, so keep the content
 // visible for focus and layout assertions.

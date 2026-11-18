@@ -18,7 +18,6 @@ defmodule FlintUI.Styled.PopoverTest do
         <.popover
           id="pop"
           opened
-          modal
           dismissible={false}
           open_on_hover
           placement="top"
@@ -77,7 +76,6 @@ defmodule FlintUI.Styled.PopoverTest do
 
     assert attr(document, :popover, "data-state") == ["open"]
     assert attr(document, :popover, "data-opened") == ["true"]
-    assert attr(document, :popover, "data-modal") == [""]
     assert attr(document, :popover, "data-dismissible") == []
     assert attr(document, :popover, "data-open-on-hover") == [""]
     assert attr(document, :popover, "data-placement") == ["top"]

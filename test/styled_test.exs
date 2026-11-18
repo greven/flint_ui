@@ -35,6 +35,7 @@ defmodule FlintUI.StyledTest do
                :label,
                :loading,
                :loading_text,
+               :modal,
                :popover,
                :progress,
                :progress_group,

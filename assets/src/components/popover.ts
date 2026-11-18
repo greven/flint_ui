@@ -1,4 +1,5 @@
 import { FlintHook } from "../lib/core";
+import { focusFirst } from "../lib/focus";
 import { createPositioner, type Align, type Positioner, type Side } from "../lib/position";
 import { awaitAnimationsPromise } from "../lib/util";
 
@@ -28,20 +29,6 @@ const DEFAULT_OFFSET = 8;
 const DEFAULT_PLACEMENT: Side = "bottom";
 const DEFAULT_ALIGN: Align = "center";
 
-const FOCUSABLE = [
-  "a[href]",
-  "area[href]",
-  "button:not([disabled])",
-  "input:not([disabled]):not([type='hidden'])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  "iframe",
-  "object",
-  "embed",
-  "[contenteditable]",
-  "[tabindex]:not([tabindex='-1'])",
-].join(",");
-
 function readNumber(value: string | undefined, fallback: number): number {
   if (value === undefined || value === "") return fallback;
 
@@ -70,7 +57,6 @@ export class Popover extends FlintHook {
   private closeDelay = 0;
   private openOnHover = false;
   private dismissible = true;
-  private modal = false;
 
   private trigger: HTMLElement | null = null;
   private content: HTMLElement | null = null;
@@ -86,10 +72,6 @@ export class Popover extends FlintHook {
   // id can be swapped instead of leaving a dead `aria-labelledby` reference.
   private ownedTriggerId: string | null = null;
   private labelledWith: string | null = null;
-
-  // The elements made inert while a modal popover is open. Only the elements
-  // this hook changed are recorded, so pre-existing `inert` values survive.
-  private isolated: HTMLElement[] = [];
 
   // The ids seen by the last sync, used to tell whether a page update touched
   // this popover at all.
@@ -112,7 +94,6 @@ export class Popover extends FlintHook {
     this.closeDelay = readNumber(this.el.dataset.closeDelay, 0);
     this.openOnHover = this.el.hasAttribute("data-open-on-hover");
     this.dismissible = this.el.hasAttribute("data-dismissible");
-    this.modal = this.el.hasAttribute("data-modal");
   }
 
   private serverOpened(): boolean {
@@ -228,14 +209,6 @@ export class Popover extends FlintHook {
 
   private wireContent(content: HTMLElement): void {
     this.js().setAttribute(content, "tabindex", "-1");
-
-    if (this.modal) {
-      this.js().setAttribute(content, "aria-modal", "true");
-      this.js().setAttribute(content, "data-modal", "");
-    } else {
-      this.js().removeAttribute(content, "aria-modal");
-      this.js().removeAttribute(content, "data-modal");
-    }
   }
 
   /**
@@ -461,8 +434,6 @@ export class Popover extends FlintHook {
     }
     this.setState("open", false);
 
-    if (this.modal) this.isolate(content);
-
     const positioner = this.ensurePositioner();
 
     const reveal = () => {
@@ -470,7 +441,7 @@ export class Popover extends FlintHook {
 
       this.js().setAttribute(content, "data-state", "open");
 
-      if (focus || this.modal) this.focusContent();
+      if (focus) this.focusContent();
 
       this.emitChange("open");
       this.pushStateEvents("open", emit);
@@ -489,25 +460,20 @@ export class Popover extends FlintHook {
     this.clearTimers();
 
     if (this.state !== "open") {
-      this.releaseIsolation();
       return;
     }
 
     const content = this.content;
-    const active = document.activeElement;
 
     this.state = "closed";
     this.openedByHover = false;
     const generation = ++this.generation;
 
     this.positioner?.stop();
-    this.releaseIsolation();
 
     this.setState("closed");
 
-    const focusWasInside = content !== null && active instanceof Node && content.contains(active);
-
-    if ((returnFocus || (this.modal && focusWasInside)) && this.trigger) {
+    if (returnFocus && this.trigger) {
       this.focusTrigger();
     }
 
@@ -544,58 +510,7 @@ export class Popover extends FlintHook {
     const content = this.content;
     if (!content) return;
 
-    const autofocus = content.querySelector<HTMLElement>("[autofocus]");
-    const target = autofocus ?? this.focusable(content)[0] ?? content;
-
-    try {
-      target.focus();
-    } catch {
-      content.focus();
-    }
-  }
-
-  private focusable(root: HTMLElement): HTMLElement[] {
-    return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-      (element) =>
-        !element.hasAttribute("disabled") &&
-        element.getAttribute("aria-hidden") !== "true" &&
-        !element.closest("[inert]"),
-    );
-  }
-
-  /**
-   * Makes everything outside the content inert while a modal popover is open.
-   * Walking the ancestor chain keeps the content and its ancestors interactive
-   * whether the content sits inside the root or in a portal target.
-   */
-  private isolate(content: HTMLElement): void {
-    this.releaseIsolation();
-
-    let node: HTMLElement | null = content;
-
-    while (node && node !== document.body) {
-      const parent: HTMLElement | null = node.parentElement;
-      if (!parent) break;
-
-      for (const sibling of Array.from(parent.children)) {
-        if (sibling === node) continue;
-        if (!(sibling instanceof HTMLElement)) continue;
-        if (sibling.hasAttribute("inert")) continue;
-
-        sibling.setAttribute("inert", "");
-        this.isolated.push(sibling);
-      }
-
-      node = parent;
-    }
-  }
-
-  private releaseIsolation(): void {
-    for (const element of this.isolated) {
-      element.removeAttribute("inert");
-    }
-
-    this.isolated = [];
+    focusFirst(content, content);
   }
 
   // --- Event handlers ---
@@ -674,13 +589,6 @@ export class Popover extends FlintHook {
     const target = event.target;
     if (!(target instanceof Node)) return;
 
-    if (this.modal) {
-      if (this.content?.contains(target)) return;
-
-      this.focusContent();
-      return;
-    }
-
     if (this.trigger?.contains(target) || this.content?.contains(target)) return;
 
     if (this.dismissible) this.hide({ returnFocus: false, source: "click" });
@@ -694,45 +602,8 @@ export class Popover extends FlintHook {
 
       event.preventDefault();
       this.hide({ returnFocus: true, source: "keyboard" });
-      return;
-    }
-
-    if (this.modal && event.key === "Tab") {
-      this.trapFocus(event);
     }
   };
-
-  private trapFocus(event: KeyboardEvent): void {
-    const content = this.content;
-    if (!content) return;
-
-    const items = this.focusable(content);
-    const first = items[0];
-    const last = items[items.length - 1];
-
-    if (!first || !last) {
-      event.preventDefault();
-      content.focus();
-      return;
-    }
-
-    const active = document.activeElement;
-    const inside = active instanceof Node ? content.contains(active) : false;
-
-    if (event.shiftKey) {
-      if (!inside || active === first || active === content) {
-        event.preventDefault();
-        last.focus();
-      }
-
-      return;
-    }
-
-    if (!inside || active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
 
   private handleOpenCommand = (): void => {
     this.show({ focus: true, source: "command" });
@@ -816,7 +687,6 @@ export class Popover extends FlintHook {
 
     this.positioner?.stop();
     this.positioner = null;
-    this.releaseIsolation();
 
     this.el.removeEventListener(Events.Open, this.handleOpenCommand);
     this.el.removeEventListener(Events.Close, this.handleCloseCommand);
@@ -895,6 +765,5 @@ export class Popover extends FlintHook {
     this.positionedContent = null;
     this.positionedArrow = null;
     this.positionedWith = "";
-    this.releaseIsolation();
   }
 }

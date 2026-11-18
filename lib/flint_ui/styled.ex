@@ -146,6 +146,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Label,
     FlintUI.Styled.Loading,
     FlintUI.Styled.LoadingText,
+    FlintUI.Styled.Modal,
     FlintUI.Styled.Popover,
     FlintUI.Styled.Progress,
     FlintUI.Styled.ProgressGroup,
