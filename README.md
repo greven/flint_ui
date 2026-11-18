@@ -53,7 +53,9 @@ The headless base stays available explicitly:
 ## Theming
 
 The generated theme is plain CSS. Import it and override semantic tokens in
-your app stylesheet:
+your app stylesheet. Button-like controls share the `--fl-control-*` inputs and
+text fields share `--fl-field-*`; component-prefixed variables remain available
+for the few per-instance escapes.
 
 ```css
 /* assets/css/app.css */

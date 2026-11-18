@@ -425,7 +425,8 @@ defmodule FlintUI.Base.Input do
         "data-part" => "label_text"
       },
       box: %{
-        "data-part" => "box"
+        "data-part" => "box",
+        "data-field-control" => true
       },
       inner_prefix: %{
         "data-part" => "inner_prefix"

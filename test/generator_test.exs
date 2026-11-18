@@ -12,6 +12,11 @@ defmodule FlintUI.GeneratorTest do
 
       assert source =~ "data-#{name}"
 
+      for primitive <- entry.primitives do
+        assert source =~ Styled.get_primitive(primitive).marker,
+               "expected #{name} to opt into #{primitive}"
+      end
+
       if FlintUI.Styled.Entry.prop(entry, :size) do
         # Forwarded props land on a nested element, so the wrapper writes them
         # into a hook map instead of the root template. Avatar, icon, and flag
@@ -287,7 +292,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "FlintUI.Styled.Color.clear(assigns, :data_active_color)"
 
     assert source =~ "~w(neutral info success warning error primary secondary),"
-    assert source =~ ~s([fill: "--fl-toggle-active-color")
+    assert source =~ ~s([fill: "--fl-control-active-color")
 
     assert source =~ "prop: :active_color"
     assert source =~ "data: :data_active_color"

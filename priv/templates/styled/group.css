@@ -31,8 +31,8 @@
         --fl-control-press: none;
     }
 
-    /* `size` sets the spacing metrics and cascades onto known controls; new
-   * controls opt in by adding their `data-element` below. A bare group uses the
+    /* `size` sets the spacing metrics and cascades onto known controls; a new
+   * control opts in with the shared `data-control` marker. A bare group uses the
    * gap and paints no shell, so the controls read as one set without touching.
    * The `surface` shell stays near segmented-control density (2/2/3/4/4px)
    * rather than tracking the scale. */
@@ -61,31 +61,31 @@
         --fl-group-padding: calc(var(--fl-spacing) * 1);
     }
 
-    [data-element="group"][data-size="xs"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
+    [data-element="group"][data-size="xs"] > [data-control] {
         height: var(--fl-control-height-xs);
         font-size: var(--fl-control-font-size-xs);
         line-height: var(--fl-control-line-height-xs);
     }
 
-    [data-element="group"][data-size="sm"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
+    [data-element="group"][data-size="sm"] > [data-control] {
         height: var(--fl-control-height-sm);
         font-size: var(--fl-control-font-size-sm);
         line-height: var(--fl-control-line-height-sm);
     }
 
-    [data-element="group"][data-size="md"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
+    [data-element="group"][data-size="md"] > [data-control] {
         height: var(--fl-control-height-md);
         font-size: var(--fl-control-font-size-md);
         line-height: var(--fl-control-line-height-md);
     }
 
-    [data-element="group"][data-size="lg"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
+    [data-element="group"][data-size="lg"] > [data-control] {
         height: var(--fl-control-height-lg);
         font-size: var(--fl-control-font-size-lg);
         line-height: var(--fl-control-line-height-lg);
     }
 
-    [data-element="group"][data-size="xl"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
+    [data-element="group"][data-size="xl"] > [data-control] {
         height: var(--fl-control-height-xl);
         font-size: var(--fl-control-font-size-xl);
         line-height: var(--fl-control-line-height-xl);

@@ -24,6 +24,7 @@ def <%= @name %>(assigns) do
   root_attrs =
     %{
       "data-input" => true,
+      "data-field" => true,
       "data-size" => assigns.data_size,
       "data-radius" => assigns.radius
     }

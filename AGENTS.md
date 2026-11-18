@@ -53,14 +53,21 @@ Breaking changes are expected until the first release.
   module's declared attrs, slots, moduledoc, and `build_attrs/1`; `use FlintUI`
   generates and imports them. `lib/flint_ui.ex` holds the component registry.
 - **Styled layer.** Each `FlintUI.Styled.Entry` names the base, target, CSS
-  part, props (`FlintUI.Styled.Prop`), slots (`FlintUI.Styled.Slot`), public CSS
-  variables (`FlintUI.Styled.Var`), and token namespaces.
-  `FlintUI.Generator.component_source/1` renders the wrapper from
-  `priv/templates/styled/<name>.ex.eex`. Wrappers stay thin: declare props and
-  slots, map props onto `data-*`, forward `class`/`rest` (whitelisted like the
-  base contract), and delegate behavior to the base.
+  part, primitives (`FlintUI.Styled.Primitive`), props (`FlintUI.Styled.Prop`),
+  slots (`FlintUI.Styled.Slot`), public CSS variables (`FlintUI.Styled.Var`),
+  and token namespaces. `FlintUI.Generator.component_source/1` renders the
+  wrapper from `priv/templates/styled/<name>.ex.eex`. Wrappers stay thin:
+  declare props and slots, map props onto `data-*`, forward `class`/`rest`
+  (whitelisted like the base contract), and delegate behavior to the base.
+- **Styling primitives.** Shared recipes live once in
+  `priv/templates/primitives/`. A styled wrapper opts in with the primitive
+  marker (`data-control` or `data-field`); its own CSS part keeps only the
+  anatomy. A primitive-owned prop names `primitive:` in
+  `FlintUI.Styled.Prop`, so the theme contract checks the shared selector
+  instead of the component root. Component-only entries may omit `:css`.
 - **Theme.** `FlintUI.Generator.theme_source/0` concatenates `tokens.css`,
-  `base.css`, the presets in `FlintUI.Theme`, then component CSS in registry
+  `base.css`, the primitive CSS parts, the presets in `FlintUI.Theme`, then
+  component CSS in registry
   order. The `:flint_theme` compiler writes `priv/static/flint.css` for the
   docs; `mix flint.setup`/`flint.theme` write the same aggregate to a host's
   `assets/css/flint.css`.
@@ -75,8 +82,10 @@ Breaking changes are expected until the first release.
 | ----------------------------------------- | ------------------------------------------- |
 | Base props, ARIA, keyboard, moduledoc     | `lib/flint_ui/base/<name>.ex`               |
 | Styled props, slots, public CSS variables | `lib/flint_ui/styled/<name>.ex`             |
+| Shared control shell and variants         | `priv/templates/primitives/control.css`     |
+| Shared field chrome and typography        | `priv/templates/primitives/field.css`       |
 | Theme tokens and scales                   | `priv/templates/tokens.css`                 |
-| Component CSS and its rationale           | `priv/templates/styled/<name>.css`          |
+| Component anatomy CSS and its rationale   | `priv/templates/styled/<name>.css`          |
 | Page content and examples                 | `docs/lib/flint_ui_docs_web/docs/<name>.ex` |
 | Docs navigation and routes                | `docs/lib/flint_ui_docs_web/nav.ex`         |
 
@@ -116,9 +125,9 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   to the `ring` preset and other presets leave the component border untouched.
   Structural borders (card bands, panels, tab lists) stay neutral.
 - **Group is child-agnostic.** `group.css` targets direct children, so any
-  control can be joined. The only child names are in the `size` cascade; a new
-  control opts in there. Group is not a complete toolbar (no roving focus or
-  arrow keys), so do not document it as one.
+  control can be joined. The size cascade targets `[data-control]`; a new
+  control opts in by adopting the shared control primitive. Group is not a
+  complete toolbar (no roving focus or arrow keys), so do not document it as one.
 - **No dependencies by accident.** Tailwind is never a library dependency.
   Elixir's built-in `JSON` is the JSON library; never add Jason. Prefer the
   standard library before adding a package. Floating UI is the one JS runtime
@@ -166,17 +175,21 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.
-- **Component inputs are a narrow escape hatch.** At most five public
-  `--fl-<name>-*` inputs, and only for what a prop or theme token cannot
-  express. `--_fl-*` is reserved for JS-published runtime values and is never
-  documented as an input.
+- **Shared primitives own their inputs.** Button-like controls expose
+  `--fl-control-*` (plus `--fl-control-active-*` for stateful controls); fields
+  expose `--fl-field-*`. These are shared inputs, documented on the primitive,
+  not per-component escapes. A component's own `--fl-<name>-*` inputs remain a
+  narrow escape hatch: at most five, and only for what a prop or theme token
+  cannot express. `--_fl-*` is reserved for JS-published runtime values and is
+  never documented as an input.
 - **CSS lives in `@layer components`**, keyed on the wrapper's `data-*` hooks,
   so the base stays unstyled. Focus and control effects are shared theme
   tokens; respect `prefers-reduced-motion`.
-- **Shared scales, no per-component shapes.** Buttons, toggles, and future form
-  controls read `--fl-control-*` and `--fl-control-radius`; components with
-  their own anatomy read the radius scale directly. There are no
-  `--fl-<component>-radius` tokens.
+- **Shared scales, no per-component shapes.** Controls opt into the control
+  primitive with `data-control`; fields opt into the field primitive with
+  `data-field` and mark their box with `data-field-control`. Component CSS keeps
+  anatomy only and reads the shared control/field inputs and radius scale.
+  There are no `--fl-<component>-radius` tokens.
 
 ## Recipes
 
@@ -196,13 +209,19 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 All five parts, in one change:
 
 1. `lib/flint_ui/styled/<name>.ex` — the `FlintUI.Styled.Entry`: base, target,
-   install command, CSS part, token namespaces, props, slots, public variables.
+   install command, CSS part, primitives, token namespaces, props, slots,
+   public variables.
 2. `priv/templates/styled/<name>.ex.eex` — the thin wrapper.
 3. `priv/templates/styled/<name>.css` — a selector for every non-default prop
    value, keyed on `[data-element="<name>"][data-*="…"]`.
 4. `test/styled/<name>_test.exs` — renders the generated wrapper and checks its
    data hooks, forwarded attributes, and slots.
 5. `docs/lib/flint_ui_docs_web/docs/<name>.ex` — the docs page.
+
+A button-like control or text field opts into `[:control]` or `[:field]`, adds
+the primitive marker (`data-control`/`data-field`), marks shared props with
+`primitive:`, and keeps its component CSS to anatomy only. A primitive-only
+entry may omit the component CSS part.
 
 `test/theme/contract_test.exs` fails if the CSS part is missing, a prop value
 has no selector, a token namespace is undefined, or a component declares a

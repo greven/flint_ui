@@ -43,6 +43,7 @@ def <%= @name %>(assigns) do
   root_attrs =
     %{
       "data-textarea" => true,
+      "data-field" => true,
       "data-size" => assigns.size,
       "data-radius" => assigns.radius,
       "data-resize" => assigns.resize,

@@ -1,16 +1,4 @@
 @layer components {
-    /* Input. Public inputs: `--fl-input-fill`, `-border`, `-placeholder`,
-     * `-check`, and `-check-content`. Heights, type, and radius come from the
-     * shared control scale; inline padding uses the field scale, so a text
-     * field is roomier than a button at the same height. */
-    [data-element="input"][data-input] {
-        display: grid;
-        gap: var(--fl-spacing-xs);
-        min-inline-size: 0;
-        font-family: var(--fl-font-sans);
-        color: var(--fl-color-text);
-    }
-
     /* The outer slots sit outside the label, so interactive content in them
      * never activates the control. The row is a two-row grid: the label text
      * spans every column above the control, and the outer slots share the
@@ -38,10 +26,6 @@
         grid-row: 1;
         margin-block-end: var(--fl-spacing-xs);
         min-inline-size: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-control-font-size-md);
-        font-weight: var(--fl-font-weight-medium);
-        line-height: var(--fl-control-line-height-md);
     }
 
     /* Outer slots are addons: segments of the control rather than labels beside
@@ -59,8 +43,8 @@
         align-self: stretch;
         min-block-size: var(--fl-control-height-md);
         padding-inline: var(--_input-addon-padding, var(--fl-field-padding-x-md));
-        border: 1px solid var(--fl-input-border, var(--fl-color-border));
-        background-color: var(--fl-input-fill, var(--fl-color-surface));
+        border: 1px solid var(--fl-field-border, var(--fl-color-border));
+        background-color: var(--fl-field-fill, var(--fl-color-surface));
         color: var(--fl-color-text-toned);
         font-size: var(--fl-control-font-size-md);
         line-height: var(--fl-control-line-height-md);
@@ -86,15 +70,15 @@
         border-inline-start-width: 0;
     }
 
-    /* A button in an outer slot is the segment: the addon drops its own chrome
-     * so the button's variant supplies the fill and border, and the joined
-     * corners are squared. Give the button the same `size` as the input so both
-     * segments share one height. */
+    /* A control in an outer slot is the segment: the addon drops its own chrome
+     * so the control's variant supplies the fill and border, and the joined
+     * corners are squared. Any control that opts into the shared primitive
+     * joins, so `<.button>`, `<.copy_button>`, and `<.toggle>` all work. Give
+     * the control the same `size` as the input so both segments share one
+     * height. */
     [data-element="input"][data-input]
         > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(
-            > [data-element="button"]
-        ) {
+        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(> [data-control]) {
         padding-inline: 0;
         border-width: 0;
         background-color: transparent;
@@ -102,17 +86,15 @@
 
     [data-element="input"][data-input]
         > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(
-            > [data-element="button"]
-        )
-        > [data-element="button"]::before {
+        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(> [data-control])
+        > [data-control]::before {
         border-radius: inherit;
     }
 
     [data-element="input"][data-input]
         > [data-part="row"]
-        > [data-part="outer_prefix"]:has(> [data-element="button"])
-        > [data-element="button"] {
+        > [data-part="outer_prefix"]:has(> [data-control])
+        > [data-control] {
         border-start-end-radius: 0;
         border-end-end-radius: 0;
         border-inline-end-width: 0;
@@ -120,15 +102,15 @@
 
     [data-element="input"][data-input]
         > [data-part="row"]
-        > [data-part="outer_prefix"]:has(> [data-element="button"])
-        > [data-element="button"]::before {
+        > [data-part="outer_prefix"]:has(> [data-control])
+        > [data-control]::before {
         border-inline-end-width: 0;
     }
 
     [data-element="input"][data-input]
         > [data-part="row"]
-        > [data-part="outer_suffix"]:has(> [data-element="button"])
-        > [data-element="button"] {
+        > [data-part="outer_suffix"]:has(> [data-control])
+        > [data-control] {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
         border-inline-start-width: 0;
@@ -136,8 +118,8 @@
 
     [data-element="input"][data-input]
         > [data-part="row"]
-        > [data-part="outer_suffix"]:has(> [data-element="button"])
-        > [data-element="button"]::before {
+        > [data-part="outer_suffix"]:has(> [data-control])
+        > [data-control]::before {
         border-inline-start-width: 0;
     }
 
@@ -158,9 +140,9 @@
         min-inline-size: 0;
         block-size: var(--fl-control-height-md);
         padding-inline: var(--fl-field-padding-x-md);
-        border: 1px solid var(--fl-input-border, var(--fl-color-border));
+        border: 1px solid var(--fl-field-border, var(--fl-color-border));
         border-radius: var(--fl-control-radius);
-        background-color: var(--fl-input-fill, var(--fl-color-surface));
+        background-color: var(--fl-field-fill, var(--fl-color-surface));
         color: var(--fl-color-text);
         transition:
             background-color var(--fl-duration-fast) var(--fl-ease-out),
@@ -186,6 +168,23 @@
         border-end-end-radius: 0;
     }
 
+    /* The native control's box. The field primitive supplies the chrome,
+     * width, type, and state treatment; this part keeps the grid placement and
+     * the inline content flow. */
+    [data-element="input"][data-input]
+        > [data-part="row"]
+        > [data-part="label"]
+        > [data-part="box"] {
+        position: relative;
+        display: flex;
+        grid-column: 2;
+        grid-row: 2;
+        align-items: center;
+        gap: var(--fl-spacing-xs);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
     [data-element="input"][data-input]
         > [data-part="row"]
         > [data-part="label"]
@@ -203,9 +202,9 @@
         background-color: transparent;
         color: var(--fl-color-text);
         font-family: inherit;
-        font-size: var(--fl-control-font-size-md);
+        font-size: inherit;
         font-weight: var(--fl-font-weight-normal);
-        line-height: var(--fl-control-line-height-md);
+        line-height: inherit;
     }
 
     /* Inner content is inside the border and the label, so keep it decorative
@@ -235,17 +234,6 @@
         ) {
         z-index: 1;
     }
-
-    /* The ring belongs on the border, not on the borderless native control. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]:has(> [data-part="control"]:focus-visible) {
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
-        outline-offset: var(--fl-focus-ring-offset);
-    }
-
     [data-element="input"][data-input]
         > [data-part="row"]
         > [data-part="label"]
@@ -253,29 +241,6 @@
         > [data-part="control"]:focus-visible {
         outline: none;
     }
-
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]:hover:not(:has(> [data-part="control"]:disabled)):not(
-            :has(> [data-part="control"][readonly])
-        ) {
-        border-color: color-mix(
-            in oklab,
-            var(--fl-input-border, var(--fl-color-border)),
-            var(--fl-color-text) 20%
-        );
-    }
-
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > [data-part="control"]::placeholder {
-        color: var(--fl-input-placeholder, var(--fl-color-text-dimmed));
-        opacity: 1;
-    }
-
     /* The native select keeps its OS arrow, popup, and multiple listbox. */
     [data-element="input"][data-input]
         > [data-part="row"]
@@ -301,43 +266,15 @@
         opacity: 0.6;
         cursor: pointer;
     }
-
-    /* Disabled fields dim as a unit; the native control keeps its own state. */
-    [data-element="input"][data-input][data-disabled] {
-        opacity: var(--fl-disabled-opacity, 0.5);
-    }
-
-    [data-element="input"][data-input] [data-part="control"]:disabled {
-        cursor: not-allowed;
-    }
-
-    /* Read-only keeps the value legible but marks it as not editable. */
-    [data-element="input"][data-input][data-readonly]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
-        background-color: var(--fl-color-surface-subtle);
-        cursor: default;
-    }
-
     /* The addons follow the control into the read-only fill. Addons that host a
-     * button stay clear so the button's own chrome still shows. */
+     * button-like control stay clear so the control's own chrome still shows. */
     [data-element="input"][data-input][data-readonly]
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):not(
-            :has(> [data-element="button"])
+            :has(> [data-control])
         ) {
         background-color: var(--fl-color-surface-subtle);
     }
-
-    /* Invalid is announced through ARIA and reinforced with the error role. */
-    [data-element="input"][data-input][data-invalid]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
-        border-color: var(--fl-color-error);
-    }
-
     /* The addons carry the same error border so the group reads as one field. */
     [data-element="input"][data-input][data-invalid]
         > [data-part="row"]
@@ -352,34 +289,6 @@
         --fl-focus-ring-color: var(--fl-focus-color-error);
         --fl-focus-border-color: var(--fl-focus-color-error);
     }
-
-    [data-element="input"][data-input] > [data-part="hint"] {
-        margin: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    /* Errors stack with a warning icon on the first text line. The icon is
-     * inline SVG, so it needs no icon set, and follows the message color. */
-    [data-element="input"][data-input] > [data-part="error"] {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--fl-spacing-xs);
-        margin: 0;
-        color: var(--fl-color-error-text);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    [data-element="input"][data-input] > [data-part="error"] > [data-part="error_icon"] {
-        flex: none;
-        inline-size: 1em;
-        block-size: 1em;
-        /* Center the icon on the first line box, not at the paragraph's top. */
-        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
-    }
-
     /* Checkbox: the native input is the control, the indicator paints the box.
      * Keeping the input in the DOM preserves focus, forced colors, and AT. */
     [data-element="input"][data-input][data-type="checkbox"] > [data-part="label"] {
@@ -401,7 +310,7 @@
         border: 1px solid var(--fl-color-border-strong);
         /* Match the dedicated checkbox box; the field radius shapes the field. */
         border-radius: var(--fl-radius-sm);
-        background-color: var(--fl-input-fill, var(--fl-color-surface));
+        background-color: var(--fl-field-fill, var(--fl-color-surface));
         color: var(--fl-input-check-content, var(--fl-color-neutral-50));
         transition:
             background-color var(--fl-duration-fast) var(--fl-ease-out),
@@ -494,34 +403,6 @@
         --fl-focus-ring-color: var(--fl-focus-color-error);
         --fl-focus-border-color: var(--fl-focus-color-error);
     }
-
-    /* Sizes. The control and the label share the control font scale; the field
-     * padding keeps the text clear of the border. */
-    [data-element="input"][data-size="xs"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-xs);
-        line-height: var(--fl-control-line-height-xs);
-    }
-
-    [data-element="input"][data-size="xs"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
-        block-size: var(--fl-control-height-xs);
-        padding-inline: var(--fl-field-padding-x-xs);
-    }
-
-    [data-element="input"][data-size="xs"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > :is(input, select, textarea) {
-        font-size: var(--fl-control-font-size-xs);
-        line-height: var(--fl-control-line-height-xs);
-    }
-
     [data-element="input"][data-size="xs"][data-input]
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
@@ -535,32 +416,6 @@
         inline-size: var(--fl-control-icon-xs);
         block-size: var(--fl-control-icon-xs);
     }
-
-    [data-element="input"][data-size="sm"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-sm);
-        line-height: var(--fl-control-line-height-sm);
-    }
-
-    [data-element="input"][data-size="sm"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
-        block-size: var(--fl-control-height-sm);
-        padding-inline: var(--fl-field-padding-x-sm);
-    }
-
-    [data-element="input"][data-size="sm"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > :is(input, select, textarea) {
-        font-size: var(--fl-control-font-size-sm);
-        line-height: var(--fl-control-line-height-sm);
-    }
-
     [data-element="input"][data-size="sm"][data-input]
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
@@ -574,32 +429,6 @@
         inline-size: var(--fl-control-icon-sm);
         block-size: var(--fl-control-icon-sm);
     }
-
-    [data-element="input"][data-size="lg"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-lg);
-        line-height: var(--fl-control-line-height-lg);
-    }
-
-    [data-element="input"][data-size="lg"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
-        block-size: var(--fl-control-height-lg);
-        padding-inline: var(--fl-field-padding-x-lg);
-    }
-
-    [data-element="input"][data-size="lg"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > :is(input, select, textarea) {
-        font-size: var(--fl-control-font-size-lg);
-        line-height: var(--fl-control-line-height-lg);
-    }
-
     [data-element="input"][data-size="lg"][data-input]
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
@@ -613,32 +442,6 @@
         inline-size: var(--fl-control-icon-lg);
         block-size: var(--fl-control-icon-lg);
     }
-
-    [data-element="input"][data-size="xl"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-xl);
-        line-height: var(--fl-control-line-height-xl);
-    }
-
-    [data-element="input"][data-size="xl"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
-        block-size: var(--fl-control-height-xl);
-        padding-inline: var(--fl-field-padding-x-xl);
-    }
-
-    [data-element="input"][data-size="xl"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > :is(input, select, textarea) {
-        font-size: var(--fl-control-font-size-xl);
-        line-height: var(--fl-control-line-height-xl);
-    }
-
     [data-element="input"][data-size="xl"][data-input]
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {

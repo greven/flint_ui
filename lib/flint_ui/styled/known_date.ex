@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.KnownDate do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop, Var}
+  alias FlintUI.Styled.{Entry, Prop}
 
   def entry do
     %Entry{
@@ -10,11 +10,13 @@ defmodule FlintUI.Styled.KnownDate do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add known_date",
       css: "styled/known_date.css",
+      primitives: [:field],
       tokens: [:color, :radius, :font, :spacing, :control, :field, :duration, :ease],
       related: [:input, :textarea],
       props: [
         Prop.new(
           name: :size,
+          primitive: :field,
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc:
@@ -22,22 +24,11 @@ defmodule FlintUI.Styled.KnownDate do
         ),
         Prop.new(
           name: :radius,
+          primitive: :field,
           values: ["none", "xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc:
             "The corner radius of the part inputs, from `none` for square corners to `xl`, following the shared radius scale."
-        )
-      ],
-      vars: [
-        Var.new(
-          name: "--fl-known-date-fill",
-          default: "var(--fl-color-surface)",
-          doc: "The part input background."
-        ),
-        Var.new(
-          name: "--fl-known-date-border",
-          default: "var(--fl-color-border)",
-          doc: "The part input border color at rest."
         )
       ]
     }

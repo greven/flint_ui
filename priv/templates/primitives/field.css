@@ -1,0 +1,212 @@
+@layer components {
+    /* Field primitive. Shared box chrome, sizing, states, and supporting
+     * typography for text-entry fields. A styled wrapper opts in with
+     * `data-field`; its box or native control carries `data-field-control`.
+     * Components keep their own layout, addons, autogrow, and part anatomy.
+     *
+     * Public inputs: `--fl-field-fill`, `--fl-field-border`, and
+     * `--fl-field-placeholder`. Heights, type, and radius come from the shared
+     * control scale; inline padding uses the field scale. */
+    [data-field] {
+        --fl-field-fill: var(--fl-color-surface);
+        --fl-field-border: var(--fl-color-border);
+        --fl-field-placeholder: var(--fl-color-text-dimmed);
+
+        display: grid;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-field] [data-field-control] {
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-inline-size: 0;
+        border: 1px solid var(--fl-field-border);
+        border-radius: var(--fl-control-radius);
+        background-color: var(--fl-field-fill);
+        color: var(--fl-color-text);
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: var(--fl-font-weight-normal);
+        line-height: inherit;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            box-shadow var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* The native input inside an input's box inherits the box's type. */
+    [data-field] [data-field-control] > :is(input, select, textarea) {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    [data-field] [data-field-control]::placeholder,
+    [data-field] [data-field-control] [data-part="control"]::placeholder {
+        color: var(--fl-field-placeholder);
+        opacity: 1;
+    }
+
+    [data-field]:not([data-disabled]):not([data-readonly]) [data-field-control]:hover {
+        border-color: color-mix(in oklab, var(--fl-field-border), var(--fl-color-text) 20%);
+    }
+
+    /* The ring belongs on the bordered box. A native control draws its own
+     * focus, while the input's box draws it for the nested control. */
+    [data-field] [data-field-control]:focus-visible,
+    [data-field] [data-field-control]:has(> [data-part="control"]:focus-visible) {
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
+            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline-offset: var(--fl-focus-ring-offset);
+    }
+
+    [data-field] [data-field-control] > [data-part="control"]:focus-visible {
+        outline: none;
+    }
+
+    /* Disabled fields dim as a unit; the native control keeps its own state. */
+    [data-field][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+    }
+
+    [data-field] [data-field-control]:disabled {
+        cursor: not-allowed;
+    }
+
+    /* Read-only keeps the value legible but marks it as not editable. */
+    [data-field][data-readonly] [data-field-control] {
+        background-color: var(--fl-color-surface-subtle);
+        cursor: default;
+    }
+
+    /* Invalid is announced through ARIA and reinforced with the error role. */
+    [data-field][data-invalid] [data-field-control] {
+        border-color: var(--fl-color-error);
+    }
+
+    [data-field][data-invalid] [data-field-control]:focus-visible,
+    [data-field][data-invalid] [data-field-control]:has(> [data-part="control"]:focus-visible) {
+        --fl-focus-ring-color: var(--fl-focus-color-error);
+        --fl-focus-border-color: var(--fl-focus-color-error);
+    }
+
+    /* Supporting typography. The component owns placement; the primitive owns
+     * type, color, and the error icon box. */
+    [data-field] [data-part="label_text"] {
+        color: var(--fl-color-text-toned);
+        font-size: inherit;
+        font-weight: var(--fl-font-weight-medium);
+        line-height: inherit;
+    }
+
+    [data-field] [data-part="sublabel"] {
+        color: var(--fl-color-text-muted);
+        font-size: var(--fl-font-size-sm);
+        font-weight: var(--fl-font-weight-normal);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-field] [data-part="description"],
+    [data-field] [data-part="hint"] {
+        margin: 0;
+        color: var(--fl-color-text-toned);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-field] [data-part="error"] {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fl-spacing-xs);
+        margin: 0;
+        color: var(--fl-color-error-text);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-field] [data-part="error"] > [data-part="error_icon"] {
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        /* Center the icon on the first line box, not at the paragraph's top. */
+        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
+    }
+
+    /* Sizes share the control scale. The field scale is roomier than the
+     * control's inline padding at the same height. */
+    [data-field][data-size="xs"] {
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-field][data-size="xs"] [data-field-control] {
+        min-block-size: var(--fl-control-height-xs);
+        padding-inline: var(--fl-field-padding-x-xs);
+    }
+
+    [data-field][data-size="sm"] {
+        font-size: var(--fl-control-font-size-sm);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-field][data-size="sm"] [data-field-control] {
+        min-block-size: var(--fl-control-height-sm);
+        padding-inline: var(--fl-field-padding-x-sm);
+    }
+
+    [data-field][data-size="md"] {
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-md);
+    }
+
+    [data-field][data-size="md"] [data-field-control] {
+        min-block-size: var(--fl-control-height-md);
+        padding-inline: var(--fl-field-padding-x-md);
+    }
+
+    [data-field][data-size="lg"] {
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-field][data-size="lg"] [data-field-control] {
+        min-block-size: var(--fl-control-height-lg);
+        padding-inline: var(--fl-field-padding-x-lg);
+    }
+
+    [data-field][data-size="xl"] {
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    [data-field][data-size="xl"] [data-field-control] {
+        min-block-size: var(--fl-control-height-xl);
+        padding-inline: var(--fl-field-padding-x-xl);
+    }
+
+    /* Radius overrides use the shared scale. */
+    [data-field][data-radius="none"] {
+        --fl-control-radius: 0;
+    }
+
+    [data-field][data-radius="xs"] {
+        --fl-control-radius: var(--fl-radius-xs);
+    }
+
+    [data-field][data-radius="sm"] {
+        --fl-control-radius: var(--fl-radius-sm);
+    }
+
+    [data-field][data-radius="lg"] {
+        --fl-control-radius: var(--fl-radius-lg);
+    }
+
+    [data-field][data-radius="xl"] {
+        --fl-control-radius: var(--fl-radius-xl);
+    }
+}

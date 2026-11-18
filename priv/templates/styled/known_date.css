@@ -1,27 +1,18 @@
 @layer components {
-    /* Known date. Public inputs: `--fl-known-date-fill` and `-border`. The
-     * three part inputs share the control scale, so they match a text input at
-     * the same size. Their widths follow the part labels; the theme keeps a
-     * single column for each block instead of measuring the value. */
+    /* Known date anatomy. The field primitive supplies the part-input chrome,
+     * sizing, states, and supporting typography. This part owns the fieldset
+     * layout, part labels, and the character-based field widths. */
     [data-element="known_date"][data-known_date] {
-        --fl-known-date-fill: var(--fl-color-surface);
-        --fl-known-date-border: var(--fl-color-border);
         --_known-date-height: var(--fl-control-height-md);
         --_known-date-font-size: var(--fl-control-font-size-md);
         --_known-date-line-height: var(--fl-control-line-height-md);
         --_known-date-label-size: var(--fl-control-font-size-md);
         --_known-date-padding: var(--fl-field-padding-x-md);
         box-sizing: border-box;
-        display: grid;
-        gap: var(--fl-spacing-xs);
         min-inline-size: 0;
         margin: 0;
         padding: 0;
         border: 0;
-        color: var(--fl-color-text);
-        font-family: var(--fl-font-sans);
-        font-size: var(--_known-date-font-size);
-        line-height: var(--_known-date-line-height);
     }
 
     /* A fieldset's legend is the group label. Reset its native padding so it
@@ -44,20 +35,6 @@
         align-items: baseline;
         gap: var(--fl-spacing-xs);
         min-inline-size: 0;
-    }
-
-    [data-element="known_date"][data-known_date] [data-part="sublabel"] {
-        color: var(--fl-color-text-muted);
-        font-size: var(--fl-font-size-sm);
-        font-weight: var(--fl-font-weight-normal);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    [data-element="known_date"][data-known_date] > [data-part="description"] {
-        margin: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
     }
 
     [data-element="known_date"][data-known_date] > [data-part="fields"] {
@@ -96,104 +73,6 @@
         white-space: nowrap;
     }
 
-    [data-element="known_date"][data-known_date] [data-part="control"] {
-        box-sizing: border-box;
-        inline-size: 100%;
-        min-inline-size: 0;
-        block-size: var(--_known-date-height);
-        margin: 0;
-        padding: 0 var(--_known-date-padding);
-        border: 1px solid var(--fl-known-date-border);
-        border-radius: var(--fl-control-radius);
-        background-color: var(--fl-known-date-fill);
-        color: var(--fl-color-text);
-        font-family: inherit;
-        font-size: var(--_known-date-font-size);
-        font-weight: var(--fl-font-weight-normal);
-        line-height: var(--_known-date-line-height);
-        transition:
-            background-color var(--fl-duration-fast) var(--fl-ease-out),
-            border-color var(--fl-duration-fast) var(--fl-ease-out),
-            box-shadow var(--fl-duration-fast) var(--fl-ease-out);
-    }
-
-    [data-element="known_date"][data-known_date] [data-part="control"]::placeholder {
-        color: var(--fl-color-text-dimmed);
-        opacity: 1;
-    }
-
-    [data-element="known_date"][data-known_date] [data-part="control"]:hover:not(:disabled):not(
-            [readonly]
-        ) {
-        border-color: color-mix(
-            in oklab,
-            var(--fl-known-date-border),
-            var(--fl-color-text) 20%
-        );
-    }
-
-    /* The ring belongs on the bordered part itself. */
-    [data-element="known_date"][data-known_date] [data-part="control"]:focus-visible {
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
-        outline-offset: var(--fl-focus-ring-offset);
-    }
-
-    /* Disabled groups dim as a unit; the native fieldset disables every part
-     * and the hidden value, so nothing submits. */
-    [data-element="known_date"][data-known_date][data-disabled] {
-        opacity: var(--fl-disabled-opacity, 0.5);
-    }
-
-    [data-element="known_date"][data-known_date] [data-part="control"]:disabled {
-        cursor: not-allowed;
-    }
-
-    /* Read-only keeps the value legible but marks it as not editable. */
-    [data-element="known_date"][data-known_date][data-readonly] [data-part="control"] {
-        background-color: var(--fl-color-surface-subtle);
-        cursor: default;
-    }
-
-    /* Invalid is announced through ARIA and reinforced with the error role. */
-    [data-element="known_date"][data-known_date][data-invalid] [data-part="control"] {
-        border-color: var(--fl-color-error);
-    }
-
-    [data-element="known_date"][data-known_date][data-invalid] [data-part="control"]:focus-visible {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
-    }
-
-    [data-element="known_date"][data-known_date] > [data-part="hint"] {
-        margin: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    /* Errors stack with a warning icon on the first text line. The icon is
-     * inline SVG, so it needs no icon set, and follows the message color. */
-    [data-element="known_date"][data-known_date] > [data-part="error"] {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--fl-spacing-xs);
-        margin: 0;
-        color: var(--fl-color-error-text);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    [data-element="known_date"][data-known_date]
-        > [data-part="error"]
-        > [data-part="error_icon"] {
-        flex: none;
-        inline-size: 1em;
-        block-size: 1em;
-        /* Center the icon on the first line box, not at the paragraph's top. */
-        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
-    }
-
     /* Sizes. The label and the parts share the control font scale; the field
      * padding keeps the digits clear of the border. */
     [data-element="known_date"][data-size="xs"][data-known_date] {
@@ -226,26 +105,5 @@
         --_known-date-line-height: var(--fl-control-line-height-xl);
         --_known-date-label-size: var(--fl-control-font-size-xl);
         --_known-date-padding: var(--fl-field-padding-x-xl);
-    }
-
-    /* Radius overrides use the shared scale. */
-    [data-element="known_date"][data-radius="none"][data-known_date] {
-        --fl-control-radius: 0;
-    }
-
-    [data-element="known_date"][data-radius="xs"][data-known_date] {
-        --fl-control-radius: var(--fl-radius-xs);
-    }
-
-    [data-element="known_date"][data-radius="sm"][data-known_date] {
-        --fl-control-radius: var(--fl-radius-sm);
-    }
-
-    [data-element="known_date"][data-radius="lg"][data-known_date] {
-        --fl-control-radius: var(--fl-radius-lg);
-    }
-
-    [data-element="known_date"][data-radius="xl"][data-known_date] {
-        --fl-control-radius: var(--fl-radius-xl);
     }
 }

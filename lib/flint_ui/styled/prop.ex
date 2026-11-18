@@ -25,6 +25,14 @@ defmodule FlintUI.Styled.Prop do
   contract then checks the nested component's selectors, for example the
   indicator's badge props resolve against `[data-element="badge"]`.
 
+  `primitive` names a shared styling primitive that owns this prop's selectors,
+  such as the control's `variant` or the field's `radius`. The theme contract
+  checks those selectors against the primitive's marker instead of the
+  component root. A prop cannot set both `forwarded_to` and `primitive`.
+
+  `state` names a data-state value that scopes a stateful hook, such as the
+  toggle's `active_variant`, which only applies in the `on` state.
+
   `type` overrides the generated `attr/3` type. It is mainly for a free-form
   prop that accepts more than strings, such as a size that also takes a number.
   Without it a free-form prop is declared as `:string`.
@@ -39,6 +47,8 @@ defmodule FlintUI.Styled.Prop do
           multi: boolean(),
           resolved: [term()],
           forwarded_to: atom() | nil,
+          primitive: atom() | nil,
+          state: String.t() | nil,
           type: atom() | nil
         }
 
@@ -49,6 +59,8 @@ defmodule FlintUI.Styled.Prop do
     :default,
     :doc,
     :forwarded_to,
+    :primitive,
+    :state,
     :type,
     allow_custom: false,
     multi: false,
@@ -74,6 +86,11 @@ defmodule FlintUI.Styled.Prop do
     unless Enum.all?(prop.resolved, &(&1 in prop.values)) do
       raise ArgumentError,
             "prop #{inspect(prop.name)} resolves values outside its list: #{inspect(prop.resolved -- prop.values)}"
+    end
+
+    if prop.forwarded_to && prop.primitive do
+      raise ArgumentError,
+            "prop #{inspect(prop.name)} cannot be both forwarded and primitive-owned"
     end
 
     prop

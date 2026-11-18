@@ -13,6 +13,8 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
     [
       %{tab: :styled, section: :usage, id: :basic, title: "Usage"},
       %{tab: :styled, section: :usage, id: :sources, title: "Sources"},
+      %{tab: :styled, section: :usage, id: :variant, title: "Variant"},
+      %{tab: :styled, section: :usage, id: :color, title: "Color"},
       %{tab: :styled, section: :usage, id: :feedback, title: "Feedback"},
       %{tab: :styled, section: :usage, id: :icons, title: "Icons"},
       %{tab: :styled, section: :usage, id: :sizing, title: "Sizing"},
@@ -94,12 +96,64 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   end
 
   @impl true
+  def render_section(%{section: :usage, id: :variant} = assigns) do
+    ~H"""
+    <.prose content="The copy button uses the shared control primitive, so it supports every button
+      variant. The default is the quiet `ghost` treatment; set `variant` to match the surrounding
+      controls. See the [button docs](/components/button) for the full control contract." />
+
+    <.preview {assigns} code={code_variants()} collapsed>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.copy_button
+          :for={variant <- variants()}
+          from="copy-button-variant-target"
+          variant={variant}
+          size="sm"
+          label={"Copy, #{variant}"}
+        >
+          {variant}
+        </Components.copy_button>
+      </div>
+      <p id="copy-button-variant-target" class="mt-4 text-sm text-muted">
+        Shared control variants
+      </p>
+    </.preview>
+    """
+  end
+
+  @impl true
+  def render_section(%{section: :usage, id: :color} = assigns) do
+    ~H"""
+    <.prose content="Every semantic color role is available. Roles follow the theme and color
+      scheme; `dark` and `light` stay absolute. A raw color is a per-instance escape hatch." />
+
+    <.preview {assigns} code={code_colors()} collapsed>
+      <div class="flex flex-wrap items-center gap-3">
+        <Components.copy_button
+          :for={color <- colors()}
+          from="copy-button-color-target"
+          variant="soft"
+          color={color}
+          size="sm"
+          label={"Copy, #{color}"}
+        >
+          {color}
+        </Components.copy_button>
+      </div>
+      <p id="copy-button-color-target" class="mt-4 text-sm text-muted">
+        Shared control colors
+      </p>
+    </.preview>
+    """
+  end
+
+  @impl true
   def render_section(%{section: :usage, id: :feedback} = assigns) do
     ~H"""
     <.prose content="The button sets `data-state` to `success` or `error` and clears it after
-      `feedback_duration` milliseconds. The styled layer swaps the icon and tints it with the
-      matching role. A failed copy is announced with the same live region, so the button never
-      changes its name." />
+      `feedback_duration` milliseconds. The styled layer swaps the icon; non-solid variants tint it
+      with the matching role, while solid variants keep the label color. A failed copy is announced
+      with the same live region, so the button never changes its name." />
     <.prose content="The second button below points at a target that does not exist. Activate it to
       see and hear the error state." />
 
@@ -197,16 +251,20 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   @impl true
   def render_section(%{section: :examples, id: :group} = assigns) do
     ~H"""
-    <.prose content="A copy button joins a group like any other control. It opts into the group's
-      size cascade, so an attached row keeps one height and one seam." />
+    <.prose content="A copy button joins a group like any other control. The default is `ghost`,
+      so pass the surrounding `variant` when the group uses a filled treatment. The group's size
+      cascade handles the height and seam." />
 
     <.preview {assigns} code={code_group()} collapsed>
       <Components.group attached size="sm">
         <Components.copy_button
           from="copy-button-group-target"
           label="Copy example"
+          variant="surface"
           size="sm"
-        />
+        >
+          Copy
+        </Components.copy_button>
         <Components.button variant="surface" size="sm" icon="lucide-clipboard-paste">
           Paste
         </Components.button>
@@ -230,6 +288,36 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
         label="Copy install command"
       />
     </div>
+    """
+  end
+
+  defp variants, do: ~w(solid soft subtle surface outline ghost link)
+  defp colors, do: ~w(neutral info success warning error primary secondary)
+
+  defp code_variants do
+    """
+    <.copy_button
+      :for={variant <- ~w(solid soft subtle surface outline ghost link)}
+      variant={variant}
+      size="sm"
+      from="value"
+    >
+      {variant}
+    </.copy_button>
+    """
+  end
+
+  defp code_colors do
+    """
+    <.copy_button
+      :for={color <- ~w(neutral info success warning error primary secondary)}
+      variant="soft"
+      color={color}
+      size="sm"
+      from="value"
+    >
+      {color}
+    </.copy_button>
     """
   end
 
@@ -280,7 +368,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   defp code_group do
     """
     <.group attached size="sm">
-      <.copy_button from="value" size="sm" />
+      <.copy_button from="value" variant="surface" size="sm">Copy</.copy_button>
       <.button variant="surface" size="sm" icon="lucide-clipboard-paste">Paste</.button>
     </.group>
     """

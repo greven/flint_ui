@@ -257,6 +257,8 @@ defmodule FlintUI.Docs do
   the hook and a generic description.
   """
   def parts(component) when is_atom(component) do
+    root = styled_root_selector(component)
+
     component
     |> parts_attrs()
     |> Enum.map(fn {name, attrs} ->
@@ -266,7 +268,7 @@ defmodule FlintUI.Docs do
         name: name,
         hook: hook,
         description: part_description(name, attrs),
-        selector: part_selector(component, hook)
+        selector: part_selector(root, hook)
       }
     end)
   end
@@ -370,8 +372,27 @@ defmodule FlintUI.Docs do
     end
   end
 
-  defp part_selector(component, "root"), do: ~s([data-element="#{component}"])
-  defp part_selector(component, hook), do: ~s([data-element="#{component}"] [data-part="#{hook}"])
+  defp part_selector(root, "root"), do: root
+  defp part_selector(root, hook), do: ~s(#{root} [data-part="#{hook}"])
+
+  # A styled component may opt into shared primitives. The markers are present
+  # on the styled root, so the docs selectors that show the real DOM include
+  # them alongside the component identity.
+  defp styled_root_selector(component) do
+    markers =
+      case FlintUI.Styled.get(component) do
+        nil ->
+          []
+
+        entry ->
+          entry.primitives
+          |> Enum.map(&FlintUI.Styled.get_primitive/1)
+          |> Enum.reject(&is_nil/1)
+          |> Enum.map(&"[#{&1.marker}]")
+      end
+
+    ~s([data-element="#{component}"]) <> Enum.join(markers)
+  end
 
   @doc """
   Returns the components closely related to a component, as declared by its

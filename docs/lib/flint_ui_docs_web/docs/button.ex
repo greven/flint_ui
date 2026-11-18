@@ -116,6 +116,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview {assigns} code="<.button>Button</.button>">
       <Components.button>Button</Components.button>
     </.preview>
+    <.prose content="The shell, variants, colors, sizes, and interaction treatment are the shared control
+      primitive. Toggle and CopyButton opt into the same treatment, so their variant and color props
+      match a button of the same size." />
     <.prose content="If all you want is to render text you can also use the `text` attribute." />
     <.preview id={"#{@id}-text"} code={~S(<.button text="Button" />)} code_only />
     """
@@ -452,7 +455,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <Components.button
           variant="solid"
           pill
-          style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
+          style="--fl-control-color: var(--color-lime-700); --fl-control-color-content: white;
           background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
         >
           <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
@@ -461,7 +464,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <Components.button
           variant="solid"
           pill
-          style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+          style="--fl-control-color: var(--color-red-800); --fl-control-color-content: white;
             --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
             background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));"
           loading
@@ -473,7 +476,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         <Components.button
           variant="solid"
           pill
-          style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+          style="--fl-control-color: var(--color-cyan-700); --fl-control-color-content: white;
           background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));"
         >
           <.icon name="lucide-panda" class="text-cyan-100" /> Panda
@@ -773,8 +776,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
       """,
       css: """
       [data-element="button"][data-variant="subtle"] {
-        --fl-button-color: #009966;
-        --fl-button-color-content: white;
+        --fl-control-color: #009966;
+        --fl-control-color-content: white;
       }
       """
     ]
@@ -920,7 +923,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button
       variant="solid"
       pill
-      style="--fl-button-color: var(--color-lime-700); --fl-button-color-content: white;
+      style="--fl-control-color: var(--color-lime-700); --fl-control-color-content: white;
       background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
     >
       <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
@@ -929,7 +932,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button
       variant="solid"
       pill
-      style="--fl-button-color: var(--color-red-800); --fl-button-color-content: white;
+      style="--fl-control-color: var(--color-red-800); --fl-control-color-content: white;
         --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
         background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));" loading>
       <.icon name="lucide-heart" class="text-rose-50" />
@@ -939,7 +942,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button
       variant="solid"
       pill
-      style="--fl-button-color: var(--color-cyan-700); --fl-button-color-content: white;
+      style="--fl-control-color: var(--color-cyan-700); --fl-control-color-content: white;
       background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
       <.icon name="lucide-panda" class="text-cyan-100" /> Panda
     </.button>

@@ -63,15 +63,24 @@ defmodule FlintUI.Generator do
   @doc """
   Absolute paths to every theme part, in assembly order.
 
-  Tokens come first (they are unlayered), then the shared base rules, then each
-  registered theme preset, then each registered component's stylesheet in
-  registry order, and finally the shared focus layer.
+  Tokens come first (they are unlayered), then the shared base rules, then the
+  primitive stylesheets, then each registered theme preset, then each registered
+  component's anatomy stylesheet in registry order, and finally the shared focus
+  layer. Entries composed entirely of primitives may omit a component part.
   """
   def part_paths do
+    primitive_parts = Enum.map(Styled.primitives(), & &1.css)
     theme_parts = Enum.map(Theme.themes(), & &1.css)
-    component_parts = Enum.map(Styled.entries(), & &1.css)
 
-    [@tokens_part, @base_part | theme_parts ++ component_parts ++ [@focus_part]]
+    component_parts =
+      Styled.entries()
+      |> Enum.map(& &1.css)
+      |> Enum.reject(&is_nil/1)
+
+    [
+      @tokens_part,
+      @base_part | primitive_parts ++ theme_parts ++ component_parts ++ [@focus_part]
+    ]
     |> Enum.map(&part_path/1)
   end
 

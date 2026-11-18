@@ -10,17 +10,20 @@ defmodule FlintUI.Styled.Textarea do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add textarea",
       css: "styled/textarea.css",
+      primitives: [:field],
       tokens: [:color, :radius, :font, :spacing, :control, :field, :duration, :ease],
       related: [:input, :label],
       props: [
         Prop.new(
           name: :size,
+          primitive: :field,
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The textarea text size and field padding, from the shared control scale."
         ),
         Prop.new(
           name: :radius,
+          primitive: :field,
           values: ["none", "xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc:
@@ -58,21 +61,6 @@ defmodule FlintUI.Styled.Textarea do
         )
       ],
       vars: [
-        Var.new(
-          name: "--fl-textarea-fill",
-          default: "var(--fl-color-surface)",
-          doc: "The control background."
-        ),
-        Var.new(
-          name: "--fl-textarea-border",
-          default: "var(--fl-color-border)",
-          doc: "The control border color at rest."
-        ),
-        Var.new(
-          name: "--fl-textarea-placeholder",
-          default: "var(--fl-color-text-dimmed)",
-          doc: "The placeholder text color."
-        ),
         Var.new(
           name: "--fl-textarea-min-rows",
           default: "2",

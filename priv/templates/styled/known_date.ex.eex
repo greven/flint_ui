@@ -14,6 +14,7 @@ def <%= @name %>(assigns) do
   root_attrs =
     %{
       "data-known_date" => true,
+      "data-field" => true,
       "data-size" => FlintUI.Styled.Size.scale(assigns.size),
       "data-radius" => assigns.radius
     }

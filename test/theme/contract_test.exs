@@ -13,11 +13,21 @@ defmodule FlintUI.Theme.ContractTest do
 
   test "every registry entry points at an existing theme part", %{} do
     for entry <- Styled.entries() do
-      assert entry.css, "expected #{entry.name} to declare a css part"
+      if entry.css do
+        path = FlintUI.Generator.part_path(entry.css)
+        assert File.exists?(path), "expected theme part #{entry.css} to exist"
+        assert File.read!(path) =~ ~s([data-element="#{entry.name}"])
+      else
+        assert entry.primitives != [],
+               "expected #{entry.name} to declare a css part or a primitive"
 
-      path = FlintUI.Generator.part_path(entry.css)
-      assert File.exists?(path), "expected theme part #{entry.css} to exist"
-      assert File.read!(path) =~ ~s([data-element="#{entry.name}"])
+        for primitive <- entry.primitives do
+          primitive = Styled.get_primitive(primitive)
+          path = FlintUI.Generator.part_path(primitive.css)
+          assert File.exists?(path), "expected primitive part #{primitive.css} to exist"
+          assert File.read!(path) =~ "[#{primitive.marker}]"
+        end
+      end
     end
   end
 
@@ -41,7 +51,20 @@ defmodule FlintUI.Theme.ContractTest do
   # prop is rendered on a nested component, so its selectors are checked against
   # that component's `data-element`.
   defp prop_selector(entry, prop, value) do
-    root = ~s([data-element="#{prop.forwarded_to || entry.name}"])
+    root =
+      cond do
+        prop.primitive ->
+          primitive = Styled.get_primitive(prop.primitive)
+          "[#{primitive.marker}]"
+
+        prop.forwarded_to ->
+          ~s([data-element="#{prop.forwarded_to}"])
+
+        true ->
+          ~s([data-element="#{entry.name}"])
+      end
+
+    root = if prop.state, do: root <> ~s([data-state="#{prop.state}"]), else: root
     attribute = Prop.attribute(prop)
 
     cond do
@@ -69,7 +92,7 @@ defmodule FlintUI.Theme.ContractTest do
   end
 
   test "components use the shared radius scale, not per-component radius tokens" do
-    for entry <- Styled.entries() do
+    for entry <- Styled.entries(), entry.css do
       source = File.read!(FlintUI.Generator.part_path(entry.css))
 
       refute source =~ "--fl-#{entry.name}-radius",

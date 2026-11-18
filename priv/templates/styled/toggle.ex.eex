@@ -18,6 +18,7 @@ def <%= @name %>(assigns) do
   ~H"""
   <FlintUI.toggle
     data-toggle
+    data-control
     data-variant={@variant}
     data-active-variant={if @active_variant == "inherit", do: @variant, else: @active_variant}
     data-dashed={@dashed}

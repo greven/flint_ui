@@ -4,14 +4,118 @@ defmodule FlintUI.Styled do
 
   Each entry (see `FlintUI.Styled.Entry`) describes how a headless (base)
   FlintUI component is lifted into a styled wrapper: the base module, the generated
-  target, the extra attributes and slots it adds, the public CSS variables it
-  exposes, and the theme tokens it consumes.
+  target, the shared styling primitives it opts into, the extra attributes and
+  slots it adds, the public CSS variables it exposes, and the theme tokens it
+  consumes. Primitives (see `FlintUI.Styled.Primitive`) own reusable recipes such
+  as the control shell and the field chrome.
 
   The generator (`mix flint.add`) and the docs both read from here, so the
   styled API has a single source of truth.
   """
 
-  alias FlintUI.Styled.Entry
+  alias FlintUI.Styled.{Entry, Primitive, Var}
+
+  @primitives [
+    %Primitive{
+      name: :control,
+      css: "primitives/control.css",
+      marker: "data-control",
+      doc:
+        "Shared shell, variants, colors, sizes, shape, depth, and interaction treatment for button-like controls.",
+      props: [
+        :variant,
+        :dashed,
+        :color,
+        :size,
+        :radius,
+        :pill,
+        :square,
+        :wide,
+        :justify,
+        :depth,
+        :inset,
+        :active_variant,
+        :active_color
+      ],
+      vars: [
+        Var.new(
+          name: "--fl-control-color",
+          default: "var(--fl-color-inverted)",
+          doc: "The fill, the outline border, and the source for tinted surfaces and focus."
+        ),
+        Var.new(
+          name: "--fl-control-color-content",
+          default: "var(--fl-color-text-inverted)",
+          doc: "The label color on a solid fill."
+        ),
+        Var.new(
+          name: "--fl-control-text",
+          default: "var(--fl-control-color)",
+          doc: "The label color on tinted, bordered, ghost, and link variants."
+        ),
+        Var.new(
+          name: "--fl-control-soft",
+          default: "color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface))",
+          doc: "The tinted surface behind soft and subtle variants."
+        ),
+        Var.new(
+          name: "--fl-control-soft-border",
+          default:
+            "color-mix(in oklab, var(--fl-control-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
+          doc: "The border color for subtle and surface variants."
+        ),
+        Var.new(
+          name: "--fl-control-active-color",
+          default: "var(--fl-control-color)",
+          doc: "The fill, border, and tint source while a stateful control is on."
+        ),
+        Var.new(
+          name: "--fl-control-active-color-content",
+          default: "var(--fl-control-color-content)",
+          doc: "The label color on a solid fill while a stateful control is on."
+        ),
+        Var.new(
+          name: "--fl-control-active-text",
+          default: "var(--fl-control-text)",
+          doc: "The label color on non-solid variants while a stateful control is on."
+        ),
+        Var.new(
+          name: "--fl-control-active-soft",
+          default: "var(--fl-control-soft)",
+          doc: "The tinted surface while a stateful control is on."
+        ),
+        Var.new(
+          name: "--fl-control-active-soft-border",
+          default: "var(--fl-control-soft-border)",
+          doc: "The subtle and surface border while a stateful control is on."
+        )
+      ]
+    },
+    %Primitive{
+      name: :field,
+      css: "primitives/field.css",
+      marker: "data-field",
+      doc: "Shared box chrome, sizing, states, and supporting typography for text-entry fields.",
+      props: [:size, :radius],
+      vars: [
+        Var.new(
+          name: "--fl-field-fill",
+          default: "var(--fl-color-surface)",
+          doc: "The field box background."
+        ),
+        Var.new(
+          name: "--fl-field-border",
+          default: "var(--fl-color-border)",
+          doc: "The field box border color at rest."
+        ),
+        Var.new(
+          name: "--fl-field-placeholder",
+          default: "var(--fl-color-text-dimmed)",
+          doc: "The placeholder text color."
+        )
+      ]
+    }
+  ]
 
   @modules [
     FlintUI.Styled.Accordion,
@@ -63,6 +167,23 @@ defmodule FlintUI.Styled do
   def entries, do: Enum.map(@modules, & &1.entry())
 
   @doc """
+  Returns every registered styling primitive.
+  """
+  def primitives, do: @primitives
+
+  @doc """
+  Returns the primitive with the given name, or `nil`.
+  """
+  def get_primitive(name) when is_atom(name) do
+    Enum.find(primitives(), &(&1.name == name))
+  end
+
+  @doc """
+  Returns the names of the registered primitives.
+  """
+  def primitive_names, do: Enum.map(primitives(), & &1.name)
+
+  @doc """
   Returns the entry for a component name, or `nil`.
   """
   def get(name) when is_atom(name) do
@@ -75,15 +196,45 @@ defmodule FlintUI.Styled do
   def names, do: Enum.map(entries(), & &1.name)
 
   @doc """
-  Validates every entry and returns `:ok` or `{:error, reason}`.
+  Validates every primitive and entry and returns `:ok` or `{:error, reason}`.
   """
   def validate_all do
-    Enum.reduce_while(entries(), :ok, fn entry, :ok ->
-      case validate(entry) do
+    primitives()
+    |> Enum.reduce_while(:ok, fn primitive, :ok ->
+      case validate_primitive(primitive) do
         :ok -> {:cont, :ok}
         error -> {:halt, error}
       end
     end)
+    |> case do
+      :ok ->
+        Enum.reduce_while(entries(), :ok, fn entry, :ok ->
+          case validate(entry) do
+            :ok -> {:cont, :ok}
+            error -> {:halt, error}
+          end
+        end)
+
+      error ->
+        error
+    end
+  end
+
+  @doc """
+  Validates a single primitive.
+  """
+  def validate_primitive(%Primitive{} = primitive) do
+    cond do
+      primitive.css in [nil, ""] ->
+        {:error, {:missing_primitive_css, primitive.name}}
+
+      not is_binary(primitive.marker) or
+          not Regex.match?(~r/^data-[a-z0-9_-]+$/, primitive.marker) ->
+        {:error, {:invalid_primitive_marker, primitive.name, primitive.marker}}
+
+      true ->
+        :ok
+    end
   end
 
   @doc """
@@ -98,6 +249,15 @@ defmodule FlintUI.Styled do
 
       entry.target in [nil, ""] ->
         {:error, {:missing_target, entry.name}}
+
+      entry.css in [nil, ""] and entry.primitives == [] ->
+        {:error, {:missing_style, entry.name}}
+
+      Entry.unknown_primitives(entry) != [] ->
+        {:error, {:unknown_primitive, entry.name, Entry.unknown_primitives(entry)}}
+
+      Entry.unowned_primitive_props(entry) != [] ->
+        {:error, {:unowned_primitive_prop, entry.name, Entry.unowned_primitive_props(entry)}}
 
       custom_color_without_vars?(entry) ->
         {:error, {:missing_color_vars, entry.name}}

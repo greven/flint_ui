@@ -72,6 +72,7 @@ defmodule FlintUI.Base.CopyButtonTest do
       assert attr(html, "type") == ["button"]
       assert attr(html, "data-element") == ["copy_button"]
       assert attr(html, "data-part") == ["root"]
+      assert attr(html, "data-control") == []
       assert attr(html, "disabled") == []
       assert attr(html, "data-disabled") == []
     end
@@ -85,6 +86,12 @@ defmodule FlintUI.Base.CopyButtonTest do
       assert attr(html, "data-copy-success-label") == ["Copied"]
       assert attr(html, "data-copy-error-label") == ["Copy failed"]
       assert attr(html, "data-state") == []
+    end
+
+    test "stacks the states in the state wrapper" do
+      html = render()
+
+      assert Enum.count(LazyHTML.query(html, ~s([data-part="states"]))) == 1
     end
 
     test "renders the default content in the copy state" do
@@ -196,6 +203,7 @@ defmodule FlintUI.Base.CopyButtonTest do
 
       assert is_list(FlintUI.Base.CopyButton.parts_attrs())
       assert FlintUI.Base.CopyButton.parts_attrs() |> Enum.any?()
+      assert Enum.any?(FlintUI.Base.CopyButton.parts_attrs(), &(elem(&1, 0) == :states))
       assert [%FlintUI.Meta.Keyboard{keys: "Tab"} | _] = FlintUI.Base.CopyButton.keyboard()
       assert Enum.any?(FlintUI.Base.CopyButton.states(), &(&1.name == "success"))
       assert Enum.any?(FlintUI.Base.CopyButton.states(), &(&1.name == "error"))

@@ -88,9 +88,9 @@ defmodule FlintUI.Styled.ButtonTest do
     assert attr(document, :button, "data-color") == []
     style = document |> attr(:button, "style") |> List.first()
 
-    assert style =~ "--fl-button-color: #1D72FE"
-    assert style =~ "--fl-button-color-content: oklch(0% 0 0)"
-    assert style =~ "--fl-button-text: light-dark("
+    assert style =~ "--fl-control-color: #1D72FE"
+    assert style =~ "--fl-control-color-content: oklch(0% 0 0)"
+    assert style =~ "--fl-control-text: light-dark("
   end
 
   test "a tw: palette color omits the data hook and sets the public inputs", %{wrapper: wrapper} do
@@ -98,16 +98,16 @@ defmodule FlintUI.Styled.ButtonTest do
     style = document |> attr(:button, "style") |> List.first()
 
     assert attr(document, :button, "data-color") == []
-    assert style =~ "--fl-button-color: oklch("
-    assert style =~ "--fl-button-color-content:"
-    assert style =~ "--fl-button-text:"
+    assert style =~ "--fl-control-color: oklch("
+    assert style =~ "--fl-control-color-content:"
+    assert style =~ "--fl-control-text:"
   end
 
   test "an explicit style wins over the derived inputs", %{wrapper: wrapper} do
-    document = colored(wrapper, "#1D72FE", "--fl-button-color-content: white")
+    document = colored(wrapper, "#1D72FE", "--fl-control-color-content: white")
     style = document |> attr(:button, "style") |> List.first()
 
-    assert String.ends_with?(style, "; --fl-button-color-content: white")
+    assert String.ends_with?(style, "; --fl-control-color-content: white")
   end
 
   test "text and icon are content shortcuts", %{wrapper: wrapper} do

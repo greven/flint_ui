@@ -1,21 +1,17 @@
 @layer focus {
     /* Bordered interactive controls pair the ring with a full-color border. */
-    [data-element="button"][data-variant]:focus-visible:not([data-disabled]),
+    [data-control]:focus-visible:not([data-disabled]),
     [data-element="dropdown"][data-dropdown]
         > [data-part="trigger"][data-dropdown-trigger]:focus-visible,
-    [data-element="toggle"][data-variant]:focus-visible:not([data-disabled]),
     [data-element="badge"][data-part][data-variant]:focus-visible,
     [data-element="card"][data-card][data-link][data-outline]:focus-visible,
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]:has(> [data-part="control"]:focus-visible),
-    [data-element="textarea"][data-textarea]
-        > [data-part="control"]:focus-visible,
-    [data-element="known_date"][data-known_date] [data-part="control"]:focus-visible,
+    [data-field] [data-field-control]:is(
+            :focus-visible,
+            :has(> [data-part="control"]:focus-visible)
+        ),
     /* A trigger that keeps its ring while a menu owns focus gets the same
      * border treatment. */
-    [data-element="button"][data-variant][data-focus-ring]:not([data-disabled]),
+    [data-control][data-focus-ring]:not([data-disabled]),
     [data-element="dropdown"][data-dropdown]
         > [data-part="trigger"][data-dropdown-trigger][data-focus-ring] {
         border-color: var(--fl-focus-border-color, revert-layer);

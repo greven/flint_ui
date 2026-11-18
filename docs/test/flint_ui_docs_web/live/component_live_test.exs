@@ -252,9 +252,23 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the css tab lists the component's state hooks", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button?tab=css")
 
-    assert has_element?(view, "#selectors code", ~s|[data-element="button"][data-disabled]|)
-    assert has_element?(view, "#selectors code", ~s|[data-element="button"][data-loading]|)
-    assert has_element?(view, "#selectors code", ~s|[data-element="button"][data-pending-submit]|)
+    assert has_element?(
+             view,
+             "#selectors code",
+             ~s|[data-element="button"][data-control][data-disabled]|
+           )
+
+    assert has_element?(
+             view,
+             "#selectors code",
+             ~s|[data-element="button"][data-control][data-loading]|
+           )
+
+    assert has_element?(
+             view,
+             "#selectors code",
+             ~s|[data-element="button"][data-control][data-pending-submit]|
+           )
   end
 
   test "legacy tabs land on the styled tab", %{conn: conn} do

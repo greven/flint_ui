@@ -61,7 +61,7 @@ defmodule FlintUIDocsWeb.InputSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-input-affixes [data-part='outer_suffix'] [data-element='button']",
+             "#usage-input-affixes [data-part='outer_suffix'] [data-element='copy_button']",
              "Copy"
            )
   end

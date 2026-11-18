@@ -21,7 +21,17 @@ defmodule FlintUI.Styled.CopyButtonTest do
           success_label="Command copied"
           error_label="Copy failed"
           feedback_duration={800}
+          variant="outline"
+          dashed
+          color="primary"
           size="lg"
+          radius="lg"
+          pill
+          square
+          wide
+          justify="end"
+          depth={false}
+          inset="top"
           disabled
           class="extra"
           data-role="test"
@@ -56,6 +66,18 @@ defmodule FlintUI.Styled.CopyButtonTest do
         <.copy_button from="install-command" aria-label="Copy install command" />
         """
       end
+
+      def text_only(assigns) do
+        ~H"""
+        <.copy_button from="install-command" text="Copy" />
+        """
+      end
+
+      def raw_color(assigns) do
+        ~H"""
+        <.copy_button from="install-command" color="#1D72FE">Copy</.copy_button>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -67,8 +89,14 @@ defmodule FlintUI.Styled.CopyButtonTest do
     assert LazyHTML.tag(root(document, :copy_button)) == ["button"]
     assert attr(document, :copy_button, "type") == ["button"]
     assert attr(document, :copy_button, "data-copy_button") == [""]
+    assert attr(document, :copy_button, "data-control") == [""]
     assert attr(document, :copy_button, "data-copy") == [""]
+    assert attr(document, :copy_button, "data-variant") == ["ghost"]
+    assert attr(document, :copy_button, "data-color") == ["neutral"]
     assert attr(document, :copy_button, "data-size") == ["sm"]
+    assert attr(document, :copy_button, "data-radius") == ["md"]
+    assert attr(document, :copy_button, "data-justify") == ["center"]
+    assert attr(document, :copy_button, "data-depth") == [""]
     assert attr(document, :copy_button, "data-square") == [""]
     assert attr(document, :copy_button, "data-copy-from") == ["install-command"]
     assert attr(document, :copy_button, "aria-label") == ["Copy"]
@@ -96,8 +124,17 @@ defmodule FlintUI.Styled.CopyButtonTest do
     assert attr(document, :copy_button, "data-copy-success-label") == ["Command copied"]
     assert attr(document, :copy_button, "data-copy-error-label") == ["Copy failed"]
     assert attr(document, :copy_button, "data-copy-duration") == ["800"]
+    assert attr(document, :copy_button, "data-variant") == ["outline"]
+    assert attr(document, :copy_button, "data-dashed") == [""]
+    assert attr(document, :copy_button, "data-color") == ["primary"]
     assert attr(document, :copy_button, "data-size") == ["lg"]
-    assert attr(document, :copy_button, "data-square") == []
+    assert attr(document, :copy_button, "data-radius") == ["lg"]
+    assert attr(document, :copy_button, "data-pill") == [""]
+    assert attr(document, :copy_button, "data-square") == [""]
+    assert attr(document, :copy_button, "data-wide") == [""]
+    assert attr(document, :copy_button, "data-justify") == ["end"]
+    assert attr(document, :copy_button, "data-depth") == []
+    assert attr(document, :copy_button, "data-inset") == ["top"]
     assert attr(document, :copy_button, "disabled") == [""]
     assert attr(document, :copy_button, "data-disabled") == [""]
     assert attr(document, :copy_button, "class") == ["extra"]
@@ -106,9 +143,20 @@ defmodule FlintUI.Styled.CopyButtonTest do
   end
 
   test "a visible label keeps the inline padding instead of a square box", %{wrapper: wrapper} do
-    document = render(wrapper, :configured)
+    document = render(wrapper, :text_only)
 
     assert attr(document, :copy_button, "data-square") == []
+    assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == "Copy"
+  end
+
+  test "a raw color writes the shared control inputs", %{wrapper: wrapper} do
+    document = render(wrapper, :raw_color)
+    style = document |> attr(:copy_button, "style") |> List.first()
+
+    assert attr(document, :copy_button, "data-color") == []
+    assert style =~ "--fl-control-color: #1D72FE"
+    assert style =~ "--fl-control-color-content"
+    assert style =~ "--fl-control-text"
   end
 
   test "renders custom icons and state content", %{wrapper: wrapper} do

@@ -70,7 +70,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.content_paragraph class="mt-3">
             Every component reads from these namespaces. Override any of them to change
             the look. The few component-prefixed entries
-            (<code class="docs-code font-mono">--fl-button-*</code>, <code class="docs-code font-mono">--fl-card-*</code>, …) are narrow
+            (<code class="docs-code font-mono">--fl-control-*</code>, <code class="docs-code font-mono">--fl-card-*</code>, …) are narrow
             per-instance inputs; prefer the semantic theme tokens above them.
           </DocsComponents.content_paragraph>
           <div :for={{namespace, tokens} <- @token_groups} class="mt-5">
@@ -883,8 +883,8 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     /* Give this instance a custom accent without adding a color token. */
     .danger-lite {
-      --fl-button-color: var(--fl-color-error-600);
-      --fl-button-color-content: var(--fl-color-error-50);
+      --fl-control-color: var(--fl-color-error-600);
+      --fl-control-color-content: var(--fl-color-error-50);
     }
     """
   end
@@ -894,7 +894,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
     <.button color="secondary" class="danger-lite">Delete</.button>
 
     <!-- or inline, for a one-off -->
-    <.button color="secondary" style="--fl-button-color: var(--fl-color-error-600)">
+    <.button color="secondary" style="--fl-control-color: var(--fl-color-error-600)">
       Delete
     </.button>
     """

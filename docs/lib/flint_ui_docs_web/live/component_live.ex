@@ -574,6 +574,30 @@ defmodule FlintUIDocsWeb.ComponentLive do
   end
 
   defp css_var_rows(entry, name) do
+    primitive_inputs =
+      if entry do
+        entry.primitives
+        |> Enum.flat_map(fn primitive ->
+          case FlintUI.Styled.get_primitive(primitive) do
+            nil -> []
+            primitive -> primitive.vars
+          end
+        end)
+        |> Enum.reject(fn var ->
+          String.starts_with?(var.name, "--fl-control-active-") and is_nil(entry.active_color)
+        end)
+        |> Enum.map(fn var ->
+          %{
+            name: var.name,
+            default: var.default,
+            description: var.doc,
+            runtime: false
+          }
+        end)
+      else
+        []
+      end
+
     inputs =
       if entry do
         Enum.map(entry.vars, fn var ->
@@ -598,18 +622,26 @@ defmodule FlintUIDocsWeb.ComponentLive do
         }
       end)
 
-    inputs ++ runtime
+    primitive_inputs ++ inputs ++ runtime
   end
 
   defp css_selectors(nil), do: []
 
   defp css_selectors(entry) do
-    root = ~s([data-element="#{entry.name}"])
+    markers =
+      entry.primitives
+      |> Enum.map(&FlintUI.Styled.get_primitive/1)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.map(&"[#{&1.marker}]")
+
+    root = ~s([data-element="#{entry.name}"]) <> Enum.join(markers)
 
     prop_selectors =
       Enum.map(entry.props, fn prop ->
+        state = if prop.state, do: ~s([data-state="#{prop.state}"]), else: ""
+
         %{
-          selector: root <> ~s([#{FlintUI.Styled.Prop.attribute(prop)}]),
+          selector: root <> state <> ~s([#{FlintUI.Styled.Prop.attribute(prop)}]),
           description: "Targets this component by its #{prop.name} value."
         }
       end)

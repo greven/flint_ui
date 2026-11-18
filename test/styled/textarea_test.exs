@@ -72,6 +72,8 @@ defmodule FlintUI.Styled.TextareaTest do
 
     assert attr(document, :textarea, "data-element") == ["textarea"]
     assert attr(document, :textarea, "data-textarea") == [""]
+    assert attr(document, :textarea, "data-field") == [""]
+    assert part_attr(document, "control", "data-field-control") == [""]
     assert attr(document, :textarea, "data-size") == ["md"]
     assert attr(document, :textarea, "data-radius") == ["md"]
     assert attr(document, :textarea, "data-resize") == ["vertical"]

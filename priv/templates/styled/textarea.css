@@ -1,21 +1,7 @@
 @layer components {
-    /* Textarea. Public inputs: `--fl-textarea-fill`, `--fl-textarea-border`, and
-     * `--fl-textarea-placeholder`. Type, field padding, and radius come from the
-     * shared control scale, so a textarea matches a text input at the same size.
-     * `resize` stays native; the prop only picks which handle the browser shows. */
-    [data-element="textarea"][data-textarea] {
-        --fl-textarea-fill: var(--fl-color-surface);
-        --fl-textarea-border: var(--fl-color-border);
-        --fl-textarea-placeholder: var(--fl-color-text-dimmed);
-        display: grid;
-        gap: var(--fl-spacing-xs);
-        min-inline-size: 0;
-        color: var(--fl-color-text);
-        font-family: var(--fl-font-sans);
-        font-size: var(--fl-control-font-size-md);
-        line-height: var(--fl-control-line-height-md);
-    }
-
+    /* Textarea anatomy. The field primitive supplies the box chrome, sizing,
+     * states, and supporting typography. This part owns the label layout,
+     * resize behavior, and autogrow limits. */
     [data-element="textarea"][data-textarea] > [data-part="label"] {
         display: grid;
         gap: var(--fl-spacing-xs);
@@ -30,198 +16,16 @@
         align-items: baseline;
         gap: var(--fl-spacing-xs);
         min-inline-size: 0;
-        color: var(--fl-color-text-toned);
-        font-weight: var(--fl-font-weight-medium);
-    }
-
-    [data-element="textarea"][data-textarea] [data-part="sublabel"] {
-        color: var(--fl-color-text-muted);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
     }
 
     [data-element="textarea"][data-textarea]
         > [data-part="control"] {
-        box-sizing: border-box;
         display: block;
-        inline-size: 100%;
         min-block-size: calc(var(--fl-control-height-lg) * 2);
         margin: 0;
-        padding: var(--fl-spacing-sm) var(--fl-field-padding-x-md);
-        border: 1px solid var(--fl-textarea-border);
-        border-radius: var(--fl-control-radius);
-        background-color: var(--fl-textarea-fill);
-        color: var(--fl-color-text);
-        font-family: inherit;
-        font-size: var(--fl-control-font-size-md);
-        font-weight: var(--fl-font-weight-normal);
-        line-height: var(--fl-control-line-height-md);
+        padding-block: var(--fl-spacing-sm);
+        block-size: auto;
         resize: vertical;
-        transition:
-            background-color var(--fl-duration-fast) var(--fl-ease-out),
-            border-color var(--fl-duration-fast) var(--fl-ease-out),
-            box-shadow var(--fl-duration-fast) var(--fl-ease-out);
-    }
-
-    [data-element="textarea"][data-textarea]
-        > [data-part="control"]::placeholder {
-        color: var(--fl-textarea-placeholder);
-        opacity: 1;
-    }
-
-    [data-element="textarea"][data-textarea]
-        > [data-part="control"]:hover:not(:disabled):not([readonly]) {
-        border-color: color-mix(in oklab, var(--fl-textarea-border), var(--fl-color-text) 20%);
-    }
-
-    /* The ring belongs on the bordered control itself. */
-    [data-element="textarea"][data-textarea]
-        > [data-part="control"]:focus-visible {
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
-        outline-offset: var(--fl-focus-ring-offset);
-    }
-
-    /* Disabled fields dim as a unit; the native control keeps its own state. */
-    [data-element="textarea"][data-textarea][data-disabled] {
-        opacity: var(--fl-disabled-opacity, 0.5);
-    }
-
-    [data-element="textarea"][data-textarea]
-        > [data-part="control"]:disabled {
-        cursor: not-allowed;
-    }
-
-    /* Read-only keeps the value legible but marks it as not editable. */
-    [data-element="textarea"][data-textarea][data-readonly]
-        > [data-part="control"] {
-        background-color: var(--fl-color-surface-subtle);
-        cursor: default;
-    }
-
-    /* Invalid is announced through ARIA and reinforced with the error role. */
-    [data-element="textarea"][data-textarea][data-invalid]
-        > [data-part="control"] {
-        border-color: var(--fl-color-error);
-    }
-
-    [data-element="textarea"][data-textarea][data-invalid]
-        > [data-part="control"]:focus-visible {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
-    }
-
-    [data-element="textarea"][data-textarea] > [data-part="description"] {
-        margin: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    [data-element="textarea"][data-textarea] > [data-part="hint"] {
-        margin: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    /* Errors stack with a warning icon on the first text line. The icon is
-     * inline SVG, so it needs no icon set, and follows the message color. */
-    [data-element="textarea"][data-textarea] > [data-part="error"] {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--fl-spacing-xs);
-        margin: 0;
-        color: var(--fl-color-error-text);
-        font-size: var(--fl-font-size-sm);
-        line-height: var(--fl-line-height-sm);
-    }
-
-    [data-element="textarea"][data-textarea] > [data-part="error"] > [data-part="error_icon"] {
-        flex: none;
-        inline-size: 1em;
-        block-size: 1em;
-        /* Center the icon on the first line box, not at the paragraph's top. */
-        margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
-    }
-
-    /* Sizes. The label and the control share the control font scale; the field
-     * padding keeps the text clear of the border. */
-    [data-element="textarea"][data-size="xs"][data-textarea]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-xs);
-        line-height: var(--fl-control-line-height-xs);
-    }
-
-    [data-element="textarea"][data-size="xs"][data-textarea]
-        > [data-part="control"] {
-        padding-inline: var(--fl-field-padding-x-xs);
-        font-size: var(--fl-control-font-size-xs);
-        line-height: var(--fl-control-line-height-xs);
-    }
-
-    [data-element="textarea"][data-size="sm"][data-textarea]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-sm);
-        line-height: var(--fl-control-line-height-sm);
-    }
-
-    [data-element="textarea"][data-size="sm"][data-textarea]
-        > [data-part="control"] {
-        padding-inline: var(--fl-field-padding-x-sm);
-        font-size: var(--fl-control-font-size-sm);
-        line-height: var(--fl-control-line-height-sm);
-    }
-
-    [data-element="textarea"][data-size="lg"][data-textarea]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-lg);
-        line-height: var(--fl-control-line-height-lg);
-    }
-
-    [data-element="textarea"][data-size="lg"][data-textarea]
-        > [data-part="control"] {
-        padding-inline: var(--fl-field-padding-x-lg);
-        font-size: var(--fl-control-font-size-lg);
-        line-height: var(--fl-control-line-height-lg);
-    }
-
-    [data-element="textarea"][data-size="xl"][data-textarea]
-        > [data-part="label"]
-        > [data-part="label_text"] {
-        font-size: var(--fl-control-font-size-xl);
-        line-height: var(--fl-control-line-height-xl);
-    }
-
-    [data-element="textarea"][data-size="xl"][data-textarea]
-        > [data-part="control"] {
-        padding-inline: var(--fl-field-padding-x-xl);
-        font-size: var(--fl-control-font-size-xl);
-        line-height: var(--fl-control-line-height-xl);
-    }
-
-    /* Radius overrides use the shared scale. */
-    [data-element="textarea"][data-radius="none"][data-textarea] {
-        --fl-control-radius: 0;
-    }
-
-    [data-element="textarea"][data-radius="xs"][data-textarea] {
-        --fl-control-radius: var(--fl-radius-xs);
-    }
-
-    [data-element="textarea"][data-radius="sm"][data-textarea] {
-        --fl-control-radius: var(--fl-radius-sm);
-    }
-
-    [data-element="textarea"][data-radius="lg"][data-textarea] {
-        --fl-control-radius: var(--fl-radius-lg);
-    }
-
-    [data-element="textarea"][data-radius="xl"][data-textarea] {
-        --fl-control-radius: var(--fl-radius-xl);
     }
 
     /* The resize prop picks which handle the browser shows. `vertical` is the

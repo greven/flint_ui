@@ -83,6 +83,7 @@ defmodule FlintUI.Styled.ToggleTest do
 
     assert LazyHTML.tag(root(document, :toggle)) == ["button"]
     assert attr(document, :toggle, "data-toggle") == [""]
+    assert attr(document, :toggle, "data-control") == [""]
     assert attr(document, :toggle, "data-variant") == ["ghost"]
     assert attr(document, :toggle, "data-active-variant") == ["soft"]
     assert attr(document, :toggle, "data-color") == ["neutral"]
@@ -173,9 +174,9 @@ defmodule FlintUI.Styled.ToggleTest do
     style = document |> attr(:toggle, "style") |> List.first()
 
     assert attr(document, :toggle, "data-color") == []
-    assert style =~ "--fl-toggle-color: #1D72FE"
-    assert style =~ "--fl-toggle-color-content:"
-    assert style =~ "--fl-toggle-text: light-dark("
+    assert style =~ "--fl-control-color: #1D72FE"
+    assert style =~ "--fl-control-color-content:"
+    assert style =~ "--fl-control-text: light-dark("
   end
 
   test "a raw active color sets the active inputs only", %{wrapper: wrapper} do
@@ -184,11 +185,11 @@ defmodule FlintUI.Styled.ToggleTest do
 
     assert attr(document, :toggle, "data-color") == ["primary"]
     assert attr(document, :toggle, "data-active-color") == []
-    assert style =~ "--fl-toggle-active-color: #1D72FE"
-    assert style =~ "--fl-toggle-active-color-content:"
-    assert style =~ "--fl-toggle-active-text: light-dark("
-    assert style =~ "--fl-toggle-active-soft: color-mix("
-    assert style =~ "--fl-toggle-active-soft-border: color-mix("
-    refute style =~ "--fl-toggle-color: "
+    assert style =~ "--fl-control-active-color: #1D72FE"
+    assert style =~ "--fl-control-active-color-content:"
+    assert style =~ "--fl-control-active-text: light-dark("
+    assert style =~ "--fl-control-active-soft: color-mix("
+    assert style =~ "--fl-control-active-soft-border: color-mix("
+    refute style =~ "--fl-control-color: "
   end
 end

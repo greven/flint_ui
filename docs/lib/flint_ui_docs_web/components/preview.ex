@@ -37,7 +37,7 @@ defmodule FlintUIDocsWeb.Preview do
 
       codes={[
         heex: "<.button color=\\"#009966\\">Common</.button>",
-        css: "[data-element=\\"button\\"] { --fl-button-color: #009966; }"
+        css: "[data-element=\\"button\\"] { --fl-control-color: #009966; }"
       ]}
 
   The demo slot receives the same props.

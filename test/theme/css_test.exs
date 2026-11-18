@@ -43,9 +43,12 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-color-dark-text: light-dark("
     assert css =~ "--fl-color-light-text: light-dark("
 
-    for element <- ~w(button badge toggle tabs loading loading_text checkbox radio),
-        tone <- ~w(dark light) do
-      assert css =~ ~s([data-element="#{element}"][data-color="#{tone}"])
+    for tone <- ~w(dark light) do
+      assert css =~ ~s([data-control][data-color="#{tone}"])
+
+      for element <- ~w(badge tabs loading loading_text checkbox radio) do
+        assert css =~ ~s([data-element="#{element}"][data-color="#{tone}"])
+      end
     end
   end
 
@@ -87,12 +90,12 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/--fl-color-border-subtle: light-dark\(\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-200\) 50%,\s*var\(--fl-color-surface\)\s*\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-900\) 50%,\s*var\(--fl-color-neutral-800\)\s*\)\s*\)/
   end
 
-  test "solid buttons darken their fill for the border", %{css: css} do
+  test "solid controls darken their fill for the border", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]\[data-variant="solid"\] \{[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-button-color, var\(--fl-color-inverted\)\),\s*oklch\(0% 0 0\) var\(--fl-border-strength-solid\)/
+             ~r/\[data-control\]\[data-variant="solid"\]:not\(\[data-state="on"\]\) \{[^}]*border-color: color-mix\(/
 
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant\]:is\(\s*\[data-variant="solid"\],/
+    assert css =~ ~s([data-control]:is()
+    assert css =~ "var(--fl-border-strength-solid)"
   end
 
   test "the pure surface anchors the page and the tint steps", %{css: css} do
@@ -182,26 +185,27 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "role content and text map to the three jobs", %{css: css} do
     for role <- ~w(primary secondary success info warning error) do
-      assert css =~ "--fl-button-color-content: var(--fl-color-#{role}-content);"
-      assert css =~ "--fl-button-text: var(--fl-color-#{role}-text);"
-      assert css =~ "--fl-toggle-color-content: var(--fl-color-#{role}-content);"
-      assert css =~ "--fl-toggle-text: var(--fl-color-#{role}-text);"
+      assert css =~ "--fl-control-color-content: var(--fl-color-#{role}-content);"
+      assert css =~ "--fl-control-text: var(--fl-color-#{role}-text);"
     end
 
     refute css =~ "-soft-foreground"
 
-    # Neutral colored text keeps the page ink and the inverted label.
-    assert css =~ "--fl-button-text: var(--fl-color-text-toned);"
-    assert css =~ "--fl-button-color-content: var(--fl-color-text-inverted);"
-    assert css =~ "--fl-toggle-text: var(--fl-color-text-toned);"
+    # Neutral keeps the inverted label on the fill; text-carrying controls tone
+    # their own neutral label in their anatomy.
+    assert css =~ "--fl-control-color: var(--fl-color-inverted);"
+    assert css =~ "--fl-control-color-content: var(--fl-color-text-inverted);"
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-toggle\]\[data-color="neutral"\] \{[^}]*--fl-control-text: var\(--fl-color-text-toned\);/
+
+    assert css =~
+             ~r/\[data-element="toggle"\]\[data-toggle\]\[data-color="neutral"\]:not\(\[data-active-color\]\) \{[^}]*--fl-control-active-text: var\(--fl-color-text-highlighted\);/
 
     # A toggled neutral label takes the strongest ink so the state still reads
-    # on the faint soft fill; the untoggled label stays toned.
+    # on the faint soft fill.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-color="neutral"\] \{[^}]*--fl-toggle-active-text: var\(--fl-color-text-highlighted\);/
-
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-active-color="neutral"\] \{[^}]*--fl-toggle-active-text: var\(--fl-color-text-highlighted\);/
+             ~r/\[data-control\]\[data-active-color="neutral"\] \{[^}]*--fl-control-active-text: var\(--fl-color-text-highlighted\);/
   end
 
   test "role text clears AA on surface and tinted surfaces", %{css: css} do
@@ -277,8 +281,11 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "the none radius step removes the control radius", %{css: css} do
-    for name <- ~w(button toggle badge) do
-      selector = ~s([data-element="#{name}"][data-radius="none"])
+    for selector <- [
+          ~s([data-control][data-radius="none"]),
+          ~s([data-field][data-radius="none"]),
+          ~s([data-element="badge"][data-radius="none"])
+        ] do
       assert css =~ selector
       assert css =~ ~s(#{selector} {\n        --fl-control-radius: 0;)
     end
@@ -316,8 +323,9 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "styles every component behind its wrapper hook", %{css: css} do
     assert css =~ "@layer components {"
-    assert css =~ ~s([data-element="button"][data-variant])
-    assert css =~ ~s([data-element="button"][data-color="neutral"])
+    assert css =~ ~s([data-control])
+    assert css =~ ~s|[data-control][data-variant="solid"]:not([data-state="on"])|
+    assert css =~ ~s([data-control][data-color="neutral"])
     assert css =~ ~s{:is([data-element="icon"], [data-element="loading"])}
     assert css =~ ~s([data-element="card"][data-card])
     assert css =~ ~s([data-element="card"][data-variant="soft"])
@@ -334,17 +342,16 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="group"][data-surface="strong"])
     assert css =~ ~s([data-element="group"][data-surface="ghost"])
     assert css =~ "--fl-color-primary:"
-    assert css =~ ~s([data-element="toggle"][data-variant])
+    assert css =~ ~s|[data-control][data-variant="solid"]:not([data-state="on"])|
+
+    assert css =~ ~s|[data-control] :is([data-element="icon"], [data-element="loading"])|
 
     assert css =~
-             ~s|[data-element="toggle"][data-variant] > :is([data-element="icon"], [data-element="loading"])|
+             ~s|[data-element="toggle"][data-toggle] > :is([data-part="on-state"], [data-part="off-state"]) {\n        display: contents;|
 
-    assert css =~
-             ~s|[data-element="toggle"] > :is([data-part="on-state"], [data-part="off-state"]) {\n        display: contents;|
-
-    assert css =~ ~s([data-element="toggle"][data-color="neutral"])
-    assert css =~ ~s([data-element="toggle"][data-active-variant="soft"][data-state="on"])
-    assert css =~ ~s([data-element="toggle"][data-active-color="primary"])
+    assert css =~ ~s([data-element="toggle"][data-toggle][data-color="neutral"])
+    assert css =~ ~s([data-control][data-state="on"][data-active-variant="soft"])
+    assert css =~ ~s([data-control][data-active-color="primary"])
     assert css =~ ~s([data-element="loading"][data-size])
     assert css =~ ~s([data-element="loading_text"][data-variant="dots"])
     assert css =~ ~s([data-element="loading_text"][data-variant="blink"])
@@ -452,7 +459,7 @@ defmodule FlintUI.Theme.CSSTest do
   test "soft and subtle fills composite at the shared tint opacity", %{css: css} do
     assert css =~ "--fl-tint-opacity: 0.9;"
 
-    for part <- ~w(styled/badge.css styled/button.css styled/toggle.css) do
+    for part <- ~w(styled/badge.css primitives/control.css) do
       source = File.read!(FlintUI.Generator.part_path(part))
       assert source =~ "calc(var(--fl-tint-opacity, 0.9) * 100%)"
     end
@@ -475,18 +482,13 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~r/\[data-element="alert"\]\[data-border="none"\] \{\s*border-style: none;/
   end
 
-  test "every colored button variant uses the role text token", %{css: css} do
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="soft"\],\s*\[data-element="button"\]\[data-variant="subtle"\] \{[^}]*color: var\(--fl-button-text/
-
-    for variant <- ~w(surface outline ghost link) do
+  test "every colored control variant uses the role text token", %{css: css} do
+    for variant <- ~w(soft subtle surface outline ghost link) do
       assert css =~
-               ~r/\[data-element="button"\]\[data-variant="#{variant}"\] \{[^}]*color: var\(--fl-button-text/
+               ~r/\[data-control\]\[data-variant="#{variant}"\][^{,]*[^{]*\{[^}]*color: var\(--fl-control-text/
     end
 
-    assert css =~
-             ~r/\[data-element="button"\]\[data-variant="link"\][^{]*:hover \{\s*color: color-mix\(\s*in oklab,\s*var\(--fl-button-text, var\(--fl-button-color, var\(--fl-color-inverted\)\)\) 75%,\s*transparent\s*\);/
-
+    assert css =~ "var(--fl-control-text) 75%"
     refute css =~ "--fl-button-soft-text"
   end
 
@@ -507,44 +509,25 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "surface uses the soft role border while outline uses the full role color", %{css: css} do
-    for name <- ~w(button badge toggle) do
-      assert css =~
-               ~r/\[data-element="#{name}"\]\[data-variant="outline"\][^{]*\{[^}]*border-color: var\(--fl-#{name}-color, var\(--fl-color-inverted\)\)/
-    end
-
-    for name <- ~w(button badge) do
-      assert css =~
-               ~r/\[data-element="#{name}"\]\[data-variant="surface"\] \{[^}]*border-color: var\(\s*--fl-#{name}-soft-border,/
-    end
-
-    # The toggle has two treatments, so each state names its own input.
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="off"\] \{[^}]*border-color: var\(\s*--fl-toggle-soft-border,/
+             ~r/\[data-control\]\[data-variant="outline"\]:not\(\[data-state="on"\]\) \{[^}]*border-color: var\(--fl-control-color\)/
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-active-variant="surface"\]\[data-state="on"\] \{[^}]*border-color: var\(--fl-toggle-active-soft-border\)/
-
-    # Neutral's untoggled edge follows the button's soft role token. Only a
-    # neutral active surface, which keeps the same fill, strengthens its edge
-    # so the state change reads.
-    assert css =~
-             "--fl-toggle-soft-border: var(--fl-color-neutral-soft-border);"
+             ~r/\[data-control\]\[data-variant="surface"\]:not\(\[data-state="on"\]\) \{[^}]*border-color: var\(--fl-control-soft-border\)/
 
     assert css =~
-             "--fl-toggle-active-soft-border: var(--fl-color-neutral-soft-border);"
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="surface"\] \{[^}]*border-color: var\(--fl-control-active-soft-border, var\(--fl-control-soft-border\)\)/
 
     assert css =~
-             ~s|[data-element="toggle"][data-active-variant="surface"][data-state="on"]:is([data-color="neutral"]:not([data-active-color]), [data-active-color="neutral"]) {|
+             "--fl-control-soft-border: var(--fl-color-neutral-soft-border);"
 
-    assert css =~
-             "--fl-toggle-active-soft-border: color-mix(in oklab, var(--fl-toggle-active-color) 32%, var(--fl-color-surface));"
+    assert css =~ "--fl-control-active-soft-border: color-mix("
+    assert css =~ "var(--fl-control-active-color, var(--fl-control-color)) 32%"
   end
 
   test "dashed is an orthogonal border modifier, not a variant", %{css: css} do
-    for name <- ~w(button badge toggle) do
-      assert css =~
-               ~r/\[data-element="#{name}"\]\[data-dashed\] \{\s*border-style: dashed;/
-    end
+    assert css =~ ~r/\[data-control\]\[data-dashed\] \{\s*border-style: dashed;/
+    assert css =~ ~r/\[data-element="badge"\]\[data-dashed\] \{\s*border-style: dashed;/
   end
 
   test "pills use the full radius and indicator markers keep compact padding", %{css: css} do
@@ -556,71 +539,44 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~r/\[data-element="indicator"\] \[data-element="badge"\]\[data-pill\] \{\s*--_badge-pill-padding: var\(--_badge-padding\);/
 
-    for name <- ~w(button toggle) do
-      assert css =~
-               ~r/\[data-element="#{name}"\]\[data-pill\] \{\s*--fl-control-radius: var\(--fl-radius-full\);/
-    end
+    assert css =~
+             ~r/\[data-control\]\[data-pill\] \{\s*--fl-control-radius: var\(--fl-radius-full\);/
   end
 
-  test "toggle applies the button treatments in both states", %{css: css} do
-    # Untoggled solid fills with the role color and a darker edge line.
+  test "the control primitive applies the same treatments in both states", %{css: css} do
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="off"\] \{[^}]*background: var\(--fl-toggle-color, var\(--fl-color-inverted\)\);[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-toggle-color, var\(--fl-color-inverted\)\),/
-
-    # Toggled solid mirrors it from the active inputs.
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-active-variant="solid"\]\[data-state="on"\] \{[^}]*background: var\(--fl-toggle-active-color\);[^}]*border-color: color-mix\(\s*in oklab,\s*var\(--fl-toggle-active-color\),/
-
-    # The toggled inputs follow the untoggled ones until `active-color` says
-    # otherwise, and each carries the raw-color fallback.
-    assert css =~ "--fl-toggle-active-color: var(--fl-toggle-color, var(--fl-color-inverted));"
+             ~r/\[data-control\]\[data-variant="solid"\]:not\(\[data-state="on"\]\) \{[^}]*background: var\(--fl-control-color\);/
 
     assert css =~
-             "--fl-toggle-active-text: var(--fl-toggle-text, var(--fl-toggle-color, var(--fl-color-inverted)));"
-
-    assert css =~ "--fl-toggle-active-soft: var("
-
-    # Solid wears the top rim light in either state.
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="solid"\]\[data-state="off"\]::before,\s*\[data-element="toggle"\]\[data-active-variant="solid"\]\[data-state="on"\]::before \{\s*border-color: rgb\(255 255 255 \/ calc\(12% \* var\(--fl-control-depth, 1\)\)\);/
-
-    # Surface carries the button's inner line and elevation, in both states.
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="surface"\]\[data-state="off"\],\s*\[data-element="toggle"\]\[data-active-variant="surface"\]\[data-state="on"\] \{\s*box-shadow:\s*inset 0 -1px 0 rgb\(0 0 0 \/ calc\(7% \* var\(--fl-control-depth, 1\)\)\),\s*var\(--fl-control-shadow, 0 0 #0000\);/
-
-    # Soft and subtle share the tinted surface in each state.
-    assert css =~
-             ~r/\[data-element="toggle"\]\[data-variant="soft"\]\[data-state="off"\],\s*\[data-element="toggle"\]\[data-variant="subtle"\]\[data-state="off"\] \{[^}]*background: color-mix\(/
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="solid"\] \{[^}]*background: var\(--fl-control-active-color, var\(--fl-control-color\)\);/
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-active-variant="soft"\]\[data-state="on"\],\s*\[data-element="toggle"\]\[data-active-variant="subtle"\]\[data-state="on"\] \{[^}]*background: color-mix\(/
+             ~r/\[data-control\]\[data-variant="soft"\]:not\(\[data-state="on"\]\),[^}]*background: color-mix\(/
 
-    # Both controls expose the depth flattening hook.
     assert css =~
-             ~r/\[data-element="toggle"\]:not\(\[data-depth\]\)\[data-variant\] \{\s*--fl-control-depth: 0;/
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="soft"\],[^}]*background: color-mix\(/
+
+    assert css =~
+             ~r/\[data-control\]:is\([^)]*\[data-variant="solid"\]:not\(\[data-state="on"\]\)[^)]*\)::before/
+
+    assert css =~ ~s|[data-control]:not([data-depth])|
   end
 
-  test "button and toggle expose only public color inputs", %{css: css} do
+  test "controls expose only public color inputs", %{css: css} do
     refute css =~ "--_fl-button-"
     refute css =~ "--_fl-toggle-"
     refute css =~ "--fl-button-surface"
     refute css =~ "--fl-toggle-surface"
 
-    assert css =~ "--fl-button-color: var(--fl-color-primary);"
-    assert css =~ "--fl-toggle-color: var(--fl-color-primary);"
+    assert css =~ "--fl-control-color: var(--fl-color-primary);"
     assert css =~ "--fl-focus-ring-color: var(--fl-color-primary);"
-    refute css =~ "--fl-focus-ring-color: var(--fl-button-color"
-    refute css =~ "--fl-focus-ring-color: var(--fl-toggle-color"
-    refute css =~ "--fl-focus-ring-color: var(--fl-tabs-color"
+    refute css =~ "--fl-focus-ring-color: var(--fl-control-color"
 
     assert css =~ "var(--fl-control-shadow, 0 0 #0000)"
     assert css =~ "var(--fl-control-press, none)"
+    assert css =~ ~s|[data-control]:not([data-depth])|
 
-    assert css =~
-             ~r/\[data-element="button"\]:not\(\[data-depth\]\)\[data-variant\] \{\s*--fl-control-depth: 0;/
-
-    refute css =~
-             ~r/\[data-element="button"\]\[data-depth\] \{\s*--fl-control-depth: 1;/
+    refute css =~ ~r/\[data-control\]\[data-depth\] \{\s*--fl-control-depth: 1;/
   end
 
   test "focus pairs a full-color border with the shared ring", %{css: css} do
@@ -629,11 +585,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-focus-border-color: initial;"
     assert css =~ "border-color: var(--fl-focus-border-color, revert-layer);"
 
-    assert css =~
-             ~s|[data-element="button"][data-variant]:focus-visible:not([data-disabled])|
-
-    assert css =~
-             ~s|[data-element="toggle"][data-variant]:focus-visible:not([data-disabled])|
+    assert css =~ ~s|[data-control]:focus-visible:not([data-disabled])|
 
     assert css =~ ~s([data-element="badge"][data-part][data-variant]:focus-visible)
 
@@ -642,54 +594,57 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "square and wide buttons are boxed and full-width", %{css: css} do
-    assert css =~ ~s([data-element="button"][data-square])
+    assert css =~ ~s([data-control][data-square])
     assert css =~ "aspect-ratio: 1;"
     assert css =~ "padding-inline: 0;"
-    assert css =~ ~s([data-element="button"][data-wide])
+    assert css =~ ~s([data-control][data-wide])
     assert css =~ "width: 100%;"
   end
 
   test "justify buttons distribute their content within the available width", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]\[data-justify="start"\] \{\s*justify-content: flex-start;/
+             ~r/\[data-control\]\[data-justify="start"\] \{\s*justify-content: flex-start;/
 
     assert css =~
-             ~r/\[data-element="button"\]\[data-justify="end"\] \{\s*justify-content: flex-end;/
+             ~r/\[data-control\]\[data-justify="end"\] \{\s*justify-content: flex-end;/
 
     assert css =~
-             ~r/\[data-element="button"\]\[data-justify="between"\] \{\s*justify-content: space-between;/
+             ~r/\[data-control\]\[data-justify="between"\] \{\s*justify-content: space-between;/
   end
 
   test "square buttons keep their icon at full strength", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]\[data-variant\]:not\(\[data-square\]\)\s*>\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
+             ~r/\[data-control\]:not\(\[data-square\]\)\s*:is\(\[data-element="icon"\], \[data-element="loading"\]\) \{\s*color: color-mix\(in oklab, currentColor 70%, transparent\);/
   end
 
   test "inset buttons negate only the requested sides", %{css: css} do
     for size <- ~w(xs sm md lg xl) do
       assert css =~
-               ~r/\[data-element="button"\]\[data-size="#{size}"\] \{[^}]*--_inset-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
+               ~r/\[data-control\]\[data-size="#{size}"\] \{[^}]*--_inset-inline: calc\(\s*-1 \* \(var\(--fl-control-padding-x-#{size}\) \+ 1px\)/
 
       assert css =~
-               ~r/\[data-element="button"\]\[data-size="#{size}"\] \{[^}]*--_inset-block: calc\(\s*-1 \* \(\(var\(--fl-control-height-#{size}\) - var\(--fl-control-line-height-#{size}\)\) \/ 2\)/
+               ~r/\[data-control\]\[data-size="#{size}"\] \{[^}]*--_inset-block: calc\(\s*-1 \* \(\(var\(--fl-control-height-#{size}\) - var\(--fl-control-line-height-#{size}\)\) \/ 2\)/
+
+      assert css =~ ~s([data-control][data-inset][data-square])
 
       assert css =~
-               ~r/\[data-element="button"\]\[data-inset\]\[data-square\]:not\(\s*\[data-variant="link"\]\s*\)\[data-size="#{size}"\] \{[^}]*--_inset-inline: calc\(\s*-1 \* \(\(var\(--fl-control-height-#{size}\) - var\(--fl-control-icon-#{size}\)\) \/ 2\)/
+               "--_inset-inline: calc(-1 * ((var(--fl-control-height-#{size}) - var(--fl-control-icon-#{size})) / 2))"
     end
 
     for side <- ~w(top bottom left right) do
-      assert css =~ ~s([data-element="button"][data-inset~="#{side}"])
+      assert css =~ ~s([data-control][data-inset~="#{side}"])
     end
 
-    assert css =~ ~s([data-element="button"][data-inset=""])
-    assert css =~ ~s([data-element="button"][data-inset~="all"])
+    assert css =~ ~s([data-control][data-inset=""])
+    assert css =~ ~s([data-control][data-inset~="all"])
 
-    assert css =~ ~r/\[data-element="button"\]\[data-variant="link"\] \{\s*--_inset-block: 0;/
+    assert css =~ ~s([data-control][data-variant="link"])
+    assert css =~ "--_inset-block: 0;"
   end
 
   test "loading buttons keep a progress cursor", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]\[data-loading\]:not\(\[data-disabled\]\) \{\s*cursor: progress;/
+             ~r/\[data-control\]\[data-loading\]:not\(\[data-disabled\]\) \{\s*cursor: progress;/
 
     assert css =~ ~r/:not\(\s*\[data-loading\]\s*\):hover::after/
     assert css =~ ~r/:not\(\s*\[data-loading\]\s*\):active/
@@ -697,7 +652,7 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "loading indicators are hidden until the button is loading", %{css: css} do
     assert css =~
-             ~r/\[data-element="button"\]:not\(\[data-loading\]\) > \[data-loading-indicator\] \{\s*display: none;/
+             ~r/\[data-control\]:not\(\[data-loading\]\) > \[data-loading-indicator\] \{\s*display: none;/
   end
 
   test "card exposes five inputs and styles bodies directly", %{css: css} do

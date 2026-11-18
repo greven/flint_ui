@@ -75,6 +75,8 @@ defmodule FlintUI.Styled.InputTest do
 
     assert attr(document, :input, "data-element") == ["input"]
     assert attr(document, :input, "data-input") == [""]
+    assert attr(document, :input, "data-field") == [""]
+    assert part_attr(document, "box", "data-field-control") == [""]
     assert attr(document, :input, "data-size") == ["md"]
     assert attr(document, :input, "data-radius") == ["md"]
   end

@@ -118,7 +118,7 @@ defmodule FlintUIDocsWeb.Docs.Page do
 
       codes={[
         heex: "<.button color=\\"#009966\\">Common</.button>",
-        css: "[data-element=\\"button\\"] { --fl-button-color: #009966; }"
+        css: "[data-element=\\"button\\"] { --fl-control-color: #009966; }"
       ]}
 
   A flavor map can override the auto-generated label with `label`, and set

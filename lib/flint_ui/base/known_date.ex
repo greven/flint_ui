@@ -417,7 +417,12 @@ defmodule FlintUI.Base.KnownDate do
       fields: %{"data-part" => "fields"},
       field: %{"data-part" => "field"},
       field_label: %{"data-part" => "field_label"},
-      control: %{"data-part" => "control", "type" => "text", "inputmode" => "numeric"},
+      control: %{
+        "data-part" => "control",
+        "type" => "text",
+        "inputmode" => "numeric",
+        "data-field-control" => true
+      },
       value: %{"data-part" => "value"},
       hint: %{"data-part" => "hint"},
       error: %{"data-part" => "error"},

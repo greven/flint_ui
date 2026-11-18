@@ -57,6 +57,8 @@ defmodule FlintUI.Styled.KnownDateTest do
 
     assert attr(document, :known_date, "data-element") == ["known_date"]
     assert attr(document, :known_date, "data-known_date") == [""]
+    assert attr(document, :known_date, "data-field") == [""]
+    assert part_attr(document, "control", "data-field-control") == ["", "", ""]
     assert attr(document, :known_date, "data-size") == ["md"]
     assert attr(document, :known_date, "data-radius") == ["md"]
   end

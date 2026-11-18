@@ -10,11 +10,13 @@ defmodule FlintUI.Styled.Input do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add input",
       css: "styled/input.css",
+      primitives: [:field],
       tokens: [:color, :radius, :font, :spacing, :control, :field, :duration, :ease],
       related: [:textarea],
       props: [
         Prop.new(
           name: :size,
+          primitive: :field,
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           allow_custom: true,
@@ -24,6 +26,7 @@ defmodule FlintUI.Styled.Input do
         ),
         Prop.new(
           name: :radius,
+          primitive: :field,
           values: ["none", "xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc:
@@ -31,21 +34,6 @@ defmodule FlintUI.Styled.Input do
         )
       ],
       vars: [
-        Var.new(
-          name: "--fl-input-fill",
-          default: "var(--fl-color-surface)",
-          doc: "The control background."
-        ),
-        Var.new(
-          name: "--fl-input-border",
-          default: "var(--fl-color-border)",
-          doc: "The control border color at rest."
-        ),
-        Var.new(
-          name: "--fl-input-placeholder",
-          default: "var(--fl-color-text-dimmed)",
-          doc: "The placeholder text color."
-        ),
         Var.new(
           name: "--fl-input-check",
           default: "var(--fl-color-primary)",

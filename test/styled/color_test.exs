@@ -7,9 +7,9 @@ defmodule FlintUI.Styled.ColorTest do
   @roles ~w(primary secondary success info warning error neutral)
 
   @vars [
-    fill: "--fl-button-color",
-    on_fill: "--fl-button-color-content",
-    on_text: "--fl-button-text"
+    fill: "--fl-control-color",
+    on_fill: "--fl-control-color-content",
+    on_text: "--fl-control-text"
   ]
 
   @colors ~w(#1D72FE #FFE066 #111827 #22C55E #F43F5E)
@@ -51,9 +51,9 @@ defmodule FlintUI.Styled.ColorTest do
       assigns = StyledColor.apply(%{color: "#1D72FE", rest: %{}, __changed__: %{}}, @roles, @vars)
 
       assert assigns.data_color == nil
-      assert assigns.rest.style =~ "--fl-button-color: #1D72FE"
-      assert assigns.rest.style =~ "--fl-button-color-content"
-      assert assigns.rest.style =~ "--fl-button-text"
+      assert assigns.rest.style =~ "--fl-control-color: #1D72FE"
+      assert assigns.rest.style =~ "--fl-control-color-content"
+      assert assigns.rest.style =~ "--fl-control-text"
       refute assigns.rest.style =~ "data-color"
     end
 
@@ -72,14 +72,14 @@ defmodule FlintUI.Styled.ColorTest do
         StyledColor.apply(
           %{
             color: "#1D72FE",
-            rest: %{style: "--fl-button-color-content: white"},
+            rest: %{style: "--fl-control-color-content: white"},
             __changed__: %{}
           },
           @roles,
           @vars
         )
 
-      assert String.ends_with?(assigns.rest.style, "; --fl-button-color-content: white")
+      assert String.ends_with?(assigns.rest.style, "; --fl-control-color-content: white")
     end
 
     test "marks the derived assigns as changed on updates" do
@@ -180,9 +180,9 @@ defmodule FlintUI.Styled.ColorTest do
 
       assert assigns.data_color == nil
       assert assigns.rest == %{style: "object-position: top"}
-      assert assigns.color_style =~ "--fl-button-color: #1D72FE"
-      assert assigns.color_style =~ "--fl-button-color-content"
-      assert assigns.color_style =~ "--fl-button-text"
+      assert assigns.color_style =~ "--fl-control-color: #1D72FE"
+      assert assigns.color_style =~ "--fl-control-color-content"
+      assert assigns.color_style =~ "--fl-control-text"
       assert assigns.__changed__[:color_style]
     end
   end
@@ -212,9 +212,9 @@ defmodule FlintUI.Styled.ColorTest do
       {:ok, expected} = Color.parse(Tailwind.shades(:rose)[500])
 
       assert assigns.data_color == nil
-      assert assigns.rest.style =~ "--fl-button-color: #{expected.css}"
-      assert assigns.rest.style =~ "--fl-button-color-content"
-      assert assigns.rest.style =~ "--fl-button-text"
+      assert assigns.rest.style =~ "--fl-control-color: #{expected.css}"
+      assert assigns.rest.style =~ "--fl-control-color-content"
+      assert assigns.rest.style =~ "--fl-control-text"
     end
 
     test "tw: names accept an explicit shade" do
@@ -223,7 +223,7 @@ defmodule FlintUI.Styled.ColorTest do
 
       {:ok, expected} = Color.parse(Tailwind.shades(:rose)[700])
 
-      assert assigns.rest.style =~ "--fl-button-color: #{expected.css}"
+      assert assigns.rest.style =~ "--fl-control-color: #{expected.css}"
     end
 
     test "tw: names are case-insensitive and allow surrounding whitespace" do
@@ -232,7 +232,7 @@ defmodule FlintUI.Styled.ColorTest do
 
       {:ok, expected} = Color.parse(Tailwind.shades(:rose)[700])
 
-      assert assigns.rest.style =~ "--fl-button-color: #{expected.css}"
+      assert assigns.rest.style =~ "--fl-control-color: #{expected.css}"
     end
 
     test "a bare role keeps the hook while tw: selects the palette" do
@@ -244,7 +244,7 @@ defmodule FlintUI.Styled.ColorTest do
       assert role.data_color == "neutral"
       assert role.rest == %{}
       assert palette.data_color == nil
-      assert palette.rest.style =~ "--fl-button-color:"
+      assert palette.rest.style =~ "--fl-control-color:"
     end
 
     test "the derived label and text clear AA" do

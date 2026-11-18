@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Toggle do
   @moduledoc false
 
-  alias FlintUI.Styled.{Attr, Entry, Prop, Slot, Var}
+  alias FlintUI.Styled.{Attr, Entry, Prop, Slot}
 
   @colors ["neutral", "info", "success", "warning", "error", "primary", "secondary"]
   @variants ["solid", "soft", "subtle", "surface", "outline", "ghost", "link"]
@@ -13,6 +13,7 @@ defmodule FlintUI.Styled.Toggle do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add toggle",
       css: "styled/toggle.css",
+      primitives: [:control],
       tokens: [:color, :radius, :font, :spacing, :control, :duration, :ease],
       related: [:group],
       dependencies: [:icon],
@@ -33,12 +34,15 @@ defmodule FlintUI.Styled.Toggle do
       props: [
         Prop.new(
           name: :variant,
+          primitive: :control,
           values: @variants,
           default: "ghost",
           doc: "The visual treatment of the untoggled control."
         ),
         Prop.new(
           name: :active_variant,
+          primitive: :control,
+          state: "on",
           values: ["inherit"] ++ @variants,
           default: "soft",
           resolved: ["inherit"],
@@ -46,6 +50,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :dashed,
+          primitive: :control,
           values: [true, false],
           default: false,
           doc:
@@ -53,6 +58,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :color,
+          primitive: :control,
           values: @colors,
           default: "neutral",
           allow_custom: true,
@@ -61,6 +67,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :active_color,
+          primitive: :control,
           values: ["inherit"] ++ @colors,
           default: "inherit",
           allow_custom: true,
@@ -70,12 +77,14 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :size,
+          primitive: :control,
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The control size."
         ),
         Prop.new(
           name: :radius,
+          primitive: :control,
           values: ["none", "xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc:
@@ -83,6 +92,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :pill,
+          primitive: :control,
           values: [true, false],
           default: false,
           doc:
@@ -90,6 +100,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :square,
+          primitive: :control,
           values: [true, false],
           default: false,
           doc:
@@ -97,12 +108,14 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :wide,
+          primitive: :control,
           values: [true, false],
           default: false,
           doc: "Whether the toggle fills the width of its container."
         ),
         Prop.new(
           name: :justify,
+          primitive: :control,
           values: ["start", "center", "end", "between"],
           default: "center",
           doc:
@@ -110,6 +123,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :depth,
+          primitive: :control,
           values: [true, false],
           default: true,
           doc:
@@ -117,6 +131,7 @@ defmodule FlintUI.Styled.Toggle do
         ),
         Prop.new(
           name: :inset,
+          primitive: :control,
           values: ["top", "bottom", "left", "right", "all"],
           default: false,
           multi: true,
@@ -140,51 +155,20 @@ defmodule FlintUI.Styled.Toggle do
             "A text label rendered when the default slot is not given. The default slot wins when both are set."
         )
       ],
-      vars: [
-        Var.new(
-          name: "--fl-toggle-color",
-          default: "var(--fl-color-inverted)",
-          doc:
-            "The untoggled fill, the untoggled outline border, and the source for tinted surfaces and focus."
-        ),
-        Var.new(
-          name: "--fl-toggle-color-content",
-          default: "var(--fl-color-text-inverted)",
-          doc: "The label color on an untoggled solid fill."
-        ),
-        Var.new(
-          name: "--fl-toggle-text",
-          default: "var(--fl-toggle-color)",
-          doc: "The untoggled label color for text-carrying variants."
-        ),
-        Var.new(
-          name: "--fl-toggle-soft",
-          default: "color-mix(in oklab, var(--fl-toggle-color) 10%, var(--fl-color-surface))",
-          doc:
-            "The tinted surface behind an untoggled soft or subtle toggle; roles map it to the role's `-soft` token."
-        ),
-        Var.new(
-          name: "--fl-toggle-soft-border",
-          default:
-            "color-mix(in oklab, var(--fl-toggle-color) var(--fl-border-strength-soft), var(--fl-color-surface))",
-          doc:
-            "The matching border for an untoggled subtle or surface toggle; roles map it to the role's `-soft-border` token. Neutral strengthens the shared mix so the untoggled state stays legible. A raw color falls back to the soft border-strength mix. The toggled state reads the matching `--fl-toggle-active-*` variable, which follows this one unless `active-color` is set."
-        )
-      ],
       color_vars: [
-        fill: "--fl-toggle-color",
-        on_fill: "--fl-toggle-color-content",
-        on_text: "--fl-toggle-text"
+        fill: "--fl-control-color",
+        on_fill: "--fl-control-color-content",
+        on_text: "--fl-control-text"
       ],
       active_color: %{
         prop: :active_color,
         inherit: "inherit",
         vars: [
-          fill: "--fl-toggle-active-color",
-          on_fill: "--fl-toggle-active-color-content",
-          on_text: "--fl-toggle-active-text",
-          soft: "--fl-toggle-active-soft",
-          soft_border: "--fl-toggle-active-soft-border"
+          fill: "--fl-control-active-color",
+          on_fill: "--fl-control-active-color-content",
+          on_text: "--fl-control-active-text",
+          soft: "--fl-control-active-soft",
+          soft_border: "--fl-control-active-soft-border"
         ]
       }
     }

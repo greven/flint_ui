@@ -281,7 +281,8 @@ defmodule FlintUI.Base.Textarea do
         "data-part" => "sublabel"
       },
       control: %{
-        "data-part" => "control"
+        "data-part" => "control",
+        "data-field-control" => true
       },
       hint: %{
         "data-part" => "hint"

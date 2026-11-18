@@ -55,13 +55,27 @@ defmodule FlintUI.StyledTest do
     assert Styled.validate_all() == :ok
   end
 
-  test "every public CSS variable is present in the component stylesheet" do
-    for entry <- Styled.entries(), var <- entry.vars do
+  test "every public CSS variable is present in its stylesheet" do
+    for entry <- Styled.entries(), entry.css, var <- entry.vars do
       css = File.read!(FlintUI.Generator.part_path(entry.css))
 
       assert css =~ var.name,
              "expected #{entry.name} to declare #{var.name} in #{entry.css}"
     end
+
+    for primitive <- Styled.primitives(), var <- primitive.vars do
+      css = File.read!(FlintUI.Generator.part_path(primitive.css))
+
+      assert css =~ var.name,
+             "expected #{primitive.name} to declare #{var.name} in #{primitive.css}"
+    end
+  end
+
+  test "the primitive registry is well formed" do
+    assert Styled.primitive_names() == [:control, :field]
+    assert Styled.get_primitive(:control).marker == "data-control"
+    assert Styled.get_primitive(:field).marker == "data-field"
+    assert Styled.get_primitive(:nope) == nil
   end
 
   test "each entry points at the matching headless base module" do
@@ -137,7 +151,7 @@ defmodule FlintUI.StyledTest do
   end
 
   test "every radius control uses the shared scale with a pill modifier" do
-    for name <- [:badge, :button, :toggle] do
+    for name <- [:badge, :button, :copy_button, :toggle] do
       entry = Styled.get(name)
       radius = Entry.prop(entry, :radius)
       pill = Entry.prop(entry, :pill)
@@ -155,6 +169,7 @@ defmodule FlintUI.StyledTest do
           :avatar,
           :badge,
           :button,
+          :copy_button,
           :checkbox,
           :radio,
           :separator,

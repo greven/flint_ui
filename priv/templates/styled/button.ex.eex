@@ -16,6 +16,7 @@ def <%= @name %>(assigns) do
   ~H"""
   <FlintUI.button
     data-button
+    data-control
     data-variant={@variant}
     data-dashed={@dashed}
     data-color={@data_color}

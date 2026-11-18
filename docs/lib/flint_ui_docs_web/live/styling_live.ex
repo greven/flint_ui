@@ -142,7 +142,7 @@ defmodule FlintUIDocsWeb.StylingLive do
             <Components.button variant="solid">Default</Components.button>
             <Components.button
               variant="solid"
-              style="--fl-button-color: #7c3aed; --fl-button-color-content: #ffffff"
+              style="--fl-control-color: #7c3aed; --fl-control-color-content: #ffffff"
             >
               Custom
             </Components.button>
@@ -169,10 +169,11 @@ defmodule FlintUIDocsWeb.StylingLive do
           </div>
           <DocsComponents.code_block code={snippet(:tailwind_one_off)} />
           <DocsComponents.content_paragraph class="mt-4">
-            Component variables (<code class="docs-code font-mono">--fl-button-*</code>, <code class="docs-code font-mono">--fl-card-*</code>, …) are the supported per-instance
-            inputs. Each component's <strong>CSS</strong>
-            tab lists its public variables and what derives from them. Set them inline for
-            one element, or from a class when several properties change together:
+            Shared primitive variables (<code class="docs-code font-mono">--fl-control-*</code>, <code class="docs-code font-mono">--fl-field-*</code>) and component variables
+            (<code class="docs-code font-mono">--fl-card-*</code>, …) are the supported per-instance inputs. Each component's
+            <strong>CSS</strong>
+            tab lists both the shared inputs it inherits and its own variables. Set them inline
+            for one element, or from a class when several properties change together:
           </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:vars_heex)} />
           <DocsComponents.code_block code={snippet(:vars_css)} lang={:css} />
@@ -316,7 +317,7 @@ defmodule FlintUIDocsWeb.StylingLive do
     """
     <.button
       variant="solid"
-      style="--fl-button-color: #7c3aed; --fl-button-color-content: #ffffff"
+      style="--fl-control-color: #7c3aed; --fl-control-color-content: #ffffff"
     >
       Save
     </.button>

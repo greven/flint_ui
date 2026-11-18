@@ -36,12 +36,26 @@ defmodule FlintUI.Base.CopyButton do
 
   ## Feedback
 
-  The hook sets `data-state` to `success` or `error` and clears it after
+  The bundled copy behavior sets `data-state` to `success` or `error` and clears it after
   `feedback_duration` milliseconds. A server render can clear that client state;
   the feedback is best-effort and never changes the source of truth. The
-  styled layer swaps the icon for each state and tints it with the success or
-  error text role. Announcements are made through one shared,
-  visually-hidden `role="status"` region, so the button's name never changes.
+  styled layer swaps the icon for each state. Non-solid variants tint it with
+  the success or error text role; solid variants keep the button's label color.
+  Announcements are made through one shared, visually-hidden `role="status"`
+  region, so the button's name never changes.
+
+  ## Variants and styling
+
+  The styled wrapper opts into the shared control primitive, so a copy button
+  supports the same `variant`, `dashed`, `color`, `size`, `radius`, `pill`,
+  `square`, `wide`, `justify`, `depth`, and `inset` props as a button. The
+  default is the quiet `ghost` treatment; pass the surrounding variant when the
+  copy button joins a group. The shared inputs are `--fl-control-color`,
+  `-color-content`, `-text`, `-soft`, and `-soft-border`. See the Button docs
+  for the full variant and color contract.
+
+  The base stays unstyled. The styled wrapper adds `data-control`; the copy
+  anatomy layers the state stack on top of the shared control.
 
   ## Accessibility
 
@@ -162,6 +176,14 @@ defmodule FlintUI.Base.CopyButton do
           description: "Disables the button."
         }
       ],
+      states: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "states",
+          description:
+            "The three-state stack. It keeps the button width stable while the idle, success, and error content swap."
+        }
+      ],
       copy_state: [
         %Meta.PartAttr{
           name: "[data-part]",
@@ -241,6 +263,7 @@ defmodule FlintUI.Base.CopyButton do
 
     %{
       root: root,
+      states: %{"data-part" => "states"},
       copy_state: %{"data-part" => "copy_state"},
       success_state: %{"data-part" => "success_state"},
       error_state: %{"data-part" => "error_state"}
@@ -314,12 +337,14 @@ defmodule FlintUI.Base.CopyButton do
       disabled={@disabled}
       {@flint_parts[:root]}
     >
-      <span {@flint_parts[:copy_state]}>{render_slot(@inner_block)}</span>
-      <span :if={@success != []} {@flint_parts[:success_state]} aria-hidden="true">
-        {render_slot(@success)}
-      </span>
-      <span :if={@error != []} {@flint_parts[:error_state]} aria-hidden="true">
-        {render_slot(@error)}
+      <span {@flint_parts[:states]}>
+        <span {@flint_parts[:copy_state]}>{render_slot(@inner_block)}</span>
+        <span :if={@success != []} {@flint_parts[:success_state]} aria-hidden="true">
+          {render_slot(@success)}
+        </span>
+        <span :if={@error != []} {@flint_parts[:error_state]} aria-hidden="true">
+          {render_slot(@error)}
+        </span>
       </span>
     </button>
     """

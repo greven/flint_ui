@@ -1,0 +1,705 @@
+@layer components {
+    /* Control primitive. The shared shell, variants, colors, sizes, shape,
+     * depth, and interaction treatment for button-like controls. A styled
+     * wrapper opts in with `data-control`; components add only their own
+     * anatomy in their styled part.
+     *
+     * Public inputs: `--fl-control-color`, `-color-content`, `-text`, `-soft`,
+     * and `-soft-border`, plus the matching `--fl-control-active-*` set for
+     * stateful controls. Shared depth, elevation, press, and focus behavior
+     * come from `--fl-control-*`. */
+    [data-control] {
+        --fl-control-color: var(--fl-color-inverted);
+        --fl-control-color-content: var(--fl-color-text-inverted);
+        --fl-control-text: var(--fl-control-color);
+        --fl-control-soft: color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface));
+        --fl-control-soft-border: color-mix(
+            in oklab,
+            var(--fl-control-color) var(--fl-border-strength-soft),
+            var(--fl-color-surface)
+        );
+
+        --fl-icon-size: var(--fl-control-icon-md);
+
+        display: inline-flex;
+        position: relative;
+        isolation: isolate;
+        align-items: center;
+        justify-content: center;
+        gap: var(--fl-spacing-sm);
+        border: 1px solid transparent;
+        border-radius: var(--fl-control-radius);
+        background: transparent;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        white-space: nowrap;
+        text-decoration: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        box-shadow: 0 0 #0000;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            box-shadow var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Icons and loading indicators inherit the control's icon box. */
+    [data-control] :is([data-element="icon"], [data-element="loading"]) {
+        flex-shrink: 0;
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Add transparency to the icon beside the label, except square
+     * (icon-only) controls. */
+    [data-control]:not([data-square]) :is([data-element="icon"], [data-element="loading"]) {
+        color: color-mix(in oklab, currentColor 70%, transparent);
+    }
+
+    [data-control]:not([data-square]):not([data-disabled]):not([data-loading]):hover
+        :is([data-element="icon"], [data-element="loading"]) {
+        color: currentColor;
+    }
+
+    /* The depth rim light. */
+    [data-control]::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border: 1px solid transparent;
+        border-radius: calc(var(--fl-control-radius) - 1px);
+        pointer-events: none;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+        transition:
+            border-color var(--fl-duration-fast) var(--fl-ease-out),
+            opacity var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Hover/active are a `currentColor` overlay inside the border, not a fill
+     * swap. The overlay follows the inner (and joined) radii and never tints the
+     * border. */
+    [data-control]:not(:is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"]))::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: inherit;
+        background: currentColor;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Bordered variants stay clipped, in either state. */
+    [data-control]:is(
+            [data-variant="solid"]:not([data-state="on"]),
+            [data-variant="subtle"]:not([data-state="on"]),
+            [data-variant="surface"]:not([data-state="on"]),
+            [data-variant="outline"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="solid"],
+            [data-state="on"][data-active-variant="subtle"],
+            [data-state="on"][data-active-variant="surface"],
+            [data-state="on"][data-active-variant="outline"]
+        ) {
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    [data-control]:not([data-disabled]):not([data-loading]):hover::after {
+        opacity: var(--fl-control-hover-opacity);
+    }
+
+    [data-control]:not([data-disabled]):not([data-loading]):active::after {
+        opacity: var(--fl-control-active-opacity);
+    }
+
+    /* The solid fill needs a stronger overlay than a neutral surface. */
+    [data-control]:is(
+            [data-variant="solid"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="solid"]
+        ) {
+        --fl-control-hover-opacity: 0.15;
+        --fl-control-active-opacity: 0.22;
+    }
+
+    [data-control]:is(
+            [data-variant="surface"]:not([data-state="on"]),
+            [data-variant="outline"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="surface"],
+            [data-state="on"][data-active-variant="outline"]
+        ) {
+        --fl-control-hover-opacity: 0.08;
+        --fl-control-active-opacity: 0.11;
+    }
+
+    /* A link has no fill to tint. */
+    [data-control]:is(
+            [data-variant="link"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="link"]
+        )::after {
+        display: none;
+    }
+
+    /* Press feedback: the control sinks. */
+    [data-control]:not([data-disabled]):not([data-loading]):active {
+        transform: var(--fl-control-press, none);
+        box-shadow: 0 0 0 0 #0000;
+    }
+
+    [data-control]:is(
+            [data-variant="solid"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="solid"]
+        ):not([data-disabled]):not([data-loading]):active::before {
+        opacity: 0;
+    }
+
+    [data-control]:is(
+            [data-variant="link"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="link"]
+        ):active {
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-control] {
+            --fl-control-press: none;
+        }
+    }
+
+    /* Depth: solid wears a top rim light. */
+    [data-control]:is(
+            [data-variant="solid"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="solid"]
+        )::before {
+        border-color: rgb(255 255 255 / calc(12% * var(--fl-control-depth, 1)));
+    }
+
+    /* Elevation: solid and subtle share the control shadow. */
+    [data-control]:is(
+            [data-variant="solid"]:not([data-state="on"]),
+            [data-variant="subtle"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="solid"],
+            [data-state="on"][data-active-variant="subtle"]
+        ) {
+        box-shadow: var(--fl-control-shadow, 0 0 #0000);
+    }
+
+    [data-control]:is(
+            [data-variant="surface"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="surface"]
+        ) {
+        box-shadow:
+            inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
+            var(--fl-control-shadow, 0 0 #0000);
+    }
+
+    /* Absent `data-depth` flattens the rim and inner line only; shadows are independent. */
+    [data-control]:not([data-depth]) {
+        --fl-control-depth: 0;
+    }
+
+    [data-control][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    /* Loading is pending, not disabled: keep the control legible and focusable. */
+    [data-control][data-loading]:not([data-disabled]) {
+        cursor: progress;
+    }
+
+    [data-control]:not([data-loading]) > [data-loading-indicator] {
+        display: none;
+    }
+
+    /* Each color sets the shared inputs. The neutral role keeps the inverted
+     * fill; stateful controls can tone the label in their own anatomy. */
+    [data-control][data-color="primary"] {
+        --fl-control-color: var(--fl-color-primary);
+        --fl-control-color-content: var(--fl-color-primary-content);
+        --fl-control-text: var(--fl-color-primary-text);
+        --fl-control-soft: var(--fl-color-primary-soft);
+        --fl-control-soft-border: var(--fl-color-primary-soft-border);
+    }
+
+    [data-control][data-color="secondary"] {
+        --fl-control-color: var(--fl-color-secondary);
+        --fl-control-color-content: var(--fl-color-secondary-content);
+        --fl-control-text: var(--fl-color-secondary-text);
+        --fl-control-soft: var(--fl-color-secondary-soft);
+        --fl-control-soft-border: var(--fl-color-secondary-soft-border);
+    }
+
+    [data-control][data-color="success"] {
+        --fl-control-color: var(--fl-color-success);
+        --fl-control-color-content: var(--fl-color-success-content);
+        --fl-control-text: var(--fl-color-success-text);
+        --fl-control-soft: var(--fl-color-success-soft);
+        --fl-control-soft-border: var(--fl-color-success-soft-border);
+    }
+
+    [data-control][data-color="info"] {
+        --fl-control-color: var(--fl-color-info);
+        --fl-control-color-content: var(--fl-color-info-content);
+        --fl-control-text: var(--fl-color-info-text);
+        --fl-control-soft: var(--fl-color-info-soft);
+        --fl-control-soft-border: var(--fl-color-info-soft-border);
+    }
+
+    [data-control][data-color="warning"] {
+        --fl-control-color: var(--fl-color-warning);
+        --fl-control-color-content: var(--fl-color-warning-content);
+        --fl-control-text: var(--fl-color-warning-text);
+        --fl-control-soft: var(--fl-color-warning-soft);
+        --fl-control-soft-border: var(--fl-color-warning-soft-border);
+    }
+
+    [data-control][data-color="error"] {
+        --fl-control-color: var(--fl-color-error);
+        --fl-control-color-content: var(--fl-color-error-content);
+        --fl-control-text: var(--fl-color-error-text);
+        --fl-control-soft: var(--fl-color-error-soft);
+        --fl-control-soft-border: var(--fl-color-error-soft-border);
+    }
+
+    [data-control][data-color="neutral"] {
+        --fl-control-color: var(--fl-color-inverted);
+        --fl-control-color-content: var(--fl-color-text-inverted);
+        --fl-control-text: var(--fl-control-color);
+        --fl-control-soft: var(--fl-color-neutral-soft);
+        --fl-control-soft-border: var(--fl-color-neutral-soft-border);
+    }
+
+    /* Absolute tones stay dark/light in either scheme. */
+    [data-control][data-color="dark"] {
+        --fl-control-color: var(--fl-color-dark);
+        --fl-control-color-content: var(--fl-color-dark-content);
+        --fl-control-text: var(--fl-color-dark-text);
+        --fl-control-soft: var(--fl-color-dark-soft);
+        --fl-control-soft-border: var(--fl-color-dark-soft-border);
+    }
+
+    [data-control][data-color="light"] {
+        --fl-control-color: var(--fl-color-light);
+        --fl-control-color-content: var(--fl-color-light-content);
+        --fl-control-text: var(--fl-color-light-text);
+        --fl-control-soft: var(--fl-color-light-soft);
+        --fl-control-soft-border: var(--fl-color-light-soft-border);
+    }
+
+    /* Active colors override only the on-state inputs. */
+    [data-control][data-active-color="primary"] {
+        --fl-control-active-color: var(--fl-color-primary);
+        --fl-control-active-color-content: var(--fl-color-primary-content);
+        --fl-control-active-text: var(--fl-color-primary-text);
+        --fl-control-active-soft: var(--fl-color-primary-soft);
+        --fl-control-active-soft-border: var(--fl-color-primary-soft-border);
+    }
+
+    [data-control][data-active-color="secondary"] {
+        --fl-control-active-color: var(--fl-color-secondary);
+        --fl-control-active-color-content: var(--fl-color-secondary-content);
+        --fl-control-active-text: var(--fl-color-secondary-text);
+        --fl-control-active-soft: var(--fl-color-secondary-soft);
+        --fl-control-active-soft-border: var(--fl-color-secondary-soft-border);
+    }
+
+    [data-control][data-active-color="success"] {
+        --fl-control-active-color: var(--fl-color-success);
+        --fl-control-active-color-content: var(--fl-color-success-content);
+        --fl-control-active-text: var(--fl-color-success-text);
+        --fl-control-active-soft: var(--fl-color-success-soft);
+        --fl-control-active-soft-border: var(--fl-color-success-soft-border);
+    }
+
+    [data-control][data-active-color="info"] {
+        --fl-control-active-color: var(--fl-color-info);
+        --fl-control-active-color-content: var(--fl-color-info-content);
+        --fl-control-active-text: var(--fl-color-info-text);
+        --fl-control-active-soft: var(--fl-color-info-soft);
+        --fl-control-active-soft-border: var(--fl-color-info-soft-border);
+    }
+
+    [data-control][data-active-color="warning"] {
+        --fl-control-active-color: var(--fl-color-warning);
+        --fl-control-active-color-content: var(--fl-color-warning-content);
+        --fl-control-active-text: var(--fl-color-warning-text);
+        --fl-control-active-soft: var(--fl-color-warning-soft);
+        --fl-control-active-soft-border: var(--fl-color-warning-soft-border);
+    }
+
+    [data-control][data-active-color="error"] {
+        --fl-control-active-color: var(--fl-color-error);
+        --fl-control-active-color-content: var(--fl-color-error-content);
+        --fl-control-active-text: var(--fl-color-error-text);
+        --fl-control-active-soft: var(--fl-color-error-soft);
+        --fl-control-active-soft-border: var(--fl-color-error-soft-border);
+    }
+
+    [data-control][data-active-color="neutral"] {
+        --fl-control-active-color: var(--fl-color-inverted);
+        --fl-control-active-color-content: var(--fl-color-text-inverted);
+        --fl-control-active-text: var(--fl-color-text-highlighted);
+        --fl-control-active-soft: var(--fl-color-neutral-soft);
+        --fl-control-active-soft-border: var(--fl-color-neutral-soft-border);
+    }
+
+    [data-control][data-active-color="dark"] {
+        --fl-control-active-color: var(--fl-color-dark);
+        --fl-control-active-color-content: var(--fl-color-dark-content);
+        --fl-control-active-text: var(--fl-color-dark-text);
+        --fl-control-active-soft: var(--fl-color-dark-soft);
+        --fl-control-active-soft-border: var(--fl-color-dark-soft-border);
+    }
+
+    [data-control][data-active-color="light"] {
+        --fl-control-active-color: var(--fl-color-light);
+        --fl-control-active-color-content: var(--fl-color-light-content);
+        --fl-control-active-text: var(--fl-color-light-text);
+        --fl-control-active-soft: var(--fl-color-light-soft);
+        --fl-control-active-soft-border: var(--fl-color-light-soft-border);
+    }
+
+    /* Untoggled variants. */
+    [data-control][data-variant="solid"]:not([data-state="on"]) {
+        background: var(--fl-control-color);
+        border-color: color-mix(
+            in oklab,
+            var(--fl-control-color),
+            oklch(0% 0 0) var(--fl-border-strength-solid)
+        );
+        color: var(--fl-control-color-content);
+    }
+
+    [data-control][data-variant="soft"]:not([data-state="on"]),
+    [data-control][data-variant="subtle"]:not([data-state="on"]) {
+        background: color-mix(
+            in oklab,
+            var(--fl-control-soft) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
+        );
+        border-color: transparent;
+        color: var(--fl-control-text);
+    }
+
+    [data-control][data-variant="subtle"]:not([data-state="on"]) {
+        border-color: var(--fl-control-soft-border);
+    }
+
+    [data-control][data-variant="surface"]:not([data-state="on"]) {
+        border-color: var(--fl-control-soft-border);
+        background: var(--fl-color-surface);
+        color: var(--fl-control-text);
+    }
+
+    [data-control][data-variant="outline"]:not([data-state="on"]) {
+        border-color: var(--fl-control-color);
+        background: transparent;
+        color: var(--fl-control-text);
+    }
+
+    [data-control][data-variant="ghost"]:not([data-state="on"]) {
+        border-color: transparent;
+        background: transparent;
+        color: var(--fl-control-text);
+    }
+
+    [data-control][data-variant="link"]:not([data-state="on"]) {
+        height: auto;
+        padding-block: 0;
+        border-color: transparent;
+        background: transparent;
+        color: var(--fl-control-text);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        --_inset-block: 0;
+    }
+
+    [data-control][data-variant="link"]:not([data-state="on"]):not([data-disabled]):not([data-loading]):hover {
+        color: color-mix(in oklab, var(--fl-control-text) 75%, transparent);
+        text-decoration-thickness: 2px;
+    }
+
+    /* Toggled variants. They read the active inputs, which follow the base
+     * inputs unless `active-color` sets them. */
+    [data-control][data-state="on"][data-active-variant="solid"] {
+        background: var(--fl-control-active-color, var(--fl-control-color));
+        border-color: color-mix(
+            in oklab,
+            var(--fl-control-active-color, var(--fl-control-color)),
+            oklch(0% 0 0) var(--fl-border-strength-solid)
+        );
+        color: var(--fl-control-active-color-content, var(--fl-control-color-content));
+    }
+
+    [data-control][data-state="on"][data-active-variant="soft"],
+    [data-control][data-state="on"][data-active-variant="subtle"] {
+        background: color-mix(
+            in oklab,
+            var(--fl-control-active-soft, var(--fl-control-soft)) calc(var(--fl-tint-opacity, 0.9) * 100%),
+            transparent
+        );
+        border-color: transparent;
+        color: var(--fl-control-active-text, var(--fl-control-text));
+    }
+
+    [data-control][data-state="on"][data-active-variant="subtle"] {
+        border-color: var(--fl-control-active-soft-border, var(--fl-control-soft-border));
+    }
+
+    [data-control][data-state="on"][data-active-variant="surface"] {
+        border-color: var(--fl-control-active-soft-border, var(--fl-control-soft-border));
+        background: var(--fl-color-surface);
+        color: var(--fl-control-active-text, var(--fl-control-text));
+    }
+
+    [data-control][data-state="on"][data-active-variant="outline"] {
+        border-color: var(--fl-control-active-color, var(--fl-control-color));
+        background: transparent;
+        color: var(--fl-control-active-text, var(--fl-control-text));
+    }
+
+    [data-control][data-state="on"][data-active-variant="ghost"] {
+        border-color: transparent;
+        background: transparent;
+        color: var(--fl-control-active-text, var(--fl-control-text));
+    }
+
+    [data-control][data-state="on"][data-active-variant="link"] {
+        height: auto;
+        padding-block: 0;
+        border-color: transparent;
+        background: transparent;
+        color: var(--fl-control-active-text, var(--fl-control-text));
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        --_inset-block: 0;
+    }
+
+    [data-control][data-state="on"][data-active-variant="link"]:not([data-disabled]):not([data-loading]):hover {
+        color: color-mix(
+            in oklab,
+            var(--fl-control-active-text, var(--fl-control-text)) 75%,
+            transparent
+        );
+        text-decoration-thickness: 2px;
+    }
+
+    /* A neutral active surface keeps the same fill, so its border carries the
+     * state change. */
+    [data-control][data-state="on"][data-active-variant="surface"]:is(
+            [data-color="neutral"]:not([data-active-color]),
+            [data-active-color="neutral"]
+        ) {
+        --fl-control-active-soft-border: color-mix(
+            in oklab,
+            var(--fl-control-active-color, var(--fl-control-color)) 32%,
+            var(--fl-color-surface)
+        );
+    }
+
+    /* Dashed: an orthogonal modifier that dashes any visible border. */
+    [data-control][data-dashed] {
+        border-style: dashed;
+    }
+
+    /* Sizes share the control metrics. */
+    [data-control][data-size="xs"] {
+        --fl-icon-size: var(--fl-control-icon-xs);
+        height: var(--fl-control-height-xs);
+        padding-inline: var(--fl-control-padding-x-xs);
+        gap: var(--fl-control-gap-xs);
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-xs) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-line-height-xs)) / 2));
+    }
+
+    [data-control][data-size="sm"] {
+        --fl-icon-size: var(--fl-control-icon-sm);
+        height: var(--fl-control-height-sm);
+        padding-inline: var(--fl-control-padding-x-sm);
+        gap: var(--fl-control-gap-sm);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-sm) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-line-height-sm)) / 2));
+    }
+
+    [data-control][data-size="md"] {
+        --fl-icon-size: var(--fl-control-icon-md);
+        height: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-md);
+        gap: var(--fl-control-gap-md);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-md) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-line-height-md)) / 2));
+    }
+
+    [data-control][data-size="lg"] {
+        --fl-icon-size: var(--fl-control-icon-lg);
+        height: var(--fl-control-height-lg);
+        padding-inline: var(--fl-control-padding-x-lg);
+        gap: var(--fl-control-gap-lg);
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-lg) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-line-height-lg)) / 2));
+    }
+
+    [data-control][data-size="xl"] {
+        --fl-icon-size: var(--fl-control-icon-xl);
+        height: var(--fl-control-height-xl);
+        padding-inline: var(--fl-control-padding-x-xl);
+        gap: var(--fl-control-gap-xl);
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+        --_inset-inline: calc(-1 * (var(--fl-control-padding-x-xl) + 1px));
+        --_inset-block: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-line-height-xl)) / 2));
+    }
+
+    /* Radius overrides use the shared scale. */
+    [data-control][data-radius="none"] {
+        --fl-control-radius: 0;
+    }
+
+    [data-control][data-radius="xs"] {
+        --fl-control-radius: var(--fl-radius-xs);
+    }
+
+    [data-control][data-radius="sm"] {
+        --fl-control-radius: var(--fl-radius-sm);
+    }
+
+    [data-control][data-radius="lg"] {
+        --fl-control-radius: var(--fl-radius-lg);
+    }
+
+    [data-control][data-radius="xl"] {
+        --fl-control-radius: var(--fl-radius-xl);
+    }
+
+    /* Pill: full radius; the control keeps its height and padding. */
+    [data-control][data-pill] {
+        --fl-control-radius: var(--fl-radius-full);
+    }
+
+    /* Wide: fills the container. */
+    [data-control][data-wide] {
+        display: flex;
+        width: 100%;
+    }
+
+    /* Justify: where the content sits when the control is wider than its
+     * content. Only visible with `wide` or a stretched/fixed width. */
+    [data-control][data-justify="start"] {
+        justify-content: flex-start;
+    }
+
+    [data-control][data-justify="end"] {
+        justify-content: flex-end;
+    }
+
+    [data-control][data-justify="between"] {
+        justify-content: space-between;
+    }
+
+    /* Square: equal width and height. A link has no box to square. */
+    [data-control][data-square]:not(
+            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
+        ) {
+        aspect-ratio: 1;
+        padding-inline: 0;
+    }
+
+    /* Inset: pull the box over the padding it keeps for its hit area so the
+     * content lines up with surrounding content. */
+    [data-control][data-inset] {
+        margin-block-start: 0;
+        margin-block-end: 0;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+    }
+
+    [data-control][data-inset=""],
+    [data-control][data-inset~="all"] {
+        margin-block-start: var(--_inset-block);
+        margin-block-end: var(--_inset-block);
+        margin-inline-start: var(--_inset-inline);
+        margin-inline-end: var(--_inset-inline);
+    }
+
+    [data-control][data-inset~="top"] {
+        margin-block-start: var(--_inset-block);
+    }
+
+    [data-control][data-inset~="bottom"] {
+        margin-block-end: var(--_inset-block);
+    }
+
+    [data-control][data-inset~="left"] {
+        margin-inline-start: var(--_inset-inline);
+    }
+
+    [data-control][data-inset~="right"] {
+        margin-inline-end: var(--_inset-inline);
+    }
+
+    /* Square controls inset by the free space around the icon instead of the
+     * inline padding. */
+    [data-control][data-inset][data-square]:not(
+            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
+        )[data-size="xs"] {
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-xs) - var(--fl-control-icon-xs)) / 2));
+        --_inset-block: var(--_inset-inline);
+    }
+
+    [data-control][data-inset][data-square]:not(
+            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
+        )[data-size="sm"] {
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-sm) - var(--fl-control-icon-sm)) / 2));
+        --_inset-block: var(--_inset-inline);
+    }
+
+    [data-control][data-inset][data-square]:not(
+            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
+        )[data-size="md"] {
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-md) - var(--fl-control-icon-md)) / 2));
+        --_inset-block: var(--_inset-inline);
+    }
+
+    [data-control][data-inset][data-square]:not(
+            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
+        )[data-size="lg"] {
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-lg) - var(--fl-control-icon-lg)) / 2));
+        --_inset-block: var(--_inset-inline);
+    }
+
+    [data-control][data-inset][data-square]:not(
+            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
+        )[data-size="xl"] {
+        --_inset-inline: calc(-1 * ((var(--fl-control-height-xl) - var(--fl-control-icon-xl)) / 2));
+        --_inset-block: var(--_inset-inline);
+    }
+
+    /* Link: text only, underlined, with no control box. Sizes still set the
+     * font; the box and the block padding are dropped. */
+    [data-control]:is(
+            [data-variant="link"]:not([data-state="on"]),
+            [data-state="on"][data-active-variant="link"]
+        ) {
+        height: auto;
+        padding-block: 0;
+        border-color: transparent;
+        background: transparent;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        --_inset-block: 0;
+    }
+}

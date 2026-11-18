@@ -42,6 +42,11 @@ defmodule FlintUI.Styled.Entry do
   `:dependencies` names components this one is built on, such as Indicator using
   Badge. Dependencies are one-way and do not imply a related link.
 
+  `:primitives` names shared styling primitives the styled wrapper opts into,
+  such as `:control` or `:field`. Primitive styles are assembled once into the
+  theme; the component's own `:css` part keeps only its anatomy. A component
+  composed entirely of primitives may omit `:css`.
+
   The generator merges `:slots` with the base component's own slots when it
   renders the wrapper's `slot/2` declarations.
   """
@@ -68,7 +73,8 @@ defmodule FlintUI.Styled.Entry do
           color_vars: keyword(),
           active_color: active_color() | nil,
           related: [relation()],
-          dependencies: [atom()]
+          dependencies: [atom()],
+          primitives: [atom()]
         }
 
   @enforce_keys [:name, :base, :target]
@@ -85,7 +91,8 @@ defmodule FlintUI.Styled.Entry do
             color_vars: [],
             active_color: nil,
             related: [],
-            dependencies: []
+            dependencies: [],
+            primitives: []
 
   @doc """
   Returns the extra attribute with the given name, or `nil`.
@@ -109,6 +116,27 @@ defmodule FlintUI.Styled.Entry do
   Returns the names of the components this component is built on.
   """
   def dependencies(%__MODULE__{dependencies: dependencies}), do: dependencies
+
+  @doc """
+  Returns the primitives an entry opts into.
+  """
+  def primitives(%__MODULE__{primitives: primitives}), do: primitives
+
+  @doc """
+  Returns the entry's primitive names that are not registered.
+  """
+  def unknown_primitives(%__MODULE__{} = entry) do
+    Enum.reject(entry.primitives, &FlintUI.Styled.get_primitive/1)
+  end
+
+  @doc """
+  Returns props that name a primitive the entry does not opt into.
+  """
+  def unowned_primitive_props(%__MODULE__{} = entry) do
+    entry.props
+    |> Enum.filter(&(&1.primitive && &1.primitive not in entry.primitives))
+    |> Enum.map(& &1.name)
+  end
 
   defp relation_name({name, _opts}), do: name
   defp relation_name(name), do: name

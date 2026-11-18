@@ -127,8 +127,9 @@ defmodule FlintUIDocsWeb.Docs.Input do
       content, such as a clear or reveal button, in an outer slot." />
 
     <.prose content="An outer slot renders as an addon: it borrows the control's fill and height, joins its border so
-      the group has a single seam, and keeps only its free end rounded. A `<.button>` placed directly in an outer slot
-      takes the segment over instead; give it the same `size` as the input." />
+      the group has a single seam, and keeps only its free end rounded. A control placed directly in an outer slot
+      (`<.button>`, `<.copy_button>`, or `<.toggle>`) takes the segment over instead; give it the same `size` as the
+      input so both segments share one height." />
 
     <.preview {assigns} code={&code_affixes/1}>
       <div class="grid w-full max-w-sm gap-4">
@@ -156,9 +157,21 @@ defmodule FlintUIDocsWeb.Docs.Input do
           <:inner_suffix>USD</:inner_suffix>
         </Components.input>
 
-        <Components.input name="invite" label="Invite link" value="acme.test/join/42">
+        <Components.input
+          id="invite-link"
+          name="invite"
+          label="Invite link"
+          value="acme.test/join/42"
+        >
           <:outer_suffix>
-            <Components.button type="button" variant="surface">Copy</Components.button>
+            <Components.copy_button
+              from="invite-link"
+              property="value"
+              size="md"
+              variant="surface"
+            >
+              Copy
+            </Components.copy_button>
           </:outer_suffix>
         </Components.input>
       </div>
@@ -511,9 +524,11 @@ defmodule FlintUIDocsWeb.Docs.Input do
       <:inner_suffix>USD</:inner_suffix>
     </.input>
 
-    <.input name="invite" label="Invite link" value="acme.test/join/42">
+    <.input id="invite-link" name="invite" label="Invite link" value="acme.test/join/42">
       <:outer_suffix>
-        <.button type="button" variant="surface">Copy</.button>
+        <.copy_button from="invite-link" property="value" size="md" variant="surface">
+          Copy
+        </.copy_button>
       </:outer_suffix>
     </.input>
     """
