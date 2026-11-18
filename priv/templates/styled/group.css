@@ -61,31 +61,31 @@
         --fl-group-padding: calc(var(--fl-spacing) * 1);
     }
 
-    [data-element="group"][data-size="xs"] > :is([data-element="button"], [data-element="toggle"]) {
+    [data-element="group"][data-size="xs"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
         height: var(--fl-control-height-xs);
         font-size: var(--fl-control-font-size-xs);
         line-height: var(--fl-control-line-height-xs);
     }
 
-    [data-element="group"][data-size="sm"] > :is([data-element="button"], [data-element="toggle"]) {
+    [data-element="group"][data-size="sm"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
         height: var(--fl-control-height-sm);
         font-size: var(--fl-control-font-size-sm);
         line-height: var(--fl-control-line-height-sm);
     }
 
-    [data-element="group"][data-size="md"] > :is([data-element="button"], [data-element="toggle"]) {
+    [data-element="group"][data-size="md"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
         height: var(--fl-control-height-md);
         font-size: var(--fl-control-font-size-md);
         line-height: var(--fl-control-line-height-md);
     }
 
-    [data-element="group"][data-size="lg"] > :is([data-element="button"], [data-element="toggle"]) {
+    [data-element="group"][data-size="lg"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
         height: var(--fl-control-height-lg);
         font-size: var(--fl-control-font-size-lg);
         line-height: var(--fl-control-line-height-lg);
     }
 
-    [data-element="group"][data-size="xl"] > :is([data-element="button"], [data-element="toggle"]) {
+    [data-element="group"][data-size="xl"] > :is([data-element="button"], [data-element="toggle"], [data-element="copy_button"]) {
         height: var(--fl-control-height-xl);
         font-size: var(--fl-control-font-size-xl);
         line-height: var(--fl-control-line-height-xl);

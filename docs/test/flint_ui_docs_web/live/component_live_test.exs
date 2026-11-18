@@ -757,7 +757,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the playground code block offers a copy button", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#usage-button-variant-copy[phx-hook]")
+    assert has_element?(view, "#usage-button-variant-copy[data-copy]")
     assert has_element?(view, "#usage-button-variant-copy .lucide-copy")
     assert has_element?(view, "#usage-button-variant-copy .lucide-check")
   end

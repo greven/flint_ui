@@ -151,30 +151,19 @@ defmodule FlintUIDocsWeb.CodeBlock do
             class="pr-16"
           />
           <div class="absolute inset-y-0 right-2 flex items-center">
-            <.copy_button :if={@copy} id={@copy_id} target={@id} />
+            <Components.copy_button
+              :if={@copy}
+              id={@copy_id}
+              from={@id}
+              label="Copy code"
+              size="xs"
+              class="text-muted hover:text-default"
+            >
+              Copy
+            </Components.copy_button>
           </div>
         </div>
       <% end %>
-
-      <script :type={Phoenix.LiveView.ColocatedHook} name=".CopyCode">
-        export default {
-          mounted() {
-            this.el.addEventListener("click", () => {
-              const target = document.getElementById(this.el.dataset.copy)
-              if (target) navigator.clipboard.writeText(target.textContent)
-
-              this.el.dataset.copied = "true"
-              clearTimeout(this.copiedTimeout)
-              this.copiedTimeout = setTimeout(() => {
-                delete this.el.dataset.copied
-              }, 2000)
-            })
-          },
-          destroyed() {
-            clearTimeout(this.copiedTimeout)
-          }
-        }
-      </script>
 
       <script :type={Phoenix.LiveView.ColocatedHook} name=".CodeHeader">
         export default {
@@ -258,7 +247,16 @@ defmodule FlintUIDocsWeb.CodeBlock do
 
       <div class="flex shrink-0 items-center gap-1">
         {render_slot(@actions)}
-        <.copy_button :if={@copy} id={@copy_id} target={@id} />
+        <Components.copy_button
+          :if={@copy}
+          id={@copy_id}
+          from={@id}
+          label="Copy code"
+          size="xs"
+          class="text-muted hover:text-default"
+        >
+          Copy
+        </Components.copy_button>
 
         <Components.button
           :if={@collapsible}
@@ -316,38 +314,6 @@ defmodule FlintUIDocsWeb.CodeBlock do
         Close Code
       </Components.button>
     </div>
-    """
-  end
-
-  ## Copy
-
-  attr :id, :string, required: true
-  attr :target, :string, required: true
-
-  defp copy_button(assigns) do
-    ~H"""
-    <Components.button
-      type="button"
-      id={@id}
-      phx-hook=".CopyCode"
-      data-copy={@target}
-      aria-label="Copy code"
-      variant="ghost"
-      size="xs"
-      class="group"
-    >
-      <span class="relative grid size-3.5 place-items-center">
-        <Components.icon
-          name="lucide-copy"
-          class="col-start-1 row-start-1 size-3.5 transition-opacity duration-200 group-data-copied:opacity-0"
-        />
-        <Components.icon
-          name="lucide-check"
-          class="col-start-1 row-start-1 size-3.5 text-green-600 opacity-0 transition-opacity duration-200 group-data-copied:opacity-100 dark:text-green-400"
-        />
-      </span>
-      Copy
-    </Components.button>
     """
   end
 

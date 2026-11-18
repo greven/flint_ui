@@ -23,6 +23,7 @@ defmodule FlintUI do
   - `checkbox`
   - `checkbox_group`
   - `collapsible`
+  - `copy_button`
   - `dropdown`
   - `dropdown_group`
   - `dropdown_header`
@@ -35,6 +36,7 @@ defmodule FlintUI do
   - `indicator`
   - `input`
   - `kbd`
+  - `known_date`
   - `label`
   - `loading`
   - `loading_text`
@@ -75,6 +77,7 @@ defmodule FlintUI do
     {:checkbox, []},
     {:checkbox_group, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
+    {:copy_button, []},
     {:dropdown, [:open_dropdown, :close_dropdown, :toggle_dropdown]},
     {:dropdown_group, []},
     {:dropdown_header, []},
@@ -87,6 +90,7 @@ defmodule FlintUI do
     {:indicator, []},
     {:input, []},
     {:kbd, []},
+    {:known_date, []},
     {:label, []},
     {:loading, []},
     {:loading_text, []},

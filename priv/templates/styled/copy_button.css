@@ -1,0 +1,182 @@
+@layer components {
+    /* Copy button. A quiet, icon-first action built on the shared control
+     * metrics. The three state cells share one grid area, so the button keeps
+     * the width of its widest state and the icon swap never shifts the layout.
+     * Public styling stays on the theme tokens; the state is driven entirely by
+     * the `data-state` the bundled `flint.js` sets. */
+    [data-element="copy_button"][data-copy_button] {
+        --fl-icon-size: var(--fl-control-icon-md);
+
+        display: inline-grid;
+        grid-template-areas: "state";
+        place-items: center;
+        box-sizing: border-box;
+        height: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-md);
+        border: 1px solid transparent;
+        border-radius: var(--fl-control-radius);
+        background: transparent;
+        color: var(--fl-color-text-toned);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-control-font-size-md);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        white-space: nowrap;
+        text-decoration: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    /* Icons inherit the size the control sets. The copy-state icon is as strong
+     * as the label; the decorative state icons use the state tint below. */
+    [data-element="copy_button"][data-copy_button] :is([data-element="icon"], [data-loading]) {
+        flex-shrink: 0;
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
+    }
+
+    /* The three states overlap in one grid cell. `visibility` rather than
+     * `display` keeps the widest state in the layout, so the label never
+     * jumps when the checkmark replaces the copy icon. */
+    [data-element="copy_button"][data-copy_button]
+        > :is([data-part="copy_state"], [data-part="success_state"], [data-part="error_state"]) {
+        grid-area: state;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--fl-control-gap-md);
+        min-width: 0;
+    }
+
+    [data-element="copy_button"][data-copy_button]
+        > :is([data-part="success_state"], [data-part="error_state"]) {
+        visibility: hidden;
+    }
+
+    [data-element="copy_button"][data-copy_button][data-state="success"] > [data-part="success_state"],
+    [data-element="copy_button"][data-copy_button][data-state="error"] > [data-part="error_state"] {
+        visibility: visible;
+    }
+
+    /* Only hide the default state when the matching state has content. A
+     * headless consumer that supplies no success or error slot keeps the
+     * default content visible. */
+    [data-element="copy_button"][data-copy_button][data-state="success"]:has(> [data-part="success_state"])
+        > [data-part="copy_state"],
+    [data-element="copy_button"][data-copy_button][data-state="error"]:has(> [data-part="error_state"])
+        > [data-part="copy_state"] {
+        visibility: hidden;
+    }
+
+    [data-element="copy_button"][data-copy_button][data-state="success"] > [data-part="success_state"] {
+        color: var(--fl-color-success-text);
+    }
+
+    [data-element="copy_button"][data-copy_button][data-state="error"] > [data-part="error_state"] {
+        color: var(--fl-color-error-text);
+    }
+
+    [data-element="copy_button"][data-copy_button]:not([data-disabled]):hover {
+        background: color-mix(
+            in oklab,
+            currentColor calc(var(--fl-control-hover-opacity) * 100%),
+            transparent
+        );
+        color: var(--fl-color-text);
+    }
+
+    [data-element="copy_button"][data-copy_button]:not([data-disabled]):active {
+        background: color-mix(
+            in oklab,
+            currentColor calc(var(--fl-control-active-opacity) * 100%),
+            transparent
+        );
+        transform: var(--fl-control-press, none);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="copy_button"][data-copy_button] {
+            --fl-control-press: none;
+        }
+    }
+
+    [data-element="copy_button"][data-copy_button][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    /* Sizes share the control metrics, so a copy button lines up with a button
+     * or toggle of the same size. */
+    [data-element="copy_button"][data-size="xs"] {
+        --fl-icon-size: var(--fl-control-icon-xs);
+        height: var(--fl-control-height-xs);
+        padding-inline: var(--fl-control-padding-x-xs);
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="copy_button"][data-size="sm"] {
+        --fl-icon-size: var(--fl-control-icon-sm);
+        height: var(--fl-control-height-sm);
+        padding-inline: var(--fl-control-padding-x-sm);
+    }
+
+    [data-element="copy_button"][data-size="md"] {
+        --fl-icon-size: var(--fl-control-icon-md);
+        height: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-md);
+    }
+
+    [data-element="copy_button"][data-size="lg"] {
+        --fl-icon-size: var(--fl-control-icon-lg);
+        height: var(--fl-control-height-lg);
+        padding-inline: var(--fl-control-padding-x-lg);
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="copy_button"][data-size="xl"] {
+        --fl-icon-size: var(--fl-control-icon-xl);
+        height: var(--fl-control-height-xl);
+        padding-inline: var(--fl-control-padding-x-xl);
+        font-size: var(--fl-control-font-size-xl);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    [data-element="copy_button"][data-size="xs"]
+        > :is([data-part="copy_state"], [data-part="success_state"], [data-part="error_state"]) {
+        gap: var(--fl-control-gap-xs);
+    }
+
+    [data-element="copy_button"][data-size="sm"]
+        > :is([data-part="copy_state"], [data-part="success_state"], [data-part="error_state"]) {
+        gap: var(--fl-control-gap-sm);
+    }
+
+    [data-element="copy_button"][data-size="md"]
+        > :is([data-part="copy_state"], [data-part="success_state"], [data-part="error_state"]) {
+        gap: var(--fl-control-gap-md);
+    }
+
+    [data-element="copy_button"][data-size="lg"]
+        > :is([data-part="copy_state"], [data-part="success_state"], [data-part="error_state"]) {
+        gap: var(--fl-control-gap-lg);
+    }
+
+    [data-element="copy_button"][data-size="xl"]
+        > :is([data-part="copy_state"], [data-part="success_state"], [data-part="error_state"]) {
+        gap: var(--fl-control-gap-xl);
+    }
+
+    /* Icon-only copy buttons are square. The wrapper sets the hook when the
+     * default slot is empty; a visible label keeps the inline padding. */
+    [data-element="copy_button"][data-copy_button][data-square] {
+        aspect-ratio: 1;
+        padding-inline: 0;
+    }
+}

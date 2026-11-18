@@ -12,6 +12,7 @@
         > [data-part="box"]:has(> [data-part="control"]:focus-visible),
     [data-element="textarea"][data-textarea]
         > [data-part="control"]:focus-visible,
+    [data-element="known_date"][data-known_date] [data-part="control"]:focus-visible,
     /* A trigger that keeps its ring while a menu owns focus gets the same
      * border treatment. */
     [data-element="button"][data-variant][data-focus-ring]:not([data-disabled]),

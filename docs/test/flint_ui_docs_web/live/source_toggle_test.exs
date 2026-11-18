@@ -34,7 +34,7 @@ defmodule FlintUIDocsWeb.SourceToggleTest do
     assert has_element?(view, "##{id}", "render_section/1")
     assert has_element?(view, "##{id}-code", "<Components.button")
     assert has_element?(view, "##{id}-source-toggle", "Code")
-    assert has_element?(view, "##{id}-copy[phx-hook]")
+    assert has_element?(view, "##{id}-copy[data-copy]")
 
     view |> element("##{id}-source-toggle") |> render_click()
 
