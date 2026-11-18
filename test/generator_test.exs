@@ -76,6 +76,49 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "<FlintUI.slider root_attrs={@root_attrs} class={@class} {@rest} />"
   end
 
+  test "progress maps its props onto the progress root" do
+    source = Generator.component_source(:progress)
+
+    assert source =~ "attr(:size, :string"
+    assert source =~ "values: ~w(xs sm md lg xl)"
+    assert source =~ "attr(:color, :string"
+    assert source =~ "attr(:radius, :string"
+    assert source =~ "attr(:animated, :boolean"
+    assert source =~ "attr(:indeterminate, :string"
+    assert source =~ "values: ~w(carousel swing elastic)"
+    assert source =~ ~s("data-progress" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ ~s("data-indeterminate" => assigns.indeterminate)
+    assert source =~ ~s("data-striped" => assigns.striped)
+    assert source =~ ~s("data-animated" => assigns.animated)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "--fl-progress-color"
+    assert source =~ "<FlintUI.progress root_attrs={@root_attrs} class={@class} {@rest} />"
+  end
+
+  test "progress_group maps its props onto the group root" do
+    source = Generator.component_source(:progress_group)
+
+    assert source =~ "attr(:size, :string"
+    assert source =~ "values: ~w(xs sm md lg xl)"
+    assert source =~ "attr(:color, :string"
+    assert source =~ "attr(:radius, :string"
+    assert source =~ ~s("data-progress_group" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ ~s("data-radius" => assigns.radius)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "FlintUI.Styled.Color.resolve_style"
+    assert source =~ "--fl-progress-group-color"
+    assert source =~ "<FlintUI.progress_group"
+    assert source =~ "<:segment"
+    assert source =~ "slot(:segment,"
+    assert source =~ "slot(:status,"
+    assert source =~ "<:status :if={@status != []}>{render_slot(@status)}</:status>"
+  end
+
   test "switch maps its size and color props" do
     source = Generator.component_source(:switch)
 

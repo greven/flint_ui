@@ -41,6 +41,8 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Loading,
     FlintUI.Styled.LoadingText,
     FlintUI.Styled.Popover,
+    FlintUI.Styled.Progress,
+    FlintUI.Styled.ProgressGroup,
     FlintUI.Styled.Radio,
     FlintUI.Styled.RadioGroup,
     FlintUI.Styled.Separator,

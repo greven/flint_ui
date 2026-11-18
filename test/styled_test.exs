@@ -34,6 +34,8 @@ defmodule FlintUI.StyledTest do
                :loading,
                :loading_text,
                :popover,
+               :progress,
+               :progress_group,
                :radio,
                :radio_group,
                :separator,

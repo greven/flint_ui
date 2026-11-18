@@ -39,6 +39,8 @@ defmodule FlintUI do
   - `loading`
   - `loading_text`
   - `popover`
+  - `progress`
+  - `progress_group`
   - `radio`
   - `radio_group`
   - `separator`
@@ -89,6 +91,8 @@ defmodule FlintUI do
     {:loading, []},
     {:loading_text, []},
     {:popover, [:open_popover, :close_popover, :toggle_popover]},
+    {:progress, []},
+    {:progress_group, []},
     {:radio, []},
     {:radio_group, []},
     {:separator, []},

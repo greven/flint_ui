@@ -3,8 +3,8 @@
      * both sides, so it reads as a divider rather than a bordered control. */
     [data-element="dropdown_separator"][data-dropdown_separator] {
         block-size: 1px;
-        margin-block: var(--fl-spacing-xs);
-        margin-inline: calc(var(--fl-spacing-xs) * -1);
+        margin-block: calc(var(--fl-spacing-xs) * 1.5);
+        margin-inline: calc(var(--fl-spacing-xs) * -1.5);
         border: 0;
         background-color: var(--fl-dropdown-separator-color, var(--fl-color-border-subtle));
     }

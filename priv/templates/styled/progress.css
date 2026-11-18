@@ -1,0 +1,444 @@
+@layer components {
+    /* Progress. Public inputs: `--fl-progress-color`, `--fl-progress-track`,
+     * and `--fl-progress-height`. The root owns the progressbar semantics; the
+     * track and segment paint the value. The base writes the segment size inline
+     * as `inline-size` (horizontal) or `block-size` (vertical), and the theme
+     * supplies the indeterminate motion and the stripe pattern. */
+    [data-element="progress"][data-progress] {
+        --fl-progress-color: var(--fl-color-primary);
+        --fl-progress-track: var(--fl-color-surface-strong);
+        --fl-progress-height: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-spacing-xs);
+        inline-size: 100%;
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress"][data-progress] > [data-part="status"] {
+        flex: none;
+        align-self: flex-end;
+        color: var(--fl-color-text-muted);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* Step labels. Only the active label is visible; the labels share one grid
+     * cell so the row keeps the height of the longest label instead of
+     * resizing as the value moves. The container takes the fill color, and the
+     * first label is the idle state, so it stays muted. */
+    [data-element="progress"][data-progress] > [data-part="steps"] {
+        display: grid;
+        flex: none;
+        align-self: stretch;
+        justify-items: end;
+        min-inline-size: 0;
+        color: var(--fl-progress-color);
+    }
+
+    [data-element="progress"][data-progress]
+        > [data-part="steps"]
+        > [data-part="step"] {
+        grid-area: 1 / 1;
+        max-inline-size: 100%;
+        overflow: hidden;
+        text-align: end;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="progress"][data-progress]
+        > [data-part="steps"]
+        > [data-part="step"][data-active] {
+        opacity: 1;
+    }
+
+    [data-element="progress"][data-progress]
+        > [data-part="steps"]
+        > [data-part="step"]:first-child {
+        color: var(--fl-color-text-muted);
+    }
+
+    [data-element="progress"][data-progress] > [data-part="track"] {
+        position: relative;
+        display: block;
+        flex: 0 0 auto;
+        overflow: clip;
+        inline-size: 100%;
+        block-size: var(--fl-progress-height);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-progress-track);
+    }
+
+    [data-element="progress"][data-progress]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        position: absolute;
+        overflow: clip;
+        background-color: var(--fl-progress-color);
+    }
+
+    [data-element="progress"][data-progress][data-orientation="horizontal"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 100%;
+    }
+
+    /* Determinate updates slide to the new percentage. The base removes the
+     * inline size for an indeterminate bar, so the transition only applies to
+     * a known value. */
+    [data-element="progress"][data-progress][data-orientation="horizontal"]:not(
+            [data-state="indeterminate"]
+        )
+        > [data-part="track"]
+        > [data-part="segment"] {
+        transition: inline-size var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"] {
+        inline-size: fit-content;
+        block-size: 10rem;
+        align-items: center;
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"]
+        > [data-part="status"] {
+        align-self: center;
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"]
+        > [data-part="steps"] {
+        justify-items: center;
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"]
+        > [data-part="steps"]
+        > [data-part="step"] {
+        text-align: center;
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"]
+        > [data-part="track"] {
+        flex: 1 1 auto;
+        min-block-size: 0;
+        inline-size: var(--fl-progress-height);
+        block-size: auto;
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 100%;
+    }
+
+    [data-element="progress"][data-progress][data-orientation="vertical"]:not(
+            [data-state="indeterminate"]
+        )
+        > [data-part="track"]
+        > [data-part="segment"] {
+        transition: block-size var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    /* Stripes. `striped` shows the pattern statically; `animated` implies the
+     * same pattern and scrolls it. The pattern is a pseudo-element so the
+     * stripe animation stays independent from the indeterminate segment
+     * motion: a striped indeterminate bar can do both at once. */
+    [data-element="progress"][data-striped][data-progress]
+        > [data-part="track"]
+        > [data-part="segment"]::before,
+    [data-element="progress"][data-animated][data-progress]
+        > [data-part="track"]
+        > [data-part="segment"]::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+            45deg,
+            color-mix(
+                    in oklab,
+                    var(--fl-progress-color) 70%,
+                    var(--fl-progress-track)
+                )
+                0 0.375rem,
+            transparent 0.375rem 0.75rem
+        );
+        pointer-events: none;
+    }
+
+    [data-element="progress"][data-animated][data-progress]
+        > [data-part="track"]
+        > [data-part="segment"]::before {
+        animation: fl-progress-stripes 1s linear infinite;
+    }
+
+    /* Sizes. The status text follows the same step, so a larger bar also has a
+     * larger label. */
+    [data-element="progress"][data-size="xs"][data-progress] {
+        --fl-progress-height: 0.125rem;
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-element="progress"][data-size="sm"][data-progress] {
+        --fl-progress-height: 0.25rem;
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-element="progress"][data-size="md"][data-progress] {
+        --fl-progress-height: 0.5rem;
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress"][data-size="lg"][data-progress] {
+        --fl-progress-height: 0.75rem;
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress"][data-size="xl"][data-progress] {
+        --fl-progress-height: 1rem;
+        font-size: var(--fl-font-size-md);
+        line-height: var(--fl-line-height-md);
+    }
+
+    /* Radius. The track clips the segment, so a determinate fill follows the
+     * track corners without its own radius declarations. */
+    [data-element="progress"][data-radius="none"][data-progress] > [data-part="track"] {
+        border-radius: 0;
+    }
+
+    [data-element="progress"][data-radius="xs"][data-progress] > [data-part="track"] {
+        border-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="progress"][data-radius="sm"][data-progress] > [data-part="track"] {
+        border-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="progress"][data-radius="md"][data-progress] > [data-part="track"] {
+        border-radius: var(--fl-radius-md);
+    }
+
+    [data-element="progress"][data-radius="lg"][data-progress] > [data-part="track"] {
+        border-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="progress"][data-radius="xl"][data-progress] > [data-part="track"] {
+        border-radius: var(--fl-radius-xl);
+    }
+
+    [data-element="progress"][data-radius="full"][data-progress] > [data-part="track"] {
+        border-radius: var(--fl-radius-full);
+    }
+
+    /* Color roles. `primary` is the base treatment; `neutral` is the inverted
+     * surface, matching the other feedback and form components. */
+    [data-element="progress"][data-color="secondary"][data-progress] {
+        --fl-progress-color: var(--fl-color-secondary);
+    }
+
+    [data-element="progress"][data-color="neutral"][data-progress] {
+        --fl-progress-color: var(--fl-color-inverted);
+    }
+
+    [data-element="progress"][data-color="info"][data-progress] {
+        --fl-progress-color: var(--fl-color-info);
+    }
+
+    [data-element="progress"][data-color="success"][data-progress] {
+        --fl-progress-color: var(--fl-color-success);
+    }
+
+    [data-element="progress"][data-color="warning"][data-progress] {
+        --fl-progress-color: var(--fl-color-warning);
+    }
+
+    [data-element="progress"][data-color="error"][data-progress] {
+        --fl-progress-color: var(--fl-color-error);
+    }
+
+    /* Indeterminate motion. The segment keeps a fixed share of the track and
+     * the keyframes move it with logical properties, so RTL and both
+     * orientations share the same rules. `carousel` is the default; the
+     * `indeterminate` prop overrides the motion for swing and elastic. */
+    [data-element="progress"][data-progress][data-state="indeterminate"][data-orientation="horizontal"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        inline-size: 40%;
+        animation: fl-progress-carousel 2s linear infinite;
+    }
+
+    [data-element="progress"][data-progress][data-state="indeterminate"][data-orientation="vertical"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        inline-size: 100%;
+        block-size: 40%;
+        animation: fl-progress-carousel-vertical 2s linear infinite;
+    }
+
+    /* The moving segment is a pill of its own, matching the track corners. A
+     * determinate fill still begins at the track edge and ends at the value. */
+    [data-element="progress"][data-progress][data-state="indeterminate"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        border-radius: inherit;
+    }
+
+    [data-element="progress"][data-indeterminate="swing"][data-progress][data-state="indeterminate"][data-orientation="horizontal"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        animation-name: fl-progress-swing;
+        animation-timing-function: var(--fl-ease-in-out);
+    }
+
+    [data-element="progress"][data-indeterminate="swing"][data-progress][data-state="indeterminate"][data-orientation="vertical"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        animation-name: fl-progress-swing-vertical;
+        animation-timing-function: var(--fl-ease-in-out);
+    }
+
+    [data-element="progress"][data-indeterminate="elastic"][data-progress][data-state="indeterminate"][data-orientation="horizontal"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        animation-name: fl-progress-elastic;
+        animation-timing-function: var(--fl-ease-in-out);
+    }
+
+    [data-element="progress"][data-indeterminate="elastic"][data-progress][data-state="indeterminate"][data-orientation="vertical"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        animation-name: fl-progress-elastic-vertical;
+        animation-timing-function: var(--fl-ease-in-out);
+    }
+
+    @keyframes fl-progress-carousel {
+        from {
+            inset-inline-start: -40%;
+        }
+
+        to {
+            inset-inline-start: 100%;
+        }
+    }
+
+    @keyframes fl-progress-swing {
+        0%,
+        100% {
+            inset-inline-start: 0%;
+        }
+
+        50% {
+            inset-inline-start: 60%;
+        }
+    }
+
+    @keyframes fl-progress-elastic {
+        0%,
+        100% {
+            inset-inline-start: 0%;
+            inline-size: 18%;
+        }
+
+        50% {
+            inset-inline-start: 20%;
+            inline-size: 70%;
+        }
+    }
+
+    @keyframes fl-progress-carousel-vertical {
+        from {
+            inset-block-end: -40%;
+        }
+
+        to {
+            inset-block-end: 100%;
+        }
+    }
+
+    @keyframes fl-progress-swing-vertical {
+        0%,
+        100% {
+            inset-block-end: 0%;
+        }
+
+        50% {
+            inset-block-end: 60%;
+        }
+    }
+
+    @keyframes fl-progress-elastic-vertical {
+        0%,
+        100% {
+            inset-block-end: 0%;
+            block-size: 18%;
+        }
+
+        50% {
+            inset-block-end: 20%;
+            block-size: 70%;
+        }
+    }
+
+    /* The stripe period is 0.75rem along the 45deg gradient, so the horizontal
+     * repeat is 0.75rem * sqrt(2). Moving the background by that distance
+     * makes the scroll seamless. */
+    @keyframes fl-progress-stripes {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: calc(0.75rem * 1.4142) 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="progress"][data-progress][data-state="indeterminate"][data-indeterminate][data-orientation="horizontal"]
+            > [data-part="track"]
+            > [data-part="segment"],
+        [data-element="progress"][data-progress][data-state="indeterminate"][data-indeterminate][data-orientation="vertical"]
+            > [data-part="track"]
+            > [data-part="segment"] {
+            animation: none;
+            inset-inline-start: 0;
+            inset-block-end: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            opacity: 0.6;
+        }
+
+        [data-element="progress"][data-progress][data-orientation="horizontal"]
+            > [data-part="track"]
+            > [data-part="segment"],
+        [data-element="progress"][data-progress][data-orientation="vertical"]
+            > [data-part="track"]
+            > [data-part="segment"] {
+            transition: none;
+        }
+
+        [data-element="progress"][data-progress][data-animated]
+            > [data-part="track"]
+            > [data-part="segment"]::before {
+            animation: none;
+        }
+
+        [data-element="progress"][data-progress]
+            > [data-part="steps"]
+            > [data-part="step"] {
+            transition: none;
+        }
+    }
+}

@@ -1,0 +1,338 @@
+@layer components {
+    /* Progress group. Public inputs: `--fl-progress-group-color`,
+     * `--fl-progress-group-track`, `--fl-progress-group-height`, and
+     * `--fl-progress-group-dot-size`. The root owns the progressbar semantics;
+     * the track and segments paint the breakdown, and the legend names it. */
+    [data-element="progress_group"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-primary);
+        --fl-progress-group-track: var(--fl-color-surface-strong);
+        --fl-progress-group-height: 0.5rem;
+        --fl-progress-group-dot-size: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-spacing-xs);
+        inline-size: 100%;
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress_group"][data-progress_group] > [data-part="status"] {
+        display: flex;
+        flex: none;
+        align-items: center;
+        justify-content: flex-end;
+        min-inline-size: fit-content;
+        color: var(--fl-color-text-muted);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    [data-element="progress_group"][data-progress_group] > [data-part="track"] {
+        position: relative;
+        display: flex;
+        flex: 0 0 auto;
+        overflow: clip;
+        inline-size: 100%;
+        block-size: var(--fl-progress-group-height);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-progress-group-track);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        flex: none;
+        block-size: 100%;
+        background-color: var(--fl-progress-group-color);
+    }
+
+    [data-element="progress_group"][data-progress_group][data-orientation="horizontal"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        transition: inline-size var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    /* Vertical: the stack sits at the bottom of the rail, with the first
+     * segment at the top of the stack so it matches the legend order. The
+     * legend sits to the right of the rail, so the bar keeps its full height
+     * and the labels stay beside the segments they describe. */
+    [data-element="progress_group"][data-progress_group][data-orientation="vertical"] {
+        display: grid;
+        grid-template-columns: var(--fl-progress-group-height) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--fl-spacing-sm);
+        row-gap: 0;
+        inline-size: fit-content;
+        min-block-size: 10rem;
+    }
+
+    [data-element="progress_group"][data-progress_group][data-orientation="vertical"]
+        > [data-part="status"] {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        justify-self: end;
+        margin-block-end: var(--fl-spacing-xs);
+    }
+
+    [data-element="progress_group"][data-progress_group][data-orientation="vertical"]
+        > [data-part="track"] {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: stretch;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-block-size: 0;
+        inline-size: var(--fl-progress-group-height);
+        block-size: auto;
+    }
+
+    [data-element="progress_group"][data-progress_group][data-orientation="vertical"]
+        > [data-part="track"]
+        > [data-part="segment"] {
+        inline-size: 100%;
+        block-size: auto;
+        transition: block-size var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="progress_group"][data-progress_group][data-orientation="vertical"]
+        > [data-part="legend"] {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: center;
+        justify-self: stretch;
+    }
+
+    /* Legend. One row per segment: the color dot (or the segment icon), the
+     * label, and the percentage at the inline end. */
+    [data-element="progress_group"][data-progress_group] > [data-part="legend"] {
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"] {
+        display: flex;
+        align-items: center;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"]
+        > [data-part="dot"] {
+        flex: none;
+        inline-size: var(--fl-progress-group-dot-size);
+        block-size: var(--fl-progress-group-dot-size);
+        border-radius: var(--fl-radius-full);
+        background-color: var(--fl-progress-group-color);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"]
+        > [data-part="icon"] {
+        --fl-icon-size: 1em;
+        flex: none;
+        color: var(--fl-progress-group-color);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"]
+        > [data-part="label"] {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"]
+        > [data-part="value"] {
+        flex: none;
+        margin-inline-start: auto;
+        color: var(--fl-color-text-muted);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* Sizes. The legend text, dot, and track follow the same step, so a larger
+     * group reads larger everywhere. */
+    [data-element="progress_group"][data-size="xs"][data-progress_group] {
+        --fl-progress-group-height: 0.125rem;
+        --fl-progress-group-dot-size: 0.375rem;
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-element="progress_group"][data-size="sm"][data-progress_group] {
+        --fl-progress-group-height: 0.25rem;
+        --fl-progress-group-dot-size: 0.375rem;
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-element="progress_group"][data-size="md"][data-progress_group] {
+        --fl-progress-group-height: 0.5rem;
+        --fl-progress-group-dot-size: 0.5rem;
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress_group"][data-size="lg"][data-progress_group] {
+        --fl-progress-group-height: 0.75rem;
+        --fl-progress-group-dot-size: 0.5rem;
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress_group"][data-size="xl"][data-progress_group] {
+        --fl-progress-group-height: 1rem;
+        --fl-progress-group-dot-size: 0.625rem;
+        font-size: var(--fl-font-size-md);
+        line-height: var(--fl-line-height-md);
+    }
+
+    /* Radius. The track clips the segments, so a horizontal bar follows the
+     * track corners without per-segment radius declarations. */
+    [data-element="progress_group"][data-radius="none"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: 0;
+    }
+
+    [data-element="progress_group"][data-radius="xs"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: var(--fl-radius-xs);
+    }
+
+    [data-element="progress_group"][data-radius="sm"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: var(--fl-radius-sm);
+    }
+
+    [data-element="progress_group"][data-radius="md"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: var(--fl-radius-md);
+    }
+
+    [data-element="progress_group"][data-radius="lg"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: var(--fl-radius-lg);
+    }
+
+    [data-element="progress_group"][data-radius="xl"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: var(--fl-radius-xl);
+    }
+
+    [data-element="progress_group"][data-radius="full"][data-progress_group]
+        > [data-part="track"] {
+        border-radius: var(--fl-radius-full);
+    }
+
+    /* Color roles. `primary` is the base treatment; `neutral` is the inverted
+     * surface, matching the other feedback and form components. The segment and
+     * its legend row override the inherited group color. */
+    [data-element="progress_group"][data-color="secondary"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-secondary);
+    }
+
+    [data-element="progress_group"][data-color="neutral"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-inverted);
+    }
+
+    [data-element="progress_group"][data-color="info"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-info);
+    }
+
+    [data-element="progress_group"][data-color="success"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-success);
+    }
+
+    [data-element="progress_group"][data-color="warning"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-warning);
+    }
+
+    [data-element="progress_group"][data-color="error"][data-progress_group] {
+        --fl-progress-group-color: var(--fl-color-error);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="primary"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="primary"] {
+        --fl-progress-group-color: var(--fl-color-primary);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="secondary"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="secondary"] {
+        --fl-progress-group-color: var(--fl-color-secondary);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="neutral"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="neutral"] {
+        --fl-progress-group-color: var(--fl-color-inverted);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="info"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="info"] {
+        --fl-progress-group-color: var(--fl-color-info);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="success"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="success"] {
+        --fl-progress-group-color: var(--fl-color-success);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="warning"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="warning"] {
+        --fl-progress-group-color: var(--fl-color-warning);
+    }
+
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="track"]
+        > [data-part="segment"][data-color="error"],
+    [data-element="progress_group"][data-progress_group]
+        > [data-part="legend"]
+        > [data-part="item"][data-color="error"] {
+        --fl-progress-group-color: var(--fl-color-error);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="progress_group"][data-progress_group]
+            > [data-part="track"]
+            > [data-part="segment"] {
+            transition: none;
+        }
+    }
+}

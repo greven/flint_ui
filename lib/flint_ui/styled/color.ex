@@ -106,21 +106,28 @@ defmodule FlintUI.Styled.Color do
   # as a `:color_style` assign. A wrapper whose root owns the color variables
   # (while `rest` belongs to a nested image) can place that style on the root.
   def apply_style(assigns, roles, vars, opts \\ []) do
-    {data_color, color_style} =
-      case resolve(assigns.color, roles) do
-        {:hook, hook} ->
-          {hook, nil}
-
-        {:raw, source, color} ->
-          {nil, style(source, color, vars, opts)}
-
-        :error ->
-          raise ArgumentError, invalid_message(:color, assigns.color, roles)
-      end
+    {data_color, color_style} = resolve_style(assigns.color, roles, vars, opts)
 
     assigns
     |> put_assign(:data_color, data_color)
     |> put_assign(:color_style, color_style)
+  end
+
+  @doc false
+  # Resolves a free-form color into the `data-color` hook and the inline style
+  # without assigns. Wrappers that color repeated children from slot attributes
+  # cannot call `apply_style/4`, which writes assigns.
+  def resolve_style(color, roles, vars, opts \\ []) do
+    case resolve(color, roles) do
+      {:hook, hook} ->
+        {hook, nil}
+
+      {:raw, source, color} ->
+        {nil, style(source, color, vars, opts)}
+
+      :error ->
+        raise ArgumentError, invalid_message(:color, color, roles)
+    end
   end
 
   @doc false
