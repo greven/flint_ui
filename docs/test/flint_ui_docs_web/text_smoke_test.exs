@@ -31,6 +31,11 @@ defmodule FlintUIDocsWeb.TextSmokeTest do
 
     assert has_element?(
              view,
+             "#usage-text-external a[data-element='text'][data-external] [data-part='trailing'] [data-element='icon']"
+           )
+
+    assert has_element?(
+             view,
              "#usage-text-truncation [data-element='text'][data-truncate]"
            )
 

@@ -19,6 +19,15 @@ defmodule FlintUI.Base.Text do
   its own. The styled wrapper adds `size`, `color`, `weight`, `align`,
   `truncate`, and `line_clamp`.
 
+  The `:trailing` slot renders inline content after the text, inside the same
+  element. The styled wrapper uses it for the external-link indicator; the base
+  leaves the content and its styling to the caller:
+
+      <.text href="https://example.com">
+        Example
+        <:trailing><.icon name="lucide-arrow-up-right" /></:trailing>
+      </.text>
+
   The base renders the semantic element only and ships no styling. The styled
   wrapper applies the type scale and ink tiers through the shared typography
   primitive.
@@ -78,6 +87,14 @@ defmodule FlintUI.Base.Text do
           value: "string",
           description: "Present on the link form, alongside the other forwarded link attributes."
         }
+      ],
+      trailing: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "trailing",
+          description:
+            "Wraps the inline content rendered after the text, inside the same element."
+        }
       ]
     ]
   end
@@ -88,7 +105,8 @@ defmodule FlintUI.Base.Text do
       root: %{
         "data-element" => "text",
         "data-part" => "root"
-      }
+      },
+      trailing: %{"data-part" => "trailing"}
     }
   end
 
@@ -109,16 +127,26 @@ defmodule FlintUI.Base.Text do
 
   slot :inner_block, required: true, doc: "The text content."
 
+  slot :trailing,
+    doc:
+      "Inline content rendered after the text, inside the same element. Use it for a decorative indicator such as an external-link arrow."
+
   @impl true
   def render(assigns) do
+    assigns = assign(assigns, :trailing, Map.get(assigns, :trailing, []))
+
     if link?(assigns) do
       ~H"""
-      <.link {@rest} {@flint_parts[:root]}>{render_slot(@inner_block)}</.link>
+      <.link {@rest} {@flint_parts[:root]}>
+        {render_slot(@inner_block)}
+        <span :if={@trailing != []} {@flint_parts[:trailing]}>{render_slot(@trailing)}</span>
+      </.link>
       """
     else
       ~H"""
       <.dynamic_tag tag_name={@as} {@rest} {@flint_parts[:root]}>
         {render_slot(@inner_block)}
+        <span :if={@trailing != []} {@flint_parts[:trailing]}>{render_slot(@trailing)}</span>
       </.dynamic_tag>
       """
     end

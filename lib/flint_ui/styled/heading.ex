@@ -36,7 +36,7 @@ defmodule FlintUI.Styled.Heading do
         ),
         Prop.new(
           name: :weight,
-          values: ~w(normal medium semibold bold),
+          values: ~w(thin extralight light normal medium semibold bold extrabold black),
           default: "semibold",
           primitive: :typography,
           doc: "The heading font weight."

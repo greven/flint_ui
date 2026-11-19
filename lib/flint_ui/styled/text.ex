@@ -1,7 +1,7 @@
 defmodule FlintUI.Styled.Text do
   @moduledoc false
 
-  alias FlintUI.Styled.{Entry, Prop, Var}
+  alias FlintUI.Styled.{Attr, Entry, Prop, Var}
 
   def entry do
     %Entry{
@@ -34,7 +34,7 @@ defmodule FlintUI.Styled.Text do
         ),
         Prop.new(
           name: :weight,
-          values: ~w(normal medium semibold bold),
+          values: ~w(thin extralight light normal medium semibold bold extrabold black),
           default: "normal",
           primitive: :typography,
           doc: "The text font weight."
@@ -45,6 +45,13 @@ defmodule FlintUI.Styled.Text do
           default: "start",
           primitive: :typography,
           doc: "The text alignment."
+        ),
+        Prop.new(
+          name: :external,
+          values: [true, false],
+          default: false,
+          doc:
+            "Whether the link leaves the site. Adds a trailing arrow inside the link and the `data-external` hook. It only applies to the link form and does not change where the link opens; set `target` and `rel` when it should open in a new tab."
         ),
         Prop.new(
           name: :truncate,
@@ -61,6 +68,15 @@ defmodule FlintUI.Styled.Text do
           type: :integer,
           doc:
             "The number of lines before the text is clamped with an ellipsis. Values `1` to `6` are documented, and any positive integer works. Takes precedence over `truncate`."
+        )
+      ],
+      content_attrs: [
+        Attr.new(
+          name: :external_icon,
+          type: :string,
+          default: "lucide-arrow-up-right",
+          doc:
+            "The icon class for the external-link arrow. Set it to a class from your icon set, or to an empty string to keep the `data-external` hook without an arrow."
         )
       ],
       vars: [

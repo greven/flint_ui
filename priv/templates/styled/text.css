@@ -38,6 +38,17 @@
         color: var(--fl-color-primary-text);
     }
 
+    /* External-link indicator. `external` appends a trailing arrow inside the
+     * link. The arrow is decorative, so the link text carries the meaning. */
+    [data-element="text"][data-external] > [data-part="trailing"] {
+        display: inline-block;
+        margin-inline-start: 0.125em;
+    }
+
+    [data-element="text"][data-external] > [data-part="trailing"] [data-element="icon"] {
+        --fl-icon-size: 1em;
+    }
+
     /* Inline code keeps its monospace semantics and scales with the text. */
     [data-element="text"] :is(code, kbd, samp) {
         font-family: var(--fl-font-mono);

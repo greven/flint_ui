@@ -61,6 +61,14 @@ defmodule FlintUI.Styled.HeadingTest do
         <.heading color="#1D72FE">Raw color</.heading>
         """
       end
+
+      def weights(assigns) do
+        ~H"""
+        <.heading :for={weight <- ~w(thin extralight light normal medium semibold bold extrabold black)} weight={weight}>
+          {weight}
+        </.heading>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -143,5 +151,12 @@ defmodule FlintUI.Styled.HeadingTest do
 
     assert attr(document, :heading, "data-color") == []
     assert attr(document, :heading, "style") |> Enum.join() =~ "--fl-typography-color:"
+  end
+
+  test "maps every weight step onto its hook", %{wrapper: wrapper} do
+    document = render(wrapper, :weights)
+
+    assert attr(document, :heading, "data-weight") ==
+             ~w(thin extralight light normal medium semibold bold extrabold black)
   end
 end

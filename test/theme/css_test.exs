@@ -294,7 +294,20 @@ defmodule FlintUI.Theme.CSSTest do
   test "defines type, spacing, elevation, and motion scales", %{css: css} do
     assert css =~ "--fl-font-mono:"
     assert css =~ "--fl-font-size-md: 1rem;"
-    assert css =~ "--fl-font-weight-medium: 500;"
+
+    for {weight, value} <- [
+          thin: 100,
+          extralight: 200,
+          light: 300,
+          normal: 400,
+          medium: 500,
+          semibold: 600,
+          bold: 700,
+          extrabold: 800,
+          black: 900
+        ] do
+      assert css =~ "--fl-font-weight-#{weight}: #{value};"
+    end
 
     for size <- ~w(2xl 3xl 4xl 5xl 6xl) do
       assert css =~ "--fl-font-size-#{size}:"
@@ -318,7 +331,11 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "[data-typography]"
     assert css =~ ~s([data-typography][data-size="6xl"])
     assert css =~ ~s([data-typography][data-color="primary"])
-    assert css =~ ~s([data-typography][data-weight="semibold"])
+
+    for weight <- ~w(thin extralight light normal medium semibold bold extrabold black) do
+      assert css =~ ~s([data-typography][data-weight="#{weight}"])
+    end
+
     assert css =~ ~s([data-typography][data-align="center"])
   end
 

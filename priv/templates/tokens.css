@@ -36,10 +36,15 @@
     --fl-line-height-5xl: 1;
     --fl-line-height-6xl: 1;
 
+    --fl-font-weight-thin: 100;
+    --fl-font-weight-extralight: 200;
+    --fl-font-weight-light: 300;
     --fl-font-weight-normal: 400;
     --fl-font-weight-medium: 500;
     --fl-font-weight-semibold: 600;
     --fl-font-weight-bold: 700;
+    --fl-font-weight-extrabold: 800;
+    --fl-font-weight-black: 900;
 
     --fl-font-tracking-tighter: -0.05em;
     --fl-font-tracking-tight: -0.025em;

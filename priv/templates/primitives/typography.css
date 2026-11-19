@@ -135,6 +135,18 @@
         --fl-typography-color: var(--fl-color-light-text);
     }
 
+    [data-typography][data-weight="thin"] {
+        font-weight: var(--fl-font-weight-thin);
+    }
+
+    [data-typography][data-weight="extralight"] {
+        font-weight: var(--fl-font-weight-extralight);
+    }
+
+    [data-typography][data-weight="light"] {
+        font-weight: var(--fl-font-weight-light);
+    }
+
     [data-typography][data-weight="normal"] {
         font-weight: var(--fl-font-weight-normal);
     }
@@ -149,6 +161,14 @@
 
     [data-typography][data-weight="bold"] {
         font-weight: var(--fl-font-weight-bold);
+    }
+
+    [data-typography][data-weight="extrabold"] {
+        font-weight: var(--fl-font-weight-extrabold);
+    }
+
+    [data-typography][data-weight="black"] {
+        font-weight: var(--fl-font-weight-black);
     }
 
     [data-typography][data-align="start"] {

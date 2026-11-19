@@ -248,10 +248,15 @@ defmodule FlintUI.Generator do
       --tracking-wider: var(--fl-font-tracking-wider);
       --tracking-widest: var(--fl-font-tracking-widest);
 
+      --font-weight-thin: var(--fl-font-weight-thin);
+      --font-weight-extralight: var(--fl-font-weight-extralight);
+      --font-weight-light: var(--fl-font-weight-light);
       --font-weight-normal: var(--fl-font-weight-normal);
       --font-weight-medium: var(--fl-font-weight-medium);
       --font-weight-semibold: var(--fl-font-weight-semibold);
       --font-weight-bold: var(--fl-font-weight-bold);
+      --font-weight-extrabold: var(--fl-font-weight-extrabold);
+      --font-weight-black: var(--fl-font-weight-black);
 
       --shadow-base: var(--fl-shadow-base);
       --shadow-2xs: var(--fl-shadow-2xs);

@@ -47,6 +47,41 @@ defmodule FlintUI.Styled.TextTest do
         <.text color="#1D72FE">Raw color</.text>
         """
       end
+
+      def external(assigns) do
+        ~H"""
+        <.text href="https://example.com" external>Example</.text>
+        """
+      end
+
+      def external_custom(assigns) do
+        ~H"""
+        <.text href="https://example.com" external external_icon="ph-arrow-up-right">
+          Example
+        </.text>
+        """
+      end
+
+      def external_no_icon(assigns) do
+        ~H"""
+        <.text href="https://example.com" external external_icon="">Example</.text>
+        """
+      end
+
+      def external_text(assigns) do
+        ~H"""
+        <.text external>Plain text</.text>
+        """
+      end
+
+      def trailing(assigns) do
+        ~H"""
+        <.text href="/docs">
+          Read the docs
+          <:trailing><span data-test="custom">!</span></:trailing>
+        </.text>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -113,5 +148,57 @@ defmodule FlintUI.Styled.TextTest do
 
     assert attr(document, :text, "data-color") == []
     assert attr(document, :text, "style") |> Enum.join() =~ "--fl-typography-color:"
+  end
+
+  test "external links get the hook and a trailing arrow", %{wrapper: wrapper} do
+    document = render(wrapper, :external)
+
+    assert LazyHTML.tag(root(document, :text)) == ["a"]
+    assert attr(document, :text, "data-external") == [""]
+
+    icon =
+      LazyHTML.query(
+        document,
+        ~s([data-element="text"] [data-part="trailing"] [data-element="icon"])
+      )
+
+    assert LazyHTML.attribute(icon, "class") == ["lucide-arrow-up-right"]
+    assert LazyHTML.attribute(icon, "aria-hidden") == ["true"]
+  end
+
+  test "external_icon swaps the arrow class", %{wrapper: wrapper} do
+    document = render(wrapper, :external_custom)
+
+    icon =
+      LazyHTML.query(
+        document,
+        ~s([data-element="text"] [data-part="trailing"] [data-element="icon"])
+      )
+
+    assert LazyHTML.attribute(icon, "class") == ["ph-arrow-up-right"]
+  end
+
+  test "external_icon nil keeps the hook without an arrow", %{wrapper: wrapper} do
+    document = render(wrapper, :external_no_icon)
+
+    assert attr(document, :text, "data-external") == [""]
+    assert LazyHTML.to_html(LazyHTML.query(document, ~s([data-element="icon"]))) == ""
+    assert LazyHTML.to_html(LazyHTML.query(document, ~s([data-part="trailing"]))) == ""
+  end
+
+  test "external is ignored on the non-link form", %{wrapper: wrapper} do
+    document = render(wrapper, :external_text)
+
+    assert LazyHTML.tag(root(document, :text)) == ["p"]
+    assert attr(document, :text, "data-external") == []
+    assert LazyHTML.to_html(LazyHTML.query(document, ~s([data-element="icon"]))) == ""
+  end
+
+  test "forwards a caller trailing slot", %{wrapper: wrapper} do
+    document = render(wrapper, :trailing)
+
+    trailing = LazyHTML.query(document, ~s([data-part="trailing"]))
+    assert LazyHTML.text(trailing) |> String.trim() == "!"
+    assert LazyHTML.to_html(LazyHTML.query(document, ~s([data-element="icon"]))) == ""
   end
 end

@@ -26,6 +26,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
       },
       %{tab: :styled, section: :usage, id: :inline, title: "Inline Text"},
       %{tab: :styled, section: :usage, id: :links, title: "Links"},
+      %{tab: :styled, section: :usage, id: :external, title: "External Links"},
       %{
         tab: :styled,
         section: :usage,
@@ -90,6 +91,27 @@ defmodule FlintUIDocsWeb.Docs.Text do
           <Components.text as="a" href="/guides/theming" color="primary">
             open the theming guide
           </Components.text>
+        </Components.text>
+      </div>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :external} = assigns) do
+    ~H"""
+    <.prose content="Set `external` on a link to append a trailing arrow. The arrow is decorative and comes from `external_icon`, which defaults to `lucide-arrow-up-right`; pass another icon class to match your set, or an empty string to keep the hook without an arrow. `external` does not change where the link opens, so set `target` and `rel` when it should open in a new tab." />
+    <.preview {assigns} code={external_code()}>
+      <div class="flex flex-col gap-3">
+        <Components.text href="https://hexdocs.pm/phoenix" external>
+          Phoenix documentation
+        </Components.text>
+        <Components.text
+          href="https://hexdocs.pm/phoenix"
+          external
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Phoenix documentation in a new tab
         </Components.text>
       </div>
     </.preview>
@@ -178,6 +200,24 @@ defmodule FlintUIDocsWeb.Docs.Text do
     <.text as="span" color="muted">
       A span can be a link too:
       <.text as="a" href="/guides/theming" color="primary">open the theming guide</.text>
+    </.text>
+    """
+    |> String.trim()
+  end
+
+  defp external_code do
+    """
+    <.text href="https://hexdocs.pm/phoenix" external>
+      Phoenix documentation
+    </.text>
+
+    <.text
+      href="https://hexdocs.pm/phoenix"
+      external
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Phoenix documentation in a new tab
     </.text>
     """
     |> String.trim()

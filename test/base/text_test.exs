@@ -31,6 +31,15 @@ defmodule FlintUI.Base.TextTest do
       <.text navigate="/settings">Settings</.text>
       """
     end
+
+    def trailing(assigns) do
+      ~H"""
+      <.text href="/docs">
+        Read the docs
+        <:trailing><span data-test="arrow">↗</span></:trailing>
+      </.text>
+      """
+    end
   end
 
   defp render(fun), do: render_component(fun, %{}) |> LazyHTML.from_fragment()
@@ -78,10 +87,23 @@ defmodule FlintUI.Base.TextTest do
     assert root(document) |> LazyHTML.text() |> String.trim() == "Settings"
   end
 
+  test "renders the trailing slot inside the link" do
+    document = render(&TestComponent.trailing/1)
+    trailing = LazyHTML.query(document, ~s([data-element="text"] [data-part="trailing"]))
+
+    assert LazyHTML.tag(root(document)) == ["a"]
+    assert LazyHTML.attribute(trailing, "data-part") == ["trailing"]
+    assert LazyHTML.text(trailing) |> String.trim() == "↗"
+
+    link_text = root(document) |> LazyHTML.text()
+    assert link_text =~ "Read the docs"
+    assert link_text =~ "↗"
+  end
+
   test "declares a documented contract" do
     assert %FlintUI.Meta{name: :text, type: :typography, status: :draft} =
              FlintUI.Base.Text.meta()
 
-    assert [:root] == FlintUI.Base.Text.parts_attrs() |> Enum.map(&elem(&1, 0))
+    assert [:root, :trailing] == FlintUI.Base.Text.parts_attrs() |> Enum.map(&elem(&1, 0))
   end
 end

@@ -531,6 +531,11 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--text-6xl: var(--fl-font-size-6xl);"
     assert bridge =~ "--text-6xl--line-height: var(--fl-line-height-6xl);"
     assert bridge =~ "--tracking-wide: var(--fl-font-tracking-wide);"
+
+    for weight <- ~w(thin extralight light normal medium semibold bold extrabold black) do
+      assert bridge =~ "--font-weight-#{weight}: var(--fl-font-weight-#{weight});"
+    end
+
     assert bridge =~ "--text-color-highlighted: var(--fl-color-text-highlighted);"
     assert bridge =~ "--text-color-default: var(--fl-color-text);"
     assert bridge =~ "--text-color-toned: var(--fl-color-text-toned);"
