@@ -103,6 +103,12 @@ defmodule FlintUIDocsWeb.Docs.Button do
       %{
         tab: :styled,
         section: :examples,
+        id: :progress,
+        title: "Progress"
+      },
+      %{
+        tab: :styled,
+        section: :examples,
         id: :interactions,
         title: "Interactions"
       }
@@ -567,6 +573,126 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
   end
 
+  def render_section(%{section: :examples, id: :progress} = assigns) do
+    ~H"""
+    <.prose content={~S|This example shows a possible implementation of a button with a progress bar.
+      The demo simulates the ticks in the browser so you can replay it with Reset or by clicking the
+      button again. Announce the start and the result, not every tick, and reserve the label width so the
+      percentage does not resize the button.|} />
+
+    <.preview {assigns} codes={&code_progress/1} collapsed>
+      <div id="button-progress-demo" phx-hook=".ButtonProgress" phx-update="ignore">
+        <div class="flex flex-wrap items-center gap-3">
+          <Components.button
+            id="button-progress-download"
+            class="relative min-w-56 overflow-hidden"
+            aria-label="Download"
+          >
+            <span class="flex items-center gap-2">
+              <Components.icon name="lucide-download" class="size-4" />
+              <span data-progress-label class="w-24 text-left">Download</span>
+              <span
+                data-progress-percent
+                class="w-8 text-right text-xs tabular-nums opacity-70"
+              ></span>
+            </span>
+            <span
+              data-progress-bar
+              aria-hidden="true"
+              class="absolute inset-x-0 bottom-0 h-0.5 w-0 bg-current opacity-60 transition-[width] duration-150 ease-out motion-reduce:transition-none"
+            ></span>
+          </Components.button>
+
+          <Components.button
+            id="button-progress-reset"
+            variant="ghost"
+            size="sm"
+            data-progress-reset
+          >
+            Reset
+          </Components.button>
+        </div>
+
+        <span id="button-progress-status" role="status" class="sr-only"></span>
+      </div>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".ButtonProgress">
+        export default {
+          mounted() {
+            this.button = this.el.querySelector("#button-progress-download")
+            this.label = this.button.querySelector("[data-progress-label]")
+            this.percent = this.button.querySelector("[data-progress-percent]")
+            this.bar = this.button.querySelector("[data-progress-bar]")
+            this.status = this.el.querySelector("#button-progress-status")
+            this.resetButton = this.el.querySelector("#button-progress-reset")
+            this.value = 0
+
+            this.onClick = () => this.start()
+            this.onReset = () => this.reset()
+
+            this.button.addEventListener("click", this.onClick)
+            this.resetButton.addEventListener("click", this.onReset)
+          },
+          start() {
+            if (this.button.hasAttribute("data-loading")) return
+
+            this.stop()
+            this.setProgress(0)
+            this.setPending(true)
+            this.label.textContent = "Downloading"
+            this.status.textContent = "Downloading"
+
+            this.timer = setInterval(() => {
+              this.setProgress(Math.min(100, this.value + 4))
+              if (this.value === 100) this.finish()
+            }, 90)
+          },
+          finish() {
+            this.stop()
+            this.setPending(false)
+            this.label.textContent = "Downloaded"
+            this.status.textContent = "Download complete"
+          },
+          reset() {
+            this.stop()
+            this.setPending(false)
+            this.label.textContent = "Download"
+            this.percent.textContent = ""
+            this.bar.style.width = "0%"
+            this.value = 0
+            this.status.textContent = ""
+          },
+          setPending(pending) {
+            if (pending) {
+              this.button.setAttribute("data-loading", "")
+              this.button.setAttribute("aria-busy", "true")
+              this.button.setAttribute("aria-disabled", "true")
+            } else {
+              this.button.removeAttribute("data-loading")
+              this.button.removeAttribute("aria-busy")
+              this.button.removeAttribute("aria-disabled")
+            }
+          },
+          setProgress(value) {
+            this.value = value
+            this.percent.textContent = value + "%"
+            this.bar.style.width = value + "%"
+          },
+          stop() {
+            clearInterval(this.timer)
+            this.timer = null
+          },
+          destroyed() {
+            this.stop()
+            this.button.removeEventListener("click", this.onClick)
+            this.resetButton.removeEventListener("click", this.onReset)
+          }
+        }
+      </script>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :examples, id: :interactions} = assigns) do
     ~H"""
     <.prose content={"The loading can be more than a disabled click: slide the label out, reveal an
@@ -916,6 +1042,57 @@ defmodule FlintUIDocsWeb.Docs.Button do
       <.icon name="lucide-trash" /> Delete Item
     </.button>
     """
+  end
+
+  defp code_progress(_) do
+    [
+      %{
+        label: "HEEx",
+        code: ~S"""
+        <.button
+          loading={@downloading}
+          aria-label="Download"
+          class="relative min-w-56 overflow-hidden"
+        >
+          <span class="flex items-center gap-2">
+            <.icon name="lucide-download" class="size-4" />
+            <span class="w-24 text-left">
+              {if @downloading, do: "Downloading", else: "Download"}
+            </span>
+            <span class="w-8 text-right text-xs tabular-nums opacity-70">
+              {if @downloading, do: "#{@percent}%"}
+            </span>
+          </span>
+          <span
+            aria-hidden="true"
+            class="absolute inset-x-0 bottom-0 h-0.5 bg-current opacity-60 transition-[width] duration-150 ease-out motion-reduce:transition-none"
+            style={"width: #{@percent}%"}
+          ></span>
+        </.button>
+
+        <span role="status" class="sr-only">{@status}</span>
+        """
+      },
+      %{
+        label: "LiveView",
+        lang: :elixir,
+        code: """
+        def handle_event("download", _params, socket) do
+          # Start the work; it reports progress with {:download_progress, percent}.
+          {:noreply, assign(socket, downloading: true, percent: 0, status: "Downloading")}
+        end
+
+        def handle_info({:download_progress, percent}, socket) do
+          {:noreply, assign(socket, :percent, percent)}
+        end
+
+        def handle_info(:download_done, socket) do
+          {:noreply,
+           assign(socket, downloading: false, percent: 100, status: "Download complete")}
+        end
+        """
+      }
+    ]
   end
 
   defp code_css_vars(_) do

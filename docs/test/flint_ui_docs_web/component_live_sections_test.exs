@@ -12,6 +12,17 @@ defmodule FlintUIDocsWeb.ComponentLiveSectionsTest do
     assert has_element?(view, "#usage-color h3 a[href='#usage-color']", "Color")
   end
 
+  test "renders the progress example idle with a reset affordance", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/button")
+
+    assert has_element?(view, "#example-button-progress-preview")
+    assert has_element?(view, "#button-progress-download[aria-label='Download']")
+    refute has_element?(view, "#button-progress-download[data-loading]")
+    assert has_element?(view, "#button-progress-download [data-progress-bar]")
+    assert has_element?(view, "#button-progress-reset", "Reset")
+    assert has_element?(view, "#button-progress-status[role='status']")
+  end
+
   test "section controls update the preview and its snippet", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
