@@ -28,7 +28,7 @@ defmodule FlintUI.Styled.CopyButton do
           type: :string,
           fills_content: true,
           doc:
-            "A visible label rendered when the default slot is not given. The default slot wins when both are set."
+            "A visible label rendered when the default slot is not given. The default slot wins when both are set. When `label` is omitted, this text also becomes the accessible name."
         ),
         Attr.new(
           name: :success_icon,
@@ -43,6 +43,13 @@ defmodule FlintUI.Styled.CopyButton do
           default: "lucide-circle-x",
           doc:
             "An icon CSS class rendered after a failed copy. The live region announces the result."
+        ),
+        Attr.new(
+          name: :tooltip,
+          type: :any,
+          default: false,
+          doc:
+            "Whether to wrap the button in a tooltip. Set `tooltip` for the default `top` placement, or pass a side (`top`, `right`, `bottom`, `left`) to prefer one. The tooltip shows `label` on hover and focus, `success_label` while the success state is visible, and `error_label` on failure. Useful for an icon-only button."
         )
       ],
       props: [
@@ -70,6 +77,15 @@ defmodule FlintUI.Styled.CopyButton do
           primitive: :control,
           doc:
             "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent."
+        ),
+        Prop.new(
+          name: :success_color,
+          values: ["inherit"] ++ ~w(neutral info success warning error primary secondary),
+          default: "inherit",
+          resolved: ["inherit"],
+          state: "success",
+          doc:
+            "The theme color the control takes while the success state is visible. `inherit` keeps the base `color`; a role recolors the whole control and transitions back when the feedback ends. A raw `color` writes its fill inline, so pair `success_color` with a role when the resting color is raw."
         ),
         Prop.new(
           name: :size,

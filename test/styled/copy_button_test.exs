@@ -69,13 +69,61 @@ defmodule FlintUI.Styled.CopyButtonTest do
 
       def text_only(assigns) do
         ~H"""
-        <.copy_button from="install-command" text="Copy" />
+        <.copy_button from="install-command" text="Copy token" />
+        """
+      end
+
+      def text_with_label(assigns) do
+        ~H"""
+        <.copy_button from="install-command" text="Copy" label="Copy install command" />
         """
       end
 
       def raw_color(assigns) do
         ~H"""
         <.copy_button from="install-command" color="#1D72FE">Copy</.copy_button>
+        """
+      end
+
+      def with_tooltip(assigns) do
+        ~H"""
+        <.copy_button
+          from="install-command"
+          label="Copy install command"
+          success_label="Command copied"
+          error_label="Nothing to copy"
+          tooltip="right"
+          class="extra"
+          data-role="test"
+        />
+        """
+      end
+
+      def with_default_tooltip(assigns) do
+        ~H"""
+        <.copy_button from="install-command" tooltip />
+        """
+      end
+
+      def with_success_color(assigns) do
+        ~H"""
+        <.copy_button from="install-command" success_color="success">Copy</.copy_button>
+        """
+      end
+
+      def with_success_slot_and_text(assigns) do
+        ~H"""
+        <.copy_button from="install-command" text="Copy">
+          <:success>Copied</:success>
+        </.copy_button>
+        """
+      end
+
+      def with_success_slot_only(assigns) do
+        ~H"""
+        <.copy_button from="install-command">
+          <:success>Copied</:success>
+        </.copy_button>
         """
       end
       ''')
@@ -113,6 +161,67 @@ defmodule FlintUI.Styled.CopyButtonTest do
     assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == ""
   end
 
+  test "omits the tooltip and the success color by default", %{wrapper: wrapper} do
+    document = render(wrapper, :defaults)
+
+    assert Enum.count(LazyHTML.query(document, ~s([data-element="tooltip"]))) == 0
+    assert attr(document, :copy_button, "data-success-color") == []
+  end
+
+  test "wraps the button in a state-aware tooltip", %{wrapper: wrapper} do
+    document = render(wrapper, :with_tooltip)
+    tooltip = LazyHTML.query(document, ~s([data-element="tooltip"]))
+
+    assert Enum.count(tooltip) == 1
+    assert LazyHTML.attribute(tooltip, "data-tooltip") == [""]
+    assert LazyHTML.attribute(tooltip, "data-copy-tooltip") == [""]
+    assert LazyHTML.attribute(tooltip, "data-placement") == ["right"]
+
+    assert attr(document, :copy_button, "data-part") == ["root"]
+    assert attr(document, :copy_button, "class") == ["extra"]
+    assert attr(document, :copy_button, "data-role") == ["test"]
+
+    for {state, text} <- [
+          {"idle", "Copy install command"},
+          {"success", "Command copied"},
+          {"error", "Nothing to copy"}
+        ] do
+      span = LazyHTML.query(document, ~s([data-copy-tooltip-text="#{state}"]))
+      assert LazyHTML.text(span) |> String.trim() == text
+    end
+  end
+
+  test "a bare tooltip defaults to the top placement", %{wrapper: wrapper} do
+    document = render(wrapper, :with_default_tooltip)
+    tooltip = LazyHTML.query(document, ~s([data-element="tooltip"]))
+
+    assert Enum.count(tooltip) == 1
+    assert LazyHTML.attribute(tooltip, "data-placement") == ["top"]
+  end
+
+  test "recolors the control for the success state", %{wrapper: wrapper} do
+    document = render(wrapper, :with_success_color)
+
+    assert attr(document, :copy_button, "data-success-color") == ["success"]
+  end
+
+  test "text renders when the body contains only a named slot", %{wrapper: wrapper} do
+    document = render(wrapper, :with_success_slot_and_text)
+
+    assert attr(document, :copy_button, "aria-label") == ["Copy"]
+    assert attr(document, :copy_button, "data-square") == []
+    assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == "Copy"
+    assert LazyHTML.text(part(document, "success_state")) =~ "Copied"
+  end
+
+  test "a named slot alone keeps the icon-only square box", %{wrapper: wrapper} do
+    document = render(wrapper, :with_success_slot_only)
+
+    assert attr(document, :copy_button, "data-square") == [""]
+    assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == ""
+    assert LazyHTML.text(part(document, "success_state")) =~ "Copied"
+  end
+
   test "maps every override and forwards the base contract", %{wrapper: wrapper} do
     document = render(wrapper, :configured)
 
@@ -142,10 +251,18 @@ defmodule FlintUI.Styled.CopyButtonTest do
     assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == "Copy"
   end
 
-  test "a visible label keeps the inline padding instead of a square box", %{wrapper: wrapper} do
+  test "text becomes the accessible name and keeps the inline padding", %{wrapper: wrapper} do
     document = render(wrapper, :text_only)
 
     assert attr(document, :copy_button, "data-square") == []
+    assert attr(document, :copy_button, "aria-label") == ["Copy token"]
+    assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == "Copy token"
+  end
+
+  test "an explicit label wins over text", %{wrapper: wrapper} do
+    document = render(wrapper, :text_with_label)
+
+    assert attr(document, :copy_button, "aria-label") == ["Copy install command"]
     assert LazyHTML.text(part(document, "copy_state")) |> String.trim() == "Copy"
   end
 

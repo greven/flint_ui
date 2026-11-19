@@ -63,11 +63,18 @@ defmodule FlintUI.Base.Tooltip do
   The content carries `role="tooltip"` and the trigger carries `aria-describedby`
   pointing at it, so a screen reader announces the hint as the trigger's
   description, not as part of its name. The hook owns that wiring: it marks the
-  first element in the default slot with `data-part="trigger"`, appends the
+  first element in the default slot with `data-tooltip-trigger` (and with
+  `data-part="trigger"` when the element has no part of its own), appends the
   content id to any `aria-describedby` the trigger already has (a form hint
   pointing at a help text is kept), and mirrors the open and disabled states
-  onto it. Because the wiring happens on mount, the markup ships without those
-  attributes; the tooltip does not work without JS in the first place.
+  onto `data-tooltip-state` and `data-tooltip-disabled`. Because the wiring
+  happens on mount, the markup ships without those attributes; the tooltip does
+  not work without JS in the first place.
+
+  The trigger state markers are separate from `data-state`, so a tooltip can
+  wrap a component that manages that attribute itself, such as a copy button in
+  its success state or a toggle in its pressed state. A component root also
+  keeps its own `data-part`.
 
   While closed, the content is `display: none` (a closed popover), so it is
   neither exposed nor focusable.
@@ -161,15 +168,21 @@ defmodule FlintUI.Base.Tooltip do
           name: "[data-part]",
           value: "trigger",
           description:
-            "Applied by the hook to the first element in the default slot, identifying it as the trigger."
+            "Applied by the hook to the first element in the default slot when it has no part marker of its own. A component root keeps its own `data-part`."
         },
         %Meta.PartAttr{
-          name: "[data-state]",
+          name: "[data-tooltip-trigger]",
+          value: "boolean",
+          description:
+            "Applied by the hook to the first element in the default slot, identifying it as the trigger even when it keeps its own `data-part`."
+        },
+        %Meta.PartAttr{
+          name: "[data-tooltip-state]",
           value: ~s("open" | "closed"),
           description: "Current open/closed state, applied by the hook."
         },
         %Meta.PartAttr{
-          name: "[data-disabled]",
+          name: "[data-tooltip-disabled]",
           value: "boolean",
           description: "Applied by the hook while interactions are suppressed."
         },

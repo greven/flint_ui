@@ -9,7 +9,7 @@ defmodule FlintUI.Base.CopyButton do
       <.copy_button value="mix flint.add copy_button" />
 
       <.copy_button from="install-command" label="Copy install command">
-        Copy
+        Copy install command
       </.copy_button>
 
   Copying is a client-side action. It needs the bundled `flint.js` and, for the
@@ -32,7 +32,7 @@ defmodule FlintUI.Base.CopyButton do
   `label` is the button's accessible name and stays stable across states; the
   outcome is announced separately by a live region. When the button also shows
   visible text, keep `label` equal to that text so the name matches what the
-  user sees.
+  user sees. The styled wrapper uses `text` as the name when `label` is omitted.
 
   ## Feedback
 
@@ -43,6 +43,11 @@ defmodule FlintUI.Base.CopyButton do
   the success or error text role; solid variants keep the button's label color.
   Announcements are made through one shared, visually-hidden `role="status"`
   region, so the button's name never changes.
+
+  The styled wrapper can also recolor the whole control while the success state
+  is visible (`success_color`) and show the same labels in a tooltip
+  (`tooltip`) on hover and focus, which is useful for an icon-only button. The
+  tooltip follows the copy state without touching `data-state`.
 
   ## Variants and styling
 
@@ -296,7 +301,7 @@ defmodule FlintUI.Base.CopyButton do
   attr :label, :string,
     default: "Copy",
     doc:
-      "The accessible name, rendered as `aria-label`. Keep it stable across states; the live region announces the result. When the button shows visible text, keep `label` equal to that text."
+      "The accessible name, rendered as `aria-label`. Keep it stable across states; the live region announces the result. When the button shows visible text, keep `label` equal to that text. The styled wrapper derives the name from `text` when `label` is omitted."
 
   attr :success_label, :string,
     default: "Copied",

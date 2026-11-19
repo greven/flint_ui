@@ -16,7 +16,9 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       %{tab: :styled, section: :usage, id: :variant, title: "Variant"},
       %{tab: :styled, section: :usage, id: :color, title: "Color"},
       %{tab: :styled, section: :usage, id: :feedback, title: "Feedback"},
+      %{tab: :styled, section: :usage, id: :success, title: "Success state"},
       %{tab: :styled, section: :usage, id: :icons, title: "Icons"},
+      %{tab: :styled, section: :usage, id: :tooltip, title: "Tooltip"},
       %{tab: :styled, section: :usage, id: :sizing, title: "Sizing"},
       %{tab: :styled, section: :usage, id: :disabled, title: "Disabled"},
       %{
@@ -55,8 +57,9 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
     <.prose content="`value` copies a literal string. `from` names an element and takes precedence over
       `value`; by default the element's text content is copied. Add `attribute` to copy one of its
       attributes, or `property` to copy a JavaScript property such as an input's `value`." />
-    <.prose content="An empty source is an error. When the button also shows visible text, keep `label`
-      equal to that text so the accessible name matches what the user sees." />
+    <.prose content="An empty source is an error. When you use the `text` attribute and omit
+      `label`, the visible text becomes the accessible name. For visible text rendered in the
+      default slot, keep `label` equal to that text so the name matches what the user sees." />
 
     <.preview {assigns} code={code_sources()} collapsed>
       <div class="flex flex-col items-start gap-5">
@@ -179,6 +182,33 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   end
 
   @impl true
+  def render_section(%{section: :usage, id: :success} = assigns) do
+    ~H"""
+    <.prose content="Set `success_color` to recolor the whole control while the success state is
+      visible. `inherit` (the default) keeps the base `color`; a semantic role switches the fill,
+      border, and label to that role, and the control's transitions ease back when the feedback
+      ends. The `:success` slot swaps the visible content, so `Copy` becomes `Copied`." />
+
+    <.preview {assigns} code={code_success()} collapsed>
+      <div class="flex flex-wrap items-center gap-3">
+        <code id="copy-button-success-target" class="docs-code font-mono">
+          mix flint.add copy_button
+        </code>
+        <Components.copy_button
+          from="copy-button-success-target"
+          text="Copy"
+          variant="solid"
+          success_color="success"
+          feedback_duration={2500}
+        >
+          <:success>Copied</:success>
+        </Components.copy_button>
+      </div>
+    </.preview>
+    """
+  end
+
+  @impl true
   def render_section(%{section: :usage, id: :icons} = assigns) do
     ~H"""
     <.prose content="`icon`, `success_icon`, and `error_icon` are icon CSS classes, like the rest of
@@ -197,6 +227,31 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
         >
           Copy token
         </Components.copy_button>
+      </div>
+    </.preview>
+    """
+  end
+
+  @impl true
+  def render_section(%{section: :usage, id: :tooltip} = assigns) do
+    ~H"""
+    <.prose content="Set `tooltip` on an icon-only copy button to name it on hover and focus. The
+      tooltip follows the copy state: it shows `label` (default `Copy`) while idle, `success_label`
+      (default `Copied`) while the success state is visible, and `error_label` on failure. The
+      default placement is `top`; pass a side such as `tooltip='right'` to prefer one, and the
+      content flips when it would leave the viewport." />
+    <.prose content="The button already has an accessible name from `label`. The tooltip is a
+      pointer-device convenience and never replaces that name." />
+
+    <.preview {assigns} code={code_tooltip()} collapsed>
+      <div class="flex flex-wrap items-center gap-3">
+        <code id="copy-button-tooltip-target" class="docs-code font-mono">fl_live_4f8c2a</code>
+        <Components.copy_button from="copy-button-tooltip-target" tooltip />
+        <Components.copy_button
+          from="copy-button-tooltip-target"
+          label="Copy token"
+          tooltip="right"
+        />
       </div>
     </.preview>
     """
@@ -344,6 +399,20 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
     """
   end
 
+  defp code_success do
+    """
+    <.copy_button
+      from="install-command"
+      text="Copy"
+      variant="solid"
+      success_color="success"
+      feedback_duration={2500}
+    >
+      <:success>Copied</:success>
+    </.copy_button>
+    """
+  end
+
   defp code_icons do
     """
     <.copy_button
@@ -362,6 +431,13 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
     """
     <.copy_button :for={size <- ~w(xs sm md lg xl)} from="value" size={size} />
     <.copy_button :for={size <- ~w(xs sm md lg xl)} from="value" size={size}>Copy</.copy_button>
+    """
+  end
+
+  defp code_tooltip do
+    """
+    <.copy_button from="api-token" tooltip />
+    <.copy_button from="api-token" label="Copy token" tooltip="right" />
     """
   end
 

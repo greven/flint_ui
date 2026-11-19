@@ -157,7 +157,8 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
         >
           <button
             data-part="trigger"
-            data-state="open"
+            data-tooltip-trigger
+            data-tooltip-state="open"
             type="button"
             class="rounded-md border border-default bg-surface px-3 py-1.5 text-sm font-medium text-default shadow-sm"
           >

@@ -13,6 +13,7 @@ interface SetupOptions {
   align?: string;
   arrow?: boolean;
   describedBy?: string;
+  triggerAttrs?: string;
 }
 
 interface PositionerMock {
@@ -43,6 +44,7 @@ function setup(options: SetupOptions = {}) {
     align = "center",
     arrow = true,
     describedBy,
+    triggerAttrs = "",
   } = options;
 
   document.body.innerHTML = `
@@ -55,7 +57,7 @@ function setup(options: SetupOptions = {}) {
       data-delay="${delay}"
       ${disabled ? "data-disabled" : ""}
     >
-      <button ${describedBy ? `aria-describedby="${describedBy}"` : ""}>Save</button>
+      <button ${describedBy ? `aria-describedby="${describedBy}"` : ""} ${triggerAttrs}>Save</button>
       <span
         id="tip-content"
         data-part="content"
@@ -87,7 +89,7 @@ function setup(options: SetupOptions = {}) {
 
   mounted.push(hook);
 
-  const trigger = el.querySelector<HTMLElement>('[data-part="trigger"]')!;
+  const trigger = el.querySelector<HTMLElement>("[data-tooltip-trigger]")!;
   const content = el.querySelector<HTMLElement>('[data-part="content"]')!;
   const arrowElement = el.querySelector<HTMLElement>('[data-part="arrow"]');
 
@@ -139,8 +141,31 @@ describe("Tooltip hook", () => {
     expect(triggerWasUnwired).toBe(true);
     expect(trigger).toBe(initialTrigger);
     expect(trigger.getAttribute("data-part")).toBe("trigger");
-    expect(trigger.getAttribute("data-state")).toBe("closed");
+    expect(trigger.getAttribute("data-tooltip-trigger")).toBe("");
+    expect(trigger.getAttribute("data-tooltip-state")).toBe("closed");
+    expect(trigger.hasAttribute("data-state")).toBe(false);
     expect(trigger.getAttribute("aria-describedby")).toBe(content.id);
+  });
+
+  it("keeps the trigger's own part and state markers", () => {
+    const { trigger } = setup({ triggerAttrs: `data-part="root" data-state="success"` });
+
+    expect(trigger.getAttribute("data-part")).toBe("root");
+    expect(trigger.getAttribute("data-state")).toBe("success");
+    expect(trigger.getAttribute("data-tooltip-trigger")).toBe("");
+    expect(trigger.getAttribute("data-tooltip-state")).toBe("closed");
+  });
+
+  it("mirrors the open state onto data-tooltip-state", async () => {
+    const { trigger } = setup();
+
+    pointer(trigger, "pointerenter");
+    await flush();
+    expect(trigger.getAttribute("data-tooltip-state")).toBe("open");
+
+    pointer(trigger, "pointerleave");
+    await flush();
+    expect(trigger.getAttribute("data-tooltip-state")).toBe("closed");
   });
 
   it("keeps a description the trigger already had", () => {
@@ -152,7 +177,7 @@ describe("Tooltip hook", () => {
   it("drops only its own description when disabled", () => {
     const { trigger, content } = setup({ disabled: true, describedBy: "field-hint" });
 
-    expect(trigger.getAttribute("data-disabled")).toBe("");
+    expect(trigger.getAttribute("data-tooltip-disabled")).toBe("");
     expect(trigger.getAttribute("aria-describedby")).toBe("field-hint");
     expect(content.getAttribute("data-state")).toBe("closed");
   });

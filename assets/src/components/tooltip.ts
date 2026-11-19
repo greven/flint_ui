@@ -79,11 +79,14 @@ export class Tooltip extends FlintHook {
   }
 
   /**
-   * The trigger is the first element in the default slot. A data hook already
-   * marked on the server (or by a previous run) wins.
+   * The trigger is the first element in the default slot. A trigger already
+   * marked on the server (or by a previous run) wins. The hook uses its own
+   * `data-tooltip-trigger` marker rather than `data-part`, so it never replaces
+   * a marker the trigger component owns.
    */
   private resolveTrigger(): HTMLElement | null {
-    if (this.parts.trigger) return this.parts.trigger;
+    const marked = this.el.querySelector<HTMLElement>("[data-tooltip-trigger]");
+    if (marked) return marked;
 
     for (const child of Array.from(this.el.children)) {
       if (!(child instanceof HTMLElement)) continue;
@@ -125,13 +128,19 @@ export class Tooltip extends FlintHook {
   }
 
   private wireTrigger(trigger: HTMLElement): void {
-    this.js().setAttribute(trigger, "data-part", "trigger");
-    this.js().setAttribute(trigger, "data-state", this.state);
+    // Keep a component's own part marker; a plain trigger gets the familiar
+    // `trigger` part for consumers styling `[data-part="trigger"]`.
+    if (!trigger.hasAttribute("data-part")) {
+      this.js().setAttribute(trigger, "data-part", "trigger");
+    }
+
+    this.js().setAttribute(trigger, "data-tooltip-trigger", "");
+    this.js().setAttribute(trigger, "data-tooltip-state", this.state);
 
     if (this.disabled) {
-      this.js().setAttribute(trigger, "data-disabled", "");
+      this.js().setAttribute(trigger, "data-tooltip-disabled", "");
     } else {
-      this.js().removeAttribute(trigger, "data-disabled");
+      this.js().removeAttribute(trigger, "data-tooltip-disabled");
     }
 
     this.syncDescription(trigger);
@@ -192,7 +201,7 @@ export class Tooltip extends FlintHook {
     this.js().setAttribute(this.el, "data-state", state);
 
     const trigger = this.parts.trigger;
-    if (trigger) this.js().setAttribute(trigger, "data-state", state);
+    if (trigger) this.js().setAttribute(trigger, "data-tooltip-state", state);
 
     // The content only joins the state once it has been positioned, so it is
     // never painted at the top-layer default position.
