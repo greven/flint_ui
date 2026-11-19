@@ -295,6 +295,16 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-font-mono:"
     assert css =~ "--fl-font-size-md: 1rem;"
     assert css =~ "--fl-font-weight-medium: 500;"
+
+    for size <- ~w(2xl 3xl 4xl 5xl 6xl) do
+      assert css =~ "--fl-font-size-#{size}:"
+      assert css =~ "--fl-line-height-#{size}:"
+    end
+
+    for tracking <- ~w(tighter tight normal wide wider widest) do
+      assert css =~ "--fl-font-tracking-#{tracking}:"
+    end
+
     assert css =~ "--fl-spacing: 0.25rem;"
     assert css =~ "--fl-spacing-lg: calc(var(--fl-spacing) * 4);"
     assert css =~ "--fl-shadow-md:"
@@ -302,6 +312,14 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-container-7xl: 80rem;"
     assert css =~ "--fl-duration-fast: 150ms;"
     assert css =~ "--fl-ease-out:"
+  end
+
+  test "the typography primitive owns the shared text hooks", %{css: css} do
+    assert css =~ "[data-typography]"
+    assert css =~ ~s([data-typography][data-size="6xl"])
+    assert css =~ ~s([data-typography][data-color="primary"])
+    assert css =~ ~s([data-typography][data-weight="semibold"])
+    assert css =~ ~s([data-typography][data-align="center"])
   end
 
   test "defines shared control metrics", %{css: css} do

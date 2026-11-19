@@ -11,7 +11,11 @@ defmodule FlintUI.Styled.Progress do
       install: "mix flint.add progress",
       css: "styled/progress.css",
       tokens: [:color, :radius, :font, :spacing, :duration, :ease],
-      related: [{:loading, nav: false}, {:progress_group, nav: true}],
+      related: [
+        {:loading, nav: false},
+        {:progress_group, nav: true},
+        {:progress_ring, nav: true}
+      ],
       props: [
         Prop.new(
           name: :size,

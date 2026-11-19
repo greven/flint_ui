@@ -29,10 +29,13 @@ defmodule FlintUI.Styled.CardTest do
           orientation="horizontal"
           padded={false}
           title_id="card-title"
+          title_as="h3"
+          description_id="card-description"
           class="extra"
           data-role="test"
         >
           <:title>Title</:title>
+          <:description>Description</:description>
           <p>Body</p>
         </.card>
         """
@@ -108,6 +111,8 @@ defmodule FlintUI.Styled.CardTest do
     assert attr(document, :card, "class") == ["extra"]
     assert attr(document, :card, "data-role") == ["test"]
     assert part_attr(document, "title", "id") == ["card-title"]
+    assert LazyHTML.tag(part(document, "title")) == ["h3"]
+    assert part_attr(document, "description", "id") == ["card-description"]
     assert part_attr(document, "section", "data-padded") == []
   end
 

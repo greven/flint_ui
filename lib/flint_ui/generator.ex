@@ -230,6 +230,23 @@ defmodule FlintUI.Generator do
       --text-lg--line-height: var(--fl-line-height-lg);
       --text-xl: var(--fl-font-size-xl);
       --text-xl--line-height: var(--fl-line-height-xl);
+      --text-2xl: var(--fl-font-size-2xl);
+      --text-2xl--line-height: var(--fl-line-height-2xl);
+      --text-3xl: var(--fl-font-size-3xl);
+      --text-3xl--line-height: var(--fl-line-height-3xl);
+      --text-4xl: var(--fl-font-size-4xl);
+      --text-4xl--line-height: var(--fl-line-height-4xl);
+      --text-5xl: var(--fl-font-size-5xl);
+      --text-5xl--line-height: var(--fl-line-height-5xl);
+      --text-6xl: var(--fl-font-size-6xl);
+      --text-6xl--line-height: var(--fl-line-height-6xl);
+
+      --tracking-tighter: var(--fl-font-tracking-tighter);
+      --tracking-tight: var(--fl-font-tracking-tight);
+      --tracking-normal: var(--fl-font-tracking-normal);
+      --tracking-wide: var(--fl-font-tracking-wide);
+      --tracking-wider: var(--fl-font-tracking-wider);
+      --tracking-widest: var(--fl-font-tracking-widest);
 
       --font-weight-normal: var(--fl-font-weight-normal);
       --font-weight-medium: var(--fl-font-weight-medium);

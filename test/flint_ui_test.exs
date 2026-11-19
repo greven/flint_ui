@@ -10,6 +10,7 @@ defmodule FlintUITest do
     assert :collapsible in FlintUI.components()
     assert :copy_button in FlintUI.components()
     assert :group in FlintUI.components()
+    assert :heading in FlintUI.components()
     assert :icon in FlintUI.components()
     assert :input in FlintUI.components()
     assert :known_date in FlintUI.components()
@@ -24,6 +25,7 @@ defmodule FlintUITest do
     assert :slider in FlintUI.components()
     assert :switch in FlintUI.components()
     assert :tabs in FlintUI.components()
+    assert :text in FlintUI.components()
     assert :textarea in FlintUI.components()
     assert :toggle in FlintUI.components()
   end

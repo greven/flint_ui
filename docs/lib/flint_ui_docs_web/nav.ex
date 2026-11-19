@@ -221,6 +221,7 @@ defmodule FlintUIDocsWeb.Nav do
   # sidebar does not know about raises instead of silently sharing a default.
   @type_icons %{
     element: "lucide-blocks",
+    typography: "lucide-type",
     layout: "lucide-panel-left",
     action: "lucide-mouse-pointer-click",
     form: "lucide-square-pen",

@@ -32,6 +32,7 @@ defmodule FlintUI do
   - `dropdown_sub`
   - `flag`
   - `group`
+  - `heading`
   - `icon`
   - `indicator`
   - `input`
@@ -44,6 +45,7 @@ defmodule FlintUI do
   - `popover`
   - `progress`
   - `progress_group`
+  - `progress_ring`
   - `radio`
   - `radio_group`
   - `separator`
@@ -51,6 +53,7 @@ defmodule FlintUI do
   - `switch`
   - `switch_group`
   - `tabs`
+  - `text`
   - `textarea`
   - `toggle`
   - `tooltip`
@@ -87,6 +90,7 @@ defmodule FlintUI do
     {:dropdown_sub, []},
     {:flag, []},
     {:group, []},
+    {:heading, []},
     {:icon, []},
     {:indicator, []},
     {:input, []},
@@ -99,6 +103,7 @@ defmodule FlintUI do
     {:popover, [:open_popover, :close_popover, :toggle_popover]},
     {:progress, []},
     {:progress_group, []},
+    {:progress_ring, []},
     {:radio, []},
     {:radio_group, []},
     {:separator, []},
@@ -106,6 +111,7 @@ defmodule FlintUI do
     {:switch, []},
     {:switch_group, []},
     {:tabs, [:select_tab]},
+    {:text, []},
     {:textarea, []},
     {:toggle, []},
     {:tooltip, []}

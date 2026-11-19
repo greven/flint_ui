@@ -1,30 +1,31 @@
 @layer components {
-    /* Modal. The root is the native `<dialog>` and also the visual surface.
+    /* Modal. The root is the native `<dialog>` and also the positioning shell.
      * The browser owns modality: `showModal()` puts the element in the top
      * layer, makes the page inert, contains focus, and restores focus on close.
-     * This layer resets the user-agent dialog box, keeps the panel inside the
-     * viewport gutter, and drives enter/leave animation from `data-state`. */
+     * This layer keeps the dialog inside the viewport gutter, leaves the paint
+     * to the nested card, and drives enter/leave animation from `data-state`. */
     [data-element="modal"][data-modal] {
+        --fl-modal-max-width: 32rem;
+        --fl-modal-gutter: var(--fl-spacing-lg);
+        --fl-modal-backdrop: light-dark(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.55));
+        display: flex;
         position: fixed;
         inset: 0;
         box-sizing: border-box;
+        flex-direction: column;
         width: min(
-            var(--fl-modal-max-width, 32rem),
-            calc(100% - (2 * var(--fl-modal-gutter, var(--fl-spacing-lg))))
+            var(--fl-modal-max-width),
+            calc(100% - (2 * var(--fl-modal-gutter)))
         );
         max-width: none;
-        max-height: calc(100dvh - (2 * var(--fl-modal-gutter, var(--fl-spacing-lg))));
+        max-height: calc(100dvh - (2 * var(--fl-modal-gutter)));
         margin: auto;
         padding: 0;
-        overflow: hidden;
-        border: 1px solid var(--fl-color-border);
-        border-radius: var(--fl-radius-xl);
-        background-color: var(--fl-color-surface);
+        overflow: visible;
+        border: 0;
+        background: none;
         color: var(--fl-color-text);
         font-family: var(--fl-font-sans);
-        font-size: var(--fl-font-size-sm);
-        line-height: 1.5;
-        box-shadow: var(--fl-shadow-xl);
     }
 
     [data-element="modal"][data-modal]:not([open]) {
@@ -33,11 +34,6 @@
 
     [data-element="modal"][data-modal]:focus {
         outline: none;
-    }
-
-    [data-element="modal"][data-modal][open] {
-        display: flex;
-        flex-direction: column;
     }
 
     /* The content wrapper is the focus fallback when the dialog has no
@@ -51,54 +47,54 @@
         outline: none;
     }
 
-    [data-element="modal"] [data-part="header"] {
-        display: grid;
-        flex: none;
-        gap: var(--fl-spacing-xs);
-        padding: var(--fl-spacing-md) var(--fl-modal-padding) var(--fl-spacing-sm);
-        border-block-end: 1px solid var(--fl-color-border-subtle);
-    }
-
-    [data-element="modal"] [data-part="content"]:has(> [data-part="close"]) [data-part="header"] {
-        padding-inline-end: calc(var(--fl-modal-padding) + 2rem);
-    }
-
-    [data-element="modal"] [data-part="title"] {
-        margin: 0;
-        color: var(--fl-color-text-highlighted);
-        font-size: var(--fl-font-size-lg);
-        font-weight: var(--fl-font-weight-semibold);
-        line-height: var(--fl-line-height-md);
-    }
-
-    [data-element="modal"] [data-part="description"] {
-        margin: 0;
-        color: var(--fl-color-text-toned);
-        font-size: var(--fl-font-size-sm);
-        line-height: 1.5;
-    }
-
-    [data-element="modal"] [data-part="body"] {
+    /* The nested card is the surface. It fills the shell, keeps the header and
+     * footer fixed, and scrolls the body. */
+    [data-element="modal"] [data-element="card"] {
         flex: 1 1 auto;
         min-height: 0;
-        padding: var(--fl-spacing-md) var(--fl-modal-padding);
+    }
+
+    [data-element="modal"] [data-element="card"] > [data-part="header"],
+    [data-element="modal"] [data-element="card"] > [data-part="footer"] {
+        flex: none;
+    }
+
+    [data-element="modal"] [data-element="card"] > [data-part="body"] {
+        flex: 1 1 auto;
+        min-height: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
     }
 
-    [data-element="modal"] [data-part="footer"] {
-        display: flex;
-        flex: none;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-        gap: var(--fl-spacing-sm);
-        padding: var(--fl-spacing-sm) var(--fl-modal-padding) var(--fl-spacing-md);
-        border-block-start: 1px solid var(--fl-color-border-subtle);
+    /* The body scrolls, so the divider under the header has to live on the
+     * header rather than on the first section inside the scroll container. */
+    [data-element="modal"]
+        [data-element="card"][data-card][data-body="divided"]
+        > [data-part="body"]:not(:first-child)
+        > [data-part="section"]:first-child {
+        border-block-start: 0;
+    }
+
+    [data-element="modal"]
+        [data-element="card"][data-card][data-body="divided"]
+        > [data-part="header"] {
+        border-block-end: 1px solid var(--fl-card-border, var(--fl-color-border));
+    }
+
+    /* The modal title reads as a dialog heading rather than a card label. */
+    [data-element="modal"] [data-element="card"] > [data-part="header"] > [data-part="title"] {
+        color: var(--fl-color-text-highlighted);
+        font-size: var(--fl-font-size-lg);
+        line-height: var(--fl-line-height-md);
+    }
+
+    [data-element="modal"] [data-element="card"] > [data-part="header"] > [data-part="description"] {
+        color: var(--fl-color-text-toned);
     }
 
     /* Close button. It is last in DOM order so the first focusable element is
-     * the first body or footer control, but it sits in the top-right corner. */
+     * the first body or footer control, but it sits in the top-right corner.
+     * The card header leaves room for it through the rule below. */
     [data-element="modal"] [data-part="close"] {
         display: inline-flex;
         position: absolute;
@@ -120,6 +116,12 @@
     [data-element="modal"] [data-part="close"]:hover {
         background: color-mix(in oklab, currentColor 10%, transparent);
         color: var(--fl-color-text);
+    }
+
+    [data-element="modal"] [data-part="content"]:has(> [data-part="close"])
+        [data-element="card"]
+        > [data-part="header"] {
+        padding-inline-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) + 2rem);
     }
 
     [data-element="modal"] [data-part="close"] > [data-part="close-icon"] {
@@ -178,7 +180,7 @@
     /* Backdrop. The browser keeps the page inert even when the backdrop is
      * transparent. */
     [data-element="modal"][data-modal]::backdrop {
-        background-color: var(--fl-modal-backdrop, light-dark(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.55)));
+        background-color: var(--fl-modal-backdrop);
     }
 
     [data-element="modal"][data-backdrop="blur"]::backdrop {

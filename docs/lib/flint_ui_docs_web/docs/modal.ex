@@ -20,12 +20,24 @@ defmodule FlintUIDocsWeb.Docs.Modal do
         controls: [
           %{key: :size, type: :select, default: "md", label: "Size"},
           %{key: :placement, type: :select, default: "center", label: "Placement"},
-          %{key: :backdrop, type: :select, default: "dim", label: "Backdrop"}
+          %{key: :backdrop, type: :select, default: "dim", label: "Backdrop"},
+          %{key: :body, type: :select, default: "divided", label: "Body"},
+          %{key: :spacing, type: :select, default: "md", label: "Spacing"}
         ]
       },
       %{tab: :styled, section: :usage, id: :sizes, title: "Sizes"},
       %{tab: :styled, section: :usage, id: :placement, title: "Placement"},
       %{tab: :styled, section: :usage, id: :backdrop, title: "Backdrop"},
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :surface,
+        title: "Surface",
+        controls: [
+          %{key: :body, type: :select, default: "separated-footer", label: "Body"},
+          %{key: :spacing, type: :select, default: "md", label: "Spacing"}
+        ]
+      },
       %{tab: :styled, section: :usage, id: :confirmation, title: "Confirmation"},
       %{tab: :styled, section: :usage, id: :scrolling, title: "Scrolling"},
       %{tab: :styled, section: :usage, id: :controlled, title: "Controlled State"}
@@ -37,7 +49,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
     ~H"""
     <.prose content="Open the modal from a control anywhere on the page with `FlintUI.open_modal/2`, or let the server drive `opened`.
       The `:title` slot names the dialog and the `:description` slot describes it; the default slot is the scrollable body and `:footer` holds the actions.
-      `size`, `placement`, and `backdrop` are the styled presentation props." />
+      `size`, `placement`, and `backdrop` shape the dialog shell, and `body` and `spacing` shape the card surface behind it." />
     <.preview :let={props} {assigns} code={&basic_code/1}>
       <Components.button phx-click={FlintUI.open_modal("docs-modal-basic")}>
         Open modal
@@ -48,6 +60,8 @@ defmodule FlintUIDocsWeb.Docs.Modal do
         size={props.size}
         placement={props.placement}
         backdrop={props.backdrop}
+        body={props.body}
+        spacing={props.spacing}
       >
         <:title>Invite teammate</:title>
         <:description>Send an invitation to join the workspace.</:description>
@@ -155,6 +169,40 @@ defmodule FlintUIDocsWeb.Docs.Modal do
     """
   end
 
+  def render_section(%{section: :usage, id: :surface} = assigns) do
+    ~H"""
+    <.prose content="The dialog is the positional shell; its surface is a `FlintUI.card`, so the region treatments come from the card.
+      `body` selects how the header, body, and footer are set apart: `divided` draws hairlines, and the `separated` values tint the bands.
+      `separated-footer` gives the actions a tinted footer, and `spacing` sets the inset on every region." />
+    <.preview :let={props} {assigns} code={&surface_code/1}>
+      <Components.button phx-click={FlintUI.open_modal("docs-modal-surface")}>
+        Open modal
+      </Components.button>
+
+      <Components.modal
+        id="docs-modal-surface"
+        body={props.body}
+        spacing={props.spacing}
+      >
+        <:title>Team plan</:title>
+        <:description>Update the plan for the whole workspace.</:description>
+        <p>The footer band follows the same recipe as a card's.</p>
+        <:footer>
+          <Components.button phx-click={FlintUI.close_modal("docs-modal-surface")}>
+            Cancel
+          </Components.button>
+          <Components.button
+            variant="solid"
+            phx-click={FlintUI.close_modal("docs-modal-surface")}
+          >
+            Save plan
+          </Components.button>
+        </:footer>
+      </Components.modal>
+    </.preview>
+    """
+  end
+
   def render_section(%{section: :usage, id: :confirmation} = assigns) do
     ~H"""
     <.prose content={
@@ -246,22 +294,34 @@ defmodule FlintUIDocsWeb.Docs.Modal do
         data-placement="center"
         data-backdrop="dim"
         class="m-0 w-full max-w-md"
-        style="position: relative; inset: auto; max-height: none; box-shadow: none;"
+        style="position: relative; inset: auto; max-height: none;"
       >
         <div data-part="content" tabindex="-1">
-          <header data-part="header">
-            <h2 data-part="title" id={"#{@parts_id}-title"}>Invite teammate</h2>
-            <p data-part="description" id={"#{@parts_id}-description"}>
-              Send an invitation to join the workspace.
-            </p>
-          </header>
-          <div data-part="body">
-            <p>The body scrolls independently of the header and footer.</p>
+          <div
+            data-element="card"
+            data-card
+            data-part="root"
+            data-body="separated-footer"
+            data-spacing="md"
+          >
+            <header data-part="header">
+              <h2 data-part="title" id={"#{@parts_id}-title"}>Invite teammate</h2>
+              <p data-part="description" id={"#{@parts_id}-description"}>
+                Send an invitation to join the workspace.
+              </p>
+            </header>
+            <div data-part="body">
+              <div data-part="section" data-padded>
+                <p>The body scrolls independently of the header and footer.</p>
+              </div>
+            </div>
+            <div data-part="footer">
+              <div data-part="footer-actions">
+                <Components.button size="sm" variant="surface">Cancel</Components.button>
+                <Components.button size="sm" variant="solid">Send invite</Components.button>
+              </div>
+            </div>
           </div>
-          <footer data-part="footer">
-            <Components.button size="sm" variant="surface">Cancel</Components.button>
-            <Components.button size="sm" variant="solid">Send invite</Components.button>
-          </footer>
           <button type="button" data-part="close" aria-label="Close">
             <Components.icon name="lucide-x" size="sm" />
           </button>
@@ -278,7 +338,9 @@ defmodule FlintUIDocsWeb.Docs.Modal do
         ~s(id="invite"),
         Snippet.attr("size", props.size, "md"),
         Snippet.attr("placement", props.placement, "center"),
-        Snippet.attr("backdrop", props.backdrop, "dim")
+        Snippet.attr("backdrop", props.backdrop, "dim"),
+        Snippet.attr("body", props.body, "divided"),
+        Snippet.attr("spacing", props.spacing, "md")
       ],
       """
       <:title>Invite teammate</:title>
@@ -287,6 +349,26 @@ defmodule FlintUIDocsWeb.Docs.Modal do
       <:footer>
         <.button phx-click={FlintUI.close_modal("invite")}>Cancel</.button>
         <.button variant="solid" phx-click={FlintUI.close_modal("invite")}>Send invite</.button>
+      </:footer>
+      """
+    )
+  end
+
+  defp surface_code(props) do
+    Snippet.tag(
+      ".modal",
+      [
+        ~s(id="team-plan"),
+        Snippet.attr("body", props.body, "divided"),
+        Snippet.attr("spacing", props.spacing, "md")
+      ],
+      """
+      <:title>Team plan</:title>
+      <:description>Update the plan for the whole workspace.</:description>
+      <p>The footer band follows the same recipe as a card's.</p>
+      <:footer>
+        <.button phx-click={FlintUI.close_modal("team-plan")}>Cancel</.button>
+        <.button variant="solid" phx-click={FlintUI.close_modal("team-plan")}>Save plan</.button>
       </:footer>
       """
     )

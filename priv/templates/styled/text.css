@@ -1,0 +1,91 @@
+@layer components {
+    /* Text. Type size, ink, weight, and alignment come from the typography
+     * primitive. The component owns the block reset, link decoration, inline
+     * code semantics, and truncation.
+     *
+     * Public input: `--fl-text-line-clamp`. */
+    [data-element="text"] {
+        margin: 0;
+        min-inline-size: 0;
+        text-wrap: pretty;
+    }
+
+    /* A text root that is itself a code-like element keeps the monospace face;
+     * its size still follows the shared scale. */
+    [data-element="text"]:is(code, kbd, samp, pre) {
+        font-family: var(--fl-font-mono);
+    }
+
+    /* Links are underlined in both the root link form and inline links inside
+     * a text block, so color is not the only way to identify them. A nested
+     * FlintUI component keeps its own link treatment. */
+    [data-element="text"]:is(a),
+    [data-element="text"] :is(a):not([data-element]) {
+        text-decoration-line: underline;
+        text-decoration-thickness: from-font;
+        text-underline-offset: 0.15em;
+    }
+
+    /* Inline links inside a text block follow the block's ink. */
+    [data-element="text"] :is(a):not([data-element]) {
+        color: inherit;
+    }
+
+    /* A link in the default tier uses the primary ink, whether the root is the
+     * link or the link sits inside the text. An explicit color keeps its role. */
+    [data-element="text"]:is(a)[data-color="default"],
+    [data-element="text"][data-color="default"] :is(a):not([data-element]) {
+        color: var(--fl-color-primary-text);
+    }
+
+    /* Inline code keeps its monospace semantics and scales with the text. */
+    [data-element="text"] :is(code, kbd, samp) {
+        font-family: var(--fl-font-mono);
+        font-size: 0.875em;
+    }
+
+    /* Single-line truncation. A block box is required for the ellipsis, so an
+     * inline `span` becomes a block while truncation is on. */
+    [data-element="text"][data-truncate] {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Multi-line clamping. `line_clamp` wins over `truncate`, so the wrapper
+     * emits only one hook. */
+    [data-element="text"][data-line-clamp] {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--fl-text-line-clamp);
+        line-clamp: var(--fl-text-line-clamp);
+        text-wrap: wrap;
+    }
+
+    /* Documented clamp presets. A custom count writes the same input inline. */
+    [data-element="text"][data-line-clamp="1"] {
+        --fl-text-line-clamp: 1;
+    }
+
+    [data-element="text"][data-line-clamp="2"] {
+        --fl-text-line-clamp: 2;
+    }
+
+    [data-element="text"][data-line-clamp="3"] {
+        --fl-text-line-clamp: 3;
+    }
+
+    [data-element="text"][data-line-clamp="4"] {
+        --fl-text-line-clamp: 4;
+    }
+
+    [data-element="text"][data-line-clamp="5"] {
+        --fl-text-line-clamp: 5;
+    }
+
+    [data-element="text"][data-line-clamp="6"] {
+        --fl-text-line-clamp: 6;
+    }
+}

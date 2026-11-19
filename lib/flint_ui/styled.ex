@@ -114,6 +114,21 @@ defmodule FlintUI.Styled do
           doc: "The placeholder text color."
         )
       ]
+    },
+    %Primitive{
+      name: :typography,
+      css: "primitives/typography.css",
+      marker: "data-typography",
+      doc: "Shared type scale, ink tiers, weight, and alignment for text components.",
+      props: [:size, :color, :weight, :align],
+      vars: [
+        Var.new(
+          name: "--fl-typography-color",
+          default: "var(--fl-color-text)",
+          doc:
+            "The text ink. A color role resolves it from the theme, and a raw color writes it inline."
+        )
+      ]
     }
   ]
 
@@ -138,6 +153,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.DropdownSub,
     FlintUI.Styled.Flag,
     FlintUI.Styled.Group,
+    FlintUI.Styled.Heading,
     FlintUI.Styled.Icon,
     FlintUI.Styled.Indicator,
     FlintUI.Styled.Input,
@@ -150,6 +166,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Popover,
     FlintUI.Styled.Progress,
     FlintUI.Styled.ProgressGroup,
+    FlintUI.Styled.ProgressRing,
     FlintUI.Styled.Radio,
     FlintUI.Styled.RadioGroup,
     FlintUI.Styled.Separator,
@@ -157,6 +174,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Switch,
     FlintUI.Styled.SwitchGroup,
     FlintUI.Styled.Tabs,
+    FlintUI.Styled.Text,
     FlintUI.Styled.Textarea,
     FlintUI.Styled.Toggle,
     FlintUI.Styled.Tooltip

@@ -24,6 +24,8 @@ defmodule FlintUI.Styled.ModalTest do
           size="lg"
           placement="top"
           backdrop="blur"
+          body="separated-footer"
+          spacing="lg"
           show_close={false}
           close_on_esc={false}
           close_on_backdrop={false}
@@ -61,6 +63,19 @@ defmodule FlintUI.Styled.ModalTest do
     assert attr(document, :modal, "data-state") == ["closed"]
   end
 
+  test "maps the surface props onto the nested card", %{wrapper: wrapper} do
+    document = render(wrapper, :defaults)
+
+    card = LazyHTML.query(document, ~s([data-element="card"]))
+    assert LazyHTML.tag(card) == ["div"]
+    assert LazyHTML.attribute(card, "data-part") == ["root"]
+    assert LazyHTML.attribute(card, "data-card") == [""]
+    assert LazyHTML.attribute(card, "data-body") == ["divided"]
+    assert LazyHTML.attribute(card, "data-spacing") == ["md"]
+
+    assert LazyHTML.query(document, ~s([data-part="content"] > [data-element="card"])) != []
+  end
+
   test "forwards the configured base attributes and styling props", %{wrapper: wrapper} do
     document = render(wrapper, :configured)
 
@@ -74,6 +89,10 @@ defmodule FlintUI.Styled.ModalTest do
     assert attr(document, :modal, "data-close-event") == ["modal_closed"]
     assert attr(document, :modal, "class") == ["extra"]
     assert attr(document, :modal, "data-role") == ["test"]
+
+    card = LazyHTML.query(document, ~s([data-element="card"]))
+    assert LazyHTML.attribute(card, "data-body") == ["separated-footer"]
+    assert LazyHTML.attribute(card, "data-spacing") == ["lg"]
   end
 
   test "forwards the base slots and their accessible wiring", %{wrapper: wrapper} do

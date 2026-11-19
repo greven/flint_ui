@@ -88,9 +88,17 @@ defmodule FlintUI.Meta do
   # Meta
 
   # Canonical ordering for the component types.
-  @types [:element, :layout, :action, :form, :feedback, :navigation, :overlay]
+  @types [:element, :typography, :layout, :action, :form, :feedback, :navigation, :overlay]
 
-  @type type :: :element | :layout | :action | :form | :feedback | :navigation | :overlay
+  @type type ::
+          :element
+          | :typography
+          | :layout
+          | :action
+          | :form
+          | :feedback
+          | :navigation
+          | :overlay
 
   @doc """
   Returns the component types in their canonical display order.

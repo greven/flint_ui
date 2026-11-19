@@ -57,6 +57,11 @@ defmodule FlintUI.Base.Card do
   list semantics are appropriate, and give it an accessible name with
   `aria-labelledby` pointing at `title_id`.
 
+  Set `title_as` to render the title as a heading (for example `"h2"` or
+  `"h3"`) when the card introduces a section of the page. Pair it with
+  `aria-labelledby` and `title_id` so the card and the heading share one name,
+  and use `description_id` to expose the supporting text as a description.
+
   A linked card renders a native `<a>` and uses `title_id` for
   `aria-labelledby`, so set a title when the card is a link. A link card is one
   anchor: nested buttons and links are invalid. Keep the card non-linked when it
@@ -116,6 +121,12 @@ defmodule FlintUI.Base.Card do
           name: "[data-part]",
           value: "title",
           description: "Identifies the title element."
+        },
+        %Meta.PartAttr{
+          name: "id",
+          value: "string",
+          description:
+            "The title id, from `title_id`. A linked card also uses it for `aria-labelledby`."
         }
       ],
       description: [
@@ -123,6 +134,11 @@ defmodule FlintUI.Base.Card do
           name: "[data-part]",
           value: "description",
           description: "Identifies the description element."
+        },
+        %Meta.PartAttr{
+          name: "id",
+          value: "string",
+          description: "The description id, from `description_id`."
         }
       ],
       header_actions: [
@@ -200,7 +216,7 @@ defmodule FlintUI.Base.Card do
       },
       header: %{"data-part" => "header"},
       title: %{"data-part" => "title", "id" => assigns.title_id},
-      description: %{"data-part" => "description"},
+      description: %{"data-part" => "description", "id" => assigns.description_id},
       header_actions: %{"data-part" => "header-actions"},
       header_content: %{"data-part" => "header-content"},
       body: %{"data-part" => "body"},
@@ -222,6 +238,16 @@ defmodule FlintUI.Base.Card do
   attr :title_id, :string,
     default: nil,
     doc: "The DOM id for the title element. A linked card also uses it for `aria-labelledby`."
+
+  attr :title_as, :string,
+    default: "div",
+    doc:
+      "The HTML element for the title, for example `\"h2\"` or `\"h3\"` when the card should carry heading semantics. Set `aria-labelledby` to `title_id` on the root."
+
+  attr :description_id, :string,
+    default: nil,
+    doc:
+      "The DOM id for the description element. Point `aria-describedby` at it to describe the card by its supporting text."
 
   attr :orientation, :string,
     default: "vertical",
@@ -297,7 +323,7 @@ defmodule FlintUI.Base.Card do
       :if={title? || description? || header_actions? || header_content?}
       {@flint_parts[:header]}
     >
-      <div :if={title?} {@flint_parts[:title]}>{title}</div>
+      <.dynamic_tag :if={title?} tag_name={@title_as} {@flint_parts[:title]}>{title}</.dynamic_tag>
       <div :if={description?} {@flint_parts[:description]}>{description}</div>
       <div :if={header_actions?} {@flint_parts[:header_actions]}>{header_actions}</div>
       <div :if={header_content?} {@flint_parts[:header_content]}>{header_content}</div>

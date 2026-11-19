@@ -27,6 +27,7 @@ defmodule FlintUI.StyledTest do
                :dropdown_sub,
                :flag,
                :group,
+               :heading,
                :icon,
                :indicator,
                :input,
@@ -39,6 +40,7 @@ defmodule FlintUI.StyledTest do
                :popover,
                :progress,
                :progress_group,
+               :progress_ring,
                :radio,
                :radio_group,
                :separator,
@@ -46,6 +48,7 @@ defmodule FlintUI.StyledTest do
                :switch,
                :switch_group,
                :tabs,
+               :text,
                :textarea,
                :toggle,
                :tooltip
@@ -73,9 +76,10 @@ defmodule FlintUI.StyledTest do
   end
 
   test "the primitive registry is well formed" do
-    assert Styled.primitive_names() == [:control, :field]
+    assert Styled.primitive_names() == [:control, :field, :typography]
     assert Styled.get_primitive(:control).marker == "data-control"
     assert Styled.get_primitive(:field).marker == "data-field"
+    assert Styled.get_primitive(:typography).marker == "data-typography"
     assert Styled.get_primitive(:nope) == nil
   end
 
@@ -122,9 +126,13 @@ defmodule FlintUI.StyledTest do
 
   test "color props list roles in the canonical docs order" do
     canonical = ~w(neutral info success warning error primary secondary)
+    tiers = ~w(default highlighted toned muted dimmed inverted)
 
     for entry <- Styled.entries(), color <- List.wrap(Entry.prop(entry, :color)) do
-      values = Enum.reject(color.values, &(&1 == "inherit"))
+      values =
+        color.values
+        |> Enum.reject(&(&1 == "inherit"))
+        |> Enum.reject(&(&1 in tiers))
 
       assert values == canonical,
              "expected #{entry.name}.color to follow #{inspect(canonical)}, got #{inspect(color.values)}"
@@ -172,9 +180,11 @@ defmodule FlintUI.StyledTest do
           :button,
           :copy_button,
           :checkbox,
+          :heading,
           :radio,
           :separator,
           :switch,
+          :text,
           :toggle,
           :tabs,
           :loading,

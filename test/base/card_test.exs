@@ -66,6 +66,22 @@ defmodule FlintUI.Base.CardTest do
       """
     end
 
+    def heading_title(assigns) do
+      ~H"""
+      <.card
+        title_id="settings-title"
+        title_as="h2"
+        description_id="settings-description"
+        aria-labelledby="settings-title"
+        aria-describedby="settings-description"
+      >
+        <:title>Settings</:title>
+        <:description>Workspace preferences.</:description>
+        <p>Body</p>
+      </.card>
+      """
+    end
+
     def link(assigns) do
       ~H"""
       <.card href="/repositories" title_id="card-link-title">
@@ -292,6 +308,17 @@ defmodule FlintUI.Base.CardTest do
 
     root = LazyHTML.query(document, ~s([data-part="root"]))
     assert LazyHTML.attribute(root, "aria-labelledby") == ["card-title"]
+  end
+
+  test "can render the title as a heading and give the description an id" do
+    document = render_component(&TestComponent.heading_title/1, %{}) |> LazyHTML.from_fragment()
+
+    title = LazyHTML.query(document, ~s([data-part="title"]))
+    assert LazyHTML.tag(title) == ["h2"]
+    assert LazyHTML.attribute(title, "id") == ["settings-title"]
+
+    description = LazyHTML.query(document, ~s([data-part="description"]))
+    assert LazyHTML.attribute(description, "id") == ["settings-description"]
   end
 
   test "declares its element type and documented parts" do

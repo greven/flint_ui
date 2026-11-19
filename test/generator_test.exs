@@ -103,6 +103,25 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "<FlintUI.progress root_attrs={@root_attrs} class={@class} {@rest} />"
   end
 
+  test "progress_ring maps its props onto the ring root" do
+    source = Generator.component_source(:progress_ring)
+
+    assert source =~ "attr(:size, :string"
+    assert source =~ "values: ~w(xs sm md lg xl)"
+    assert source =~ "attr(:thickness, :string"
+    assert source =~ "attr(:color, :string"
+    assert source =~ "attr(:indeterminate, :string"
+    assert source =~ "values: ~w(spin sweep)"
+    assert source =~ ~s("data-progress_ring" => true)
+    assert source =~ ~s("data-size" => assigns.size)
+    assert source =~ ~s("data-thickness" => assigns.thickness)
+    assert source =~ ~s("data-color" => assigns.data_color)
+    assert source =~ ~s("data-indeterminate" => assigns.indeterminate)
+    assert source =~ "FlintUI.Styled.Color.apply_style"
+    assert source =~ "--fl-progress-ring-color"
+    assert source =~ "<FlintUI.progress_ring root_attrs={@root_attrs} class={@class} {@rest} />"
+  end
+
   test "progress_group maps its props onto the group root" do
     source = Generator.component_source(:progress_group)
 
@@ -333,7 +352,7 @@ defmodule FlintUI.GeneratorTest do
     source = Generator.component_source(:card)
 
     assert source =~
-             "include: ~w(as orientation padded title_id href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"
+             "include: ~w(as description_id orientation padded title_as title_id href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"
 
     assert source =~ "attr(:body, :string"
     assert source =~ "values: ~w(solid soft strong ghost)"
@@ -508,6 +527,10 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--spacing: var(--fl-spacing);"
     assert bridge =~ "--spacing-lg: var(--fl-spacing-lg);"
     assert bridge =~ "--text-sm: var(--fl-font-size-sm);"
+    assert bridge =~ "--text-2xl: var(--fl-font-size-2xl);"
+    assert bridge =~ "--text-6xl: var(--fl-font-size-6xl);"
+    assert bridge =~ "--text-6xl--line-height: var(--fl-line-height-6xl);"
+    assert bridge =~ "--tracking-wide: var(--fl-font-tracking-wide);"
     assert bridge =~ "--text-color-highlighted: var(--fl-color-text-highlighted);"
     assert bridge =~ "--text-color-default: var(--fl-color-text);"
     assert bridge =~ "--text-color-toned: var(--fl-color-text-toned);"

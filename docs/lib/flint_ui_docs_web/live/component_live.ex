@@ -546,7 +546,7 @@ defmodule FlintUIDocsWeb.ComponentLive do
   defp styled_attribute_row(prop) do
     %{
       name: prop.name,
-      type: if(FlintUI.Styled.Prop.boolean?(prop), do: :boolean, else: :string),
+      type: if(FlintUI.Styled.Prop.boolean?(prop), do: :boolean, else: prop.type || :string),
       values: prop.values,
       number: prop.type == :any,
       default: prop.default,
@@ -640,9 +640,23 @@ defmodule FlintUIDocsWeb.ComponentLive do
       Enum.map(entry.props, fn prop ->
         state = if prop.state, do: ~s([data-state="#{prop.state}"]), else: ""
 
+        # A forwarded prop is rendered on a nested component, so its selector
+        # targets that component instead of this one's root.
+        prop_root =
+          if prop.forwarded_to do
+            ~s([data-element="#{prop.forwarded_to}"])
+          else
+            root
+          end
+
         %{
-          selector: root <> state <> ~s([#{FlintUI.Styled.Prop.attribute(prop)}]),
-          description: "Targets this component by its #{prop.name} value."
+          selector: prop_root <> state <> ~s([#{FlintUI.Styled.Prop.attribute(prop)}]),
+          description:
+            if prop.forwarded_to do
+              "Targets the nested #{prop.forwarded_to} by its #{prop.name} value."
+            else
+              "Targets this component by its #{prop.name} value."
+            end
         }
       end)
 

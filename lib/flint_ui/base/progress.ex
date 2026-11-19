@@ -76,6 +76,8 @@ defmodule FlintUI.Base.Progress do
 
   use FlintUI.Component
 
+  alias FlintUI.ProgressScale
+
   @impl true
   def meta do
     %Meta{
@@ -243,7 +245,7 @@ defmodule FlintUI.Base.Progress do
         %{}
       else
         %{
-          "aria-valuenow" => format_number(derived.value),
+          "aria-valuenow" => ProgressScale.format_number(derived.value),
           "aria-valuetext" => derived.value_text
         }
       end
@@ -255,7 +257,7 @@ defmodule FlintUI.Base.Progress do
           "data-part" => "root",
           "role" => "progressbar",
           "aria-valuemin" => "0",
-          "aria-valuemax" => format_number(derived.max),
+          "aria-valuemax" => ProgressScale.format_number(derived.max),
           "aria-label" => Map.get(assigns, :label),
           "aria-orientation" => if(derived.orientation == "vertical", do: "vertical"),
           "data-orientation" => derived.orientation,
@@ -360,100 +362,20 @@ defmodule FlintUI.Base.Progress do
 
   # Everything the markup needs, resolved once from assigns.
   defp resolve(assigns) do
-    {steps, max} = scale(Map.get(assigns, :max))
-    raw_value = Map.get(assigns, :value)
-    indeterminate = raw_value in [nil, ""]
-    value = if indeterminate, do: nil, else: raw_value |> number(0) |> clamp(0, max)
-    percent = if indeterminate, do: nil, else: value / max * 100
     orientation = Map.get(assigns, :orientation, "horizontal")
-    active_step = if indeterminate, do: nil, else: active_step(steps, value)
+    derived = ProgressScale.resolve(Map.get(assigns, :value), Map.get(assigns, :max))
 
-    %{
-      max: max,
-      value: value,
-      indeterminate: indeterminate,
+    Map.merge(derived, %{
       orientation: orientation,
-      steps: if(indeterminate, do: nil, else: steps),
-      active_step: active_step && elem(active_step, 0),
-      value_text: if(indeterminate, do: nil, else: value_text(active_step, percent)),
-      percent_label: if(indeterminate, do: nil, else: percent_label(percent)),
-      segment_style: segment_style(orientation, percent)
-    }
+      segment_style: segment_style(orientation, derived.percent)
+    })
   end
-
-  # A list of labels is a step scale: the last label is the maximum so the
-  # labels sit evenly from 0% to 100%. A single label still needs a positive
-  # scale to divide by.
-  defp scale(labels) when is_list(labels) do
-    case Enum.map(labels, &step_label/1) do
-      [] -> {nil, 100}
-      steps -> {steps, max(length(steps) - 1, 1)}
-    end
-  end
-
-  defp scale(value), do: {nil, max_value(value)}
-
-  defp step_label(label) when is_binary(label), do: label
-  defp step_label(label), do: to_string(label)
-
-  defp active_step(nil, _value), do: nil
-
-  defp active_step(steps, value) do
-    index = value |> floor() |> clamp(0, length(steps) - 1)
-    {index, Enum.at(steps, index)}
-  end
-
-  defp value_text(nil, percent), do: percent_label(percent)
-  defp value_text({_index, label}, percent) when label in [nil, ""], do: percent_label(percent)
-  defp value_text({_index, label}, _percent), do: label
-
-  defp max_value(value) do
-    case number(value, 100) do
-      max when max > 0 -> max
-      _ -> 100
-    end
-  end
-
-  defp percent_label(percent), do: "#{round(percent)}%"
 
   defp segment_style(_orientation, nil), do: nil
-  defp segment_style("vertical", percent), do: "block-size: #{format_number(percent)}%"
-  defp segment_style(_orientation, percent), do: "inline-size: #{format_number(percent)}%"
 
-  defp clamp(_value, min, max) when max <= min, do: min
-  defp clamp(value, min, max), do: value |> Kernel.max(min) |> Kernel.min(max)
+  defp segment_style("vertical", percent),
+    do: "block-size: #{ProgressScale.format_number(percent)}%"
 
-  defp number(nil, default), do: default
-  defp number(value, _default) when is_integer(value), do: value
-
-  defp number(value, _default) when is_float(value) do
-    normalize_number(value)
-  end
-
-  defp number(value, default) when is_binary(value) do
-    case Float.parse(value) do
-      {number, ""} -> normalize_number(number)
-      _ -> default
-    end
-  end
-
-  defp number(_value, default), do: default
-
-  defp normalize_number(value) when is_float(value) do
-    if value == trunc(value), do: trunc(value), else: value
-  end
-
-  defp normalize_number(value), do: value
-
-  defp format_number(value) when is_integer(value), do: Integer.to_string(value)
-
-  defp format_number(value) when is_float(value) do
-    value = Float.round(value, 6)
-
-    if value == trunc(value) do
-      Integer.to_string(trunc(value))
-    else
-      Float.to_string(value)
-    end
-  end
+  defp segment_style(_orientation, percent),
+    do: "inline-size: #{ProgressScale.format_number(percent)}%"
 end

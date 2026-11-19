@@ -1,0 +1,267 @@
+@layer components {
+    /* Progress ring. Public inputs: `--fl-progress-ring-color`,
+     * `--fl-progress-ring-track`, `--fl-progress-ring-size`, and
+     * `--fl-progress-ring-thickness`. The root owns the progressbar semantics;
+     * the SVG and its circles paint the value. The base writes the arc offset
+     * inline as `stroke-dashoffset`, and the theme supplies the rotation, the
+     * indeterminate motion, and the size and thickness scales. */
+    [data-element="progress_ring"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-primary);
+        --fl-progress-ring-track: var(--fl-color-surface-strong);
+        --fl-progress-ring-size: 4rem;
+        --fl-progress-ring-thickness: 6;
+        display: inline-grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        place-items: center;
+        inline-size: var(--fl-progress-ring-size);
+        min-inline-size: 0;
+        color: var(--fl-color-text);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    /* The drawing starts at twelve o'clock. Rotating the whole SVG keeps the
+     * arc offset in logical drawing space; the track is a full circle, so the
+     * rotation never shows on it. */
+    [data-element="progress_ring"][data-progress_ring] > [data-part="svg"] {
+        grid-area: 1 / 1;
+        display: block;
+        inline-size: 100%;
+        block-size: auto;
+        overflow: visible;
+        rotate: -90deg;
+    }
+
+    [data-element="progress_ring"][data-progress_ring]
+        > [data-part="svg"]
+        > [data-part="track"] {
+        stroke: var(--fl-progress-ring-track);
+        stroke-width: var(--fl-progress-ring-thickness);
+        opacity: 1;
+    }
+
+    [data-element="progress_ring"][data-progress_ring]
+        > [data-part="svg"]
+        > [data-part="segment"] {
+        stroke: var(--fl-progress-ring-color);
+        stroke-width: var(--fl-progress-ring-thickness);
+        stroke-linecap: round;
+    }
+
+    /* Determinate updates slide to the new percentage. The base omits the
+     * offset for an indeterminate ring, so the transition only applies to a
+     * known value. */
+    [data-element="progress_ring"][data-progress_ring]:not(
+            [data-state="indeterminate"]
+        )
+        > [data-part="svg"]
+        > [data-part="segment"] {
+        transition: stroke-dashoffset var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    /* Centred status. It shares the drawing's grid cell, so the ring keeps its
+     * diameter and the percentage sits over the hole. */
+    [data-element="progress_ring"][data-progress_ring] > [data-part="status"] {
+        grid-area: 1 / 1;
+        place-self: center;
+        color: var(--fl-color-text);
+        font-weight: var(--fl-font-weight-medium);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* Step labels. Only the active label is visible; the labels share one grid
+     * cell so the row keeps the height of the longest label instead of
+     * resizing as the value moves. The first label is the idle state, so it
+     * stays muted. */
+    [data-element="progress_ring"][data-progress_ring] > [data-part="steps"] {
+        grid-area: 2 / 1;
+        display: grid;
+        justify-items: center;
+        min-inline-size: 0;
+        margin-block-start: var(--fl-spacing-xs);
+        color: var(--fl-progress-ring-color);
+    }
+
+    [data-element="progress_ring"][data-progress_ring]
+        > [data-part="steps"]
+        > [data-part="step"] {
+        grid-area: 1 / 1;
+        max-inline-size: 100%;
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="progress_ring"][data-progress_ring]
+        > [data-part="steps"]
+        > [data-part="step"][data-active] {
+        opacity: 1;
+    }
+
+    [data-element="progress_ring"][data-progress_ring]
+        > [data-part="steps"]
+        > [data-part="step"]:first-child {
+        color: var(--fl-color-text-muted);
+    }
+
+    /* Sizes. The status text follows the same step, so a larger ring also has a
+     * larger percentage. */
+    [data-element="progress_ring"][data-size="xs"][data-progress_ring] {
+        --fl-progress-ring-size: 2.5rem;
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-element="progress_ring"][data-size="sm"][data-progress_ring] {
+        --fl-progress-ring-size: 3rem;
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-element="progress_ring"][data-size="md"][data-progress_ring] {
+        --fl-progress-ring-size: 4rem;
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="progress_ring"][data-size="lg"][data-progress_ring] {
+        --fl-progress-ring-size: 6rem;
+        font-size: var(--fl-font-size-md);
+        line-height: var(--fl-line-height-md);
+    }
+
+    [data-element="progress_ring"][data-size="xl"][data-progress_ring] {
+        --fl-progress-ring-size: 8rem;
+        font-size: var(--fl-font-size-xl);
+        line-height: var(--fl-line-height-xl);
+    }
+
+    /* Thickness. The value is a share of the 100-unit drawing space, so the
+     * stroke stays proportional when the diameter changes. */
+    [data-element="progress_ring"][data-thickness="xs"][data-progress_ring] {
+        --fl-progress-ring-thickness: 3;
+    }
+
+    [data-element="progress_ring"][data-thickness="sm"][data-progress_ring] {
+        --fl-progress-ring-thickness: 4;
+    }
+
+    [data-element="progress_ring"][data-thickness="md"][data-progress_ring] {
+        --fl-progress-ring-thickness: 6;
+    }
+
+    [data-element="progress_ring"][data-thickness="lg"][data-progress_ring] {
+        --fl-progress-ring-thickness: 8;
+    }
+
+    [data-element="progress_ring"][data-thickness="xl"][data-progress_ring] {
+        --fl-progress-ring-thickness: 10;
+    }
+
+    /* Color roles. `primary` is the base treatment; `neutral` is the inverted
+     * surface, matching the other feedback and form components. */
+    [data-element="progress_ring"][data-color="secondary"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-secondary);
+    }
+
+    [data-element="progress_ring"][data-color="neutral"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-inverted);
+    }
+
+    [data-element="progress_ring"][data-color="info"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-info);
+    }
+
+    [data-element="progress_ring"][data-color="success"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-success);
+    }
+
+    [data-element="progress_ring"][data-color="warning"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-warning);
+    }
+
+    [data-element="progress_ring"][data-color="error"][data-progress_ring] {
+        --fl-progress-ring-color: var(--fl-color-error);
+    }
+
+    /* Indeterminate motion. `spin` keeps a fixed share of the circle visible and
+     * turns the drawing. `sweep` adds the stroke-dash morph, so the arc grows
+     * and shrinks as it turns. The base omits the inline offset, leaving the
+     * whole dash pattern to this layer. */
+    [data-element="progress_ring"][data-progress_ring][data-state="indeterminate"]
+        > [data-part="svg"] {
+        animation: fl-progress-ring-spin 2s linear infinite;
+    }
+
+    [data-element="progress_ring"][data-progress_ring][data-state="indeterminate"]
+        > [data-part="svg"]
+        > [data-part="segment"] {
+        stroke-dasharray: 25 100;
+        stroke-dashoffset: 0;
+    }
+
+    [data-element="progress_ring"][data-indeterminate="sweep"][data-progress_ring][data-state="indeterminate"]
+        > [data-part="svg"]
+        > [data-part="segment"] {
+        animation: fl-progress-ring-sweep 1.5s ease-in-out infinite;
+    }
+
+    @keyframes fl-progress-ring-spin {
+        from {
+            rotate: -90deg;
+        }
+
+        to {
+            rotate: 270deg;
+        }
+    }
+
+    @keyframes fl-progress-ring-sweep {
+        0% {
+            stroke-dasharray: 1 100;
+            stroke-dashoffset: 0;
+        }
+
+        50% {
+            stroke-dasharray: 60 100;
+            stroke-dashoffset: -30;
+        }
+
+        100% {
+            stroke-dasharray: 60 100;
+            stroke-dashoffset: -100;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="progress_ring"][data-progress_ring][data-state="indeterminate"]
+            > [data-part="svg"] {
+            animation: none;
+            rotate: -90deg;
+        }
+
+        [data-element="progress_ring"][data-progress_ring][data-state="indeterminate"]
+            > [data-part="svg"]
+            > [data-part="segment"] {
+            animation: none;
+            stroke-dasharray: 25 100;
+            stroke-dashoffset: 0;
+            opacity: 0.6;
+        }
+
+        [data-element="progress_ring"][data-progress_ring]
+            > [data-part="svg"]
+            > [data-part="segment"],
+        [data-element="progress_ring"][data-progress_ring]
+            > [data-part="steps"]
+            > [data-part="step"] {
+            transition: none;
+        }
+    }
+}

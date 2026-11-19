@@ -13,6 +13,13 @@ defmodule FlintUI.Base.Modal do
   through the dialog's `cancel` event. That is why a modal must be opened from
   JavaScript. `mix flint.setup` installs the hook with the rest of the theme.
 
+  The dialog is only the positional shell. Its surface is a nested
+  `FlintUI.card`: the card supplies the header, body, footer, dividers, and
+  banded regions, and the styled layer maps the modal's `body` and `spacing`
+  props onto it. A dialog therefore gets the card's surface treatments without
+  reimplementing them, and `body="separated-footer"` gives the footer a tinted
+  band.
+
   ## Examples
 
   Open a modal from a control anywhere on the page with `open_modal/2`:
@@ -151,7 +158,8 @@ defmodule FlintUI.Base.Modal do
         %Meta.PartAttr{
           name: "[data-part]",
           value: "root",
-          description: "Identifies the dialog element, which is also the modal surface."
+          description:
+            "Identifies the dialog element, which is the positioning shell. The surface is the nested card."
         },
         %Meta.PartAttr{
           name: "[data-state]",
@@ -227,7 +235,7 @@ defmodule FlintUI.Base.Modal do
           name: "[data-part]",
           value: "content",
           description:
-            "Identifies the focusable layout container inside the dialog. It carries the fallback focus target."
+            "Identifies the focusable layout container inside the dialog. It wraps the card surface and carries the fallback focus target."
         },
         %Meta.PartAttr{
           name: "tabindex",
@@ -236,18 +244,21 @@ defmodule FlintUI.Base.Modal do
             "Lets the content receive focus when the dialog contains no focusable element."
         }
       ],
+      # The header, title, description, body, section, and footer regions come
+      # from the nested card. The modal owns the dialog shell and the close
+      # control, so the surface treatment stays in one place.
       header: [
         %Meta.PartAttr{
           name: "[data-part]",
           value: "header",
-          description: "Identifies the header region wrapping the title and description."
+          description: "The nested card's header region, wrapping the title and description."
         }
       ],
       title: [
         %Meta.PartAttr{
           name: "[data-part]",
           value: "title",
-          description: "Identifies the dialog heading."
+          description: "The nested card's title, rendered as the modal heading."
         },
         %Meta.PartAttr{
           name: "id",
@@ -259,7 +270,7 @@ defmodule FlintUI.Base.Modal do
         %Meta.PartAttr{
           name: "[data-part]",
           value: "description",
-          description: "Identifies the supporting text under the title."
+          description: "The nested card's description, the supporting text under the title."
         },
         %Meta.PartAttr{
           name: "id",
@@ -271,14 +282,30 @@ defmodule FlintUI.Base.Modal do
         %Meta.PartAttr{
           name: "[data-part]",
           value: "body",
-          description: "Identifies the scrollable body region."
+          description: "The nested card's body region, which scrolls inside the dialog."
+        }
+      ],
+      section: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "section",
+          description:
+            "The nested card's body section holding the default slot. The `padded` setting comes from the card."
         }
       ],
       footer: [
         %Meta.PartAttr{
           name: "[data-part]",
           value: "footer",
-          description: "Identifies the footer region that usually holds actions."
+          description: "The nested card's footer region holding the actions."
+        }
+      ],
+      footer_actions: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "footer-actions",
+          description:
+            "The nested card's actions row. The modal's `:footer` slot renders here, aligned to the end."
         }
       ],
       close: [
@@ -423,11 +450,6 @@ defmodule FlintUI.Base.Modal do
         "data-part" => "content",
         "tabindex" => "-1"
       },
-      header: %{"data-part" => "header"},
-      title: %{"data-part" => "title", "id" => title_id},
-      description: %{"data-part" => "description", "id" => description_id},
-      body: %{"data-part" => "body"},
-      footer: %{"data-part" => "footer"},
       close: %{
         "type" => "button",
         "data-part" => "close",
@@ -441,6 +463,10 @@ defmodule FlintUI.Base.Modal do
   @doc false
 
   attr :flint_parts, :map, default: nil, doc: false
+
+  # The styled wrapper supplies the nested card's visual hooks. It is an
+  # internal connector, like `flint_parts`, so it stays out of the public API.
+  attr :card_attrs, :map, default: %{}, doc: false
 
   attr :id, :string,
     required: true,
@@ -519,7 +545,8 @@ defmodule FlintUI.Base.Modal do
 
   slot :inner_block, doc: "The dialog body."
 
-  slot :footer, doc: "Content rendered at the end of the dialog, usually actions."
+  slot :footer,
+    doc: "Actions rendered at the end of the card's footer, aligned to the inline end."
 
   slot :close,
     doc:
@@ -528,24 +555,21 @@ defmodule FlintUI.Base.Modal do
   @impl true
   def render(assigns) do
     ~H"""
-    <% title = render_slot(@title) %>
-    <% description = render_slot(@description) %>
-    <% body = render_slot(@inner_block) %>
-    <% footer = render_slot(@footer) %>
     <% close = render_slot(@close) %>
-    <% title? = present?(title) %>
-    <% description? = present?(description) %>
-    <% body? = present?(body) %>
-    <% footer? = present?(footer) %>
     <% close? = present?(close) %>
     <dialog {@rest} {@flint_parts[:root]}>
       <div {@flint_parts[:content]}>
-        <header :if={title? or description? or @show_close} {@flint_parts[:header]}>
-          <h2 :if={title?} {@flint_parts[:title]}>{title}</h2>
-          <p :if={description?} {@flint_parts[:description]}>{description}</p>
-        </header>
-        <div :if={body?} {@flint_parts[:body]}>{body}</div>
-        <footer :if={footer?} {@flint_parts[:footer]}>{footer}</footer>
+        <FlintUI.card
+          title_id={"#{@id}-title"}
+          title_as="h2"
+          description_id={"#{@id}-description"}
+          {@card_attrs}
+        >
+          <:title>{render_slot(@title)}</:title>
+          <:description>{render_slot(@description)}</:description>
+          <:footer_actions>{render_slot(@footer)}</:footer_actions>
+          {render_slot(@inner_block)}
+        </FlintUI.card>
         <button :if={@show_close} {@flint_parts[:close]}>
           <%= if close? do %>
             {close}

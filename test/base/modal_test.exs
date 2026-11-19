@@ -101,15 +101,27 @@ defmodule FlintUI.Base.ModalTest do
     assert attr(document, "aria-modal") == ["true"]
   end
 
-  test "renders each region in DOM order" do
+  test "renders each region inside the card surface" do
     document = render(&TestComponent.defaults/1)
 
-    for name <- ~w(root content header title description body footer close) do
+    for name <- ~w(root content header title description body section footer footer-actions close) do
       assert part(document, name) != [], "expected a [data-part=#{name}] element"
     end
 
     assert part_attr(document, "content", "tabindex") == ["-1"]
-    assert LazyHTML.query(document, ~s([data-part="content"] > [data-part="header"])) != []
+
+    card = LazyHTML.query(document, ~s([data-element="card"]))
+    assert LazyHTML.tag(card) == ["div"]
+    assert LazyHTML.attribute(card, "data-part") == ["root"]
+
+    assert LazyHTML.query(document, ~s([data-part="content"] > [data-element="card"])) != []
+    assert LazyHTML.query(card, ~s([data-part="header"])) != []
+  end
+
+  test "renders the title as the dialog heading" do
+    document = render(&TestComponent.defaults/1)
+
+    assert LazyHTML.tag(part(document, "title")) == ["h2"]
   end
 
   test "wires the title and description as the dialog name and description" do
@@ -193,7 +205,9 @@ defmodule FlintUI.Base.ModalTest do
              :title,
              :description,
              :body,
+             :section,
              :footer,
+             :footer_actions,
              :close,
              :close_icon
            ]

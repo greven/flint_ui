@@ -1,0 +1,102 @@
+@layer components {
+    /* Heading. The wrapper stacks the optional kicker, the semantic heading,
+     * and the optional subtitle. Type size, ink, weight, and alignment come
+     * from the typography primitive; the heading keeps only its anatomy.
+     *
+     * Public inputs: `--fl-heading-kicker-color`, `-subtitle-color`, `-gap`,
+     * and `-line-clamp`. */
+    [data-element="heading"] {
+        --fl-heading-kicker-color: var(--fl-color-text-muted);
+        --fl-heading-subtitle-color: var(--fl-color-text-toned);
+        --fl-heading-gap: var(--fl-spacing-sm);
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-heading-gap);
+        margin: 0;
+        min-inline-size: 0;
+    }
+
+    /* The kicker is a label, not a heading. It stays outside the heading
+     * element so it does not join the accessible name. */
+    [data-element="heading"] > [data-part="kicker"] {
+        margin: 0;
+        color: var(--fl-heading-kicker-color);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        font-weight: var(--fl-font-weight-semibold);
+        line-height: var(--fl-line-height-sm);
+        letter-spacing: var(--fl-font-tracking-wider);
+        text-transform: uppercase;
+    }
+
+    /* Reset the browser's heading size, weight, and margin. The root owns the
+     * type scale, so visual size never follows the semantic level. */
+    [data-element="heading"] > [data-part="heading"] {
+        margin: 0;
+        min-inline-size: 0;
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-wrap: balance;
+    }
+
+    /* The subtitle scales from the heading instead of taking a fixed step, so
+     * a display heading keeps a proportionate deck. */
+    [data-element="heading"] > [data-part="subtitle"] {
+        margin: 0;
+        color: var(--fl-heading-subtitle-color);
+        font-family: var(--fl-font-sans);
+        font-size: clamp(var(--fl-font-size-md), 0.375em, var(--fl-font-size-2xl));
+        font-weight: var(--fl-font-weight-normal);
+        line-height: 1.5;
+        text-wrap: pretty;
+    }
+
+    /* Single-line truncation targets the title; the kicker and subtitle stay
+     * visible. */
+    [data-element="heading"][data-truncate] > [data-part="heading"] {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Multi-line clamping. `line_clamp` wins over `truncate`, so the wrapper
+     * emits only one hook. Any positive integer works through the inline
+     * input. */
+    [data-element="heading"][data-line-clamp] > [data-part="heading"] {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--fl-heading-line-clamp);
+        line-clamp: var(--fl-heading-line-clamp);
+        text-wrap: wrap;
+    }
+
+    /* Documented clamp presets. A custom count writes the same input inline. */
+    [data-element="heading"][data-line-clamp="1"] {
+        --fl-heading-line-clamp: 1;
+    }
+
+    [data-element="heading"][data-line-clamp="2"] {
+        --fl-heading-line-clamp: 2;
+    }
+
+    [data-element="heading"][data-line-clamp="3"] {
+        --fl-heading-line-clamp: 3;
+    }
+
+    [data-element="heading"][data-line-clamp="4"] {
+        --fl-heading-line-clamp: 4;
+    }
+
+    [data-element="heading"][data-line-clamp="5"] {
+        --fl-heading-line-clamp: 5;
+    }
+
+    [data-element="heading"][data-line-clamp="6"] {
+        --fl-heading-line-clamp: 6;
+    }
+}

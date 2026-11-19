@@ -6,7 +6,7 @@ defmodule FlintUI.Base.InputTest do
   defmodule TestComponent do
     use FlintUI
 
-    def text(assigns) do
+    def text_input(assigns) do
       ~H"""
       <.input
         id={@id}
@@ -134,7 +134,7 @@ defmodule FlintUI.Base.InputTest do
 
   defp render(overrides \\ %{}) do
     assigns = Map.merge(@defaults, Map.new(overrides))
-    render_component(&TestComponent.text/1, assigns) |> LazyHTML.from_fragment()
+    render_component(&TestComponent.text_input/1, assigns) |> LazyHTML.from_fragment()
   end
 
   defp root(html), do: LazyHTML.query(html, ~s([data-part="root"]))

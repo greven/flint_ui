@@ -19,17 +19,34 @@
     --fl-font-size-md: 1rem;
     --fl-font-size-lg: 1.125rem;
     --fl-font-size-xl: 1.25rem;
+    --fl-font-size-2xl: 1.5rem;
+    --fl-font-size-3xl: 1.875rem;
+    --fl-font-size-4xl: 2.25rem;
+    --fl-font-size-5xl: 3rem;
+    --fl-font-size-6xl: 3.75rem;
 
     --fl-line-height-xs: 1rem;
     --fl-line-height-sm: 1.25rem;
     --fl-line-height-md: 1.5rem;
     --fl-line-height-lg: 1.75rem;
     --fl-line-height-xl: 2rem;
+    --fl-line-height-2xl: 2rem;
+    --fl-line-height-3xl: 2.25rem;
+    --fl-line-height-4xl: 2.5rem;
+    --fl-line-height-5xl: 1;
+    --fl-line-height-6xl: 1;
 
     --fl-font-weight-normal: 400;
     --fl-font-weight-medium: 500;
     --fl-font-weight-semibold: 600;
     --fl-font-weight-bold: 700;
+
+    --fl-font-tracking-tighter: -0.05em;
+    --fl-font-tracking-tight: -0.025em;
+    --fl-font-tracking-normal: 0em;
+    --fl-font-tracking-wide: 0.025em;
+    --fl-font-tracking-wider: 0.05em;
+    --fl-font-tracking-widest: 0.1em;
 
     /* Spacing scale; `--fl-spacing` is the base unit. */
     --fl-spacing: 0.25rem;

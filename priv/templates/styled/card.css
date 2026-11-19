@@ -340,6 +340,8 @@
 
     [data-element="card"][data-card] [data-part="title"] {
         grid-column: 1;
+        margin: 0;
+        font-size: inherit;
         font-weight: var(--fl-font-weight-semibold);
         line-height: var(--fl-line-height-sm);
     }

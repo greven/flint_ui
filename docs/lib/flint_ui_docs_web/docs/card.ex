@@ -27,7 +27,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
           %{key: :inverted, type: :boolean, default: false, label: "Inverted"}
         ]
       },
-      %{tab: :styled, section: :usage, id: :link, title: "Link"}
+      %{tab: :styled, section: :usage, id: :link, title: "Link"},
+      %{tab: :styled, section: :usage, id: :heading, title: "Heading"}
     ]
   end
 
@@ -72,6 +73,27 @@ defmodule FlintUIDocsWeb.Docs.Card do
     """
   end
 
+  def render_section(%{section: :usage, id: :heading} = assigns) do
+    ~H"""
+    <.prose content="Set `title_as` to render the title as a heading, and `description_id` to give the supporting text an id for `aria-describedby`. The card stays a plain container; pair `title_as` with `aria-labelledby` and `title_id` when the card introduces a page section." />
+    <.preview {assigns} code={heading_code()}>
+      <Components.card
+        as="section"
+        title_as="h2"
+        title_id="card-heading-title"
+        description_id="card-heading-description"
+        aria-labelledby="card-heading-title"
+        aria-describedby="card-heading-description"
+        class="w-full max-w-sm"
+      >
+        <:title>Billing</:title>
+        <:description>Manage the workspace plan.</:description>
+        <p>Invoices, payment methods, and receipts.</p>
+      </Components.card>
+    </.preview>
+    """
+  end
+
   @impl true
   def parts_demo(assigns) do
     ~H"""
@@ -99,6 +121,24 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <:title>Browse components</:title>
       <:description>See every FlintUI component</:description>
       <p>Open the component index.</p>
+    </.card>
+    """
+    |> String.trim()
+  end
+
+  defp heading_code do
+    """
+    <.card
+      as="section"
+      title_as="h2"
+      title_id="card-heading-title"
+      description_id="card-heading-description"
+      aria-labelledby="card-heading-title"
+      aria-describedby="card-heading-description"
+    >
+      <:title>Billing</:title>
+      <:description>Manage the workspace plan.</:description>
+      <p>Invoices, payment methods, and receipts.</p>
     </.card>
     """
     |> String.trim()

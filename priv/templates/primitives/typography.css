@@ -1,0 +1,169 @@
+@layer components {
+    /* Typography primitive. The shared type scale, ink tiers, weight, and
+     * alignment for text components. A styled wrapper opts in with
+     * `data-typography`; its component part keeps only its own anatomy.
+     *
+     * Public input: `--fl-typography-color`. A raw color writes it inline,
+     * while the role and tier hooks below resolve it from theme tokens. */
+    [data-typography] {
+        --fl-typography-color: var(--fl-color-text);
+
+        color: var(--fl-typography-color);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-md);
+        font-weight: var(--fl-font-weight-normal);
+        line-height: var(--fl-line-height-md);
+        text-align: start;
+    }
+
+    /* Type scale. Large steps tighten their tracking so display text keeps
+     * its shape instead of drifting apart. */
+    [data-typography][data-size="xs"] {
+        font-size: var(--fl-font-size-xs);
+        line-height: var(--fl-line-height-xs);
+    }
+
+    [data-typography][data-size="sm"] {
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-typography][data-size="md"] {
+        font-size: var(--fl-font-size-md);
+        line-height: var(--fl-line-height-md);
+    }
+
+    [data-typography][data-size="lg"] {
+        font-size: var(--fl-font-size-lg);
+        line-height: var(--fl-line-height-lg);
+    }
+
+    [data-typography][data-size="xl"] {
+        font-size: var(--fl-font-size-xl);
+        line-height: var(--fl-line-height-xl);
+    }
+
+    [data-typography][data-size="2xl"] {
+        font-size: var(--fl-font-size-2xl);
+        line-height: var(--fl-line-height-2xl);
+    }
+
+    [data-typography][data-size="3xl"] {
+        font-size: var(--fl-font-size-3xl);
+        line-height: var(--fl-line-height-3xl);
+    }
+
+    [data-typography][data-size="4xl"] {
+        font-size: var(--fl-font-size-4xl);
+        line-height: var(--fl-line-height-4xl);
+        letter-spacing: var(--fl-font-tracking-tight);
+    }
+
+    [data-typography][data-size="5xl"] {
+        font-size: var(--fl-font-size-5xl);
+        line-height: var(--fl-line-height-5xl);
+        letter-spacing: var(--fl-font-tracking-tighter);
+    }
+
+    [data-typography][data-size="6xl"] {
+        font-size: var(--fl-font-size-6xl);
+        line-height: var(--fl-line-height-6xl);
+        letter-spacing: var(--fl-font-tracking-tighter);
+    }
+
+    /* Ink tiers. `dimmed` is intentionally below AA; it belongs to
+     * placeholders and decoration, never readable content. */
+    [data-typography][data-color="default"] {
+        --fl-typography-color: var(--fl-color-text);
+    }
+
+    [data-typography][data-color="highlighted"] {
+        --fl-typography-color: var(--fl-color-text-highlighted);
+    }
+
+    [data-typography][data-color="toned"] {
+        --fl-typography-color: var(--fl-color-text-toned);
+    }
+
+    [data-typography][data-color="muted"] {
+        --fl-typography-color: var(--fl-color-text-muted);
+    }
+
+    [data-typography][data-color="dimmed"] {
+        --fl-typography-color: var(--fl-color-text-dimmed);
+    }
+
+    [data-typography][data-color="inverted"] {
+        --fl-typography-color: var(--fl-color-text-inverted);
+    }
+
+    /* Semantic roles use the role's readable text token on a neutral surface. */
+    [data-typography][data-color="primary"] {
+        --fl-typography-color: var(--fl-color-primary-text);
+    }
+
+    [data-typography][data-color="secondary"] {
+        --fl-typography-color: var(--fl-color-secondary-text);
+    }
+
+    [data-typography][data-color="neutral"] {
+        --fl-typography-color: var(--fl-color-neutral-text);
+    }
+
+    [data-typography][data-color="success"] {
+        --fl-typography-color: var(--fl-color-success-text);
+    }
+
+    [data-typography][data-color="info"] {
+        --fl-typography-color: var(--fl-color-info-text);
+    }
+
+    [data-typography][data-color="warning"] {
+        --fl-typography-color: var(--fl-color-warning-text);
+    }
+
+    [data-typography][data-color="error"] {
+        --fl-typography-color: var(--fl-color-error-text);
+    }
+
+    /* Absolute tones stay dark or light in either scheme. */
+    [data-typography][data-color="dark"] {
+        --fl-typography-color: var(--fl-color-dark-text);
+    }
+
+    [data-typography][data-color="light"] {
+        --fl-typography-color: var(--fl-color-light-text);
+    }
+
+    [data-typography][data-weight="normal"] {
+        font-weight: var(--fl-font-weight-normal);
+    }
+
+    [data-typography][data-weight="medium"] {
+        font-weight: var(--fl-font-weight-medium);
+    }
+
+    [data-typography][data-weight="semibold"] {
+        font-weight: var(--fl-font-weight-semibold);
+    }
+
+    [data-typography][data-weight="bold"] {
+        font-weight: var(--fl-font-weight-bold);
+    }
+
+    [data-typography][data-align="start"] {
+        text-align: start;
+    }
+
+    [data-typography][data-align="center"] {
+        text-align: center;
+    }
+
+    [data-typography][data-align="end"] {
+        text-align: end;
+    }
+
+    [data-typography][data-align="justify"] {
+        text-align: justify;
+    }
+}
