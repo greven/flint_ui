@@ -13,9 +13,10 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-progress-basic [role='progressbar'][aria-valuenow='40'][aria-valuemax='100'][aria-valuetext='40%']"
+             "#usage-progress-basic [role='progressbar'][aria-valuenow='40'][aria-valuemax='100'][aria-valuetext='40%'][aria-labelledby]"
            )
 
+    assert has_element?(view, "#usage-progress-basic [data-part='label']", "Upload progress")
     assert has_element?(view, "#usage-progress-basic [data-part='status']", "40%")
 
     assert has_element?(
@@ -48,9 +49,10 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-progress-steps [role='progressbar'][aria-valuemax='4'][aria-valuenow='3'][aria-valuetext='Deploying']"
+             "#usage-progress-steps [role='progressbar'][aria-valuemax='4'][aria-valuenow='3'][aria-valuetext='Deploying'][aria-label='Deployment']"
            )
 
+    refute has_element?(view, "#usage-progress-steps [data-part='label']")
     assert has_element?(view, "#usage-progress-steps [data-part='steps']")
 
     assert has_element?(
@@ -94,6 +96,13 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
              view,
              "#usage-progress-striped [data-element='progress'][data-striped][data-indeterminate='carousel']"
            )
+
+    assert has_element?(
+             view,
+             "#usage-progress-striped [role='progressbar'][aria-label='Uploading']"
+           )
+
+    refute has_element?(view, "#usage-progress-striped [data-part='label']")
 
     refute has_element?(view, "#usage-progress-striped [data-element='progress'][data-animated]")
 
@@ -144,6 +153,7 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
              "72%"
            )
 
+    assert has_element?(view, "#usage-progress-status [data-part='label']", "Starting")
     assert has_element?(view, "#usage-progress-status [data-part='status']", "0%")
     assert has_element?(view, "#usage-progress-status [data-part='status']", "35%")
     assert has_element?(view, "#usage-progress-status [data-part='status']", "100%")
@@ -175,6 +185,7 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
            )
 
     assert has_element?(view, "#example-progress-uploads-preview [data-part='status']", "62%")
+    refute has_element?(view, "#example-progress-uploads-preview [data-part='label']")
 
     assert has_element?(
              view,

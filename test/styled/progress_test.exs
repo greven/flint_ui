@@ -143,9 +143,19 @@ defmodule FlintUI.Styled.ProgressTest do
     assert attr(document, :progress, "aria-valuenow") == ["72"]
     assert attr(document, :progress, "aria-valuemax") == ["90"]
     assert attr(document, :progress, "aria-valuetext") == ["80%"]
-    assert attr(document, :progress, "aria-label") == ["Upload progress"]
+
+    label = part(document, "label")
+    label_id = LazyHTML.attribute(label, "id") |> List.first()
+
+    assert LazyHTML.text(label) |> String.trim() == "Upload progress"
+    assert attr(document, :progress, "aria-labelledby") == [label_id]
+    assert attr(document, :progress, "aria-label") == []
     assert attr(document, :progress, "data-orientation") == ["vertical"]
     assert attr(document, :progress, "aria-orientation") == ["vertical"]
+
+    assert LazyHTML.query(document, ~s([data-part="header"] > [data-part="status"]))
+           |> Enum.count() == 1
+
     assert LazyHTML.text(part(document, "status")) |> String.trim() == "80%"
     assert part_attr(document, "segment", "style") == ["block-size: 80%"]
   end

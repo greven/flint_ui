@@ -33,7 +33,13 @@ defmodule FlintUI.Base.ProgressTest do
 
     def labelled(assigns) do
       ~H"""
-      <.progress value="40" aria-labelledby="upload-label" />
+      <.progress value="40" label="Upload progress" aria-labelledby="upload-label" />
+      """
+    end
+
+    def caller_named(assigns) do
+      ~H"""
+      <.progress value="40" label="Upload progress" aria-label="Custom name" />
       """
     end
   end
@@ -81,6 +87,8 @@ defmodule FlintUI.Base.ProgressTest do
 
       assert segment_style(html) == ["inline-size: 40%"]
       assert part(html, "status") |> Enum.empty?()
+      assert part(html, "header") |> Enum.empty?()
+      assert part(html, "label") |> Enum.empty?()
       assert LazyHTML.attribute(part(html, "track"), "aria-hidden") == ["true"]
       assert LazyHTML.attribute(part(html, "segment"), "aria-hidden") == ["true"]
     end
@@ -135,19 +143,47 @@ defmodule FlintUI.Base.ProgressTest do
       assert LazyHTML.text(part(html, "status")) |> String.trim() == "33%"
     end
 
-    test "renders the status above the bar" do
+    test "renders the status in the header above the bar" do
       html = render(show_status: true)
       status = part(html, "status")
 
       assert Enum.count(status) == 1
       assert LazyHTML.text(status) |> String.trim() == "40%"
       assert LazyHTML.attribute(status, "aria-hidden") == ["true"]
+
+      assert LazyHTML.query(html, ~s([data-part="header"] > [data-part="status"])) |> Enum.count() ==
+               1
     end
 
-    test "renders the accessible name from label" do
+    test "renders the label visibly and names the bar from it" do
       html = render(label: "Upload progress")
+      label = part(html, "label")
+      label_id = LazyHTML.attribute(label, "id") |> List.first()
 
-      assert root_attr(html, "aria-label") == ["Upload progress"]
+      assert LazyHTML.text(label) |> String.trim() == "Upload progress"
+      assert label_id
+
+      assert LazyHTML.query(html, ~s([data-part="header"] > [data-part="label"])) |> Enum.count() ==
+               1
+
+      assert root_attr(html, "aria-labelledby") == [label_id]
+      assert root_attr(html, "aria-label") == []
+    end
+
+    test "renders only the status when the label is omitted" do
+      html = render(show_status: true)
+
+      assert part(html, "label") |> Enum.empty?()
+
+      assert LazyHTML.query(html, ~s([data-part="header"] > [data-part="status"])) |> Enum.count() ==
+               1
+    end
+
+    test "lets a caller aria-label replace the generated label reference" do
+      html = render_component(&TestComponent.caller_named/1, %{}) |> LazyHTML.from_fragment()
+
+      assert root_attr(html, "aria-label") == ["Custom name"]
+      assert root_attr(html, "aria-labelledby") == []
     end
 
     test "forwards caller globals to the root" do

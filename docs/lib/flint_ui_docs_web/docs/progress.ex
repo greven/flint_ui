@@ -89,17 +89,18 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       values outside the scale are clamped, so a server-side count can be passed
       directly. Omit `value` for an indeterminate bar, shown below.|} />
 
-    <.prose content={~S|`size` controls the track thickness and the status text, `radius`
-      controls the corners, and `color` sets the fill. `show_status` prints the rounded
-      percentage above the bar. The same percentage is exposed as `aria-valuetext`, so
-      assistive technology hears it even when `max` is not 100.|} />
+    <.prose content={~S|`size` controls the track thickness and the header text, `radius`
+      controls the corners, and `color` sets the fill. `label` renders above the bar
+      and names it through `aria-labelledby`. `show_status` prints the rounded
+      percentage at the right of the same row. The same percentage is exposed as
+      `aria-valuetext`, so assistive technology hears it even when `max` is not 100.|} />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
       <div class="w-full max-w-sm">
         <Components.progress
           value="40"
           max="100"
-          label="Upload progress"
+          label="Uploading..."
           show_status={props.show_status}
           size={props.size}
           color={props.color}
@@ -124,7 +125,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
         <Components.progress
           value={props.value}
           max={steps()}
-          label="Deployment"
+          aria-label="Deployment"
           color={props.color}
         />
       </div>
@@ -143,14 +144,14 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       <div class="grid w-full max-w-sm gap-6">
         <Components.progress
           value="60"
-          label="Uploading"
+          aria-label="Uploading"
           show_status
           striped={props.striped}
           animated={props.animated}
         />
         <Components.progress
           value="60"
-          label="Syncing"
+          aria-label="Syncing"
           show_status
           color="success"
           striped={props.striped}
@@ -175,9 +176,9 @@ defmodule FlintUIDocsWeb.Docs.Progress do
 
     <.preview :let={props} {assigns} code={&code_indeterminate/1}>
       <div class="grid w-full max-w-sm gap-6">
-        <Components.progress label="Uploading" indeterminate={props.indeterminate} />
+        <Components.progress aria-label="Uploading" indeterminate={props.indeterminate} />
         <Components.progress
-          label="Processing"
+          aria-label="Processing"
           indeterminate={props.indeterminate}
           color="success"
         />
@@ -190,19 +191,25 @@ defmodule FlintUIDocsWeb.Docs.Progress do
     ~H"""
     <.prose content={~S|`orientation="vertical"` puts the track on its side and fills it
       from the bottom. A vertical bar defaults to ten rems tall; set a height with
-      `class` or `style` when the surrounding layout needs a different length. The status
-      stays above the track and centres over it.|} />
+      `class` or `style` when the surrounding layout needs a different length. The
+      status stays above the track and aligns to the right. These bars are named with
+      `aria-label` rather than `label`, so no visible label row appears.|} />
 
     <.preview :let={props} {assigns} code={&code_vertical/1}>
       <div class="flex items-end gap-8">
         <Components.progress
           value="72"
-          label="Storage used"
+          aria-label="Storage used"
           orientation={props.orientation}
           show_status
           class="h-44"
         />
-        <Components.progress value="35" label="Bandwidth" orientation={props.orientation} />
+        <Components.progress
+          value="35"
+          aria-label="Bandwidth"
+          orientation={props.orientation}
+          show_status
+        />
       </div>
     </.preview>
     """
@@ -210,10 +217,12 @@ defmodule FlintUIDocsWeb.Docs.Progress do
 
   def render_section(%{section: :usage, id: :status} = assigns) do
     ~H"""
-    <.prose content={~S|`show_status` renders the rounded percentage above the bar. The
-      status is decorative and hidden from assistive technology, because the progressbar
-      already announces the same percentage through `aria-valuetext`. A zero value shows
-      `0%`; a value at the maximum shows `100%`.|} />
+    <.prose content={~S|`show_status` renders the rounded percentage in the header
+      above the bar: the label sits on the left and the status on the right. Without a
+      label, the status sits alone at the right. The status is decorative and hidden
+      from assistive technology, because the progressbar already announces the same
+      percentage through `aria-valuetext`. A zero value shows `0%`; a value at the
+      maximum shows `100%`.|} />
 
     <.preview {assigns} code={code_status()}>
       <div class="grid w-full max-w-sm gap-6">
@@ -236,13 +245,13 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       <div class="grid w-full max-w-sm gap-6">
         <Components.progress
           value="100"
-          label="Design files"
+          aria-label="Design files"
           show_status
           color="success"
           striped
         />
-        <Components.progress value="62" label="Photos" show_status animated />
-        <Components.progress label="Video" indeterminate="swing" />
+        <Components.progress value="62" aria-label="Photos" show_status animated />
+        <Components.progress aria-label="Video" indeterminate="swing" />
       </div>
     </.preview>
     """
@@ -270,7 +279,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
     Snippet.component(".progress", [
       ~s(value="40"),
       ~s(max="100"),
-      ~s(label="Upload progress"),
+      ~s(label="Uploading..."),
       Snippet.flag("show_status", props.show_status),
       Snippet.attr("size", props.size, "md"),
       Snippet.attr("color", props.color, "primary"),
@@ -284,7 +293,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
     Snippet.component(".progress", [
       Snippet.attr("value", props.value, "3"),
       Snippet.attr("max", @steps),
-      ~s(label="Deployment"),
+      ~s(aria-label="Deployment"),
       Snippet.attr("color", props.color, "primary")
     ])
   end
@@ -292,7 +301,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
   defp code_striped(props) do
     Snippet.component(".progress", [
       ~s(value="60"),
-      ~s(label="Uploading"),
+      ~s(aria-label="Uploading"),
       "show_status",
       Snippet.flag("striped", props.striped),
       Snippet.flag("animated", props.animated)
@@ -301,7 +310,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
 
   defp code_indeterminate(props) do
     Snippet.component(".progress", [
-      ~s(label="Uploading"),
+      ~s(aria-label="Uploading"),
       Snippet.attr("indeterminate", props.indeterminate, "carousel")
     ])
   end
@@ -309,7 +318,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
   defp code_vertical(props) do
     Snippet.component(".progress", [
       ~s(value="72"),
-      ~s(label="Storage used"),
+      ~s(aria-label="Storage used"),
       Snippet.attr("orientation", props.orientation, "horizontal"),
       "show_status",
       ~s(class="h-44")
@@ -337,18 +346,18 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       [
         Snippet.component(".progress", [
           ~s(value="100"),
-          ~s(label="Design files"),
+          ~s(aria-label="Design files"),
           ~s(color="success"),
           "show_status",
           "striped"
         ]),
         Snippet.component(".progress", [
           ~s(value="62"),
-          ~s(label="Photos"),
+          ~s(aria-label="Photos"),
           "show_status",
           "animated"
         ]),
-        Snippet.component(".progress", [~s(label="Video"), ~s(indeterminate="swing")])
+        Snippet.component(".progress", [~s(aria-label="Video"), ~s(indeterminate="swing")])
       ],
       "\n"
     )

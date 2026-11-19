@@ -599,7 +599,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
             <span
               data-progress-bar
               aria-hidden="true"
-              class="absolute inset-x-0 bottom-0 h-0.5 w-0 bg-current opacity-60 transition-[width] duration-150 ease-out motion-reduce:transition-none"
+              class="absolute inset-x-0 bottom-0 h-0.5 w-0 bg-current opacity-60 transition-[width]
+                duration-150 ease-out motion-reduce:transition-none"
             ></span>
           </Components.button>
 

@@ -37,11 +37,12 @@ defmodule FlintUI.Base.Progress do
 
   ## Status
 
-  `show_status` renders the rounded percentage above the bar. The root also
-  exposes `aria-valuetext` with the same percentage, so assistive technology
-  hears "40%" even when `max` is not 100. The visible status is decorative and
-  hidden from assistive technology, since the progressbar already announces its
-  value.
+  `show_status` renders the rounded percentage in the label row above the bar,
+  aligned to the right; `label` sits on the left of the same row. With no
+  `label`, the status sits alone at the right. The root also exposes
+  `aria-valuetext` with the same percentage, so assistive technology hears
+  "40%" even when `max` is not 100. The visible status is decorative and hidden
+  from assistive technology, since the progressbar already announces its value.
 
   ## Orientation
 
@@ -63,10 +64,14 @@ defmodule FlintUI.Base.Progress do
   label when `max` is a list. An indeterminate bar omits `aria-valuenow` and
   `aria-valuetext`. The track, segment, status, and steps are decorative.
 
-  Give the bar an accessible name with `label`, or pass `aria-labelledby` when a
-  visible heading already names the task. Never rely on color alone to show the
-  value: keep the label or surrounding text meaningful, and show the status when
-  the percentage matters.
+  `label` renders as visible text above the bar and names the bar through
+  `aria-labelledby`. When a visible heading already names the task, pass
+  `aria-labelledby` through the rest attributes instead. Without either, the bar
+  has no accessible name, so always give it one. A caller-supplied `aria-label`
+  also wins over the generated label reference.
+
+  Never rely on color alone to show the value: keep the label or surrounding
+  text meaningful, and show the status when the percentage matters.
 
   ## Keyboard
 
@@ -76,7 +81,7 @@ defmodule FlintUI.Base.Progress do
 
   use FlintUI.Component
 
-  alias FlintUI.ProgressScale
+  alias FlintUI.{API, ProgressScale}
 
   @impl true
   def meta do
@@ -129,9 +134,10 @@ defmodule FlintUI.Base.Progress do
             "The current value as a rounded percentage, such as `40%`, or the active step label when `max` is a list. Omitted while the bar is indeterminate."
         },
         %Meta.PartAttr{
-          name: "aria-label",
+          name: "aria-labelledby",
           value: "string",
-          description: "The accessible name, set from `label`."
+          description:
+            "The id of the visible label, set from `label`. A caller-supplied `aria-label` or `aria-labelledby` wins."
         },
         %Meta.PartAttr{
           name: "aria-orientation",
@@ -149,12 +155,33 @@ defmodule FlintUI.Base.Progress do
           description: "Present only while no `value` is set."
         }
       ],
+      header: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "header",
+          description:
+            "The row above the bar that holds the visible label and the status. Rendered only when one of them has content."
+        }
+      ],
+      label: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "label",
+          description:
+            "The visible label text at the inline start of the header, set from `label`."
+        },
+        %Meta.PartAttr{
+          name: "id",
+          value: "string",
+          description: "The label id, referenced by the root's `aria-labelledby`."
+        }
+      ],
       status: [
         %Meta.PartAttr{
           name: "[data-part]",
           value: "status",
           description:
-            "The rounded percentage shown above the bar when `show_status` is set and the value is known."
+            "The rounded percentage at the inline end of the header when `show_status` is set and the value is known."
         },
         %Meta.PartAttr{
           name: "aria-hidden",
@@ -239,6 +266,8 @@ defmodule FlintUI.Base.Progress do
   @impl true
   def build_attrs(assigns) do
     derived = resolve(assigns)
+    label = present_label(assigns)
+    label_id = label && label_id(assigns)
 
     value_attrs =
       if derived.indeterminate do
@@ -258,7 +287,7 @@ defmodule FlintUI.Base.Progress do
           "role" => "progressbar",
           "aria-valuemin" => "0",
           "aria-valuemax" => ProgressScale.format_number(derived.max),
-          "aria-label" => Map.get(assigns, :label),
+          "aria-labelledby" => if(label_id && !caller_aria_label?(assigns), do: label_id),
           "aria-orientation" => if(derived.orientation == "vertical", do: "vertical"),
           "data-orientation" => derived.orientation,
           "data-state" => if(derived.indeterminate, do: "indeterminate")
@@ -268,6 +297,13 @@ defmodule FlintUI.Base.Progress do
 
     %{
       root: root,
+      header: %{
+        "data-part" => "header"
+      },
+      label: %{
+        "data-part" => "label",
+        "id" => label_id
+      },
       status: %{
         "data-part" => "status",
         "aria-hidden" => "true"
@@ -313,7 +349,7 @@ defmodule FlintUI.Base.Progress do
   attr :label, :string,
     default: nil,
     doc:
-      "An accessible name for the bar. Use it when no visible heading names the task; when a heading already does, pass `aria-labelledby` through the rest attributes instead."
+      "The visible label above the bar. It also names the bar through `aria-labelledby`. Use it when no visible heading names the task; when a heading already does, pass `aria-labelledby` through the rest attributes instead."
 
   attr :orientation, :string,
     default: "horizontal",
@@ -324,7 +360,7 @@ defmodule FlintUI.Base.Progress do
   attr :show_status, :boolean,
     default: false,
     doc:
-      "Whether to show the rounded percentage above the bar. Hidden while the bar is indeterminate."
+      "Whether to show the rounded percentage in the header above the bar, aligned to the right. Hidden while the bar is indeterminate."
 
   attr :class, :any, default: nil, doc: "Additional classes for the progress root."
 
@@ -333,17 +369,22 @@ defmodule FlintUI.Base.Progress do
   @impl true
   def render(assigns) do
     derived = resolve(assigns)
+    label = present_label(assigns)
     status = if assigns.show_status and not derived.indeterminate, do: derived.percent_label
 
     assigns =
       assigns
+      |> assign(:label, label)
       |> assign(:status, status)
       |> assign(:steps, derived.steps)
       |> assign(:active_step, derived.active_step)
 
     ~H"""
     <div {@rest} {@flint_parts[:root]} {@root_attrs} class={@class}>
-      <div :if={@status} {@flint_parts[:status]}>{@status}</div>
+      <div :if={@label || @status} {@flint_parts[:header]}>
+        <div :if={@label} {@flint_parts[:label]}>{@label}</div>
+        <div :if={@status} {@flint_parts[:status]}>{@status}</div>
+      </div>
       <div {@flint_parts[:track]}>
         <div {@flint_parts[:segment]}></div>
       </div>
@@ -369,6 +410,31 @@ defmodule FlintUI.Base.Progress do
       orientation: orientation,
       segment_style: segment_style(orientation, derived.percent)
     })
+  end
+
+  defp present_label(assigns) do
+    case Map.get(assigns, :label) do
+      label when is_binary(label) and label != "" -> label
+      _ -> nil
+    end
+  end
+
+  # A caller id makes the label id stable across updates; otherwise a generated
+  # id keeps the label reference unique on the page.
+  defp label_id(assigns) do
+    case caller_rest(assigns, :id) do
+      id when is_binary(id) and id != "" -> id <> "-label"
+      _ -> API.use_id("fl-progress-label")
+    end
+  end
+
+  defp caller_aria_label?(assigns) do
+    caller_rest(assigns, :"aria-label") not in [nil, ""]
+  end
+
+  defp caller_rest(assigns, key) do
+    rest = Map.get(assigns, :rest, %{})
+    Map.get(rest, key) || Map.get(rest, to_string(key))
   end
 
   defp segment_style(_orientation, nil), do: nil
