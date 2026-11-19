@@ -26,7 +26,7 @@
         font-size: var(--fl-font-size-sm);
         font-weight: var(--fl-font-weight-semibold);
         line-height: var(--fl-line-height-sm);
-        letter-spacing: var(--fl-font-tracking-wider);
+        letter-spacing: var(--fl-font-tracking-wide);
         text-transform: uppercase;
     }
 
@@ -50,7 +50,8 @@
         font-family: var(--fl-font-sans);
         font-size: clamp(var(--fl-font-size-md), 0.375em, var(--fl-font-size-2xl));
         font-weight: var(--fl-font-weight-normal);
-        line-height: 1.5;
+        line-height: var(--fl-line-height-md);
+        letter-spacing: var(--fl-font-tracking-normal);
         text-wrap: pretty;
     }
 

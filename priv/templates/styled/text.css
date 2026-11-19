@@ -22,8 +22,10 @@
     [data-element="text"]:is(a),
     [data-element="text"] :is(a):not([data-element]) {
         text-decoration-line: underline;
+        text-decoration-color: color-mix(in oklab, currentColor, transparent 75%);
         text-decoration-thickness: from-font;
         text-underline-offset: 0.15em;
+        transition: text-decoration-color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     /* Inline links inside a text block follow the block's ink. */
@@ -36,6 +38,14 @@
     [data-element="text"]:is(a)[data-color="default"],
     [data-element="text"][data-color="default"] :is(a):not([data-element]) {
         color: var(--fl-color-primary-text);
+        text-decoration-color: color-mix(in oklab, var(--fl-color-primary-text), transparent 75%);
+    }
+
+    /* The underline is muted at rest and becomes solid on hover and keyboard
+     * focus, so the link's ink identifies the target without shouting. */
+    [data-element="text"]:is(a):is(:hover, :focus-visible),
+    [data-element="text"] :is(a):not([data-element]):is(:hover, :focus-visible) {
+        text-decoration-color: currentColor;
     }
 
     /* External-link indicator. `external` appends a trailing arrow inside the
@@ -98,5 +108,12 @@
 
     [data-element="text"][data-line-clamp="6"] {
         --fl-text-line-clamp: 6;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="text"]:is(a),
+        [data-element="text"] :is(a):not([data-element]) {
+            transition: none;
+        }
     }
 }

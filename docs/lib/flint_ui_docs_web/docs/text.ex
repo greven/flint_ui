@@ -79,7 +79,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
 
   def render_section(%{section: :usage, id: :links} = assigns) do
     ~H"""
-    <.prose content="Pass `href`, `navigate`, or `patch` to render a native link with the text styling and an underline. A link in the default tier uses the primary ink; pass a role color to match a surrounding accent." />
+    <.prose content="Pass `href`, `navigate`, or `patch` to render a native link with the text styling and an underline. A link in the default tier uses the primary ink; pass a role color to match a surrounding accent. The underline takes the link's ink at reduced opacity and becomes solid on hover and keyboard focus." />
     <.preview {assigns} code={links_code()}>
       <div class="flex flex-col gap-3">
         <Components.text href="/components/heading">Read the heading guide</Components.text>

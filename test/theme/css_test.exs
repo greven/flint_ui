@@ -339,6 +339,17 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-typography][data-align="center"])
   end
 
+  test "link underlines use the link ink and solidify on hover and focus", %{css: css} do
+    assert css =~ "text-decoration-color: color-mix(in oklab, currentColor, transparent 75%);"
+    assert css =~ "transition: text-decoration-color var(--fl-duration-fast) var(--fl-ease-out);"
+
+    assert css =~
+             ~s|[data-element="text"]:is(a):is(:hover, :focus-visible)|
+
+    assert css =~
+             ~s|[data-element="text"] :is(a):not([data-element]):is(:hover, :focus-visible)|
+  end
+
   test "defines shared control metrics", %{css: css} do
     for size <- ~w(xs sm md lg xl) do
       assert css =~ "--fl-control-height-#{size}:"

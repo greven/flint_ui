@@ -164,7 +164,7 @@ defmodule FlintUI.Base.Heading do
       <.dynamic_tag tag_name={@as} {@flint_parts[:heading]} {@rest}>
         {render_slot(@inner_block)}
       </.dynamic_tag>
-      <div :if={@subtitle != []} {@flint_parts[:subtitle]}>{render_slot(@subtitle)}</div>
+      <p :if={@subtitle != []} {@flint_parts[:subtitle]}>{render_slot(@subtitle)}</p>
     </div>
     """
   end
