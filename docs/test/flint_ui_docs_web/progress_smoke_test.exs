@@ -13,15 +13,15 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-progress-basic [role='progressbar'][aria-valuenow='40'][aria-valuemax='100'][aria-valuetext='40%'][aria-labelledby]"
+             "#usage-progress-basic [role='progressbar'][aria-valuenow='11'][aria-valuemax='100'][aria-valuetext='11%'][aria-labelledby]"
            )
 
-    assert has_element?(view, "#usage-progress-basic [data-part='label']", "Upload progress")
-    assert has_element?(view, "#usage-progress-basic [data-part='status']", "40%")
+    assert has_element?(view, "#usage-progress-basic [data-part='label']", "Uploading")
+    assert has_element?(view, "#usage-progress-basic [data-part='status']", "11%")
 
     assert has_element?(
              view,
-             "#usage-progress-basic [data-part='segment'][style='inline-size: 40%']"
+             "#usage-progress-basic [data-part='segment'][style='inline-size: 11%']"
            )
 
     view

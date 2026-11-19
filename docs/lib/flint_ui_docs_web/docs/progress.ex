@@ -95,18 +95,64 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       percentage at the right of the same row. The same percentage is exposed as
       `aria-valuetext`, so assistive technology hears it even when `max` is not 100.|} />
 
+    <.prose content={~S|The demo ticks from 11% toward 68% in random steps, like a
+      server pushing progress updates. The bar still has a maximum of 100, so it
+      keeps room for the remaining work.|} />
+
     <.preview :let={props} {assigns} code={&code_basic/1}>
       <div class="w-full max-w-sm">
         <Components.progress
-          value="40"
+          id="progress-basic-demo"
+          phx-hook=".ProgressDemo"
+          value="11"
           max="100"
-          label="Uploading..."
+          label="Uploading"
           show_status={props.show_status}
           size={props.size}
           color={props.color}
           radius={props.radius}
+          animated
         />
       </div>
+
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".ProgressDemo">
+        export default {
+          mounted() {
+            this.max = 68
+            this.value = 11
+            this.render(this.value)
+            this.schedule()
+          },
+          updated() {
+            this.render(this.value)
+          },
+          schedule() {
+            this.timer = window.setTimeout(() => this.tick(), 280 + Math.random() * 320)
+          },
+          tick() {
+            if (this.value >= this.max) return
+
+            const step = Math.floor(Math.random() * 13)
+            this.value = Math.min(this.max, this.value + step)
+            this.render(this.value)
+
+            if (this.value < this.max) this.schedule()
+          },
+          render(value) {
+            const percent = `${value}%`
+            const status = this.el.querySelector('[data-part="status"]')
+            const segment = this.el.querySelector('[data-part="segment"]')
+
+            this.el.setAttribute("aria-valuenow", String(value))
+            this.el.setAttribute("aria-valuetext", percent)
+            if (status) status.textContent = percent
+            if (segment) segment.style.setProperty("inline-size", percent)
+          },
+          destroyed() {
+            window.clearTimeout(this.timer)
+          }
+        }
+      </script>
     </.preview>
     """
   end
@@ -277,9 +323,9 @@ defmodule FlintUIDocsWeb.Docs.Progress do
 
   defp code_basic(props) do
     Snippet.component(".progress", [
-      ~s(value="40"),
+      ~s(value="11"),
       ~s(max="100"),
-      ~s(label="Uploading..."),
+      ~s(label="Uploading"),
       Snippet.flag("show_status", props.show_status),
       Snippet.attr("size", props.size, "md"),
       Snippet.attr("color", props.color, "primary"),
