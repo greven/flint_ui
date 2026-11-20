@@ -130,6 +130,7 @@ defmodule FlintUIDocsWeb.Nav do
   # stay out of the components page listing.
   @sub_components [
     :accordion_item,
+    :breadcrumbs_item,
     :dropdown_group,
     :dropdown_header,
     :dropdown_item,

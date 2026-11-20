@@ -111,7 +111,6 @@ defmodule FlintUIDocsWeb.Docs.Progress do
           size={props.size}
           color={props.color}
           radius={props.radius}
-          animated
         />
       </div>
 

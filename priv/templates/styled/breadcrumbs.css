@@ -1,0 +1,36 @@
+@layer components {
+    /* Breadcrumbs. The navigation landmark and the ordered list are the only
+     * structure owned here; each crumb styles its own row. Public inputs are
+     * `--fl-breadcrumbs-gap` and `--fl-breadcrumbs-separator-color`, which the
+     * item part reads. */
+    [data-element="breadcrumbs"][data-breadcrumbs] {
+        --fl-breadcrumbs-gap: var(--fl-spacing-xs);
+        --fl-breadcrumbs-separator-color: var(--fl-color-text-muted);
+        display: block;
+        min-inline-size: 0;
+        color: var(--fl-color-text-toned);
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        line-height: var(--fl-line-height-sm);
+    }
+
+    [data-element="breadcrumbs"][data-breadcrumbs] > [data-part="list"] {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--fl-breadcrumbs-gap);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* The trail opens with its root page, so a separator there would point at
+     * nothing. Hiding the part keeps the markup identical for every crumb and
+     * lets the wrapper default to one separator style. */
+    [data-element="breadcrumbs"][data-breadcrumbs]
+        > [data-part="list"]
+        > [data-element="breadcrumbs_item"]:first-child
+        > [data-part="separator"] {
+        display: none;
+    }
+}

@@ -52,7 +52,15 @@ defmodule FlintUIDocsWeb.Layouts do
         />
 
         <main class="min-w-0 flex-1 py-8">
-          <.breadcrumbs :if={@breadcrumbs != []} crumbs={@breadcrumbs} />
+          <Components.breadcrumbs :if={@breadcrumbs != []} class="mb-4">
+            <Components.breadcrumbs_item
+              :for={{crumb, index} <- Enum.with_index(@breadcrumbs)}
+              navigate={if index < length(@breadcrumbs) - 1, do: crumb.path}
+              current={index == length(@breadcrumbs) - 1}
+            >
+              {crumb.label}
+            </Components.breadcrumbs_item>
+          </Components.breadcrumbs>
           {render_slot(@inner_block)}
         </main>
 
@@ -73,43 +81,6 @@ defmodule FlintUIDocsWeb.Layouts do
 
   defp breadcrumb_trail(%{section: section, page: page}) do
     FlintUIDocsWeb.Nav.breadcrumbs(section, page)
-  end
-
-  @doc """
-  Renders the section/group breadcrumb trail shown above a page title.
-
-  Ancestor crumbs are links; the final crumb is the current context and is
-  rendered in the accent colour.
-  """
-  attr :crumbs, :list, required: true, doc: "the trail from `FlintUIDocsWeb.Nav.breadcrumbs/2`"
-
-  def breadcrumbs(assigns) do
-    ~H"""
-    <nav aria-label="Breadcrumb" class="mb-4">
-      <ol class="flex flex-wrap items-center gap-1.5 text-sm">
-        <li :for={{crumb, index} <- Enum.with_index(@crumbs)} class="flex items-center gap-1.5">
-          <.icon
-            :if={index > 0}
-            name="lucide-chevron-right"
-            class="size-4 shrink-0 translate-y-px text-toned"
-          />
-          <.link
-            :if={index < length(@crumbs) - 1}
-            navigate={crumb.path}
-            class="text-muted transition-colors hover:text-default"
-          >
-            {crumb.label}
-          </.link>
-          <span
-            :if={index == length(@crumbs) - 1}
-            class="font-medium text-default"
-          >
-            {crumb.label}
-          </span>
-        </li>
-      </ol>
-    </nav>
-    """
   end
 
   @doc """

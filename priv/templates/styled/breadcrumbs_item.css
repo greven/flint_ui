@@ -1,0 +1,86 @@
+@layer components {
+    /* Breadcrumb item. The item is the list row; the content is a link when the
+     * crumb has a destination and a plain container otherwise. The separator is
+     * an empty, aria-hidden part whose glyph is generated here, so `separator`
+     * stays presentational and the theme contract can key on its value. */
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fl-breadcrumbs-gap, var(--fl-spacing-xs));
+        font-weight: var(--fl-font-weight-medium);
+        min-inline-size: 0;
+        color: inherit;
+    }
+
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] > [data-part="content"] {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fl-spacing-xs);
+        min-inline-size: 0;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    /* An icon beside the label follows the crumb text rather than the control
+     * scale, so a short trail stays compact. */
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] > [data-part="content"] > [data-element="icon"] {
+        flex: none;
+        --fl-icon-size: var(--fl-control-icon-sm);
+    }
+
+    /* A linked crumb uses the toned ink so it reads as navigation rather than
+     * body copy. The underline is muted at rest and solid on hover and keyboard
+     * focus, which keeps the link discoverable without making the trail loud. */
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] > a[data-part="content"] {
+        border-radius: var(--fl-radius-sm);
+        color: inherit;
+    }
+
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] > a[data-part="content"]:is(:hover, :focus-visible) {
+        color: var(--fl-color-text);
+        text-decoration-color: currentColor;
+    }
+
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] > a[data-part="content"]:focus-visible {
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style) color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline-offset: var(--fl-focus-ring-offset);
+    }
+
+    /* The current item */
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item][data-current] > [data-part="content"] {
+        color: var(--fl-color-text-muted);
+    }
+
+    /* Separator */
+    [data-element="breadcrumbs_item"][data-breadcrumbs_item] > [data-part="separator"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: 1em;
+        color: var(--fl-breadcrumbs-separator-color, var(--fl-color-text-muted));
+        font-size: var(--fl-font-size-sm);
+        line-height: 1;
+        user-select: none;
+    }
+
+    [data-element="breadcrumbs_item"][data-separator="chevron"][data-breadcrumbs_item] > [data-part="separator"]::before {
+        content: "›";
+    }
+
+    [data-element="breadcrumbs_item"][data-separator="slash"][data-breadcrumbs_item] > [data-part="separator"]::before {
+        content: "/";
+    }
+
+    [data-element="breadcrumbs_item"][data-separator="arrow"][data-breadcrumbs_item] > [data-part="separator"]::before {
+        content: "→";
+    }
+
+    [data-element="breadcrumbs_item"][data-separator="dot"][data-breadcrumbs_item] > [data-part="separator"]::before {
+        content: "•";
+    }
+
+    [data-element="breadcrumbs_item"][data-separator="none"][data-breadcrumbs_item] > [data-part="separator"] {
+        display: none;
+    }
+}

@@ -139,6 +139,8 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.Avatar,
     FlintUI.Styled.AvatarGroup,
     FlintUI.Styled.Badge,
+    FlintUI.Styled.Breadcrumbs,
+    FlintUI.Styled.BreadcrumbsItem,
     FlintUI.Styled.Button,
     FlintUI.Styled.Card,
     FlintUI.Styled.Checkbox,

@@ -670,6 +670,26 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
     assert has_element?(view, "#keyboard code", "Space")
   end
 
+  test "the breadcrumbs separator control offers and applies every separator", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/components/breadcrumbs")
+
+    assert has_element?(
+             view,
+             "#usage-breadcrumbs-basic-controls select[name='separator'] option[value='slash']"
+           )
+
+    view
+    |> element("#usage-breadcrumbs-basic-controls")
+    |> render_change(%{"separator" => "slash"})
+
+    assert has_element?(
+             view,
+             "#usage-breadcrumbs-basic [data-element='breadcrumbs_item'][data-separator='slash']"
+           )
+
+    assert has_element?(view, "#usage-breadcrumbs-basic-code", ~s(separator="slash"))
+  end
+
   test "the button page exposes its section controls", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 

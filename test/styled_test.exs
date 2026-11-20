@@ -13,6 +13,8 @@ defmodule FlintUI.StyledTest do
                :avatar,
                :avatar_group,
                :badge,
+               :breadcrumbs,
+               :breadcrumbs_item,
                :button,
                :card,
                :checkbox,

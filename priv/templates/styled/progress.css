@@ -180,16 +180,32 @@
         content: "";
         position: absolute;
         inset: 0;
-        background-image: repeating-linear-gradient(
+        background-image: linear-gradient(
             45deg,
             color-mix(
                     in oklab,
                     var(--fl-progress-color) 70%,
                     var(--fl-progress-track)
                 )
-                0 0.375rem,
-            transparent 0.375rem 0.75rem
+                25%,
+            transparent 25%,
+            transparent 50%,
+            color-mix(
+                    in oklab,
+                    var(--fl-progress-color) 70%,
+                    var(--fl-progress-track)
+                )
+                50%,
+            color-mix(
+                    in oklab,
+                    var(--fl-progress-color) 70%,
+                    var(--fl-progress-track)
+                )
+                75%,
+            transparent 75%,
+            transparent
         );
+        background-size: 1rem 1rem;
         pointer-events: none;
     }
 
@@ -410,16 +426,16 @@
         }
     }
 
-    /* The stripe period is 0.75rem along the 45deg gradient, so the horizontal
-     * repeat is 0.75rem * sqrt(2). Moving the background by that distance
-     * makes the scroll seamless. */
+    /* The stripe tile is 1rem square and repeats horizontally every 1rem, so
+     * moving the background by exactly one tile loops without a fractional
+     * pixel snap at the start of the bar. */
     @keyframes fl-progress-stripes {
         from {
             background-position: 0 0;
         }
 
         to {
-            background-position: calc(0.75rem * 1.4142) 0;
+            background-position: 1rem 0;
         }
     }
 

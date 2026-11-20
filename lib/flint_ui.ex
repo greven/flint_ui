@@ -18,6 +18,8 @@ defmodule FlintUI do
   - `avatar`
   - `avatar_group`
   - `badge`
+  - `breadcrumbs`
+  - `breadcrumbs_item`
   - `button`
   - `card`
   - `checkbox`
@@ -76,6 +78,8 @@ defmodule FlintUI do
     {:avatar, []},
     {:avatar_group, []},
     {:badge, []},
+    {:breadcrumbs, []},
+    {:breadcrumbs_item, []},
     {:button, []},
     {:card, []},
     {:checkbox, []},
