@@ -11,6 +11,7 @@ interface SetupOptions {
   openDelay?: number;
   closeDelay?: number;
   arrow?: boolean;
+  submenuOpenOnHover?: boolean;
 }
 
 interface PositionerMock {
@@ -34,7 +35,13 @@ function makePositioner(start?: Mock): PositionerMock {
 }
 
 function setup(options: SetupOptions = {}) {
-  const { openOnHover = false, openDelay = 0, closeDelay = 0, arrow = true } = options;
+  const {
+    openOnHover = false,
+    openDelay = 0,
+    closeDelay = 0,
+    arrow = true,
+    submenuOpenOnHover = false,
+  } = options;
 
   document.body.innerHTML = `
     <div id="app">
@@ -106,6 +113,7 @@ function setup(options: SetupOptions = {}) {
             data-element="dropdown_sub"
             data-part="submenu-trigger"
             data-menu="more"
+            ${submenuOpenOnHover ? "data-open-on-hover" : ""}
             role="menuitem"
             aria-haspopup="menu"
             aria-expanded="false"
@@ -185,7 +193,11 @@ function pointer(
   type: "pointerover" | "pointerout",
   options: { pointerType?: string; relatedTarget?: EventTarget | null } = {},
 ) {
-  const event = new MouseEvent(type, { relatedTarget: options.relatedTarget ?? null });
+  const event = new MouseEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    relatedTarget: options.relatedTarget ?? null,
+  });
   if (options.pointerType) {
     Object.defineProperty(event, "pointerType", { value: options.pointerType });
   }
@@ -480,6 +492,140 @@ describe("Dropdown hook", () => {
     await vi.advanceTimersByTimeAsync(1);
 
     expect(content.dataset.state).toBe("closed");
+  });
+
+  it("opens a hover-enabled submenu without moving focus", async () => {
+    const { trigger, content, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+
+    click(trigger);
+    await flush();
+    expect(document.activeElement).toBe(content);
+
+    pointer(more, "pointerover");
+    await flush();
+
+    expect(submenu.dataset.state).toBe("open");
+    expect(more.getAttribute("aria-expanded")).toBe("true");
+    expect(document.activeElement).toBe(content);
+  });
+
+  it("does not open a submenu on hover without data-open-on-hover", async () => {
+    const { trigger, submenu } = setup();
+    const more = document.getElementById("more-trigger") as HTMLElement;
+
+    click(trigger);
+    await flush();
+    pointer(more, "pointerover");
+    await flush();
+
+    expect(submenu.dataset.state).toBe("closed");
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("keeps a hover-opened submenu open when the pointer moves inside it", async () => {
+    const { trigger, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const docs = document.getElementById("docs") as HTMLElement;
+
+    click(trigger);
+    await flush();
+    pointer(more, "pointerover");
+    await flush();
+
+    pointer(more, "pointerout", { relatedTarget: docs });
+    pointer(docs, "pointerover");
+    await flush();
+
+    expect(submenu.dataset.state).toBe("open");
+  });
+
+  it("keeps a hover-opened submenu open while the pointer crosses the gap", async () => {
+    vi.useFakeTimers();
+    const { trigger, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const docs = document.getElementById("docs") as HTMLElement;
+
+    click(trigger);
+    await vi.advanceTimersByTimeAsync(1);
+    pointer(more, "pointerover");
+    await vi.advanceTimersByTimeAsync(1);
+    expect(submenu.dataset.state).toBe("open");
+
+    pointer(more, "pointerout");
+    await vi.advanceTimersByTimeAsync(100);
+    pointer(docs, "pointerover");
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(submenu.dataset.state).toBe("open");
+  });
+
+  it("closes a hover-opened submenu when the pointer moves to a sibling item", async () => {
+    const { trigger, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const settings = document.getElementById("settings") as HTMLElement;
+
+    click(trigger);
+    await flush();
+    pointer(more, "pointerover");
+    await flush();
+    expect(submenu.dataset.state).toBe("open");
+
+    pointer(settings, "pointerover");
+    await flush();
+
+    expect(submenu.dataset.state).toBe("closed");
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("pins a hover-opened submenu when it is clicked", async () => {
+    const { trigger, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const settings = document.getElementById("settings") as HTMLElement;
+
+    click(trigger);
+    await flush();
+    pointer(more, "pointerover");
+    await flush();
+    click(more);
+    await flush();
+
+    pointer(settings, "pointerover");
+    await flush();
+
+    expect(submenu.dataset.state).toBe("open");
+  });
+
+  it("waits for the open delay before opening a hovered submenu", async () => {
+    vi.useFakeTimers();
+    const { trigger, submenu } = setup({ submenuOpenOnHover: true, openDelay: 200 });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+
+    click(trigger);
+    await vi.advanceTimersByTimeAsync(1);
+    pointer(more, "pointerover");
+
+    await vi.advanceTimersByTimeAsync(199);
+    expect(submenu.dataset.state).toBe("closed");
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(submenu.dataset.state).toBe("open");
+  });
+
+  it("cancels a pending hover open when the pointer leaves the submenu trigger", async () => {
+    vi.useFakeTimers();
+    const { trigger, submenu } = setup({ submenuOpenOnHover: true, openDelay: 200 });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const settings = document.getElementById("settings") as HTMLElement;
+
+    click(trigger);
+    await vi.advanceTimersByTimeAsync(1);
+    pointer(more, "pointerover");
+    pointer(settings, "pointerover");
+
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(submenu.dataset.state).toBe("closed");
   });
 
   it("opens a submenu on click and closes it back to its trigger", async () => {

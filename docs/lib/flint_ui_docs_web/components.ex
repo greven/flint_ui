@@ -1441,7 +1441,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
 
   attr(:rest, :global,
-    include: ~w(menu disabled),
+    include: ~w(menu disabled open_on_hover),
     doc: "Additional HTML attributes, forwarded to the headless component."
   )
 

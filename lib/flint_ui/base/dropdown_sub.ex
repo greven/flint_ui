@@ -18,6 +18,17 @@ defmodule FlintUI.Base.DropdownSub do
   managed by the dropdown's hook. A submenu can contain items, groups, headers,
   and separators.
 
+  ## Hover
+
+  Menus open on click, `Enter`, `Space`, and `ArrowRight`. Set `open_on_hover` to
+  also open this submenu when the pointer rests on its trigger. The dropdown's
+  `open_delay` sets how long the pointer must rest before a hovered submenu
+  opens; hover opening never moves focus. A click focuses the submenu and pins
+  it open.
+
+  Hovering another item in the parent menu closes a submenu that was opened by
+  hover, and moving the pointer into the submenu keeps it open.
+
   ## Accessibility
 
   The trigger is a `role="menuitem"` with `aria-haspopup="menu"`,
@@ -80,6 +91,11 @@ defmodule FlintUI.Base.DropdownSub do
           description: "Present when the trigger is disabled."
         },
         %Meta.PartAttr{
+          name: "[data-open-on-hover]",
+          value: "boolean",
+          description: "Present when the submenu may open on hover."
+        },
+        %Meta.PartAttr{
           name: "role",
           value: "menuitem",
           description: "Exposes the trigger as a menu item."
@@ -135,6 +151,7 @@ defmodule FlintUI.Base.DropdownSub do
         "data-part" => "submenu-trigger",
         "data-menu" => assigns.menu,
         "data-disabled" => assigns.disabled,
+        "data-open-on-hover" => assigns.open_on_hover,
         "role" => "menuitem",
         "tabindex" => "-1",
         "aria-haspopup" => "menu",
@@ -160,6 +177,11 @@ defmodule FlintUI.Base.DropdownSub do
   attr :disabled, :boolean,
     default: false,
     doc: "Whether the trigger is disabled and skipped by menu navigation."
+
+  attr :open_on_hover, :boolean,
+    default: false,
+    doc:
+      "Whether the submenu may open when the pointer rests on its trigger. Uses the dropdown's `open_delay`. When `false`, it opens only on click, `Enter`, `Space`, or `ArrowRight`."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 

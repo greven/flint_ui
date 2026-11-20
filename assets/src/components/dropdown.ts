@@ -27,6 +27,7 @@ const DEFAULT_OFFSET = 4;
 const DEFAULT_PLACEMENT: Side = "bottom";
 const DEFAULT_ALIGN: Align = "start";
 const SUBMENU_OFFSET = 10;
+const SUBMENU_HOVER_CLOSE_GRACE = 150;
 const TYPEAHEAD_TIMEOUT = 500;
 
 function readNumber(value: string | undefined, fallback: number): number {
@@ -84,6 +85,11 @@ export class Dropdown extends FlintHook {
   private generation = 0;
   private openedByHover = false;
   private keyboardOpen = false;
+
+  private submenuOpenTimer: number | null = null;
+  private submenuCloseTimer: number | null = null;
+  private hoveredSubmenuTrigger: HTMLElement | null = null;
+  private hoverOpenedSubmenus = new Set<HTMLElement>();
 
   private typeahead = "";
   private typeaheadTimer: number | null = null;
@@ -319,6 +325,26 @@ export class Dropdown extends FlintHook {
     this.clearCloseTimer();
   }
 
+  private clearSubmenuOpenTimer(): void {
+    if (this.submenuOpenTimer === null) return;
+
+    window.clearTimeout(this.submenuOpenTimer);
+    this.submenuOpenTimer = null;
+  }
+
+  private clearSubmenuCloseTimer(): void {
+    if (this.submenuCloseTimer === null) return;
+
+    window.clearTimeout(this.submenuCloseTimer);
+    this.submenuCloseTimer = null;
+  }
+
+  private clearSubmenuHoverTimers(): void {
+    this.clearSubmenuOpenTimer();
+    this.clearSubmenuCloseTimer();
+    this.hoveredSubmenuTrigger = null;
+  }
+
   private scheduleHoverOpen(): void {
     if (!this.openOnHover || this.state === "open") return;
 
@@ -353,6 +379,44 @@ export class Dropdown extends FlintHook {
       this.closeTimer = null;
       this.hide({ returnFocus: false, source: "pointer" });
     }, this.closeDelay);
+  }
+
+  private scheduleSubmenuHoverOpen(trigger: HTMLElement): void {
+    const menu = this.submenuFor(trigger);
+
+    if (!menu || this.submenuStack.includes(menu)) return;
+
+    this.clearSubmenuOpenTimer();
+
+    if (this.openDelay <= 0) {
+      this.openSubmenu(trigger, "none", true);
+      return;
+    }
+
+    this.submenuOpenTimer = window.setTimeout(() => {
+      this.submenuOpenTimer = null;
+
+      if (this.state !== "open" || this.hoveredSubmenuTrigger !== trigger || !trigger.isConnected) {
+        return;
+      }
+
+      this.openSubmenu(trigger, "none", true);
+    }, this.openDelay);
+  }
+
+  private scheduleSubmenuHoverClose(): void {
+    if (this.hoverOpenedSubmenus.size === 0) return;
+
+    this.clearSubmenuCloseTimer();
+
+    // The trigger and its submenu are separated by an offset, so the pointer
+    // briefly leaves both while crossing the gap. Give it time to arrive.
+    const delay = Math.max(this.closeDelay, SUBMENU_HOVER_CLOSE_GRACE);
+
+    this.submenuCloseTimer = window.setTimeout(() => {
+      this.submenuCloseTimer = null;
+      this.closeHoverSubmenus();
+    }, delay);
   }
 
   private show(options: ShowOptions = {}): void {
@@ -420,6 +484,7 @@ export class Dropdown extends FlintHook {
     const { returnFocus = false } = options;
 
     this.clearTimers();
+    this.clearSubmenuHoverTimers();
 
     if (this.state !== "open") {
       this.closeAllSubmenus();
@@ -617,7 +682,11 @@ export class Dropdown extends FlintHook {
     return triggers.find((trigger) => trigger.dataset.menu === menu.id) ?? null;
   }
 
-  private openSubmenu(trigger: HTMLElement, focus: "first" | "menu" = "first"): void {
+  private openSubmenu(
+    trigger: HTMLElement,
+    focus: "first" | "menu" | "none" = "first",
+    openedByHover = false,
+  ): void {
     if (isDisabled(trigger)) return;
 
     const menu = this.submenuFor(trigger);
@@ -632,8 +701,15 @@ export class Dropdown extends FlintHook {
     }
 
     if (this.submenuStack.includes(menu)) {
-      this.focusSubmenu(menu, focus);
+      if (!openedByHover) this.hoverOpenedSubmenus.delete(menu);
+      if (focus !== "none") this.focusSubmenu(menu, focus);
       return;
+    }
+
+    if (openedByHover) {
+      this.hoverOpenedSubmenus.add(menu);
+    } else {
+      this.hoverOpenedSubmenus.delete(menu);
     }
 
     this.submenuStack.push(menu);
@@ -668,7 +744,7 @@ export class Dropdown extends FlintHook {
 
       this.js().setAttribute(menu, "data-state", "open");
       this.js().setAttribute(trigger, "aria-expanded", "true");
-      this.focusSubmenu(menu, focus);
+      if (focus !== "none") this.focusSubmenu(menu, focus);
     };
 
     positioner.start().then(reveal, reveal);
@@ -681,6 +757,42 @@ export class Dropdown extends FlintHook {
     }
 
     this.focusMenu(menu, "first");
+  }
+
+  /**
+   * The open submenus that contain the target, from the nearest menu outward.
+   * Submenus are DOM siblings of the root content, so the parent chain comes
+   * from each menu's trigger rather than from the DOM.
+   */
+  private submenuAncestors(target: Element): Set<HTMLElement> {
+    const menus = new Set<HTMLElement>();
+    let menu = target.closest<HTMLElement>('[data-part="submenu"]');
+
+    while (menu && this.el.contains(menu)) {
+      menus.add(menu);
+
+      const trigger = this.triggerForSubmenu(menu);
+      menu = trigger?.closest<HTMLElement>('[data-part="submenu"]') ?? null;
+    }
+
+    return menus;
+  }
+
+  private closeHoverSubmenusOutside(target: Element, keep: HTMLElement | null = null): void {
+    if (this.hoverOpenedSubmenus.size === 0) return;
+
+    const ancestors = this.submenuAncestors(target);
+    if (keep) ancestors.add(keep);
+
+    for (const menu of Array.from(this.hoverOpenedSubmenus)) {
+      if (!ancestors.has(menu)) this.closeSubmenu(menu, false);
+    }
+  }
+
+  private closeHoverSubmenus(): void {
+    for (const menu of Array.from(this.hoverOpenedSubmenus)) {
+      this.closeSubmenu(menu, false);
+    }
   }
 
   private closeSubmenu(menu: HTMLElement, returnFocus: boolean): void {
@@ -697,6 +809,7 @@ export class Dropdown extends FlintHook {
     const trigger = this.triggerForSubmenu(menu);
     const positioner = this.submenuPositioners.get(menu);
 
+    this.hoverOpenedSubmenus.delete(menu);
     positioner?.stop();
     this.submenuPositioners.delete(menu);
 
@@ -740,6 +853,8 @@ export class Dropdown extends FlintHook {
       const closing = this.submenuStack.pop();
       if (closing) this.closeSubmenuElement(closing, false);
     }
+
+    this.hoverOpenedSubmenus.clear();
   }
 
   // --- Event handlers ---
@@ -805,6 +920,7 @@ export class Dropdown extends FlintHook {
 
     if (item.getAttribute("data-element") === "dropdown_sub") {
       event.preventDefault();
+      this.clearSubmenuHoverTimers();
       this.openSubmenu(item, event.detail === 0 ? "first" : "menu");
       return;
     }
@@ -815,19 +931,52 @@ export class Dropdown extends FlintHook {
   };
 
   private handlePointerOver = (event: PointerEvent): void => {
-    if (!this.openOnHover) return;
     if (event.pointerType && event.pointerType !== "mouse") return;
 
-    this.clearCloseTimer();
-    if (this.state === "closed") this.scheduleHoverOpen();
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    this.clearSubmenuCloseTimer();
+
+    if (this.state === "closed") {
+      if (!this.openOnHover) return;
+
+      this.clearCloseTimer();
+      this.scheduleHoverOpen();
+      return;
+    }
+
+    const trigger = target.closest<HTMLElement>('[data-part="submenu-trigger"]');
+    const submenuTrigger = trigger && this.el.contains(trigger) ? trigger : null;
+
+    this.hoveredSubmenuTrigger = submenuTrigger;
+
+    if (!submenuTrigger) {
+      this.clearSubmenuOpenTimer();
+      this.closeHoverSubmenusOutside(target);
+      return;
+    }
+
+    this.closeHoverSubmenusOutside(submenuTrigger, this.submenuFor(submenuTrigger));
+
+    if (submenuTrigger.hasAttribute("data-open-on-hover") && !isDisabled(submenuTrigger)) {
+      this.scheduleSubmenuHoverOpen(submenuTrigger);
+    } else {
+      this.clearSubmenuOpenTimer();
+    }
   };
 
   private handlePointerOut = (event: PointerEvent): void => {
-    if (!this.openOnHover) return;
     if (event.pointerType && event.pointerType !== "mouse") return;
 
     const next = event.relatedTarget;
     if (next instanceof Node && this.el.contains(next)) return;
+
+    this.hoveredSubmenuTrigger = null;
+    this.clearSubmenuOpenTimer();
+    this.scheduleSubmenuHoverClose();
+
+    if (!this.openOnHover) return;
 
     this.scheduleHoverClose();
   };
@@ -1023,6 +1172,7 @@ export class Dropdown extends FlintHook {
 
   destroyed() {
     this.clearTimers();
+    this.clearSubmenuHoverTimers();
     this.generation++;
 
     this.positioner?.stop();
@@ -1084,6 +1234,7 @@ export class Dropdown extends FlintHook {
 
   private reset(): void {
     this.clearTimers();
+    this.clearSubmenuHoverTimers();
     this.generation++;
     this.state = "closed";
     this.openedByHover = false;

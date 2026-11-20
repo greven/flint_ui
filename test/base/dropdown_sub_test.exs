@@ -7,10 +7,19 @@ defmodule FlintUI.Base.DropdownSubTest do
     use FlintUI
 
     def example(assigns) do
-      assigns = assign_new(assigns, :disabled, fn -> false end)
+      assigns =
+        assigns
+        |> assign_new(:disabled, fn -> false end)
+        |> assign_new(:open_on_hover, fn -> false end)
 
       ~H"""
-      <.dropdown_sub menu="more" disabled={@disabled} class="extra" data-role="test">
+      <.dropdown_sub
+        menu="more"
+        disabled={@disabled}
+        open_on_hover={@open_on_hover}
+        class="extra"
+        data-role="test"
+      >
         More
       </.dropdown_sub>
       """
@@ -39,6 +48,14 @@ defmodule FlintUI.Base.DropdownSubTest do
     assert LazyHTML.attribute(trigger, "class") == ["extra"]
     assert LazyHTML.attribute(trigger, "data-role") == ["test"]
     assert LazyHTML.text(trigger) =~ "More"
+  end
+
+  test "opts into hover opening with data-open-on-hover" do
+    assert LazyHTML.attribute(render(), "data-open-on-hover") == []
+
+    trigger = render(open_on_hover: true)
+
+    assert LazyHTML.attribute(trigger, "data-open-on-hover") == [""]
   end
 
   test "renders the decorative chevron" do

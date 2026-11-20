@@ -62,7 +62,8 @@ defmodule FlintUI.Base.Dropdown do
 
   A submenu opens to the right of its trigger and flips left when it does not
   fit. The root menu closes its open submenu when focus or the pointer leaves,
-  and `Escape` closes one level at a time.
+  and `Escape` closes one level at a time. Set `open_on_hover` on a
+  `dropdown_sub` to open that submenu when the pointer rests on it.
 
   ## Hover
 
@@ -71,6 +72,9 @@ defmodule FlintUI.Base.Dropdown do
   trigger, and `close_delay` is how long the menu stays open after the pointer
   leaves. Hover opening never moves focus. A click pins the menu open and moves
   focus into it.
+
+  Submenus take their own `open_on_hover`; a hovered submenu shares the
+  dropdown's `open_delay`.
 
   ## Accessibility
 
