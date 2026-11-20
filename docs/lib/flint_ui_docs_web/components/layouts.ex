@@ -681,4 +681,31 @@ defmodule FlintUIDocsWeb.Layouts do
     </div>
     """
   end
+
+  @doc """
+  Provides a palette picker.
+
+  Selecting a palette dispatches `phx:set-palette`, which the inline script in
+  root.html.heex reflects onto `data-palette`.
+  """
+  attr :palettes, :list, required: true
+  attr :class, :any, default: nil
+
+  def palette_picker(assigns) do
+    ~H"""
+    <div class={["flex flex-wrap gap-1.5", @class]}>
+      <Components.button
+        :for={palette <- @palettes}
+        type="button"
+        variant="surface"
+        size="xs"
+        pill
+        phx-click={JS.dispatch("phx:set-palette")}
+        data-phx-palette={palette}
+      >
+        {palette}
+      </Components.button>
+    </div>
+    """
+  end
 end

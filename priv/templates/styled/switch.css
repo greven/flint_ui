@@ -8,8 +8,8 @@
         --fl-switch-fill: var(--fl-color-border-strong);
         --fl-switch-border: var(--fl-color-border-strong);
         --fl-switch-thumb: var(--fl-color-surface);
-        --fl-switch-color: var(--fl-color-primary);
-        --fl-switch-color-content: var(--fl-color-neutral-50);
+        --fl-switch-color: var(--fl-tone, var(--fl-color-primary));
+        --fl-switch-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
         display: grid;
         gap: var(--fl-spacing-xs);
         min-inline-size: 0;
@@ -264,49 +264,6 @@
 
     [data-element="switch"][data-size="xl"][data-switch] > [data-part="label"] {
         gap: var(--fl-control-gap-xl);
-    }
-
-    /* Each color sets the on track. The thumb is a neutral ink by default;
-     * only the light fills and the scheme-inverting neutral need a different
-     * one. */
-    [data-element="switch"][data-color="primary"] {
-        --fl-switch-color: var(--fl-color-primary);
-    }
-
-    [data-element="switch"][data-color="success"] {
-        --fl-switch-color: var(--fl-color-success);
-    }
-
-    [data-element="switch"][data-color="info"] {
-        --fl-switch-color: var(--fl-color-info);
-    }
-
-    [data-element="switch"][data-color="error"] {
-        --fl-switch-color: var(--fl-color-error);
-    }
-
-    [data-element="switch"][data-color="secondary"] {
-        --fl-switch-color: var(--fl-color-secondary);
-    }
-
-    [data-element="switch"][data-color="dark"] {
-        --fl-switch-color: var(--fl-color-dark);
-    }
-
-    [data-element="switch"][data-color="warning"] {
-        --fl-switch-color: var(--fl-color-warning);
-        --fl-switch-color-content: var(--fl-color-warning-content);
-    }
-
-    [data-element="switch"][data-color="light"] {
-        --fl-switch-color: var(--fl-color-light);
-        --fl-switch-color-content: var(--fl-color-light-content);
-    }
-
-    /* The neutral fill inverts with the scheme, so its thumb follows. */
-    [data-element="switch"][data-color="neutral"] {
-        --fl-switch-color: var(--fl-color-inverted);
-        --fl-switch-color-content: var(--fl-color-text-inverted);
     }
 
     @media (prefers-reduced-motion: reduce) {

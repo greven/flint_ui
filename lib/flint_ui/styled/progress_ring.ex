@@ -33,7 +33,7 @@ defmodule FlintUI.Styled.ProgressRing do
           default: "primary",
           allow_custom: true,
           doc:
-            "The arc color, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The track stays neutral."
+            "The arc color, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The track stays neutral."
         ),
         Prop.new(
           name: :indeterminate,

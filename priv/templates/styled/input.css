@@ -311,7 +311,7 @@
         /* Match the dedicated checkbox box; the field radius shapes the field. */
         border-radius: var(--fl-radius-sm);
         background-color: var(--fl-field-fill, var(--fl-color-surface));
-        color: var(--fl-input-check-content, var(--fl-color-neutral-50));
+        color: var(--fl-input-check-content, var(--fl-tone-content, var(--fl-color-text-inverted)));
         transition:
             background-color var(--fl-duration-fast) var(--fl-ease-out),
             border-color var(--fl-duration-fast) var(--fl-ease-out);

@@ -39,7 +39,7 @@ defmodule FlintUI.Styled.Radio do
           default: "primary",
           allow_custom: true,
           doc:
-            "The selected fill and border, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The dot is a neutral ink that only flips on a light fill."
+            "The selected fill and border, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The dot is a neutral ink that only flips on a light fill."
         )
       ],
       vars: [
@@ -60,7 +60,7 @@ defmodule FlintUI.Styled.Radio do
         ),
         Var.new(
           name: "--fl-radio-color-content",
-          default: "var(--fl-color-neutral-50)",
+          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
           doc: "The dot color on the selected circle."
         )
       ],

@@ -6,8 +6,8 @@
     [data-element="radio"][data-variant] {
         --fl-radio-fill: var(--fl-color-surface);
         --fl-radio-border: var(--fl-color-border-strong);
-        --fl-radio-color: var(--fl-color-primary);
-        --fl-radio-color-content: var(--fl-color-neutral-50);
+        --fl-radio-color: var(--fl-tone, var(--fl-color-primary));
+        --fl-radio-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
         --fl-control-radius: var(--fl-radius-sm);
         display: grid;
         gap: var(--fl-spacing-xs);
@@ -295,47 +295,5 @@
 
     [data-element="radio"][data-radius="xl"][data-radio] {
         --fl-control-radius: var(--fl-radius-xl);
-    }
-
-    /* Each color sets the fill. The dot is a neutral ink by default; only the
-     * light fills and the scheme-inverting neutral need a different one. */
-    [data-element="radio"][data-color="primary"] {
-        --fl-radio-color: var(--fl-color-primary);
-    }
-
-    [data-element="radio"][data-color="success"] {
-        --fl-radio-color: var(--fl-color-success);
-    }
-
-    [data-element="radio"][data-color="info"] {
-        --fl-radio-color: var(--fl-color-info);
-    }
-
-    [data-element="radio"][data-color="error"] {
-        --fl-radio-color: var(--fl-color-error);
-    }
-
-    [data-element="radio"][data-color="secondary"] {
-        --fl-radio-color: var(--fl-color-secondary);
-    }
-
-    [data-element="radio"][data-color="dark"] {
-        --fl-radio-color: var(--fl-color-dark);
-    }
-
-    [data-element="radio"][data-color="warning"] {
-        --fl-radio-color: var(--fl-color-warning);
-        --fl-radio-color-content: var(--fl-color-warning-content);
-    }
-
-    [data-element="radio"][data-color="light"] {
-        --fl-radio-color: var(--fl-color-light);
-        --fl-radio-color-content: var(--fl-color-light-content);
-    }
-
-    /* The neutral fill inverts with the scheme, so its dot follows. */
-    [data-element="radio"][data-color="neutral"] {
-        --fl-radio-color: var(--fl-color-inverted);
-        --fl-radio-color-content: var(--fl-color-text-inverted);
     }
 }

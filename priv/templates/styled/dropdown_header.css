@@ -13,27 +13,7 @@
         white-space: nowrap;
     }
 
-    [data-element="dropdown_header"][data-dropdown_header][data-color="info"] {
-        --fl-dropdown-header-text: var(--fl-color-info-text);
-    }
-
-    [data-element="dropdown_header"][data-dropdown_header][data-color="success"] {
-        --fl-dropdown-header-text: var(--fl-color-success-text);
-    }
-
-    [data-element="dropdown_header"][data-dropdown_header][data-color="warning"] {
-        --fl-dropdown-header-text: var(--fl-color-warning-text);
-    }
-
-    [data-element="dropdown_header"][data-dropdown_header][data-color="error"] {
-        --fl-dropdown-header-text: var(--fl-color-error-text);
-    }
-
-    [data-element="dropdown_header"][data-dropdown_header][data-color="primary"] {
-        --fl-dropdown-header-text: var(--fl-color-primary-text);
-    }
-
-    [data-element="dropdown_header"][data-dropdown_header][data-color="secondary"] {
-        --fl-dropdown-header-text: var(--fl-color-secondary-text);
+    [data-element="dropdown_header"][data-dropdown_header][data-color] {
+        --fl-dropdown-header-text: var(--fl-tone-text);
     }
 }

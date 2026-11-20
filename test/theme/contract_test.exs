@@ -4,8 +4,9 @@ defmodule FlintUI.Theme.ContractTest do
   alias FlintUI.Styled
   alias FlintUI.Styled.Prop
 
-  @color_roles ~w(primary secondary neutral success info warning error)
-  @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
+  @color_roles ~w(primary secondary neutral success info warning error dark light)
+  @color_shades [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+  @tone_values @color_roles ++ ~w(red orange yellow green cyan blue indigo purple pink gray)
 
   setup_all do
     %{css: FlintUI.Generator.theme_source()}
@@ -51,6 +52,22 @@ defmodule FlintUI.Theme.ContractTest do
   # prop is rendered on a nested component, so its selectors are checked against
   # that component's `data-element`.
   defp prop_selector(entry, prop, value) do
+    cond do
+      prop.name == :color and value in @tone_values ->
+        ~s|:where([data-color="#{value}"])|
+
+      prop.name == :active_color and value in @tone_values ->
+        ~s|:where([data-active-color="#{value}"])|
+
+      prop.name == :success_color and value in @tone_values ->
+        ~s|:where([data-active-color="#{value}"])|
+
+      true ->
+        component_prop_selector(entry, prop, value)
+    end
+  end
+
+  defp component_prop_selector(entry, prop, value) do
     root =
       cond do
         prop.primitive ->
@@ -84,10 +101,29 @@ defmodule FlintUI.Theme.ContractTest do
     end
   end
 
-  test "every semantic role ships a complete 50..950 scale", %{css: css} do
-    for role <- @color_roles, shade <- @color_shades do
-      assert css =~ "--fl-color-#{role}-#{shade}:",
-             "expected --fl-color-#{role}-#{shade} in the theme"
+  test "every palette ships eighteen hues and a complete 50..950 scale" do
+    for palette <- FlintUI.Palette.palettes(),
+        hue <- FlintUI.Palette.hues(),
+        shade <- @color_shades do
+      shades = palette.module.shades(hue)
+
+      assert Map.has_key?(shades, shade),
+             "expected #{palette.name} to define #{hue}-#{shade}"
+    end
+  end
+
+  test "every semantic role resolves the five tone tokens", %{css: css} do
+    for role <- @color_roles, suffix <- ["", "-content", "-text", "-soft", "-soft-border"] do
+      assert css =~ "--fl-color-#{role}#{suffix}:",
+             "expected --fl-color-#{role}#{suffix} in the theme"
+    end
+  end
+
+  test "every palette hue has a color hook", %{css: css} do
+    for hue <- FlintUI.Palette.hue_names() do
+      assert css =~ ~s|:where([data-color="#{hue}"])|
+      assert css =~ ~s|:where([data-active-color="#{hue}"])|
+      assert css =~ "--fl-palette-#{hue}:"
     end
   end
 
@@ -107,15 +143,13 @@ defmodule FlintUI.Theme.ContractTest do
     end
   end
 
-  test "tinted alerts elevate every role's soft token for nested controls" do
+  test "tinted alerts elevate the inherited tone for nested controls" do
     source = File.read!(FlintUI.Generator.part_path("styled/alert.css"))
 
-    for role <- ~w(primary secondary neutral success info warning error dark light) do
-      assert source =~ ~s([data-color="#{role}"] > *),
-             "expected a #{role} alert to elevate its nested soft token"
+    assert source =~ ~s([data-color] > *),
+           "expected a tinted alert to elevate its nested tone"
 
-      assert source =~ "--fl-color-#{role}-soft: color-mix(",
-             "expected a #{role} alert to elevate --fl-color-#{role}-soft"
-    end
+    assert source =~ "--fl-tone-soft: color-mix(",
+           "expected a tinted alert to elevate --fl-tone-soft"
   end
 end

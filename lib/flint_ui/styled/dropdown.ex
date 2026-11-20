@@ -24,7 +24,7 @@ defmodule FlintUI.Styled.Dropdown do
       vars: [
         Var.new(
           name: "--fl-dropdown-surface",
-          default: "var(--fl-color-surface)",
+          default: "var(--fl-color-surface-raised)",
           doc: "Background color of the menu and its submenus."
         ),
         Var.new(

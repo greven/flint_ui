@@ -164,6 +164,13 @@ defmodule FlintUI.Palette.Color do
 
   defp cube_root(value), do: :math.pow(value, 1.0 / 3.0)
 
+  @doc """
+  Formats OKLCH components as a canonical `oklch()` string.
+
+  `l` is a 0..1 lightness, `c` the chroma, and `h` the hue angle in degrees.
+  """
+  def format(l, c, h), do: oklch(l, c, h)
+
   defp oklch(l, c, h) do
     "oklch(#{fmt(l * 100)}% #{fmt(c)} #{fmt(h)})"
   end

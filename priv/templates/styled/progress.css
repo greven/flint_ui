@@ -5,7 +5,7 @@
      * as `inline-size` (horizontal) or `block-size` (vertical), and the theme
      * supplies the indeterminate motion and the stripe pattern. */
     [data-element="progress"][data-progress] {
-        --fl-progress-color: var(--fl-color-primary);
+        --fl-progress-color: var(--fl-tone, var(--fl-color-primary));
         --fl-progress-track: var(--fl-color-surface-strong);
         --fl-progress-height: 0.5rem;
         display: flex;
@@ -275,32 +275,6 @@
 
     [data-element="progress"][data-radius="full"][data-progress] > [data-part="track"] {
         border-radius: var(--fl-radius-full);
-    }
-
-    /* Color roles. `primary` is the base treatment; `neutral` is the inverted
-     * surface, matching the other feedback and form components. */
-    [data-element="progress"][data-color="secondary"][data-progress] {
-        --fl-progress-color: var(--fl-color-secondary);
-    }
-
-    [data-element="progress"][data-color="neutral"][data-progress] {
-        --fl-progress-color: var(--fl-color-inverted);
-    }
-
-    [data-element="progress"][data-color="info"][data-progress] {
-        --fl-progress-color: var(--fl-color-info);
-    }
-
-    [data-element="progress"][data-color="success"][data-progress] {
-        --fl-progress-color: var(--fl-color-success);
-    }
-
-    [data-element="progress"][data-color="warning"][data-progress] {
-        --fl-progress-color: var(--fl-color-warning);
-    }
-
-    [data-element="progress"][data-color="error"][data-progress] {
-        --fl-progress-color: var(--fl-color-error);
     }
 
     /* Indeterminate motion. The segment keeps a fixed share of the track and

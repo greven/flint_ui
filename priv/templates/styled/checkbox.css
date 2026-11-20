@@ -6,8 +6,8 @@
     [data-element="checkbox"][data-variant] {
         --fl-checkbox-fill: var(--fl-color-surface);
         --fl-checkbox-border: var(--fl-color-border-strong);
-        --fl-checkbox-color: var(--fl-color-primary);
-        --fl-checkbox-color-content: var(--fl-color-neutral-50);
+        --fl-checkbox-color: var(--fl-tone, var(--fl-color-primary));
+        --fl-checkbox-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
         --fl-control-radius: var(--fl-radius-sm);
         display: grid;
         gap: var(--fl-spacing-xs);
@@ -373,47 +373,5 @@
 
     [data-element="checkbox"][data-radius="xl"][data-checkbox] {
         --fl-control-radius: var(--fl-radius-xl);
-    }
-
-    /* Each color sets the fill. The mark is a neutral ink by default; only the
-     * light fills and the scheme-inverting neutral need a different one. */
-    [data-element="checkbox"][data-color="primary"] {
-        --fl-checkbox-color: var(--fl-color-primary);
-    }
-
-    [data-element="checkbox"][data-color="success"] {
-        --fl-checkbox-color: var(--fl-color-success);
-    }
-
-    [data-element="checkbox"][data-color="info"] {
-        --fl-checkbox-color: var(--fl-color-info);
-    }
-
-    [data-element="checkbox"][data-color="error"] {
-        --fl-checkbox-color: var(--fl-color-error);
-    }
-
-    [data-element="checkbox"][data-color="secondary"] {
-        --fl-checkbox-color: var(--fl-color-secondary);
-    }
-
-    [data-element="checkbox"][data-color="dark"] {
-        --fl-checkbox-color: var(--fl-color-dark);
-    }
-
-    [data-element="checkbox"][data-color="warning"] {
-        --fl-checkbox-color: var(--fl-color-warning);
-        --fl-checkbox-color-content: var(--fl-color-warning-content);
-    }
-
-    [data-element="checkbox"][data-color="light"] {
-        --fl-checkbox-color: var(--fl-color-light);
-        --fl-checkbox-color-content: var(--fl-color-light-content);
-    }
-
-    /* The neutral fill inverts with the scheme, so its mark follows. */
-    [data-element="checkbox"][data-color="neutral"] {
-        --fl-checkbox-color: var(--fl-color-inverted);
-        --fl-checkbox-color-content: var(--fl-color-text-inverted);
     }
 }

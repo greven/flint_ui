@@ -6,7 +6,7 @@
      * Public input: `--fl-typography-color`. A raw color writes it inline,
      * while the role and tier hooks below resolve it from theme tokens. */
     [data-typography] {
-        --fl-typography-color: var(--fl-color-text);
+        --fl-typography-color: var(--fl-tone-text, var(--fl-color-text));
 
         color: var(--fl-typography-color);
         font-family: var(--fl-font-sans);
@@ -97,43 +97,8 @@
         --fl-typography-color: var(--fl-color-text-inverted);
     }
 
-    /* Semantic roles use the role's readable text token on a neutral surface. */
-    [data-typography][data-color="primary"] {
-        --fl-typography-color: var(--fl-color-primary-text);
-    }
-
-    [data-typography][data-color="secondary"] {
-        --fl-typography-color: var(--fl-color-secondary-text);
-    }
-
-    [data-typography][data-color="neutral"] {
-        --fl-typography-color: var(--fl-color-neutral-text);
-    }
-
-    [data-typography][data-color="success"] {
-        --fl-typography-color: var(--fl-color-success-text);
-    }
-
-    [data-typography][data-color="info"] {
-        --fl-typography-color: var(--fl-color-info-text);
-    }
-
-    [data-typography][data-color="warning"] {
-        --fl-typography-color: var(--fl-color-warning-text);
-    }
-
-    [data-typography][data-color="error"] {
-        --fl-typography-color: var(--fl-color-error-text);
-    }
-
-    /* Absolute tones stay dark or light in either scheme. */
-    [data-typography][data-color="dark"] {
-        --fl-typography-color: var(--fl-color-dark-text);
-    }
-
-    [data-typography][data-color="light"] {
-        --fl-typography-color: var(--fl-color-light-text);
-    }
+    /* Palette hues and semantic roles resolve through the shared tone
+     * contract. The ink tiers above win by specificity. */
 
     [data-typography][data-weight="thin"] {
         font-weight: var(--fl-font-weight-thin);

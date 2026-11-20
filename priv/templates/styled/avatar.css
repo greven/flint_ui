@@ -10,8 +10,8 @@
         --fl-avatar-size-lg: 3rem;
         --fl-avatar-size-xl: 3.5rem;
 
-        --fl-avatar-color: var(--fl-color-inverted);
-        --fl-avatar-color-content: var(--fl-color-text-inverted);
+        --fl-avatar-color: var(--fl-tone, var(--fl-color-inverted));
+        --fl-avatar-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
         --fl-avatar-size: var(--fl-avatar-size-md);
         --_avatar-radius: 0;
         box-sizing: border-box;
@@ -143,52 +143,5 @@
 
     [data-element="avatar"][data-shape="square"] {
         border-radius: var(--_avatar-radius);
-    }
-
-    /* Each color sets the public inputs. Raw and initials colors override them
-     * with inline custom properties on the root. */
-    [data-element="avatar"][data-color="primary"] {
-        --fl-avatar-color: var(--fl-color-primary);
-        --fl-avatar-color-content: var(--fl-color-primary-content);
-    }
-
-    [data-element="avatar"][data-color="success"] {
-        --fl-avatar-color: var(--fl-color-success);
-        --fl-avatar-color-content: var(--fl-color-success-content);
-    }
-
-    [data-element="avatar"][data-color="info"] {
-        --fl-avatar-color: var(--fl-color-info);
-        --fl-avatar-color-content: var(--fl-color-info-content);
-    }
-
-    [data-element="avatar"][data-color="warning"] {
-        --fl-avatar-color: var(--fl-color-warning);
-        --fl-avatar-color-content: var(--fl-color-warning-content);
-    }
-
-    [data-element="avatar"][data-color="error"] {
-        --fl-avatar-color: var(--fl-color-error);
-        --fl-avatar-color-content: var(--fl-color-error-content);
-    }
-
-    [data-element="avatar"][data-color="secondary"] {
-        --fl-avatar-color: var(--fl-color-secondary);
-        --fl-avatar-color-content: var(--fl-color-secondary-content);
-    }
-
-    [data-element="avatar"][data-color="neutral"] {
-        --fl-avatar-color: var(--fl-color-inverted);
-        --fl-avatar-color-content: var(--fl-color-text-inverted);
-    }
-
-    [data-element="avatar"][data-color="dark"] {
-        --fl-avatar-color: var(--fl-color-dark);
-        --fl-avatar-color-content: var(--fl-color-dark-content);
-    }
-
-    [data-element="avatar"][data-color="light"] {
-        --fl-avatar-color: var(--fl-color-light);
-        --fl-avatar-color-content: var(--fl-color-light-content);
     }
 }

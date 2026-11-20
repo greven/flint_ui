@@ -5,7 +5,7 @@
      * tooltips paint around it. The component publishes the thumb fractions as
      * `--_fl-slider-start`, `--_fl-slider-end`, and `--_fl-slider-offset`. */
     [data-element="slider"][data-slider] {
-        --fl-slider-color: var(--fl-color-primary);
+        --fl-slider-color: var(--fl-tone, var(--fl-color-primary));
         --fl-slider-track: var(--fl-color-surface-strong);
         --fl-slider-thumb: var(--fl-color-surface);
         --fl-slider-thumb-border: var(--fl-slider-color);
@@ -414,40 +414,6 @@
         --_fl-slider-track-size: 0.5rem;
         font-size: var(--fl-control-font-size-xl);
         line-height: var(--fl-control-line-height-xl);
-    }
-
-    /* Color roles. `primary` is the base treatment. `neutral` is the inverted
-     * surface, matching the other form controls. */
-    [data-element="slider"][data-color="secondary"][data-slider] {
-        --fl-slider-color: var(--fl-color-secondary);
-    }
-
-    [data-element="slider"][data-color="neutral"][data-slider] {
-        --fl-slider-color: var(--fl-color-inverted);
-    }
-
-    [data-element="slider"][data-color="info"][data-slider] {
-        --fl-slider-color: var(--fl-color-info);
-    }
-
-    [data-element="slider"][data-color="success"][data-slider] {
-        --fl-slider-color: var(--fl-color-success);
-    }
-
-    [data-element="slider"][data-color="warning"][data-slider] {
-        --fl-slider-color: var(--fl-color-warning);
-    }
-
-    [data-element="slider"][data-color="error"][data-slider] {
-        --fl-slider-color: var(--fl-color-error);
-    }
-
-    [data-element="slider"][data-color="dark"][data-slider] {
-        --fl-slider-color: var(--fl-color-dark);
-    }
-
-    [data-element="slider"][data-color="light"][data-slider] {
-        --fl-slider-color: var(--fl-color-light);
     }
 
     /* Validation wins over the chosen color role, so an invalid slider always

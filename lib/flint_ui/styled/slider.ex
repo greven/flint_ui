@@ -26,7 +26,7 @@ defmodule FlintUI.Styled.Slider do
           default: "primary",
           allow_custom: true,
           doc:
-            "The filled track and the thumb ring, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb body stays a neutral surface."
+            "The filled track and the thumb ring, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb body stays a neutral surface."
         )
       ],
       vars: [

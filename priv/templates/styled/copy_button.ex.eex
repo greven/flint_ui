@@ -51,6 +51,7 @@ def <%= @name %>(assigns) do
       data-dashed={@dashed}
       data-color={@data_color}
       data-success-color={if @success_color == "inherit", do: nil, else: @success_color}
+      data-active-color={if @success_color == "inherit", do: nil, else: @success_color}
       data-size={@size}
       data-radius={@radius}
       data-pill={@pill}
@@ -88,6 +89,7 @@ def <%= @name %>(assigns) do
     data-dashed={@dashed}
     data-color={@data_color}
     data-success-color={if @success_color == "inherit", do: nil, else: @success_color}
+    data-active-color={if @success_color == "inherit", do: nil, else: @success_color}
     data-size={@size}
     data-radius={@radius}
     data-pill={@pill}

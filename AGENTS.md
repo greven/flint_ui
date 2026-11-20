@@ -35,6 +35,7 @@ mise exec -- mix format
 mise exec -- mix compile --warnings-as-errors
 mise exec -- mix test
 
+mise exec -- mix flint.palette brand --from "#8b5cf6"  # generate a custom hue
 cd docs && mise exec -- mix precommit   # docs: compile, format, test
 cd docs && mise exec -- mix phx.server  # run the docs site
 ```
@@ -65,11 +66,11 @@ Breaking changes are expected until the first release.
   anatomy. A primitive-owned prop names `primitive:` in
   `FlintUI.Styled.Prop`, so the theme contract checks the shared selector
   instead of the component root. Component-only entries may omit `:css`.
-- **Theme.** `FlintUI.Generator.theme_source/0` concatenates `tokens.css`,
-  `base.css`, the primitive CSS parts, the presets in `FlintUI.Theme`, then
-  component CSS in registry
-  order. The `:flint_theme` compiler writes `priv/static/flint.css` for the
-  docs; `mix flint.setup`/`flint.theme` write the same aggregate to a host's
+- **Theme.** `FlintUI.Generator.theme_source/0` concatenates the palette parts
+  in `FlintUI.Palette`, `tokens.css`, `colors.css`, the shared base and
+  primitive parts, the presets in `FlintUI.Theme`, then component CSS in
+  registry order. The `:flint_theme` compiler writes `priv/static/flint.css` for
+  the docs; `mix flint.setup`/`flint.theme` write the same aggregate to a host's
   `assets/css/flint.css`.
 - **Naming.** Generated components are the primary `<.button>`/`<.toggle>`
   (import the host's components module). The headless base stays explicit
@@ -84,7 +85,10 @@ Breaking changes are expected until the first release.
 | Styled props, slots, public CSS variables | `lib/flint_ui/styled/<name>.ex`             |
 | Shared control shell and variants         | `priv/templates/primitives/control.css`     |
 | Shared field chrome and typography        | `priv/templates/primitives/field.css`       |
-| Theme tokens and scales                   | `priv/templates/tokens.css`                 |
+| Palette hue ramps and derived tone tokens | `lib/flint_ui/palette.ex` + `palette/*.ex`  |
+| Rendered palette CSS parts                | `priv/templates/palettes/*.css`             |
+| Semantic role aliases and chrome tokens   | `priv/templates/tokens.css`                 |
+| Generic `data-color` tone hooks           | `priv/templates/colors.css`                 |
 | Component anatomy CSS and its rationale   | `priv/templates/styled/<name>.css`          |
 | Page content and examples                 | `docs/lib/flint_ui_docs_web/docs/<name>.ex` |
 | Docs navigation and routes                | `docs/lib/flint_ui_docs_web/nav.ex`         |
@@ -140,38 +144,52 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 
 - **Tokens are the styling API.** Components read `--fl-*` custom properties;
   Tailwind is optional. Light/dark is automatic via `color-scheme` and
-  `light-dark()`. Force a scheme with `data-color-scheme`; select a preset with
-  `data-theme` (presets override tokens only, never `color-scheme`).
-- **Semantic color roles** own a `50..950` scale plus three jobs: the bare role
-  is the fill, `-content` is the label on that fill, and `-text` is the role as
-  text on a neutral surface. Palette tooling picks the labels for AA; retinting a
-  role by overriding its fill means setting the derived tokens too. `color`
-  accepts semantic roles first; a raw color is a per-instance escape hatch for
-  data-driven accents. A
-  raw color is used exactly as the fill and its labels derive from it, but it
-  does not participate in presets or the role contract. Prefer a role or a
-  theme override for app-wide color.
+  `light-dark()`. Force a scheme with `data-color-scheme`; select a theme preset
+  with `data-theme` and a palette with `data-palette`. Both override tokens only,
+  never `color-scheme`, and compose with each other.
+- **Palettes own hue ramps.** Every palette defines the same eighteen hues — red,
+  orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo,
+  violet, purple, fuchsia, pink, rose, gray — each with a
+  `50..950` scale plus five derived tokens: `--fl-palette-{hue}` (core fill),
+  `-content`, `-text`, `-soft`, and `-soft-border`. Derived tokens reference the
+  ramp, so remapping a hue's eleven shade variables updates its label, text, and
+  tints together. The `gray` ramp drives the chrome. Palette tokens are data,
+  not component styling: components read the role aliases and `--fl-tone*`.
+- **Semantic roles alias palette hues.** A role owns five tokens, not a scale:
+  the fill, `-content` (label on that fill), `-text` (role as text on a neutral
+  surface), `-soft`, and `-soft-border`. `primary` is the brand slot and defaults
+  to the neutral ink, so a fresh app is monochrome until a theme maps it.
+  `secondary` follows the palette `gray`; `info`, `success`, `warning`, and
+  `error` point at blue, green, amber, and red. Remap a role by pointing its
+  five tokens at another hue.
+- **Color hooks.** `color` accepts a semantic role or one of the eighteen palette
+  hues. Both resolve to one `--fl-tone*` set in `colors.css`; components read
+  that set with their own public inputs as fallbacks. `color="inherit"` omits
+  the hook and lets the parent tone through. A raw color writes the same public
+  inputs inline, so it stays a per-instance escape hatch for data-driven
+  accents. A specific palette shade is a CSS escape hatch (set the tone set or
+  remap the hue), not part of the `color` API. App-specific hue names go in
+  `config :flint_ui, extra_hues: [:brand]` and use the CSS part generated by
+  `mix flint.palette`.
 - **Text tiers have jobs.** `text` is the default ink, `text-highlighted` is for
   headings and strong labels, `text-toned` is for secondary copy and
   descriptions, `text-muted` is meta and labels, and `text-dimmed` is
   placeholders and decoration. `text-dimmed` is below AA on purpose; never use
   it for readable content or interactive labels. On the full toned fill, prefer
   `text-toned` over `text-muted`.
-- **Chrome ladders share three levels.** `surface` is the pure anchor: white in
-  light and `neutral-950` in dark. `background` is the page, one tint step off it
-  toward the opposite neutral extreme; `surface-subtle` is two steps and
-  `surface-strong` four. Each scheme sets its own step: `--fl-surface-step` at
-  1.75% (a 1.75/3.5/7% ladder) and `--fl-surface-step-dark` at 2.5%
-  (2.5/5/10%), because the same oklab step yields less contrast separation as
-  the anchor darkens. Do not raise the dark step without moving `border-subtle`:
-  four steps must stay under it, or an edge sinks into the fill it bounds. The
-  tint order is the same in both schemes, so the page is never pure and a card
-  is never the page color. Chrome fills and edges name the amount of tint, not
-  loudness: `subtle` is the faint step and
-  `strong` the heavy step, because every rung sits above the pure anchor, so
-  `border-subtle` / `border` / `border-strong` read as amounts. `muted` belongs
-  to ink only (`text-muted`). Opaque bordered controls paint `surface`, so
-  attached-group seams stay single. Never use `subtle` for a strong fill.
+- **Chrome ladders share one ordered scale.** `surface` is the anchor: white in
+  light and `gray-900` in dark. The page sits one step away from it, `gray-50`
+  in light and `gray-950` in dark, so a card is lighter than the page in both
+  schemes. Tonal fills and edges are a tint of `--fl-surface-ink` over
+  `surface`: `surface-subtle` 3%, `surface-strong` 5.5%, `border-subtle` 7%,
+  `border` 10%, and `border-strong` 18%. The order is intentional: a fill must
+  stay below the quietest edge, or an edge sinks into the panel it bounds.
+  `surface-raised` lifts overlays above a card; it equals the surface in light,
+  where white is already the top, and adds one step in dark. Chrome fills and
+  edges name the amount of tint, not loudness, because every rung sits above
+  the pure anchor. `muted` belongs to ink only (`text-muted`). Opaque bordered
+  controls paint `surface`, so attached-group seams stay single. Never use
+  `subtle` for a strong fill.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.

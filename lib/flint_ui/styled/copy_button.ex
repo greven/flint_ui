@@ -76,7 +76,7 @@ defmodule FlintUI.Styled.CopyButton do
           allow_custom: true,
           primitive: :control,
           doc:
-            "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent."
+            "The theme color the variant is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :success_color,

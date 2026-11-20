@@ -63,7 +63,7 @@ defmodule FlintUI.Styled.Toggle do
           default: "neutral",
           allow_custom: true,
           doc:
-            "The theme color the untoggled control and its variants are built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent."
+            "The theme color the untoggled control and its variants are built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent."
         ),
         Prop.new(
           name: :active_color,
@@ -73,7 +73,7 @@ defmodule FlintUI.Styled.Toggle do
           allow_custom: true,
           resolved: ["inherit"],
           doc:
-            "The theme color of the toggled control. `inherit` follows `color`. Accepts the same roles, Tailwind palette colors, and raw colors as `color`."
+            "The theme color of the toggled control. `inherit` follows `color`. Accepts the same roles, palette hues, and raw colors as `color`."
         ),
         Prop.new(
           name: :size,

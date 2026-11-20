@@ -49,7 +49,7 @@ defmodule FlintUI.Styled.Separator do
           default: "neutral",
           allow_custom: true,
           doc:
-            "The theme color of the line, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The label keeps the default text color."
+            "The theme color of the line, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The label keeps the default text color."
         )
       ],
       content_attrs: [

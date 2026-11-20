@@ -5,7 +5,8 @@ defmodule FlintUI.Theme do
   A preset is a CSS part under `priv/templates/themes/` that selects under
   `[data-theme="<name>"]` and overrides only the tokens it changes. It carries
   no `color-scheme`, so a preset composes with the light/dark `data-color-scheme`
-  control. The default theme is `:root` (see `tokens.css`) and is implicit.
+  control and with any palette selected through `data-palette`. The default
+  theme is `:root` (see `tokens.css`) and is implicit.
 
   `:default` is a selectable preset with no stylesheet: it is the `:root`
   baseline, so selecting it means clearing `data-theme` on `<html>`. It is listed

@@ -1,290 +1,84 @@
 defmodule FlintUI.Theme.ContrastTest do
   use ExUnit.Case, async: true
 
-  alias FlintUI.Palette.Contrast
+  alias FlintUI.Palette
+  alias FlintUI.Palette.{Contrast, Tailwind}
 
-  @roles ~w(primary secondary neutral success info warning error)
-  @shades ~w(50 100 200 300 400 500 600 700 800 900 950)
+  test "every palette hue has an AA label on its core fill" do
+    for palette <- Palette.palettes(), hue <- Palette.hues() do
+      shades = palette.module.shades(hue)
+      core = Map.fetch!(shades, Palette.core_shade(hue))
 
-  # Fills use 600 when it supports a light label, stepping to 700 when it does
-  # not. Warning keeps a light fill with a dark label so amber stays yellow,
-  # and neutral is the inverted surface. Primary and secondary default to
-  # neutral until a theme brands them.
-  @expected_fill_shades %{
-    "neutral" => {"900", "200"},
-    "success" => {"700", "700"},
-    "warning" => {"500", "500"}
-  }
+      candidates = [
+        Map.fetch!(shades, 50),
+        Map.fetch!(shades, 950),
+        "oklch(100% 0 0)",
+        "oklch(0% 0 0)"
+      ]
 
-  @light_label_roles ~w(primary secondary success info error)
+      best =
+        candidates
+        |> Enum.map(fn value -> {value, Contrast.ratio(core, value) || 0.0} end)
+        |> Enum.max_by(&elem(&1, 1))
 
-  setup_all do
+      assert elem(best, 1) >= Contrast.aa(),
+             "#{palette.name}/#{hue} needs a readable label on its core fill"
+    end
+  end
+
+  test "every palette hue has an AA text shade on the page" do
+    for palette <- Palette.palettes(), hue <- Palette.hues() do
+      shades = palette.module.shades(hue)
+      light_page = Map.fetch!(shades, 50)
+      dark_surface = Map.fetch!(shades, 900)
+
+      assert Contrast.ratio(Map.fetch!(shades, 800), light_page) >= Contrast.aa(),
+             "#{palette.name}/#{hue}-800 should read on the light page"
+
+      assert Contrast.ratio(Map.fetch!(shades, 300), dark_surface) >= Contrast.aa(),
+             "#{palette.name}/#{hue}-300 should read on the dark surface"
+    end
+  end
+
+  test "role aliases point at palette hues" do
     css = File.read!(FlintUI.Generator.part_path("tokens.css"))
-    %{tokens: parse_tokens(css), scales: parse_scales(css), steps: parse_surface_steps(css)}
+
+    assert css =~ "--fl-color-secondary: var(--fl-palette-gray);"
+    assert css =~ "--fl-color-info: var(--fl-palette-blue);"
+    assert css =~ "--fl-color-success: var(--fl-palette-green);"
+    assert css =~ "--fl-color-warning: var(--fl-palette-amber);"
+    assert css =~ "--fl-color-error: var(--fl-palette-red);"
+    assert css =~ "--fl-color-primary: var(--fl-color-neutral);"
   end
 
-  test "every shipped role label clears AA on its fill", %{tokens: tokens} do
-    for role <- @roles do
-      {fill_light, fill_dark} = resolve(tokens, role)
-      {content_light, content_dark} = resolve(tokens, "#{role}-content")
+  test "text tiers are softened neutrals that clear AA where used" do
+    gray = Tailwind.shades(:gray)
 
-      for {scheme, fill, content} <- [
-            {:light, fill_light, content_light},
-            {:dark, fill_dark, content_dark}
-          ] do
-        ratio = Contrast.ratio(fill, content) || 0.0
+    # The default ink and toned ink on the light surfaces.
+    assert Contrast.ratio(gray[700], gray[50]) >= Contrast.aa()
+    assert Contrast.ratio(gray[600], gray[100]) >= Contrast.aa()
 
-        assert ratio >= Contrast.aa(),
-               "#{role}/#{scheme} content #{content} on #{fill} is #{ratio}:1, below AA"
-      end
-    end
+    # The dark ink tiers on the dark surfaces.
+    assert Contrast.ratio(gray[200], gray[900]) >= Contrast.aa()
+    assert Contrast.ratio(gray[300], gray[800]) >= Contrast.aa()
+
+    # `text-muted` clears AA on the pure surface, the page tint, and the
+    # `surface-subtle` step, but not on the stronger `surface-strong` step.
+    muted = Contrast.mix(gray[500], gray[600], 0.9)
+    assert Contrast.ratio(muted, gray[50]) >= Contrast.aa()
+    assert Contrast.ratio(muted, gray[100]) >= Contrast.aa()
+    assert Contrast.ratio(muted, gray[200]) < Contrast.aa()
+
+    # `dimmed` is intentionally below AA: placeholders and decoration only.
+    assert Contrast.ratio(gray[400], gray[50]) < Contrast.aa()
+    assert Contrast.ratio(gray[500], gray[950]) < Contrast.aa()
   end
 
-  test "solid labels stay light for the roles that prefer white", %{tokens: tokens} do
-    for role <- @light_label_roles do
-      {content_light, content_dark} = resolve(tokens, "#{role}-content")
+  test "solid neutral keeps a high-contrast label in both schemes" do
+    gray = Tailwind.shades(:gray)
+    white = "oklch(100% 0 none)"
 
-      for {scheme, content} <- [{:light, content_light}, {:dark, content_dark}] do
-        luminance = Contrast.luminance(content) || 0.0
-
-        assert luminance >= 0.8,
-               "#{role}/#{scheme} content #{content} is not a light solid label"
-      end
-    end
-  end
-
-  test "every shipped role text clears AA on its soft surface", %{tokens: tokens} do
-    for role <- @roles do
-      {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
-      {text_light, text_dark} = resolve(tokens, "#{role}-text")
-
-      for {scheme, soft, text} <- [
-            {:light, soft_light, text_light},
-            {:dark, soft_dark, text_dark}
-          ] do
-        ratio = Contrast.ratio(text, soft) || 0.0
-
-        assert ratio >= Contrast.aa(),
-               "#{role}/#{scheme} text #{text} on #{soft} is #{ratio}:1, below AA"
-      end
-    end
-  end
-
-  test "the muted alert body clears AA on its tinted surface", %{tokens: tokens} do
-    for role <- @roles do
-      {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
-      {text_light, text_dark} = resolve(tokens, "#{role}-text")
-
-      for {scheme, soft, text} <- [
-            {:light, soft_light, text_light},
-            {:dark, soft_dark, text_dark}
-          ] do
-        body = Contrast.mix(text, soft, 0.88)
-        ratio = Contrast.ratio(body, soft) || 0.0
-
-        assert ratio >= Contrast.aa(),
-               "#{role}/#{scheme} muted body #{body} on #{soft} is #{ratio}:1, below AA"
-      end
-    end
-  end
-
-  test "the muted alert body clears AA on a backgroundless surface", %{tokens: tokens} do
-    for role <- @roles, scheme <- [:light, :dark] do
-      text = eval_token(tokens, "#{role}-text", scheme)
-      surface = eval_token(tokens, "surface", scheme)
-      body = Contrast.mix(text, surface, 0.88)
-      ratio = Contrast.ratio(body, surface) || 0.0
-
-      assert ratio >= Contrast.aa(),
-             "#{role}/#{scheme} muted body #{body} on #{surface} is #{ratio}:1, below AA"
-    end
-  end
-
-  test "soft surfaces stay visible and their border reads against them", %{
-    tokens: tokens
-  } do
-    for role <- @roles do
-      {soft_light, soft_dark} = resolve(tokens, "#{role}-soft")
-      {border_light, border_dark} = resolve(tokens, "#{role}-soft-border")
-
-      for {scheme, soft, border} <- [
-            {:light, soft_light, border_light},
-            {:dark, soft_dark, border_dark}
-          ] do
-        surface = eval_token(tokens, "surface", scheme)
-        soft_ratio = Contrast.ratio(soft, surface) || 0.0
-        border_ratio = Contrast.ratio(border, soft) || 0.0
-
-        assert soft_ratio >= 1.1,
-               "#{role}/#{scheme} soft #{soft} is too close to #{surface}"
-
-        assert border_ratio >= 1.1,
-               "#{role}/#{scheme} border #{border} is too close to #{soft}"
-      end
-    end
-  end
-
-  test "role fills use their accessibility step, and neutral stays inverted", %{
-    tokens: tokens
-  } do
-    for role <- @roles do
-      {fill_light, fill_dark} = resolve(tokens, role)
-      {light, dark} = Map.get(@expected_fill_shades, role, {"600", "600"})
-
-      expected = {
-        eval_token(tokens, "#{role}-#{light}", :light),
-        eval_token(tokens, "#{role}-#{dark}", :dark)
-      }
-
-      assert {fill_light, fill_dark} == expected,
-             "#{role} should resolve its fill to #{inspect({role, light, dark})}, got " <>
-               inspect({fill_light, fill_dark})
-    end
-  end
-
-  test "primary and secondary scales default to the neutral ramp", %{tokens: tokens} do
-    for role <- ~w(primary secondary), shade <- @shades do
-      assert eval_token(tokens, "#{role}-#{shade}", :light) ==
-               eval_token(tokens, "neutral-#{shade}", :light),
-             "#{role}-#{shade} should default to neutral-#{shade}"
-    end
-  end
-
-  test "the contrast reference is conservative against the shipped surfaces", %{
-    tokens: tokens,
-    steps: steps
-  } do
-    # Light mode scores dark role text against the pure surface (white). Dark
-    # mode scores light role text against the lightest tinted step, so the
-    # reference must be at least as light as `surface-strong` in each scheme.
-    assert (Contrast.luminance(Contrast.light_background()) || 0.0) >=
-             (Contrast.luminance(eval_token(tokens, "surface", :light)) || 0.0)
-
-    dark_surface = eval_token(tokens, "surface", :dark)
-    dark_contrast = eval_token(tokens, "neutral-50", :dark)
-    strong_dark = Contrast.mix(dark_contrast, dark_surface, steps.dark * 4)
-
-    assert (Contrast.luminance(Contrast.dark_background()) || 0.0) >=
-             (Contrast.luminance(strong_dark) || 0.0)
-  end
-
-  test "absolute tones stay pinned and readable", %{tokens: tokens} do
-    for {tone, fill, content} <- [
-          {"dark", "neutral-900", "neutral-50"},
-          {"light", "neutral-50", "neutral-900"}
-        ] do
-      {fill_light, fill_dark} = resolve(tokens, tone)
-      assert fill_light == fill_dark
-      assert fill_light == eval_token(tokens, fill, :light)
-
-      {content_light, content_dark} = resolve(tokens, "#{tone}-content")
-      assert content_light == content_dark
-      assert content_light == eval_token(tokens, content, :light)
-      assert (Contrast.ratio(fill_light, content_light) || 0.0) >= Contrast.aa()
-
-      {soft_light, soft_dark} = resolve(tokens, "#{tone}-soft")
-      {text_light, text_dark} = resolve(tokens, "#{tone}-text")
-
-      for {soft, text} <- [{soft_light, text_light}, {soft_dark, text_dark}] do
-        assert (Contrast.ratio(text, soft) || 0.0) >= Contrast.aa()
-      end
-    end
-  end
-
-  defp parse_tokens(css) do
-    ~r/--fl-color-([a-z0-9-]+):\s*([^;]+);/
-    |> Regex.scan(css, capture: :all_but_first)
-    |> Map.new(fn [name, value] -> {name, String.trim(value)} end)
-  end
-
-  # Each scheme carries its own step: the dark anchor needs a larger one to keep
-  # comparable separation against the pure surface.
-  defp parse_surface_steps(css) do
-    %{
-      light: parse_surface_step(css, "--fl-surface-step"),
-      dark: parse_surface_step(css, "--fl-surface-step-dark")
-    }
-  end
-
-  defp parse_surface_step(css, name) do
-    [_, percent] = Regex.run(~r/#{name}:\s*([\d.]+)%/, css)
-    {step, _} = Float.parse(percent)
-    step / 100
-  end
-
-  defp parse_scales(css) do
-    Map.new(@roles, fn role ->
-      values =
-        Map.new(@shades, fn shade ->
-          [_, value] = Regex.run(~r/--fl-color-#{role}-#{shade}:\s*([^;]+);/, css)
-          {shade, String.trim(value)}
-        end)
-
-      {role, values}
-    end)
-  end
-
-  defp resolve(tokens, token) do
-    {eval_token(tokens, token, :light), eval_token(tokens, token, :dark)}
-  end
-
-  defp eval_token(tokens, name, scheme) do
-    eval_expr(tokens, Map.fetch!(tokens, name), scheme)
-  end
-
-  # Evaluates the small color expression subset the tokens use: scale vars,
-  # role aliases, oklch literals, light-dark branches, and a two-stop
-  # color-mix.
-  defp eval_expr(tokens, value, scheme) do
-    value = String.trim(value)
-
-    cond do
-      String.starts_with?(value, "light-dark(") ->
-        [_, inner] = Regex.run(~r/^light-dark\((.*)\)$/s, value)
-        [light, dark] = split_top_level(inner)
-        eval_expr(tokens, if(scheme == :light, do: light, else: dark), scheme)
-
-      String.starts_with?(value, "var(--fl-color-") ->
-        name =
-          value
-          |> String.replace_prefix("var(--fl-color-", "")
-          |> String.trim_trailing(")")
-
-        eval_token(tokens, name, scheme)
-
-      String.starts_with?(value, "color-mix(") ->
-        [_, first, percent, second] =
-          Regex.run(~r/^color-mix\(\s*in oklab,\s*(.+)\s+(\d+(?:\.\d+)?)%,\s*(.+)\)$/s, value)
-
-        {weight, _} = Float.parse(percent)
-        weight = weight / 100
-
-        Contrast.mix(
-          eval_expr(tokens, first, scheme),
-          eval_expr(tokens, second, scheme),
-          weight
-        )
-
-      String.starts_with?(value, "oklch(") ->
-        value
-
-      true ->
-        flunk("unexpected token value in tokens.css: #{inspect(value)}")
-    end
-  end
-
-  # Splits on commas that are not nested inside a function call. `light-dark()`
-  # branches contain `color-mix()` arguments, so a plain split is not enough.
-  defp split_top_level(value) do
-    value
-    |> String.graphemes()
-    |> Enum.reduce({[], [], 0}, fn
-      "(", {parts, current, depth} -> {parts, ["(" | current], depth + 1}
-      ")", {parts, current, depth} -> {parts, [")" | current], depth - 1}
-      ",", {parts, current, 0} -> {[Enum.reverse(current) | parts], [], 0}
-      char, {parts, current, depth} -> {parts, [char | current], depth}
-    end)
-    |> then(fn {parts, current, _depth} -> Enum.reverse([Enum.reverse(current) | parts]) end)
-    |> Enum.map(&(&1 |> Enum.join() |> String.trim()))
+    assert Contrast.ratio(white, gray[900]) >= Contrast.aa()
+    assert Contrast.ratio(gray[800], white) >= Contrast.aa()
   end
 end

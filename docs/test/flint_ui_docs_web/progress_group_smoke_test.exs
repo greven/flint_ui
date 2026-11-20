@@ -132,7 +132,7 @@ defmodule FlintUIDocsWeb.ProgressGroupSmokeTest do
     assert has_element?(
              view,
              "#example-progress-group-custom-colors-preview-code",
-             ~s(color="tw:sky-500")
+             ~s(color="cyan")
            )
   end
 end

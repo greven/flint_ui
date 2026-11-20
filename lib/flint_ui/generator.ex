@@ -51,6 +51,7 @@ defmodule FlintUI.Generator do
   end
 
   @tokens_part "tokens.css"
+  @colors_part "colors.css"
   @base_part "base.css"
   @focus_part "focus.css"
   @aggregate "priv/static/flint.css"
@@ -67,8 +68,12 @@ defmodule FlintUI.Generator do
   primitive stylesheets, then each registered theme preset, then each registered
   component's anatomy stylesheet in registry order, and finally the shared focus
   layer. Entries composed entirely of primitives may omit a component part.
+
+  Palettes come before tokens so the default palette establishes the hue ramps
+  the semantic roles alias.
   """
   def part_paths do
+    palette_parts = Enum.map(FlintUI.Palette.palettes(), & &1.css)
     primitive_parts = Enum.map(Styled.primitives(), & &1.css)
     theme_parts = Enum.map(Theme.themes(), & &1.css)
 
@@ -77,10 +82,9 @@ defmodule FlintUI.Generator do
       |> Enum.map(& &1.css)
       |> Enum.reject(&is_nil/1)
 
-    [
-      @tokens_part,
-      @base_part | primitive_parts ++ theme_parts ++ component_parts ++ [@focus_part]
-    ]
+    (palette_parts ++
+       [@tokens_part, @colors_part, @base_part] ++
+       primitive_parts ++ theme_parts ++ component_parts ++ [@focus_part])
     |> Enum.map(&part_path/1)
   end
 
@@ -151,9 +155,9 @@ defmodule FlintUI.Generator do
       end)
 
     scales =
-      Enum.map_join(@color_roles, "\n", fn role ->
+      Enum.map_join(FlintUI.Palette.hues(), "\n", fn hue ->
         Enum.map_join(@color_shades, "\n", fn shade ->
-          "    --color-#{role}-#{shade}: var(--fl-color-#{role}-#{shade});"
+          "    --color-#{hue}-#{shade}: var(--fl-palette-#{hue}-#{shade});"
         end)
       end)
 
@@ -170,6 +174,7 @@ defmodule FlintUI.Generator do
       /* Chrome surfaces */
       --background-color-default: var(--fl-color-background);
       --background-color-surface: var(--fl-color-surface);
+      --background-color-raised: var(--fl-color-surface-raised);
       --background-color-subtle: var(--fl-color-surface-subtle);
       --background-color-strong: var(--fl-color-surface-strong);
       --background-color-inverted: var(--fl-color-inverted);
@@ -196,7 +201,7 @@ defmodule FlintUI.Generator do
       /* Semantic roles: fill, role text, and the label on the fill */
     #{roles}
 
-      /* Semantic color scales */
+      /* Palette scales. These follow the active palette. */
     #{scales}
 
       --radius: var(--fl-radius);

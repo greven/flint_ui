@@ -93,14 +93,11 @@ defmodule FlintUI.Styled.ButtonTest do
     assert style =~ "--fl-control-text: light-dark("
   end
 
-  test "a tw: palette color omits the data hook and sets the public inputs", %{wrapper: wrapper} do
-    document = colored(wrapper, "tw:rose")
-    style = document |> attr(:button, "style") |> List.first()
+  test "a palette hue keeps the data hook and leaves the style alone", %{wrapper: wrapper} do
+    document = colored(wrapper, "pink")
 
-    assert attr(document, :button, "data-color") == []
-    assert style =~ "--fl-control-color: oklch("
-    assert style =~ "--fl-control-color-content:"
-    assert style =~ "--fl-control-text:"
+    assert attr(document, :button, "data-color") == ["pink"]
+    assert attr(document, :button, "style") == []
   end
 
   test "an explicit style wins over the derived inputs", %{wrapper: wrapper} do

@@ -30,19 +30,33 @@
             document.documentElement.setAttribute("data-theme", preset);
           }
         };
+        const setPalette = (palette) => {
+          if (!palette || palette === "default") {
+            localStorage.removeItem("phx:palette");
+            document.documentElement.removeAttribute("data-palette");
+          } else {
+            localStorage.setItem("phx:palette", palette);
+            document.documentElement.setAttribute("data-palette", palette);
+          }
+        };
         if (!document.documentElement.hasAttribute("data-color-scheme")) {
           setScheme(localStorage.getItem("phx:scheme") || "system");
         }
         if (!document.documentElement.hasAttribute("data-theme")) {
           setPreset(localStorage.getItem("phx:preset") || "default");
         }
+        if (!document.documentElement.hasAttribute("data-palette")) {
+          setPalette(localStorage.getItem("phx:palette") || "default");
+        }
         window.addEventListener("storage", (e) => {
           if (e.key === "phx:scheme") setScheme(e.newValue || "system");
           if (e.key === "phx:preset") setPreset(e.newValue || "default");
+          if (e.key === "phx:palette") setPalette(e.newValue || "default");
         });
 
         window.addEventListener("phx:set-scheme", (e) => setScheme(e.target.dataset.phxScheme));
         window.addEventListener("phx:set-preset", (e) => setPreset(e.target.dataset.phxPreset));
+        window.addEventListener("phx:set-palette", (e) => setPalette(e.target.dataset.phxPalette));
       })();
     </script>
   </head>

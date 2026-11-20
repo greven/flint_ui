@@ -21,7 +21,7 @@
         padding-block: 0;
         border: 1px solid var(--fl-dropdown-border, var(--fl-color-border));
         border-radius: var(--fl-control-radius);
-        background-color: var(--fl-dropdown-surface, var(--fl-color-surface));
+        background-color: var(--fl-color-surface);
         color: var(--fl-dropdown-text, var(--fl-color-text));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-control-font-size-md);
@@ -39,7 +39,7 @@
     }
 
     [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger]:not([data-disabled]):hover {
-        background-color: color-mix(in oklab, var(--fl-dropdown-text, var(--fl-color-text)) 6%, var(--fl-dropdown-surface, var(--fl-color-surface)));
+        background-color: color-mix(in oklab, var(--fl-dropdown-text, var(--fl-color-text)) 6%, var(--fl-color-surface));
     }
 
     [data-element="dropdown"][data-dropdown] > [data-part="trigger"][data-dropdown-trigger][data-state="open"] {
@@ -78,7 +78,7 @@
         padding: 0;
         border: 1px solid var(--fl-dropdown-border, var(--fl-color-border));
         border-radius: var(--fl-radius-lg);
-        background-color: var(--fl-dropdown-surface, var(--fl-color-surface));
+        background-color: var(--fl-dropdown-surface, var(--fl-color-surface-raised));
         color: var(--fl-dropdown-text, var(--fl-color-text));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-sm);
@@ -123,7 +123,7 @@
         background-color: inherit;
         transform: rotate(45deg);
         pointer-events: none;
-        --_fl-dropdown-ring: color-mix(in oklab, var(--fl-dropdown-border, var(--fl-color-border)) 80%, var(--fl-dropdown-surface, var(--fl-color-surface)));
+        --_fl-dropdown-ring: color-mix(in oklab, var(--fl-dropdown-border, var(--fl-color-border)) 80%, var(--fl-dropdown-surface, var(--fl-color-surface-raised)));
     }
 
     [data-part="content"][data-dropdown-content][data-side="top"] [data-part="arrow"] {

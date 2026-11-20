@@ -1,0 +1,440 @@
+/* Color hooks. One selected color, one five-token tone set.
+ *
+ * `data-color` is the base tone; `data-active-color` is the toggled tone.
+ * Components read `--fl-tone*` / `--fl-active-tone*`, so a role and a palette
+ * hue are interchangeable. Raw colors write the same inputs inline, and an
+ * omitted hook (for example `color="inherit"`) lets the parent tone through.
+ */
+
+@layer components {
+    :where([data-color="primary"]) {
+        --fl-tone: var(--fl-color-primary);
+        --fl-tone-content: var(--fl-color-primary-content);
+        --fl-tone-text: var(--fl-color-primary-text);
+        --fl-tone-soft: var(--fl-color-primary-soft);
+        --fl-tone-soft-border: var(--fl-color-primary-soft-border);
+    }
+    
+    :where([data-color="secondary"]) {
+        --fl-tone: var(--fl-color-secondary);
+        --fl-tone-content: var(--fl-color-secondary-content);
+        --fl-tone-text: var(--fl-color-secondary-text);
+        --fl-tone-soft: var(--fl-color-secondary-soft);
+        --fl-tone-soft-border: var(--fl-color-secondary-soft-border);
+    }
+    
+    :where([data-color="neutral"]) {
+        --fl-tone: var(--fl-color-neutral);
+        --fl-tone-content: var(--fl-color-neutral-content);
+        --fl-tone-text: var(--fl-color-neutral-text);
+        --fl-tone-soft: var(--fl-color-neutral-soft);
+        --fl-tone-soft-border: var(--fl-color-neutral-soft-border);
+    }
+    
+    :where([data-color="info"]) {
+        --fl-tone: var(--fl-color-info);
+        --fl-tone-content: var(--fl-color-info-content);
+        --fl-tone-text: var(--fl-color-info-text);
+        --fl-tone-soft: var(--fl-color-info-soft);
+        --fl-tone-soft-border: var(--fl-color-info-soft-border);
+    }
+    
+    :where([data-color="success"]) {
+        --fl-tone: var(--fl-color-success);
+        --fl-tone-content: var(--fl-color-success-content);
+        --fl-tone-text: var(--fl-color-success-text);
+        --fl-tone-soft: var(--fl-color-success-soft);
+        --fl-tone-soft-border: var(--fl-color-success-soft-border);
+    }
+    
+    :where([data-color="warning"]) {
+        --fl-tone: var(--fl-color-warning);
+        --fl-tone-content: var(--fl-color-warning-content);
+        --fl-tone-text: var(--fl-color-warning-text);
+        --fl-tone-soft: var(--fl-color-warning-soft);
+        --fl-tone-soft-border: var(--fl-color-warning-soft-border);
+    }
+    
+    :where([data-color="error"]) {
+        --fl-tone: var(--fl-color-error);
+        --fl-tone-content: var(--fl-color-error-content);
+        --fl-tone-text: var(--fl-color-error-text);
+        --fl-tone-soft: var(--fl-color-error-soft);
+        --fl-tone-soft-border: var(--fl-color-error-soft-border);
+    }
+    
+    :where([data-color="dark"]) {
+        --fl-tone: var(--fl-color-dark);
+        --fl-tone-content: var(--fl-color-dark-content);
+        --fl-tone-text: var(--fl-color-dark-text);
+        --fl-tone-soft: var(--fl-color-dark-soft);
+        --fl-tone-soft-border: var(--fl-color-dark-soft-border);
+    }
+    
+    :where([data-color="light"]) {
+        --fl-tone: var(--fl-color-light);
+        --fl-tone-content: var(--fl-color-light-content);
+        --fl-tone-text: var(--fl-color-light-text);
+        --fl-tone-soft: var(--fl-color-light-soft);
+        --fl-tone-soft-border: var(--fl-color-light-soft-border);
+    }
+    :where([data-color="red"]) {
+        --fl-tone: var(--fl-palette-red);
+        --fl-tone-content: var(--fl-palette-red-content);
+        --fl-tone-text: var(--fl-palette-red-text);
+        --fl-tone-soft: var(--fl-palette-red-soft);
+        --fl-tone-soft-border: var(--fl-palette-red-soft-border);
+    }
+    
+    :where([data-color="orange"]) {
+        --fl-tone: var(--fl-palette-orange);
+        --fl-tone-content: var(--fl-palette-orange-content);
+        --fl-tone-text: var(--fl-palette-orange-text);
+        --fl-tone-soft: var(--fl-palette-orange-soft);
+        --fl-tone-soft-border: var(--fl-palette-orange-soft-border);
+    }
+    
+    :where([data-color="amber"]) {
+        --fl-tone: var(--fl-palette-amber);
+        --fl-tone-content: var(--fl-palette-amber-content);
+        --fl-tone-text: var(--fl-palette-amber-text);
+        --fl-tone-soft: var(--fl-palette-amber-soft);
+        --fl-tone-soft-border: var(--fl-palette-amber-soft-border);
+    }
+    
+    :where([data-color="yellow"]) {
+        --fl-tone: var(--fl-palette-yellow);
+        --fl-tone-content: var(--fl-palette-yellow-content);
+        --fl-tone-text: var(--fl-palette-yellow-text);
+        --fl-tone-soft: var(--fl-palette-yellow-soft);
+        --fl-tone-soft-border: var(--fl-palette-yellow-soft-border);
+    }
+    
+    :where([data-color="lime"]) {
+        --fl-tone: var(--fl-palette-lime);
+        --fl-tone-content: var(--fl-palette-lime-content);
+        --fl-tone-text: var(--fl-palette-lime-text);
+        --fl-tone-soft: var(--fl-palette-lime-soft);
+        --fl-tone-soft-border: var(--fl-palette-lime-soft-border);
+    }
+    
+    :where([data-color="green"]) {
+        --fl-tone: var(--fl-palette-green);
+        --fl-tone-content: var(--fl-palette-green-content);
+        --fl-tone-text: var(--fl-palette-green-text);
+        --fl-tone-soft: var(--fl-palette-green-soft);
+        --fl-tone-soft-border: var(--fl-palette-green-soft-border);
+    }
+    
+    :where([data-color="emerald"]) {
+        --fl-tone: var(--fl-palette-emerald);
+        --fl-tone-content: var(--fl-palette-emerald-content);
+        --fl-tone-text: var(--fl-palette-emerald-text);
+        --fl-tone-soft: var(--fl-palette-emerald-soft);
+        --fl-tone-soft-border: var(--fl-palette-emerald-soft-border);
+    }
+    
+    :where([data-color="teal"]) {
+        --fl-tone: var(--fl-palette-teal);
+        --fl-tone-content: var(--fl-palette-teal-content);
+        --fl-tone-text: var(--fl-palette-teal-text);
+        --fl-tone-soft: var(--fl-palette-teal-soft);
+        --fl-tone-soft-border: var(--fl-palette-teal-soft-border);
+    }
+    
+    :where([data-color="cyan"]) {
+        --fl-tone: var(--fl-palette-cyan);
+        --fl-tone-content: var(--fl-palette-cyan-content);
+        --fl-tone-text: var(--fl-palette-cyan-text);
+        --fl-tone-soft: var(--fl-palette-cyan-soft);
+        --fl-tone-soft-border: var(--fl-palette-cyan-soft-border);
+    }
+    
+    :where([data-color="sky"]) {
+        --fl-tone: var(--fl-palette-sky);
+        --fl-tone-content: var(--fl-palette-sky-content);
+        --fl-tone-text: var(--fl-palette-sky-text);
+        --fl-tone-soft: var(--fl-palette-sky-soft);
+        --fl-tone-soft-border: var(--fl-palette-sky-soft-border);
+    }
+    
+    :where([data-color="blue"]) {
+        --fl-tone: var(--fl-palette-blue);
+        --fl-tone-content: var(--fl-palette-blue-content);
+        --fl-tone-text: var(--fl-palette-blue-text);
+        --fl-tone-soft: var(--fl-palette-blue-soft);
+        --fl-tone-soft-border: var(--fl-palette-blue-soft-border);
+    }
+    
+    :where([data-color="indigo"]) {
+        --fl-tone: var(--fl-palette-indigo);
+        --fl-tone-content: var(--fl-palette-indigo-content);
+        --fl-tone-text: var(--fl-palette-indigo-text);
+        --fl-tone-soft: var(--fl-palette-indigo-soft);
+        --fl-tone-soft-border: var(--fl-palette-indigo-soft-border);
+    }
+    
+    :where([data-color="violet"]) {
+        --fl-tone: var(--fl-palette-violet);
+        --fl-tone-content: var(--fl-palette-violet-content);
+        --fl-tone-text: var(--fl-palette-violet-text);
+        --fl-tone-soft: var(--fl-palette-violet-soft);
+        --fl-tone-soft-border: var(--fl-palette-violet-soft-border);
+    }
+    
+    :where([data-color="purple"]) {
+        --fl-tone: var(--fl-palette-purple);
+        --fl-tone-content: var(--fl-palette-purple-content);
+        --fl-tone-text: var(--fl-palette-purple-text);
+        --fl-tone-soft: var(--fl-palette-purple-soft);
+        --fl-tone-soft-border: var(--fl-palette-purple-soft-border);
+    }
+    
+    :where([data-color="fuchsia"]) {
+        --fl-tone: var(--fl-palette-fuchsia);
+        --fl-tone-content: var(--fl-palette-fuchsia-content);
+        --fl-tone-text: var(--fl-palette-fuchsia-text);
+        --fl-tone-soft: var(--fl-palette-fuchsia-soft);
+        --fl-tone-soft-border: var(--fl-palette-fuchsia-soft-border);
+    }
+    
+    :where([data-color="pink"]) {
+        --fl-tone: var(--fl-palette-pink);
+        --fl-tone-content: var(--fl-palette-pink-content);
+        --fl-tone-text: var(--fl-palette-pink-text);
+        --fl-tone-soft: var(--fl-palette-pink-soft);
+        --fl-tone-soft-border: var(--fl-palette-pink-soft-border);
+    }
+    
+    :where([data-color="rose"]) {
+        --fl-tone: var(--fl-palette-rose);
+        --fl-tone-content: var(--fl-palette-rose-content);
+        --fl-tone-text: var(--fl-palette-rose-text);
+        --fl-tone-soft: var(--fl-palette-rose-soft);
+        --fl-tone-soft-border: var(--fl-palette-rose-soft-border);
+    }
+    
+    :where([data-color="gray"]) {
+        --fl-tone: var(--fl-palette-gray);
+        --fl-tone-content: var(--fl-palette-gray-content);
+        --fl-tone-text: var(--fl-palette-gray-text);
+        --fl-tone-soft: var(--fl-palette-gray-soft);
+        --fl-tone-soft-border: var(--fl-palette-gray-soft-border);
+    }
+
+    :where([data-active-color="primary"]) {
+        --fl-active-tone: var(--fl-palette-primary);
+        --fl-active-tone-content: var(--fl-palette-primary-content);
+        --fl-active-tone-text: var(--fl-palette-primary-text);
+        --fl-active-tone-soft: var(--fl-palette-primary-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-primary-soft-border);
+    }
+    
+    :where([data-active-color="secondary"]) {
+        --fl-active-tone: var(--fl-palette-secondary);
+        --fl-active-tone-content: var(--fl-palette-secondary-content);
+        --fl-active-tone-text: var(--fl-palette-secondary-text);
+        --fl-active-tone-soft: var(--fl-palette-secondary-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-secondary-soft-border);
+    }
+    
+    :where([data-active-color="neutral"]) {
+        --fl-active-tone: var(--fl-palette-neutral);
+        --fl-active-tone-content: var(--fl-palette-neutral-content);
+        --fl-active-tone-text: var(--fl-palette-neutral-text);
+        --fl-active-tone-soft: var(--fl-palette-neutral-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-neutral-soft-border);
+    }
+    
+    :where([data-active-color="info"]) {
+        --fl-active-tone: var(--fl-palette-info);
+        --fl-active-tone-content: var(--fl-palette-info-content);
+        --fl-active-tone-text: var(--fl-palette-info-text);
+        --fl-active-tone-soft: var(--fl-palette-info-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-info-soft-border);
+    }
+    
+    :where([data-active-color="success"]) {
+        --fl-active-tone: var(--fl-palette-success);
+        --fl-active-tone-content: var(--fl-palette-success-content);
+        --fl-active-tone-text: var(--fl-palette-success-text);
+        --fl-active-tone-soft: var(--fl-palette-success-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-success-soft-border);
+    }
+    
+    :where([data-active-color="warning"]) {
+        --fl-active-tone: var(--fl-palette-warning);
+        --fl-active-tone-content: var(--fl-palette-warning-content);
+        --fl-active-tone-text: var(--fl-palette-warning-text);
+        --fl-active-tone-soft: var(--fl-palette-warning-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-warning-soft-border);
+    }
+    
+    :where([data-active-color="error"]) {
+        --fl-active-tone: var(--fl-palette-error);
+        --fl-active-tone-content: var(--fl-palette-error-content);
+        --fl-active-tone-text: var(--fl-palette-error-text);
+        --fl-active-tone-soft: var(--fl-palette-error-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-error-soft-border);
+    }
+    
+    :where([data-active-color="dark"]) {
+        --fl-active-tone: var(--fl-palette-dark);
+        --fl-active-tone-content: var(--fl-palette-dark-content);
+        --fl-active-tone-text: var(--fl-palette-dark-text);
+        --fl-active-tone-soft: var(--fl-palette-dark-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-dark-soft-border);
+    }
+    
+    :where([data-active-color="light"]) {
+        --fl-active-tone: var(--fl-palette-light);
+        --fl-active-tone-content: var(--fl-palette-light-content);
+        --fl-active-tone-text: var(--fl-palette-light-text);
+        --fl-active-tone-soft: var(--fl-palette-light-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-light-soft-border);
+    }
+    
+    :where([data-active-color="red"]) {
+        --fl-active-tone: var(--fl-palette-red);
+        --fl-active-tone-content: var(--fl-palette-red-content);
+        --fl-active-tone-text: var(--fl-palette-red-text);
+        --fl-active-tone-soft: var(--fl-palette-red-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-red-soft-border);
+    }
+    
+    :where([data-active-color="orange"]) {
+        --fl-active-tone: var(--fl-palette-orange);
+        --fl-active-tone-content: var(--fl-palette-orange-content);
+        --fl-active-tone-text: var(--fl-palette-orange-text);
+        --fl-active-tone-soft: var(--fl-palette-orange-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-orange-soft-border);
+    }
+    
+    :where([data-active-color="amber"]) {
+        --fl-active-tone: var(--fl-palette-amber);
+        --fl-active-tone-content: var(--fl-palette-amber-content);
+        --fl-active-tone-text: var(--fl-palette-amber-text);
+        --fl-active-tone-soft: var(--fl-palette-amber-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-amber-soft-border);
+    }
+    
+    :where([data-active-color="yellow"]) {
+        --fl-active-tone: var(--fl-palette-yellow);
+        --fl-active-tone-content: var(--fl-palette-yellow-content);
+        --fl-active-tone-text: var(--fl-palette-yellow-text);
+        --fl-active-tone-soft: var(--fl-palette-yellow-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-yellow-soft-border);
+    }
+    
+    :where([data-active-color="lime"]) {
+        --fl-active-tone: var(--fl-palette-lime);
+        --fl-active-tone-content: var(--fl-palette-lime-content);
+        --fl-active-tone-text: var(--fl-palette-lime-text);
+        --fl-active-tone-soft: var(--fl-palette-lime-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-lime-soft-border);
+    }
+    
+    :where([data-active-color="green"]) {
+        --fl-active-tone: var(--fl-palette-green);
+        --fl-active-tone-content: var(--fl-palette-green-content);
+        --fl-active-tone-text: var(--fl-palette-green-text);
+        --fl-active-tone-soft: var(--fl-palette-green-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-green-soft-border);
+    }
+    
+    :where([data-active-color="emerald"]) {
+        --fl-active-tone: var(--fl-palette-emerald);
+        --fl-active-tone-content: var(--fl-palette-emerald-content);
+        --fl-active-tone-text: var(--fl-palette-emerald-text);
+        --fl-active-tone-soft: var(--fl-palette-emerald-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-emerald-soft-border);
+    }
+    
+    :where([data-active-color="teal"]) {
+        --fl-active-tone: var(--fl-palette-teal);
+        --fl-active-tone-content: var(--fl-palette-teal-content);
+        --fl-active-tone-text: var(--fl-palette-teal-text);
+        --fl-active-tone-soft: var(--fl-palette-teal-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-teal-soft-border);
+    }
+    
+    :where([data-active-color="cyan"]) {
+        --fl-active-tone: var(--fl-palette-cyan);
+        --fl-active-tone-content: var(--fl-palette-cyan-content);
+        --fl-active-tone-text: var(--fl-palette-cyan-text);
+        --fl-active-tone-soft: var(--fl-palette-cyan-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-cyan-soft-border);
+    }
+    
+    :where([data-active-color="sky"]) {
+        --fl-active-tone: var(--fl-palette-sky);
+        --fl-active-tone-content: var(--fl-palette-sky-content);
+        --fl-active-tone-text: var(--fl-palette-sky-text);
+        --fl-active-tone-soft: var(--fl-palette-sky-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-sky-soft-border);
+    }
+    
+    :where([data-active-color="blue"]) {
+        --fl-active-tone: var(--fl-palette-blue);
+        --fl-active-tone-content: var(--fl-palette-blue-content);
+        --fl-active-tone-text: var(--fl-palette-blue-text);
+        --fl-active-tone-soft: var(--fl-palette-blue-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-blue-soft-border);
+    }
+    
+    :where([data-active-color="indigo"]) {
+        --fl-active-tone: var(--fl-palette-indigo);
+        --fl-active-tone-content: var(--fl-palette-indigo-content);
+        --fl-active-tone-text: var(--fl-palette-indigo-text);
+        --fl-active-tone-soft: var(--fl-palette-indigo-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-indigo-soft-border);
+    }
+    
+    :where([data-active-color="violet"]) {
+        --fl-active-tone: var(--fl-palette-violet);
+        --fl-active-tone-content: var(--fl-palette-violet-content);
+        --fl-active-tone-text: var(--fl-palette-violet-text);
+        --fl-active-tone-soft: var(--fl-palette-violet-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-violet-soft-border);
+    }
+    
+    :where([data-active-color="purple"]) {
+        --fl-active-tone: var(--fl-palette-purple);
+        --fl-active-tone-content: var(--fl-palette-purple-content);
+        --fl-active-tone-text: var(--fl-palette-purple-text);
+        --fl-active-tone-soft: var(--fl-palette-purple-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-purple-soft-border);
+    }
+    
+    :where([data-active-color="fuchsia"]) {
+        --fl-active-tone: var(--fl-palette-fuchsia);
+        --fl-active-tone-content: var(--fl-palette-fuchsia-content);
+        --fl-active-tone-text: var(--fl-palette-fuchsia-text);
+        --fl-active-tone-soft: var(--fl-palette-fuchsia-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-fuchsia-soft-border);
+    }
+    
+    :where([data-active-color="pink"]) {
+        --fl-active-tone: var(--fl-palette-pink);
+        --fl-active-tone-content: var(--fl-palette-pink-content);
+        --fl-active-tone-text: var(--fl-palette-pink-text);
+        --fl-active-tone-soft: var(--fl-palette-pink-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-pink-soft-border);
+    }
+    
+    :where([data-active-color="rose"]) {
+        --fl-active-tone: var(--fl-palette-rose);
+        --fl-active-tone-content: var(--fl-palette-rose-content);
+        --fl-active-tone-text: var(--fl-palette-rose-text);
+        --fl-active-tone-soft: var(--fl-palette-rose-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-rose-soft-border);
+    }
+    
+    :where([data-active-color="gray"]) {
+        --fl-active-tone: var(--fl-palette-gray);
+        --fl-active-tone-content: var(--fl-palette-gray-content);
+        --fl-active-tone-text: var(--fl-palette-gray-text);
+        --fl-active-tone-soft: var(--fl-palette-gray-soft);
+        --fl-active-tone-soft-border: var(--fl-palette-gray-soft-border);
+    }
+}

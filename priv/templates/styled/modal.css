@@ -50,6 +50,8 @@
     /* The nested card is the surface. It fills the shell, keeps the header and
      * footer fixed, and scrolls the body. */
     [data-element="modal"] [data-element="card"] {
+        --fl-card-surface: var(--fl-color-surface-raised);
+
         flex: 1 1 auto;
         min-height: 0;
     }

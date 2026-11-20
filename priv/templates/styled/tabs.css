@@ -10,8 +10,8 @@
      * descendant combinators.
      */
     [data-element="tabs"][data-tabs] {
-        --fl-tabs-color: var(--fl-color-inverted);
-        --fl-tabs-text: var(--fl-color-text);
+        --fl-tabs-color: var(--fl-tone, var(--fl-color-inverted));
+        --fl-tabs-text: var(--fl-tone-text, var(--fl-color-text));
         --fl-tabs-surface: var(--fl-color-surface);
 
         display: flex;
@@ -215,49 +215,6 @@
         color: var(--fl-tabs-text);
     }
 
-    /* Each color sets the public inputs. Neutral uses the text hierarchy
-     * and the inverted accent above. */
-    [data-element="tabs"][data-color="primary"] {
-        --fl-tabs-color: var(--fl-color-primary);
-        --fl-tabs-text: var(--fl-color-primary-text);
-    }
-
-    [data-element="tabs"][data-color="secondary"] {
-        --fl-tabs-color: var(--fl-color-secondary);
-        --fl-tabs-text: var(--fl-color-secondary-text);
-    }
-
-    [data-element="tabs"][data-color="success"] {
-        --fl-tabs-color: var(--fl-color-success);
-        --fl-tabs-text: var(--fl-color-success-text);
-    }
-
-    [data-element="tabs"][data-color="info"] {
-        --fl-tabs-color: var(--fl-color-info);
-        --fl-tabs-text: var(--fl-color-info-text);
-    }
-
-    [data-element="tabs"][data-color="warning"] {
-        --fl-tabs-color: var(--fl-color-warning);
-        --fl-tabs-text: var(--fl-color-warning-text);
-    }
-
-    [data-element="tabs"][data-color="error"] {
-        --fl-tabs-color: var(--fl-color-error);
-        --fl-tabs-text: var(--fl-color-error-text);
-    }
-
-    /* Absolute tones stay dark/light in either scheme. */
-    [data-element="tabs"][data-color="dark"] {
-        --fl-tabs-color: var(--fl-color-dark);
-        --fl-tabs-text: var(--fl-color-dark-text);
-    }
-
-    [data-element="tabs"][data-color="light"] {
-        --fl-tabs-color: var(--fl-color-light);
-        --fl-tabs-text: var(--fl-color-light-text);
-    }
-
     /* Sizes drive the default trigger metrics. */
     [data-element="tabs"][data-size="xs"] > [data-part="tablist"] > [data-part="tab"][data-tabs-tab] {
         height: var(--fl-control-height-xs);
@@ -366,4 +323,10 @@
             scroll-behavior: auto;
         }
     }
+    /* The neutral tabs keep the page ink rather than the role's stronger
+     * neutral text token. */
+    [data-element="tabs"][data-color="neutral"] {
+        --fl-tabs-text: var(--fl-color-text);
+    }
+
 }

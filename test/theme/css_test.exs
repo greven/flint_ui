@@ -7,48 +7,50 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "defines prefixed tokens with automatic light/dark", %{css: css} do
     assert css =~ "color-scheme: light dark;"
-    assert css =~ "--fl-color-primary: var(--fl-color-primary-600);"
-    assert css =~ "--fl-color-primary-content: light-dark("
-    assert css =~ "--fl-color-primary-600: var(--fl-color-neutral-600);"
+    assert css =~ "--fl-color-primary: var(--fl-color-neutral);"
+    assert css =~ "--fl-color-primary-content: var(--fl-color-neutral-content);"
+    assert css =~ "--fl-palette-gray-600:"
     assert css =~ "--fl-color-neutral: light-dark("
     assert css =~ "--fl-radius:"
     assert css =~ "--fl-radius-md:"
     assert css =~ "--fl-font-sans:"
   end
 
-  test "defines a 50..950 scale and three jobs per semantic role", %{css: css} do
-    for role <- ~w(primary secondary neutral success info warning error) do
-      assert css =~ "--fl-color-#{role}-50:"
-      assert css =~ "--fl-color-#{role}-950:"
-      assert css =~ "--fl-color-#{role}:"
-      assert css =~ "--fl-color-#{role}-content: light-dark("
-      assert css =~ "--fl-color-#{role}-text: light-dark("
-      assert css =~ "--fl-color-#{role}-soft: light-dark("
-      assert css =~ "--fl-color-#{role}-soft-border: color-mix("
-      refute css =~ "--fl-color-#{role}-foreground"
-      refute css =~ "--fl-color-#{role}-soft-foreground"
+  test "defines eighteen palette hues and role aliases instead of role scales", %{css: css} do
+    for hue <- FlintUI.Palette.hue_names() do
+      assert css =~ "--fl-palette-#{hue}-50:"
+      assert css =~ "--fl-palette-#{hue}-950:"
+      assert css =~ "--fl-palette-#{hue}:"
+      assert css =~ ~s|:where([data-color="#{hue}"])|
     end
 
-    # Primary and secondary ship the neutral ramp until a theme brands them.
-    for role <- ~w(primary secondary), shade <- ~w(50 100 200 300 400 500 600 700 800 900 950) do
-      assert css =~ "--fl-color-#{role}-#{shade}: var(--fl-color-neutral-#{shade});"
+    for role <- ~w(primary secondary neutral success info warning error dark light) do
+      assert css =~ "--fl-color-#{role}:"
+      assert css =~ "--fl-color-#{role}-content:"
+      assert css =~ "--fl-color-#{role}-text:"
+      assert css =~ "--fl-color-#{role}-soft:"
+      assert css =~ "--fl-color-#{role}-soft-border:"
     end
+
+    assert css =~ "--fl-color-secondary: var(--fl-palette-gray);"
+    assert css =~ "--fl-color-success: var(--fl-palette-green);"
+    assert css =~ "--fl-color-warning: var(--fl-palette-amber);"
+    assert css =~ "--fl-color-error: var(--fl-palette-red);"
+    assert css =~ "--fl-color-info: var(--fl-palette-blue);"
+    refute css =~ "--fl-color-primary-50:"
+    refute css =~ "--fl-color-error-950:"
   end
 
-  test "defines absolute tones and maps them on every color component", %{css: css} do
-    assert css =~ "--fl-color-dark: var(--fl-color-neutral-900);"
-    assert css =~ "--fl-color-light: var(--fl-color-neutral-50);"
-    assert css =~ "--fl-color-dark-content: var(--fl-color-neutral-50);"
-    assert css =~ "--fl-color-light-content: var(--fl-color-neutral-900);"
+  test "defines absolute tones and maps them through the shared hook", %{css: css} do
+    assert css =~ "--fl-color-dark: var(--fl-palette-gray-900);"
+    assert css =~ "--fl-color-light: var(--fl-palette-gray-50);"
+    assert css =~ "--fl-color-dark-content: var(--fl-palette-gray-50);"
+    assert css =~ "--fl-color-light-content: var(--fl-palette-gray-900);"
     assert css =~ "--fl-color-dark-text: light-dark("
     assert css =~ "--fl-color-light-text: light-dark("
 
     for tone <- ~w(dark light) do
-      assert css =~ ~s([data-control][data-color="#{tone}"])
-
-      for element <- ~w(badge tabs loading loading_text checkbox radio) do
-        assert css =~ ~s([data-element="#{element}"][data-color="#{tone}"])
-      end
+      assert css =~ ~s|:where([data-color="#{tone}"])|
     end
   end
 
@@ -64,6 +66,7 @@ defmodule FlintUI.Theme.CSSTest do
           surface
           surface-subtle
           surface-strong
+          surface-raised
           inverted
           border
           border-subtle
@@ -86,8 +89,17 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "--fl-color-border-accented"
     assert css =~ "--fl-disabled-opacity: 0.5;"
 
+    assert css =~ "--fl-surface-ink: light-dark("
+    assert css =~ "--fl-color-surface-raised: light-dark("
+
     assert css =~
-             ~r/--fl-color-border-subtle: light-dark\(\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-200\) 50%,\s*var\(--fl-color-surface\)\s*\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-900\) 50%,\s*var\(--fl-color-neutral-800\)\s*\)\s*\)/
+             ~r/--fl-color-border-subtle: color-mix\(in oklab, var\(--fl-surface-ink\) 7%, var\(--fl-color-surface\)\)/
+
+    assert css =~
+             ~r/--fl-color-border: color-mix\(in oklab, var\(--fl-surface-ink\) 10%, var\(--fl-color-surface\)\)/
+
+    assert css =~
+             ~r/--fl-color-border-strong: color-mix\(in oklab, var\(--fl-surface-ink\) 18%, var\(--fl-color-surface\)\)/
   end
 
   test "solid controls darken their fill for the border", %{css: css} do
@@ -98,48 +110,47 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "var(--fl-border-strength-solid)"
   end
 
-  test "the pure surface anchors the page and the tint steps", %{css: css} do
-    assert css =~ "--fl-surface-step: 1.75%;"
-    assert css =~ "--fl-surface-step-dark: 2.5%;"
+  test "the surface anchors the page and the fill ladder stays below the edges", %{css: css} do
+    assert css =~
+             "--fl-surface-ink: light-dark(var(--fl-palette-gray-950), var(--fl-palette-gray-50));"
+
+    assert css =~ "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-palette-gray-900));"
 
     assert css =~
-             "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-neutral-950));"
+             "--fl-color-background: light-dark(var(--fl-palette-gray-50), var(--fl-palette-gray-950));"
 
-    # Each rung tints the pure surface toward the opposite neutral extreme, one
-    # branch per scheme. The dark branch reads its own step so both ladders keep
-    # comparable separation against their anchor.
-    for {name, light, dark} <- [
-          {"background", "var(--fl-surface-step)", "var(--fl-surface-step-dark)"},
-          {"surface-subtle", "calc(var(--fl-surface-step) * 2)",
-           "calc(var(--fl-surface-step-dark) * 2)"},
-          {"surface-strong", "calc(var(--fl-surface-step) * 4)",
-           "calc(var(--fl-surface-step-dark) * 4)"}
+    for {name, percent} <- [
+          {"surface-subtle", "3%"},
+          {"surface-strong", "5.5%"},
+          {"border-subtle", "7%"},
+          {"border", "10%"},
+          {"border-strong", "18%"}
         ] do
-      light = Regex.escape(light)
-      dark = Regex.escape(dark)
-
       assert css =~
-               ~r/--fl-color-#{name}: light-dark\(\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-950\)\s*#{light},\s*var\(--fl-color-surface\)\s*\),\s*color-mix\(\s*in oklab,\s*var\(--fl-color-neutral-50\)\s*#{dark},\s*var\(--fl-color-surface\)\s*\)\s*\)/
+               ~r/--fl-color-#{name}: color-mix\(in oklab, var\(--fl-surface-ink\) #{percent}, var\(--fl-color-surface\)\)/
     end
 
+    assert css =~ "--fl-color-surface-raised: light-dark("
+
+    refute css =~ "--fl-surface-step"
     refute css =~ "--fl-color-control:"
   end
 
   test "text tiers are softened neutrals that clear AA where used", %{css: css} do
     assert css =~
-             ~r/--fl-color-text-highlighted: light-dark\(\s*var\(--fl-color-neutral-900\),\s*oklch\(1 0 0\)\s*\)/
+             ~r/--fl-color-text-highlighted: light-dark\(\s*var\(--fl-palette-gray-900\),\s*oklch\(1 0 0\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-text: light-dark\(\s*var\(--fl-color-neutral-700\),\s*var\(--fl-color-neutral-200\)\s*\)/
+             ~r/--fl-color-text: light-dark\(\s*var\(--fl-palette-gray-700\),\s*var\(--fl-palette-gray-200\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-text-toned: light-dark\(\s*var\(--fl-color-neutral-600\),\s*var\(--fl-color-neutral-300\)\s*\)/
+             ~r/--fl-color-text-toned: light-dark\(\s*var\(--fl-palette-gray-600\),\s*var\(--fl-palette-gray-300\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-text-inverted: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-color-neutral-800\)\s*\)/
+             ~r/--fl-color-text-inverted: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-palette-gray-800\)\s*\)/
 
     neutral = fn shade ->
-      [_, value] = Regex.run(~r/--fl-color-neutral-#{shade}: ([^;]+);/, css)
+      [_, value] = Regex.run(~r/--fl-palette-gray-#{shade}: ([^;]+);/, css)
       value
     end
 
@@ -183,18 +194,24 @@ defmodule FlintUI.Theme.CSSTest do
     assert FlintUI.Palette.Contrast.ratio(neutral.(800), white) >= 4.5
   end
 
-  test "role content and text map to the three jobs", %{css: css} do
+  test "role content and text map to the shared tone contract", %{css: css} do
     for role <- ~w(primary secondary success info warning error) do
-      assert css =~ "--fl-control-color-content: var(--fl-color-#{role}-content);"
-      assert css =~ "--fl-control-text: var(--fl-color-#{role}-text);"
+      assert css =~ ~s|:where([data-color="#{role}"])|
+      assert css =~ "--fl-tone: var(--fl-color-#{role});"
+      assert css =~ "--fl-tone-content: var(--fl-color-#{role}-content);"
+      assert css =~ "--fl-tone-text: var(--fl-color-#{role}-text);"
     end
 
     refute css =~ "-soft-foreground"
 
-    # Neutral keeps the inverted label on the fill; text-carrying controls tone
-    # their own neutral label in their anatomy.
-    assert css =~ "--fl-control-color: var(--fl-color-inverted);"
-    assert css =~ "--fl-control-color-content: var(--fl-color-text-inverted);"
+    # Controls read the shared tone with their own fallbacks, so a raw color
+    # can write the same public inputs inline.
+    assert css =~ "--fl-control-color: var(--fl-tone, var(--fl-color-inverted));"
+
+    assert css =~
+             "--fl-control-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));"
+
+    assert css =~ "--fl-control-text: var(--fl-tone-text, var(--fl-control-color));"
 
     assert css =~
              ~r/\[data-element="toggle"\]\[data-toggle\]\[data-color="neutral"\] \{[^}]*--fl-control-text: var\(--fl-color-text-toned\);/
@@ -208,52 +225,27 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-control\]\[data-active-color="neutral"\] \{[^}]*--fl-control-active-text: var\(--fl-color-text-highlighted\);/
   end
 
-  test "role text clears AA on surface and tinted surfaces", %{css: css} do
-    alias FlintUI.Palette.{Contrast, Tailwind}
+  test "palette fills and text shades clear AA where used" do
+    alias FlintUI.Palette
+    alias FlintUI.Palette.Contrast
 
-    neutral = fn shade ->
-      [_, value] = Regex.run(~r/--fl-color-neutral-#{shade}: ([^;]+);/, css)
-      value
-    end
+    for hue <- Palette.hues() do
+      shades = FlintUI.Palette.default().module.shades(hue)
+      core = Map.fetch!(shades, Palette.core_shade(hue))
+      content = Map.fetch!(shades, 50)
+      light_text = Map.fetch!(shades, 800)
+      dark_text = Map.fetch!(shades, 300)
 
-    white = "oklch(100% 0 none)"
-    dark_surface = neutral.(900)
+      assert Contrast.ratio(core, content) >= 4.5 or
+               Contrast.ratio(core, "oklch(100% 0 0)") >= 4.5 or
+               Contrast.ratio(core, "oklch(0% 0 0)") >= 4.5,
+             "#{hue} needs a readable label on its core fill"
 
-    # The docs palette: fill shade, AA text shade in light, AA text shade in dark.
-    roles = [
-      {"primary", :red, 600, 700, 400},
-      {"secondary", :gray, 600, 600, 400},
-      {"success", :emerald, 700, 800, 500},
-      {"info", :blue, 600, 700, 400},
-      {"warning", :amber, 400, 800, 400},
-      {"error", :red, 600, 700, 400}
-    ]
+      assert Contrast.ratio(light_text, Map.fetch!(shades, 50)) >= 4.5,
+             "#{hue}-800 should read on the light page"
 
-    for {role, color, fill_shade, light_text_shade, dark_text_shade} <- roles do
-      shades = Tailwind.shades(color)
-      fill = Map.fetch!(shades, fill_shade)
-      light_text = Map.fetch!(shades, light_text_shade)
-      dark_text = Map.fetch!(shades, dark_text_shade)
-
-      for {surface, background} <- [
-            {"light surface", white},
-            {"light tint", Contrast.mix(fill, white, 0.25)}
-          ] do
-        ratio = Contrast.ratio(light_text, background)
-
-        assert ratio >= 4.5,
-               "#{role} light text on #{surface}: #{Float.round(ratio, 2)}"
-      end
-
-      for {surface, background} <- [
-            {"dark surface", dark_surface},
-            {"dark tint", Contrast.mix(fill, dark_surface, 0.18)}
-          ] do
-        ratio = Contrast.ratio(dark_text, background)
-
-        assert ratio >= 4.5,
-               "#{role} dark text on #{surface}: #{Float.round(ratio, 2)}"
-      end
+      assert Contrast.ratio(dark_text, Map.fetch!(shades, 900)) >= 4.5,
+             "#{hue}-300 should read on the dark surface"
     end
   end
 
@@ -330,7 +322,7 @@ defmodule FlintUI.Theme.CSSTest do
   test "the typography primitive owns the shared text hooks", %{css: css} do
     assert css =~ "[data-typography]"
     assert css =~ ~s([data-typography][data-size="6xl"])
-    assert css =~ ~s([data-typography][data-color="primary"])
+    assert css =~ ~s|:where([data-color="primary"])|
 
     for weight <- ~w(thin extralight light normal medium semibold bold extrabold black) do
       assert css =~ ~s([data-typography][data-weight="#{weight}"])
@@ -397,7 +389,7 @@ defmodule FlintUI.Theme.CSSTest do
 
     assert css =~ ~s([data-element="toggle"][data-toggle][data-color="neutral"])
     assert css =~ ~s([data-control][data-state="on"][data-active-variant="soft"])
-    assert css =~ ~s([data-control][data-active-color="primary"])
+    assert css =~ ~s|:where([data-active-color="primary"])|
     assert css =~ ~s([data-element="loading"][data-size])
     assert css =~ ~s([data-element="loading_text"][data-variant="dots"])
     assert css =~ ~s([data-element="loading_text"][data-variant="blink"])
@@ -408,7 +400,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="collapsible"][data-collapsible])
     assert css =~ ~s([data-element="tabs"][data-variant="segmented"])
     assert css =~ ~s([data-element="tabs"][data-variant="minimal"])
-    assert css =~ ~s([data-element="tabs"][data-color="primary"])
+    assert css =~ ~s|:where([data-color="primary"])|
     assert css =~ ~s([data-element="tabs"][data-size="lg"])
     assert css =~ ~s([data-element="tabs"][data-grow])
     assert css =~ ~s([data-element="tabs"][data-justify="center"])
@@ -438,8 +430,8 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              ~r/\[data-element="tabs"\]\[data-tabs\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]/
 
-    assert css =~ "--fl-tabs-color: var(--fl-color-inverted);"
-    assert css =~ "--fl-tabs-text: var(--fl-color-text);"
+    assert css =~ "--fl-tabs-color: var(--fl-tone, var(--fl-color-inverted));"
+    assert css =~ "--fl-tabs-text: var(--fl-tone-text, var(--fl-color-text));"
     assert css =~ "--fl-tabs-surface: var(--fl-color-surface);"
     assert css =~ "--fl-tabs-gap"
     assert css =~ "--fl-tabs-content-gap"
@@ -485,7 +477,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-color-surface:"
 
     assert css =~
-             "--fl-color-border: light-dark(var(--fl-color-neutral-200), var(--fl-color-neutral-800));"
+             ~r/--fl-color-border: color-mix\(in oklab, var\(--fl-surface-ink\) 10%, var\(--fl-color-surface\)\)/
 
     # Chromatic borders are opaque and share the soft strength across subtle and
     # surface.
@@ -565,7 +557,7 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="surface"\] \{[^}]*border-color: var\(--fl-control-active-soft-border, var\(--fl-control-soft-border\)\)/
 
     assert css =~
-             "--fl-control-soft-border: var(--fl-color-neutral-soft-border);"
+             ~r/--fl-control-soft-border: var\(\s*--fl-tone-soft-border,/
 
     assert css =~ "--fl-control-active-soft-border: color-mix("
     assert css =~ "var(--fl-control-active-color, var(--fl-control-color)) 32%"
@@ -614,7 +606,7 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "--fl-button-surface"
     refute css =~ "--fl-toggle-surface"
 
-    assert css =~ "--fl-control-color: var(--fl-color-primary);"
+    assert css =~ "--fl-control-color: var(--fl-tone, var(--fl-color-inverted));"
     assert css =~ "--fl-focus-ring-color: var(--fl-color-primary);"
     refute css =~ "--fl-focus-ring-color: var(--fl-control-color"
 

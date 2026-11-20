@@ -1,26 +1,160 @@
 defmodule FlintUI.Palette do
   @moduledoc """
-  Behaviour for a named color palette that can be imported into theme tokens.
+  The registry and behaviour for color palettes.
 
-  A palette exposes a list of color names and, for each color, a shade map. The
-  built-in `FlintUI.Palette.Tailwind` is the first implementation; other sources
-  (OpenColors, Radix, …) can implement the same behaviour and feed
-  `FlintUI.Palette.CSS.render/2`.
+  A palette is the lowest color layer: it answers "what is pink?" without
+  knowing what pink means. Every palette defines the same eighteen hues, each
+  with the `50..950` shades, so a component can use `color="pink"` against any
+  palette. Themes and semantic roles sit above this layer: they decide which
+  hue a role points at, never what a hue looks like.
 
-  FlintUI ships no raw palette variables in the default theme. A palette source
-  is mapped onto the semantic `--fl-color-{role}-{shade}` scales and role
-  aliases; the source's color names never become CSS variables.
+  The eighteen hues are portable across palettes. The default palette mirrors
+  the Tailwind CSS v4 colors, with `gray` sourced from Tailwind's neutral ramp
+  so the chrome starts achromatic; override the `--fl-palette-gray-*`
+  variables to use a warmer or cooler neutral.
+
+  Applications can add a hue name with `config :flint_ui, extra_hues: [:brand]`.
+  The app supplies that hue's palette block and tone hooks; `FlintUI.Styled.Color`
+  accepts the configured names.
+
+  A palette source implements this behaviour and feeds
+  `FlintUI.Palette.CSS.render_palette/2`. The rendered CSS is shipped as a
+  plain stylesheet under `priv/templates/palettes/`. Selecting a palette is a
+  document-level choice (`data-palette` on `<html>`), like `data-theme`.
   """
 
   @shade_keys [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
-  @doc "The ordered shade keys a palette is expected to provide."
+  @hues [
+    :red,
+    :orange,
+    :amber,
+    :yellow,
+    :lime,
+    :green,
+    :emerald,
+    :teal,
+    :cyan,
+    :sky,
+    :blue,
+    :indigo,
+    :violet,
+    :purple,
+    :fuchsia,
+    :pink,
+    :rose,
+    :gray
+  ]
+
+  @reserved [
+    :primary,
+    :secondary,
+    :neutral,
+    :info,
+    :success,
+    :warning,
+    :error,
+    :inherit,
+    :dark,
+    :light
+  ]
+
+  @palettes [
+    %{name: :tailwind, css: "palettes/tailwind.css", module: __MODULE__.Tailwind, default: true},
+    %{name: :natural, css: "palettes/natural.css", module: __MODULE__.Natural},
+    %{name: :bright, css: "palettes/bright.css", module: __MODULE__.Bright},
+    %{name: :mono, css: "palettes/mono.css", module: __MODULE__.Mono}
+  ]
+
+  @doc "The ordered shade keys every palette provides."
   def shade_keys, do: @shade_keys
+
+  @doc "The ordered hue names every palette provides."
+  def hues, do: @hues
+
+  @doc "The hue names as strings, for prop validation and docs."
+  def hue_names, do: Enum.map(@hues, &Atom.to_string/1)
+
+  @doc """
+  Returns the app-configured extra hue names.
+
+  Set `config :flint_ui, extra_hues: [:brand]` to make `color="brand"` a valid
+  hook. The app supplies the palette block and tone hooks. Reserved role names
+  are ignored.
+  """
+  def extra_hues do
+    :flint_ui
+    |> Application.get_env(:extra_hues, [])
+    |> List.wrap()
+    |> Enum.map(&normalize_hue/1)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.reject(&(&1 in @reserved))
+    |> Enum.uniq()
+    |> Kernel.--(@hues)
+  end
+
+  @doc "The app-configured extra hue names as strings."
+  def extra_hue_names, do: Enum.map(extra_hues(), &Atom.to_string/1)
+
+  @doc "Every accepted hue name: the canonical palette plus app extras."
+  def known_hue_names, do: hue_names() ++ extra_hue_names()
+
+  @doc """
+  Returns every shipped palette.
+
+  Each entry has `:name`, `:css` (relative to `priv/templates`), `:module` (the
+  palette source), and `:default` (true for the `:root` baseline).
+  """
+  def palettes, do: @palettes
+
+  @doc "Returns the names of the shipped palettes."
+  def names, do: Enum.map(@palettes, & &1.name)
+
+  @doc "Returns the default palette entry."
+  def default, do: Enum.find(@palettes, & &1.default)
+
+  @doc "Returns the palette entry with the given name, or `nil`."
+  def get(name) when is_atom(name), do: Enum.find(@palettes, &(&1.name == name))
+  def get(_name), do: nil
+
+  @doc """
+  Returns the selectable palettes, default first.
+
+  `:default` has no attribute: it is the `:root` palette, so selecting it means
+  clearing `data-palette` on `<html>`.
+  """
+  def presets, do: [:default | names()]
 
   @doc false
   def build(values) when is_list(values) do
     @shade_keys |> Enum.zip(values) |> Map.new()
   end
+
+  @doc """
+  The shade a hue resolves to for its core fill.
+
+  Light chromatic hues use a darker core so a light label clears AA; amber-like
+  hues stay bright and take a dark label. A palette can override these choices
+  by wrapping its source, but the defaults keep `color="<hue>"` visually
+  consistent across palettes.
+  """
+  def core_shade(:orange), do: 600
+  def core_shade(:amber), do: 500
+  def core_shade(:yellow), do: 500
+  def core_shade(:green), do: 700
+  def core_shade(:emerald), do: 700
+  def core_shade(:teal), do: 700
+  def core_shade(:cyan), do: 700
+  def core_shade(:sky), do: 700
+  def core_shade(_hue), do: 600
+
+  defp normalize_hue(hue) when is_atom(hue), do: normalize_hue(Atom.to_string(hue))
+
+  defp normalize_hue(hue) when is_binary(hue) do
+    if Regex.match?(~r/^[a-z][a-z0-9-]*$/, hue), do: String.to_atom(hue)
+  end
+
+  defp normalize_hue(_hue), do: nil
 
   @callback name() :: atom()
   @callback colors() :: [atom()]

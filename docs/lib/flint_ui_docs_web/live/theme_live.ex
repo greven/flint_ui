@@ -12,7 +12,9 @@ defmodule FlintUIDocsWeb.ThemeLive do
      assign(socket,
        page_title: "Theming",
        token_groups: token_groups(),
-       themes: FlintUI.Theme.presets() ++ [:brand]
+       themes: FlintUI.Theme.presets() ++ [:brand],
+       palettes: FlintUI.Palette.presets(),
+       hues: FlintUI.Palette.hue_names()
      )}
   end
 
@@ -57,13 +59,43 @@ defmodule FlintUIDocsWeb.ThemeLive do
             <code class="docs-code font-mono">data-theme</code>
             on the <code class="docs-code font-mono">&lt;html&gt;</code>
             element; a preset only overrides tokens, so it composes with the
-            light/dark scheme. <strong>default</strong>
+            light/dark scheme and the selected palette. <strong>default</strong>
             has no stylesheet — it is the base <code class="docs-code font-mono">:root</code>
             theme — so selecting it clears <code class="docs-code font-mono">data-theme</code>.
             Pick one to preview it on this page:
           </DocsComponents.content_paragraph>
           <Layouts.theme_preset_picker themes={@themes} class="mt-3" />
           <DocsComponents.code_block code={snippet(:presets)} lang={:css} />
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Palettes" id="palettes">
+          <DocsComponents.content_paragraph class="mt-3">
+            A palette is the color spectrum: eighteen hues, each with a
+            <code class="docs-code font-mono">50..950</code>
+            scale. It answers <em>what is pink?</em>
+            without deciding what pink means.
+            The default palette mirrors Tailwind; every other palette retunes the
+            same eighteen hue names, so <code class="docs-code font-mono">color="pink"</code>
+            follows whichever palette is active.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            Select one with <code class="docs-code font-mono">data-palette</code>
+            on the <code class="docs-code font-mono">&lt;html&gt;</code>
+            element. Palettes compose with themes and schemes: any theme, any
+            palette, either scheme. Clearing the attribute selects the default.
+          </DocsComponents.content_paragraph>
+          <Layouts.palette_picker palettes={@palettes} class="mt-3" />
+          <div class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+            <div
+              :for={hue <- @hues}
+              class="overflow-hidden rounded-lg border border-default"
+            >
+              <div class="h-8" style={"background: var(--fl-palette-#{hue});"} />
+              <div class="h-3" style={"background: var(--fl-palette-#{hue}-soft);"} />
+              <p class="px-2 py-1.5 font-mono text-xs">{hue}</p>
+            </div>
+          </div>
+          <DocsComponents.code_block code={snippet(:palettes)} lang={:css} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Tokens" id="tokens">
@@ -157,36 +189,39 @@ defmodule FlintUIDocsWeb.ThemeLive do
         <DocsComponents.section title="Surfaces" id="surfaces">
           <DocsComponents.content_paragraph class="mt-3">
             <code class="docs-code font-mono">surface</code>
-            is the pure anchor — white in light, <code class="docs-code font-mono">neutral-950</code>
-            in dark. The page and the other surface steps are tints of it toward
-            the opposite neutral extreme. <code class="docs-code font-mono">--fl-surface-step</code>
-            is one tint step: <code class="docs-code font-mono">background</code>
-            is the page (one step), <code class="docs-code font-mono">surface-subtle</code>
-            is a faint panel (two steps), and <code class="docs-code font-mono">surface-strong</code>
-            is the strong panel (four steps). The step is per scheme:
-            <code class="docs-code font-mono">--fl-surface-step</code>
-            defaults to 1.75% (a 1.75/3.5/7% ladder) and
-            <code class="docs-code font-mono">--fl-surface-step-dark</code>
-            to 2.5% (2.5/5/10%). Dark takes the larger step because the same oklab
-            step buys less contrast separation against a near-black anchor, and a
-            dark elevation has no drop shadow to fall back on. Raising either step
-            strengthens every surface in that scheme together. The same
-            tint order holds in both schemes, so the page is never pure and a card
-            is never the page color. Chrome fills and edges name the amount of tint
-            (<code class="docs-code font-mono">subtle</code>, default, <code class="docs-code font-mono">strong</code>),
-            because every rung sits above the pure anchor; ink alone names loudness,
-            which is why <code class="docs-code font-mono">muted</code>
-            is reserved for <code class="docs-code font-mono">text-muted</code>. Bordered controls paint <code class="docs-code font-mono">surface</code>, an opaque fill
-            that matches the card, so attached-group seams stay single and the
-            border ladder reads the same over every control. Disabled controls dim with
-            <code class="docs-code font-mono">--fl-disabled-opacity</code>
-            instead of swapping in dedicated fills.
+            is the anchor: white in light and <code class="docs-code font-mono">gray-900</code>
+            in dark. The page sits one step away from it,
+            <code class="docs-code font-mono">gray-50</code>
+            in light and <code class="docs-code font-mono">gray-950</code>
+            in dark, so a card is lighter than the page in both schemes.
           </DocsComponents.content_paragraph>
-          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <DocsComponents.content_paragraph class="mt-3">
+            Tonal fills are a tint of <code class="docs-code font-mono">--fl-surface-ink</code>
+            over the surface: <code class="docs-code font-mono">surface-subtle</code>
+            at 3% and <code class="docs-code font-mono">surface-strong</code>
+            at 5.5%. <code class="docs-code font-mono">surface-raised</code>
+            lifts overlays above a card. It equals the surface in light, where
+            white is already the top, and adds one step in dark.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            The chrome ladder is ordered: subtle (3%) &lt; strong (5.5%) &lt;
+            border-subtle (7%) &lt; border (10%) &lt; border-strong (18%).
+            That keeps a divider above the fill it bounds in both schemes.
+            Disabled controls dim with <code class="docs-code font-mono">--fl-disabled-opacity</code>
+            instead of a dedicated fill.
+          </DocsComponents.content_paragraph>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Components.card :for={variant <- ~w(solid soft strong)} variant={variant}>
               <:title>{variant}</:title>
               <p class="text-sm text-toned">Body</p>
             </Components.card>
+            <div
+              class="rounded-xl border border-default p-4"
+              style="background: var(--fl-color-surface-raised);"
+            >
+              <p class="font-semibold">raised</p>
+              <p class="mt-1 text-sm text-toned">Overlays</p>
+            </div>
           </div>
           <div class="mt-3 flex flex-wrap items-center gap-3">
             <Components.button variant="subtle" disabled>Disabled subtle</Components.button>
@@ -199,23 +234,23 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
         <DocsComponents.section title="Borders" id="borders">
           <DocsComponents.content_paragraph class="mt-3">
-            Borders follow the same amount ladder as surfaces.
+            All three edges are a tint of the same
+            <code class="docs-code font-mono">--fl-surface-ink</code>
+            over <code class="docs-code font-mono">surface</code>:
+            <code class="docs-code font-mono">border-subtle</code>
+            at 7%, <code class="docs-code font-mono">border</code>
+            at 10%, and <code class="docs-code font-mono">border-strong</code>
+            at 18%. Because fills stop at 5.5%, an edge never sinks into the
+            panel it bounds, in either scheme.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
             <code class="docs-code font-mono">border-subtle</code>
             is the quiet edge for dividers and soft fills,
             <code class="docs-code font-mono">border</code>
             is the default edge, and <code class="docs-code font-mono">border-strong</code>
-            is the heavier edge for inputs, hover targets, and emphasis. Each
-            edge is a neutral-ramp step — <code class="docs-code font-mono">surface</code>
-            → <code class="docs-code font-mono">neutral-200</code>
-            → <code class="docs-code font-mono">neutral-300</code>
-            in light, <code class="docs-code font-mono">neutral-900</code>
-            → <code class="docs-code font-mono">neutral-800</code>
-            → <code class="docs-code font-mono">neutral-700</code>
-            in dark — with a halfway
-            mix for the rungs the 100-step ramp leaves out, so retinting the
-            neutral ramp retints the borders. The boxes below keep a transparent
-            fill so only the edge shows, and use a 2px width so the steps are
-            easy to compare.
+            is the heavier edge for inputs, hover targets, and emphasis.
+            The boxes below keep a transparent fill so only the edge shows, and
+            use a 2px width so the steps are easy to compare.
           </DocsComponents.content_paragraph>
           <div class="mt-4 grid gap-3 sm:grid-cols-3">
             <div
@@ -241,7 +276,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.content_paragraph class="mt-3">
             The default ink is a softened neutral —
             <code class="docs-code font-mono">neutral-700</code>
-            in light, <code class="docs-code font-mono">neutral-200</code>
+            in light, <code class="docs-code font-mono">gray-200</code>
             in dark — rather than near-black or white.
             <code class="docs-code font-mono">text-highlighted</code>
             is the strongest tier for headings and strong labels;
@@ -288,57 +323,39 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:text)} lang={:css} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="Color scales" id="colors">
+        <DocsComponents.section title="Color roles" id="colors">
           <DocsComponents.content_paragraph class="mt-3">
-            Every semantic role ships a full <code class="docs-code font-mono">50..950</code>
-            scale. Components read the role fill
-            (<code class="docs-code font-mono">--fl-color-primary</code>), which resolves a
-            shade per scheme, so the same button looks right in light and dark
-            without a second override. <code class="docs-code font-mono">primary</code>
-            and <code class="docs-code font-mono">secondary</code>
-            ship the neutral ramp by default, so a fresh theme assumes no brand
-            hue; override the role or its scale to opt in. Chromatic fills start
-            at the <code class="docs-code font-mono">600</code>
-            step and step to <code class="docs-code font-mono">700</code>
-            when that is what a near-white solid label needs; warning is the
-            exception and stays at <code class="docs-code font-mono">600</code>
-            with a dark label so amber does not turn brown. Labels are always
-            contrast-picked against the resolved fill. Each role has three core
-            jobs: <code class="docs-code font-mono">-primary</code>
-            is the fill, <code class="docs-code font-mono">-primary-content</code>
-            is the label on that
-            fill, and <code class="docs-code font-mono">-primary-text</code>
-            is the role as text on a neutral surface. It also owns
-            <code class="docs-code font-mono">-primary-soft</code>
-            and <code class="docs-code font-mono">-primary-soft-border</code>
-            for tinted and bordered variants. Tinted fills composite at
-            <code class="docs-code font-mono">--fl-tint-opacity</code>
-            (90%) so the surface below shows through; the
-            <code class="docs-code font-mono">-soft</code>
-            token carries extra strength so the rendered fill still reads
-            against the surface. Override the role in your app stylesheet after
-            the theme import:
+            Semantic roles alias palette hues. A role owns no scale; it points at
+            one hue's five-token tone set: the fill
+            (<code class="docs-code font-mono">-primary</code>), the label on that
+            fill (<code class="docs-code font-mono">-primary-content</code>), the
+            role as text on a neutral surface
+            (<code class="docs-code font-mono">-primary-text</code>), and the tint
+            pair (<code class="docs-code font-mono">-primary-soft</code>, <code class="docs-code font-mono">-primary-soft-border</code>).
           </DocsComponents.content_paragraph>
-          <DocsComponents.code_block code={snippet(:brand_css)} lang={:css} />
           <DocsComponents.content_paragraph class="mt-3">
-            Solid controls use <code class="docs-code font-mono">-content</code>. Tinted,
-            surface, outline, ghost, and link variants all use the regular
-            <code class="docs-code font-mono">-text</code>
-            token, which is contrast-picked
-            for AA. Set <code class="docs-code font-mono">-text</code>
-            alongside the fill
-            when you retint a role by hand; if the chosen label on the fill is
-            unusual, set <code class="docs-code font-mono">-content</code>
-            too.
+            <strong>primary</strong>
+            is the brand slot. Unbranded, it follows the
+            neutral ink, so a fresh app is monochrome until a theme maps primary to
+            a hue. <strong>secondary</strong>
+            follows the palette's gray; <strong>info</strong>
+            blue; <strong>success</strong>
+            green; <strong>warning</strong>
+            amber; and <strong>error</strong>
+            red. A
+            palette switch changes what those hues look like; a role override
+            changes which hue a role points at.
           </DocsComponents.content_paragraph>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button
-              :for={role <- ~w(info success warning error primary secondary)}
+              :for={role <- ~w(info success warning error secondary)}
               variant="surface"
               color={role}
             >
               {role}
             </Components.button>
+            <Components.button variant="surface" color="cyan">cyan</Components.button>
+            <Components.button variant="surface" color="pink">pink</Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:colors)} lang={:css} />
         </DocsComponents.section>
@@ -354,7 +371,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
             on any <code class="docs-code font-mono">color</code>
             attribute. They are not semantic
             roles: they have no scale and are not offered in the component examples or
-            pickers. They alias the neutral extremes, so retinting the neutral ramp
+            pickers. They alias the palette gray extremes, so retinting the neutral ramp
             retints them too, and a theme can override the fill and label pair directly.
           </DocsComponents.content_paragraph>
           <div class="mt-4 flex flex-wrap items-center gap-3">
@@ -442,31 +459,46 @@ defmodule FlintUIDocsWeb.ThemeLive do
           </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
-        <DocsComponents.section title="Ad-hoc palette colors" id="palette-colors">
+        <DocsComponents.section title="Palette hues" id="palette-colors">
           <DocsComponents.content_paragraph class="mt-3">
-            For a one-off color, the <code class="docs-code font-mono">color</code>
-            attribute also accepts a <code class="docs-code font-mono">tw:</code>
-            prefix that names a color from the bundled Tailwind palette.
-            <code class="docs-code font-mono">tw:rose</code>
-            is <code class="docs-code font-mono">rose-500</code>;
-            <code class="docs-code font-mono">tw:rose-700</code>
-            picks an explicit shade. The palette is vendored as data, so it works
-            without Tailwind, and FlintUI still derives an accessible label and text
-            color for the fill.
+            The <code class="docs-code font-mono">color</code>
+            attribute also accepts any of the eighteen palette hues.
+            <code class="docs-code font-mono">color="pink"</code>
+            uses the active palette's core pink; the prop names a hue, not a
+            shade. A specific shade is a CSS escape hatch — set the tone set
+            (<code class="docs-code font-mono">--fl-tone</code>
+            and its companions)
+            or remap the hue in your app stylesheet.
           </DocsComponents.content_paragraph>
           <DocsComponents.content_paragraph class="mt-3">
-            This is an escape hatch, not a role: its fill is static, so it does not follow
-            presets, <code class="docs-code font-mono">data-color-scheme</code> remapping, or a theme
-            override (the derived label and text stay readable in both schemes). Use it
-            for decoration, data-driven accents, and one-off examples. For anything
-            app-wide, map a role instead (see <a href="#palette" class="docs-link">Full color scales</a>).
+            A hue is not a role: it does not follow role remaps, but it does follow
+            the palette and the light/dark scheme. Use it for decoration,
+            data-driven accents, and one-off examples. For anything app-wide, map
+            a role instead (see <a href="#palette" class="docs-link">Remapping a hue</a>).
           </DocsComponents.content_paragraph>
           <div class="mt-4 flex flex-wrap items-center gap-3">
-            <Components.button color="tw:rose">Rose</Components.button>
-            <Components.button color="tw:rose-700">Rose 700</Components.button>
-            <Components.button variant="solid" color="tw:emerald-600">Emerald</Components.button>
+            <Components.button color="rose">Rose</Components.button>
+            <Components.button color="emerald">Emerald</Components.button>
+            <Components.button variant="solid" color="sky">Sky</Components.button>
           </div>
           <DocsComponents.code_block code={snippet(:palette_colors)} />
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Custom hues" id="custom-hues">
+          <DocsComponents.content_paragraph class="mt-3">
+            Add an app-specific hue name in config, then generate its ramp:
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:custom_hues_config)} />
+          <DocsComponents.code_block code={snippet(:custom_hues)} lang={:sh} />
+          <DocsComponents.content_paragraph class="mt-3">
+            The generated file contains the eleven shades, the five derived
+            tokens, and the base and active hooks. Import it after <code class="docs-code font-mono">flint.css</code>, then
+            <code class="docs-code font-mono">color="brand"</code>
+            works like any shipped hue. Use
+            <code class="docs-code font-mono">--from tailwind:rose</code>
+            to copy an existing ramp instead of seeding one.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:custom_hues_use)} lang={:heex} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Light and dark" id="light-dark">
@@ -491,36 +523,29 @@ defmodule FlintUIDocsWeb.ThemeLive do
           <DocsComponents.code_block code={snippet(:custom)} lang={:css} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="Full color scales" id="palette">
+        <DocsComponents.section title="Remapping a hue" id="palette">
           <DocsComponents.content_paragraph class="mt-3">
-            The CSS overrides above are enough for most apps. For a complete
-            <code class="docs-code font-mono">50..950</code>
-            scale, map the role shades to
-            a palette you already have. With Tailwind, point them at the
-            <code class="docs-code font-mono">--color-*</code>
-            variables in <code class="docs-code font-mono">app.css</code>:
+            Each palette hue is eleven shade variables plus five derived tokens.
+            The derived tokens reference the ramp, so remapping the eleven shades
+            updates the fill, label, text, and tinted treatments together. This is
+            the quickest way to make a shipped hue match your brand — for example,
+            remap <code class="docs-code font-mono">rose</code>
+            to a <code class="docs-code font-mono">brand</code>
+            scale.
           </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:palette_css)} lang={:css} />
           <DocsComponents.content_paragraph class="mt-3">
-            Without Tailwind, paste the same shape with the literal colors. The
-            role scale is the only color contract — the source palette names
-            never become CSS variables. Override any token in
-            <code class="docs-code font-mono">app.css</code>
-            after the theme import. The default <code class="docs-code font-mono">-content</code>
-            and <code class="docs-code font-mono">-text</code>
-            picks assume the shipped scales, so re-check them when you replace a
-            scale: their shade refs follow the new scale, but the chosen shade
-            may no longer be the accessible one. The <code class="docs-code font-mono">-soft</code>
-            and <code class="docs-code font-mono">-soft-border</code>
-            pair blends the role fill with the surface, so it follows a remapped
-            scale automatically. The docs app re-checks its cyan primary in <code class="docs-code font-mono">app.css</code>.
-          </DocsComponents.content_paragraph>
-          <DocsComponents.content_paragraph class="mt-3">
-            Neutral is the page and surface ladder, so remapping it is the quickest
-            way to change the whole chrome. The page, controls, surfaces, borders
-            and default text follow; the role scales stay independent:
+            The palette's <code class="docs-code font-mono">gray</code>
+            hue drives the whole chrome: page, cards, text tiers, borders, and the
+            secondary role. Remap it to warm or cool every surface at once.
           </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={snippet(:neutral_palette)} lang={:css} />
+          <DocsComponents.content_paragraph class="mt-3">
+            For a role change, point the role's five tokens at another palette hue
+            instead. That keeps the semantic name and lets a palette switch retint
+            the brand.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:brand_css)} lang={:css} />
         </DocsComponents.section>
 
         <DocsComponents.section title="Tailwind (optional)" id="tailwind">
@@ -547,15 +572,18 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     :root {
       color-scheme: light dark;
-      --fl-color-primary-600: oklch(0.439 0 0);
-      --fl-color-primary: var(--fl-color-primary-600);
-      --fl-color-primary-content: light-dark(
-        var(--fl-color-primary-50),
-        var(--fl-color-primary-50)
-      );
+
+      /* A palette hue owns its scale and tone set. */
+      --fl-palette-pink-600: oklch(59.2% 0.249 0.584);
+      --fl-palette-pink: var(--fl-palette-pink-600);
+      --fl-palette-pink-content: oklch(100% 0 0);
+
+      /* A semantic role aliases a hue. */
+      --fl-color-primary: var(--fl-palette-pink);
+      --fl-color-primary-content: var(--fl-palette-pink-content);
       --fl-color-primary-text: light-dark(
-        var(--fl-color-primary-600),
-        var(--fl-color-primary-400)
+        var(--fl-palette-pink-800),
+        var(--fl-palette-pink-300)
       );
     }
     """
@@ -564,48 +592,30 @@ defmodule FlintUIDocsWeb.ThemeLive do
   defp snippet(:surfaces) do
     """
     :root {
-      --fl-surface-step: 1.75%;
-      --fl-surface-step-dark: 2.5%;
+      --fl-surface-ink: light-dark(
+        var(--fl-palette-gray-950),
+        var(--fl-palette-gray-50)
+      );
 
-      --fl-color-surface: light-dark(
-        white,
-        var(--fl-color-neutral-950)
-      );
+      --fl-color-surface: light-dark(white, var(--fl-palette-gray-900));
       --fl-color-background: light-dark(
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-950) var(--fl-surface-step),
-          var(--fl-color-surface)
-        ),
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-50) var(--fl-surface-step-dark),
-          var(--fl-color-surface)
-        )
+        var(--fl-palette-gray-50),
+        var(--fl-palette-gray-950)
       );
-      --fl-color-surface-subtle: light-dark(
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-950) calc(var(--fl-surface-step) * 2),
-          var(--fl-color-surface)
-        ),
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-50) calc(var(--fl-surface-step-dark) * 2),
-          var(--fl-color-surface)
-        )
+
+      --fl-color-surface-subtle: color-mix(
+        in oklab,
+        var(--fl-surface-ink) 3%,
+        var(--fl-color-surface)
       );
-      --fl-color-surface-strong: light-dark(
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-950) calc(var(--fl-surface-step) * 4),
-          var(--fl-color-surface)
-        ),
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-50) calc(var(--fl-surface-step-dark) * 4),
-          var(--fl-color-surface)
-        )
+      --fl-color-surface-strong: color-mix(
+        in oklab,
+        var(--fl-surface-ink) 5.5%,
+        var(--fl-color-surface)
+      );
+      --fl-color-surface-raised: light-dark(
+        white,
+        color-mix(in oklab, var(--fl-surface-ink) 5%, var(--fl-color-surface))
       );
 
       --fl-disabled-opacity: 0.5;
@@ -616,29 +626,20 @@ defmodule FlintUIDocsWeb.ThemeLive do
   defp snippet(:borders) do
     """
     :root {
-      --fl-color-border: light-dark(
-        var(--fl-color-neutral-200),
-        var(--fl-color-neutral-800)
+      --fl-color-border-subtle: color-mix(
+        in oklab,
+        var(--fl-surface-ink) 7%,
+        var(--fl-color-surface)
       );
-      --fl-color-border-subtle: light-dark(
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-200) 50%,
-          var(--fl-color-surface)
-        ),
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-900) 50%,
-          var(--fl-color-neutral-800)
-        )
+      --fl-color-border: color-mix(
+        in oklab,
+        var(--fl-surface-ink) 10%,
+        var(--fl-color-surface)
       );
-      --fl-color-border-strong: light-dark(
-        var(--fl-color-neutral-300),
-        color-mix(
-          in oklab,
-          var(--fl-color-neutral-700) 50%,
-          var(--fl-color-neutral-800)
-        )
+      --fl-color-border-strong: color-mix(
+        in oklab,
+        var(--fl-surface-ink) 18%,
+        var(--fl-color-surface)
       );
     }
     """
@@ -648,28 +649,28 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     :root {
       --fl-color-text-highlighted: light-dark(
-        var(--fl-color-neutral-900),
+        var(--fl-palette-gray-900),
         white
       );
       --fl-color-text: light-dark(
-        var(--fl-color-neutral-700),
-        var(--fl-color-neutral-200)
+        var(--fl-palette-gray-700),
+        var(--fl-palette-gray-200)
       );
       --fl-color-text-toned: light-dark(
-        var(--fl-color-neutral-600),
-        var(--fl-color-neutral-300)
+        var(--fl-palette-gray-600),
+        var(--fl-palette-gray-300)
       );
       --fl-color-text-muted: light-dark(
         color-mix(
           in oklab,
-          var(--fl-color-neutral-500) 90%,
-          var(--fl-color-neutral-600)
+          var(--fl-palette-gray-500) 90%,
+          var(--fl-palette-gray-600)
         ),
-        var(--fl-color-neutral-400)
+        var(--fl-palette-gray-400)
       );
       --fl-color-text-dimmed: light-dark(
-        var(--fl-color-neutral-400),
-        var(--fl-color-neutral-500)
+        var(--fl-palette-gray-400),
+        var(--fl-palette-gray-500)
       );
     }
     """
@@ -677,38 +678,42 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   defp snippet(:colors) do
     """
-    /* Each role owns a 50..950 ramp. Primary and secondary ship the neutral
-     * ramp until a theme brands them. */
-    --fl-color-primary-50: var(--fl-color-neutral-50);
-    --fl-color-primary-600: var(--fl-color-neutral-600);
-    --fl-color-primary-950: var(--fl-color-neutral-950);
+    /* A role aliases one palette hue's five-token tone set. Primary is the
+     * brand slot; unbranded, it follows the neutral ink. */
+    --fl-color-primary: var(--fl-color-neutral);
+    --fl-color-primary-content: var(--fl-color-neutral-content);
+    --fl-color-primary-text: var(--fl-color-neutral-text);
+    --fl-color-primary-soft: var(--fl-color-neutral-soft);
+    --fl-color-primary-soft-border: var(--fl-color-neutral-soft-border);
 
-    /* ... and three core jobs: fill, label on the fill, and text on the page.
-     * Fills start at 600 and the labels are contrast-picked against them. */
-    --fl-color-primary: var(--fl-color-primary-600);
-    --fl-color-primary-content: light-dark(
-      var(--fl-color-primary-50),
-      var(--fl-color-primary-50)
-    );
-    --fl-color-primary-text: light-dark(
-      var(--fl-color-primary-600),
-      var(--fl-color-primary-400)
-    );
+    /* The other roles point at palette hues. */
+    --fl-color-secondary: var(--fl-palette-gray);
+    --fl-color-info: var(--fl-palette-blue);
+    --fl-color-success: var(--fl-palette-green);
+    --fl-color-warning: var(--fl-palette-amber);
+    --fl-color-error: var(--fl-palette-red);
 
-    /* The tint pair blends the role fill with the surface, so light and dark
-     * roles stay equally visible without matching the solid fill's opacity.
-     * Components composite it at --fl-tint-opacity; the token carries a little
-     * extra strength to keep the rendered fill visible. */
-    --fl-tint-opacity: 0.9;
-    --fl-color-primary-soft: light-dark(
-      color-mix(in oklab, var(--fl-color-primary) 8%, var(--fl-color-surface)),
-      color-mix(in oklab, var(--fl-color-primary) 20%, var(--fl-color-surface))
+    /* A hue owns the fill, label, text, and tint pair. */
+    --fl-palette-pink: var(--fl-palette-pink-600);
+    --fl-palette-pink-content: oklch(100% 0 0);
+    --fl-palette-pink-text: light-dark(
+      var(--fl-palette-pink-800),
+      var(--fl-palette-pink-300)
     );
-    --fl-color-primary-soft-border: color-mix(
-      in oklab,
-      var(--fl-color-primary) 50%,
-      var(--fl-color-surface)
+    --fl-palette-pink-soft: light-dark(
+      color-mix(in oklab, var(--fl-palette-pink) 12%, var(--fl-color-surface)),
+      color-mix(in oklab, var(--fl-palette-pink) 18%, var(--fl-color-surface))
     );
+    """
+  end
+
+  defp snippet(:palettes) do
+    """
+    <!-- Pick a palette; clear the attribute for the default. -->
+    <html data-palette="natural">
+
+    <!-- Palettes, themes, and schemes compose. -->
+    <html data-theme="modern" data-palette="bright" data-color-scheme="dark">
     """
   end
 
@@ -717,23 +722,23 @@ defmodule FlintUIDocsWeb.ThemeLive do
     /* Absolute tones do not follow the color scheme. They alias the neutral
      * extremes, so retinting the neutral ramp retints them too. A theme can
      * override the fill and label pair directly. */
-    --fl-color-dark: var(--fl-color-neutral-900);
-    --fl-color-dark-content: var(--fl-color-neutral-50);
+    --fl-color-dark: var(--fl-palette-gray-900);
+    --fl-color-dark-content: var(--fl-palette-gray-50);
     --fl-color-dark-text: light-dark(
-      var(--fl-color-neutral-900),
-      var(--fl-color-neutral-200)
+      var(--fl-palette-gray-900),
+      var(--fl-palette-gray-200)
     );
-    --fl-color-dark-soft: var(--fl-color-neutral-soft);
-    --fl-color-dark-soft-border: var(--fl-color-neutral-soft-border);
+    --fl-color-dark-soft: var(--fl-palette-gray-soft);
+    --fl-color-dark-soft-border: var(--fl-palette-gray-soft-border);
 
-    --fl-color-light: var(--fl-color-neutral-50);
-    --fl-color-light-content: var(--fl-color-neutral-900);
+    --fl-color-light: var(--fl-palette-gray-50);
+    --fl-color-light-content: var(--fl-palette-gray-900);
     --fl-color-light-text: light-dark(
-      var(--fl-color-neutral-700),
-      var(--fl-color-neutral-50)
+      var(--fl-palette-gray-700),
+      var(--fl-palette-gray-50)
     );
-    --fl-color-light-soft: var(--fl-color-neutral-soft);
-    --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
+    --fl-color-light-soft: var(--fl-palette-gray-soft);
+    --fl-color-light-soft-border: var(--fl-palette-gray-soft-border);
     """
   end
 
@@ -743,22 +748,39 @@ defmodule FlintUIDocsWeb.ThemeLive do
     @import "./flint.css";
 
     :root {
-      --fl-color-primary: oklch(0.55 0.24 275);
-      --fl-color-primary-content: oklch(1 0 0);
-      /* Tinted, surface, outline, ghost, and link read -text, so retint that AA shade. */
-      --fl-color-primary-text: light-dark(
-        oklch(0.491 0.27 292.581),
-        oklch(0.702 0.183 293.541)
-      );
+      --fl-color-primary: var(--fl-palette-purple);
+      --fl-color-primary-content: var(--fl-palette-purple-content);
+      --fl-color-primary-text: var(--fl-palette-purple-text);
+      --fl-color-primary-soft: var(--fl-palette-purple-soft);
+      --fl-color-primary-soft-border: var(--fl-palette-purple-soft-border);
     }
     """
   end
 
   defp snippet(:palette_colors) do
     """
-    <.button color="tw:rose">Rose 500</.button>
-    <.button color="tw:rose-700">Rose 700</.button>
-    <.button variant="solid" color="tw:emerald-600">Emerald 600</.button>
+    <.button color="rose">Rose</.button>
+    <.button color="emerald">Emerald</.button>
+    <.button variant="solid" color="sky">Sky</.button>
+    """
+  end
+
+  defp snippet(:custom_hues_config) do
+    """
+    # config/config.exs
+    config :flint_ui, extra_hues: [:brand]
+    """
+  end
+
+  defp snippet(:custom_hues) do
+    """
+    mix flint.palette brand --from "#8b5cf6" --write assets/css/flint-brand.css
+    """
+  end
+
+  defp snippet(:custom_hues_use) do
+    """
+    <.button color="brand">Brand</.button>
     """
   end
 
@@ -802,35 +824,27 @@ defmodule FlintUIDocsWeb.ThemeLive do
 
   defp snippet(:neutral_palette) do
     """
-    /* app.css, after the flint.css import */
+    /* app.css, after the flint.css import. A cool neutral. */
     :root {
-      --fl-color-neutral-50: var(--color-slate-50);
+      --fl-palette-gray-50: var(--color-slate-50);
       /* … 100 through 900 … */
-      --fl-color-neutral-950: var(--color-slate-950);
+      --fl-palette-gray-950: var(--color-slate-950);
     }
     """
   end
 
   defp snippet(:palette_css) do
     """
-    /* app.css, after the flint.css import */
+    /* app.css, after the flint.css import. Remap rose to a brand scale. */
     :root {
-      --fl-color-primary-50: var(--color-red-50);
-      /* … 100 through 500 … */
-      --fl-color-primary-600: var(--color-red-600);
-      /* … 700 through 900 … */
-      --fl-color-primary-950: var(--color-red-950);
-
-      --fl-color-primary: light-dark(
-        var(--fl-color-primary-600),
-        var(--fl-color-primary-600)
-      );
-      --fl-color-primary-content: oklch(100% 0 0);
-      --fl-color-primary-text: light-dark(
-        var(--fl-color-primary-700),
-        var(--fl-color-primary-400)
-      );
+      --fl-palette-rose-50: var(--color-brand-50);
+      /* … 100 through 900 … */
+      --fl-palette-rose-950: var(--color-brand-950);
     }
+
+    /* The derived tokens follow the ramp automatically: */
+    /* --fl-palette-rose: var(--fl-palette-rose-600);
+     * --fl-palette-rose-content, -text, -soft, -soft-border … */
     """
   end
 
@@ -883,8 +897,8 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     /* Give this instance a custom accent without adding a color token. */
     .danger-lite {
-      --fl-control-color: var(--fl-color-error-600);
-      --fl-control-color-content: var(--fl-color-error-50);
+      --fl-control-color: var(--fl-palette-red-600);
+      --fl-control-color-content: var(--fl-palette-red-content);
     }
     """
   end
@@ -894,7 +908,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
     <.button color="secondary" class="danger-lite">Delete</.button>
 
     <!-- or inline, for a one-off -->
-    <.button color="secondary" style="--fl-control-color: var(--fl-color-error-600)">
+    <.button color="secondary" style="--fl-control-color: var(--fl-palette-red-600)">
       Delete
     </.button>
     """
@@ -918,12 +932,11 @@ defmodule FlintUIDocsWeb.ThemeLive do
     """
     /* assets/css/app.css, after the flint.css import */
     [data-theme="brand"] {
-      --fl-color-primary: oklch(0.55 0.24 275);
-      --fl-color-primary-content: oklch(1 0 0);
-      --fl-color-primary-text: light-dark(
-        oklch(0.491 0.27 292.581),
-        oklch(0.702 0.183 293.541)
-      );
+      --fl-color-primary: var(--fl-palette-purple);
+      --fl-color-primary-content: var(--fl-palette-purple-content);
+      --fl-color-primary-text: var(--fl-palette-purple-text);
+      --fl-color-primary-soft: var(--fl-palette-purple-soft);
+      --fl-color-primary-soft-border: var(--fl-palette-purple-soft-border);
       --fl-radius: 0.375rem;
     }
     """
@@ -938,6 +951,10 @@ defmodule FlintUIDocsWeb.ThemeLive do
       --border-color-default: var(--fl-color-border);
       --text-color-primary: var(--fl-color-primary-text);
       --background-color-primary: var(--fl-color-primary);
+
+      /* Palette shades are available as utilities too. */
+      --color-pink-500: var(--fl-palette-pink-500);
+      --color-gray-900: var(--fl-palette-gray-900);
       --radius-md: var(--fl-radius-md);
     }
     """
@@ -948,6 +965,7 @@ defmodule FlintUIDocsWeb.ThemeLive do
     |> then(&Regex.scan(~r/--fl-[a-z0-9-]+/, &1))
     |> List.flatten()
     |> Enum.uniq()
+    |> Enum.reject(&String.starts_with?(&1, ["--fl-palette-", "--fl-tone", "--fl-active-tone"]))
     |> Enum.sort()
     |> Enum.group_by(fn token ->
       token |> String.replace_prefix("--fl-", "") |> String.split("-") |> hd()

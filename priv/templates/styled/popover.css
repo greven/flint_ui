@@ -19,7 +19,7 @@
         padding: var(--fl-popover-padding, var(--fl-spacing-md));
         border: 1px solid var(--fl-popover-border, var(--fl-color-border));
         border-radius: var(--fl-radius-lg);
-        background-color: var(--fl-popover-surface, var(--fl-color-surface));
+        background-color: var(--fl-popover-surface, var(--fl-color-surface-raised));
         color: var(--fl-popover-text, var(--fl-color-text));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-sm);
@@ -54,7 +54,7 @@
         --_fl-popover-ring: color-mix(
             in oklab,
             var(--fl-popover-border, var(--fl-color-border)) 80%,
-            var(--fl-popover-surface, var(--fl-color-surface))
+            var(--fl-popover-surface, var(--fl-color-surface-raised))
         );
     }
 

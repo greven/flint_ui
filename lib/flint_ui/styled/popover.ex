@@ -25,7 +25,7 @@ defmodule FlintUI.Styled.Popover do
         ),
         Var.new(
           name: "--fl-popover-surface",
-          default: "var(--fl-color-surface)",
+          default: "var(--fl-color-surface-raised)",
           doc: "Background color of the popover content."
         ),
         Var.new(

@@ -26,7 +26,7 @@ defmodule FlintUIDocsWeb.AvatarSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-avatar-basic [data-element='avatar'][style*='--fl-avatar-color']"
+             "#usage-avatar-basic [data-element='avatar'][data-color]"
            )
 
     view

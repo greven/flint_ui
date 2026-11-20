@@ -123,20 +123,22 @@ defmodule FlintUI.Styled.AvatarTest do
     assert attr(document, :avatar, "data-color") == ["primary"]
   end
 
-  test "initials color is deterministic and lives on the root", %{wrapper: wrapper} do
+  test "initials color is deterministic and lives on the root as a hue hook", %{wrapper: wrapper} do
     first = render(wrapper, :initials)
     second = render(wrapper, :initials_again)
 
-    assert attr(first, :avatar, "data-color") == []
-    assert style(first) =~ "--fl-avatar-color:"
-    assert style(first) =~ "--fl-avatar-color-content:"
-    assert style(first) == style(second)
+    assert [hue] = attr(first, :avatar, "data-color")
+    assert hue in FlintUI.Palette.hue_names()
+    assert attr(first, :avatar, "data-color") == attr(second, :avatar, "data-color")
+    assert style(first) in [nil, ""]
   end
 
-  test "initials keep a white label unless white is unreadable", %{wrapper: wrapper} do
+  test "initials pick a palette hue and leave the label to the palette", %{wrapper: wrapper} do
     document = render(wrapper, :initials_light_fill)
 
-    assert style(document) =~ "--fl-avatar-color-content: #{FlintUI.Palette.Color.white()}"
+    assert [hue] = attr(document, :avatar, "data-color")
+    assert hue in FlintUI.Palette.hue_names()
+    assert style(document) in [nil, ""]
   end
 
   test "a raw color sets the fallback inputs on the root", %{wrapper: wrapper} do

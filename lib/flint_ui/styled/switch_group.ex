@@ -33,7 +33,7 @@ defmodule FlintUI.Styled.SwitchGroup do
           allow_custom: true,
           forwarded_to: :switch,
           doc:
-            "The on track fill and border, forwarded to every option. Accepts a semantic role, a Tailwind palette color such as `tw:rose` (500), or a raw CSS color. The thumb is a neutral ink that only flips on a light fill."
+            "The on track fill and border, forwarded to every option. Accepts a semantic role, a palette hue such as `pink`, or a raw CSS color. The thumb is a neutral ink that only flips on a light fill."
         )
       ],
       color_vars: [

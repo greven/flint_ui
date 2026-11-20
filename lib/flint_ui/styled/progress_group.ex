@@ -26,7 +26,7 @@ defmodule FlintUI.Styled.ProgressGroup do
           default: "primary",
           allow_custom: true,
           doc:
-            "The fallback color for segments that do not set their own, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE`. The track stays neutral."
+            "The fallback color for segments that do not set their own, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE`. The track stays neutral."
         ),
         Prop.new(
           name: :radius,

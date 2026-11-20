@@ -27,7 +27,7 @@ defmodule FlintUI.Styled.Alert do
           default: nil,
           allow_custom: true,
           doc:
-            "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Defaults to the `intent` when set, otherwise `neutral`."
+            "The theme color the variant is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Defaults to the `intent` when set, otherwise `neutral`."
         ),
         Prop.new(
           name: :spacing,

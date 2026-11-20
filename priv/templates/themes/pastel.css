@@ -1,14 +1,11 @@
 /* Pastel preset (`data-theme="pastel"`). Presets override tokens only; the
- * light/dark scheme is controlled separately by `data-color-scheme`. */
+ * light/dark scheme and the palette are controlled separately. */
 [data-theme="pastel"] {
     --fl-radius: 0.5rem;
 
-    --fl-color-primary: oklch(0.66 0.14 290);
-    --fl-color-primary-content: oklch(0.98 0.012 290);
     --fl-color-border: light-dark(
         oklch(0.85 0.028 300),
-        var(--fl-color-neutral-800)
+        var(--fl-palette-gray-800)
     );
     --fl-border-strength-soft: 25%;
-    --fl-color-ring: oklch(0.74 0.13 290);
 }

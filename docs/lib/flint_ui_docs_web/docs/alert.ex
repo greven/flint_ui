@@ -343,31 +343,31 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :examples, id: :custom_color} = assigns) do
     ~H"""
-    <.prose content="Pass a raw CSS color or a bundled Tailwind palette color to `color` for a one-off accent. The fill is used exactly and the label is derived for contrast.
+    <.prose content="Pass a palette hue or a raw CSS color to `color` for a one-off accent. A hue uses the active palette's core shade and derives its label for contrast; a raw color is used exactly.
       Prefer a semantic role or a theme override for anything app-wide." />
     <.preview {assigns} code={custom_color_code()} collapsed>
       <div class="grid w-full max-w-xl gap-3">
         <%!-- <Components.alert variant="solid" color="#B45309"> --%>
         <%!-- A raw color keeps its exact fill. --%>
         <%!-- </Components.alert> --%>
-        <Components.alert variant="soft" color="tw:zinc">Zinc</Components.alert>
-        <Components.alert variant="soft" color="tw:red">Red</Components.alert>
-        <Components.alert variant="soft" color="tw:orange">Orange</Components.alert>
-        <Components.alert variant="soft" color="tw:amber">Amber</Components.alert>
-        <Components.alert variant="soft" color="tw:yellow">Yellow</Components.alert>
-        <Components.alert variant="soft" color="tw:lime">Lime</Components.alert>
-        <Components.alert variant="soft" color="tw:green">Green</Components.alert>
-        <Components.alert variant="soft" color="tw:emerald">Emerald</Components.alert>
-        <Components.alert variant="soft" color="tw:teal">Teal</Components.alert>
-        <Components.alert variant="soft" color="tw:cyan">Cyan</Components.alert>
-        <Components.alert variant="soft" color="tw:sky">Sky</Components.alert>
-        <Components.alert variant="soft" color="tw:blue">Blue</Components.alert>
-        <Components.alert variant="soft" color="tw:indigo">Indigo</Components.alert>
-        <Components.alert variant="soft" color="tw:violet">Violet</Components.alert>
-        <Components.alert variant="soft" color="tw:purple">Purple</Components.alert>
-        <Components.alert variant="soft" color="tw:fuchsia">Fuchsia</Components.alert>
-        <Components.alert variant="soft" color="tw:pink">Pink</Components.alert>
-        <Components.alert variant="soft" color="tw:rose">Rose</Components.alert>
+        <Components.alert variant="soft" color="red">Red</Components.alert>
+        <Components.alert variant="soft" color="orange">Orange</Components.alert>
+        <Components.alert variant="soft" color="amber">Amber</Components.alert>
+        <Components.alert variant="soft" color="yellow">Yellow</Components.alert>
+        <Components.alert variant="soft" color="lime">Lime</Components.alert>
+        <Components.alert variant="soft" color="green">Green</Components.alert>
+        <Components.alert variant="soft" color="emerald">Emerald</Components.alert>
+        <Components.alert variant="soft" color="teal">Teal</Components.alert>
+        <Components.alert variant="soft" color="cyan">Cyan</Components.alert>
+        <Components.alert variant="soft" color="sky">Sky</Components.alert>
+        <Components.alert variant="soft" color="blue">Blue</Components.alert>
+        <Components.alert variant="soft" color="indigo">Indigo</Components.alert>
+        <Components.alert variant="soft" color="violet">Violet</Components.alert>
+        <Components.alert variant="soft" color="purple">Purple</Components.alert>
+        <Components.alert variant="soft" color="fuchsia">Fuchsia</Components.alert>
+        <Components.alert variant="soft" color="pink">Pink</Components.alert>
+        <Components.alert variant="soft" color="rose">Rose</Components.alert>
+        <Components.alert variant="soft" color="gray">Gray</Components.alert>
       </div>
     </.preview>
     """
@@ -579,7 +579,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   defp custom_color_code do
     """
     <.alert variant="solid" color="#B45309" title="Amber">A raw color keeps its exact fill.</.alert>
-    <.alert variant="soft" color="tw:indigo-600" title="Indigo">A `tw:` color comes from the bundled palette.</.alert>
+    <.alert variant="soft" color="indigo" title="Indigo">A palette hue comes from the active palette.</.alert>
     """
     |> String.trim()
   end

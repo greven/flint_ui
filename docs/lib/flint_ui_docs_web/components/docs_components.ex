@@ -823,7 +823,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <Components.badge
       class="ml-1.5"
       variant="outline"
-      color="tw:sky"
+      color="cyan"
       radius="sm"
       size="sm"
     >
@@ -1077,7 +1077,7 @@ defmodule FlintUIDocsWeb.DocsComponents do
     <Components.badge
       class="ml-1"
       variant="outline"
-      color="tw:rose"
+      color="pink"
       radius="sm"
       size="sm"
     >

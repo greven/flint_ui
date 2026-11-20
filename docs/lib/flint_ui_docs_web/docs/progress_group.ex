@@ -150,17 +150,17 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
 
   def render_section(%{section: :examples, id: :custom_colors} = assigns) do
     ~H"""
-    <.prose content={~S|Every segment accepts a raw CSS color or a `tw:` palette color, not
-      just a semantic role. The legend dot or icon takes the same color. Raw colors are a
-      per-instance accent: they do not follow presets or the color scheme, so prefer a role
-      or a theme override for app-wide color.|} />
+    <.prose content={~S|Every segment accepts a raw CSS color or a palette hue, not
+      just a semantic role. The legend dot or icon takes the same color. A hue follows the
+      active palette; raw colors are a per-instance accent that does not follow the palette
+      or the color scheme, so prefer a role or a theme override for app-wide color.|} />
 
     <.preview {assigns} code={code_custom_colors()}>
       <div class="w-full max-w-sm">
         <Components.progress_group max="128" label="Storage" show_status>
-          <:segment label="Compute" value="42" color="tw:violet-500" />
-          <:segment label="Storage" value="18" color="tw:sky-500" icon="lucide-database" />
-          <:segment label="Bandwidth" value="9" color="tw:amber-500" />
+          <:segment label="Compute" value="42" color="purple" />
+          <:segment label="Storage" value="18" color="cyan" icon="lucide-database" />
+          <:segment label="Bandwidth" value="9" color="orange" />
         </Components.progress_group>
       </div>
     </.preview>
@@ -246,9 +246,9 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
       ".progress_group",
       [~s(max="128"), ~s(label="Storage"), "show_status"],
       """
-      <:segment label="Compute" value="42" color="tw:violet-500" />
-      <:segment label="Storage" value="18" color="tw:sky-500" icon="lucide-database" />
-      <:segment label="Bandwidth" value="9" color="tw:amber-500" />
+      <:segment label="Compute" value="42" color="purple" />
+      <:segment label="Storage" value="18" color="cyan" icon="lucide-database" />
+      <:segment label="Bandwidth" value="9" color="orange" />
       """
     )
   end

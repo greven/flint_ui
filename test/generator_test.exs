@@ -485,10 +485,12 @@ defmodule FlintUI.GeneratorTest do
              "include: ~w(as href navigate patch replace method csrf_token target rel download hreflang referrerpolicy)"
   end
 
-  test "assembles the theme from tokens, base rules, then each component part" do
-    [first, second | _] = Generator.part_paths()
-    assert first =~ "tokens.css"
-    assert second =~ "base.css"
+  test "assembles the theme from palettes and tokens, then each component part" do
+    [first | _] = Generator.part_paths()
+    assert first =~ "palettes/tailwind.css"
+    assert Enum.any?(Generator.part_paths(), &(&1 =~ "tokens.css"))
+    assert Enum.any?(Generator.part_paths(), &(&1 =~ "colors.css"))
+    assert Enum.any?(Generator.part_paths(), &(&1 =~ "base.css"))
     assert List.last(Generator.part_paths()) =~ "focus.css"
 
     css = Generator.theme_source()
@@ -514,12 +516,14 @@ defmodule FlintUI.GeneratorTest do
     end
   end
 
-  test "tailwind bridge exposes role scales and radius" do
+  test "tailwind bridge exposes palette scales and radius" do
     bridge = Generator.tailwind_bridge_source()
 
     assert bridge =~ "@theme inline {"
-    assert bridge =~ "--color-primary-50: var(--fl-color-primary-50);"
-    assert bridge =~ "--color-error-950: var(--fl-color-error-950);"
+    assert bridge =~ "--color-pink-500: var(--fl-palette-pink-500);"
+    assert bridge =~ "--color-gray-950: var(--fl-palette-gray-950);"
+    assert bridge =~ "--background-color-raised: var(--fl-color-surface-raised);"
+    refute bridge =~ "--color-primary-50:"
     assert bridge =~ "--radius-md: var(--fl-radius-md);"
     assert bridge =~ "--radius-full: var(--fl-radius-full);"
     assert bridge =~ "--font-sans: var(--fl-font-sans);"

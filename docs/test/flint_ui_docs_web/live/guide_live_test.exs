@@ -147,6 +147,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#absolute")
     assert has_element?(view, "#custom")
     assert has_element?(view, "#palette")
+    assert has_element?(view, "#custom-hues")
     assert has_element?(view, "#tailwind")
     assert has_element?(view, "header a[href='/themes']", "Themes")
     refute has_element?(view, "header a[href='/themes'][aria-current='page']")
@@ -155,13 +156,13 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert html =~ "--fl-color-primary"
     assert html =~ "--fl-color-surface-subtle"
     assert html =~ "--fl-color-border-strong"
-    assert html =~ "--fl-surface-step"
+    assert html =~ "--fl-surface-ink"
     assert html =~ "--fl-disabled-opacity"
     assert html =~ "data-theme"
     assert html =~ "data-focus"
     assert html =~ "--fl-focus-border-color"
     assert html =~ "--fl-focus-color-error"
-    refute html =~ "mix flint.palette"
+    assert html =~ "mix flint.palette"
   end
 
   test "installation page shows its section breadcrumb", %{conn: conn} do

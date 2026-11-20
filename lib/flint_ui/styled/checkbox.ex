@@ -39,7 +39,7 @@ defmodule FlintUI.Styled.Checkbox do
           default: "primary",
           allow_custom: true,
           doc:
-            "The checked fill and border, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The check mark is a neutral ink that only flips on a light fill."
+            "The checked fill and border, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The check mark is a neutral ink that only flips on a light fill."
         )
       ],
       vars: [
@@ -60,7 +60,7 @@ defmodule FlintUI.Styled.Checkbox do
         ),
         Var.new(
           name: "--fl-checkbox-color-content",
-          default: "var(--fl-color-neutral-50)",
+          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
           doc: "The check mark color on the checked box."
         )
       ],

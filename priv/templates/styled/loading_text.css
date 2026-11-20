@@ -8,43 +8,10 @@
         color: currentColor;
     }
 
-    /* Semantic roles read the role's text token, so the copy stays legible on the
-   * page. `inherit` (the default) has no rule and follows `currentColor`. */
-    [data-element="loading_text"][data-color="primary"] {
-        color: var(--fl-color-primary-text);
-    }
-
-    [data-element="loading_text"][data-color="secondary"] {
-        color: var(--fl-color-secondary-text);
-    }
-
-    [data-element="loading_text"][data-color="success"] {
-        color: var(--fl-color-success-text);
-    }
-
-    [data-element="loading_text"][data-color="info"] {
-        color: var(--fl-color-info-text);
-    }
-
-    [data-element="loading_text"][data-color="warning"] {
-        color: var(--fl-color-warning-text);
-    }
-
-    [data-element="loading_text"][data-color="error"] {
-        color: var(--fl-color-error-text);
-    }
-
-    [data-element="loading_text"][data-color="neutral"] {
-        color: var(--fl-color-neutral-text);
-    }
-
-    /* Absolute tones stay dark/light in either scheme. */
-    [data-element="loading_text"][data-color="dark"] {
-        color: var(--fl-color-dark-text);
-    }
-
-    [data-element="loading_text"][data-color="light"] {
-        color: var(--fl-color-light-text);
+    /* A color hook resolves the copy ink. `inherit` (the default) has no hook
+     * and follows `currentColor`. */
+    [data-element="loading_text"][data-color] {
+        color: var(--fl-tone-text);
     }
 
     [data-element="loading_text"][data-variant="dots"] [data-part="dots"] {

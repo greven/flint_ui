@@ -9,15 +9,20 @@
      * stateful controls. Shared depth, elevation, press, and focus behavior
      * come from `--fl-control-*`. */
     [data-control] {
-        --fl-control-color: var(--fl-color-inverted);
-        --fl-control-color-content: var(--fl-color-text-inverted);
-        --fl-control-text: var(--fl-control-color);
-        --fl-control-soft: color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface));
-        --fl-control-soft-border: color-mix(
-            in oklab,
-            var(--fl-control-color) var(--fl-border-strength-soft),
-            var(--fl-color-surface)
+        --fl-control-color: var(--fl-tone, var(--fl-color-inverted));
+        --fl-control-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
+        --fl-control-text: var(--fl-tone-text, var(--fl-control-color));
+        --fl-control-soft: var(--fl-tone-soft, color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface)));
+        --fl-control-soft-border: var(
+            --fl-tone-soft-border,
+            color-mix(in oklab, var(--fl-control-color) var(--fl-border-strength-soft), var(--fl-color-surface))
         );
+
+        --fl-control-active-color: var(--fl-active-tone, var(--fl-control-color));
+        --fl-control-active-color-content: var(--fl-active-tone-content, var(--fl-control-color-content));
+        --fl-control-active-text: var(--fl-active-tone-text, var(--fl-control-text));
+        --fl-control-active-soft: var(--fl-active-tone-soft, var(--fl-control-soft));
+        --fl-control-active-soft-border: var(--fl-active-tone-soft-border, var(--fl-control-soft-border));
 
         --fl-icon-size: var(--fl-control-icon-md);
 
@@ -221,152 +226,15 @@
         display: none;
     }
 
-    /* Each color sets the shared inputs. The neutral role keeps the inverted
-     * fill; stateful controls can tone the label in their own anatomy. */
-    [data-control][data-color="primary"] {
-        --fl-control-color: var(--fl-color-primary);
-        --fl-control-color-content: var(--fl-color-primary-content);
-        --fl-control-text: var(--fl-color-primary-text);
-        --fl-control-soft: var(--fl-color-primary-soft);
-        --fl-control-soft-border: var(--fl-color-primary-soft-border);
-    }
-
-    [data-control][data-color="secondary"] {
-        --fl-control-color: var(--fl-color-secondary);
-        --fl-control-color-content: var(--fl-color-secondary-content);
-        --fl-control-text: var(--fl-color-secondary-text);
-        --fl-control-soft: var(--fl-color-secondary-soft);
-        --fl-control-soft-border: var(--fl-color-secondary-soft-border);
-    }
-
-    [data-control][data-color="success"] {
-        --fl-control-color: var(--fl-color-success);
-        --fl-control-color-content: var(--fl-color-success-content);
-        --fl-control-text: var(--fl-color-success-text);
-        --fl-control-soft: var(--fl-color-success-soft);
-        --fl-control-soft-border: var(--fl-color-success-soft-border);
-    }
-
-    [data-control][data-color="info"] {
-        --fl-control-color: var(--fl-color-info);
-        --fl-control-color-content: var(--fl-color-info-content);
-        --fl-control-text: var(--fl-color-info-text);
-        --fl-control-soft: var(--fl-color-info-soft);
-        --fl-control-soft-border: var(--fl-color-info-soft-border);
-    }
-
-    [data-control][data-color="warning"] {
-        --fl-control-color: var(--fl-color-warning);
-        --fl-control-color-content: var(--fl-color-warning-content);
-        --fl-control-text: var(--fl-color-warning-text);
-        --fl-control-soft: var(--fl-color-warning-soft);
-        --fl-control-soft-border: var(--fl-color-warning-soft-border);
-    }
-
-    [data-control][data-color="error"] {
-        --fl-control-color: var(--fl-color-error);
-        --fl-control-color-content: var(--fl-color-error-content);
-        --fl-control-text: var(--fl-color-error-text);
-        --fl-control-soft: var(--fl-color-error-soft);
-        --fl-control-soft-border: var(--fl-color-error-soft-border);
-    }
-
+    /* `data-color` resolves to `--fl-tone*`; the shared inputs read it. The
+     * neutral control keeps the inverted fill as its label on bordered and
+     * ghost variants, which is stronger than the neutral role's text token. */
     [data-control][data-color="neutral"] {
-        --fl-control-color: var(--fl-color-inverted);
-        --fl-control-color-content: var(--fl-color-text-inverted);
         --fl-control-text: var(--fl-control-color);
-        --fl-control-soft: var(--fl-color-neutral-soft);
-        --fl-control-soft-border: var(--fl-color-neutral-soft-border);
-    }
-
-    /* Absolute tones stay dark/light in either scheme. */
-    [data-control][data-color="dark"] {
-        --fl-control-color: var(--fl-color-dark);
-        --fl-control-color-content: var(--fl-color-dark-content);
-        --fl-control-text: var(--fl-color-dark-text);
-        --fl-control-soft: var(--fl-color-dark-soft);
-        --fl-control-soft-border: var(--fl-color-dark-soft-border);
-    }
-
-    [data-control][data-color="light"] {
-        --fl-control-color: var(--fl-color-light);
-        --fl-control-color-content: var(--fl-color-light-content);
-        --fl-control-text: var(--fl-color-light-text);
-        --fl-control-soft: var(--fl-color-light-soft);
-        --fl-control-soft-border: var(--fl-color-light-soft-border);
-    }
-
-    /* Active colors override only the on-state inputs. */
-    [data-control][data-active-color="primary"] {
-        --fl-control-active-color: var(--fl-color-primary);
-        --fl-control-active-color-content: var(--fl-color-primary-content);
-        --fl-control-active-text: var(--fl-color-primary-text);
-        --fl-control-active-soft: var(--fl-color-primary-soft);
-        --fl-control-active-soft-border: var(--fl-color-primary-soft-border);
-    }
-
-    [data-control][data-active-color="secondary"] {
-        --fl-control-active-color: var(--fl-color-secondary);
-        --fl-control-active-color-content: var(--fl-color-secondary-content);
-        --fl-control-active-text: var(--fl-color-secondary-text);
-        --fl-control-active-soft: var(--fl-color-secondary-soft);
-        --fl-control-active-soft-border: var(--fl-color-secondary-soft-border);
-    }
-
-    [data-control][data-active-color="success"] {
-        --fl-control-active-color: var(--fl-color-success);
-        --fl-control-active-color-content: var(--fl-color-success-content);
-        --fl-control-active-text: var(--fl-color-success-text);
-        --fl-control-active-soft: var(--fl-color-success-soft);
-        --fl-control-active-soft-border: var(--fl-color-success-soft-border);
-    }
-
-    [data-control][data-active-color="info"] {
-        --fl-control-active-color: var(--fl-color-info);
-        --fl-control-active-color-content: var(--fl-color-info-content);
-        --fl-control-active-text: var(--fl-color-info-text);
-        --fl-control-active-soft: var(--fl-color-info-soft);
-        --fl-control-active-soft-border: var(--fl-color-info-soft-border);
-    }
-
-    [data-control][data-active-color="warning"] {
-        --fl-control-active-color: var(--fl-color-warning);
-        --fl-control-active-color-content: var(--fl-color-warning-content);
-        --fl-control-active-text: var(--fl-color-warning-text);
-        --fl-control-active-soft: var(--fl-color-warning-soft);
-        --fl-control-active-soft-border: var(--fl-color-warning-soft-border);
-    }
-
-    [data-control][data-active-color="error"] {
-        --fl-control-active-color: var(--fl-color-error);
-        --fl-control-active-color-content: var(--fl-color-error-content);
-        --fl-control-active-text: var(--fl-color-error-text);
-        --fl-control-active-soft: var(--fl-color-error-soft);
-        --fl-control-active-soft-border: var(--fl-color-error-soft-border);
     }
 
     [data-control][data-active-color="neutral"] {
-        --fl-control-active-color: var(--fl-color-inverted);
-        --fl-control-active-color-content: var(--fl-color-text-inverted);
         --fl-control-active-text: var(--fl-color-text-highlighted);
-        --fl-control-active-soft: var(--fl-color-neutral-soft);
-        --fl-control-active-soft-border: var(--fl-color-neutral-soft-border);
-    }
-
-    [data-control][data-active-color="dark"] {
-        --fl-control-active-color: var(--fl-color-dark);
-        --fl-control-active-color-content: var(--fl-color-dark-content);
-        --fl-control-active-text: var(--fl-color-dark-text);
-        --fl-control-active-soft: var(--fl-color-dark-soft);
-        --fl-control-active-soft-border: var(--fl-color-dark-soft-border);
-    }
-
-    [data-control][data-active-color="light"] {
-        --fl-control-active-color: var(--fl-color-light);
-        --fl-control-active-color-content: var(--fl-color-light-content);
-        --fl-control-active-text: var(--fl-color-light-text);
-        --fl-control-active-soft: var(--fl-color-light-soft);
-        --fl-control-active-soft-border: var(--fl-color-light-soft-border);
     }
 
     /* Untoggled variants. */

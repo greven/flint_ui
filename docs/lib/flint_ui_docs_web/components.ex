@@ -162,7 +162,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: nil,
     doc:
-      "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Defaults to the `intent` when set, otherwise `neutral`. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the variant is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Defaults to the `intent` when set, otherwise `neutral`. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:spacing, :string,
@@ -297,7 +297,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The fallback fill, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Pass `initials` to derive a stable color from `alt`; initials keep a white label unless white falls below 3:1 on that fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The fallback fill, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Pass `initials` to derive a stable color from `alt`; initials keep a white label unless white falls below 3:1 on that fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -471,7 +471,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the variant is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The badge size.")
@@ -590,7 +590,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the variant is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The control size.")
@@ -812,7 +812,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The checked fill and border, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The check mark is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The checked fill and border, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The check mark is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -1072,7 +1072,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The theme color the variant is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the variant is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:success_color, :string,
@@ -1648,7 +1648,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "error",
     doc:
-      "The theme color the nested badge is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the nested badge is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "xs", doc: "The nested badge size.")
@@ -1983,7 +1983,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "inherit",
     doc:
-      "The theme color of the indicator, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`. Semantic roles: inherit, neutral, info, success, warning, error, primary, secondary."
+      "The theme color of the indicator, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`. Semantic roles: inherit, neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:size, :string, values: ~w(sm md lg), default: "md", doc: "The indicator size.")
@@ -2031,7 +2031,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "inherit",
     doc:
-      "The theme color of the text, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`. Semantic roles: inherit, neutral, info, success, warning, error, primary, secondary."
+      "The theme color of the text, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`. Semantic roles: inherit, neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -2113,7 +2113,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The fill color, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The track stays neutral. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The fill color, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The track stays neutral. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:radius, :string,
@@ -2209,7 +2209,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The fallback color for segments that do not set their own, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE`. The track stays neutral. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The fallback color for segments that do not set their own, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE`. The track stays neutral. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:radius, :string,
@@ -2382,7 +2382,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The arc color, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The track stays neutral. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The arc color, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The track stays neutral. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:indeterminate, :string,
@@ -2468,7 +2468,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The selected fill and border, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The dot is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The selected fill and border, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The dot is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -2689,7 +2689,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The theme color of the line, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The label keeps the default text color. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color of the line, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The label keeps the default text color. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -2761,7 +2761,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The filled track and the thumb ring, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb body stays a neutral surface. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The filled track and the thumb ring, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb body stays a neutral surface. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -2826,7 +2826,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The on track fill and border, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The on track fill and border, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -2908,7 +2908,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "primary",
     doc:
-      "The on track fill and border, forwarded to every option. Accepts a semantic role, a Tailwind palette color such as `tw:rose` (500), or a raw CSS color. The thumb is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The on track fill and border, forwarded to every option. Accepts a semantic role, a palette hue such as `pink`, or a raw CSS color. The thumb is a neutral ink that only flips on a light fill. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
@@ -3040,7 +3040,7 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The theme color the active state is built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the active state is built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:size, :string,
@@ -3302,13 +3302,13 @@ defmodule FlintUIDocsWeb.Components do
   attr(:color, :string,
     default: "neutral",
     doc:
-      "The theme color the untoggled control and its variants are built from, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color the untoggled control and its variants are built from, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:active_color, :string,
     default: "inherit",
     doc:
-      "The theme color of the toggled control. `inherit` follows `color`. Accepts the same roles, Tailwind palette colors, and raw colors as `color`. Semantic roles: neutral, info, success, warning, error, primary, secondary."
+      "The theme color of the toggled control. `inherit` follows `color`. Accepts the same roles, palette hues, and raw colors as `color`. Semantic roles: neutral, info, success, warning, error, primary, secondary."
   )
 
   attr(:size, :string, values: ~w(xs sm md lg xl), default: "md", doc: "The control size.")

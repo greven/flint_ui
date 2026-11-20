@@ -25,7 +25,7 @@ defmodule FlintUI.Styled.Switch do
           default: "primary",
           allow_custom: true,
           doc:
-            "The on track fill and border, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb is a neutral ink that only flips on a light fill."
+            "The on track fill and border, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. The thumb is a neutral ink that only flips on a light fill."
         )
       ],
       vars: [
@@ -51,7 +51,7 @@ defmodule FlintUI.Styled.Switch do
         ),
         Var.new(
           name: "--fl-switch-color-content",
-          default: "var(--fl-color-neutral-50)",
+          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
           doc: "The thumb color on the on track."
         )
       ],

@@ -6,7 +6,7 @@
      * inline as `stroke-dashoffset`, and the theme supplies the rotation, the
      * indeterminate motion, and the size and thickness scales. */
     [data-element="progress_ring"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-primary);
+        --fl-progress-ring-color: var(--fl-tone, var(--fl-color-primary));
         --fl-progress-ring-track: var(--fl-color-surface-strong);
         --fl-progress-ring-size: 4rem;
         --fl-progress-ring-thickness: 6;
@@ -162,32 +162,6 @@
 
     [data-element="progress_ring"][data-thickness="xl"][data-progress_ring] {
         --fl-progress-ring-thickness: 10;
-    }
-
-    /* Color roles. `primary` is the base treatment; `neutral` is the inverted
-     * surface, matching the other feedback and form components. */
-    [data-element="progress_ring"][data-color="secondary"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-secondary);
-    }
-
-    [data-element="progress_ring"][data-color="neutral"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-inverted);
-    }
-
-    [data-element="progress_ring"][data-color="info"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-info);
-    }
-
-    [data-element="progress_ring"][data-color="success"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-success);
-    }
-
-    [data-element="progress_ring"][data-color="warning"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-warning);
-    }
-
-    [data-element="progress_ring"][data-color="error"][data-progress_ring] {
-        --fl-progress-ring-color: var(--fl-color-error);
     }
 
     /* Indeterminate motion. `spin` keeps a fixed share of the circle visible and

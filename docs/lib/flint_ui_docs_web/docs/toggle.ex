@@ -228,9 +228,9 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
         </Components.group>
 
         <Components.group attached>
-          <Components.toggle active_color="tw:green">Day</Components.toggle>
-          <Components.toggle active_color="tw:green">Month</Components.toggle>
-          <Components.toggle active_color="tw:green">Year</Components.toggle>
+          <Components.toggle active_color="green">Day</Components.toggle>
+          <Components.toggle active_color="green">Month</Components.toggle>
+          <Components.toggle active_color="green">Year</Components.toggle>
         </Components.group>
       </div>
     </.preview>

@@ -43,7 +43,7 @@ defmodule FlintUI.Styled.Avatar do
           default: "neutral",
           allow_custom: true,
           doc:
-            "The fallback fill, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. Pass `initials` to derive a stable color from `alt`; initials keep a white label unless white falls below 3:1 on that fill."
+            "The fallback fill, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. Pass `initials` to derive a stable color from `alt`; initials keep a white label unless white falls below 3:1 on that fill."
         )
       ],
       content_attrs: [

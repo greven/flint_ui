@@ -156,24 +156,24 @@ defmodule FlintUI.Styled.ProgressGroupTest do
            |> Enum.join() =~ "--fl-progress-group-color: #1D72FE"
   end
 
-  test "writes a raw segment color to the segment and its legend row", %{wrapper: wrapper} do
+  test "writes a segment hue as a hook and a raw color to the CSS input", %{wrapper: wrapper} do
     segments = [
-      %{value: 42, label: "Compute", color: "tw:rose-700"},
+      %{value: 42, label: "Compute", color: "pink"},
       %{value: 18, label: "Storage", color: "#00A86B"}
     ]
 
     document = render(wrapper, :basic, defaults(segments: segments))
 
-    assert part_attr(document, "segment", "data-color") == []
-    assert part_attr(document, "item", "data-color") == []
+    assert part_attr(document, "segment", "data-color") == ["pink"]
+    assert part_attr(document, "item", "data-color") == ["pink"]
 
-    for style <- part_attr(document, "segment", "style") do
-      assert style =~ "--fl-progress-group-color:"
-    end
+    assert Enum.count(
+             part_attr(document, "segment", "style"),
+             &(&1 =~ "--fl-progress-group-color:")
+           ) == 1
 
-    for style <- part_attr(document, "item", "style") do
-      assert style =~ "--fl-progress-group-color:"
-    end
+    assert Enum.count(part_attr(document, "item", "style"), &(&1 =~ "--fl-progress-group-color:")) ==
+             1
   end
 
   test "keeps a caller slot class on the segment", %{wrapper: wrapper} do

@@ -36,7 +36,7 @@ defmodule FlintUI.Styled.LoadingText do
           default: "inherit",
           allow_custom: true,
           doc:
-            "The theme color of the text, a Tailwind palette color such as `tw:rose` (500) or `tw:rose-700`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`."
+            "The theme color of the text, a palette hue such as `pink` or `cyan`, or a raw CSS color such as `#1D72FE` for a one-off accent. `inherit` follows the surrounding `currentColor`."
         )
       ]
     }

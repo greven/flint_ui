@@ -1,138 +1,140 @@
 defmodule FlintUI.Palette.CSSTest do
   use ExUnit.Case, async: true
 
-  alias FlintUI.Palette.CSS
-  alias FlintUI.Palette.Tailwind
+  alias FlintUI.Palette
+  alias FlintUI.Palette.{CSS, Color, Contrast, Natural, Seed, Tailwind}
 
-  test "renders the role scale, alias, and content under :root" do
-    css = CSS.render(primary: {Tailwind, :indigo})
+  test "renders the eighteen hues and derived tokens under :root" do
+    css = CSS.render_palette(Tailwind, default: true)
+
+    assert css =~ ~s(:root,\n[data-palette="tailwind"])
+    assert css =~ "--fl-palette-red-50:"
+    assert css =~ "--fl-palette-red-950:"
+    assert css =~ "--fl-palette-red: var(--fl-palette-red-600);"
+    assert css =~ "--fl-palette-red-content: oklch(100% 0 0);"
+    assert css =~ "--fl-palette-yellow-content: var(--fl-palette-yellow-950);"
+    assert css =~ "--fl-palette-red-text: light-dark("
+    assert css =~ "var(--fl-palette-red-800)"
+    assert css =~ "var(--fl-palette-red-300)"
+    assert css =~ "--fl-palette-red-soft: light-dark("
+    assert css =~ "color-mix(in oklab, var(--fl-palette-red) 12%"
+    assert css =~ "--fl-palette-red-soft-border: color-mix("
+
+    for hue <- Palette.hue_names() do
+      assert css =~ "--fl-palette-#{hue}:"
+    end
+  end
+
+  test "derived tokens stay relative so a ramp remap follows" do
+    css = CSS.render_palette(Tailwind, default: true)
+
+    assert css =~ "--fl-palette-pink: var(--fl-palette-pink-600);"
+    assert css =~ "--fl-palette-pink-content: oklch(100% 0 0);"
+    assert css =~ "var(--fl-palette-pink-800)"
+    assert css =~ "var(--fl-palette-pink-300)"
+    assert css =~ "color-mix(in oklab, var(--fl-palette-pink)"
+  end
+
+  test "named palettes scope under data-palette only" do
+    css = CSS.render_palette(Natural)
+
+    assert css =~ ~s([data-palette="natural"] {)
+    refute css =~ ":root"
+  end
+
+  test "every shipped palette renders every hue" do
+    for palette <- Palette.palettes() do
+      css = CSS.render_palette(palette.module, default: Map.get(palette, :default, false))
+
+      for hue <- Palette.hue_names() do
+        assert css =~ "--fl-palette-#{hue}-50:"
+        assert css =~ "--fl-palette-#{hue}:"
+      end
+    end
+  end
+
+  test "a transformed palette keeps the same contract but different colors" do
+    css = CSS.render_palette(Natural)
+
+    refute Natural.shades(:red)[600] == Tailwind.shades(:red)[600]
+    assert css =~ "--fl-palette-red: var(--fl-palette-red-600);"
+    assert css =~ "--fl-palette-red-soft: light-dark("
+  end
+
+  test "a stricter contrast target raises the text steps" do
+    aa = CSS.render_palette(Tailwind, default: true)
+    aaa = CSS.render_palette(Tailwind, default: true, contrast: :aaa)
+
+    refute aa == aaa
+    assert aaa =~ "--fl-palette-red-text: light-dark("
+  end
+
+  test "the color hooks match the hue registry" do
+    path = FlintUI.Generator.part_path("colors.css")
+
+    assert File.read!(path) == CSS.render_hooks(),
+           "colors.css is stale; regenerate it from FlintUI.Palette.CSS.render_hooks/0"
+  end
+
+  test "a custom hue can render only its own hooks" do
+    hooks = CSS.render_hooks(roles: [], hues: ["brand"])
+
+    assert hooks =~ ~s|:where([data-color="brand"])|
+    assert hooks =~ ~s|:where([data-active-color="brand"])|
+    assert hooks =~ "--fl-tone: var(--fl-palette-brand);"
+    assert hooks =~ "--fl-active-tone: var(--fl-palette-brand);"
+    refute hooks =~ ~s|data-color="primary"|
+  end
+
+  test "a seed ramp anchors 600 at the seed and keeps eleven shades" do
+    shades = Seed.from_color("#8b5cf6")
+    {:ok, seed} = Color.parse("#8b5cf6")
+
+    assert shades |> Map.keys() |> Enum.sort() == Palette.shade_keys() |> Enum.sort()
+    assert shades[600] == seed.css
+
+    for {_shade, css} <- shades do
+      assert {:ok, _color} = Color.parse(css)
+    end
+  end
+
+  test "a seeded hue renders the ramp, derived tokens, and hooks" do
+    shades = Seed.from_color("#8b5cf6")
+    css = CSS.render_custom_hue("brand", shades)
 
     assert css =~ ":root {"
-    assert css =~ "--fl-color-primary-600: oklch(51.1% 0.262 276.966);"
-    assert css =~ "--fl-color-primary: light-dark("
-    assert css =~ "--fl-color-primary-content: light-dark("
-    refute css =~ "--fl-palette-"
+    assert css =~ "--fl-palette-brand-50:"
+    assert css =~ "--fl-palette-brand: var(--fl-palette-brand-600);"
+    assert css =~ "--fl-palette-brand-content:"
+    assert css =~ "--fl-palette-brand-text: light-dark("
+    assert css =~ "--fl-palette-brand-soft: light-dark("
+    assert css =~ ~s|:where([data-color="brand"])|
+    assert css =~ ~s|:where([data-active-color="brand"])|
   end
 
-  test "emits the soft tint and matching border" do
-    css =
-      CSS.render(
-        primary: {Tailwind, :indigo},
-        warning: {Tailwind, :amber},
-        neutral: {Tailwind, :zinc}
-      )
+  test "a seeded core has an AA label" do
+    shades = Seed.from_color("#8b5cf6")
+    core = shades[600]
 
-    assert css =~
-             "--fl-color-primary-soft: light-dark(\n    color-mix(in oklab, var(--fl-color-primary-100) 50%, var(--fl-color-primary-200)),\n    color-mix(in oklab, var(--fl-color-primary-950) 70%, var(--fl-color-surface))"
+    candidates = [shades[50], shades[950], "oklch(100% 0 0)", "oklch(0% 0 0)"]
 
-    assert css =~
-             "--fl-color-primary-soft-border: light-dark(\n    color-mix(in oklab, var(--fl-color-primary-200) 50%, var(--fl-color-primary-300)),\n    color-mix(in oklab, var(--fl-color-primary-800) 70%, var(--fl-color-surface))"
+    best =
+      candidates
+      |> Enum.map(fn value -> {value, Contrast.ratio(core, value) || 0.0} end)
+      |> Enum.max_by(&elem(&1, 1))
 
-    assert css =~
-             "--fl-color-warning-soft-border: light-dark(\n    color-mix(in oklab, var(--fl-color-warning-200) 50%, var(--fl-color-warning-300)),\n    color-mix(in oklab, var(--fl-color-warning-800) 70%, var(--fl-color-surface))"
-
-    assert css =~
-             "--fl-color-neutral-soft: light-dark(\n    color-mix(in oklab, var(--fl-color-neutral-100) 50%, var(--fl-color-neutral-200)),\n    color-mix(in oklab, var(--fl-color-neutral-800) 70%, var(--fl-color-surface))"
+    assert elem(best, 1) >= Contrast.aa()
   end
 
-  test "uses a data-theme selector when a theme name is given" do
-    css = CSS.render([primary: {Tailwind, :indigo}], theme: "brand")
-    assert css =~ ~s([data-theme="brand"] {)
-  end
+  test "every shipped palette part matches its renderer output" do
+    for palette <- Palette.palettes() do
+      expected =
+        CSS.render_palette(palette.module, default: Map.get(palette, :default, false))
 
-  test "emits a color shared by several roles in each role scale" do
-    css = CSS.render(primary: {Tailwind, :zinc}, neutral: {Tailwind, :zinc})
+      path = FlintUI.Generator.part_path(palette.css)
 
-    assert css =~ "--fl-color-primary-600: oklch("
-    assert css =~ "--fl-color-neutral-600: oklch("
-    refute css =~ "--fl-palette-"
-  end
-
-  test "picks a dark content for a light alias shade" do
-    css = CSS.render([primary: {Tailwind, :yellow}], light_shade: 300, dark_shade: 300)
-
-    assert css =~ "var(--fl-color-primary-950),\n    var(--fl-color-primary-950)"
-  end
-
-  test "picks a light content for a dark alias shade" do
-    css = CSS.render([primary: {Tailwind, :blue}], light_shade: 900, dark_shade: 900)
-
-    assert css =~ "var(--fl-color-primary-50),\n    var(--fl-color-primary-50)"
-  end
-
-  test "picks the higher-contrast content for a mid-tone fill" do
-    # green-600 reads better against green-950 than green-50.
-    css = CSS.render([success: {Tailwind, :green}], light_shade: 600, dark_shade: 600)
-
-    assert css =~ "--fl-color-success-content: light-dark(\n    var(--fl-color-success-950)"
-  end
-
-  test "falls back to pure white/black when the ramp extremes miss AA" do
-    # red-600/red-50 is 4.36 (below AA); pure white reads better at 4.76 and
-    # keeps the vivid red-600 fill instead of darkening it.
-    css = CSS.render([error: {Tailwind, :red}], light_shade: 600, dark_shade: 600)
-
-    assert css =~ "--fl-color-error-content: light-dark(\n    oklch(100% 0 0),"
-  end
-
-  test "a pinned shade gives a light label" do
-    css = CSS.render([success: {Tailwind, :green}], shades: %{success: {700, 400}})
-
-    assert css =~ "--fl-color-success: light-dark(\n    var(--fl-color-success-700),"
-    assert css =~ "--fl-color-success-content: light-dark(\n    var(--fl-color-success-50),"
-  end
-
-  test "the :contrast option raises the target to AAA" do
-    aa = CSS.render([primary: {Tailwind, :red}], light_shade: 600, dark_shade: 400)
-
-    aaa =
-      CSS.render([primary: {Tailwind, :red}],
-        light_shade: 600,
-        dark_shade: 400,
-        contrast: :aaa
-      )
-
-    assert aa =~ "--fl-color-primary-text: light-dark(\n    var(--fl-color-primary-700),"
-    assert aaa =~ "--fl-color-primary-text: light-dark(\n    var(--fl-color-primary-900),"
-  end
-
-  test "emits a contrast-safe text alias per role" do
-    css = CSS.render([warning: {Tailwind, :amber}], shades: %{warning: 400})
-
-    # amber-400 as text on white would be ~1.7:1; amber-700 clears AA (5.05:1).
-    assert css =~
-             "--fl-color-warning-text: light-dark(\n    var(--fl-color-warning-700),\n    var(--fl-color-warning-400)"
-  end
-
-  test ":shades pins one role's alias and contrast-picks its content" do
-    css =
-      CSS.render(
-        [primary: {Tailwind, :indigo}, warning: {Tailwind, :amber}],
-        shades: %{warning: 400}
-      )
-
-    # warning resolves amber-400 in both schemes; light amber picks a dark label.
-    assert css =~
-             "--fl-color-warning: light-dark(\n    var(--fl-color-warning-400),\n    var(--fl-color-warning-400)"
-
-    assert css =~
-             "--fl-color-warning-content: light-dark(\n    var(--fl-color-warning-950),\n    var(--fl-color-warning-950)"
-
-    # primary is untouched and keeps the global 600 anchor in both schemes.
-    assert css =~
-             "--fl-color-primary: light-dark(\n    var(--fl-color-primary-600),\n    var(--fl-color-primary-600)"
-  end
-
-  test "keeps a solid fill equally saturated in dark mode" do
-    # The alias resolves to the same shade in both schemes, so the dark fill is
-    # as vivid as the light one and keeps a light label (never a washed-out
-    # pale fill with dark text).
-    css = CSS.render(error: {Tailwind, :red})
-
-    assert css =~
-             "--fl-color-error: light-dark(\n    var(--fl-color-error-600),\n    var(--fl-color-error-600)"
-
-    assert css =~
-             "--fl-color-error-content: light-dark(\n    oklch(100% 0 0),\n    oklch(100% 0 0)"
+      assert File.read!(path) == expected,
+             "#{palette.css} is stale; regenerate it from FlintUI.Palette.CSS"
+    end
   end
 end

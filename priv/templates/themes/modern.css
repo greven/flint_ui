@@ -1,13 +1,9 @@
-/* Modern preset (`data-theme="modern"`): retunes radius, type and primary color;
- * the scheme stays independent. */
+/* Modern preset (`data-theme="modern"`): retunes radius and type; the scheme
+ * and palette stay independent. Brand color is a role mapping, not a theme. */
 [data-theme="modern"] {
     --fl-radius: 0.625rem;
 
     --fl-font-sans:
         "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         sans-serif;
-
-    --fl-color-primary: oklch(0.55 0.24 275);
-    --fl-color-primary-content: oklch(0.98 0.012 275);
-    --fl-color-ring: oklch(0.55 0.24 275);
 }

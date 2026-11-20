@@ -2,15 +2,19 @@ defmodule FlintUI.Palette.Tailwind do
   @moduledoc """
   The Tailwind CSS v4 default color palette, vendored as data.
 
-  FlintUI ships no raw palettes by default; this module is the source data for
-  the docs color tooling and the styled `color` prop's `tw:` names, so a project
-  can use Tailwind colors without a Tailwind dependency. Values are taken from
-  `tailwindcss` (MIT): `packages/tailwindcss/theme.css`.
+  This is the default FlintUI palette. It exposes the eighteen portable hue
+  names: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`,
+  `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`,
+  `rose`, and `gray`. `gray` uses Tailwind's neutral ramp so the chrome starts
+  achromatic; override `--fl-palette-gray-*` to warm or cool it.
+
+  Values are taken from `tailwindcss` (MIT):
+  `packages/tailwindcss/theme.css`.
   """
 
   @behaviour FlintUI.Palette
 
-  @colors ~w(red orange amber yellow lime green emerald teal cyan sky blue indigo violet purple fuchsia pink rose slate gray zinc neutral stone mauve olive mist taupe)a
+  @colors ~w(red orange amber yellow lime green emerald teal cyan sky blue indigo violet purple fuchsia pink rose gray)a
 
   @palette %{
     red: [
@@ -360,5 +364,6 @@ defmodule FlintUI.Palette.Tailwind do
   def colors, do: @colors
 
   @impl true
+  def shades(:gray), do: FlintUI.Palette.build(Map.fetch!(@palette, :neutral))
   def shades(color), do: FlintUI.Palette.build(Map.fetch!(@palette, color))
 end

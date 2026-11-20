@@ -1,0 +1,505 @@
+[data-palette="mono"] {
+    --fl-palette-red-50: oklch(97.1% 0.0 17.38);
+    --fl-palette-red-100: oklch(93.6% 0.0 17.717);
+    --fl-palette-red-200: oklch(88.5% 0.0 18.334);
+    --fl-palette-red-300: oklch(80.8% 0.0 19.571);
+    --fl-palette-red-400: oklch(70.4% 0.0 22.216);
+    --fl-palette-red-500: oklch(63.7% 0.0 25.331);
+    --fl-palette-red-600: oklch(57.7% 0.0 27.325);
+    --fl-palette-red-700: oklch(50.5% 0.0 27.518);
+    --fl-palette-red-800: oklch(44.4% 0.0 26.899);
+    --fl-palette-red-900: oklch(39.6% 0.0 25.723);
+    --fl-palette-red-950: oklch(25.8% 0.0 26.042);
+    
+    --fl-palette-red: var(--fl-palette-red-600);
+    --fl-palette-red-content: oklch(0% 0 0);
+    --fl-palette-red-text: light-dark(
+        var(--fl-palette-red-800),
+        var(--fl-palette-red-300)
+    );
+    --fl-palette-red-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-red) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-red) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-red-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-red) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-orange-50: oklch(98.0% 0.0 73.684);
+    --fl-palette-orange-100: oklch(95.4% 0.0 75.164);
+    --fl-palette-orange-200: oklch(90.1% 0.0 70.697);
+    --fl-palette-orange-300: oklch(83.7% 0.0 66.29);
+    --fl-palette-orange-400: oklch(75.0% 0.0 55.934);
+    --fl-palette-orange-500: oklch(70.5% 0.0 47.604);
+    --fl-palette-orange-600: oklch(64.6% 0.0 41.116);
+    --fl-palette-orange-700: oklch(55.3% 0.0 38.402);
+    --fl-palette-orange-800: oklch(47.0% 0.0 37.304);
+    --fl-palette-orange-900: oklch(40.8% 0.0 38.172);
+    --fl-palette-orange-950: oklch(26.6% 0.0 36.259);
+    
+    --fl-palette-orange: var(--fl-palette-orange-600);
+    --fl-palette-orange-content: var(--fl-palette-orange-950);
+    --fl-palette-orange-text: light-dark(
+        var(--fl-palette-orange-800),
+        var(--fl-palette-orange-300)
+    );
+    --fl-palette-orange-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-orange) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-orange) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-orange-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-orange) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-amber-50: oklch(98.7% 0.0 95.277);
+    --fl-palette-amber-100: oklch(96.2% 0.0 95.617);
+    --fl-palette-amber-200: oklch(92.4% 0.0 95.746);
+    --fl-palette-amber-300: oklch(87.9% 0.0 91.605);
+    --fl-palette-amber-400: oklch(82.8% 0.0 84.429);
+    --fl-palette-amber-500: oklch(76.9% 0.0 70.08);
+    --fl-palette-amber-600: oklch(66.6% 0.0 58.318);
+    --fl-palette-amber-700: oklch(55.5% 0.0 48.998);
+    --fl-palette-amber-800: oklch(47.3% 0.0 46.201);
+    --fl-palette-amber-900: oklch(41.4% 0.0 45.904);
+    --fl-palette-amber-950: oklch(27.9% 0.0 45.635);
+    
+    --fl-palette-amber: var(--fl-palette-amber-500);
+    --fl-palette-amber-content: var(--fl-palette-amber-950);
+    --fl-palette-amber-text: light-dark(
+        var(--fl-palette-amber-800),
+        var(--fl-palette-amber-300)
+    );
+    --fl-palette-amber-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-amber) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-amber) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-amber-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-amber) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-yellow-50: oklch(98.7% 0.0 102.212);
+    --fl-palette-yellow-100: oklch(97.3% 0.0 103.193);
+    --fl-palette-yellow-200: oklch(94.5% 0.0 101.54);
+    --fl-palette-yellow-300: oklch(90.5% 0.0 98.111);
+    --fl-palette-yellow-400: oklch(85.2% 0.0 91.936);
+    --fl-palette-yellow-500: oklch(79.5% 0.0 86.047);
+    --fl-palette-yellow-600: oklch(68.1% 0.0 75.834);
+    --fl-palette-yellow-700: oklch(55.4% 0.0 66.442);
+    --fl-palette-yellow-800: oklch(47.6% 0.0 61.907);
+    --fl-palette-yellow-900: oklch(42.1% 0.0 57.708);
+    --fl-palette-yellow-950: oklch(28.6% 0.0 53.813);
+    
+    --fl-palette-yellow: var(--fl-palette-yellow-500);
+    --fl-palette-yellow-content: var(--fl-palette-yellow-950);
+    --fl-palette-yellow-text: light-dark(
+        var(--fl-palette-yellow-800),
+        var(--fl-palette-yellow-300)
+    );
+    --fl-palette-yellow-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-yellow) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-yellow) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-yellow-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-yellow) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-lime-50: oklch(98.6% 0.0 120.757);
+    --fl-palette-lime-100: oklch(96.7% 0.0 122.328);
+    --fl-palette-lime-200: oklch(93.8% 0.0 124.321);
+    --fl-palette-lime-300: oklch(89.7% 0.0 126.665);
+    --fl-palette-lime-400: oklch(84.1% 0.0 128.85);
+    --fl-palette-lime-500: oklch(76.8% 0.0 130.85);
+    --fl-palette-lime-600: oklch(64.8% 0.0 131.684);
+    --fl-palette-lime-700: oklch(53.2% 0.0 131.589);
+    --fl-palette-lime-800: oklch(45.3% 0.0 130.933);
+    --fl-palette-lime-900: oklch(40.5% 0.0 131.063);
+    --fl-palette-lime-950: oklch(27.4% 0.0 132.109);
+    
+    --fl-palette-lime: var(--fl-palette-lime-600);
+    --fl-palette-lime-content: var(--fl-palette-lime-950);
+    --fl-palette-lime-text: light-dark(
+        var(--fl-palette-lime-800),
+        var(--fl-palette-lime-300)
+    );
+    --fl-palette-lime-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-lime) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-lime) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-lime-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-lime) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-green-50: oklch(98.2% 0.0 155.826);
+    --fl-palette-green-100: oklch(96.2% 0.0 156.743);
+    --fl-palette-green-200: oklch(92.5% 0.0 155.995);
+    --fl-palette-green-300: oklch(87.1% 0.0 154.449);
+    --fl-palette-green-400: oklch(79.2% 0.0 151.711);
+    --fl-palette-green-500: oklch(72.3% 0.0 149.579);
+    --fl-palette-green-600: oklch(62.7% 0.0 149.214);
+    --fl-palette-green-700: oklch(52.7% 0.0 150.069);
+    --fl-palette-green-800: oklch(44.8% 0.0 151.328);
+    --fl-palette-green-900: oklch(39.3% 0.0 152.535);
+    --fl-palette-green-950: oklch(26.6% 0.0 152.934);
+    
+    --fl-palette-green: var(--fl-palette-green-700);
+    --fl-palette-green-content: var(--fl-palette-green-50);
+    --fl-palette-green-text: light-dark(
+        var(--fl-palette-green-800),
+        var(--fl-palette-green-300)
+    );
+    --fl-palette-green-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-green) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-green) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-green-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-green) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-emerald-50: oklch(97.9% 0.0 166.113);
+    --fl-palette-emerald-100: oklch(95.0% 0.0 163.051);
+    --fl-palette-emerald-200: oklch(90.5% 0.0 164.15);
+    --fl-palette-emerald-300: oklch(84.5% 0.0 164.978);
+    --fl-palette-emerald-400: oklch(76.5% 0.0 163.223);
+    --fl-palette-emerald-500: oklch(69.6% 0.0 162.48);
+    --fl-palette-emerald-600: oklch(59.6% 0.0 163.225);
+    --fl-palette-emerald-700: oklch(50.8% 0.0 165.612);
+    --fl-palette-emerald-800: oklch(43.2% 0.0 166.913);
+    --fl-palette-emerald-900: oklch(37.8% 0.0 168.94);
+    --fl-palette-emerald-950: oklch(26.2% 0.0 172.552);
+    
+    --fl-palette-emerald: var(--fl-palette-emerald-700);
+    --fl-palette-emerald-content: var(--fl-palette-emerald-50);
+    --fl-palette-emerald-text: light-dark(
+        var(--fl-palette-emerald-800),
+        var(--fl-palette-emerald-300)
+    );
+    --fl-palette-emerald-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-emerald) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-emerald) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-emerald-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-emerald) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-teal-50: oklch(98.4% 0.0 180.72);
+    --fl-palette-teal-100: oklch(95.3% 0.0 180.801);
+    --fl-palette-teal-200: oklch(91.0% 0.0 180.426);
+    --fl-palette-teal-300: oklch(85.5% 0.0 181.071);
+    --fl-palette-teal-400: oklch(77.7% 0.0 181.912);
+    --fl-palette-teal-500: oklch(70.4% 0.0 182.503);
+    --fl-palette-teal-600: oklch(60.0% 0.0 184.704);
+    --fl-palette-teal-700: oklch(51.1% 0.0 186.391);
+    --fl-palette-teal-800: oklch(43.7% 0.0 188.216);
+    --fl-palette-teal-900: oklch(38.6% 0.0 188.416);
+    --fl-palette-teal-950: oklch(27.7% 0.0 192.524);
+    
+    --fl-palette-teal: var(--fl-palette-teal-700);
+    --fl-palette-teal-content: var(--fl-palette-teal-50);
+    --fl-palette-teal-text: light-dark(
+        var(--fl-palette-teal-800),
+        var(--fl-palette-teal-300)
+    );
+    --fl-palette-teal-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-teal) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-teal) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-teal-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-teal) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-cyan-50: oklch(98.4% 0.0 200.873);
+    --fl-palette-cyan-100: oklch(95.6% 0.0 203.388);
+    --fl-palette-cyan-200: oklch(91.7% 0.0 205.041);
+    --fl-palette-cyan-300: oklch(86.5% 0.0 207.078);
+    --fl-palette-cyan-400: oklch(78.9% 0.0 211.53);
+    --fl-palette-cyan-500: oklch(71.5% 0.0 215.221);
+    --fl-palette-cyan-600: oklch(60.9% 0.0 221.723);
+    --fl-palette-cyan-700: oklch(52.0% 0.0 223.128);
+    --fl-palette-cyan-800: oklch(45.0% 0.0 224.283);
+    --fl-palette-cyan-900: oklch(39.8% 0.0 227.392);
+    --fl-palette-cyan-950: oklch(30.2% 0.0 229.695);
+    
+    --fl-palette-cyan: var(--fl-palette-cyan-700);
+    --fl-palette-cyan-content: var(--fl-palette-cyan-50);
+    --fl-palette-cyan-text: light-dark(
+        var(--fl-palette-cyan-800),
+        var(--fl-palette-cyan-300)
+    );
+    --fl-palette-cyan-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-cyan) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-cyan) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-cyan-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-cyan) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-sky-50: oklch(97.7% 0.0 236.62);
+    --fl-palette-sky-100: oklch(95.1% 0.0 236.824);
+    --fl-palette-sky-200: oklch(90.1% 0.0 230.902);
+    --fl-palette-sky-300: oklch(82.8% 0.0 230.318);
+    --fl-palette-sky-400: oklch(74.6% 0.0 232.661);
+    --fl-palette-sky-500: oklch(68.5% 0.0 237.323);
+    --fl-palette-sky-600: oklch(58.8% 0.0 241.966);
+    --fl-palette-sky-700: oklch(50.0% 0.0 242.749);
+    --fl-palette-sky-800: oklch(44.3% 0.0 240.79);
+    --fl-palette-sky-900: oklch(39.1% 0.0 240.876);
+    --fl-palette-sky-950: oklch(29.3% 0.0 243.157);
+    
+    --fl-palette-sky: var(--fl-palette-sky-700);
+    --fl-palette-sky-content: var(--fl-palette-sky-50);
+    --fl-palette-sky-text: light-dark(
+        var(--fl-palette-sky-800),
+        var(--fl-palette-sky-300)
+    );
+    --fl-palette-sky-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-sky) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-sky) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-sky-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-sky) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-blue-50: oklch(97.0% 0.0 254.604);
+    --fl-palette-blue-100: oklch(93.2% 0.0 255.585);
+    --fl-palette-blue-200: oklch(88.2% 0.0 254.128);
+    --fl-palette-blue-300: oklch(80.9% 0.0 251.813);
+    --fl-palette-blue-400: oklch(70.7% 0.0 254.624);
+    --fl-palette-blue-500: oklch(62.3% 0.0 259.815);
+    --fl-palette-blue-600: oklch(54.6% 0.0 262.881);
+    --fl-palette-blue-700: oklch(48.8% 0.0 264.376);
+    --fl-palette-blue-800: oklch(42.4% 0.0 265.638);
+    --fl-palette-blue-900: oklch(37.9% 0.0 265.522);
+    --fl-palette-blue-950: oklch(28.2% 0.0 267.935);
+    
+    --fl-palette-blue: var(--fl-palette-blue-600);
+    --fl-palette-blue-content: var(--fl-palette-blue-50);
+    --fl-palette-blue-text: light-dark(
+        var(--fl-palette-blue-800),
+        var(--fl-palette-blue-300)
+    );
+    --fl-palette-blue-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-blue) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-blue) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-blue-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-blue) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-indigo-50: oklch(96.2% 0.0 272.314);
+    --fl-palette-indigo-100: oklch(93.0% 0.0 272.788);
+    --fl-palette-indigo-200: oklch(87.0% 0.0 274.039);
+    --fl-palette-indigo-300: oklch(78.5% 0.0 274.713);
+    --fl-palette-indigo-400: oklch(67.3% 0.0 276.935);
+    --fl-palette-indigo-500: oklch(58.5% 0.0 277.117);
+    --fl-palette-indigo-600: oklch(51.1% 0.0 276.966);
+    --fl-palette-indigo-700: oklch(45.7% 0.0 277.023);
+    --fl-palette-indigo-800: oklch(39.8% 0.0 277.366);
+    --fl-palette-indigo-900: oklch(35.9% 0.0 278.697);
+    --fl-palette-indigo-950: oklch(25.7% 0.0 281.288);
+    
+    --fl-palette-indigo: var(--fl-palette-indigo-600);
+    --fl-palette-indigo-content: var(--fl-palette-indigo-50);
+    --fl-palette-indigo-text: light-dark(
+        var(--fl-palette-indigo-800),
+        var(--fl-palette-indigo-300)
+    );
+    --fl-palette-indigo-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-indigo) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-indigo) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-indigo-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-indigo) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-violet-50: oklch(96.9% 0.0 293.756);
+    --fl-palette-violet-100: oklch(94.3% 0.0 294.588);
+    --fl-palette-violet-200: oklch(89.4% 0.0 293.283);
+    --fl-palette-violet-300: oklch(81.1% 0.0 293.571);
+    --fl-palette-violet-400: oklch(70.2% 0.0 293.541);
+    --fl-palette-violet-500: oklch(60.6% 0.0 292.717);
+    --fl-palette-violet-600: oklch(54.1% 0.0 293.009);
+    --fl-palette-violet-700: oklch(49.1% 0.0 292.581);
+    --fl-palette-violet-800: oklch(43.2% 0.0 292.759);
+    --fl-palette-violet-900: oklch(38.0% 0.0 293.745);
+    --fl-palette-violet-950: oklch(28.3% 0.0 291.089);
+    
+    --fl-palette-violet: var(--fl-palette-violet-600);
+    --fl-palette-violet-content: var(--fl-palette-violet-50);
+    --fl-palette-violet-text: light-dark(
+        var(--fl-palette-violet-800),
+        var(--fl-palette-violet-300)
+    );
+    --fl-palette-violet-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-violet) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-violet) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-violet-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-violet) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-purple-50: oklch(97.7% 0.0 308.299);
+    --fl-palette-purple-100: oklch(94.6% 0.0 307.174);
+    --fl-palette-purple-200: oklch(90.2% 0.0 306.703);
+    --fl-palette-purple-300: oklch(82.7% 0.0 306.383);
+    --fl-palette-purple-400: oklch(71.4% 0.0 305.504);
+    --fl-palette-purple-500: oklch(62.7% 0.0 303.9);
+    --fl-palette-purple-600: oklch(55.8% 0.0 302.321);
+    --fl-palette-purple-700: oklch(49.6% 0.0 301.924);
+    --fl-palette-purple-800: oklch(43.8% 0.0 303.724);
+    --fl-palette-purple-900: oklch(38.1% 0.0 304.987);
+    --fl-palette-purple-950: oklch(29.1% 0.0 302.717);
+    
+    --fl-palette-purple: var(--fl-palette-purple-600);
+    --fl-palette-purple-content: oklch(100% 0 0);
+    --fl-palette-purple-text: light-dark(
+        var(--fl-palette-purple-800),
+        var(--fl-palette-purple-300)
+    );
+    --fl-palette-purple-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-purple) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-purple) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-purple-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-purple) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-fuchsia-50: oklch(97.7% 0.0 320.058);
+    --fl-palette-fuchsia-100: oklch(95.2% 0.0 318.852);
+    --fl-palette-fuchsia-200: oklch(90.3% 0.0 319.62);
+    --fl-palette-fuchsia-300: oklch(83.3% 0.0 321.434);
+    --fl-palette-fuchsia-400: oklch(74.0% 0.0 322.16);
+    --fl-palette-fuchsia-500: oklch(66.7% 0.0 322.15);
+    --fl-palette-fuchsia-600: oklch(59.1% 0.0 322.896);
+    --fl-palette-fuchsia-700: oklch(51.8% 0.0 323.949);
+    --fl-palette-fuchsia-800: oklch(45.2% 0.0 324.591);
+    --fl-palette-fuchsia-900: oklch(40.1% 0.0 325.612);
+    --fl-palette-fuchsia-950: oklch(29.3% 0.0 325.661);
+    
+    --fl-palette-fuchsia: var(--fl-palette-fuchsia-600);
+    --fl-palette-fuchsia-content: oklch(0% 0 0);
+    --fl-palette-fuchsia-text: light-dark(
+        var(--fl-palette-fuchsia-800),
+        var(--fl-palette-fuchsia-300)
+    );
+    --fl-palette-fuchsia-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-fuchsia) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-fuchsia) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-fuchsia-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-fuchsia) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-pink-50: oklch(97.1% 0.0 343.198);
+    --fl-palette-pink-100: oklch(94.8% 0.0 342.258);
+    --fl-palette-pink-200: oklch(89.9% 0.0 343.231);
+    --fl-palette-pink-300: oklch(82.3% 0.0 346.018);
+    --fl-palette-pink-400: oklch(71.8% 0.0 349.761);
+    --fl-palette-pink-500: oklch(65.6% 0.0 354.308);
+    --fl-palette-pink-600: oklch(59.2% 0.0 0.584);
+    --fl-palette-pink-700: oklch(52.5% 0.0 3.958);
+    --fl-palette-pink-800: oklch(45.9% 0.0 3.815);
+    --fl-palette-pink-900: oklch(40.8% 0.0 2.432);
+    --fl-palette-pink-950: oklch(28.4% 0.0 3.907);
+    
+    --fl-palette-pink: var(--fl-palette-pink-600);
+    --fl-palette-pink-content: oklch(0% 0 0);
+    --fl-palette-pink-text: light-dark(
+        var(--fl-palette-pink-800),
+        var(--fl-palette-pink-300)
+    );
+    --fl-palette-pink-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-pink) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-pink) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-pink-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-pink) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-rose-50: oklch(96.9% 0.0 12.422);
+    --fl-palette-rose-100: oklch(94.1% 0.0 12.58);
+    --fl-palette-rose-200: oklch(89.2% 0.0 10.001);
+    --fl-palette-rose-300: oklch(81.0% 0.0 11.638);
+    --fl-palette-rose-400: oklch(71.2% 0.0 13.428);
+    --fl-palette-rose-500: oklch(64.5% 0.0 16.439);
+    --fl-palette-rose-600: oklch(58.6% 0.0 17.585);
+    --fl-palette-rose-700: oklch(51.4% 0.0 16.935);
+    --fl-palette-rose-800: oklch(45.5% 0.0 13.697);
+    --fl-palette-rose-900: oklch(41.0% 0.0 10.272);
+    --fl-palette-rose-950: oklch(27.1% 0.0 12.094);
+    
+    --fl-palette-rose: var(--fl-palette-rose-600);
+    --fl-palette-rose-content: oklch(0% 0 0);
+    --fl-palette-rose-text: light-dark(
+        var(--fl-palette-rose-800),
+        var(--fl-palette-rose-300)
+    );
+    --fl-palette-rose-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-rose) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-rose) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-rose-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-rose) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+    
+    --fl-palette-gray-50: oklch(98.5% 0.0 0.0);
+    --fl-palette-gray-100: oklch(97.0% 0.0 0.0);
+    --fl-palette-gray-200: oklch(92.2% 0.0 0.0);
+    --fl-palette-gray-300: oklch(87.0% 0.0 0.0);
+    --fl-palette-gray-400: oklch(70.8% 0.0 0.0);
+    --fl-palette-gray-500: oklch(55.6% 0.0 0.0);
+    --fl-palette-gray-600: oklch(43.9% 0.0 0.0);
+    --fl-palette-gray-700: oklch(37.1% 0.0 0.0);
+    --fl-palette-gray-800: oklch(26.9% 0.0 0.0);
+    --fl-palette-gray-900: oklch(20.5% 0.0 0.0);
+    --fl-palette-gray-950: oklch(14.5% 0.0 0.0);
+    
+    --fl-palette-gray: var(--fl-palette-gray-600);
+    --fl-palette-gray-content: var(--fl-palette-gray-50);
+    --fl-palette-gray-text: light-dark(
+        var(--fl-palette-gray-800),
+        var(--fl-palette-gray-300)
+    );
+    --fl-palette-gray-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-gray) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-gray) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-gray-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-gray) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
+}

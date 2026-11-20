@@ -41,7 +41,7 @@ defmodule FlintUI.Styled.Input do
         ),
         Var.new(
           name: "--fl-input-check-content",
-          default: "var(--fl-color-neutral-50)",
+          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
           doc: "The check mark color on the checked checkbox."
         )
       ]

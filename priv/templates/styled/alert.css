@@ -3,6 +3,18 @@
      * `-soft`, and `-soft-border`. Layout, spacing, radius, and elevation stay
      * on the prop hooks and the shared scales. */
     [data-element="alert"][data-variant] {
+        --fl-alert-color: var(--fl-tone, var(--fl-color-inverted));
+        --fl-alert-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
+        --fl-alert-text: var(--fl-tone-text, var(--fl-alert-color));
+        --fl-alert-soft: var(
+            --fl-tone-soft,
+            color-mix(in oklab, var(--fl-alert-color) 10%, var(--fl-color-surface))
+        );
+        --fl-alert-soft-border: var(
+            --fl-tone-soft-border,
+            color-mix(in oklab, var(--fl-alert-color) var(--fl-border-strength-soft), var(--fl-color-surface))
+        );
+
         box-sizing: border-box;
         display: flex;
         align-items: flex-start;
@@ -18,121 +30,18 @@
         line-height: 1.375;
     }
 
-    /* Each color sets the public inputs. */
-    [data-element="alert"][data-color="primary"] {
-        --fl-alert-color: var(--fl-color-primary);
-        --fl-alert-color-content: var(--fl-color-primary-content);
-        --fl-alert-text: var(--fl-color-primary-text);
-        --fl-alert-soft: var(--fl-color-primary-soft);
-        --fl-alert-soft-border: var(--fl-color-primary-soft-border);
-    }
-
-    [data-element="alert"][data-color="success"] {
-        --fl-alert-color: var(--fl-color-success);
-        --fl-alert-color-content: var(--fl-color-success-content);
-        --fl-alert-text: var(--fl-color-success-text);
-        --fl-alert-soft: var(--fl-color-success-soft);
-        --fl-alert-soft-border: var(--fl-color-success-soft-border);
-    }
-
-    [data-element="alert"][data-color="info"] {
-        --fl-alert-color: var(--fl-color-info);
-        --fl-alert-color-content: var(--fl-color-info-content);
-        --fl-alert-text: var(--fl-color-info-text);
-        --fl-alert-soft: var(--fl-color-info-soft);
-        --fl-alert-soft-border: var(--fl-color-info-soft-border);
-    }
-
-    [data-element="alert"][data-color="warning"] {
-        --fl-alert-color: var(--fl-color-warning);
-        --fl-alert-color-content: var(--fl-color-warning-content);
-        --fl-alert-text: var(--fl-color-warning-text);
-        --fl-alert-soft: var(--fl-color-warning-soft);
-        --fl-alert-soft-border: var(--fl-color-warning-soft-border);
-    }
-
-    [data-element="alert"][data-color="error"] {
-        --fl-alert-color: var(--fl-color-error);
-        --fl-alert-color-content: var(--fl-color-error-content);
-        --fl-alert-text: var(--fl-color-error-text);
-        --fl-alert-soft: var(--fl-color-error-soft);
-        --fl-alert-soft-border: var(--fl-color-error-soft-border);
-    }
-
-    [data-element="alert"][data-color="secondary"] {
-        --fl-alert-color: var(--fl-color-secondary);
-        --fl-alert-color-content: var(--fl-color-secondary-content);
-        --fl-alert-text: var(--fl-color-secondary-text);
-        --fl-alert-soft: var(--fl-color-secondary-soft);
-        --fl-alert-soft-border: var(--fl-color-secondary-soft-border);
-    }
-
-    [data-element="alert"][data-color="neutral"] {
-        --fl-alert-color: var(--fl-color-inverted);
-        --fl-alert-color-content: var(--fl-color-text-inverted);
-        --fl-alert-text: var(--fl-color-text-toned);
-        --fl-alert-soft: var(--fl-color-neutral-soft);
-        --fl-alert-soft-border: var(--fl-color-neutral-soft-border);
-    }
-
-    /* Absolute tones stay dark/light in either scheme. */
-    [data-element="alert"][data-color="dark"] {
-        --fl-alert-color: var(--fl-color-dark);
-        --fl-alert-color-content: var(--fl-color-dark-content);
-        --fl-alert-text: var(--fl-color-dark-text);
-        --fl-alert-soft: var(--fl-color-dark-soft);
-        --fl-alert-soft-border: var(--fl-color-dark-soft-border);
-    }
-
-    [data-element="alert"][data-color="light"] {
-        --fl-alert-color: var(--fl-color-light);
-        --fl-alert-color-content: var(--fl-color-light-content);
-        --fl-alert-text: var(--fl-color-light-text);
-        --fl-alert-soft: var(--fl-color-light-soft);
-        --fl-alert-soft-border: var(--fl-color-light-soft-border);
-    }
-
     /* A control sitting on a tinted alert needs one more tint step to stay
      * distinct from the surface. The alert root keeps the base soft; its direct
-     * children resolve an elevated value that inherits into the content and
-     * actions. A matching `soft` or `subtle` control reads the same role token,
-     * so it gains the step without any alert-specific control styling. The 12%
-     * step keeps every role's `-text` token above AA on the elevated fill. Raw
-     * colors have no role token to elevate and keep the base soft. */
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="primary"] > * {
-        --fl-color-primary-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
+     * children resolve an elevated tone that inherits into the content and
+     * actions. The 12% step keeps the tone's text token above AA on the
+     * elevated fill. */
+    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color] > * {
+        --fl-tone-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
     }
 
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="secondary"] > * {
-        --fl-color-secondary-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="success"] > * {
-        --fl-color-success-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="info"] > * {
-        --fl-color-info-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="warning"] > * {
-        --fl-color-warning-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="error"] > * {
-        --fl-color-error-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="neutral"] > * {
-        --fl-color-neutral-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="dark"] > * {
-        --fl-color-dark-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
-    }
-
-    [data-element="alert"][data-background]:is([data-variant="outline"], [data-variant="soft"])[data-color="light"] > * {
-        --fl-color-light-soft: color-mix(in oklab, var(--fl-alert-color) 12%, var(--fl-alert-soft));
+    /* The neutral alert reads as secondary copy, not as the inverted fill. */
+    [data-element="alert"][data-color="neutral"] {
+        --fl-alert-text: var(--fl-color-text-toned);
     }
 
     /* Variants. Outline is the default: the shared tint with the role's

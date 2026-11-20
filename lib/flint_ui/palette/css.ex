@@ -1,212 +1,254 @@
 defmodule FlintUI.Palette.CSS do
   @moduledoc """
-  Renders a palette mapping into theme CSS.
+  Renders a palette source into a theme stylesheet part.
 
-  Given a mapping of semantic role to a `{palette_module, color_name}`, it emits:
+  Each hue emits its `50..950` ramp plus five derived tokens:
 
-    * `--fl-color-{role}-{shade}` — the role's scale, written directly from the
-      source palette;
-    * `--fl-color-{role}` and `--fl-color-{role}-content` — the role fill and a
-      contrast-picked label on that fill;
-    * `--fl-color-{role}-text` — a shade safe to use as text on the page
-      background (see `FlintUI.Palette.Contrast`).
+    * `--fl-palette-{hue}` — the core fill (see `FlintUI.Palette.core_shade/1`);
+    * `--fl-palette-{hue}-content` — the label on that fill;
+    * `--fl-palette-{hue}-text` — an AA shade for text on the page;
+    * `--fl-palette-{hue}-soft` — the tinted fill;
+    * `--fl-palette-{hue}-soft-border` — the matching tinted edge.
 
-  Source palette names never become CSS variables: the role scale is the only
-  color contract. Every role in the mapping overrides the default theme, because
-  the block lands after `flint.css` in the host stylesheet.
+  Derived tokens reference the ramp rather than literal colors wherever
+  possible, so remapping a hue's eleven shade variables in an app stylesheet
+  updates its label, text, and tinted treatments at the same time.
+
+  The default palette renders under `:root, [data-palette="<name>"]`; other
+  palettes render under `[data-palette="<name>"]`. `render_hooks/1` emits the
+  `data-color` tone hooks, and `render_custom_hue/3` combines a generated ramp
+  with its hooks for `mix flint.palette`.
   """
 
   alias FlintUI.Palette
   alias FlintUI.Palette.Contrast
 
-  @roles ~w(primary secondary neutral success info warning error)a
+  @roles ~w(primary secondary neutral info success warning error dark light)
+
+  @white "oklch(100% 0 0)"
+  @black "oklch(0% 0 0)"
 
   @doc """
-  Renders the CSS block for `mapping`.
+  Renders the `data-color` and `data-active-color` tone hooks.
 
-  `mapping` is an enumerable of `{role, {palette_module, color_name}}`. Options:
-
-    * `:theme` — a preset name; renders under `[data-theme="<name>"]` instead of
-      `:root`.
-    * `:light_shade` / `:dark_shade` — the shade a role alias resolves to per
-      scheme (defaults `600` / `600`, so a solid fill stays equally saturated in
-      both schemes — lightening it in dark washes the fill out and pairs it with
-      a dark label).
-    * `:shades` — per-role override of the alias shade(s), e.g.
-      `%{warning: 400}` (both schemes) or `%{warning: {300, 500}}`. Roles not
-      listed keep `:light_shade`/`:dark_shade`.
-    * `:contrast` — the target ratio for computed label/text shades: `:aa`
-      (default, 4.5), `:aaa` (7.0), or an explicit number.
+  The hooks cover semantic roles plus the canonical palette hues by default.
+  Pass `:hues` and `:roles` to render a different set, as `mix flint.palette`
+  does for one custom hue.
   """
-  def render(mapping, opts \\ []) do
-    mapping =
-      mapping
-      |> Enum.map(fn {role, {source, color}} -> {role, source, color} end)
-      |> Enum.sort_by(fn {role, _source, _color} -> Enum.find_index(@roles, &(&1 == role)) end)
+  def render_hooks(opts \\ []) do
+    roles = Keyword.get(opts, :roles, @roles)
+    hues = Keyword.get(opts, :hues, Palette.hue_names())
 
-    light = Keyword.get(opts, :light_shade, 600)
-    dark = Keyword.get(opts, :dark_shade, 600)
-    shades = Keyword.get(opts, :shades, %{})
+    base =
+      Enum.map_join(roles, "\n", &role_hook("data-color", &1)) <>
+        Enum.map_join(hues, "\n", &hue_hook("data-color", &1))
+
+    active =
+      Enum.map_join(roles ++ hues, "\n", &hue_hook("data-active-color", &1))
+
+    """
+    /* Color hooks. One selected color, one five-token tone set.
+     *
+     * `data-color` is the base tone; `data-active-color` is the toggled tone.
+     * Components read `--fl-tone*` / `--fl-active-tone*`, so a role and a palette
+     * hue are interchangeable. Raw colors write the same inputs inline, and an
+     * omitted hook (for example `color="inherit"`) lets the parent tone through.
+     */
+
+    @layer components {
+    #{indent(String.trim_trailing(base))}
+
+    #{indent(String.trim_trailing(active))}
+    }
+    """
+  end
+
+  defp role_hook(attribute, role) do
+    """
+    :where([#{attribute}="#{role}"]) {
+        --fl-tone: var(--fl-color-#{role});
+        --fl-tone-content: var(--fl-color-#{role}-content);
+        --fl-tone-text: var(--fl-color-#{role}-text);
+        --fl-tone-soft: var(--fl-color-#{role}-soft);
+        --fl-tone-soft-border: var(--fl-color-#{role}-soft-border);
+    }
+    """
+  end
+
+  defp hue_hook(attribute, hue) do
+    prefix = if attribute == "data-active-color", do: "--fl-active-tone", else: "--fl-tone"
+
+    """
+    :where([#{attribute}="#{hue}"]) {
+        #{prefix}: var(--fl-palette-#{hue});
+        #{prefix}-content: var(--fl-palette-#{hue}-content);
+        #{prefix}-text: var(--fl-palette-#{hue}-text);
+        #{prefix}-soft: var(--fl-palette-#{hue}-soft);
+        #{prefix}-soft-border: var(--fl-palette-#{hue}-soft-border);
+    }
+    """
+  end
+
+  @doc """
+  Renders a standalone stylesheet part for one app-defined hue.
+
+  The block contains the eleven shades, the five derived tokens, and the base
+  and active hooks. Import it after `flint.css` and add the hue to
+  `config :flint_ui, extra_hues: [...]`.
+  """
+  def render_custom_hue(name, shades, opts \\ []) do
+    hue = to_string(name)
+    core = Keyword.get(opts, :core, 600)
+    tokens = hue_tokens(hue, shades, core: core, contrast: Keyword.get(opts, :contrast))
+    hooks = render_hooks(roles: [], hues: [hue])
+
+    """
+    /* Custom palette hue `#{hue}`. Import after flint.css. */
+    :root {
+    #{indent(tokens)}
+    }
+
+    #{hooks}\
+    """
+  end
+
+  @doc """
+  Renders the CSS block for `source`.
+
+  Options:
+
+    * `:default` — render under `:root` as well as the palette selector.
+    * `:contrast` — the target ratio for labels and text shades: `:aa`
+      (default), `:aaa`, or an explicit number.
+  """
+  def render_palette(source, opts \\ []) do
     target = Contrast.target(Keyword.get(opts, :contrast))
 
-    [
-      selector(opts),
-      " {\n",
-      Enum.map_join(mapping, "\n", fn {role, source, color} ->
-        {role_light, role_dark} = role_shades(shades, role, light, dark)
-        role_block({role, source, color}, role_light, role_dark, target)
-      end),
-      "\n}\n"
-    ]
-    |> IO.iodata_to_binary()
+    hues =
+      source
+      |> source_hues()
+      |> Enum.map_join("\n\n", &hue_tokens(&1, source.shades(&1), contrast: target))
+
+    "#{selector(source, opts)} {\n#{indent(hues)}\n}\n"
   end
 
-  # A role's alias shades: `nil` falls back to the global pair, an integer pins
-  # both schemes, and a `{light, dark}` tuple pins each.
-  defp role_shades(shades, role, light, dark) do
-    case Map.get(shades, role) do
-      nil -> {light, dark}
-      {role_light, role_dark} -> {role_light, role_dark}
-      shade -> {shade, shade}
+  defp source_hues(source), do: source.colors()
+
+  defp selector(source, opts) do
+    if Keyword.get(opts, :default, false) do
+      ~s(:root,\n[data-palette="#{source.name()}"])
+    else
+      ~s([data-palette="#{source.name()}"])
     end
   end
 
-  defp selector(opts) do
-    case Keyword.get(opts, :theme) do
-      nil -> ":root"
-      theme -> ~s([data-theme="#{theme}"])
-    end
-  end
+  @doc """
+  Renders the eleven shades and five derived tokens for one hue.
 
-  defp role_block({role, source, color}, light, dark, target) do
-    shades = source.shades(color)
+  `core` defaults to `FlintUI.Palette.core_shade/1`; pass `:core` to pin a
+  different shade. This is the block the palette parts and `mix flint.palette`
+  share.
+  """
+  def hue_tokens(hue, shades, opts \\ []) do
+    target = Contrast.target(Keyword.get(opts, :contrast))
+    core = Keyword.get(opts, :core, Palette.core_shade(hue))
+    light_step = text_step(shades, shade_value(shades, 50), target, [800, 700, 900, 600])
+    dark_step = text_step(shades, shade_value(shades, 900), target, [300, 400, 200, 500])
 
     scale =
       Enum.map_join(Palette.shade_keys(), "\n", fn shade ->
-        "  --fl-color-#{role}-#{shade}: #{shade_value(shades, shade)};"
+        "--fl-palette-#{hue}-#{shade}: #{shade_value(shades, shade)};"
       end)
 
-    text_light =
-      text_shade(
-        shades,
-        light,
-        text_background(shades, light, Contrast.light_background()),
-        target
-      )
-
-    text_dark =
-      text_shade(
-        shades,
-        dark,
-        text_background(shades, dark, Contrast.dark_background()),
-        target
-      )
-
-    {soft_dark, border_dark} = soft_shades(role)
-
     footer = """
-      --fl-color-#{role}: light-dark(
-        var(--fl-color-#{role}-#{light}),
-        var(--fl-color-#{role}-#{dark})
-      );
-      --fl-color-#{role}-content: light-dark(
-        #{content_value(role, shades, light, target)},
-        #{content_value(role, shades, dark, target)}
-      );
-      --fl-color-#{role}-text: light-dark(
-        var(--fl-color-#{role}-#{text_light}),
-        var(--fl-color-#{role}-#{text_dark})
-      );
-      --fl-color-#{role}-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-#{role}-100) 50%, var(--fl-color-#{role}-200)),
-        color-mix(in oklab, var(--fl-color-#{role}-#{soft_dark}) 70%, var(--fl-color-surface))
-      );
-      --fl-color-#{role}-soft-border: light-dark(
-        color-mix(in oklab, var(--fl-color-#{role}-200) 50%, var(--fl-color-#{role}-300)),
-        color-mix(in oklab, var(--fl-color-#{role}-#{border_dark}) 70%, var(--fl-color-surface))
-      );
+    --fl-palette-#{hue}: var(--fl-palette-#{hue}-#{core});
+    --fl-palette-#{hue}-content: #{content_value(hue, shades, core, target)};
+    --fl-palette-#{hue}-text: light-dark(
+        var(--fl-palette-#{hue}-#{light_step}),
+        var(--fl-palette-#{hue}-#{dark_step})
+    );
+    --fl-palette-#{hue}-soft: light-dark(
+        color-mix(in oklab, var(--fl-palette-#{hue}) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-palette-#{hue}) 18%, var(--fl-color-surface))
+    );
+    --fl-palette-#{hue}-soft-border: color-mix(
+        in oklab,
+        var(--fl-palette-#{hue}) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );\
     """
 
-    scale <> "\n\n" <> String.trim_trailing(footer)
+    scale <> "\n\n" <> footer
   end
 
-  # The tint pair blends the scale's light steps in light mode and the role's
-  # dark step with the surface in dark mode. This keeps a light role and a dark
-  # one at a comparable visual weight instead of letting the fill's own
-  # lightness decide it. Neutral is chrome: its dark steps stay one step lighter
-  # than the colored roles.
-  defp soft_shades(role) do
-    if role == :neutral, do: {800, 700}, else: {950, 800}
-  end
-
-  # The label on a solid fill. Prefer the ramp's tinted extreme (near-white `50`
-  # or near-black `950`) when it clears the target; a mid-tone fill whose extremes
-  # both fall short (e.g. red-600) falls back to pure white/black — which reads
-  # better than the off-white `50` and keeps the fill vivid instead of darkening
-  # it. If even pure white/black misses the target (e.g. AAA on a mid-tone), the
-  # best-contrast option is used.
+  # The label on the core fill. Prefer the ramp's near-white/near-black extremes
+  # so a remapped ramp carries its label with it; fall back to pure white/black
+  # when both extremes miss the target (a mid-tone fill such as red-600).
   @content_shades [50, 950]
-  @extreme_values ["oklch(100% 0 0)", "oklch(0% 0 0)"]
 
-  defp content_value(role, shades, shade, target) do
-    base = shade_value(shades, shade)
+  defp content_value(hue, shades, core, target) do
+    base = shade_value(shades, core)
 
     {key, ratio} =
       @content_shades
-      |> Enum.map(fn candidate ->
-        {candidate, Contrast.ratio(base, shade_value(shades, candidate)) || 0.0}
+      |> Enum.map(fn shade ->
+        {shade, Contrast.ratio(base, shade_value(shades, shade)) || 0.0}
       end)
       |> Enum.max_by(&elem(&1, 1))
 
     {extreme, extreme_ratio} =
-      @extreme_values
-      |> Enum.map(fn value -> {value, Contrast.ratio(base, value) || 0.0} end)
-      |> Enum.max_by(&elem(&1, 1))
+      [
+        {@white, Contrast.ratio(base, @white) || 0.0},
+        {@black, Contrast.ratio(base, @black) || 0.0}
+      ]
+      |> prefer_white(target)
 
     cond do
-      ratio >= target -> "var(--fl-color-#{role}-#{key})"
+      ratio >= target -> "var(--fl-palette-#{hue}-#{key})"
       extreme_ratio >= target -> extreme
-      ratio >= extreme_ratio -> "var(--fl-color-#{role}-#{key})"
+      ratio >= extreme_ratio -> "var(--fl-palette-#{hue}-#{key})"
       true -> extreme
     end
   end
 
-  # The text-carrying variants paint the color over the surface (the soft tint,
-  # 10-25%, deepening on hover), so the alias is scored against the strongest
-  # resting fill tint over that surface. The hover overlay itself is not
-  # modeled; `-text` is guaranteed AA on the resting background.
-  @text_tint 0.18
-
-  defp text_background(shades, shade, page) do
-    Contrast.mix(shade_value(shades, shade), page, @text_tint)
+  # A light label is the default for a saturated fill; only switch to black
+  # when white misses the target.
+  defp prefer_white([{white, white_ratio}, {black, black_ratio}], target) do
+    cond do
+      white_ratio >= target -> {white, white_ratio}
+      black_ratio >= target -> {black, black_ratio}
+      white_ratio >= black_ratio -> {white, white_ratio}
+      true -> {black, black_ratio}
+    end
   end
 
-  # The color used as text on the page: the shade nearest the brand alias that
-  # still clears the target ratio against the tinted surface. When no shade
-  # qualifies (a mid-tone brand color, or an unreachable target) the most legible
-  # shade is used instead.
-  defp text_shade(shades, shade, background, target) do
-    keys = Palette.shade_keys()
-
+  # The shade used as colored text on the page. Try the conventional steps
+  # first; when the whole ramp is too light (or a custom palette is unusually
+  # flat), fall back to the most legible shade so the token still resolves.
+  defp text_step(shades, background, target, preferred) do
     ratios =
-      Enum.map(keys, fn key ->
-        {key, Contrast.ratio(shade_value(shades, key), background) || 0.0}
+      Enum.map(Palette.shade_keys(), fn shade ->
+        {shade, Contrast.ratio(shade_value(shades, shade), background) || 0.0}
       end)
 
-    case Enum.filter(ratios, fn {_key, ratio} -> ratio >= target end) do
-      [] ->
+    case Enum.find(preferred, fn shade ->
+           {_shade, ratio} = List.keyfind(ratios, shade, 0)
+           ratio >= target
+         end) do
+      nil ->
         {best, _} = Enum.max_by(ratios, &elem(&1, 1))
         best
 
-      passing ->
-        index = Enum.find_index(keys, &(&1 == shade)) || 0
-
-        {best, _} =
-          Enum.min_by(passing, fn {key, _} -> abs(Enum.find_index(keys, &(&1 == key)) - index) end)
-
-        best
+      step ->
+        step
     end
   end
 
   defp shade_value(shades, shade), do: Map.get(shades, shade, Map.get(shades, to_string(shade)))
+
+  defp indent(text) do
+    text
+    |> String.split("\n")
+    |> Enum.map_join("\n", &("    " <> &1))
+  end
 end

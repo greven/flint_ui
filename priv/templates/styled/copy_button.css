@@ -70,60 +70,16 @@
     /* Success color: while the success state is visible, the control reads the
      * chosen role's shared inputs, so every variant recolors and the control's
      * own transitions ease back to the resting color when the state clears. */
-    [data-element="copy_button"][data-state="success"][data-success-color="primary"][data-copy_button] {
-        --fl-control-color: var(--fl-color-primary);
-        --fl-control-color-content: var(--fl-color-primary-content);
-        --fl-control-text: var(--fl-color-primary-text);
-        --fl-control-soft: var(--fl-color-primary-soft);
-        --fl-control-soft-border: var(--fl-color-primary-soft-border);
-    }
-
-    [data-element="copy_button"][data-state="success"][data-success-color="secondary"][data-copy_button] {
-        --fl-control-color: var(--fl-color-secondary);
-        --fl-control-color-content: var(--fl-color-secondary-content);
-        --fl-control-text: var(--fl-color-secondary-text);
-        --fl-control-soft: var(--fl-color-secondary-soft);
-        --fl-control-soft-border: var(--fl-color-secondary-soft-border);
-    }
-
-    [data-element="copy_button"][data-state="success"][data-success-color="success"][data-copy_button] {
-        --fl-control-color: var(--fl-color-success);
-        --fl-control-color-content: var(--fl-color-success-content);
-        --fl-control-text: var(--fl-color-success-text);
-        --fl-control-soft: var(--fl-color-success-soft);
-        --fl-control-soft-border: var(--fl-color-success-soft-border);
-    }
-
-    [data-element="copy_button"][data-state="success"][data-success-color="info"][data-copy_button] {
-        --fl-control-color: var(--fl-color-info);
-        --fl-control-color-content: var(--fl-color-info-content);
-        --fl-control-text: var(--fl-color-info-text);
-        --fl-control-soft: var(--fl-color-info-soft);
-        --fl-control-soft-border: var(--fl-color-info-soft-border);
-    }
-
-    [data-element="copy_button"][data-state="success"][data-success-color="warning"][data-copy_button] {
-        --fl-control-color: var(--fl-color-warning);
-        --fl-control-color-content: var(--fl-color-warning-content);
-        --fl-control-text: var(--fl-color-warning-text);
-        --fl-control-soft: var(--fl-color-warning-soft);
-        --fl-control-soft-border: var(--fl-color-warning-soft-border);
-    }
-
-    [data-element="copy_button"][data-state="success"][data-success-color="error"][data-copy_button] {
-        --fl-control-color: var(--fl-color-error);
-        --fl-control-color-content: var(--fl-color-error-content);
-        --fl-control-text: var(--fl-color-error-text);
-        --fl-control-soft: var(--fl-color-error-soft);
-        --fl-control-soft-border: var(--fl-color-error-soft-border);
+    [data-element="copy_button"][data-state="success"][data-success-color][data-copy_button] {
+        --fl-control-color: var(--fl-active-tone, var(--fl-color-success));
+        --fl-control-color-content: var(--fl-active-tone-content, var(--fl-color-success-content));
+        --fl-control-text: var(--fl-active-tone-text, var(--fl-color-success-text));
+        --fl-control-soft: var(--fl-active-tone-soft, var(--fl-color-success-soft));
+        --fl-control-soft-border: var(--fl-active-tone-soft-border, var(--fl-color-success-soft-border));
     }
 
     [data-element="copy_button"][data-state="success"][data-success-color="neutral"][data-copy_button] {
-        --fl-control-color: var(--fl-color-inverted);
-        --fl-control-color-content: var(--fl-color-text-inverted);
         --fl-control-text: var(--fl-control-color);
-        --fl-control-soft: var(--fl-color-neutral-soft);
-        --fl-control-soft-border: var(--fl-color-neutral-soft-border);
     }
 
     /* The tooltip repeats the button's copy labels. Only the label for the

@@ -14,22 +14,20 @@ defmodule FlintUI.Styled.ColorTest do
 
   @colors ~w(#1D72FE #FFE066 #111827 #22C55E #F43F5E)
 
-  test "valid?/1 accepts roles, absolute tones, and raw colors" do
+  test "valid?/1 accepts roles, absolute tones, palette hues, and raw colors" do
     assert StyledColor.valid?("primary")
     assert StyledColor.valid?("inherit")
     assert StyledColor.valid?("dark")
     assert StyledColor.valid?("light")
     assert StyledColor.valid?("#1D72FE")
     assert StyledColor.valid?("rgb(29 114 254)")
-    assert StyledColor.valid?("tw:rose")
-    assert StyledColor.valid?("tw:rose-700")
-    assert StyledColor.valid?("tw:neutral")
-    assert StyledColor.valid?("TW:Rose-700")
-    refute StyledColor.valid?("tw:nope")
-    refute StyledColor.valid?("tw:rose-0")
-    refute StyledColor.valid?("tw:rose-999")
-    refute StyledColor.valid?("tw:rose-")
-    refute StyledColor.valid?("tw:")
+
+    for hue <- FlintUI.Palette.hue_names() do
+      assert StyledColor.valid?(hue)
+    end
+
+    refute StyledColor.valid?("crimson")
+    refute StyledColor.valid?("tw:rose")
     refute StyledColor.valid?("nope")
     refute StyledColor.valid?(nil)
   end
@@ -150,7 +148,7 @@ defmodule FlintUI.Styled.ColorTest do
         end
 
       assert error.message =~ "primary"
-      assert error.message =~ "tw:rose"
+      assert error.message =~ "cyan"
       assert error.message =~ "#rrggbb"
       assert error.message =~ "oklch"
     end
@@ -188,12 +186,12 @@ defmodule FlintUI.Styled.ColorTest do
   end
 
   describe "initials_color/1" do
-    test "is stable for the same name and picks a vendored hue" do
+    test "is stable for the same name and picks a palette hue" do
       first = StyledColor.initials_color("Jane Doe")
       second = StyledColor.initials_color("Jane Doe")
 
       assert first == second
-      assert first =~ ~r/^tw:[a-z]+-600$/
+      assert first in (FlintUI.Palette.hue_names() -- ["gray"])
       assert StyledColor.valid?(first)
     end
 
@@ -204,57 +202,36 @@ defmodule FlintUI.Styled.ColorTest do
     end
   end
 
-  describe "tailwind palette colors" do
-    test "tw: names select the 500 shade by default" do
-      assigns =
-        StyledColor.apply(%{color: "tw:rose", rest: %{}, __changed__: %{}}, @roles, @vars)
+  describe "palette hues" do
+    test "a hue name keeps the data hook and leaves the style alone" do
+      for hue <- ~w(red orange amber yellow green cyan blue indigo purple pink gray) do
+        assigns =
+          StyledColor.apply(
+            %{color: hue, rest: %{style: "color: red"}, __changed__: %{}},
+            @roles,
+            @vars
+          )
 
-      {:ok, expected} = Color.parse(Tailwind.shades(:rose)[500])
-
-      assert assigns.data_color == nil
-      assert assigns.rest.style =~ "--fl-control-color: #{expected.css}"
-      assert assigns.rest.style =~ "--fl-control-color-content"
-      assert assigns.rest.style =~ "--fl-control-text"
+        assert assigns.data_color == hue
+        assert assigns.rest == %{style: "color: red"}
+      end
     end
 
-    test "tw: names accept an explicit shade" do
-      assigns =
-        StyledColor.apply(%{color: "tw:rose-700", rest: %{}, __changed__: %{}}, @roles, @vars)
-
-      {:ok, expected} = Color.parse(Tailwind.shades(:rose)[700])
-
-      assert assigns.rest.style =~ "--fl-control-color: #{expected.css}"
-    end
-
-    test "tw: names are case-insensitive and allow surrounding whitespace" do
-      assigns =
-        StyledColor.apply(%{color: " TW:Rose-700 ", rest: %{}, __changed__: %{}}, @roles, @vars)
-
-      {:ok, expected} = Color.parse(Tailwind.shades(:rose)[700])
-
-      assert assigns.rest.style =~ "--fl-control-color: #{expected.css}"
-    end
-
-    test "a bare role keeps the hook while tw: selects the palette" do
+    test "a hue is distinct from the role with the same name" do
       role = StyledColor.apply(%{color: "neutral", rest: %{}, __changed__: %{}}, @roles, @vars)
-
-      palette =
-        StyledColor.apply(%{color: "tw:neutral", rest: %{}, __changed__: %{}}, @roles, @vars)
+      hue = StyledColor.apply(%{color: "gray", rest: %{}, __changed__: %{}}, @roles, @vars)
 
       assert role.data_color == "neutral"
-      assert role.rest == %{}
-      assert palette.data_color == nil
-      assert palette.rest.style =~ "--fl-control-color:"
+      assert hue.data_color == "gray"
     end
 
-    test "the derived label and text clear AA" do
-      {:ok, color} = Color.parse(Tailwind.shades(:rose)[500])
-      derived = StyledColor.derive(color.css, color)
+    test "raw colors still write the public inputs inline" do
+      assigns =
+        StyledColor.apply(%{color: "#1D72FE", rest: %{}, __changed__: %{}}, @roles, @vars)
 
-      {light_text, dark_text} = derived.on_text
-
-      assert ratio(light_text, tint(color, Contrast.light_background())) >= 4.5
-      assert ratio(dark_text, tint(color, Contrast.dark_background())) >= 4.5
+      assert assigns.data_color == nil
+      assert assigns.rest.style =~ "--fl-control-color: #1D72FE"
+      assert assigns.rest.style =~ "--fl-control-color-content"
     end
   end
 
