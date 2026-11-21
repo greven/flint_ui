@@ -63,6 +63,16 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
             Surfaces always stay a step brighter than the page.
           </DocsComponents.content_paragraph>
           <DocsComponents.content_paragraph class="mt-3">
+            For a smaller move, set <code class="docs-code font-mono">--fl-surface-page-tint</code>
+            and <code class="docs-code font-mono">--fl-surface-page-lift</code>.
+            Tint mixes ink into the light page; lift adds white to the dark
+            page. Both carry the rungs above them, so every step keeps its
+            spacing. They default to <code class="docs-code font-mono">0%</code>,
+            and <code class="docs-code font-mono">1%</code>
+            tint / <code class="docs-code font-mono">2%</code>
+            lift is a subtle step.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
             Text has its own anchor. Set <code class="docs-code font-mono">--fl-text-base</code>
             to retune the body ink; the highlighted, toned, muted, and dimmed
             tiers follow.

@@ -532,13 +532,27 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         over the surface: <code class="docs-code font-mono">surface-subtle</code>
         at 3% and <code class="docs-code font-mono">surface-strong</code>
         at 6%. <code class="docs-code font-mono">surface-raised</code>
-        lifts overlays above a card. It is white in light, where white is already
-        the top, and a 12% white mix of the base in dark.
+        lifts overlays above a card. It is a 100% white mix in light, where
+        white is already the top, and a 12% white mix of the base in dark.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
         Set <code class="docs-code font-mono">--fl-surface-base</code>
         to move the whole ramp: a darker value darkens the dark page and tints
         the light page, while the surfaces stay a step brighter.
+      </DocsComponents.content_paragraph>
+      <DocsComponents.content_paragraph class="mt-3">
+        For a smaller adjustment, set <code class="docs-code font-mono">--fl-surface-page-tint</code>
+        and <code class="docs-code font-mono">--fl-surface-page-lift</code>.
+        They move the page off the anchor extremes and carry the ladder with
+        them: tint mixes ink into the light page, lift adds white to the dark
+        page, and every step keeps its spacing. They are separate because the
+        light page has less contrast headroom. A 1% tint puts the light page
+        near <code class="docs-code font-mono">gray-100</code>, and a 2% lift
+        moves the dark page off <code class="docs-code font-mono">gray-950</code>
+        without reaching <code class="docs-code font-mono">gray-900</code>.
+        Keep the tint near 1% if <code class="docs-code font-mono">text-muted</code>
+        sits on the page: a darker light page spends text AA headroom. The dark
+        side stays comfortable through about 5%.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
         The chrome ladder is ordered: subtle (3%) &lt; strong (6%) &lt;

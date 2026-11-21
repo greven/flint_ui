@@ -185,13 +185,17 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   chrome anchor: the darkest ink the page, surfaces, and tints are built from.
   It defaults to `gray-950`, so remapping the gray ramp retints the whole
   chrome. `background`, `surface`, and `surface-raised` are white mixes of that
-  ink, so each step up the ramp is brighter in both schemes. Tonal fills and
-  edges are a tint of `--fl-surface-ink` over `surface`: `surface-subtle` 3%,
-  `surface-strong` 6%, `border-subtle` 7%, `border` 10%, and
-  `border-strong` 18%. The order is intentional: a fill must stay below the
-  quietest edge, or an edge sinks into the panel it bounds. `surface-raised`
-  lifts overlays above a card; it is white in light, where white is already the
-  top, and a 12% white mix in dark. Chrome fills and edges name the amount of
+  ink, so each step up the ramp is brighter in both schemes.
+  `--fl-surface-page-tint` and `--fl-surface-page-lift` (both default `0%`)
+  move the page off the extremes and carry the ladder with it: tint mixes ink
+  into the light page, lift adds white to the dark page, and every step keeps
+  its spacing. Tonal fills and edges are a tint of
+  `--fl-surface-ink` over `surface`: `surface-subtle` 3%, `surface-strong` 6%,
+  `border-subtle` 7%, `border` 10%, and `border-strong` 18%. The order is
+  intentional: a fill must stay below the quietest edge, or an edge sinks into
+  the panel it bounds. `surface-raised` lifts overlays above a card; it is a
+  100% white mix in light, where white is already the top, and a 12% white mix
+  in dark. Chrome fills and edges name the amount of
   tint, not loudness, because every rung sits above the pure anchor. `muted`
   belongs to ink only (`text-muted`). Opaque bordered controls paint `surface`,
   so attached-group seams stay single. Never use `subtle` for a strong fill.

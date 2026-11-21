@@ -262,14 +262,28 @@
     --fl-surface-base: var(--fl-color-gray-950);
     --fl-surface-ink: light-dark(var(--fl-surface-base), color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)));
 
-    --fl-color-background: light-dark(color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)), var(--fl-surface-base));
+    /* The page moves off the anchor extremes and carries the rest of the
+     * ladder with it: `--fl-surface-page-tint` mixes ink into the light page,
+     * `--fl-surface-page-lift` mixes white into the dark page. They are
+     * separate because the light page loses text contrast sooner. Every step
+     * keeps its spacing for any value. */
+    --fl-surface-page-tint: 0%;
+    --fl-surface-page-lift: 0%;
+
+    --fl-color-background: light-dark(
+        color-mix(in oklab, oklch(1 0 0) calc(98.25% - var(--fl-surface-page-tint)), var(--fl-surface-base)),
+        color-mix(in oklab, oklch(1 0 0) var(--fl-surface-page-lift), var(--fl-surface-base))
+    );
     --fl-color-surface: light-dark(
-        color-mix(in oklab, oklch(1 0 0) 99.5%, var(--fl-surface-base)),
-        color-mix(in oklab, oklch(1 0 0) 7%, var(--fl-surface-base))
+        color-mix(in oklab, oklch(1 0 0) calc(99.5% - var(--fl-surface-page-tint)), var(--fl-surface-base)),
+        color-mix(in oklab, oklch(1 0 0) calc(7% + var(--fl-surface-page-lift)), var(--fl-surface-base))
     );
     --fl-color-surface-subtle: color-mix(in oklab, var(--fl-surface-ink) 3%, var(--fl-color-surface));
     --fl-color-surface-strong: color-mix(in oklab, var(--fl-surface-ink) 6%, var(--fl-color-surface));
-    --fl-color-surface-raised: light-dark(oklch(1 0 0), color-mix(in oklab, oklch(1 0 0) 12%, var(--fl-surface-base)));
+    --fl-color-surface-raised: light-dark(
+        color-mix(in oklab, oklch(1 0 0) calc(100% - var(--fl-surface-page-tint)), var(--fl-surface-base)),
+        color-mix(in oklab, oklch(1 0 0) calc(12% + var(--fl-surface-page-lift)), var(--fl-surface-base))
+    );
 
     --fl-color-inverted: light-dark(var(--fl-color-gray-900), oklch(1 0 0));
 
@@ -281,10 +295,7 @@
      * the default gray tiers. */
     --fl-text-base: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-200));
     --fl-color-text: var(--fl-text-base);
-    --fl-color-text-highlighted: light-dark(
-        color-mix(in oklab, var(--fl-text-base) 55.4%, oklch(0% 0 0)),
-        oklch(1 0 0)
-    );
+    --fl-color-text-highlighted: light-dark(color-mix(in oklab, var(--fl-text-base) 55.4%, oklch(0% 0 0)), oklch(1 0 0));
     --fl-color-text-toned: light-dark(
         color-mix(in oklab, var(--fl-text-base) 88.1%, oklch(1 0 0)),
         color-mix(in oklab, var(--fl-text-base) 94.6%, oklch(0% 0 0))

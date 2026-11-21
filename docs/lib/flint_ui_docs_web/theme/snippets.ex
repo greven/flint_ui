@@ -33,17 +33,46 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
         color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base))
       );
 
+      /* Move the page off the extremes and carry the ladder with it:
+       * ink into the light page, white into the dark page. */
+      --fl-surface-page-tint: 0%;
+      --fl-surface-page-lift: 0%;
+
       --fl-color-background: light-dark(
-        color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)),
-        var(--fl-surface-base)
+        color-mix(
+          in oklab,
+          oklch(1 0 0) calc(98.25% - var(--fl-surface-page-tint)),
+          var(--fl-surface-base)
+        ),
+        color-mix(
+          in oklab,
+          oklch(1 0 0) var(--fl-surface-page-lift),
+          var(--fl-surface-base)
+        )
       );
       --fl-color-surface: light-dark(
-        color-mix(in oklab, oklch(1 0 0) 99.5%, var(--fl-surface-base)),
-        color-mix(in oklab, oklch(1 0 0) 7%, var(--fl-surface-base))
+        color-mix(
+          in oklab,
+          oklch(1 0 0) calc(99.5% - var(--fl-surface-page-tint)),
+          var(--fl-surface-base)
+        ),
+        color-mix(
+          in oklab,
+          oklch(1 0 0) calc(7% + var(--fl-surface-page-lift)),
+          var(--fl-surface-base)
+        )
       );
       --fl-color-surface-raised: light-dark(
-        oklch(1 0 0),
-        color-mix(in oklab, oklch(1 0 0) 12%, var(--fl-surface-base))
+        color-mix(
+          in oklab,
+          oklch(1 0 0) calc(100% - var(--fl-surface-page-tint)),
+          var(--fl-surface-base)
+        ),
+        color-mix(
+          in oklab,
+          oklch(1 0 0) calc(12% + var(--fl-surface-page-lift)),
+          var(--fl-surface-base)
+        )
       );
 
       /* Tonal fills tint toward the surface ink. */
@@ -71,6 +100,11 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       /* The single chrome anchor. A darker value darkens the dark page and
        * tints the light page; surfaces always stay a step brighter. */
       --fl-surface-base: var(--fl-color-gray-950);
+
+      /* Nudge the page instead of swapping the anchor: ink into the light
+       * page, white into the dark page, carrying the ladder with it. */
+      --fl-surface-page-tint: 1%;
+      --fl-surface-page-lift: 2%;
     }
     """
   end

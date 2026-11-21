@@ -98,7 +98,10 @@ both schemes. Tonal fills then tint toward `--fl-surface-ink` over the surface:
 intentional: a fill never reaches the quietest edge, so an edge never sinks into
 the panel it bounds. Remapping the gray ramp retints the whole chrome through
 `--fl-surface-base`; override the base alone to make the dark page darker or
-lighter while the surfaces stay a step brighter. Chrome fills and edges name the
+lighter while the surfaces stay a step brighter. For a smaller move,
+`--fl-surface-page-tint` mixes ink into the light page and
+`--fl-surface-page-lift` adds white to the dark page, carrying the whole ladder
+with them. Chrome fills and edges name the
 amount of tint (`subtle` / default / `strong`), while ink names loudness
 (`text-muted` and friends).
 

@@ -113,15 +113,17 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "the surface base anchors the page and the fill ladder stays below the edges", %{css: css} do
     assert css =~ "--fl-surface-base: var(--fl-color-gray-950);"
+    assert css =~ "--fl-surface-page-tint: 0%;"
+    assert css =~ "--fl-surface-page-lift: 0%;"
 
     assert css =~
              ~r/--fl-surface-ink: light-dark\(\s*var\(--fl-surface-base\),\s*color-mix\(in oklab, oklch\(1 0 0\) 98\.25%, var\(--fl-surface-base\)\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-surface: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) 99\.5%, var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) 7%, var\(--fl-surface-base\)\)\s*\)/
+             ~r/--fl-color-surface: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(99\.5% - var\(--fl-surface-page-tint\)\), var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(7% \+ var\(--fl-surface-page-lift\)\), var\(--fl-surface-base\)\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-background: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) 98\.25%, var\(--fl-surface-base\)\),\s*var\(--fl-surface-base\)\s*\)/
+             ~r/--fl-color-background: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(98\.25% - var\(--fl-surface-page-tint\)\), var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) var\(--fl-surface-page-lift\), var\(--fl-surface-base\)\)\s*\)/
 
     for {name, percent} <- [
           {"surface-subtle", "3%"},
@@ -135,7 +137,7 @@ defmodule FlintUI.Theme.CSSTest do
     end
 
     assert css =~
-             ~r/--fl-color-surface-raised: light-dark\(\s*oklch\(1 0 0\),\s*color-mix\(in oklab, oklch\(1 0 0\) 12%, var\(--fl-surface-base\)\)\s*\)/
+             ~r/--fl-color-surface-raised: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(100% - var\(--fl-surface-page-tint\)\), var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(12% \+ var\(--fl-surface-page-lift\)\), var\(--fl-surface-base\)\)\s*\)/
 
     refute css =~ "--fl-surface-step"
     refute css =~ "--fl-color-control:"
