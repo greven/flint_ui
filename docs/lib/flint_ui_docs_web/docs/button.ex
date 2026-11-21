@@ -210,11 +210,13 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
     <.preview
       id={"#{@id}-dashed"}
-      code={~S(<.button variant="outline" color="info" dashed>Dashing</.button>)}
+      code={~S|<.button variant="subtle" color="success" dashed>Subtle</.button>
+    <.button variant="outline" color="gray" dashed>And</.button>
+    <.button variant="outline" color="info" dashed>Dashing</.button>|}
     >
       <div class="flex flex-wrap items-center gap-3">
         <Components.button variant="subtle" color="success" dashed>Subtle</Components.button>
-        <Components.button variant="outline" dashed>And</Components.button>
+        <Components.button variant="outline" color="gray" dashed>And</Components.button>
         <Components.button variant="outline" color="info" dashed>Dashing</Components.button>
       </div>
     </.preview>

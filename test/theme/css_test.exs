@@ -601,6 +601,14 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~r/\[data-element="badge"\]\[data-dashed\] \{\s*border-style: dashed;/
   end
 
+  test "a dashed outline fades its border to half transparency in both states", %{css: css} do
+    assert css =~
+             ~r/\[data-control\]\[data-variant="outline"\]:not\(\[data-state="on"\]\)\[data-dashed\] \{\s*border-color: color-mix\(in oklab, var\(--fl-control-color\) 50%, transparent\);/
+
+    assert css =~
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="outline"\]\[data-dashed\] \{\s*border-color: color-mix\(in oklab, var\(--fl-control-active-color, var\(--fl-control-color\)\) 50%, transparent\);/
+  end
+
   test "pills use the full radius and indicator markers keep compact padding", %{css: css} do
     # Badges add inline padding for the label; the nested indicator badge resets
     # it so a one-character count stays a circle. Controls only change the radius.

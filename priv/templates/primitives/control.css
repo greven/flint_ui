@@ -336,6 +336,11 @@
         border-style: dashed;
     }
 
+    /* Tone down outline dashed. */
+    [data-control][data-variant="outline"]:not([data-state="on"])[data-dashed] {
+        border-color: color-mix(in oklab, var(--fl-control-color) 50%, transparent);
+    }
+
     /* Sizes share the control metrics. */
     [data-control][data-size="xs"] {
         --fl-icon-size: var(--fl-control-icon-xs);
