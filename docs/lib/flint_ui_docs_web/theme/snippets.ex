@@ -206,7 +206,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
     --fl-color-secondary: var(--fl-color-gray);
     --fl-color-info: var(--fl-color-blue);
     --fl-color-success: var(--fl-color-green);
-    --fl-color-warning: var(--fl-color-amber);
+    --fl-color-warning: var(--fl-color-yellow);
     --fl-color-danger: var(--fl-color-red);
 
     /* A hue owns the fill, label, on-soft text, and tint pair. */

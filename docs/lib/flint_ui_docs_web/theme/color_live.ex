@@ -127,7 +127,7 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
             follows the palette's gray; <strong>info</strong>
             blue; <strong>success</strong>
             green; <strong>warning</strong>
-            amber; and <strong>danger</strong>
+            yellow; and <strong>danger</strong>
             red. A
             palette switch changes what those hues look like; a role override
             changes which hue a role points at.

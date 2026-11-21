@@ -19,7 +19,7 @@ defmodule FlintUI.Palette.ContrastTest do
   end
 
   test "matches known Tailwind ratios" do
-    # amber-400 on amber-950 (the warning solid combo).
+    # amber-400 on amber-950 (a warm-ramp cross-check).
     assert_in_delta Contrast.ratio("oklch(82.8% 0.189 84.429)", "oklch(27.9% 0.077 45.635)"),
                     8.73,
                     0.02

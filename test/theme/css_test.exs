@@ -35,7 +35,7 @@ defmodule FlintUI.Theme.CSSTest do
 
     assert css =~ "--fl-color-secondary: var(--fl-color-gray);"
     assert css =~ "--fl-color-success: var(--fl-color-green);"
-    assert css =~ "--fl-color-warning: var(--fl-color-amber);"
+    assert css =~ "--fl-color-warning: var(--fl-color-yellow);"
     assert css =~ "--fl-color-danger: var(--fl-color-red);"
     assert css =~ "--fl-color-info: var(--fl-color-blue);"
     refute css =~ "--fl-color-primary-50:"

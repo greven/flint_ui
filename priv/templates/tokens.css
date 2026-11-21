@@ -195,8 +195,8 @@
     --fl-color-neutral-on: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));
     --fl-color-neutral-on-soft: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
     --fl-color-neutral-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-color-neutral) 14%, var(--fl-color-surface))
+        color-mix(in oklab, var(--fl-color-neutral) 6%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-neutral) 9%, var(--fl-color-surface))
     );
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 18%, var(--fl-color-surface));
 

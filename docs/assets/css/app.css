@@ -102,7 +102,7 @@
     --border-color-info: var(--fl-color-info);
     --ring-color-info: var(--fl-color-info);
 
-    /* warning: Tailwind amber */
+    /* warning: Tailwind yellow */
     --color-warning: var(--fl-color-warning);
     --text-color-warning: var(--fl-color-warning-on-soft);
     --text-color-warning-content: var(--fl-color-warning-on);

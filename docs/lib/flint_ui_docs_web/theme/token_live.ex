@@ -173,7 +173,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
                   {"neutral", "gray (inverted)"},
                   {"info", "blue"},
                   {"success", "green"},
-                  {"warning", "amber"},
+                  {"warning", "yellow"},
                   {"danger", "red"}
                 ]
             }>
