@@ -165,13 +165,31 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
 
     assert has_element?(view, "#palettes")
     assert has_element?(view, "#palette-colors")
-    assert has_element?(view, "#color-roles")
+    assert has_element?(view, "#semantic-colors")
     assert has_element?(view, "#absolute")
     assert has_element?(view, "aside a[href='/guides/theming/color'][aria-current='page']")
+
+    # The default palette is the Tailwind source, listed once as "default".
+    assert has_element?(view, "[data-phx-palette='default']")
+    refute has_element?(view, "[data-phx-palette='tailwind']")
+
+    # Every hue gets a main swatch plus its full 50..950 scale.
+    assert has_element?(view, "[data-color-swatch='rose'] [data-swatch-main]")
+    assert has_element?(view, "[data-color-swatch='rose'] [data-shade='50']")
+    assert has_element?(view, "[data-color-swatch='rose'] [data-shade='950']")
+    assert has_element?(view, "[data-color-swatch='amber'] [data-swatch-core]", "500")
+    assert has_element?(view, "[data-color-swatch='green'] [data-swatch-core]", "700")
+
+    # The neutral ramps sit under the hue grid as fixed Tailwind source ramps.
+    assert has_element?(view, "#neutral-ramps")
+    assert has_element?(view, "[data-color-swatch='neutral-neutral']", "default")
+    assert has_element?(view, "[data-color-swatch='neutral-neutral'] [data-shade='950']")
+    assert has_element?(view, "[data-color-swatch='neutral-zinc'] [data-swatch-core]", "600")
 
     html = render(view)
     assert html =~ ~s|data-copy-value="var(--fl-color-rose)"|
     assert html =~ ~s|aria-label="Copy var(--fl-color-rose)"|
+    assert html =~ ~s|data-copy-value="var(--fl-color-rose-300)"|
   end
 
   test "themes page documents presets, schemes, and custom themes", %{conn: conn} do

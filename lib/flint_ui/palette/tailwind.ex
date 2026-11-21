@@ -15,6 +15,7 @@ defmodule FlintUI.Palette.Tailwind do
   @behaviour FlintUI.Palette
 
   @colors ~w(red orange amber yellow lime green emerald teal cyan sky blue indigo violet purple fuchsia pink rose gray)a
+  @neutrals ~w(neutral slate gray zinc stone mauve olive mist taupe)a
 
   @palette %{
     red: [
@@ -362,6 +363,24 @@ defmodule FlintUI.Palette.Tailwind do
 
   @impl true
   def colors, do: @colors
+
+  @doc """
+  The Tailwind neutral ramps, default first.
+
+  `shades/1` maps FlintUI's `gray` hue to `neutral`, because the chrome starts
+  achromatic. These are the raw Tailwind neutral families an app can point the
+  chrome at by remapping `--fl-color-gray-*`.
+  """
+  def neutral_ramps, do: @neutrals
+
+  @doc """
+  Returns a Tailwind neutral ramp by name.
+
+  Unlike `shades/1`, this includes Tailwind's own `:gray`, which is distinct
+  from the `:neutral` ramp the palette ships as `:gray`.
+  """
+  def neutral_shades(name) when name in @neutrals,
+    do: FlintUI.Palette.build(Map.fetch!(@palette, name))
 
   @impl true
   def shades(:gray), do: FlintUI.Palette.build(Map.fetch!(@palette, :neutral))

@@ -431,6 +431,107 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     }
 }
 
+/* Palette swatches. The LiveView supplies the per-hue `--_fl-swatch-*` inputs;
+   these rules stay hue-agnostic. Hovering or focusing a scale swatch previews
+   that shade in the main swatch and swaps the corner number. The `:has()`
+   rules are progressive enhancement: without support the default fill and core
+   number stay visible. */
+@layer components {
+    [data-swatch-main] {
+        background-color: var(--_fl-swatch-fill-preview, var(--_fl-swatch-fill));
+        color: var(--_fl-swatch-on-preview, var(--_fl-swatch-on));
+    }
+
+    [data-swatch-preview]::after {
+        content: var(--_fl-swatch-label-preview, "");
+    }
+
+    /* A copied shade shows a brief check instead of a lingering ring, so a
+       click never reads as a selected or pressed swatch. */
+    [data-color-swatch] [data-shade][data-state="success"]::after {
+        content: "✓";
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background-color: rgb(0 0 0 / 45%);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    [data-color-swatch]:has([data-shade]:is(:hover, :focus-visible)) [data-swatch-core] {
+        display: none;
+    }
+
+    [data-color-swatch]:has([data-shade="50"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-50-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-50-on);
+        --_fl-swatch-label-preview: "50";
+    }
+
+    [data-color-swatch]:has([data-shade="100"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-100-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-100-on);
+        --_fl-swatch-label-preview: "100";
+    }
+
+    [data-color-swatch]:has([data-shade="200"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-200-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-200-on);
+        --_fl-swatch-label-preview: "200";
+    }
+
+    [data-color-swatch]:has([data-shade="300"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-300-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-300-on);
+        --_fl-swatch-label-preview: "300";
+    }
+
+    [data-color-swatch]:has([data-shade="400"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-400-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-400-on);
+        --_fl-swatch-label-preview: "400";
+    }
+
+    [data-color-swatch]:has([data-shade="500"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-500-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-500-on);
+        --_fl-swatch-label-preview: "500";
+    }
+
+    [data-color-swatch]:has([data-shade="600"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-600-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-600-on);
+        --_fl-swatch-label-preview: "600";
+    }
+
+    [data-color-swatch]:has([data-shade="700"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-700-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-700-on);
+        --_fl-swatch-label-preview: "700";
+    }
+
+    [data-color-swatch]:has([data-shade="800"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-800-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-800-on);
+        --_fl-swatch-label-preview: "800";
+    }
+
+    [data-color-swatch]:has([data-shade="900"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-900-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-900-on);
+        --_fl-swatch-label-preview: "900";
+    }
+
+    [data-color-swatch]:has([data-shade="950"]:is(:hover, :focus-visible)) {
+        --_fl-swatch-fill-preview: var(--_fl-swatch-950-fill);
+        --_fl-swatch-on-preview: var(--_fl-swatch-950-on);
+        --_fl-swatch-label-preview: "950";
+    }
+}
+
 @import "./flint-flags.css";
 
 @plugin "../vendor/heroicons";

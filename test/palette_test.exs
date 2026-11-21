@@ -32,14 +32,22 @@ defmodule FlintUI.PaletteTest do
     assert Tailwind.shades(:gray)[600] == "oklch(43.9% 0 none)"
   end
 
+  test "tailwind exposes every neutral ramp, default first" do
+    assert Tailwind.neutral_ramps() |> hd() == :neutral
+    assert :gray in Tailwind.neutral_ramps()
+    assert Tailwind.neutral_shades(:neutral) == Tailwind.shades(:gray)
+    assert Tailwind.neutral_shades(:gray)[600] == "oklch(44.6% 0.03 256.802)"
+  end
+
   test "every core shade is part of the palette ramp" do
     for hue <- Palette.hues() do
       assert Palette.core_shade(hue) in Palette.shade_keys()
     end
   end
 
-  test "presets put the implicit default first" do
-    assert Palette.presets() == [:default | Palette.names()]
+  test "presets put the implicit default first and omit its source name" do
+    assert Palette.presets() == [:default, :natural, :bright]
+    refute :tailwind in Palette.presets()
   end
 
   test "build/1 maps shade keys in order" do

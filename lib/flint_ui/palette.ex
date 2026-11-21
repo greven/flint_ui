@@ -71,8 +71,7 @@ defmodule FlintUI.Palette do
   @palettes [
     %{name: :tailwind, css: "palettes/tailwind.css", module: __MODULE__.Tailwind, default: true},
     %{name: :natural, css: "palettes/natural.css", module: __MODULE__.Natural},
-    %{name: :bright, css: "palettes/bright.css", module: __MODULE__.Bright},
-    %{name: :mono, css: "palettes/mono.css", module: __MODULE__.Mono}
+    %{name: :bright, css: "palettes/bright.css", module: __MODULE__.Bright}
   ]
 
   @doc "The ordered shade keys every palette provides."
@@ -137,9 +136,10 @@ defmodule FlintUI.Palette do
   Returns the selectable palettes, default first.
 
   `:default` has no attribute: it is the `:root` palette, so selecting it means
-  clearing `data-palette` on `<html>`.
+  clearing `data-palette` on `<html>`. The default palette is also named
+  `:tailwind` in the registry, but it is offered only once, as `:default`.
   """
-  def presets, do: [:default | names()]
+  def presets, do: [:default | names() -- [default().name]]
 
   @doc false
   def build(values) when is_list(values) do
