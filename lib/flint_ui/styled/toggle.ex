@@ -3,7 +3,7 @@ defmodule FlintUI.Styled.Toggle do
 
   alias FlintUI.Styled.{Attr, Entry, Prop, Slot}
 
-  @colors ["neutral", "info", "success", "warning", "error", "primary", "secondary"]
+  @colors ["neutral", "info", "success", "warning", "danger", "primary", "secondary"]
   @variants ["solid", "soft", "subtle", "surface", "outline", "ghost", "link"]
 
   def entry do

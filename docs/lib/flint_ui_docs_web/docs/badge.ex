@@ -93,7 +93,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       <div class="flex items-center gap-3">
         <Components.badge variant="solid">Solid</Components.badge>
         <Components.badge variant="soft">Soft</Components.badge>
-        <Components.badge variant="soft" color="error">Soft Error</Components.badge>
+        <Components.badge variant="soft" color="danger">Soft Error</Components.badge>
         <Components.badge variant="subtle" color="info">Subtle Info</Components.badge>
         <Components.badge variant="surface">Surface</Components.badge>
         <Components.badge variant="outline">Outline</Components.badge>
@@ -152,7 +152,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           dashed={props.dashed}
           radius={props.radius}
           pill={props.pill}
-          color="error"
+          color="danger"
         >
           Packages
         </Components.badge>
@@ -170,12 +170,12 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
     <.prose content="Each `color` and `variant` compose freely: every variant is available in every role.
       Each row below is a color role, each column a variant. You can use any of the semantic theme colors: `neutral`, `info`,
-      `success`, `warning`, `error`, `primary`, and `secondary`." />
+      `success`, `warning`, `danger`, `primary`, and `secondary`." />
 
     <.preview id={"#{@id}-grid"}>
       <div class="space-y-3">
         <div
-          :for={color <- ~w(neutral info success warning error)}
+          :for={color <- ~w(neutral info success warning danger)}
           class="flex flex-wrap gap-3 justify-center"
         >
           <Components.badge
@@ -203,7 +203,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
           <Components.badge color="success" icon="ph-seal-check-duotone">Success</Components.badge>
           <Components.badge color="info" icon="ph-info-duotone">Info</Components.badge>
           <Components.badge color="warning" icon="ph-clock-duotone">Pending</Components.badge>
-          <Components.badge color="error" icon="ph-x-circle-duotone">Failure</Components.badge>
+          <Components.badge color="danger" icon="ph-x-circle-duotone">Failure</Components.badge>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
           <Components.badge variant="solid" color="neutral">
@@ -327,7 +327,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       <div class="flex flex-wrap items-center gap-2">
         <Components.badge variant="dot" color="success" radius="xl">Online</Components.badge>
         <Components.badge variant="dot" color="warning" radius="xl">Pending</Components.badge>
-        <Components.badge variant="dot" color="error" radius="xl">Offline</Components.badge>
+        <Components.badge variant="dot" color="danger" radius="xl">Offline</Components.badge>
         <Components.badge variant="dot" color="#9810FA" radius="xl">Custom</Components.badge>
       </div>
     </.preview>
@@ -586,7 +586,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         </Components.badge>
         <Components.badge
           variant="solid"
-          color="error"
+          color="danger"
           pill
           size="sm"
           role="status"
@@ -651,7 +651,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge color="success" icon="lucide-badge-check">Success</.badge>
     <.badge color="info" icon="lucide-info">Info</.badge>
     <.badge color="warning" icon="lucide-clock">Pending</.badge>
-    <.badge color="error" icon="lucide-circle-x">Failure</.badge>
+    <.badge color="danger" icon="lucide-circle-x">Failure</.badge>
     <.badge variant="solid" color="neutral">
       <:leading><.icon name="lucide-tag-plus" /></:leading> New Version
     </.badge>
@@ -749,7 +749,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.badge variant="subtle" color="neutral" role="img" aria-label="Saved">
       <.icon name="lucide-bookmark" />
     </.badge>
-    <.badge variant="solid" color="error" pill size="sm"
+    <.badge variant="solid" color="danger" pill size="sm"
       role="status" aria-label="7 unread notifications">
       7
     </.badge>
@@ -886,7 +886,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     """
     <.badge variant="dot" color="success" radius="xl">Online</.badge>
     <.badge variant="dot" color="warning" radius="xl">Pending</.badge>
-    <.badge variant="dot" color="error" radius="xl">Offline</.badge>
+    <.badge variant="dot" color="danger" radius="xl">Offline</.badge>
     """
     |> String.trim()
   end

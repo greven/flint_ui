@@ -161,7 +161,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
             {variant}
           </span>
           <div
-            :for={color <- ~w(neutral info success warning error)}
+            :for={color <- ~w(neutral info success warning danger)}
             class="contents"
           >
             <span class="text-xs font-medium text-muted">{color}</span>
@@ -229,7 +229,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview id={@id} code={&code_icon/1} collapsed>
       <div class="flex flex-wrap items-center gap-3">
         <Components.button icon="lucide-save">Save</Components.button>
-        <Components.button variant="solid" color="error" icon="lucide-trash">Delete</Components.button>
+        <Components.button variant="solid" color="danger" icon="lucide-trash">Delete</Components.button>
         <Components.button variant="solid">
           <:leading>
             <.icon name="lucide-plus" />
@@ -541,7 +541,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.preview id={@id} code={&code_destructive_confirm/1}>
       <Components.button
         variant="solid"
-        color="error"
+        color="danger"
         phx-click="delete_item"
         phx-value-id="67"
         data-confirm="Delete item?"
@@ -961,7 +961,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   defp code_icon(_) do
     """
     <.button icon="lucide-save">Save</.button>
-    <.button variant="solid" color="error" icon="lucide-trash">Delete</.button>
+    <.button variant="solid" color="danger" icon="lucide-trash">Delete</.button>
     <.button variant="solid">
       <:leading>
         <.icon name="lucide-plus" />
@@ -1035,7 +1035,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     """
     <.button
       variant="solid"
-      color="error"
+      color="danger"
       phx-click="delete_item"
       phx-value-id="67"
       data-confirm="Delete item?"

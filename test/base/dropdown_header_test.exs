@@ -34,6 +34,6 @@ defmodule FlintUI.Base.DropdownHeaderTest do
   end
 
   test "forwards the semantic color" do
-    assert LazyHTML.attribute(render(color: "error"), "data-color") == ["error"]
+    assert LazyHTML.attribute(render(color: "danger"), "data-color") == ["danger"]
   end
 end

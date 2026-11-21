@@ -23,7 +23,7 @@ defmodule FlintUI.Styled.Alert do
         ),
         Prop.new(
           name: :color,
-          values: ~w(neutral info success warning error primary secondary),
+          values: ~w(neutral info success warning danger primary secondary),
           default: nil,
           allow_custom: true,
           doc:

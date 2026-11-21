@@ -18,7 +18,7 @@ defmodule FlintUI.Styled.DropdownItemTest do
 
       def configured(assigns) do
         ~H"""
-        <.dropdown_item intent="error" disabled class="extra" data-role="test">Log out</.dropdown_item>
+        <.dropdown_item intent="danger" disabled class="extra" data-role="test">Log out</.dropdown_item>
         """
       end
 
@@ -62,7 +62,7 @@ defmodule FlintUI.Styled.DropdownItemTest do
   test "forwards intent, disabled, class, and rest", %{wrapper: wrapper} do
     item = render(wrapper, :configured) |> part("item")
 
-    assert LazyHTML.attribute(item, "data-intent") == ["error"]
+    assert LazyHTML.attribute(item, "data-intent") == ["danger"]
     assert LazyHTML.attribute(item, "disabled") == [""]
     assert LazyHTML.attribute(item, "data-disabled") == [""]
     assert LazyHTML.attribute(item, "class") == ["extra"]

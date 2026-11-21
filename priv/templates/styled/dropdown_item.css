@@ -66,9 +66,9 @@
         --fl-dropdown-item-accent: var(--fl-color-warning-on-soft);
     }
 
-    [data-element="dropdown_item"][data-dropdown_item][data-intent="error"] {
-        --fl-dropdown-item-text: var(--fl-color-error-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-error-on-soft);
+    [data-element="dropdown_item"][data-dropdown_item][data-intent="danger"] {
+        --fl-dropdown-item-text: var(--fl-color-danger-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-danger-on-soft);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="primary"] {

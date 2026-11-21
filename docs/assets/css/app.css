@@ -110,13 +110,13 @@
     --border-color-warning: var(--fl-color-warning);
     --ring-color-warning: var(--fl-color-warning);
 
-    /* error: Tailwind red */
-    --color-error: var(--fl-color-error);
-    --text-color-error: var(--fl-color-error-on-soft);
-    --text-color-error-content: var(--fl-color-error-on);
-    --background-color-error: var(--fl-color-error);
-    --border-color-error: var(--fl-color-error);
-    --ring-color-error: var(--fl-color-error);
+    /* danger: Tailwind red */
+    --color-danger: var(--fl-color-danger);
+    --text-color-danger: var(--fl-color-danger-on-soft);
+    --text-color-danger-content: var(--fl-color-danger-on);
+    --background-color-danger: var(--fl-color-danger);
+    --border-color-danger: var(--fl-color-danger);
+    --ring-color-danger: var(--fl-color-danger);
 }
 
 /* FlintUI overrides live here, after the `flint.css` import. `flint.css` is

@@ -72,7 +72,7 @@ defmodule FlintUI.Styled.ProgressRingTest do
   end
 
   test "renders every color role", %{wrapper: wrapper} do
-    for color <- ~w(neutral info success warning error primary secondary) do
+    for color <- ~w(neutral info success warning danger primary secondary) do
       document = render(wrapper, :basic, defaults(color: color))
       assert attr(document, :progress_ring, "data-color") == [color]
     end
@@ -99,7 +99,7 @@ defmodule FlintUI.Styled.ProgressRingTest do
 
   test "keeps the presentational hooks off the drawing parts", %{wrapper: wrapper} do
     document =
-      render(wrapper, :basic, defaults(size: "lg", thickness: "xl", color: "error"))
+      render(wrapper, :basic, defaults(size: "lg", thickness: "xl", color: "danger"))
 
     assert part_attr(document, "svg", "data-size") == []
     assert part_attr(document, "track", "data-thickness") == []

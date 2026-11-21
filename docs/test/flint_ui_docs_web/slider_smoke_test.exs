@@ -21,11 +21,11 @@ defmodule FlintUIDocsWeb.SliderSmokeTest do
 
     view
     |> element("#usage-slider-basic-controls")
-    |> render_change(%{"size" => "lg", "color" => "error"})
+    |> render_change(%{"size" => "lg", "color" => "danger"})
 
     assert has_element?(
              view,
-             "#usage-slider-basic [data-element='slider'][data-size='lg'][data-color='error']"
+             "#usage-slider-basic [data-element='slider'][data-size='lg'][data-color='danger']"
            )
   end
 

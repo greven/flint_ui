@@ -82,7 +82,7 @@ defmodule FlintUI.Theme.ContrastTest do
     assert css =~ "--fl-color-info: var(--fl-color-blue);"
     assert css =~ "--fl-color-success: var(--fl-color-green);"
     assert css =~ "--fl-color-warning: var(--fl-color-amber);"
-    assert css =~ "--fl-color-error: var(--fl-color-red);"
+    assert css =~ "--fl-color-danger: var(--fl-color-red);"
     assert css =~ "--fl-color-primary: var(--fl-color-neutral);"
   end
 

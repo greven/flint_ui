@@ -14,7 +14,7 @@ defmodule FlintUI.Base.AlertTest do
 
     def intent(assigns) do
       ~H"""
-      <.alert intent="error" title="Failure">We could not save your changes.</.alert>
+      <.alert intent="danger" title="Failure">We could not save your changes.</.alert>
       """
     end
 
@@ -63,7 +63,7 @@ defmodule FlintUI.Base.AlertTest do
 
     def role_override(assigns) do
       ~H"""
-      <.alert intent="error" role="none">Body</.alert>
+      <.alert intent="danger" role="none">Body</.alert>
       """
     end
 
@@ -107,14 +107,14 @@ defmodule FlintUI.Base.AlertTest do
   test "an error intent defaults the alert role and exposes the intent hook" do
     document = render(&TestComponent.intent/1)
 
-    assert attr(document, "data-intent") == ["error"]
+    assert attr(document, "data-intent") == ["danger"]
     assert attr(document, "role") == ["alert"]
   end
 
   test "an explicit role wins over the intent default" do
     document = render(&TestComponent.role_override/1)
 
-    assert attr(document, "data-intent") == ["error"]
+    assert attr(document, "data-intent") == ["danger"]
     assert attr(document, "role") == ["none"]
   end
 
@@ -185,7 +185,7 @@ defmodule FlintUI.Base.AlertTest do
     assert FlintUI.Base.Alert.intent_icon("info") == "lucide-info"
     assert FlintUI.Base.Alert.intent_icon("success") == "lucide-circle-check"
     assert FlintUI.Base.Alert.intent_icon("warning") == "lucide-circle-exclamation-point"
-    assert FlintUI.Base.Alert.intent_icon("error") == "lucide-circle-x"
+    assert FlintUI.Base.Alert.intent_icon("danger") == "lucide-circle-x"
     assert FlintUI.Base.Alert.intent_icon(nil) == nil
   end
 

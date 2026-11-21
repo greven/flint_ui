@@ -223,7 +223,7 @@
 
 .highlight .err {
     color: var(--hl-error);
-    background-color: color-mix(in oklab, var(--fl-color-error) 12%, transparent);
+    background-color: color-mix(in oklab, var(--fl-color-danger) 12%, transparent);
 }
 
 .highlight .ne {

@@ -21,7 +21,7 @@ defmodule FlintUI.Base.IndicatorTest do
         badge_attrs={
           %{
             "data-variant" => "solid",
-            "data-color" => "error",
+            "data-color" => "danger",
             "data-size" => "xs",
             "data-pill" => true
           }
@@ -130,7 +130,7 @@ defmodule FlintUI.Base.IndicatorTest do
     document = render(&TestComponent.styled_badge/1)
 
     assert attr(badge(document), "data-variant") == ["solid"]
-    assert attr(badge(document), "data-color") == ["error"]
+    assert attr(badge(document), "data-color") == ["danger"]
     assert attr(badge(document), "data-size") == ["xs"]
     assert attr(badge(document), "data-pill") == [""]
   end

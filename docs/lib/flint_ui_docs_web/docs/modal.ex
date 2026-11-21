@@ -211,7 +211,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
     } />
     <.preview {assigns} code={confirmation_code()}>
       <Components.button
-        color="error"
+        color="danger"
         variant="solid"
         phx-click={FlintUI.open_modal("docs-modal-confirm")}
       >
@@ -235,7 +235,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
             Cancel
           </Components.button>
           <Components.button
-            color="error"
+            color="danger"
             variant="solid"
             phx-click={FlintUI.close_modal("docs-modal-confirm")}
           >
@@ -417,7 +417,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
       <:description>You can restore it from the trash within 30 days.</:description>
       <:footer>
         <.button autofocus phx-click={FlintUI.close_modal("archive")}>Cancel</.button>
-        <.button color="error" variant="solid" phx-click={FlintUI.close_modal("archive")}>
+        <.button color="danger" variant="solid" phx-click={FlintUI.close_modal("archive")}>
           Archive
         </.button>
       </:footer>

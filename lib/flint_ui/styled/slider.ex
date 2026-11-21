@@ -22,7 +22,7 @@ defmodule FlintUI.Styled.Slider do
         ),
         Prop.new(
           name: :color,
-          values: ["neutral", "info", "success", "warning", "error", "primary", "secondary"],
+          values: ["neutral", "info", "success", "warning", "danger", "primary", "secondary"],
           default: "primary",
           allow_custom: true,
           doc:

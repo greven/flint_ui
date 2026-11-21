@@ -183,7 +183,7 @@
      * `primary` is the brand slot. Unbranded, it follows the neutral ink, so a
      * fresh app stays monochrome until a theme maps primary to a palette hue.
      * `secondary` follows the palette's gray; `info`, `success`, `warning`, and
-     * `error` point at blue, green, amber, and red. A theme or an app override
+     * `danger` point at blue, green, yellow, and red. A theme or an app override
      * can remap any role with the same five lines.
      *
      * Components composite the soft fill at `--fl-tint-opacity`, so the token
@@ -224,17 +224,17 @@
     --fl-color-success-soft: var(--fl-color-green-soft);
     --fl-color-success-soft-border: var(--fl-color-green-soft-border);
 
-    --fl-color-warning: var(--fl-color-amber);
-    --fl-color-warning-on: var(--fl-color-amber-on);
-    --fl-color-warning-on-soft: var(--fl-color-amber-on-soft);
-    --fl-color-warning-soft: var(--fl-color-amber-soft);
-    --fl-color-warning-soft-border: var(--fl-color-amber-soft-border);
+    --fl-color-warning: var(--fl-color-yellow);
+    --fl-color-warning-on: var(--fl-color-yellow-on);
+    --fl-color-warning-on-soft: var(--fl-color-yellow-on-soft);
+    --fl-color-warning-soft: var(--fl-color-yellow-soft);
+    --fl-color-warning-soft-border: var(--fl-color-yellow-soft-border);
 
-    --fl-color-error: var(--fl-color-red);
-    --fl-color-error-on: var(--fl-color-red-on);
-    --fl-color-error-on-soft: var(--fl-color-red-on-soft);
-    --fl-color-error-soft: var(--fl-color-red-soft);
-    --fl-color-error-soft-border: var(--fl-color-red-soft-border);
+    --fl-color-danger: var(--fl-color-red);
+    --fl-color-danger-on: var(--fl-color-red-on);
+    --fl-color-danger-on-soft: var(--fl-color-red-on-soft);
+    --fl-color-danger-soft: var(--fl-color-red-soft);
+    --fl-color-danger-soft-border: var(--fl-color-red-soft-border);
 
     /* Absolute tones. Unlike `neutral`, these do not follow the color scheme:
      * `dark` stays dark and `light` stays light. They alias the palette's gray
@@ -335,7 +335,7 @@
     /* Bordered controls pair the translucent ring with a full-color border. */
     --fl-focus-border-color: var(--fl-focus-ring-color);
     /* Invalid controls override both focus colors with this. */
-    --fl-focus-color-error: var(--fl-color-error);
+    --fl-focus-color-danger: var(--fl-color-danger);
 }
 
 /* Focus presets. `ring` is the default: a ring drawn at the component edge.

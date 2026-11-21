@@ -207,7 +207,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
     --fl-color-info: var(--fl-color-blue);
     --fl-color-success: var(--fl-color-green);
     --fl-color-warning: var(--fl-color-amber);
-    --fl-color-error: var(--fl-color-red);
+    --fl-color-danger: var(--fl-color-red);
 
     /* A hue owns the fill, label, on-soft text, and tint pair. */
     --fl-color-pink: var(--fl-color-pink-600);
@@ -348,7 +348,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-focus-ring-color: var(--fl-color-primary);
       --fl-focus-ring-alpha: 50%;
       --fl-focus-border-color: var(--fl-focus-ring-color);
-      --fl-focus-color-error: var(--fl-color-error);
+      --fl-focus-color-danger: var(--fl-color-danger);
     }
     """
   end

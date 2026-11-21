@@ -102,7 +102,7 @@ function setup(options: SetupOptions = {}) {
             id="logout"
             data-element="dropdown_item"
             data-part="item"
-            data-intent="error"
+            data-intent="danger"
             role="menuitem"
             tabindex="-1"
           >

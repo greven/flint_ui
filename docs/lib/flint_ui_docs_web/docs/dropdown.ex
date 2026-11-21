@@ -58,7 +58,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
             <Components.dropdown_item icon="lucide-arrow-left-right">
               Switch user
             </Components.dropdown_item>
-            <Components.dropdown_item icon="lucide-log-out" intent="error">
+            <Components.dropdown_item icon="lucide-log-out" intent="danger">
               Log out
             </Components.dropdown_item>
           </Components.dropdown_group>
@@ -180,7 +180,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
       <.dropdown_item icon="lucide-arrow-left-right">
         Switch user
       </.dropdown_item>
-      <.dropdown_item icon="lucide-log-out" intent="error">
+      <.dropdown_item icon="lucide-log-out" intent="danger">
         Log out
       </.dropdown_item>
     </.dropdown_group>

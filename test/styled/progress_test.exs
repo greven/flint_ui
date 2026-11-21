@@ -73,7 +73,7 @@ defmodule FlintUI.Styled.ProgressTest do
   end
 
   test "renders every color role", %{wrapper: wrapper} do
-    for color <- ~w(neutral info success warning error primary secondary) do
+    for color <- ~w(neutral info success warning danger primary secondary) do
       document = render(wrapper, :basic, defaults(color: color))
       assert attr(document, :progress, "data-color") == [color]
     end
@@ -117,7 +117,7 @@ defmodule FlintUI.Styled.ProgressTest do
   end
 
   test "keeps the presentational hooks off the track and segment", %{wrapper: wrapper} do
-    document = render(wrapper, :basic, defaults(size: "lg", color: "error", striped: true))
+    document = render(wrapper, :basic, defaults(size: "lg", color: "danger", striped: true))
 
     assert part_attr(document, "track", "data-size") == []
     assert part_attr(document, "track", "data-color") == []

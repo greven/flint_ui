@@ -6,7 +6,7 @@ defmodule FlintUI.Styled.DropdownHeaderTest do
       compile_wrapper!(:dropdown_header, ~S'''
       def example(assigns) do
         ~H"""
-        <.dropdown_header color="error" class="extra" data-role="test">Account</.dropdown_header>
+        <.dropdown_header color="danger" class="extra" data-role="test">Account</.dropdown_header>
         """
       end
       ''')
@@ -21,7 +21,7 @@ defmodule FlintUI.Styled.DropdownHeaderTest do
     assert attr(document, :dropdown_header, "data-dropdown_header") == [""]
     assert LazyHTML.tag(header) == ["header"]
     assert LazyHTML.attribute(header, "role") == ["presentation"]
-    assert LazyHTML.attribute(header, "data-color") == ["error"]
+    assert LazyHTML.attribute(header, "data-color") == ["danger"]
     assert LazyHTML.attribute(header, "class") == ["extra"]
     assert LazyHTML.attribute(header, "data-role") == ["test"]
     assert LazyHTML.text(header) =~ "Account"

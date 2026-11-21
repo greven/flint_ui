@@ -12,13 +12,13 @@ defmodule FlintUI.Styled.AlertTest do
 
       def intent(assigns) do
         ~H"""
-        <.alert intent="error" title="Failure">We could not save your changes.</.alert>
+        <.alert intent="danger" title="Failure">We could not save your changes.</.alert>
         """
       end
 
       def color_override(assigns) do
         ~H"""
-        <.alert intent="error" color="info">Overridden color.</.alert>
+        <.alert intent="danger" color="info">Overridden color.</.alert>
         """
       end
 
@@ -36,7 +36,7 @@ defmodule FlintUI.Styled.AlertTest do
 
       def explicit_icon(assigns) do
         ~H"""
-        <.alert intent="error" show_icon={false}>
+        <.alert intent="danger" show_icon={false}>
           <:icon><span id="custom-icon">!</span></:icon>
           Failure.
         </.alert>
@@ -124,8 +124,8 @@ defmodule FlintUI.Styled.AlertTest do
   test "an intent drives the default color, icon, and role", %{wrapper: wrapper} do
     document = render(wrapper, :intent)
 
-    assert attr(document, :alert, "data-intent") == ["error"]
-    assert attr(document, :alert, "data-color") == ["error"]
+    assert attr(document, :alert, "data-intent") == ["danger"]
+    assert attr(document, :alert, "data-color") == ["danger"]
     assert attr(document, :alert, "role") == ["alert"]
     assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-x"]
   end
@@ -133,7 +133,7 @@ defmodule FlintUI.Styled.AlertTest do
   test "an explicit color overrides the intent color but keeps its icon", %{wrapper: wrapper} do
     document = render(wrapper, :color_override)
 
-    assert attr(document, :alert, "data-intent") == ["error"]
+    assert attr(document, :alert, "data-intent") == ["danger"]
     assert attr(document, :alert, "data-color") == ["info"]
     assert icon(document) |> LazyHTML.attribute("class") == ["lucide-circle-x"]
   end

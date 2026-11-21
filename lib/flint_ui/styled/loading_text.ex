@@ -29,7 +29,7 @@ defmodule FlintUI.Styled.LoadingText do
             "info",
             "success",
             "warning",
-            "error",
+            "danger",
             "primary",
             "secondary"
           ],

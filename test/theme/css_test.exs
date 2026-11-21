@@ -25,7 +25,7 @@ defmodule FlintUI.Theme.CSSTest do
       assert css =~ ~s|:where([data-color="#{hue}"])|
     end
 
-    for role <- ~w(primary secondary neutral success info warning error dark light) do
+    for role <- ~w(primary secondary neutral success info warning danger dark light) do
       assert css =~ "--fl-color-#{role}:"
       assert css =~ "--fl-color-#{role}-on:"
       assert css =~ "--fl-color-#{role}-on-soft:"
@@ -36,10 +36,10 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-color-secondary: var(--fl-color-gray);"
     assert css =~ "--fl-color-success: var(--fl-color-green);"
     assert css =~ "--fl-color-warning: var(--fl-color-amber);"
-    assert css =~ "--fl-color-error: var(--fl-color-red);"
+    assert css =~ "--fl-color-danger: var(--fl-color-red);"
     assert css =~ "--fl-color-info: var(--fl-color-blue);"
     refute css =~ "--fl-color-primary-50:"
-    refute css =~ "--fl-color-error-950:"
+    refute css =~ "--fl-color-danger-950:"
   end
 
   test "defines absolute tones and maps them through the shared hook", %{css: css} do
@@ -212,7 +212,7 @@ defmodule FlintUI.Theme.CSSTest do
   end
 
   test "role on and on-soft map to the shared tone contract", %{css: css} do
-    for role <- ~w(primary secondary success info warning error) do
+    for role <- ~w(primary secondary success info warning danger) do
       assert css =~ ~s|:where([data-color="#{role}"])|
       assert css =~ "--fl-tone: var(--fl-color-#{role});"
       assert css =~ "--fl-tone-on: var(--fl-color-#{role}-on);"
@@ -652,7 +652,7 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "focus pairs a full-color border with the shared ring", %{css: css} do
     assert css =~ "--fl-focus-border-color: var(--fl-focus-ring-color);"
-    assert css =~ "--fl-focus-color-error: var(--fl-color-error);"
+    assert css =~ "--fl-focus-color-danger: var(--fl-color-danger);"
     assert css =~ "--fl-focus-border-color: initial;"
     assert css =~ "border-color: var(--fl-focus-border-color, revert-layer);"
 

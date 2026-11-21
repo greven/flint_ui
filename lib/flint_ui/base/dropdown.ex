@@ -17,7 +17,7 @@ defmodule FlintUI.Base.Dropdown do
         <FlintUI.dropdown_item navigate="/account">Account</FlintUI.dropdown_item>
         <FlintUI.dropdown_separator />
         <FlintUI.dropdown_group aria-label="Session">
-          <FlintUI.dropdown_item intent="error">Log out</FlintUI.dropdown_item>
+          <FlintUI.dropdown_item intent="danger">Log out</FlintUI.dropdown_item>
         </FlintUI.dropdown_group>
       </FlintUI.dropdown>
 

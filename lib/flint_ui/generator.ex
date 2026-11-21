@@ -131,7 +131,7 @@ defmodule FlintUI.Generator do
     end
   end
 
-  @color_roles ~w(primary secondary neutral success info warning error)
+  @color_roles ~w(primary secondary neutral success info warning danger)
   @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
 
   @doc """

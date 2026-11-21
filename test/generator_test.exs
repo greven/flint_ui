@@ -310,7 +310,7 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ ~s(if assigns.active_color == "inherit" do)
     assert source =~ "FlintUI.Styled.Color.clear(assigns, :data_active_color)"
 
-    assert source =~ "~w(neutral info success warning error primary secondary),"
+    assert source =~ "~w(neutral info success warning danger primary secondary),"
     assert source =~ ~s([fill: "--fl-control-active-color")
 
     assert source =~ "prop: :active_color"
@@ -576,7 +576,7 @@ defmodule FlintUI.GeneratorTest do
   test "the alert wrapper keeps the runtime intent icon names literal for Tailwind" do
     source = Generator.component_source(:alert)
 
-    for intent <- ~w(neutral info success warning error) do
+    for intent <- ~w(neutral info success warning danger) do
       assert source =~ FlintUI.Base.Alert.intent_icon(intent)
     end
   end

@@ -25,12 +25,12 @@ defmodule FlintUIDocsWeb.CheckboxSmokeTest do
       "variant" => "card",
       "size" => "lg",
       "radius" => "xl",
-      "color" => "error"
+      "color" => "danger"
     })
 
     assert has_element?(
              view,
-             "#usage-checkbox-basic [data-element='checkbox'][data-variant='card'][data-size='lg'][data-radius='xl'][data-color='error']"
+             "#usage-checkbox-basic [data-element='checkbox'][data-variant='card'][data-size='lg'][data-radius='xl'][data-color='danger']"
            )
   end
 

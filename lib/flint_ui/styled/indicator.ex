@@ -30,8 +30,8 @@ defmodule FlintUI.Styled.Indicator do
         ),
         Prop.new(
           name: :color,
-          values: ~w(neutral info success warning error primary secondary),
-          default: "error",
+          values: ~w(neutral info success warning danger primary secondary),
+          default: "danger",
           allow_custom: true,
           forwarded_to: :badge,
           doc:

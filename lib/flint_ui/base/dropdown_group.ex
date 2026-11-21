@@ -7,7 +7,7 @@ defmodule FlintUI.Base.DropdownGroup do
 
       <FlintUI.dropdown_group aria-label="Session">
         <FlintUI.dropdown_item>Switch user</FlintUI.dropdown_item>
-        <FlintUI.dropdown_item intent="error">Log out</FlintUI.dropdown_item>
+        <FlintUI.dropdown_item intent="danger">Log out</FlintUI.dropdown_item>
       </FlintUI.dropdown_group>
 
   Use a group when the items share a name that helps a screen-reader user

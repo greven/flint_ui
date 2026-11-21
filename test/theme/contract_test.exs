@@ -4,7 +4,7 @@ defmodule FlintUI.Theme.ContractTest do
   alias FlintUI.Styled
   alias FlintUI.Styled.Prop
 
-  @color_roles ~w(primary secondary neutral success info warning error dark light)
+  @color_roles ~w(primary secondary neutral success info warning danger dark light)
   @color_shades [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
   @tone_values @color_roles ++ ~w(red orange yellow green cyan blue indigo purple pink gray)
 

@@ -53,7 +53,7 @@ defmodule FlintUI.Palette do
     :info,
     :success,
     :warning,
-    :error,
+    :danger,
     :inherit,
     :dark,
     :light,

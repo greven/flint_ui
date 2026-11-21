@@ -55,12 +55,12 @@
         --fl-tone-soft-border: var(--fl-color-warning-soft-border);
     }
 
-    :where([data-color="error"]) {
-        --fl-tone: var(--fl-color-error);
-        --fl-tone-on: var(--fl-color-error-on);
-        --fl-tone-on-soft: var(--fl-color-error-on-soft);
-        --fl-tone-soft: var(--fl-color-error-soft);
-        --fl-tone-soft-border: var(--fl-color-error-soft-border);
+    :where([data-color="danger"]) {
+        --fl-tone: var(--fl-color-danger);
+        --fl-tone-on: var(--fl-color-danger-on);
+        --fl-tone-on-soft: var(--fl-color-danger-on-soft);
+        --fl-tone-soft: var(--fl-color-danger-soft);
+        --fl-tone-soft-border: var(--fl-color-danger-soft-border);
     }
 
     :where([data-color="dark"]) {
@@ -270,12 +270,12 @@
         --fl-active-tone-soft-border: var(--fl-color-warning-soft-border);
     }
 
-    :where([data-active-color="error"]) {
-        --fl-active-tone: var(--fl-color-error);
-        --fl-active-tone-on: var(--fl-color-error-on);
-        --fl-active-tone-on-soft: var(--fl-color-error-on-soft);
-        --fl-active-tone-soft: var(--fl-color-error-soft);
-        --fl-active-tone-soft-border: var(--fl-color-error-soft-border);
+    :where([data-active-color="danger"]) {
+        --fl-active-tone: var(--fl-color-danger);
+        --fl-active-tone-on: var(--fl-color-danger-on);
+        --fl-active-tone-on-soft: var(--fl-color-danger-on-soft);
+        --fl-active-tone-soft: var(--fl-color-danger-soft);
+        --fl-active-tone-soft-border: var(--fl-color-danger-soft-border);
     }
 
     :where([data-active-color="dark"]) {

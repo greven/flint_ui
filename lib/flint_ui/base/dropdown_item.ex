@@ -13,7 +13,7 @@ defmodule FlintUI.Base.DropdownItem do
   `intent` tints the item with a semantic color. Use it sparingly for a
   destructive action or a state the item confirms:
 
-      <FlintUI.dropdown_item intent="error">Delete project</FlintUI.dropdown_item>
+      <FlintUI.dropdown_item intent="danger">Delete project</FlintUI.dropdown_item>
 
   ## Custom content
 
@@ -47,7 +47,7 @@ defmodule FlintUI.Base.DropdownItem do
 
   use FlintUI.Component
 
-  @intents ~w(neutral info success warning error primary secondary)
+  @intents ~w(neutral info success warning danger primary secondary)
 
   @impl true
   def meta do
@@ -88,7 +88,7 @@ defmodule FlintUI.Base.DropdownItem do
         %Meta.PartAttr{
           name: "[data-intent]",
           value:
-            ~s("neutral" | "info" | "success" | "warning" | "error" | "primary" | "secondary"),
+            ~s("neutral" | "info" | "success" | "warning" | "danger" | "primary" | "secondary"),
           description: "The semantic color of the item."
         },
         %Meta.PartAttr{

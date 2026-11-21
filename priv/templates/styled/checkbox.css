@@ -182,7 +182,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-error-on-soft);
+        color: var(--fl-color-danger-on-soft);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }
@@ -214,22 +214,22 @@
     [data-element="checkbox"][data-variant][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"] {
-        border-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
     }
 
     [data-element="checkbox"][data-variant][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:checked) {
-        border-color: var(--fl-color-error);
-        background-color: var(--fl-color-error);
-        color: var(--fl-color-error-on);
+        border-color: var(--fl-color-danger);
+        background-color: var(--fl-color-danger);
+        color: var(--fl-color-danger-on);
     }
 
     [data-element="checkbox"][data-variant][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
+        --fl-focus-ring-color: var(--fl-focus-color-danger);
+        --fl-focus-border-color: var(--fl-focus-color-danger);
     }
 
     /* Card: the field itself becomes the selectable surface. A stretched label
@@ -274,14 +274,14 @@
     }
 
     [data-element="checkbox"][data-variant="card"][data-invalid] {
-        border-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
     }
 
     [data-element="checkbox"][data-variant="card"][data-invalid]:has(
             > [data-part="label"] > [data-part="indicator"] > [data-part="control"]:checked
         ) {
-        border-color: var(--fl-color-error);
-        background: color-mix(in oklab, var(--fl-color-error) 8%, var(--fl-color-surface));
+        border-color: var(--fl-color-danger);
+        background: color-mix(in oklab, var(--fl-color-danger) 8%, var(--fl-color-surface));
     }
 
     [data-element="checkbox"][data-variant="card"] > [data-part="error"] {

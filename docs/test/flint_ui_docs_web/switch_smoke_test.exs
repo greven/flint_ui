@@ -31,11 +31,11 @@ defmodule FlintUIDocsWeb.SwitchSmokeTest do
 
     view
     |> element("#usage-switch-basic-controls")
-    |> render_change(%{"size" => "lg", "color" => "error"})
+    |> render_change(%{"size" => "lg", "color" => "danger"})
 
     assert has_element?(
              view,
-             "#usage-switch-basic [data-element='switch'][data-size='lg'][data-color='error']"
+             "#usage-switch-basic [data-element='switch'][data-size='lg'][data-color='danger']"
            )
   end
 

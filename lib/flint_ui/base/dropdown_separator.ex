@@ -6,7 +6,7 @@ defmodule FlintUI.Base.DropdownSeparator do
 
       <FlintUI.dropdown_item>Settings</FlintUI.dropdown_item>
       <FlintUI.dropdown_separator />
-      <FlintUI.dropdown_item intent="error">Log out</FlintUI.dropdown_item>
+      <FlintUI.dropdown_item intent="danger">Log out</FlintUI.dropdown_item>
 
   Use a separator for a visual break between unrelated actions. Use a
   `FlintUI.dropdown_group/1` when the items share an accessible name.

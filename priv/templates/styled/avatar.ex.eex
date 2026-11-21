@@ -18,7 +18,7 @@ def <%= @name %>(assigns) do
     assigns
     |> initials_color()
     |> FlintUI.Styled.Color.apply_style(
-      ~w(neutral info success warning error primary secondary),
+      ~w(neutral info success warning danger primary secondary),
       [fill: "--fl-avatar-color", on_fill: "--fl-avatar-color-content"],
       color_opts
     )

@@ -37,7 +37,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
         id: :color,
         title: "Color",
         controls: [
-          %{key: :color, type: :select, default: "error", label: "Color"},
+          %{key: :color, type: :select, default: "danger", label: "Color"},
           %{key: :variant, type: :select, default: "solid", label: "Variant"}
         ]
       },
@@ -269,7 +269,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
           </Components.button>
         </Components.indicator>
 
-        <Components.indicator color="error" size="lg" offset={-2}>
+        <Components.indicator color="danger" size="lg" offset={-2}>
           <Components.button variant="subtle" square aria-label="Ada Lovelace, offline">
             <Components.icon name="lucide-user" />
           </Components.button>
@@ -294,7 +294,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
       <div class="flex flex-wrap items-center gap-6">
         <Components.button variant="subtle">
           Inbox
-          <Components.badge variant="solid" color="error" size="xs" pill>3</Components.badge>
+          <Components.badge variant="solid" color="danger" size="xs" pill>3</Components.badge>
         </Components.button>
 
         <Components.indicator label="3">
@@ -379,7 +379,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
       ".indicator",
       [
         Snippet.attr("label", "3"),
-        Snippet.attr("color", props.color, "error"),
+        Snippet.attr("color", props.color, "danger"),
         Snippet.attr("variant", props.variant, "solid")
       ],
       anchor_code()
@@ -469,7 +469,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
       </.button>
     </.indicator>
 
-    <.indicator color="error" size="lg" offset={-2}>
+    <.indicator color="danger" size="lg" offset={-2}>
       <.button variant="subtle" square aria-label="Ada Lovelace, offline">
         <.icon name="lucide-user" />
       </.button>
@@ -499,7 +499,7 @@ defmodule FlintUIDocsWeb.Docs.Indicator do
     """
     <.button variant="subtle">
       Inbox
-      <.badge variant="solid" color="error" size="xs" pill>3</.badge>
+      <.badge variant="solid" color="danger" size="xs" pill>3</.badge>
     </.button>
 
     <.indicator label="3">

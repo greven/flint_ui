@@ -166,7 +166,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-error-on-soft);
+        color: var(--fl-color-danger-on-soft);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }
@@ -198,35 +198,35 @@
     [data-element="switch"][data-switch][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"] {
-        border-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
     }
 
     [data-element="switch"][data-switch][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:checked) {
-        border-color: var(--fl-color-error);
-        background-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
+        background-color: var(--fl-color-danger);
     }
 
     [data-element="switch"][data-switch][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:checked)
         > [data-part="thumb"] {
-        background-color: var(--fl-color-error-on);
+        background-color: var(--fl-color-danger-on);
     }
 
     [data-element="switch"][data-switch][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:checked)
         > [data-part="on-state"] {
-        color: var(--fl-color-error-on);
+        color: var(--fl-color-danger-on);
     }
 
     [data-element="switch"][data-switch][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
+        --fl-focus-ring-color: var(--fl-focus-color-danger);
+        --fl-focus-border-color: var(--fl-focus-color-danger);
     }
 
     /* Sizes drive the label type and the gap; the `em` track follows. */

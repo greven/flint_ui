@@ -347,7 +347,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   end
 
   defp variants, do: ~w(solid soft subtle surface outline ghost link)
-  defp colors, do: ~w(neutral info success warning error primary secondary)
+  defp colors, do: ~w(neutral info success warning danger primary secondary)
 
   defp code_variants do
     """
@@ -365,7 +365,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   defp code_colors do
     """
     <.copy_button
-      :for={color <- ~w(neutral info success warning error primary secondary)}
+      :for={color <- ~w(neutral info success warning danger primary secondary)}
       variant="soft"
       color={color}
       size="sm"

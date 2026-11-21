@@ -127,14 +127,14 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
             follows the palette's gray; <strong>info</strong>
             blue; <strong>success</strong>
             green; <strong>warning</strong>
-            amber; and <strong>error</strong>
+            amber; and <strong>danger</strong>
             red. A
             palette switch changes what those hues look like; a role override
             changes which hue a role points at.
           </DocsComponents.content_paragraph>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <Components.button
-              :for={role <- ~w(neutral info success warning error secondary)}
+              :for={role <- ~w(neutral info success warning danger secondary)}
               variant="surface"
               color={role}
             >

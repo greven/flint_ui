@@ -122,7 +122,7 @@ defmodule FlintUI.Styled.IndicatorTest do
     assert badge_attr(document, "data-part") == ["root"]
     assert badge_attr(document, "data-variant") == ["solid"]
     assert badge_attr(document, "data-dashed") == []
-    assert badge_attr(document, "data-color") == ["error"]
+    assert badge_attr(document, "data-color") == ["danger"]
     assert badge_attr(document, "data-size") == ["xs"]
     assert badge_attr(document, "data-pill") == [""]
     assert badge_attr(document, "data-radius") == []

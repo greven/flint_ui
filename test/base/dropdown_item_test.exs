@@ -84,9 +84,9 @@ defmodule FlintUI.Base.DropdownItemTest do
     end
 
     test "forwards intent" do
-      item = item(render(:button_example, intent: "error"))
+      item = item(render(:button_example, intent: "danger"))
 
-      assert LazyHTML.attribute(item, "data-intent") == ["error"]
+      assert LazyHTML.attribute(item, "data-intent") == ["danger"]
     end
 
     test "renders a disabled button with the native state" do

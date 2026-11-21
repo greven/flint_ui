@@ -16,7 +16,7 @@ def <%= @name %>(assigns) do
   assigns =
     FlintUI.Styled.Color.apply_style(
       assigns,
-      ~w(neutral info success warning error primary secondary),
+      ~w(neutral info success warning danger primary secondary),
       fill: "--fl-progress-group-color"
     )
 
@@ -89,7 +89,7 @@ defp segment_assigns(segment) do
         {data_color, color_style} =
           FlintUI.Styled.Color.resolve_style(
             color,
-            ~w(neutral info success warning error primary secondary),
+            ~w(neutral info success warning danger primary secondary),
             fill: "--fl-progress-group-color"
           )
 

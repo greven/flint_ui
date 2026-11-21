@@ -279,15 +279,15 @@
     [data-element="input"][data-input][data-invalid]
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
-        border-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
     }
 
     [data-element="input"][data-input][data-invalid]
         > [data-part="row"]
         > [data-part="label"]
         > [data-part="box"]:has(> [data-part="control"]:focus-visible) {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
+        --fl-focus-ring-color: var(--fl-focus-color-danger);
+        --fl-focus-border-color: var(--fl-focus-color-danger);
     }
     /* Checkbox: the native input is the control, the indicator paints the box.
      * Keeping the input in the DOM preserves focus, forced colors, and AT. */
@@ -388,20 +388,20 @@
     /* Invalid checkboxes use the error role for the box and the mark. */
     [data-element="input"][data-input][data-type="checkbox"][data-invalid]
         [data-part="indicator"] {
-        border-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
     }
 
     [data-element="input"][data-input][data-type="checkbox"][data-invalid]
         [data-part="indicator"]:has(> [data-part="control"]:checked) {
-        border-color: var(--fl-color-error);
-        background-color: var(--fl-color-error);
-        color: var(--fl-color-error-on);
+        border-color: var(--fl-color-danger);
+        background-color: var(--fl-color-danger);
+        color: var(--fl-color-danger-on);
     }
 
     [data-element="input"][data-input][data-type="checkbox"][data-invalid]
         [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
+        --fl-focus-ring-color: var(--fl-focus-color-danger);
+        --fl-focus-border-color: var(--fl-focus-color-danger);
     }
     [data-element="input"][data-size="xs"][data-input]
         > [data-part="row"]

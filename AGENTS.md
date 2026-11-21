@@ -162,7 +162,7 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   soft surface), `-soft`, and `-soft-border`. `primary` is the brand slot and defaults
   to the neutral ink, so a fresh app is monochrome until a theme maps it.
   `secondary` follows the palette `gray`; `info`, `success`, `warning`, and
-  `error` point at blue, green, amber, and red. Remap a role by pointing its
+  `danger` point at blue, green, amber, and red. Remap a role by pointing its
   five tokens at another hue.
 - **Color hooks.** `color` accepts a semantic role or one of the eighteen palette
   hues. Both resolve to one `--fl-tone*` set in `colors.css`; components read

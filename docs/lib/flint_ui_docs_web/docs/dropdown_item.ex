@@ -6,7 +6,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownItem do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
-  @roles ~w(neutral info success warning error primary secondary)
+  @roles ~w(neutral info success warning danger primary secondary)
 
   @impl true
   def base_docs, do: :all
@@ -87,7 +87,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownItem do
               data-element="dropdown_item"
               data-part="item"
               data-dropdown_item
-              data-intent="error"
+              data-intent="danger"
             >
               <Components.icon name="lucide-log-out" class="size-4" /> Log out
             </div>

@@ -45,7 +45,7 @@ defmodule FlintUI.Styled.Separator do
         ),
         Prop.new(
           name: :color,
-          values: ["neutral", "info", "success", "warning", "error", "primary", "secondary"],
+          values: ["neutral", "info", "success", "warning", "danger", "primary", "secondary"],
           default: "neutral",
           allow_custom: true,
           doc:

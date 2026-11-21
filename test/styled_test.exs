@@ -114,7 +114,7 @@ defmodule FlintUI.StyledTest do
              "info",
              "success",
              "warning",
-             "error",
+             "danger",
              "primary",
              "secondary"
            ]
@@ -127,7 +127,7 @@ defmodule FlintUI.StyledTest do
   end
 
   test "color props list roles in the canonical docs order" do
-    canonical = ~w(neutral info success warning error primary secondary)
+    canonical = ~w(neutral info success warning danger primary secondary)
     tiers = ~w(default highlighted toned muted dimmed inverted)
 
     for entry <- Styled.entries(), color <- List.wrap(Entry.prop(entry, :color)) do

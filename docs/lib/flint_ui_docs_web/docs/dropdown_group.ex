@@ -20,7 +20,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownGroup do
     <.preview
       {assigns}
       code={
-        ~s(<.dropdown_group aria-label="Session">\n  <.dropdown_item>Switch user</.dropdown_item>\n  <.dropdown_item intent="error">Log out</.dropdown_item>\n</.dropdown_group>)
+        ~s(<.dropdown_group aria-label="Session">\n  <.dropdown_item>Switch user</.dropdown_item>\n  <.dropdown_item intent="danger">Log out</.dropdown_item>\n</.dropdown_group>)
       }
     >
       <div class="flex min-h-40 w-full items-center justify-center">
@@ -30,7 +30,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownGroup do
             <Components.dropdown_item icon="lucide-arrow-left-right">
               Switch user
             </Components.dropdown_item>
-            <Components.dropdown_item icon="lucide-log-out" intent="error">
+            <Components.dropdown_item icon="lucide-log-out" intent="danger">
               Log out
             </Components.dropdown_item>
           </Components.dropdown_group>
@@ -55,7 +55,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownGroup do
           <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="neutral">
             Switch user
           </div>
-          <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="error">
+          <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="danger">
             Log out
           </div>
         </div>

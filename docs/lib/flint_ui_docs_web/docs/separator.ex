@@ -116,7 +116,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
       <div class="w-full max-w-md space-y-6">
         <Components.separator color={props.color} label={props.color} />
         <Components.separator color="success" label="success" />
-        <Components.separator color="error" label="error" />
+        <Components.separator color="danger" label="danger" />
         <Components.separator color="#1D72FE" label="raw color" />
       </div>
     </.preview>

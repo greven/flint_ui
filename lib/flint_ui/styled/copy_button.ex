@@ -71,7 +71,7 @@ defmodule FlintUI.Styled.CopyButton do
         ),
         Prop.new(
           name: :color,
-          values: ["neutral", "info", "success", "warning", "error", "primary", "secondary"],
+          values: ["neutral", "info", "success", "warning", "danger", "primary", "secondary"],
           default: "neutral",
           allow_custom: true,
           primitive: :control,
@@ -80,7 +80,7 @@ defmodule FlintUI.Styled.CopyButton do
         ),
         Prop.new(
           name: :success_color,
-          values: ["inherit"] ++ ~w(neutral info success warning error primary secondary),
+          values: ["inherit"] ++ ~w(neutral info success warning danger primary secondary),
           default: "inherit",
           resolved: ["inherit"],
           state: "success",

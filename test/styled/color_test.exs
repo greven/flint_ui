@@ -4,7 +4,7 @@ defmodule FlintUI.Styled.ColorTest do
   alias FlintUI.Palette.{Color, Contrast, Tailwind}
   alias FlintUI.Styled.Color, as: StyledColor
 
-  @roles ~w(primary secondary success info warning error neutral)
+  @roles ~w(primary secondary success info warning danger neutral)
 
   @vars [
     fill: "--fl-control-color",

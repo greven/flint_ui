@@ -24,7 +24,7 @@ defmodule FlintUI.Palette.CSS do
   alias FlintUI.Palette
   alias FlintUI.Palette.Contrast
 
-  @roles ~w(primary secondary neutral info success warning error dark light)
+  @roles ~w(primary secondary neutral info success warning danger dark light)
 
   @white "oklch(100% 0 0)"
   @black "oklch(0% 0 0)"

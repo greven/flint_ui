@@ -1,6 +1,6 @@
 defmodule FlintUI.Base.Alert do
   @moduledoc """
-  A prominent message that communicates a status, warning, or error.
+  A prominent message that communicates a status, warning, or danger.
 
   ## Examples
 
@@ -28,7 +28,7 @@ defmodule FlintUI.Base.Alert do
 
   ## Accessibility
 
-  The root is a live region. `warning` and `error` intents default to
+  The root is a live region. `warning` and `danger` intents default to
   `role="alert"` (assertive); the other intents default to `role="status"`
   (polite). Pass `role` yourself to choose another role or to make a purely
   static callout `role="none"`.
@@ -103,7 +103,7 @@ defmodule FlintUI.Base.Alert do
         },
         %Meta.PartAttr{
           name: "[data-intent]",
-          value: ~s("neutral" | "info" | "success" | "warning" | "error"),
+          value: ~s("neutral" | "info" | "success" | "warning" | "danger"),
           description: "The semantic intent, when set. It selects the default icon and color."
         },
         %Meta.PartAttr{
@@ -121,7 +121,7 @@ defmodule FlintUI.Base.Alert do
           name: "role",
           value: ~s("alert" | "status" | "none"),
           description:
-            "The live-region role. `warning`/`error` default to `alert`, the other intents default to `status`. A caller-supplied role wins."
+            "The live-region role. `warning`/`danger` default to `alert`, the other intents default to `status`. A caller-supplied role wins."
         }
       ],
       icon: [
@@ -223,7 +223,7 @@ defmodule FlintUI.Base.Alert do
     ]
   end
 
-  @intents ~w(neutral info success warning error)
+  @intents ~w(neutral info success warning danger)
 
   @impl true
   def build_attrs(%{intent: intent} = assigns) when is_nil(intent) or intent in @intents do
@@ -265,7 +265,7 @@ defmodule FlintUI.Base.Alert do
   attr :intent, :string,
     default: nil,
     doc:
-      "The semantic meaning of the message: `neutral`, `info`, `success`, `warning`, or `error`. It selects the default icon and is the fallback color when `color` is not set."
+      "The semantic meaning of the message: `neutral`, `info`, `success`, `warning`, or `danger`. It selects the default icon and is the fallback color when `color` is not set."
 
   attr :title, :string,
     default: nil,
@@ -297,7 +297,7 @@ defmodule FlintUI.Base.Alert do
   attr :role, :string,
     default: nil,
     doc:
-      "The live-region role. Defaults to `alert` for warning and error intents, and `status` otherwise."
+      "The live-region role. Defaults to `alert` for warning and danger intents, and `status` otherwise."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 
@@ -349,7 +349,7 @@ defmodule FlintUI.Base.Alert do
   def intent_icon("info"), do: "lucide-info"
   def intent_icon("success"), do: "lucide-circle-check"
   def intent_icon("warning"), do: "lucide-circle-exclamation-point"
-  def intent_icon("error"), do: "lucide-circle-x"
+  def intent_icon("danger"), do: "lucide-circle-x"
   def intent_icon(_intent), do: nil
 
   @doc """
@@ -391,6 +391,6 @@ defmodule FlintUI.Base.Alert do
     rendered |> Phoenix.HTML.Safe.to_iodata() |> IO.iodata_to_binary() |> String.trim() != ""
   end
 
-  defp alert_role(%{intent: intent}) when intent in ["warning", "error"], do: "alert"
+  defp alert_role(%{intent: intent}) when intent in ["warning", "danger"], do: "alert"
   defp alert_role(_assigns), do: "status"
 end

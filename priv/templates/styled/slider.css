@@ -372,7 +372,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-error-on-soft);
+        color: var(--fl-color-danger-on-soft);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }
@@ -419,8 +419,8 @@
     /* Validation wins over the chosen color role, so an invalid slider always
      * reads as an error. Keep this after the color selectors. */
     [data-element="slider"][data-slider][data-invalid] {
-        --fl-slider-color: var(--fl-color-error);
-        --fl-focus-ring-color: var(--fl-focus-color-error);
+        --fl-slider-color: var(--fl-color-danger);
+        --fl-focus-ring-color: var(--fl-focus-color-danger);
     }
 
     @media (prefers-reduced-motion: reduce) {

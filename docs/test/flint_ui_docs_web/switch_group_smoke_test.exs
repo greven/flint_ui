@@ -26,7 +26,7 @@ defmodule FlintUIDocsWeb.SwitchGroupSmokeTest do
 
     view
     |> element("#usage-switch-group-basic-controls")
-    |> render_change(%{"orientation" => "horizontal", "size" => "lg", "color" => "error"})
+    |> render_change(%{"orientation" => "horizontal", "size" => "lg", "color" => "danger"})
 
     assert has_element?(
              view,
@@ -35,7 +35,7 @@ defmodule FlintUIDocsWeb.SwitchGroupSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-switch-group-basic [data-element='switch'][data-size='lg'][data-color='error']"
+             "#usage-switch-group-basic [data-element='switch'][data-size='lg'][data-color='danger']"
            )
   end
 

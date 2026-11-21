@@ -13,7 +13,7 @@ defmodule FlintUIDocsWeb.IndicatorSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-indicator-basic [data-element='badge'][data-variant='solid'][data-color='error'][data-size='xs']",
+             "#usage-indicator-basic [data-element='badge'][data-variant='solid'][data-color='danger'][data-size='xs']",
              "3"
            )
 
@@ -22,7 +22,7 @@ defmodule FlintUIDocsWeb.IndicatorSmokeTest do
 
     assert has_element?(
              view,
-             "#usage-indicator-color [data-element='badge'][data-color='error'][data-variant='solid']"
+             "#usage-indicator-color [data-element='badge'][data-color='danger'][data-variant='solid']"
            )
 
     assert has_element?(view, "#usage-indicator-position [data-element='indicator']")

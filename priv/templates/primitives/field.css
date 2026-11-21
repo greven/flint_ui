@@ -86,13 +86,13 @@
 
     /* Invalid is announced through ARIA and reinforced with the error role. */
     [data-field][data-invalid] [data-field-control] {
-        border-color: var(--fl-color-error);
+        border-color: var(--fl-color-danger);
     }
 
     [data-field][data-invalid] [data-field-control]:focus-visible,
     [data-field][data-invalid] [data-field-control]:has(> [data-part="control"]:focus-visible) {
-        --fl-focus-ring-color: var(--fl-focus-color-error);
-        --fl-focus-border-color: var(--fl-focus-color-error);
+        --fl-focus-ring-color: var(--fl-focus-color-danger);
+        --fl-focus-border-color: var(--fl-focus-color-danger);
     }
 
     /* Supporting typography. The component owns placement; the primitive owns
@@ -124,7 +124,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-error-on-soft);
+        color: var(--fl-color-danger-on-soft);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }

@@ -22,7 +22,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownSeparator do
         <Components.dropdown label="Actions">
           <Components.dropdown_item>Settings</Components.dropdown_item>
           <Components.dropdown_separator />
-          <Components.dropdown_item intent="error">Log out</Components.dropdown_item>
+          <Components.dropdown_item intent="danger">Log out</Components.dropdown_item>
         </Components.dropdown>
       </div>
     </.preview>
@@ -38,7 +38,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownSeparator do
           Settings
         </div>
         <div data-element="dropdown_separator" data-part="separator" data-dropdown_separator></div>
-        <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="error">
+        <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="danger">
           Log out
         </div>
       </div>

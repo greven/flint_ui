@@ -42,7 +42,7 @@ defmodule FlintUIDocsWeb.Theme.OverviewLive do
     },
     %{
       label: "Semantic roles",
-      body: "Primary, secondary, info, success, warning, and error point at palette hues."
+      body: "Primary, secondary, info, success, warning, and danger point at palette hues."
     },
     %{
       label: "Theme tokens",

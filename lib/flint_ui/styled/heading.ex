@@ -27,12 +27,12 @@ defmodule FlintUI.Styled.Heading do
         Prop.new(
           name: :color,
           values:
-            ~w(default highlighted toned muted dimmed inverted neutral info success warning error primary secondary),
+            ~w(default highlighted toned muted dimmed inverted neutral info success warning danger primary secondary),
           default: "highlighted",
           allow_custom: true,
           primitive: :typography,
           doc:
-            "The heading ink: a text tier such as `highlighted` (the default) or `toned`, a semantic role such as `primary` or `error`, or a raw CSS color such as `#1D72FE`. `dimmed` is below AA and belongs to decoration only."
+            "The heading ink: a text tier such as `highlighted` (the default) or `toned`, a semantic role such as `primary` or `danger`, or a raw CSS color such as `#1D72FE`. `dimmed` is below AA and belongs to decoration only."
         ),
         Prop.new(
           name: :weight,

@@ -14,7 +14,7 @@ def <%= @name %>(assigns) do
   assigns =
     FlintUI.Styled.Color.apply_style(
       assigns,
-      ~w(neutral info success warning error primary secondary),
+      ~w(neutral info success warning danger primary secondary),
       fill: "--fl-radio-color",
       on_fill: "--fl-radio-color-content"
     )

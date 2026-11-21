@@ -6,7 +6,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
   alias FlintUIDocsWeb.Components
   alias FlintUIDocsWeb.Docs.Snippet
 
-  @roles ~w(neutral info success warning error primary secondary)
+  @roles ~w(neutral info success warning danger primary secondary)
 
   @impl true
   def base_docs, do: :all
@@ -26,7 +26,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
             type: :select,
             default: "info",
             label: "Intent",
-            values: ~w(neutral info success warning error)
+            values: ~w(neutral info success warning danger)
           },
           %{
             key: :color,
@@ -163,13 +163,13 @@ defmodule FlintUIDocsWeb.Docs.Alert do
 
   def render_section(%{section: :usage, id: :intent} = assigns) do
     ~H"""
-    <.prose content="`intent` gives the message a semantic meaning. It selects the default icon and is the fallback color. The five intents are `neutral`, `info`, `success`, `warning`, and `error`." />
-    <.prose content={"`warning` and `error` default to `role=\"alert\"`, so they interrupt. The other intents default to the polite `role=\"status\"`.
+    <.prose content="`intent` gives the message a semantic meaning. It selects the default icon and is the fallback color. The five intents are `neutral`, `info`, `success`, `warning`, and `danger`." />
+    <.prose content={"`warning` and `danger` default to `role=\"alert\"`, so they interrupt. The other intents default to the polite `role=\"status\"`.
       Set `role` yourself when the surrounding flow needs a different announcement."} />
     <.preview :let={props} {assigns} code={intent_code()}>
       <div class="grid w-full max-w-xl gap-3">
         <Components.alert
-          :for={intent <- ~w(neutral info success warning error)}
+          :for={intent <- ~w(neutral info success warning danger)}
           intent={intent}
           show_icon={props.show_icon}
           title={String.capitalize(intent)}
@@ -445,7 +445,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.alert intent="info" title="Info">An alert with the info intent.</.alert>
     <.alert intent="success" title="Success">An alert with the success intent.</.alert>
     <.alert intent="warning" title="Warning">An alert with the warning intent.</.alert>
-    <.alert intent="error" title="Error">An alert with the error intent.</.alert>
+    <.alert intent="danger" title="Danger">An alert with the danger intent.</.alert>
     <.alert intent="neutral" title="Neutral">An alert with the neutral intent.</.alert>
     """
     |> String.trim()

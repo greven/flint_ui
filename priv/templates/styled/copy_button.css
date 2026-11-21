@@ -64,7 +64,7 @@
     [data-element="copy_button"][data-copy_button][data-state="error"]:not([data-variant="solid"])
         > [data-part="states"]
         > [data-part="error_state"] {
-        color: var(--fl-color-error-on-soft);
+        color: var(--fl-color-danger-on-soft);
     }
 
     /* Success color: while the success state is visible, the control reads the

@@ -87,7 +87,7 @@ defmodule FlintUI.Styled.SliderTest do
   end
 
   test "renders every color role", %{wrapper: wrapper} do
-    for color <- ~w(neutral info success warning error primary secondary) do
+    for color <- ~w(neutral info success warning danger primary secondary) do
       document = render(wrapper, :basic, defaults(color: color))
       assert attr(document, :slider, "data-color") == [color]
     end
@@ -101,7 +101,7 @@ defmodule FlintUI.Styled.SliderTest do
   end
 
   test "keeps the root hooks off the native input", %{wrapper: wrapper} do
-    document = render(wrapper, :basic, defaults(size: "lg", color: "error"))
+    document = render(wrapper, :basic, defaults(size: "lg", color: "danger"))
 
     assert part_attr(document, "input", "data-size") == []
     assert part_attr(document, "input", "data-color") == []

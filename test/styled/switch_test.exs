@@ -80,7 +80,7 @@ defmodule FlintUI.Styled.SwitchTest do
   end
 
   test "keeps the root hooks off the native control", %{wrapper: wrapper} do
-    document = render(wrapper, :basic, defaults(size: "lg", color: "error"))
+    document = render(wrapper, :basic, defaults(size: "lg", color: "danger"))
 
     assert part_attr(document, "control", "data-part") == ["control"]
     assert part_attr(document, "control", "role") == ["switch"]

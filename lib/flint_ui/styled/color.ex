@@ -37,7 +37,7 @@ defmodule FlintUI.Styled.Color do
   alias FlintUI.Palette
   alias FlintUI.Palette.{Color, Contrast}
 
-  @roles ~w(primary secondary success info warning error neutral inherit)
+  @roles ~w(primary secondary success info warning danger neutral inherit)
   @absolute ~w(dark light)
   @hues Palette.hue_names()
   # White is kept for image-like labels until it misses the 3:1 large-text floor.

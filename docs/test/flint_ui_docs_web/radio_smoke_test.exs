@@ -22,12 +22,12 @@ defmodule FlintUIDocsWeb.RadioSmokeTest do
       "variant" => "card",
       "size" => "lg",
       "radius" => "xl",
-      "color" => "error"
+      "color" => "danger"
     })
 
     assert has_element?(
              view,
-             "#usage-radio-basic [data-element='radio'][data-variant='card'][data-size='lg'][data-radius='xl'][data-color='error']"
+             "#usage-radio-basic [data-element='radio'][data-variant='card'][data-size='lg'][data-radius='xl'][data-color='danger']"
            )
   end
 

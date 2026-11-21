@@ -174,7 +174,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
                   {"info", "blue"},
                   {"success", "green"},
                   {"warning", "amber"},
-                  {"error", "red"}
+                  {"danger", "red"}
                 ]
             }>
               <td class="py-3 pr-6 font-medium">{role}</td>
@@ -672,7 +672,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         and <code class="docs-code font-mono">inset</code>
         leave the border unchanged. Structural borders such as card bands
         and tab-list rules stay neutral. Invalid inputs will use
-        <code class="docs-code font-mono">--fl-focus-color-error</code>
+        <code class="docs-code font-mono">--fl-focus-color-danger</code>
         for both the border and the ring.
       </DocsComponents.content_paragraph>
       <div class="mt-4 overflow-x-auto">

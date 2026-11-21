@@ -29,7 +29,7 @@ defmodule FlintUI.Base.DropdownHeader do
 
   use FlintUI.Component
 
-  @colors ~w(neutral info success warning error primary secondary)
+  @colors ~w(neutral info success warning danger primary secondary)
 
   @impl true
   def meta do
