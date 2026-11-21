@@ -71,9 +71,9 @@ defmodule FlintUIDocsWeb.Theme.Tokens do
       title: "Surfaces",
       path: "/guides/theming/tokens/surfaces",
       icon: "lucide-layers",
-      summary: "The chrome anchor, page tint and lift, card, raised fills, and disabled opacity.",
+      summary: "The chrome anchor, page colors, card, raised fills, and disabled opacity.",
       subtitle:
-        "The chrome ladder: one base ink, a page tint and lift, the page, the card, tonal fills, raised overlays, and the opacity used for disabled controls.",
+        "The chrome ladder: one base ink, explicit page colors, the card, tonal fills, raised overlays, and the opacity used for disabled controls.",
       namespace: "--fl-color-surface-*"
     },
     %{

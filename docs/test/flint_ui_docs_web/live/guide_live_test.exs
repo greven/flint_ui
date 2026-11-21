@@ -231,6 +231,8 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert html =~ "--fl-surface-base"
     assert html =~ "--fl-surface-page-tint"
     assert html =~ "--fl-surface-page-lift"
+    assert html =~ "--fl-surface-page-light"
+    assert html =~ "--fl-surface-page-dark"
     assert html =~ "--fl-text-base"
     assert html =~ "mix flint.palette"
     assert html =~ "color-rose"

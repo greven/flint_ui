@@ -123,7 +123,13 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/--fl-color-surface: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(99\.5% - var\(--fl-surface-page-tint\)\), var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(7% \+ var\(--fl-surface-page-lift\)\), var\(--fl-surface-base\)\)\s*\)/
 
     assert css =~
-             ~r/--fl-color-background: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) calc\(98\.25% - var\(--fl-surface-page-tint\)\), var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) var\(--fl-surface-page-lift\), var\(--fl-surface-base\)\)\s*\)/
+             ~r/--fl-surface-page-light: color-mix\(\s*in oklab,\s*var\(--fl-surface-base\) calc\(1\.75% \+ var\(--fl-surface-page-tint\)\),\s*oklch\(1 0 0\)\s*\)/
+
+    assert css =~
+             ~r/--fl-surface-page-dark: color-mix\(\s*in oklab,\s*oklch\(1 0 0\) var\(--fl-surface-page-lift\),\s*var\(--fl-surface-base\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-background: light-dark\(\s*var\(--fl-surface-page-light\),\s*var\(--fl-surface-page-dark\)\s*\)/
 
     for {name, percent} <- [
           {"surface-subtle", "3%"},

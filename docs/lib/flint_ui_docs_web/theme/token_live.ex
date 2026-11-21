@@ -524,7 +524,8 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         is the single chrome anchor: the darkest ink every surface is built
         from. It defaults to <code class="docs-code font-mono">gray-950</code>, so
         remapping the gray ramp retints the page, surfaces, tints, and edges
-        together. Background, surface, and raised are white mixes of that ink,
+        together. The page is an explicit color per scheme that defaults to a
+        white mix of that ink; surface and raised are white mixes of the ink,
         so each step up the ramp is brighter in both schemes.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
@@ -554,6 +555,18 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         sits on the page: a darker light page spends text AA headroom. The dark
         side stays comfortable through about 5%.
       </DocsComponents.content_paragraph>
+      <DocsComponents.content_paragraph class="mt-3">
+        The page is also a pair of explicit colors:
+        <code class="docs-code font-mono">--fl-surface-page-light</code>
+        and <code class="docs-code font-mono">--fl-surface-page-dark</code>.
+        Set them directly for absolute values, such as a pure white light page
+        or a pure black dark page. A white page is the top of the light ladder,
+        so solid cards resolve near white and rely on borders or shadows; the
+        tonal <code class="docs-code font-mono">surface-subtle</code>
+        and <code class="docs-code font-mono">surface-strong</code>
+        fills still provide tinted panels.
+      </DocsComponents.content_paragraph>
+      <DocsComponents.code_block code={Snippets.snippet(:page_extremes)} lang={:css} />
       <DocsComponents.content_paragraph class="mt-3">
         The chrome ladder is ordered: subtle (3%) &lt; strong (6%) &lt;
         border-subtle (7%) &lt; border (10%) &lt; border-strong (18%).

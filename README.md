@@ -101,7 +101,10 @@ the panel it bounds. Remapping the gray ramp retints the whole chrome through
 lighter while the surfaces stay a step brighter. For a smaller move,
 `--fl-surface-page-tint` mixes ink into the light page and
 `--fl-surface-page-lift` adds white to the dark page, carrying the whole ladder
-with them. Chrome fills and edges name the
+with them. Set `--fl-surface-page-light` / `--fl-surface-page-dark` for an
+absolute page such as white or black; at white the solid ladder bottoms out, so
+separate cards with borders, shadows, or the tonal fills. Chrome fills and
+edges name the
 amount of tint (`subtle` / default / `strong`), while ink names loudness
 (`text-muted` and friends).
 

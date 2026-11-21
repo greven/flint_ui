@@ -189,7 +189,11 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   `--fl-surface-page-tint` and `--fl-surface-page-lift` (both default `0%`)
   move the page off the extremes and carry the ladder with it: tint mixes ink
   into the light page, lift adds white to the dark page, and every step keeps
-  its spacing. Tonal fills and edges are a tint of
+  its spacing. The page itself is an explicit color per scheme
+  (`--fl-surface-page-light` / `--fl-surface-page-dark`), defaulting to those
+  mixes; a pure-white page is the top of the light ladder, so solid cards
+  resolve near white and separation comes from borders, shadows, or the tonal
+  fills. Tonal fills and edges are a tint of
   `--fl-surface-ink` over `surface`: `surface-subtle` 3%, `surface-strong` 6%,
   `border-subtle` 7%, `border` 10%, and `border-strong` 18%. The order is
   intentional: a fill must stay below the quietest edge, or an edge sinks into

@@ -51,16 +51,17 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
         <DocsComponents.section title="Retune the chrome" id="chrome">
           <DocsComponents.content_paragraph class="mt-3">
             <code class="docs-code font-mono">--fl-surface-base</code>
-            is the single chrome anchor. Background, surface, and raised are
-            white mixes of it, so changing this one token moves the whole ramp
-            while keeping each step brighter. It defaults to <code class="docs-code font-mono">gray-950</code>, so remapping the
+            is the single chrome anchor. The page defaults to a white mix of
+            it, and surface and raised are white mixes of it, so changing this
+            one token moves the whole ramp while keeping each step brighter.
+            It defaults to <code class="docs-code font-mono">gray-950</code>, so remapping the
             gray hue still retints everything.
           </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={Snippets.snippet(:chrome_base)} lang={:css} />
           <DocsComponents.content_paragraph class="mt-3">
             A darker base — even black — makes a near-black dark page and a
             faintly tinted light page. A lighter base lifts the dark page.
-            Surfaces always stay a step brighter than the page.
+            Surfaces stay a step brighter than the default page.
           </DocsComponents.content_paragraph>
           <DocsComponents.content_paragraph class="mt-3">
             For a smaller move, set <code class="docs-code font-mono">--fl-surface-page-tint</code>
@@ -72,6 +73,18 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
             tint / <code class="docs-code font-mono">2%</code>
             lift is a subtle step.
           </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            For an absolute page, set <code class="docs-code font-mono">--fl-surface-page-light</code>
+            and <code class="docs-code font-mono">--fl-surface-page-dark</code>.
+            A pure white light page is the top of the ladder, so solid cards
+            resolve near white; separate them with borders or shadows, or use
+            the tonal <code class="docs-code font-mono">surface-subtle</code>
+            and <code class="docs-code font-mono">surface-strong</code>
+            fills. A
+            pure black dark page keeps the anchored surfaces, so cards stay a
+            step brighter.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={Snippets.snippet(:page_extremes)} lang={:css} />
           <DocsComponents.content_paragraph class="mt-3">
             Text has its own anchor. Set <code class="docs-code font-mono">--fl-text-base</code>
             to retune the body ink; the highlighted, toned, muted, and dimmed

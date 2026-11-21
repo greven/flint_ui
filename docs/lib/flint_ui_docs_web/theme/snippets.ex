@@ -33,22 +33,26 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
         color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base))
       );
 
-      /* Move the page off the extremes and carry the ladder with it:
-       * ink into the light page, white into the dark page. */
+      /* The page is a color per scheme. Tint and lift shape the default;
+       * set the page colors directly for absolute values such as white or
+       * black. */
       --fl-surface-page-tint: 0%;
       --fl-surface-page-lift: 0%;
 
+      --fl-surface-page-light: color-mix(
+        in oklab,
+        var(--fl-surface-base) calc(1.75% + var(--fl-surface-page-tint)),
+        oklch(1 0 0)
+      );
+      --fl-surface-page-dark: color-mix(
+        in oklab,
+        oklch(1 0 0) var(--fl-surface-page-lift),
+        var(--fl-surface-base)
+      );
+
       --fl-color-background: light-dark(
-        color-mix(
-          in oklab,
-          oklch(1 0 0) calc(98.25% - var(--fl-surface-page-tint)),
-          var(--fl-surface-base)
-        ),
-        color-mix(
-          in oklab,
-          oklch(1 0 0) var(--fl-surface-page-lift),
-          var(--fl-surface-base)
-        )
+        var(--fl-surface-page-light),
+        var(--fl-surface-page-dark)
       );
       --fl-color-surface: light-dark(
         color-mix(
@@ -105,6 +109,19 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
        * page, white into the dark page, carrying the ladder with it. */
       --fl-surface-page-tint: 1%;
       --fl-surface-page-lift: 2%;
+    }
+    """
+  end
+
+  def snippet(:page_extremes) do
+    """
+    /* assets/css/app.css, after the flint.css import. */
+    :root {
+      /* Absolute page colors. The light page is the top of the ladder, so
+       * solid cards resolve near white and rely on borders or shadows; use
+       * surface-subtle/strong for toned panels. */
+      --fl-surface-page-light: white;
+      --fl-surface-page-dark: black;
     }
     """
   end

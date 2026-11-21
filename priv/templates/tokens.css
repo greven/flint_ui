@@ -255,25 +255,26 @@
     /* Chrome surfaces. `--fl-surface-base` is the single chrome anchor: the
      * darkest ink every surface and tint is built from. It defaults to the
      * palette's gray-950, so remapping the gray ramp retints the page,
-     * surfaces, tints, and edges together. Background, surface, and raised are
+     * surfaces, tints, and edges together. The page is an explicit color per
+     * scheme that defaults to a white mix of that ink; surface and raised are
      * white mixes of that ink, so each step up the ramp is brighter in both
      * schemes. Tonal fills and edges remain a tint of `--fl-surface-ink` over
      * the surface. */
     --fl-surface-base: var(--fl-color-gray-950);
     --fl-surface-ink: light-dark(var(--fl-surface-base), color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)));
 
-    /* The page moves off the anchor extremes and carries the rest of the
-     * ladder with it: `--fl-surface-page-tint` mixes ink into the light page,
-     * `--fl-surface-page-lift` mixes white into the dark page. They are
-     * separate because the light page loses text contrast sooner. Every step
-     * keeps its spacing for any value. */
+    /* The page is an explicit color per scheme. `--fl-surface-page-tint` and
+     * `--fl-surface-page-lift` shape the default page and carry the ladder
+     * with them; set the page colors directly for absolute values such as
+     * white or black. The tint and lift are separate because the light page
+     * loses text contrast sooner. */
     --fl-surface-page-tint: 0%;
     --fl-surface-page-lift: 0%;
 
-    --fl-color-background: light-dark(
-        color-mix(in oklab, oklch(1 0 0) calc(98.25% - var(--fl-surface-page-tint)), var(--fl-surface-base)),
-        color-mix(in oklab, oklch(1 0 0) var(--fl-surface-page-lift), var(--fl-surface-base))
-    );
+    --fl-surface-page-light: color-mix(in oklab, var(--fl-surface-base) calc(1.75% + var(--fl-surface-page-tint)), oklch(1 0 0));
+    --fl-surface-page-dark: color-mix(in oklab, oklch(1 0 0) var(--fl-surface-page-lift), var(--fl-surface-base));
+
+    --fl-color-background: light-dark(var(--fl-surface-page-light), var(--fl-surface-page-dark));
     --fl-color-surface: light-dark(
         color-mix(in oklab, oklch(1 0 0) calc(99.5% - var(--fl-surface-page-tint)), var(--fl-surface-base)),
         color-mix(in oklab, oklch(1 0 0) calc(7% + var(--fl-surface-page-lift)), var(--fl-surface-base))
