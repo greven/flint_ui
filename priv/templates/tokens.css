@@ -265,10 +265,7 @@
     --fl-color-background: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));
     --fl-color-surface-subtle: color-mix(in oklab, var(--fl-surface-ink) 3%, var(--fl-color-surface));
     --fl-color-surface-strong: color-mix(in oklab, var(--fl-surface-ink) 5.5%, var(--fl-color-surface));
-    --fl-color-surface-raised: light-dark(
-        oklch(1 0 0),
-        color-mix(in oklab, var(--fl-surface-ink) 5%, var(--fl-color-surface))
-    );
+    --fl-color-surface-raised: light-dark(oklch(1 0 0), color-mix(in oklab, var(--fl-surface-ink) 5%, var(--fl-color-surface)));
 
     --fl-color-inverted: light-dark(var(--fl-color-gray-900), oklch(1 0 0));
 

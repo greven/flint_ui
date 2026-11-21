@@ -67,8 +67,7 @@
         color: color-mix(in oklab, currentColor 70%, transparent);
     }
 
-    [data-control]:not([data-square]):not([data-disabled]):not([data-loading]):hover
-        :is([data-element="icon"], [data-element="loading"]) {
+    [data-control]:not([data-square]):not([data-disabled]):not([data-loading]):hover :is([data-element="icon"], [data-element="loading"]) {
         color: currentColor;
     }
 
@@ -105,15 +104,15 @@
 
     /* Bordered variants stay clipped, in either state. */
     [data-control]:is(
-            [data-variant="solid"]:not([data-state="on"]),
-            [data-variant="subtle"]:not([data-state="on"]),
-            [data-variant="surface"]:not([data-state="on"]),
-            [data-variant="outline"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="solid"],
-            [data-state="on"][data-active-variant="subtle"],
-            [data-state="on"][data-active-variant="surface"],
-            [data-state="on"][data-active-variant="outline"]
-        ) {
+        [data-variant="solid"]:not([data-state="on"]),
+        [data-variant="subtle"]:not([data-state="on"]),
+        [data-variant="surface"]:not([data-state="on"]),
+        [data-variant="outline"]:not([data-state="on"]),
+        [data-state="on"][data-active-variant="solid"],
+        [data-state="on"][data-active-variant="subtle"],
+        [data-state="on"][data-active-variant="surface"],
+        [data-state="on"][data-active-variant="outline"]
+    ) {
         overflow: hidden;
         overflow: clip;
     }
@@ -127,29 +126,23 @@
     }
 
     /* The solid fill needs a stronger overlay than a neutral surface. */
-    [data-control]:is(
-            [data-variant="solid"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="solid"]
-        ) {
+    [data-control]:is([data-variant="solid"]:not([data-state="on"]), [data-state="on"][data-active-variant="solid"]) {
         --fl-control-hover-opacity: 0.15;
         --fl-control-active-opacity: 0.22;
     }
 
     [data-control]:is(
-            [data-variant="surface"]:not([data-state="on"]),
-            [data-variant="outline"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="surface"],
-            [data-state="on"][data-active-variant="outline"]
-        ) {
-        --fl-control-hover-opacity: 0.08;
+        [data-variant="surface"]:not([data-state="on"]),
+        [data-variant="outline"]:not([data-state="on"]),
+        [data-state="on"][data-active-variant="surface"],
+        [data-state="on"][data-active-variant="outline"]
+    ) {
+        --fl-control-hover-opacity: 0.07;
         --fl-control-active-opacity: 0.11;
     }
 
     /* A link has no fill to tint. */
-    [data-control]:is(
-            [data-variant="link"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="link"]
-        )::after {
+    [data-control]:is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])::after {
         display: none;
     }
 
@@ -159,17 +152,13 @@
         box-shadow: 0 0 0 0 #0000;
     }
 
-    [data-control]:is(
-            [data-variant="solid"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="solid"]
-        ):not([data-disabled]):not([data-loading]):active::before {
+    [data-control]:is([data-variant="solid"]:not([data-state="on"]), [data-state="on"][data-active-variant="solid"]):not([data-disabled]):not(
+            [data-loading]
+        ):active::before {
         opacity: 0;
     }
 
-    [data-control]:is(
-            [data-variant="link"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="link"]
-        ):active {
+    [data-control]:is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"]):active {
         transform: none;
     }
 
@@ -180,27 +169,21 @@
     }
 
     /* Depth: solid wears a top rim light. */
-    [data-control]:is(
-            [data-variant="solid"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="solid"]
-        )::before {
+    [data-control]:is([data-variant="solid"]:not([data-state="on"]), [data-state="on"][data-active-variant="solid"])::before {
         border-color: rgb(255 255 255 / calc(12% * var(--fl-control-depth, 1)));
     }
 
     /* Elevation: solid and subtle share the control shadow. */
     [data-control]:is(
-            [data-variant="solid"]:not([data-state="on"]),
-            [data-variant="subtle"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="solid"],
-            [data-state="on"][data-active-variant="subtle"]
-        ) {
+        [data-variant="solid"]:not([data-state="on"]),
+        [data-variant="subtle"]:not([data-state="on"]),
+        [data-state="on"][data-active-variant="solid"],
+        [data-state="on"][data-active-variant="subtle"]
+    ) {
         box-shadow: var(--fl-control-shadow, 0 0 #0000);
     }
 
-    [data-control]:is(
-            [data-variant="surface"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="surface"]
-        ) {
+    [data-control]:is([data-variant="surface"]:not([data-state="on"]), [data-state="on"][data-active-variant="surface"]) {
         box-shadow:
             inset 0 -1px 0 rgb(0 0 0 / calc(7% * var(--fl-control-depth, 1))),
             var(--fl-control-shadow, 0 0 #0000);
@@ -240,21 +223,13 @@
     /* Untoggled variants. */
     [data-control][data-variant="solid"]:not([data-state="on"]) {
         background: var(--fl-control-color);
-        border-color: color-mix(
-            in oklab,
-            var(--fl-control-color),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-control-color), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-control-color-content);
     }
 
     [data-control][data-variant="soft"]:not([data-state="on"]),
     [data-control][data-variant="subtle"]:not([data-state="on"]) {
-        background: color-mix(
-            in oklab,
-            var(--fl-control-soft) calc(var(--fl-tint-opacity, 0.9) * 100%),
-            transparent
-        );
+        background: color-mix(in oklab, var(--fl-control-soft) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
         border-color: transparent;
         color: var(--fl-control-text);
     }
@@ -265,7 +240,7 @@
 
     [data-control][data-variant="surface"]:not([data-state="on"]) {
         border-color: var(--fl-control-soft-border);
-        background: var(--fl-color-surface);
+        background: color-mix(in oklab, var(--fl-color-surface) 50%, transparent);
         color: var(--fl-control-text);
     }
 
@@ -301,21 +276,13 @@
      * inputs unless `active-color` sets them. */
     [data-control][data-state="on"][data-active-variant="solid"] {
         background: var(--fl-control-active-color, var(--fl-control-color));
-        border-color: color-mix(
-            in oklab,
-            var(--fl-control-active-color, var(--fl-control-color)),
-            oklch(0% 0 0) var(--fl-border-strength-solid)
-        );
+        border-color: color-mix(in oklab, var(--fl-control-active-color, var(--fl-control-color)), oklch(0% 0 0) var(--fl-border-strength-solid));
         color: var(--fl-control-active-color-content, var(--fl-control-color-content));
     }
 
     [data-control][data-state="on"][data-active-variant="soft"],
     [data-control][data-state="on"][data-active-variant="subtle"] {
-        background: color-mix(
-            in oklab,
-            var(--fl-control-active-soft, var(--fl-control-soft)) calc(var(--fl-tint-opacity, 0.9) * 100%),
-            transparent
-        );
+        background: color-mix(in oklab, var(--fl-control-active-soft, var(--fl-control-soft)) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
         border-color: transparent;
         color: var(--fl-control-active-text, var(--fl-control-text));
     }
@@ -354,25 +321,14 @@
     }
 
     [data-control][data-state="on"][data-active-variant="link"]:not([data-disabled]):not([data-loading]):hover {
-        color: color-mix(
-            in oklab,
-            var(--fl-control-active-text, var(--fl-control-text)) 75%,
-            transparent
-        );
+        color: color-mix(in oklab, var(--fl-control-active-text, var(--fl-control-text)) 75%, transparent);
         text-decoration-thickness: 2px;
     }
 
     /* A neutral active surface keeps the same fill, so its border carries the
      * state change. */
-    [data-control][data-state="on"][data-active-variant="surface"]:is(
-            [data-color="neutral"]:not([data-active-color]),
-            [data-active-color="neutral"]
-        ) {
-        --fl-control-active-soft-border: color-mix(
-            in oklab,
-            var(--fl-control-active-color, var(--fl-control-color)) 32%,
-            var(--fl-color-surface)
-        );
+    [data-control][data-state="on"][data-active-variant="surface"]:is([data-color="neutral"]:not([data-active-color]), [data-active-color="neutral"]) {
+        --fl-control-active-soft-border: color-mix(in oklab, var(--fl-control-active-color, var(--fl-control-color)) 32%, var(--fl-color-surface));
     }
 
     /* Dashed: an orthogonal modifier that dashes any visible border. */
@@ -479,9 +435,7 @@
     }
 
     /* Square: equal width and height. A link has no box to square. */
-    [data-control][data-square]:not(
-            :is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])
-        ) {
+    [data-control][data-square]:not(:is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"])) {
         aspect-ratio: 1;
         padding-inline: 0;
     }
@@ -558,10 +512,7 @@
 
     /* Link: text only, underlined, with no control box. Sizes still set the
      * font; the box and the block padding are dropped. */
-    [data-control]:is(
-            [data-variant="link"]:not([data-state="on"]),
-            [data-state="on"][data-active-variant="link"]
-        ) {
+    [data-control]:is([data-variant="link"]:not([data-state="on"]), [data-state="on"][data-active-variant="link"]) {
         height: auto;
         padding-block: 0;
         border-color: transparent;
