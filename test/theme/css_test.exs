@@ -125,7 +125,7 @@ defmodule FlintUI.Theme.CSSTest do
 
     for {name, percent} <- [
           {"surface-subtle", "3%"},
-          {"surface-strong", "5.5%"},
+          {"surface-strong", "6%"},
           {"border-subtle", "7%"},
           {"border", "10%"},
           {"border-strong", "18%"}
@@ -141,15 +141,11 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ "--fl-color-control:"
   end
 
-  test "text tiers are softened neutrals that clear AA where used", %{css: css} do
+  test "text tiers derive from one anchor and clear AA where used", %{css: css} do
     assert css =~
-             ~r/--fl-color-text-highlighted: light-dark\(\s*var\(--fl-color-gray-900\),\s*oklch\(1 0 0\)\s*\)/
+             "--fl-text-base: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-200));"
 
-    assert css =~
-             ~r/--fl-color-text: light-dark\(\s*var\(--fl-color-gray-700\),\s*var\(--fl-color-gray-200\)\s*\)/
-
-    assert css =~
-             ~r/--fl-color-text-toned: light-dark\(\s*var\(--fl-color-gray-600\),\s*var\(--fl-color-gray-300\)\s*\)/
+    assert css =~ "--fl-color-text: var(--fl-text-base);"
 
     assert css =~
              ~r/--fl-color-text-inverted: light-dark\(\s*oklch\(1 0 0\),\s*var\(--fl-color-gray-800\)\s*\)/
@@ -159,44 +155,52 @@ defmodule FlintUI.Theme.CSSTest do
       value
     end
 
+    light_base = neutral.(700)
+    dark_base = neutral.(200)
+
+    {light_highlighted, dark_highlighted} =
+      resolve_text(css, "text-highlighted", light_base, dark_base)
+
+    {light_toned, dark_toned} = resolve_text(css, "text-toned", light_base, dark_base)
+    {light_muted, _dark_muted} = resolve_text(css, "text-muted", light_base, dark_base)
+    {light_dimmed, dark_dimmed} = resolve_text(css, "text-dimmed", light_base, dark_base)
+
     white = "oklch(100% 0 none)"
-    # Conservative proxies for the pure surface and the 6% strong step: use
-    # surfaces at least as dark as the real light steps and at least as light as
-    # the real dark steps so the AA checks do not overstate contrast.
+    light_page = neutral.(50)
     light_surface = neutral.(100)
     light_strong = neutral.(200)
+    dark_page = neutral.(950)
     dark_surface = neutral.(900)
     dark_strong = neutral.(800)
 
     for {fg, surfaces} <- [
-          {neutral.(700), [light_surface, light_strong]},
-          {neutral.(200), [dark_surface, dark_strong]},
-          {neutral.(600), [light_surface, light_strong]},
-          {neutral.(300), [dark_surface, dark_strong]}
+          {light_base, [light_page, light_surface, light_strong]},
+          {dark_base, [dark_page, dark_surface, dark_strong]},
+          {light_toned, [light_page, light_surface, light_strong]},
+          {dark_toned, [dark_page, dark_surface, dark_strong]}
         ],
         surface <- surfaces do
-      assert FlintUI.Palette.Contrast.ratio(fg, surface) >= 4.5
+      assert ratio(fg, surface) >= 4.5
     end
 
     # Highlighted is the strongest tier in both schemes.
-    assert FlintUI.Palette.Contrast.ratio(neutral.(900), white) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(white, neutral.(950)) >= 4.5
+    assert ratio(light_highlighted, white) >= 4.5
+    assert ratio(dark_highlighted, dark_page) >= 4.5
 
     # `text-muted` clears AA on the pure surface, the page tint, and the
     # `surface-subtle` step, but not on the stronger `surface-strong` step.
-    text_muted = FlintUI.Palette.Contrast.mix(neutral.(500), neutral.(600), 0.9)
-    assert FlintUI.Palette.Contrast.ratio(text_muted, white) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(50)) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(100)) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(text_muted, neutral.(200)) < 4.5
+    assert ratio(light_muted, white) >= 4.5
+    assert ratio(light_muted, light_page) >= 4.5
+    assert ratio(light_muted, light_surface) >= 4.5
+    assert ratio(light_muted, light_strong) < 4.5
 
     # `dimmed` is intentionally below AA: placeholders and decoration only.
-    assert FlintUI.Palette.Contrast.ratio(neutral.(400), white) < 4.5
-    assert FlintUI.Palette.Contrast.ratio(neutral.(500), neutral.(950)) < 4.5
+    assert ratio(light_dimmed, white) < 4.5
+    assert ratio(dark_dimmed, dark_surface) < 4.5
 
     # Solid neutral keeps a high-contrast label in both schemes.
-    assert FlintUI.Palette.Contrast.ratio(white, neutral.(900)) >= 4.5
-    assert FlintUI.Palette.Contrast.ratio(neutral.(800), white) >= 4.5
+    assert ratio(white, neutral.(900)) >= 4.5
+    assert ratio(neutral.(800), white) >= 4.5
   end
 
   test "role on and on-soft map to the shared tone contract", %{css: css} do
@@ -762,4 +766,32 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "var(--_fl-collapsible-height, auto)"
     refute css =~ "var(--fl-collapsible-height"
   end
+
+  defp resolve_text(css, token, light_base, dark_base) do
+    branch =
+      "color-mix\\(in oklab, var\\(--fl-text-base\\) [\\d.]+%, oklch\\([^)]*\\)\\)|oklch\\([^)]*\\)"
+
+    [_, light, dark] =
+      Regex.run(
+        Regex.compile!(
+          "--fl-color-#{token}: light-dark\\(\\s*(#{branch}),\\s*(#{branch})\\s*\\);",
+          "s"
+        ),
+        css
+      )
+
+    {resolve_branch(light, light_base), resolve_branch(dark, dark_base)}
+  end
+
+  defp resolve_branch("oklch(" <> _ = value, _base), do: value
+
+  defp resolve_branch(expression, base) do
+    [_, percent, other] =
+      Regex.run(~r/var\(--fl-text-base\) ([\d.]+)%, (oklch\([^)]*\))/, expression)
+
+    {weight, _} = Float.parse(percent)
+    FlintUI.Palette.Contrast.mix(base, other, weight / 100)
+  end
+
+  defp ratio(fg, bg), do: FlintUI.Palette.Contrast.ratio(fg, bg)
 end

@@ -54,7 +54,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       );
       --fl-color-surface-strong: color-mix(
         in oklab,
-        var(--fl-surface-ink) 5.5%,
+        var(--fl-surface-ink) 6%,
         var(--fl-color-surface)
       );
 
@@ -100,29 +100,28 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
   def snippet(:text) do
     """
     :root {
-      --fl-color-text-highlighted: light-dark(
-        var(--fl-color-gray-900),
-        white
-      );
-      --fl-color-text: light-dark(
+      /* The single text anchor. Override it to retune every tier. */
+      --fl-text-base: light-dark(
         var(--fl-color-gray-700),
         var(--fl-color-gray-200)
       );
+      --fl-color-text: var(--fl-text-base);
+
+      --fl-color-text-highlighted: light-dark(
+        color-mix(in oklab, var(--fl-text-base) 55.4%, oklch(0% 0 0)),
+        oklch(1 0 0)
+      );
       --fl-color-text-toned: light-dark(
-        var(--fl-color-gray-600),
-        var(--fl-color-gray-300)
+        color-mix(in oklab, var(--fl-text-base) 88.1%, oklch(1 0 0)),
+        color-mix(in oklab, var(--fl-text-base) 94.6%, oklch(0% 0 0))
       );
       --fl-color-text-muted: light-dark(
-        color-mix(
-          in oklab,
-          var(--fl-color-gray-500) 90%,
-          var(--fl-color-gray-600)
-        ),
-        var(--fl-color-gray-400)
+        color-mix(in oklab, var(--fl-text-base) 73%, oklch(1 0 0)),
+        color-mix(in oklab, var(--fl-text-base) 76.8%, oklch(0% 0 0))
       );
       --fl-color-text-dimmed: light-dark(
-        var(--fl-color-gray-400),
-        var(--fl-color-gray-500)
+        color-mix(in oklab, var(--fl-text-base) 46.5%, oklch(1 0 0)),
+        color-mix(in oklab, var(--fl-text-base) 59.8%, oklch(0% 0 0))
       );
     }
     """

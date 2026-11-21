@@ -17,15 +17,15 @@ defmodule FlintUI.Palette.Contrast do
   @aaa 7.0
 
   # Reference surfaces for role text. Light text starts on white; dark text
-  # starts on the 5.5% `surface-strong` tint, the lightest dark backdrop a role
+  # starts on the 6% `surface-strong` tint, the lightest dark backdrop a role
   # text token sits on. Scoring against the lightest backdrop in each scheme is
   # the strict case.
   @light_background "oklch(100% 0 none)"
-  @dark_background "oklch(24.8% 0 none)"
+  @dark_background "oklch(25.2% 0 none)"
 
   # A tinted soft fill mixes over the surface anchor, not the strong tint:
   # white in light, `gray-900` in dark. Keep these in step with `tokens.css`.
-  @light_surface_strong "oklch(95.3% 0 none)"
+  @light_surface_strong "oklch(94.5% 0 none)"
   @dark_surface "oklch(20.5% 0 none)"
 
   @pattern ~r/^\s*oklch\(\s*([0-9.]+)(%?)\s+([0-9.]+|none)(?:\s+([0-9.]+|none))?\s*\)\s*$/

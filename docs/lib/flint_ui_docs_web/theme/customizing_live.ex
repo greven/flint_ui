@@ -62,6 +62,11 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
             faintly tinted light page. A lighter base lifts the dark page.
             Surfaces always stay a step brighter than the page.
           </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            Text has its own anchor. Set <code class="docs-code font-mono">--fl-text-base</code>
+            to retune the body ink; the highlighted, toned, muted, and dimmed
+            tiers follow.
+          </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
         <DocsComponents.section title="Remap a hue" id="remapping-a-hue">

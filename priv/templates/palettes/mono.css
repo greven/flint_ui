@@ -126,7 +126,7 @@
     --fl-color-lime: var(--fl-color-lime-600);
     --fl-color-lime-on: var(--fl-color-lime-950);
     --fl-color-lime-on-soft: light-dark(
-        var(--fl-color-lime-700),
+        var(--fl-color-lime-800),
         var(--fl-color-lime-400)
     );
     --fl-color-lime-soft: light-dark(

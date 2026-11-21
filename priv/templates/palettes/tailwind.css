@@ -43,7 +43,7 @@
     --fl-color-orange: var(--fl-color-orange-600);
     --fl-color-orange-on: oklch(0% 0 0);
     --fl-color-orange-on-soft: light-dark(
-        var(--fl-color-orange-700),
+        var(--fl-color-orange-800),
         var(--fl-color-orange-400)
     );
     --fl-color-orange-soft: light-dark(

@@ -40,7 +40,7 @@ defmodule FlintUI.Theme.ContrastTest do
       light_backgrounds = [
         white,
         Contrast.mix(light_ink, white, 0.03),
-        Contrast.mix(light_ink, white, 0.055),
+        Contrast.mix(light_ink, white, 0.06),
         Contrast.mix(core, white, 0.12)
       ]
 
@@ -48,7 +48,7 @@ defmodule FlintUI.Theme.ContrastTest do
         Map.fetch!(gray, 950),
         dark_base,
         Contrast.mix(dark_ink, dark_base, 0.03),
-        Contrast.mix(dark_ink, dark_base, 0.055),
+        Contrast.mix(dark_ink, dark_base, 0.06),
         Contrast.mix(core, dark_base, 0.18)
       ]
 

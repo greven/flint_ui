@@ -194,10 +194,13 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
 
     <DocsComponents.section title="Text tiers" id="text">
       <DocsComponents.content_paragraph class="mt-3">
-        The default ink is a softened neutral — <code class="docs-code font-mono">neutral-700</code>
+        <code class="docs-code font-mono">--fl-text-base</code>
+        is the single text anchor: a softened neutral —
+        <code class="docs-code font-mono">gray-700</code>
         in light, <code class="docs-code font-mono">gray-200</code>
-        in dark — rather than near-black or white.
-        <code class="docs-code font-mono">text-highlighted</code>
+        in dark — rather than near-black or white. The other tiers are tonal
+        mixes of it toward black or white, so overriding the anchor retunes the
+        whole ramp. <code class="docs-code font-mono">text-highlighted</code>
         is the strongest tier for headings and strong labels;
         <code class="docs-code font-mono">text-toned</code>
         is one step softer for secondary copy, and <code class="docs-code font-mono">text-muted</code>
@@ -480,7 +483,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         <code class="docs-code font-mono">border-subtle</code>
         at 7%, <code class="docs-code font-mono">border</code>
         at 10%, and <code class="docs-code font-mono">border-strong</code>
-        at 18%. Because fills stop at 5.5%, an edge never sinks into the
+        at 18%. Because fills stop at 6%, an edge never sinks into the
         panel it bounds, in either scheme.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
@@ -528,7 +531,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         Tonal fills are a tint of <code class="docs-code font-mono">--fl-surface-ink</code>
         over the surface: <code class="docs-code font-mono">surface-subtle</code>
         at 3% and <code class="docs-code font-mono">surface-strong</code>
-        at 5.5%. <code class="docs-code font-mono">surface-raised</code>
+        at 6%. <code class="docs-code font-mono">surface-raised</code>
         lifts overlays above a card. It is white in light, where white is already
         the top, and a 12% white mix of the base in dark.
       </DocsComponents.content_paragraph>
@@ -538,7 +541,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         the light page, while the surfaces stay a step brighter.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
-        The chrome ladder is ordered: subtle (3%) &lt; strong (5.5%) &lt;
+        The chrome ladder is ordered: subtle (3%) &lt; strong (6%) &lt;
         border-subtle (7%) &lt; border (10%) &lt; border-strong (18%).
         That keeps a divider above the fill it bounds in both schemes.
       </DocsComponents.content_paragraph>

@@ -93,7 +93,7 @@ Neutral chrome is built from one anchor, `--fl-surface-base` (the darkest
 ink, default `gray-950`). The page (`background`), `surface`, and
 `surface-raised` are white mixes of that ink, so each step up is brighter in
 both schemes. Tonal fills then tint toward `--fl-surface-ink` over the surface:
-`surface-subtle` at 3% and `surface-strong` at 5.5%, followed by
+`surface-subtle` at 3% and `surface-strong` at 6%, followed by
 `border-subtle` 7%, `border` 10%, and `border-strong` 18%. The order is
 intentional: a fill never reaches the quietest edge, so an edge never sinks into
 the panel it bounds. Remapping the gray ramp retints the whole chrome through
