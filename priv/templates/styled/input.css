@@ -311,7 +311,7 @@
         /* Match the dedicated checkbox box; the field radius shapes the field. */
         border-radius: var(--fl-radius-sm);
         background-color: var(--fl-field-fill, var(--fl-color-surface));
-        color: var(--fl-input-check-content, var(--fl-tone-content, var(--fl-color-text-inverted)));
+        color: var(--fl-input-check-content, var(--fl-tone-on, var(--fl-color-text-inverted)));
         transition:
             background-color var(--fl-duration-fast) var(--fl-ease-out),
             border-color var(--fl-duration-fast) var(--fl-ease-out);
@@ -395,7 +395,7 @@
         [data-part="indicator"]:has(> [data-part="control"]:checked) {
         border-color: var(--fl-color-error);
         background-color: var(--fl-color-error);
-        color: var(--fl-color-error-content);
+        color: var(--fl-color-error-on);
     }
 
     [data-element="input"][data-input][data-type="checkbox"][data-invalid]

@@ -58,13 +58,13 @@
         ):not([data-success-color])
         > [data-part="states"]
         > [data-part="success_state"] {
-        color: var(--fl-color-success-text);
+        color: var(--fl-color-success-on-soft);
     }
 
     [data-element="copy_button"][data-copy_button][data-state="error"]:not([data-variant="solid"])
         > [data-part="states"]
         > [data-part="error_state"] {
-        color: var(--fl-color-error-text);
+        color: var(--fl-color-error-on-soft);
     }
 
     /* Success color: while the success state is visible, the control reads the
@@ -72,8 +72,8 @@
      * own transitions ease back to the resting color when the state clears. */
     [data-element="copy_button"][data-state="success"][data-success-color][data-copy_button] {
         --fl-control-color: var(--fl-active-tone, var(--fl-color-success));
-        --fl-control-color-content: var(--fl-active-tone-content, var(--fl-color-success-content));
-        --fl-control-text: var(--fl-active-tone-text, var(--fl-color-success-text));
+        --fl-control-color-content: var(--fl-active-tone-on, var(--fl-color-success-on));
+        --fl-control-text: var(--fl-active-tone-on-soft, var(--fl-color-success-on-soft));
         --fl-control-soft: var(--fl-active-tone-soft, var(--fl-color-success-soft));
         --fl-control-soft-border: var(--fl-active-tone-soft-border, var(--fl-color-success-soft-border));
     }

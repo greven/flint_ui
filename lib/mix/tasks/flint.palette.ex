@@ -8,12 +8,15 @@ defmodule Mix.Tasks.Flint.Palette do
       mix flint.palette brand --from tailwind:rose
       mix flint.palette brand --from "#8b5cf6" --write assets/css/flint-brand.css
 
-  The generated block contains the eleven shades, the derived `-content`,
-  `-text`, `-soft`, and `-soft-border` tokens, and the base and active
+  The generated block contains the eleven shades, the derived `-on`,
+  `-on-soft`, `-soft`, and `-soft-border` tokens, and the base and active
   `[data-color]` hooks. Add the hue to your config so `color="brand"` passes
   validation:
 
       config :flint_ui, extra_hues: [:brand]
+
+  Names that would shadow a semantic role or chrome token — `primary`, `text`,
+  `surface`, `border`, and so on — are reserved. Choose a distinct hue name.
 
   Import the written file after `flint.css`. The task appends the import to
   `assets/css/app.css` when that file exists.
@@ -75,6 +78,10 @@ defmodule Mix.Tasks.Flint.Palette do
 
     if name in Palette.hue_names() do
       Mix.raise("#{name} is already a shipped hue. Choose another name or remap its shades.")
+    end
+
+    if Palette.reserved_hue_name?(name) do
+      Mix.raise("#{name} is reserved for a semantic role or chrome token. Choose another name.")
     end
 
     name

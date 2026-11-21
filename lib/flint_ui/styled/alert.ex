@@ -81,7 +81,7 @@ defmodule FlintUI.Styled.Alert do
           name: "--fl-alert-text",
           default: "var(--fl-alert-color)",
           doc:
-            "The label color on tinted variants and alerts without a background; it maps to the role's `-text` token. The body derives a slightly muted mix from it."
+            "The label color on tinted variants and alerts without a background; it maps to the role's `-on-soft` token. The body derives a slightly muted mix from it."
         ),
         Var.new(
           name: "--fl-alert-soft",

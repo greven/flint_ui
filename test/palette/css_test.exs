@@ -8,31 +8,31 @@ defmodule FlintUI.Palette.CSSTest do
     css = CSS.render_palette(Tailwind, default: true)
 
     assert css =~ ~s(:root,\n[data-palette="tailwind"])
-    assert css =~ "--fl-palette-red-50:"
-    assert css =~ "--fl-palette-red-950:"
-    assert css =~ "--fl-palette-red: var(--fl-palette-red-600);"
-    assert css =~ "--fl-palette-red-content: oklch(100% 0 0);"
-    assert css =~ "--fl-palette-yellow-content: var(--fl-palette-yellow-950);"
-    assert css =~ "--fl-palette-red-text: light-dark("
-    assert css =~ "var(--fl-palette-red-800)"
-    assert css =~ "var(--fl-palette-red-300)"
-    assert css =~ "--fl-palette-red-soft: light-dark("
-    assert css =~ "color-mix(in oklab, var(--fl-palette-red) 12%"
-    assert css =~ "--fl-palette-red-soft-border: color-mix("
+    assert css =~ "--fl-color-red-50:"
+    assert css =~ "--fl-color-red-950:"
+    assert css =~ "--fl-color-red: var(--fl-color-red-600);"
+    assert css =~ "--fl-color-red-on: oklch(100% 0 0);"
+    assert css =~ "--fl-color-yellow-on: var(--fl-color-yellow-950);"
+    assert css =~ "--fl-color-red-on-soft: light-dark("
+    assert css =~ "var(--fl-color-red-800)"
+    assert css =~ "var(--fl-color-red-300)"
+    assert css =~ "--fl-color-red-soft: light-dark("
+    assert css =~ "color-mix(in oklab, var(--fl-color-red) 12%"
+    assert css =~ "--fl-color-red-soft-border: color-mix("
 
     for hue <- Palette.hue_names() do
-      assert css =~ "--fl-palette-#{hue}:"
+      assert css =~ "--fl-color-#{hue}:"
     end
   end
 
   test "derived tokens stay relative so a ramp remap follows" do
     css = CSS.render_palette(Tailwind, default: true)
 
-    assert css =~ "--fl-palette-pink: var(--fl-palette-pink-600);"
-    assert css =~ "--fl-palette-pink-content: oklch(100% 0 0);"
-    assert css =~ "var(--fl-palette-pink-800)"
-    assert css =~ "var(--fl-palette-pink-300)"
-    assert css =~ "color-mix(in oklab, var(--fl-palette-pink)"
+    assert css =~ "--fl-color-pink: var(--fl-color-pink-600);"
+    assert css =~ "--fl-color-pink-on: oklch(100% 0 0);"
+    assert css =~ "var(--fl-color-pink-800)"
+    assert css =~ "var(--fl-color-pink-300)"
+    assert css =~ "color-mix(in oklab, var(--fl-color-pink)"
   end
 
   test "named palettes scope under data-palette only" do
@@ -47,8 +47,8 @@ defmodule FlintUI.Palette.CSSTest do
       css = CSS.render_palette(palette.module, default: Map.get(palette, :default, false))
 
       for hue <- Palette.hue_names() do
-        assert css =~ "--fl-palette-#{hue}-50:"
-        assert css =~ "--fl-palette-#{hue}:"
+        assert css =~ "--fl-color-#{hue}-50:"
+        assert css =~ "--fl-color-#{hue}:"
       end
     end
   end
@@ -57,8 +57,8 @@ defmodule FlintUI.Palette.CSSTest do
     css = CSS.render_palette(Natural)
 
     refute Natural.shades(:red)[600] == Tailwind.shades(:red)[600]
-    assert css =~ "--fl-palette-red: var(--fl-palette-red-600);"
-    assert css =~ "--fl-palette-red-soft: light-dark("
+    assert css =~ "--fl-color-red: var(--fl-color-red-600);"
+    assert css =~ "--fl-color-red-soft: light-dark("
   end
 
   test "a stricter contrast target raises the text steps" do
@@ -66,7 +66,7 @@ defmodule FlintUI.Palette.CSSTest do
     aaa = CSS.render_palette(Tailwind, default: true, contrast: :aaa)
 
     refute aa == aaa
-    assert aaa =~ "--fl-palette-red-text: light-dark("
+    assert aaa =~ "--fl-color-red-on-soft: light-dark("
   end
 
   test "the color hooks match the hue registry" do
@@ -81,8 +81,8 @@ defmodule FlintUI.Palette.CSSTest do
 
     assert hooks =~ ~s|:where([data-color="brand"])|
     assert hooks =~ ~s|:where([data-active-color="brand"])|
-    assert hooks =~ "--fl-tone: var(--fl-palette-brand);"
-    assert hooks =~ "--fl-active-tone: var(--fl-palette-brand);"
+    assert hooks =~ "--fl-tone: var(--fl-color-brand);"
+    assert hooks =~ "--fl-active-tone: var(--fl-color-brand);"
     refute hooks =~ ~s|data-color="primary"|
   end
 
@@ -103,11 +103,11 @@ defmodule FlintUI.Palette.CSSTest do
     css = CSS.render_custom_hue("brand", shades)
 
     assert css =~ ":root {"
-    assert css =~ "--fl-palette-brand-50:"
-    assert css =~ "--fl-palette-brand: var(--fl-palette-brand-600);"
-    assert css =~ "--fl-palette-brand-content:"
-    assert css =~ "--fl-palette-brand-text: light-dark("
-    assert css =~ "--fl-palette-brand-soft: light-dark("
+    assert css =~ "--fl-color-brand-50:"
+    assert css =~ "--fl-color-brand: var(--fl-color-brand-600);"
+    assert css =~ "--fl-color-brand-on:"
+    assert css =~ "--fl-color-brand-on-soft: light-dark("
+    assert css =~ "--fl-color-brand-soft: light-dark("
     assert css =~ ~s|:where([data-color="brand"])|
     assert css =~ ~s|:where([data-active-color="brand"])|
   end

@@ -146,8 +146,8 @@ defmodule FlintUI.Generator do
       Enum.map_join(@color_roles, "\n", fn role ->
         """
             --color-#{role}: var(--fl-color-#{role});
-            --text-color-#{role}: var(--fl-color-#{role}-text);
-            --text-color-#{role}-content: var(--fl-color-#{role}-content);
+            --text-color-#{role}: var(--fl-color-#{role}-on-soft);
+            --text-color-#{role}-content: var(--fl-color-#{role}-on);
             --background-color-#{role}: var(--fl-color-#{role});
             --border-color-#{role}: var(--fl-color-#{role});
             --ring-color-#{role}: var(--fl-color-#{role});\
@@ -157,7 +157,7 @@ defmodule FlintUI.Generator do
     scales =
       Enum.map_join(FlintUI.Palette.hues(), "\n", fn hue ->
         Enum.map_join(@color_shades, "\n", fn shade ->
-          "    --color-#{hue}-#{shade}: var(--fl-palette-#{hue}-#{shade});"
+          "    --color-#{hue}-#{shade}: var(--fl-color-#{hue}-#{shade});"
         end)
       end)
 

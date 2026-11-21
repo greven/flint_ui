@@ -60,7 +60,7 @@ defmodule FlintUI.Styled.Radio do
         ),
         Var.new(
           name: "--fl-radio-color-content",
-          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
+          default: "var(--fl-tone-on, var(--fl-color-text-inverted))",
           doc: "The dot color on the selected circle."
         )
       ],

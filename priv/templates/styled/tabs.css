@@ -11,7 +11,7 @@
      */
     [data-element="tabs"][data-tabs] {
         --fl-tabs-color: var(--fl-tone, var(--fl-color-inverted));
-        --fl-tabs-text: var(--fl-tone-text, var(--fl-color-text));
+        --fl-tabs-text: var(--fl-tone-on-soft, var(--fl-color-text));
         --fl-tabs-surface: var(--fl-color-surface);
 
         display: flex;

@@ -3,6 +3,8 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
 
   import Phoenix.LiveViewTest
 
+  alias FlintUIDocsWeb.Theme.Tokens
+
   test "landing links into every section", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/")
 
@@ -135,34 +137,110 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert html =~ "flag-pt-square"
   end
 
-  test "theming page documents tokens and custom themes", %{conn: conn} do
+  test "theming overview routes into the guide", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming")
 
     assert has_element?(view, "#how")
-    assert has_element?(view, "#tokens")
-    assert has_element?(view, "#focus")
-    assert has_element?(view, "#surfaces")
-    assert has_element?(view, "#borders")
-    assert has_element?(view, "#light-dark")
-    assert has_element?(view, "#absolute")
-    assert has_element?(view, "#custom")
-    assert has_element?(view, "#palette")
-    assert has_element?(view, "#custom-hues")
-    assert has_element?(view, "#tailwind")
-    assert has_element?(view, "header a[href='/themes']", "Themes")
-    refute has_element?(view, "header a[href='/themes'][aria-current='page']")
+    assert has_element?(view, "#layers")
+    assert has_element?(view, "#start")
+    assert has_element?(view, "aside a[href='/guides/theming'][aria-current='page']")
+
+    for path <- [
+          "/guides/theming/color",
+          "/guides/theming/themes",
+          "/guides/theming/tokens",
+          "/guides/theming/customizing",
+          "/guides/theming/css-utilities"
+        ] do
+      assert has_element?(view, "a[href='#{path}']")
+    end
 
     html = render(view)
     assert html =~ "--fl-color-primary"
-    assert html =~ "--fl-color-surface-subtle"
-    assert html =~ "--fl-color-border-strong"
-    assert html =~ "--fl-surface-ink"
-    assert html =~ "--fl-disabled-opacity"
-    assert html =~ "data-theme"
-    assert html =~ "data-focus"
-    assert html =~ "--fl-focus-border-color"
-    assert html =~ "--fl-focus-color-error"
+    assert html =~ "color-scheme"
+  end
+
+  test "color page documents palettes and roles", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/color")
+
+    assert has_element?(view, "#palettes")
+    assert has_element?(view, "#palette-colors")
+    assert has_element?(view, "#color-roles")
+    assert has_element?(view, "#absolute")
+    assert has_element?(view, "aside a[href='/guides/theming/color'][aria-current='page']")
+
+    html = render(view)
+    assert html =~ ~s|data-copy-value="var(--fl-color-rose)"|
+    assert html =~ ~s|aria-label="Copy var(--fl-color-rose)"|
+  end
+
+  test "themes page documents presets, schemes, and custom themes", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/themes")
+
+    assert has_element?(view, "#presets")
+    assert has_element?(view, "#light-dark")
+    assert has_element?(view, "#custom-themes")
+    assert has_element?(view, "a[href='/themes']", "Themes page")
+    assert has_element?(view, "header a[href='/themes']", "Themes")
+    refute has_element?(view, "header a[href='/themes'][aria-current='page']")
+  end
+
+  test "design tokens grid links to every token page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/tokens")
+
+    assert has_element?(view, "#groups")
+    assert has_element?(view, "#component-inputs")
+    assert has_element?(view, "#override")
+
+    for page <- Tokens.pages() do
+      assert has_element?(view, "a[href='#{page.path}']"),
+             "expected the token grid to link to #{page.path}"
+    end
+  end
+
+  test "every token page renders its reference", %{conn: conn} do
+    for page <- Tokens.pages() do
+      {:ok, view, _html} = live(conn, page.path)
+
+      assert has_element?(view, "h1", page.title)
+      assert has_element?(view, "aside a[href='#{page.path}'][aria-current='page']")
+
+      token_prefix = String.replace(page.namespace, "*", "")
+      assert render(view) =~ token_prefix
+    end
+  end
+
+  test "color token reference includes the neutral role", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/tokens/colors")
+
+    assert has_element?(view, "td", "neutral")
+    assert render(view) =~ "--fl-color-neutral"
+  end
+
+  test "customizing page collects the override recipes", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/customizing")
+
+    assert has_element?(view, "#tokens")
+    assert has_element?(view, "#color-instance")
+    assert has_element?(view, "#remapping-a-hue")
+    assert has_element?(view, "#role-remap")
+    assert has_element?(view, "#custom-hues")
+
+    html = render(view)
     assert html =~ "mix flint.palette"
+    assert html =~ "color-rose"
+  end
+
+  test "css utilities page is an opt-in placeholder", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/css-utilities")
+
+    assert has_element?(view, "#utilities")
+    assert has_element?(view, "#planned")
+    assert has_element?(view, "h1", "CSS Utilities")
+
+    html = render(view)
+    assert html =~ "mix flint.setup --tailwind"
+    assert html =~ "Planned"
   end
 
   test "installation page shows its section breadcrumb", %{conn: conn} do
@@ -176,7 +254,13 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
              "Get Started"
            )
 
-    assert has_element?(view, "#{breadcrumb} span", "Overview")
+    assert has_element?(
+             view,
+             "#{breadcrumb} a[href='/getting-started/introduction']",
+             "Overview"
+           )
+
+    assert has_element?(view, "#{breadcrumb} span", "Installation")
   end
 
   test "the sidebar lists only the active section", %{conn: conn} do

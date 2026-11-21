@@ -34,7 +34,7 @@
     }
 
     [data-element="label"][data-label] [data-part="required"] {
-        color: var(--fl-color-error-text);
+        color: var(--fl-color-error-on-soft);
         font-weight: var(--fl-font-weight-medium);
     }
 

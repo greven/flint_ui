@@ -10,7 +10,7 @@ defmodule FlintUI.Palette do
 
   The eighteen hues are portable across palettes. The default palette mirrors
   the Tailwind CSS v4 colors, with `gray` sourced from Tailwind's neutral ramp
-  so the chrome starts achromatic; override the `--fl-palette-gray-*`
+  so the chrome starts achromatic; override the `--fl-color-gray-*`
   variables to use a warmer or cooler neutral.
 
   Applications can add a hue name with `config :flint_ui, extra_hues: [:brand]`.
@@ -56,7 +56,16 @@ defmodule FlintUI.Palette do
     :error,
     :inherit,
     :dark,
-    :light
+    :light,
+    :text,
+    :surface,
+    :background,
+    :border,
+    :ring,
+    :inverted,
+    :overlay,
+    :shadow,
+    :focus
   ]
 
   @palettes [
@@ -79,8 +88,8 @@ defmodule FlintUI.Palette do
   Returns the app-configured extra hue names.
 
   Set `config :flint_ui, extra_hues: [:brand]` to make `color="brand"` a valid
-  hook. The app supplies the palette block and tone hooks. Reserved role names
-  are ignored.
+  hook. The app supplies the palette block and tone hooks. Reserved role and
+  chrome names are ignored so an extra hue cannot shadow a semantic token.
   """
   def extra_hues do
     :flint_ui
@@ -95,6 +104,13 @@ defmodule FlintUI.Palette do
 
   @doc "The app-configured extra hue names as strings."
   def extra_hue_names, do: Enum.map(extra_hues(), &Atom.to_string/1)
+
+  @doc """
+  True when a hue name would shadow a semantic role or a chrome token.
+
+  Reserved names are rejected by `extra_hues/0` and by `mix flint.palette`.
+  """
+  def reserved_hue_name?(name), do: normalize_hue(name) in @reserved
 
   @doc "Every accepted hue name: the canonical palette plus app extras."
   def known_hue_names, do: hue_names() ++ extra_hue_names()

@@ -150,14 +150,16 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 - **Palettes own hue ramps.** Every palette defines the same eighteen hues — red,
   orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo,
   violet, purple, fuchsia, pink, rose, gray — each with a
-  `50..950` scale plus five derived tokens: `--fl-palette-{hue}` (core fill),
-  `-content`, `-text`, `-soft`, and `-soft-border`. Derived tokens reference the
-  ramp, so remapping a hue's eleven shade variables updates its label, text, and
-  tints together. The `gray` ramp drives the chrome. Palette tokens are data,
-  not component styling: components read the role aliases and `--fl-tone*`.
+  `50..950` scale plus five derived tokens: `--fl-color-{hue}` (core fill),
+  `-on`, `-on-soft`, `-soft`, and `-soft-border`. Derived tokens reference the
+  ramp, so remapping a hue's eleven shade variables updates its label, on-soft
+  text, and tints together. The `gray` ramp drives the chrome. Hue tokens live
+  in the same `--fl-color-*` namespace as semantic tokens, but they are palette
+  data: components normally read the role aliases and `--fl-tone*`, and may use
+  a hue token directly when a semantic token is wrong for the job.
 - **Semantic roles alias palette hues.** A role owns five tokens, not a scale:
-  the fill, `-content` (label on that fill), `-text` (role as text on a neutral
-  surface), `-soft`, and `-soft-border`. `primary` is the brand slot and defaults
+  the fill, `-on` (label on that fill), `-on-soft` (role as text on a neutral or
+  soft surface), `-soft`, and `-soft-border`. `primary` is the brand slot and defaults
   to the neutral ink, so a fresh app is monochrome until a theme maps it.
   `secondary` follows the palette `gray`; `info`, `success`, `warning`, and
   `error` point at blue, green, amber, and red. Remap a role by pointing its

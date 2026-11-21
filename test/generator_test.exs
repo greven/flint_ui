@@ -520,8 +520,8 @@ defmodule FlintUI.GeneratorTest do
     bridge = Generator.tailwind_bridge_source()
 
     assert bridge =~ "@theme inline {"
-    assert bridge =~ "--color-pink-500: var(--fl-palette-pink-500);"
-    assert bridge =~ "--color-gray-950: var(--fl-palette-gray-950);"
+    assert bridge =~ "--color-pink-500: var(--fl-color-pink-500);"
+    assert bridge =~ "--color-gray-950: var(--fl-color-gray-950);"
     assert bridge =~ "--background-color-raised: var(--fl-color-surface-raised);"
     refute bridge =~ "--color-primary-50:"
     assert bridge =~ "--radius-md: var(--fl-radius-md);"
@@ -552,8 +552,8 @@ defmodule FlintUI.GeneratorTest do
     assert bridge =~ "--border-color-default: var(--fl-color-border);"
     assert bridge =~ "--divide-color-default: var(--fl-color-border);"
     assert bridge =~ "--ring-color-default: var(--fl-color-ring);"
-    assert bridge =~ "--text-color-primary: var(--fl-color-primary-text);"
-    assert bridge =~ "--text-color-primary-content: var(--fl-color-primary-content);"
+    assert bridge =~ "--text-color-primary: var(--fl-color-primary-on-soft);"
+    assert bridge =~ "--text-color-primary-content: var(--fl-color-primary-on);"
     assert bridge =~ "--background-color-primary: var(--fl-color-primary);"
     refute bridge =~ "--color-foreground"
     refute bridge =~ "--text-color-soft"

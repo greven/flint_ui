@@ -68,15 +68,29 @@ defmodule FlintUIDocsWeb.NavTest do
     refute Nav.sub_component?(:avatar_group)
   end
 
-  test "breadcrumbs/2 builds the section and group trail", %{} do
+  test "breadcrumbs/2 builds the section, group, and page trail", %{} do
     assert Nav.breadcrumbs(:getting_started, :installation) == [
              %{label: "Get Started", path: "/getting-started/introduction"},
-             %{label: "Overview", path: "/getting-started/introduction"}
+             %{label: "Overview", path: "/getting-started/introduction"},
+             %{label: "Installation", path: "/getting-started/installation"}
            ]
 
     assert Nav.breadcrumbs(:guides, :theming) == [
              %{label: "Guides", path: "/guides/theming"},
              %{label: "Theming", path: "/guides/theming"}
+           ]
+
+    assert Nav.breadcrumbs(:guides, :theming_color) == [
+             %{label: "Guides", path: "/guides/theming"},
+             %{label: "Theming", path: "/guides/theming"},
+             %{label: "Color", path: "/guides/theming/color"}
+           ]
+
+    assert Nav.breadcrumbs(:guides, :theming_token_borders) == [
+             %{label: "Guides", path: "/guides/theming"},
+             %{label: "Theming", path: "/guides/theming"},
+             %{label: "Design Tokens", path: "/guides/theming/tokens"},
+             %{label: "Borders", path: "/guides/theming/tokens/borders"}
            ]
   end
 

@@ -60,7 +60,7 @@ defmodule FlintUI.Styled.Checkbox do
         ),
         Var.new(
           name: "--fl-checkbox-color-content",
-          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
+          default: "var(--fl-tone-on, var(--fl-color-text-inverted))",
           doc: "The check mark color on the checked box."
         )
       ],

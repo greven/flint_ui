@@ -52,33 +52,33 @@
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="info"] {
-        --fl-dropdown-item-text: var(--fl-color-info-text);
-        --fl-dropdown-item-accent: var(--fl-color-info-text);
+        --fl-dropdown-item-text: var(--fl-color-info-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-info-on-soft);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="success"] {
-        --fl-dropdown-item-text: var(--fl-color-success-text);
-        --fl-dropdown-item-accent: var(--fl-color-success-text);
+        --fl-dropdown-item-text: var(--fl-color-success-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-success-on-soft);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="warning"] {
-        --fl-dropdown-item-text: var(--fl-color-warning-text);
-        --fl-dropdown-item-accent: var(--fl-color-warning-text);
+        --fl-dropdown-item-text: var(--fl-color-warning-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-warning-on-soft);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="error"] {
-        --fl-dropdown-item-text: var(--fl-color-error-text);
-        --fl-dropdown-item-accent: var(--fl-color-error-text);
+        --fl-dropdown-item-text: var(--fl-color-error-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-error-on-soft);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="primary"] {
-        --fl-dropdown-item-text: var(--fl-color-primary-text);
-        --fl-dropdown-item-accent: var(--fl-color-primary-text);
+        --fl-dropdown-item-text: var(--fl-color-primary-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-primary-on-soft);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="secondary"] {
-        --fl-dropdown-item-text: var(--fl-color-secondary-text);
-        --fl-dropdown-item-accent: var(--fl-color-secondary-text);
+        --fl-dropdown-item-text: var(--fl-color-secondary-on-soft);
+        --fl-dropdown-item-accent: var(--fl-color-secondary-on-soft);
     }
 
     /* A custom item is a content block, not a row. It keeps the caller's own

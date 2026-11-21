@@ -26,28 +26,61 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
-  test "every palette hue has an AA text shade on the page" do
+  test "every palette hue has an AA on-soft shade on the page and soft fill" do
+    white = "oklch(100% 0 0)"
+
     for palette <- Palette.palettes(), hue <- Palette.hues() do
       shades = palette.module.shades(hue)
-      light_page = Map.fetch!(shades, 50)
-      dark_surface = Map.fetch!(shades, 900)
+      core = Map.fetch!(shades, Palette.core_shade(hue))
+      light_ink = Map.fetch!(shades, 950)
+      dark_base = Map.fetch!(shades, 900)
+      dark_ink = Map.fetch!(shades, 50)
 
-      assert Contrast.ratio(Map.fetch!(shades, 800), light_page) >= Contrast.aa(),
-             "#{palette.name}/#{hue}-800 should read on the light page"
+      light_backgrounds = [
+        white,
+        Contrast.mix(light_ink, white, 0.03),
+        Contrast.mix(light_ink, white, 0.055),
+        Contrast.mix(core, white, 0.12)
+      ]
 
-      assert Contrast.ratio(Map.fetch!(shades, 300), dark_surface) >= Contrast.aa(),
-             "#{palette.name}/#{hue}-300 should read on the dark surface"
+      dark_backgrounds = [
+        dark_base,
+        Contrast.mix(dark_ink, dark_base, 0.03),
+        Contrast.mix(dark_ink, dark_base, 0.055),
+        Contrast.mix(core, dark_base, 0.18)
+      ]
+
+      css = FlintUI.Palette.CSS.hue_tokens(hue, shades)
+
+      [_, light_step, dark_step] =
+        Regex.run(
+          ~r/--fl-color-#{hue}-on-soft: light-dark\(\s*var\(--fl-color-#{hue}-(\d+)\),\s*var\(--fl-color-#{hue}-(\d+)\)\s*\);/s,
+          css
+        )
+
+      light_value = Map.fetch!(shades, String.to_integer(light_step))
+      dark_value = Map.fetch!(shades, String.to_integer(dark_step))
+
+      for background <- light_backgrounds do
+        assert Contrast.ratio(light_value, background) >= Contrast.aa(),
+               "#{palette.name}/#{hue}-#{light_step} should read on #{background}"
+      end
+
+      for background <- dark_backgrounds do
+        assert Contrast.ratio(dark_value, background) >= Contrast.aa(),
+               "#{palette.name}/#{hue}-#{dark_step} should read on #{background}"
+      end
     end
   end
 
   test "role aliases point at palette hues" do
     css = File.read!(FlintUI.Generator.part_path("tokens.css"))
 
-    assert css =~ "--fl-color-secondary: var(--fl-palette-gray);"
-    assert css =~ "--fl-color-info: var(--fl-palette-blue);"
-    assert css =~ "--fl-color-success: var(--fl-palette-green);"
-    assert css =~ "--fl-color-warning: var(--fl-palette-amber);"
-    assert css =~ "--fl-color-error: var(--fl-palette-red);"
+    assert css =~ "--fl-color-secondary: var(--fl-color-gray);"
+    assert css =~ "--fl-color-info: var(--fl-color-blue);"
+    assert css =~ "--fl-color-success: var(--fl-color-green);"
+    assert css =~ "--fl-color-warning: var(--fl-color-amber);"
+    assert css =~ "--fl-color-error: var(--fl-color-red);"
     assert css =~ "--fl-color-primary: var(--fl-color-neutral);"
   end
 

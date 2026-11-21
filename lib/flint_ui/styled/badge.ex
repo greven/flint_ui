@@ -110,7 +110,7 @@ defmodule FlintUI.Styled.Badge do
           name: "--fl-badge-text",
           default: "var(--fl-badge-color)",
           doc:
-            "The label color on tinted, bordered, and ghost variants; it maps to the role's `-text` token."
+            "The label color on tinted, bordered, and ghost variants; it maps to the role's `-on-soft` token."
         ),
         Var.new(
           name: "--fl-badge-soft",

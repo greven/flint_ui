@@ -140,9 +140,9 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
 
     :root {
       --fl-color-primary: oklch(0.55 0.24 275);
-      --fl-color-primary-content: oklch(1 0 0);
-      /* Tinted, surface, outline, ghost, and link read -text. */
-      --fl-color-primary-text: light-dark(
+      --fl-color-primary-on: oklch(1 0 0);
+      /* Tinted, surface, outline, ghost, and link read -on-soft. */
+      --fl-color-primary-on-soft: light-dark(
         oklch(0.491 0.27 292.581),
         oklch(0.702 0.183 293.541)
       );

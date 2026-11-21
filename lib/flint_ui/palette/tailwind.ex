@@ -6,7 +6,7 @@ defmodule FlintUI.Palette.Tailwind do
   names: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`,
   `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`,
   `rose`, and `gray`. `gray` uses Tailwind's neutral ramp so the chrome starts
-  achromatic; override `--fl-palette-gray-*` to warm or cool it.
+  achromatic; override `--fl-color-gray-*` to warm or cool it.
 
   Values are taken from `tailwindcss` (MIT):
   `packages/tailwindcss/theme.css`.

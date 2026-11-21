@@ -166,7 +166,7 @@
 
     [data-element="separator"][data-variant="strong"]:not([data-color="neutral"])[data-separator] {
         --_separator-line: var(
-            --fl-tone-text,
+            --fl-tone-on-soft,
             color-mix(in oklab, var(--fl-separator-color) 80%, var(--fl-color-text-highlighted))
         );
     }

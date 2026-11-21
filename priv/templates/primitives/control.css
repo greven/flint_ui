@@ -10,8 +10,8 @@
      * come from `--fl-control-*`. */
     [data-control] {
         --fl-control-color: var(--fl-tone, var(--fl-color-inverted));
-        --fl-control-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
-        --fl-control-text: var(--fl-tone-text, var(--fl-control-color));
+        --fl-control-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));
+        --fl-control-text: var(--fl-tone-on-soft, var(--fl-control-color));
         --fl-control-soft: var(--fl-tone-soft, color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface)));
         --fl-control-soft-border: var(
             --fl-tone-soft-border,
@@ -19,8 +19,8 @@
         );
 
         --fl-control-active-color: var(--fl-active-tone, var(--fl-control-color));
-        --fl-control-active-color-content: var(--fl-active-tone-content, var(--fl-control-color-content));
-        --fl-control-active-text: var(--fl-active-tone-text, var(--fl-control-text));
+        --fl-control-active-color-content: var(--fl-active-tone-on, var(--fl-control-color-content));
+        --fl-control-active-text: var(--fl-active-tone-on-soft, var(--fl-control-text));
         --fl-control-active-soft: var(--fl-active-tone-soft, var(--fl-control-soft));
         --fl-control-active-soft-border: var(--fl-active-tone-soft-border, var(--fl-control-soft-border));
 

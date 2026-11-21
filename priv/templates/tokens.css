@@ -175,15 +175,15 @@
 
     /* Semantic roles alias a palette hue. Each role carries five jobs:
      *   <role>              the fill (solid background)
-     *   <role>-content      the label on that fill
-     *   <role>-text         the role used as text on a neutral surface
+     *   <role>-on           the label on that fill
+     *   <role>-on-soft      the role used as text on a neutral or soft surface
      *   <role>-soft         the tinted background
      *   <role>-soft-border  the matching edge
      *
      * `primary` is the brand slot. Unbranded, it follows the neutral ink, so a
      * fresh app stays monochrome until a theme maps primary to a palette hue.
      * `secondary` follows the palette's gray; `info`, `success`, `warning`, and
-     * `error` point at blue, green, orange, and red. A theme or an app override
+     * `error` point at blue, green, amber, and red. A theme or an app override
      * can remap any role with the same five lines.
      *
      * Components composite the soft fill at `--fl-tint-opacity`, so the token
@@ -191,9 +191,9 @@
      * the surface. */
     --fl-tint-opacity: 0.9;
 
-    --fl-color-neutral: light-dark(var(--fl-palette-gray-900), var(--fl-palette-gray-200));
-    --fl-color-neutral-content: light-dark(var(--fl-palette-gray-50), var(--fl-palette-gray-950));
-    --fl-color-neutral-text: light-dark(var(--fl-palette-gray-900), var(--fl-palette-gray-200));
+    --fl-color-neutral: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
+    --fl-color-neutral-on: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));
+    --fl-color-neutral-on-soft: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
     --fl-color-neutral-soft: light-dark(
         color-mix(in oklab, var(--fl-color-neutral) 8%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-neutral) 14%, var(--fl-color-surface))
@@ -201,54 +201,54 @@
     --fl-color-neutral-soft-border: color-mix(in oklab, var(--fl-color-neutral) 18%, var(--fl-color-surface));
 
     --fl-color-primary: var(--fl-color-neutral);
-    --fl-color-primary-content: var(--fl-color-neutral-content);
-    --fl-color-primary-text: var(--fl-color-neutral-text);
+    --fl-color-primary-on: var(--fl-color-neutral-on);
+    --fl-color-primary-on-soft: var(--fl-color-neutral-on-soft);
     --fl-color-primary-soft: var(--fl-color-neutral-soft);
     --fl-color-primary-soft-border: var(--fl-color-neutral-soft-border);
 
-    --fl-color-secondary: var(--fl-palette-gray);
-    --fl-color-secondary-content: var(--fl-palette-gray-content);
-    --fl-color-secondary-text: var(--fl-palette-gray-text);
-    --fl-color-secondary-soft: var(--fl-palette-gray-soft);
-    --fl-color-secondary-soft-border: var(--fl-palette-gray-soft-border);
+    --fl-color-secondary: var(--fl-color-gray);
+    --fl-color-secondary-on: var(--fl-color-gray-on);
+    --fl-color-secondary-on-soft: var(--fl-color-gray-on-soft);
+    --fl-color-secondary-soft: var(--fl-color-gray-soft);
+    --fl-color-secondary-soft-border: var(--fl-color-gray-soft-border);
 
-    --fl-color-info: var(--fl-palette-blue);
-    --fl-color-info-content: var(--fl-palette-blue-content);
-    --fl-color-info-text: var(--fl-palette-blue-text);
-    --fl-color-info-soft: var(--fl-palette-blue-soft);
-    --fl-color-info-soft-border: var(--fl-palette-blue-soft-border);
+    --fl-color-info: var(--fl-color-blue);
+    --fl-color-info-on: var(--fl-color-blue-on);
+    --fl-color-info-on-soft: var(--fl-color-blue-on-soft);
+    --fl-color-info-soft: var(--fl-color-blue-soft);
+    --fl-color-info-soft-border: var(--fl-color-blue-soft-border);
 
-    --fl-color-success: var(--fl-palette-green);
-    --fl-color-success-content: var(--fl-palette-green-content);
-    --fl-color-success-text: var(--fl-palette-green-text);
-    --fl-color-success-soft: var(--fl-palette-green-soft);
-    --fl-color-success-soft-border: var(--fl-palette-green-soft-border);
+    --fl-color-success: var(--fl-color-green);
+    --fl-color-success-on: var(--fl-color-green-on);
+    --fl-color-success-on-soft: var(--fl-color-green-on-soft);
+    --fl-color-success-soft: var(--fl-color-green-soft);
+    --fl-color-success-soft-border: var(--fl-color-green-soft-border);
 
-    --fl-color-warning: var(--fl-palette-amber);
-    --fl-color-warning-content: var(--fl-palette-amber-content);
-    --fl-color-warning-text: var(--fl-palette-amber-text);
-    --fl-color-warning-soft: var(--fl-palette-amber-soft);
-    --fl-color-warning-soft-border: var(--fl-palette-amber-soft-border);
+    --fl-color-warning: var(--fl-color-amber);
+    --fl-color-warning-on: var(--fl-color-amber-on);
+    --fl-color-warning-on-soft: var(--fl-color-amber-on-soft);
+    --fl-color-warning-soft: var(--fl-color-amber-soft);
+    --fl-color-warning-soft-border: var(--fl-color-amber-soft-border);
 
-    --fl-color-error: var(--fl-palette-red);
-    --fl-color-error-content: var(--fl-palette-red-content);
-    --fl-color-error-text: var(--fl-palette-red-text);
-    --fl-color-error-soft: var(--fl-palette-red-soft);
-    --fl-color-error-soft-border: var(--fl-palette-red-soft-border);
+    --fl-color-error: var(--fl-color-red);
+    --fl-color-error-on: var(--fl-color-red-on);
+    --fl-color-error-on-soft: var(--fl-color-red-on-soft);
+    --fl-color-error-soft: var(--fl-color-red-soft);
+    --fl-color-error-soft-border: var(--fl-color-red-soft-border);
 
     /* Absolute tones. Unlike `neutral`, these do not follow the color scheme:
      * `dark` stays dark and `light` stays light. They alias the palette's gray
      * extremes, so retinting the gray ramp retints them too. Text-carrying
-     * variants still resolve their `-text` per scheme so they stay legible. */
-    --fl-color-dark: var(--fl-palette-gray-900);
-    --fl-color-dark-content: var(--fl-palette-gray-50);
-    --fl-color-dark-text: light-dark(var(--fl-palette-gray-900), var(--fl-palette-gray-200));
+     * variants still resolve their `-on-soft` per scheme so they stay legible. */
+    --fl-color-dark: var(--fl-color-gray-900);
+    --fl-color-dark-on: var(--fl-color-gray-50);
+    --fl-color-dark-on-soft: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
     --fl-color-dark-soft: var(--fl-color-neutral-soft);
     --fl-color-dark-soft-border: var(--fl-color-neutral-soft-border);
 
-    --fl-color-light: var(--fl-palette-gray-50);
-    --fl-color-light-content: var(--fl-palette-gray-900);
-    --fl-color-light-text: light-dark(var(--fl-palette-gray-700), var(--fl-palette-gray-50));
+    --fl-color-light: var(--fl-color-gray-50);
+    --fl-color-light-on: var(--fl-color-gray-900);
+    --fl-color-light-on-soft: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-50));
     --fl-color-light-soft: var(--fl-color-neutral-soft);
     --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
 
@@ -259,10 +259,10 @@
      * subtle 3% < strong 5.5% < border-subtle 7% < border 10% < strong 18%.
      * `surface-raised` lifts an overlay above a card; it is the same as the
      * surface in light, where white is already the top of the scale. */
-    --fl-surface-ink: light-dark(var(--fl-palette-gray-950), var(--fl-palette-gray-50));
+    --fl-surface-ink: light-dark(var(--fl-color-gray-950), var(--fl-color-gray-50));
 
-    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-palette-gray-900));
-    --fl-color-background: light-dark(var(--fl-palette-gray-50), var(--fl-palette-gray-950));
+    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-gray-900));
+    --fl-color-background: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));
     --fl-color-surface-subtle: color-mix(in oklab, var(--fl-surface-ink) 3%, var(--fl-color-surface));
     --fl-color-surface-strong: color-mix(in oklab, var(--fl-surface-ink) 5.5%, var(--fl-color-surface));
     --fl-color-surface-raised: light-dark(
@@ -270,17 +270,17 @@
         color-mix(in oklab, var(--fl-surface-ink) 5%, var(--fl-color-surface))
     );
 
-    --fl-color-inverted: light-dark(var(--fl-palette-gray-900), oklch(1 0 0));
+    --fl-color-inverted: light-dark(var(--fl-color-gray-900), oklch(1 0 0));
 
     /* Chrome text. `highlighted` is for headings and strong labels; `text` is
      * the default ink; `toned` is softened copy; `muted` is meta; `dimmed` is
      * for placeholders and decoration. `dimmed` is intentionally below AA. */
-    --fl-color-text-highlighted: light-dark(var(--fl-palette-gray-900), oklch(1 0 0));
-    --fl-color-text: light-dark(var(--fl-palette-gray-700), var(--fl-palette-gray-200));
-    --fl-color-text-toned: light-dark(var(--fl-palette-gray-600), var(--fl-palette-gray-300));
-    --fl-color-text-muted: light-dark(color-mix(in oklab, var(--fl-palette-gray-500) 90%, var(--fl-palette-gray-600)), var(--fl-palette-gray-400));
-    --fl-color-text-dimmed: light-dark(var(--fl-palette-gray-400), var(--fl-palette-gray-500));
-    --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-palette-gray-800));
+    --fl-color-text-highlighted: light-dark(var(--fl-color-gray-900), oklch(1 0 0));
+    --fl-color-text: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-200));
+    --fl-color-text-toned: light-dark(var(--fl-color-gray-600), var(--fl-color-gray-300));
+    --fl-color-text-muted: light-dark(color-mix(in oklab, var(--fl-color-gray-500) 90%, var(--fl-color-gray-600)), var(--fl-color-gray-400));
+    --fl-color-text-dimmed: light-dark(var(--fl-color-gray-400), var(--fl-color-gray-500));
+    --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-gray-800));
 
     /* Chrome borders. All three are a tint of the same ink over the surface, so
      * the edge ladder stays above the fill ladder in both schemes. `subtle` is
@@ -289,7 +289,7 @@
     --fl-color-border-subtle: color-mix(in oklab, var(--fl-surface-ink) 7%, var(--fl-color-surface));
     --fl-color-border: color-mix(in oklab, var(--fl-surface-ink) 10%, var(--fl-color-surface));
     --fl-color-border-strong: color-mix(in oklab, var(--fl-surface-ink) 18%, var(--fl-color-surface));
-    --fl-color-ring: light-dark(var(--fl-palette-gray-400), var(--fl-palette-gray-500));
+    --fl-color-ring: light-dark(var(--fl-color-gray-400), var(--fl-color-gray-500));
 
     /* Colored control borders. */
     --fl-border-strength-soft: 30%;

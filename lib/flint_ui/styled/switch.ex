@@ -51,7 +51,7 @@ defmodule FlintUI.Styled.Switch do
         ),
         Var.new(
           name: "--fl-switch-color-content",
-          default: "var(--fl-tone-content, var(--fl-color-text-inverted))",
+          default: "var(--fl-tone-on, var(--fl-color-text-inverted))",
           doc: "The thumb color on the on track."
         )
       ],

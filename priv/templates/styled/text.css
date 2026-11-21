@@ -37,8 +37,8 @@
      * link or the link sits inside the text. An explicit color keeps its role. */
     [data-element="text"]:is(a)[data-color="default"],
     [data-element="text"][data-color="default"] :is(a):not([data-element]) {
-        color: var(--fl-color-primary-text);
-        text-decoration-color: color-mix(in oklab, var(--fl-color-primary-text), transparent 75%);
+        color: var(--fl-color-primary-on-soft);
+        text-decoration-color: color-mix(in oklab, var(--fl-color-primary-on-soft), transparent 75%);
     }
 
     /* The underline is muted at rest and becomes solid on hover and keyboard

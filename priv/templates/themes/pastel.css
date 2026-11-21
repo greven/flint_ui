@@ -5,7 +5,7 @@
 
     --fl-color-border: light-dark(
         oklch(0.85 0.028 300),
-        var(--fl-palette-gray-800)
+        var(--fl-color-gray-800)
     );
     --fl-border-strength-soft: 25%;
 }

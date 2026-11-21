@@ -4,15 +4,15 @@ defmodule FlintUI.Palette.CSS do
 
   Each hue emits its `50..950` ramp plus five derived tokens:
 
-    * `--fl-palette-{hue}` — the core fill (see `FlintUI.Palette.core_shade/1`);
-    * `--fl-palette-{hue}-content` — the label on that fill;
-    * `--fl-palette-{hue}-text` — an AA shade for text on the page;
-    * `--fl-palette-{hue}-soft` — the tinted fill;
-    * `--fl-palette-{hue}-soft-border` — the matching tinted edge.
+    * `--fl-color-{hue}` — the core fill (see `FlintUI.Palette.core_shade/1`);
+    * `--fl-color-{hue}-on` — the label on that fill;
+    * `--fl-color-{hue}-on-soft` — an AA shade for text on the page or a soft fill;
+    * `--fl-color-{hue}-soft` — the tinted fill;
+    * `--fl-color-{hue}-soft-border` — the matching tinted edge.
 
   Derived tokens reference the ramp rather than literal colors wherever
   possible, so remapping a hue's eleven shade variables in an app stylesheet
-  updates its label, text, and tinted treatments at the same time.
+  updates its label, on-soft text, and tinted treatments at the same time.
 
   The default palette renders under `:root, [data-palette="<name>"]`; other
   palettes render under `[data-palette="<name>"]`. `render_hooks/1` emits the
@@ -67,8 +67,8 @@ defmodule FlintUI.Palette.CSS do
     """
     :where([#{attribute}="#{role}"]) {
         --fl-tone: var(--fl-color-#{role});
-        --fl-tone-content: var(--fl-color-#{role}-content);
-        --fl-tone-text: var(--fl-color-#{role}-text);
+        --fl-tone-on: var(--fl-color-#{role}-on);
+        --fl-tone-on-soft: var(--fl-color-#{role}-on-soft);
         --fl-tone-soft: var(--fl-color-#{role}-soft);
         --fl-tone-soft-border: var(--fl-color-#{role}-soft-border);
     }
@@ -80,11 +80,11 @@ defmodule FlintUI.Palette.CSS do
 
     """
     :where([#{attribute}="#{hue}"]) {
-        #{prefix}: var(--fl-palette-#{hue});
-        #{prefix}-content: var(--fl-palette-#{hue}-content);
-        #{prefix}-text: var(--fl-palette-#{hue}-text);
-        #{prefix}-soft: var(--fl-palette-#{hue}-soft);
-        #{prefix}-soft-border: var(--fl-palette-#{hue}-soft-border);
+        #{prefix}: var(--fl-color-#{hue});
+        #{prefix}-on: var(--fl-color-#{hue}-on);
+        #{prefix}-on-soft: var(--fl-color-#{hue}-on-soft);
+        #{prefix}-soft: var(--fl-color-#{hue}-soft);
+        #{prefix}-soft-border: var(--fl-color-#{hue}-soft-border);
     }
     """
   end
@@ -152,28 +152,37 @@ defmodule FlintUI.Palette.CSS do
   def hue_tokens(hue, shades, opts \\ []) do
     target = Contrast.target(Keyword.get(opts, :contrast))
     core = Keyword.get(opts, :core, Palette.core_shade(hue))
-    light_step = text_step(shades, shade_value(shades, 50), target, [800, 700, 900, 600])
-    dark_step = text_step(shades, shade_value(shades, 900), target, [300, 400, 200, 500])
+    core_value = shade_value(shades, core)
+
+    # `on-soft` is used both on the soft fill and as role text on the page, so
+    # score it against the soft fill: it is the stricter background in each
+    # scheme (slightly darker than the light page, slightly lighter than the
+    # dark page).
+    light_soft = Contrast.mix(core_value, @white, 0.12)
+    dark_soft = Contrast.mix(core_value, shade_value(shades, 900), 0.18)
+
+    light_step = text_step(shades, light_soft, target, [800, 700, 900, 600])
+    dark_step = text_step(shades, dark_soft, target, [300, 400, 200, 500])
 
     scale =
       Enum.map_join(Palette.shade_keys(), "\n", fn shade ->
-        "--fl-palette-#{hue}-#{shade}: #{shade_value(shades, shade)};"
+        "--fl-color-#{hue}-#{shade}: #{shade_value(shades, shade)};"
       end)
 
     footer = """
-    --fl-palette-#{hue}: var(--fl-palette-#{hue}-#{core});
-    --fl-palette-#{hue}-content: #{content_value(hue, shades, core, target)};
-    --fl-palette-#{hue}-text: light-dark(
-        var(--fl-palette-#{hue}-#{light_step}),
-        var(--fl-palette-#{hue}-#{dark_step})
+    --fl-color-#{hue}: var(--fl-color-#{hue}-#{core});
+    --fl-color-#{hue}-on: #{on_value(hue, shades, core, target)};
+    --fl-color-#{hue}-on-soft: light-dark(
+        var(--fl-color-#{hue}-#{light_step}),
+        var(--fl-color-#{hue}-#{dark_step})
     );
-    --fl-palette-#{hue}-soft: light-dark(
-        color-mix(in oklab, var(--fl-palette-#{hue}) 12%, var(--fl-color-surface)),
-        color-mix(in oklab, var(--fl-palette-#{hue}) 18%, var(--fl-color-surface))
+    --fl-color-#{hue}-soft: light-dark(
+        color-mix(in oklab, var(--fl-color-#{hue}) 12%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-#{hue}) 18%, var(--fl-color-surface))
     );
-    --fl-palette-#{hue}-soft-border: color-mix(
+    --fl-color-#{hue}-soft-border: color-mix(
         in oklab,
-        var(--fl-palette-#{hue}) var(--fl-border-strength-soft),
+        var(--fl-color-#{hue}) var(--fl-border-strength-soft),
         var(--fl-color-surface)
     );\
     """
@@ -186,7 +195,7 @@ defmodule FlintUI.Palette.CSS do
   # when both extremes miss the target (a mid-tone fill such as red-600).
   @content_shades [50, 950]
 
-  defp content_value(hue, shades, core, target) do
+  defp on_value(hue, shades, core, target) do
     base = shade_value(shades, core)
 
     {key, ratio} =
@@ -204,9 +213,9 @@ defmodule FlintUI.Palette.CSS do
       |> prefer_white(target)
 
     cond do
-      ratio >= target -> "var(--fl-palette-#{hue}-#{key})"
+      ratio >= target -> "var(--fl-color-#{hue}-#{key})"
       extreme_ratio >= target -> extreme
-      ratio >= extreme_ratio -> "var(--fl-palette-#{hue}-#{key})"
+      ratio >= extreme_ratio -> "var(--fl-color-#{hue}-#{key})"
       true -> extreme
     end
   end
@@ -249,6 +258,9 @@ defmodule FlintUI.Palette.CSS do
   defp indent(text) do
     text
     |> String.split("\n")
-    |> Enum.map_join("\n", &("    " <> &1))
+    |> Enum.map_join("\n", fn
+      "" -> ""
+      line -> "    " <> line
+    end)
   end
 end

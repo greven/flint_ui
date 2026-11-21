@@ -63,18 +63,18 @@ for the few per-instance escapes.
 
 :root {
   --fl-color-primary: oklch(0.55 0.24 275);
-  --fl-color-primary-content: oklch(1 0 0);
-  /* Tinted, surface, outline, ghost, and link use the role's AA text shade. */
-  --fl-color-primary-text: light-dark(
+  --fl-color-primary-on: oklch(1 0 0);
+  /* Tinted, surface, outline, ghost, and link use the role's AA on-soft shade. */
+  --fl-color-primary-on-soft: light-dark(
     oklch(0.491 0.27 292.581),
     oklch(0.702 0.183 293.541)
   );
 }
 ```
 
-Each role has three core jobs: the bare role is the fill, `-content` is the
-label on that fill, and `-text` is the role as text on a neutral surface. It
-also owns `-soft` and `-soft-border` for tinted and bordered variants. Those
+Each role has three core jobs: the bare role is the fill, `-on` is the label
+on that fill, and `-on-soft` is the role as text on a neutral or soft surface.
+It also owns `-soft` and `-soft-border` for tinted and bordered variants. Those
 blend the role with the surface rather than repeating the solid fill, so a light
 role and a dark one stay equally visible. Components composite the tint at
 `--fl-tint-opacity` (90%), so the surface below shows through while the
@@ -103,28 +103,21 @@ default /
 ever moves away from the pure anchor, so `bg-subtle` / `bg-strong` and
 `border-subtle` / `border-strong` read as amounts, not ranks against the page.
 
-For a full `50..950` scale, map the role shades to the palette you already
-have. With Tailwind, point them at the `--color-*` variables in `app.css`:
+To retint a hue, remap its ramp in `app.css`. Every role that aliases the hue
+follows, and the derived `-on` and `-on-soft` tokens update with the ramp. With
+Tailwind, point the ramp at the `--color-*` variables:
 
 ```css
 :root {
-  --fl-color-primary-50: var(--color-rose-50);
-  /* … 100 through 500 … */
-  --fl-color-primary-600: var(--color-rose-600);
-  /* … 700 through 900 … */
-  --fl-color-primary-950: var(--color-rose-950);
-  --fl-color-primary: light-dark(
-    var(--fl-color-primary-600),
-    var(--fl-color-primary-600)
-  );
+  --fl-color-rose-50: var(--color-brand-50);
+  /* … 100 through 900 … */
+  --fl-color-rose-950: var(--color-brand-950);
 }
 ```
 
-Without Tailwind, paste the literal scale into `app.css`. The role scale is the
-only color contract; source palette names never become CSS variables. Re-check
-`-content` and `-text` after remapping a scale: their shade refs follow the new
-scale, but the shipped picks assume the default scales. Custom themes are
-`[data-theme="…"]` blocks in the same app stylesheet.
+Without Tailwind, paste literal values into the same variables. The `gray` ramp
+drives the whole chrome. Custom themes are `[data-theme="…"]` blocks in the same
+app stylesheet.
 
 `mix flint.setup --tailwind` writes a bridge that maps each utility family to its
 own token (`text-default`, `bg-surface`, `border-default`, `text-primary` vs

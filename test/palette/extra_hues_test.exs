@@ -7,7 +7,22 @@ defmodule FlintUI.Palette.ExtraHuesTest do
   setup do
     previous = Application.get_env(:flint_ui, :extra_hues)
 
-    Application.put_env(:flint_ui, :extra_hues, [:brand, "accent", :primary, :pink, :brand])
+    Application.put_env(:flint_ui, :extra_hues, [
+      :brand,
+      "accent",
+      :primary,
+      :pink,
+      :brand,
+      :text,
+      :surface,
+      :background,
+      :border,
+      :ring,
+      :inverted,
+      :overlay,
+      :shadow,
+      :focus
+    ])
 
     on_exit(fn ->
       if previous do
@@ -37,9 +52,14 @@ defmodule FlintUI.Palette.ExtraHuesTest do
     end
   end
 
-  test "reserved role names and canonical hues are not extra hues" do
-    refute :primary in Palette.extra_hues()
+  test "reserved role, chrome, and canonical names are not extra hues" do
+    for name <- ~w(primary text surface background border ring inverted overlay shadow focus) do
+      refute String.to_atom(name) in Palette.extra_hues()
+      assert Palette.reserved_hue_name?(name)
+    end
+
     refute :pink in Palette.extra_hues()
+    refute Palette.reserved_hue_name?(:brand)
   end
 
   test "unknown names still raise" do

@@ -160,7 +160,7 @@ defmodule Mix.Tasks.Flint.SetupTest do
     assert source =~ "--text-color-default: var(--fl-color-text);"
     assert source =~ "--background-color-surface: var(--fl-color-surface);"
     assert source =~ "--border-color-default: var(--fl-color-border);"
-    assert source =~ "--text-color-primary: var(--fl-color-primary-text);"
+    assert source =~ "--text-color-primary: var(--fl-color-primary-on-soft);"
     refute source =~ "--color-border:"
   end
 end

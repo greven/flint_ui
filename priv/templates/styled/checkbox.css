@@ -7,7 +7,7 @@
         --fl-checkbox-fill: var(--fl-color-surface);
         --fl-checkbox-border: var(--fl-color-border-strong);
         --fl-checkbox-color: var(--fl-tone, var(--fl-color-primary));
-        --fl-checkbox-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
+        --fl-checkbox-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));
         --fl-control-radius: var(--fl-radius-sm);
         display: grid;
         gap: var(--fl-spacing-xs);
@@ -182,7 +182,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-error-text);
+        color: var(--fl-color-error-on-soft);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }
@@ -222,7 +222,7 @@
         > [data-part="indicator"]:has(> [data-part="control"]:checked) {
         border-color: var(--fl-color-error);
         background-color: var(--fl-color-error);
-        color: var(--fl-color-error-content);
+        color: var(--fl-color-error-on);
     }
 
     [data-element="checkbox"][data-variant][data-invalid]

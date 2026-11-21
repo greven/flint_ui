@@ -9,7 +9,7 @@
         --fl-switch-border: var(--fl-color-border-strong);
         --fl-switch-thumb: var(--fl-color-surface);
         --fl-switch-color: var(--fl-tone, var(--fl-color-primary));
-        --fl-switch-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
+        --fl-switch-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));
         display: grid;
         gap: var(--fl-spacing-xs);
         min-inline-size: 0;
@@ -166,7 +166,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-error-text);
+        color: var(--fl-color-error-on-soft);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }
@@ -212,14 +212,14 @@
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:checked)
         > [data-part="thumb"] {
-        background-color: var(--fl-color-error-content);
+        background-color: var(--fl-color-error-on);
     }
 
     [data-element="switch"][data-switch][data-invalid]
         > [data-part="label"]
         > [data-part="indicator"]:has(> [data-part="control"]:checked)
         > [data-part="on-state"] {
-        color: var(--fl-color-error-content);
+        color: var(--fl-color-error-on);
     }
 
     [data-element="switch"][data-switch][data-invalid]

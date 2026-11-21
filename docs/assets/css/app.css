@@ -64,56 +64,56 @@
 
     /* primary: Tailwind red */
     --color-primary: var(--fl-color-primary);
-    --text-color-primary: var(--fl-color-primary-text);
-    --text-color-primary-content: var(--fl-color-primary-content);
+    --text-color-primary: var(--fl-color-primary-on-soft);
+    --text-color-primary-content: var(--fl-color-primary-on);
     --background-color-primary: var(--fl-color-primary);
     --border-color-primary: var(--fl-color-primary);
     --ring-color-primary: var(--fl-color-primary);
 
     /* secondary: Tailwind gray */
     --color-secondary: var(--fl-color-secondary);
-    --text-color-secondary: var(--fl-color-secondary-text);
-    --text-color-secondary-content: var(--fl-color-secondary-content);
+    --text-color-secondary: var(--fl-color-secondary-on-soft);
+    --text-color-secondary-content: var(--fl-color-secondary-on);
     --background-color-secondary: var(--fl-color-secondary);
     --border-color-secondary: var(--fl-color-secondary);
     --ring-color-secondary: var(--fl-color-secondary);
 
     /* neutral: Tailwind neutral */
     --color-neutral: var(--fl-color-neutral);
-    --text-color-neutral: var(--fl-color-neutral-text);
-    --text-color-neutral-content: var(--fl-color-neutral-content);
+    --text-color-neutral: var(--fl-color-neutral-on-soft);
+    --text-color-neutral-content: var(--fl-color-neutral-on);
     --background-color-neutral: var(--fl-color-neutral);
     --border-color-neutral: var(--fl-color-neutral);
     --ring-color-neutral: var(--fl-color-neutral);
 
     /* success: Tailwind emerald */
     --color-success: var(--fl-color-success);
-    --text-color-success: var(--fl-color-success-text);
-    --text-color-success-content: var(--fl-color-success-content);
+    --text-color-success: var(--fl-color-success-on-soft);
+    --text-color-success-content: var(--fl-color-success-on);
     --background-color-success: var(--fl-color-success);
     --border-color-success: var(--fl-color-success);
     --ring-color-success: var(--fl-color-success);
 
     /* info: Tailwind blue */
     --color-info: var(--fl-color-info);
-    --text-color-info: var(--fl-color-info-text);
-    --text-color-info-content: var(--fl-color-info-content);
+    --text-color-info: var(--fl-color-info-on-soft);
+    --text-color-info-content: var(--fl-color-info-on);
     --background-color-info: var(--fl-color-info);
     --border-color-info: var(--fl-color-info);
     --ring-color-info: var(--fl-color-info);
 
     /* warning: Tailwind amber */
     --color-warning: var(--fl-color-warning);
-    --text-color-warning: var(--fl-color-warning-text);
-    --text-color-warning-content: var(--fl-color-warning-content);
+    --text-color-warning: var(--fl-color-warning-on-soft);
+    --text-color-warning-content: var(--fl-color-warning-on);
     --background-color-warning: var(--fl-color-warning);
     --border-color-warning: var(--fl-color-warning);
     --ring-color-warning: var(--fl-color-warning);
 
     /* error: Tailwind red */
     --color-error: var(--fl-color-error);
-    --text-color-error: var(--fl-color-error-text);
-    --text-color-error-content: var(--fl-color-error-content);
+    --text-color-error: var(--fl-color-error-on-soft);
+    --text-color-error-content: var(--fl-color-error-on);
     --background-color-error: var(--fl-color-error);
     --border-color-error: var(--fl-color-error);
     --ring-color-error: var(--fl-color-error);
@@ -133,11 +133,11 @@
 
 /* A custom preset. Select "brand" in the theming guide's preset picker. */
 [data-theme="brand"] {
-    --fl-color-primary: var(--fl-palette-purple);
-    --fl-color-primary-content: var(--fl-palette-purple-content);
-    --fl-color-primary-text: var(--fl-palette-purple-text);
-    --fl-color-primary-soft: var(--fl-palette-purple-soft);
-    --fl-color-primary-soft-border: var(--fl-palette-purple-soft-border);
+    --fl-color-primary: var(--fl-color-purple);
+    --fl-color-primary-on: var(--fl-color-purple-on);
+    --fl-color-primary-on-soft: var(--fl-color-purple-on-soft);
+    --fl-color-primary-soft: var(--fl-color-purple-soft);
+    --fl-color-primary-soft-border: var(--fl-color-purple-soft-border);
 
     --fl-radius: 0.375rem;
 }
@@ -411,7 +411,7 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 
     [data-parts-overlay-label] {
         background-color: var(--fl-color-primary);
-        color: var(--fl-color-primary-content);
+        color: var(--fl-color-primary-on);
     }
 
     [data-parts-overlay-label][hidden] {

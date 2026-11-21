@@ -11,7 +11,7 @@
         --fl-avatar-size-xl: 3.5rem;
 
         --fl-avatar-color: var(--fl-tone, var(--fl-color-inverted));
-        --fl-avatar-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
+        --fl-avatar-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));
         --fl-avatar-size: var(--fl-avatar-size-md);
         --_avatar-radius: 0;
         box-sizing: border-box;

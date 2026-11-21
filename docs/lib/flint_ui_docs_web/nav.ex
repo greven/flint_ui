@@ -53,7 +53,27 @@ defmodule FlintUIDocsWeb.Nav do
       %{
         label: "Theming",
         icon: "lucide-palette",
-        pages: [%{id: :theming, label: "Theming", path: "/guides/theming"}]
+        pages: [
+          %{id: :theming, label: "Overview", path: "/guides/theming"},
+          %{id: :theming_color, label: "Color", path: "/guides/theming/color"},
+          %{id: :theming_themes, label: "Themes", path: "/guides/theming/themes"},
+          %{
+            id: :theming_tokens,
+            label: "Design Tokens",
+            path: "/guides/theming/tokens",
+            children: FlintUIDocsWeb.Theme.Tokens.nav_pages()
+          },
+          %{
+            id: :theming_customizing,
+            label: "Customizing",
+            path: "/guides/theming/customizing"
+          },
+          %{
+            id: :theming_css_utilities,
+            label: "CSS Utilities",
+            path: "/guides/theming/css-utilities"
+          }
+        ]
       },
       %{
         label: "Interaction",
@@ -197,11 +217,38 @@ defmodule FlintUIDocsWeb.Nav do
 
   defp group_crumbs(section, page_id) do
     Enum.find_value(section.groups, [], fn group ->
-      if Enum.any?(group.pages, &page_match?(&1, page_id)) do
-        [%{label: group.label, path: group.pages |> List.first() |> Map.fetch!(:path)}]
+      case page_trail(group.pages, page_id) do
+        nil ->
+          nil
+
+        trail ->
+          first = List.first(group.pages)
+          trail = if List.first(trail).id == first.id, do: tl(trail), else: trail
+
+          [%{label: group.label, path: first.path} | Enum.map(trail, &crumb/1)]
       end
     end)
   end
+
+  # The group crumb already stands in for the group's first page. Add any
+  # deeper ancestors and the target, so a nested token page reads
+  # Guides → Theming → Design Tokens → Borders.
+  defp page_trail(pages, page_id) do
+    Enum.find_value(pages, fn page ->
+      cond do
+        page.id == page_id ->
+          [page]
+
+        true ->
+          case page_trail(Map.get(page, :children, []), page_id) do
+            nil -> nil
+            trail -> [page | trail]
+          end
+      end
+    end)
+  end
+
+  defp crumb(page), do: %{label: page.label, path: page.path}
 
   defp page_match?(page, page_id) do
     page.id == page_id or

@@ -4,8 +4,8 @@
      * on the prop hooks and the shared scales. */
     [data-element="alert"][data-variant] {
         --fl-alert-color: var(--fl-tone, var(--fl-color-inverted));
-        --fl-alert-color-content: var(--fl-tone-content, var(--fl-color-text-inverted));
-        --fl-alert-text: var(--fl-tone-text, var(--fl-alert-color));
+        --fl-alert-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));
+        --fl-alert-text: var(--fl-tone-on-soft, var(--fl-alert-color));
         --fl-alert-soft: var(
             --fl-tone-soft,
             color-mix(in oklab, var(--fl-alert-color) 10%, var(--fl-color-surface))
