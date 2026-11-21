@@ -252,10 +252,9 @@
     --fl-color-light-soft: var(--fl-color-neutral-soft);
     --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
 
-    /* Chrome surfaces. `surface` is the anchor: white in light and gray-900 in
-     * dark. The page sits one step away from it (gray-50 / gray-950); tonal
-     * fills are a tint of the opposite ink over the surface. The ladder is
-     * ordered so a fill never reaches the quietest edge:
+    /* Chrome surfaces. `surface` is the anchor: white in light and gray-900 in dark.
+     * The page sits one step away from it (gray-50 / gray-950); tonal fills are a tint of the
+     * opposite ink over the surface. The ladder is ordered so a fill never reaches the quietest edge:
      * subtle 3% < strong 5.5% < border-subtle 7% < border 10% < strong 18%.
      * `surface-raised` lifts an overlay above a card; it is the same as the
      * surface in light, where white is already the top of the scale. */

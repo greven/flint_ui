@@ -31,10 +31,11 @@ defmodule FlintUI.Theme.ContrastTest do
 
     for palette <- Palette.palettes(), hue <- Palette.hues() do
       shades = palette.module.shades(hue)
+      gray = palette.module.shades(:gray)
       core = Map.fetch!(shades, Palette.core_shade(hue))
-      light_ink = Map.fetch!(shades, 950)
-      dark_base = Map.fetch!(shades, 900)
-      dark_ink = Map.fetch!(shades, 50)
+      light_ink = Map.fetch!(gray, 950)
+      dark_base = Map.fetch!(gray, 900)
+      dark_ink = Map.fetch!(gray, 50)
 
       light_backgrounds = [
         white,
@@ -44,6 +45,7 @@ defmodule FlintUI.Theme.ContrastTest do
       ]
 
       dark_backgrounds = [
+        Map.fetch!(gray, 950),
         dark_base,
         Contrast.mix(dark_ink, dark_base, 0.03),
         Contrast.mix(dark_ink, dark_base, 0.055),

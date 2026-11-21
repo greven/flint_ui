@@ -6,7 +6,8 @@ defmodule FlintUI.Palette.CSS do
 
     * `--fl-color-{hue}` — the core fill (see `FlintUI.Palette.core_shade/1`);
     * `--fl-color-{hue}-on` — the label on that fill;
-    * `--fl-color-{hue}-on-soft` — an AA shade for text on the page or a soft fill;
+    * `--fl-color-{hue}-on-soft` — the most saturated AA shade for text on the
+      page or a soft fill;
     * `--fl-color-{hue}-soft` — the tinted fill;
     * `--fl-color-{hue}-soft-border` — the matching tinted edge.
 
@@ -155,14 +156,17 @@ defmodule FlintUI.Palette.CSS do
     core_value = shade_value(shades, core)
 
     # `on-soft` is used both on the soft fill and as role text on the page, so
-    # score it against the soft fill: it is the stricter background in each
-    # scheme (slightly darker than the light page, slightly lighter than the
-    # dark page).
+    # score it against the lightest backdrop in each scheme: `surface-strong`
+    # and the tinted soft fill. The soft fill mixes with the surface anchor
+    # (`--fl-color-surface`), so mirror that base here.
     light_soft = Contrast.mix(core_value, @white, 0.12)
-    dark_soft = Contrast.mix(core_value, shade_value(shades, 900), 0.18)
+    dark_soft = Contrast.mix(core_value, Contrast.dark_surface(), 0.18)
 
-    light_step = text_step(shades, light_soft, target, [800, 700, 900, 600])
-    dark_step = text_step(shades, dark_soft, target, [300, 400, 200, 500])
+    light_backgrounds = [Contrast.light_surface_strong(), light_soft]
+    dark_backgrounds = [Contrast.dark_background(), dark_soft]
+
+    light_step = text_step(shades, light_backgrounds, target, [700, 800, 900, 600])
+    dark_step = text_step(shades, dark_backgrounds, target, [400, 300, 200, 500])
 
     scale =
       Enum.map_join(Palette.shade_keys(), "\n", fn shade ->
@@ -231,25 +235,22 @@ defmodule FlintUI.Palette.CSS do
     end
   end
 
-  # The shade used as colored text on the page. Try the conventional steps
-  # first; when the whole ramp is too light (or a custom palette is unusually
-  # flat), fall back to the most legible shade so the token still resolves.
-  defp text_step(shades, background, target, preferred) do
-    ratios =
-      Enum.map(Palette.shade_keys(), fn shade ->
-        {shade, Contrast.ratio(shade_value(shades, shade), background) || 0.0}
-      end)
+  # The shade used as colored text on the page and soft fill. A candidate must
+  # clear the target on every backdrop; fall back to the shade with the best
+  # worst-case ratio when the whole ramp is too flat (or a custom palette is
+  # unusually constrained).
+  defp text_step(shades, backgrounds, target, preferred) do
+    worst_ratio = fn shade ->
+      value = shade_value(shades, shade)
 
-    case Enum.find(preferred, fn shade ->
-           {_shade, ratio} = List.keyfind(ratios, shade, 0)
-           ratio >= target
-         end) do
-      nil ->
-        {best, _} = Enum.max_by(ratios, &elem(&1, 1))
-        best
+      backgrounds
+      |> Enum.map(&(Contrast.ratio(value, &1) || 0.0))
+      |> Enum.min()
+    end
 
-      step ->
-        step
+    case Enum.find(preferred, &(worst_ratio.(&1) >= target)) do
+      nil -> Enum.max_by(Palette.shade_keys(), worst_ratio)
+      step -> step
     end
   end
 

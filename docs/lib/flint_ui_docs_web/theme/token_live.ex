@@ -149,7 +149,10 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         text on a neutral or soft surface, and <code class="docs-code font-mono">-soft</code>
         and <code class="docs-code font-mono">-soft-border</code>
         are the tinted
-        pair.
+        pair. <code class="docs-code font-mono">-on-soft</code>
+        picks the most saturated shade that still clears AA on both the surface
+        ladder and the tinted soft fill, so it stays vivid instead of fading to
+        a pastel.
       </DocsComponents.content_paragraph>
       <div class="mt-4 overflow-x-auto">
         <table class="w-full min-w-lg text-left text-sm">

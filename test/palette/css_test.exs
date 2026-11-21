@@ -14,8 +14,8 @@ defmodule FlintUI.Palette.CSSTest do
     assert css =~ "--fl-color-red-on: oklch(100% 0 0);"
     assert css =~ "--fl-color-yellow-on: var(--fl-color-yellow-950);"
     assert css =~ "--fl-color-red-on-soft: light-dark("
-    assert css =~ "var(--fl-color-red-800)"
-    assert css =~ "var(--fl-color-red-300)"
+    assert css =~ "var(--fl-color-red-700)"
+    assert css =~ "var(--fl-color-red-400)"
     assert css =~ "--fl-color-red-soft: light-dark("
     assert css =~ "color-mix(in oklab, var(--fl-color-red) 12%"
     assert css =~ "--fl-color-red-soft-border: color-mix("
@@ -25,13 +25,25 @@ defmodule FlintUI.Palette.CSSTest do
     end
   end
 
+  test "on-soft stays as vivid as AA allows in each scheme" do
+    css = CSS.render_palette(Tailwind, default: true)
+
+    assert css =~
+             ~r/--fl-color-red-on-soft: light-dark\(\s*var\(--fl-color-red-700\),\s*var\(--fl-color-red-400\)\s*\);/
+
+    # Warm hues cannot clear AA at 700 on the light surface-strong tint, so
+    # only the light step backs off; the dark step stays at 400.
+    assert css =~
+             ~r/--fl-color-green-on-soft: light-dark\(\s*var\(--fl-color-green-800\),\s*var\(--fl-color-green-400\)\s*\);/
+  end
+
   test "derived tokens stay relative so a ramp remap follows" do
     css = CSS.render_palette(Tailwind, default: true)
 
     assert css =~ "--fl-color-pink: var(--fl-color-pink-600);"
     assert css =~ "--fl-color-pink-on: oklch(100% 0 0);"
-    assert css =~ "var(--fl-color-pink-800)"
-    assert css =~ "var(--fl-color-pink-300)"
+    assert css =~ "var(--fl-color-pink-700)"
+    assert css =~ "var(--fl-color-pink-400)"
     assert css =~ "color-mix(in oklab, var(--fl-color-pink)"
   end
 

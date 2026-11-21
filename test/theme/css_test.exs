@@ -228,25 +228,41 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "palette fills and text shades clear AA where used" do
     alias FlintUI.Palette
+    alias FlintUI.Palette.CSS
     alias FlintUI.Palette.Contrast
+
+    white = "oklch(100% 0 0)"
 
     for hue <- Palette.hues() do
       shades = FlintUI.Palette.default().module.shades(hue)
       core = Map.fetch!(shades, Palette.core_shade(hue))
       content = Map.fetch!(shades, 50)
-      light_text = Map.fetch!(shades, 800)
-      dark_text = Map.fetch!(shades, 300)
 
       assert Contrast.ratio(core, content) >= 4.5 or
-               Contrast.ratio(core, "oklch(100% 0 0)") >= 4.5 or
+               Contrast.ratio(core, white) >= 4.5 or
                Contrast.ratio(core, "oklch(0% 0 0)") >= 4.5,
              "#{hue} needs a readable label on its core fill"
 
-      assert Contrast.ratio(light_text, Map.fetch!(shades, 50)) >= 4.5,
-             "#{hue}-800 should read on the light page"
+      [_, light_step, dark_step] =
+        Regex.run(
+          ~r/--fl-color-#{hue}-on-soft: light-dark\(\s*var\(--fl-color-#{hue}-(\d+)\),\s*var\(--fl-color-#{hue}-(\d+)\)\s*\);/s,
+          CSS.hue_tokens(hue, shades)
+        )
 
-      assert Contrast.ratio(dark_text, Map.fetch!(shades, 900)) >= 4.5,
-             "#{hue}-300 should read on the dark surface"
+      light_text = Map.fetch!(shades, String.to_integer(light_step))
+      dark_text = Map.fetch!(shades, String.to_integer(dark_step))
+
+      assert Contrast.ratio(light_text, Contrast.light_surface_strong()) >= 4.5,
+             "#{hue}-#{light_step} should read on the light surface-strong tint"
+
+      assert Contrast.ratio(light_text, Contrast.mix(core, white, 0.12)) >= 4.5,
+             "#{hue}-#{light_step} should read on its soft fill"
+
+      assert Contrast.ratio(dark_text, Contrast.dark_background()) >= 4.5,
+             "#{hue}-#{dark_step} should read on the dark surface-strong tint"
+
+      assert Contrast.ratio(dark_text, Contrast.mix(core, Contrast.dark_surface(), 0.18)) >= 4.5,
+             "#{hue}-#{dark_step} should read on its soft fill"
     end
   end
 

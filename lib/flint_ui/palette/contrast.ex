@@ -5,9 +5,8 @@ defmodule FlintUI.Palette.Contrast do
   `FlintUI.Palette.CSS` uses these to derive accessible foreground/text shades
   from a palette scale instead of hardcoding them: the solid "on-fill" label is
   the shade with the highest contrast against the fill, and the "as text" alias
-  is the shade nearest the brand shade that still meets the AA ratio against the
-  surface it sits on (the white or dark surface, or the tinted subtle
-  surface derived from it).
+  is the most saturated shade that still meets the AA ratio against every
+  backdrop it can sit on (the surface ladder and the tinted soft fill).
 
   Colors are converted oklch → oklab → linear sRGB and scored with the WCAG 2.1
   relative-luminance formula.
@@ -17,13 +16,17 @@ defmodule FlintUI.Palette.Contrast do
   @aa 4.5
   @aaa 7.0
 
-  # Reference surfaces for role text: light is the pure surface (white); dark
-  # approximates `--fl-color-surface-strong`, the lightest dark backdrop a
-  # role text token sits on in outline/soft. Scoring against the darker pure
-  # surface would overstate contrast. Keep it >= the resolved dark
-  # `surface-strong` (4 dark surface steps over neutral-950).
+  # Reference surfaces for role text. Light text starts on white; dark text
+  # starts on the 5.5% `surface-strong` tint, the lightest dark backdrop a role
+  # text token sits on. Scoring against the lightest backdrop in each scheme is
+  # the strict case.
   @light_background "oklch(100% 0 none)"
-  @dark_background "oklch(23% 0 none)"
+  @dark_background "oklch(24.8% 0 none)"
+
+  # A tinted soft fill mixes over the surface anchor, not the strong tint:
+  # white in light, `gray-900` in dark. Keep these in step with `tokens.css`.
+  @light_surface_strong "oklch(95.3% 0 none)"
+  @dark_surface "oklch(20.5% 0 none)"
 
   @pattern ~r/^\s*oklch\(\s*([0-9.]+)(%?)\s+([0-9.]+|none)(?:\s+([0-9.]+|none))?\s*\)\s*$/
 
@@ -41,17 +44,31 @@ defmodule FlintUI.Palette.Contrast do
   def target(:aaa), do: @aaa
   def target(ratio) when is_number(ratio), do: ratio * 1.0
 
-  @doc "The light-mode surface the text alias is scored against."
+  @doc """
+  The light-mode surface anchor (white).
+
+  Raw colors model their tinted surface over this anchor.
+  """
   def light_background, do: @light_background
 
   @doc """
-  The dark-mode surface the text alias is scored against.
+  The dark-mode `surface-strong` tint: the lightest dark backdrop a label sits
+  on.
 
-  This approximates `--fl-color-surface-strong`, the lightest backdrop role
-  text sits on in outline, soft, and subtle. Scoring against the darker pure
-  surface would overstate contrast.
+  Raw-color tints and palette `-on-soft` shades are scored against it.
   """
   def dark_background, do: @dark_background
+
+  @doc "The light-mode `surface-strong` tint a colored label can sit on."
+  def light_surface_strong, do: @light_surface_strong
+
+  @doc """
+  The dark-mode surface anchor (`gray-900`).
+
+  A tinted soft fill mixes its hue over this anchor, so the `-on-soft` shade is
+  scored against the same base the CSS paints.
+  """
+  def dark_surface, do: @dark_surface
 
   @doc """
   The WCAG contrast ratio between two `oklch()` strings.

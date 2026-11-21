@@ -15,8 +15,8 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-color-primary: var(--fl-color-pink);
       --fl-color-primary-on: var(--fl-color-pink-on);
       --fl-color-primary-on-soft: light-dark(
-        var(--fl-color-pink-800),
-        var(--fl-color-pink-300)
+        var(--fl-color-pink-700),
+        var(--fl-color-pink-400)
       );
     }
     """
@@ -145,8 +145,8 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
     --fl-color-pink: var(--fl-color-pink-600);
     --fl-color-pink-on: oklch(100% 0 0);
     --fl-color-pink-on-soft: light-dark(
-      var(--fl-color-pink-800),
-      var(--fl-color-pink-300)
+      var(--fl-color-pink-700),
+      var(--fl-color-pink-400)
     );
     --fl-color-pink-soft: light-dark(
       color-mix(in oklab, var(--fl-color-pink) 12%, var(--fl-color-surface)),
