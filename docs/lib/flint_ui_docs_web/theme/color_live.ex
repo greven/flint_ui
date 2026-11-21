@@ -17,8 +17,20 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
      assign(socket,
        page_title: "Color",
        palettes: FlintUI.Palette.presets(),
-       swatches: hue_swatches(),
+       active_palette: "default",
+       swatches: hue_swatches(FlintUI.Palette.default().module),
        neutrals: neutral_swatches()
+     )}
+  end
+
+  @impl true
+  def handle_event("set-palette", %{"palette" => palette}, socket) do
+    {name, module} = palette_source(palette)
+
+    {:noreply,
+     assign(socket,
+       active_palette: name,
+       swatches: hue_swatches(module)
      )}
   end
 
@@ -26,7 +38,12 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} section={:guides} page={:theming_color}>
-      <div class="max-w-3xl">
+      <div
+        id="color-swatches"
+        phx-hook=".PaletteSync"
+        data-active-palette={@active_palette}
+        class="max-w-3xl"
+      >
         <DocsComponents.page_header
           title="Color"
           subtitle="Color has three layers: a palette of raw hues, semantic roles that point at those hues, and a color prop that selects either one."
@@ -47,6 +64,9 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
             on the <code class="docs-code font-mono">&lt;html&gt;</code>
             element. Palettes compose with themes and schemes: any theme, any
             palette, either scheme. Clearing the attribute selects the default.
+            <code class="docs-code font-mono">pastel</code>
+            picks its own lighter core shade, so the default fill changes with
+            the palette as well as the hue.
           </DocsComponents.content_paragraph>
 
           <DocsComponents.code_block code={Snippets.snippet(:palettes)} lang={:css} />
@@ -56,12 +76,12 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
             <.color_swatch :for={swatch <- @swatches} swatch={swatch} />
           </div>
           <DocsComponents.content_paragraph class="mt-3 text-xs">
-            Each swatch shows a hue's default fill — the shade its
+            Each swatch shows the active palette's default fill — the shade its
             <code class="docs-code font-mono">color</code>
-            prop resolves to; the default varies by hue so the label clears AA.
-            Hover or focus a shade in the scale below to preview it in the swatch
-            and read its number. Click a swatch to copy its CSS variable, for
-            example <code class="docs-code font-mono">var(--fl-color-rose)</code>
+            prop resolves to; the core varies by hue and palette so the label
+            clears AA. Hover or focus a shade in the scale below to preview it in
+            the swatch and read its number. Click a swatch to copy its CSS
+            variable, for example <code class="docs-code font-mono">var(--fl-color-rose)</code>
             or <code class="docs-code font-mono">var(--fl-color-rose-300)</code>.
           </DocsComponents.content_paragraph>
 
@@ -182,6 +202,36 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
           </div>
           <DocsComponents.code_block code={Snippets.snippet(:absolute)} lang={:css} />
         </DocsComponents.section>
+
+        <script :type={Phoenix.LiveView.ColocatedHook} name=".PaletteSync">
+          const preset = () => {
+            const value = document.documentElement.getAttribute("data-palette")
+            return !value || value === "tailwind" ? "default" : value
+          }
+
+          export default {
+            mounted() {
+              this.onSet = (event) => {
+                const palette = event.target.dataset.phxPalette
+                if (palette) this.pushEvent("set-palette", { palette })
+              }
+              window.addEventListener("phx:set-palette", this.onSet)
+              this.sync()
+            },
+            updated() {
+              this.sync()
+            },
+            destroyed() {
+              window.removeEventListener("phx:set-palette", this.onSet)
+            },
+            sync() {
+              const palette = preset()
+              if (palette !== this.el.dataset.activePalette) {
+                this.pushEvent("set-palette", { palette })
+              }
+            }
+          }
+        </script>
       </div>
     </Layouts.app>
     """
@@ -256,18 +306,16 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
     """
   end
 
-  defp hue_swatches do
-    default_palette = FlintUI.Palette.default()
-
+  defp hue_swatches(palette_module) do
     Enum.map(FlintUI.Palette.hues(), fn hue ->
-      shades = default_palette.module.shades(hue)
+      shades = palette_module.shades(hue)
       name = Atom.to_string(hue)
 
       %{
         id: name,
         name: name,
         badge: nil,
-        core: FlintUI.Palette.core_shade(hue),
+        core: FlintUI.Palette.core(palette_module, hue),
         fill: "var(--fl-color-#{name})",
         on: "var(--fl-color-#{name}-on)",
         copy_value: "var(--fl-color-#{name})",
@@ -288,6 +336,15 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
           end)
       }
     end)
+  end
+
+  defp palette_source("default"), do: {"default", FlintUI.Palette.default().module}
+
+  defp palette_source(name) do
+    case Enum.find(FlintUI.Palette.palettes(), &(Atom.to_string(&1.name) == name)) do
+      nil -> {"default", FlintUI.Palette.default().module}
+      palette -> {name, palette.module}
+    end
   end
 
   defp neutral_swatches do
@@ -323,9 +380,8 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
 
   # The label that stays readable on a fill. This mirrors the on-fill rule in
   # `FlintUI.Palette.CSS`: prefer a near-white or near-black ramp extreme when
-  # it clears AA, otherwise fall back to pure white or black. Every shipped
-  # palette keeps the Tailwind lightness ramp, so scoring the default palette
-  # still holds after a `data-palette` switch.
+  # it clears AA, otherwise fall back to pure white or black. The swatches are
+  # re-rendered for the active palette, so this scores that palette's own ramp.
   defp hue_label(hue, shades, shade) do
     case label(shades, shade) do
       {:ramp, key} -> "var(--fl-color-#{hue}-#{key})"
@@ -355,7 +411,7 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
     if ramp_ratio >= Contrast.aa(), do: {:ramp, ramp}, else: {:extreme, extreme}
   end
 
-  defp swatch_style(%{fill: fill, on: on, core: core, shades: shades}) do
+  defp swatch_style(%{fill: fill, on: on, shades: shades}) do
     previews =
       Enum.map_join(shades, "\n", fn %{key: key, fill: fill, on: on} ->
         "--_fl-swatch-#{key}-fill: #{fill};\n--_fl-swatch-#{key}-on: #{on};"
@@ -364,7 +420,6 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
     """
     --_fl-swatch-fill: #{fill};
     --_fl-swatch-on: #{on};
-    --_fl-swatch-label: '#{core}';
     #{previews}
     """
   end

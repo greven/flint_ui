@@ -171,6 +171,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
 
     # The default palette is the Tailwind source, listed once as "default".
     assert has_element?(view, "[data-phx-palette='default']")
+    assert has_element?(view, "[data-phx-palette='pastel']")
     refute has_element?(view, "[data-phx-palette='tailwind']")
 
     # Every hue gets a main swatch plus its full 50..950 scale.
@@ -179,6 +180,15 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "[data-color-swatch='rose'] [data-shade='950']")
     assert has_element?(view, "[data-color-swatch='amber'] [data-swatch-core]", "500")
     assert has_element?(view, "[data-color-swatch='green'] [data-swatch-core]", "700")
+
+    # Selecting a palette re-renders the swatches against that palette's ramps.
+    assert has_element?(view, "#color-swatches[data-active-palette='default']")
+
+    render_click(view, "set-palette", %{"palette" => "pastel"})
+
+    assert has_element?(view, "#color-swatches[data-active-palette='pastel']")
+    assert has_element?(view, "[data-color-swatch='amber'] [data-swatch-core]", "400")
+    assert has_element?(view, "[data-color-swatch='gray'] [data-swatch-core]", "600")
 
     # The neutral ramps sit under the hue grid as fixed Tailwind source ramps.
     assert has_element?(view, "#neutral-ramps")

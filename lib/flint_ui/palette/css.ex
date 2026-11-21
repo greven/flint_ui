@@ -4,7 +4,7 @@ defmodule FlintUI.Palette.CSS do
 
   Each hue emits its `50..950` ramp plus five derived tokens:
 
-    * `--fl-color-{hue}` — the core fill (see `FlintUI.Palette.core_shade/1`);
+    * `--fl-color-{hue}` — the core fill (see `FlintUI.Palette.core/2`);
     * `--fl-color-{hue}-on` — the label on that fill;
     * `--fl-color-{hue}-on-soft` — the most saturated AA shade for text on the
       page or a soft fill;
@@ -128,7 +128,12 @@ defmodule FlintUI.Palette.CSS do
     hues =
       source
       |> source_hues()
-      |> Enum.map_join("\n\n", &hue_tokens(&1, source.shades(&1), contrast: target))
+      |> Enum.map_join("\n\n", fn hue ->
+        hue_tokens(hue, source.shades(hue),
+          core: Palette.core(source, hue),
+          contrast: target
+        )
+      end)
 
     "#{selector(source, opts)} {\n#{indent(hues)}\n}\n"
   end

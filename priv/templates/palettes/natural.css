@@ -13,33 +13,47 @@
 
     --fl-color-red: var(--fl-color-red-600);
     --fl-color-red-on: oklch(100% 0 0);
-    --fl-color-red-on-soft: light-dark(var(--fl-color-red-700), var(--fl-color-red-400));
+    --fl-color-red-on-soft: light-dark(
+        var(--fl-color-red-700),
+        var(--fl-color-red-400)
+    );
     --fl-color-red-soft: light-dark(
         color-mix(in oklab, var(--fl-color-red) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-red) 18%, var(--fl-color-surface))
     );
-    --fl-color-red-soft-border: color-mix(in oklab, var(--fl-color-red) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-red-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-red) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
-    --fl-color-orange-50: oklch(98% 0.0088 73.684);
+    --fl-color-orange-50: oklch(98.0% 0.0088 73.684);
     --fl-color-orange-100: oklch(95.4% 0.0209 75.164);
     --fl-color-orange-200: oklch(90.1% 0.0418 70.697);
     --fl-color-orange-300: oklch(83.7% 0.0704 66.29);
-    --fl-color-orange-400: oklch(75% 0.1007 55.934);
+    --fl-color-orange-400: oklch(75.0% 0.1007 55.934);
     --fl-color-orange-500: oklch(70.5% 0.1172 47.604);
     --fl-color-orange-600: oklch(64.6% 0.1221 41.116);
     --fl-color-orange-700: oklch(55.3% 0.1073 38.402);
-    --fl-color-orange-800: oklch(47% 0.0864 37.304);
+    --fl-color-orange-800: oklch(47.0% 0.0864 37.304);
     --fl-color-orange-900: oklch(40.8% 0.0677 38.172);
     --fl-color-orange-950: oklch(26.6% 0.0435 36.259);
 
     --fl-color-orange: var(--fl-color-orange-600);
     --fl-color-orange-on: oklch(0% 0 0);
-    --fl-color-orange-on-soft: light-dark(var(--fl-color-orange-800), var(--fl-color-orange-400));
+    --fl-color-orange-on-soft: light-dark(
+        var(--fl-color-orange-800),
+        var(--fl-color-orange-400)
+    );
     --fl-color-orange-soft: light-dark(
         color-mix(in oklab, var(--fl-color-orange) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-orange) 18%, var(--fl-color-surface))
     );
-    --fl-color-orange-soft-border: color-mix(in oklab, var(--fl-color-orange) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-orange-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-orange) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-amber-50: oklch(98.7% 0.0121 95.277);
     --fl-color-amber-100: oklch(96.2% 0.0324 95.617);
@@ -55,12 +69,19 @@
 
     --fl-color-amber: var(--fl-color-amber-500);
     --fl-color-amber-on: var(--fl-color-amber-950);
-    --fl-color-amber-on-soft: light-dark(var(--fl-color-amber-800), var(--fl-color-amber-400));
+    --fl-color-amber-on-soft: light-dark(
+        var(--fl-color-amber-800),
+        var(--fl-color-amber-400)
+    );
     --fl-color-amber-soft: light-dark(
         color-mix(in oklab, var(--fl-color-amber) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-amber) 18%, var(--fl-color-surface))
     );
-    --fl-color-amber-soft-border: color-mix(in oklab, var(--fl-color-amber) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-amber-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-amber) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-yellow-50: oklch(98.7% 0.0143 102.212);
     --fl-color-yellow-100: oklch(97.3% 0.0391 103.193);
@@ -76,12 +97,19 @@
 
     --fl-color-yellow: var(--fl-color-yellow-500);
     --fl-color-yellow-on: var(--fl-color-yellow-950);
-    --fl-color-yellow-on-soft: light-dark(var(--fl-color-yellow-800), var(--fl-color-yellow-400));
+    --fl-color-yellow-on-soft: light-dark(
+        var(--fl-color-yellow-800),
+        var(--fl-color-yellow-400)
+    );
     --fl-color-yellow-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-yellow) 18%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-yellow) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-yellow) 18%, var(--fl-color-surface))
     );
-    --fl-color-yellow-soft-border: color-mix(in oklab, var(--fl-color-yellow) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-yellow-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-yellow) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-lime-50: oklch(98.6% 0.0171 120.757);
     --fl-color-lime-100: oklch(96.7% 0.0369 122.328);
@@ -97,12 +125,19 @@
 
     --fl-color-lime: var(--fl-color-lime-600);
     --fl-color-lime-on: var(--fl-color-lime-950);
-    --fl-color-lime-on-soft: light-dark(var(--fl-color-lime-800), var(--fl-color-lime-400));
+    --fl-color-lime-on-soft: light-dark(
+        var(--fl-color-lime-800),
+        var(--fl-color-lime-400)
+    );
     --fl-color-lime-soft: light-dark(
         color-mix(in oklab, var(--fl-color-lime) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-lime) 18%, var(--fl-color-surface))
     );
-    --fl-color-lime-soft-border: color-mix(in oklab, var(--fl-color-lime) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-lime-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-lime) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-green-50: oklch(98.2% 0.0099 155.826);
     --fl-color-green-100: oklch(96.2% 0.0242 156.743);
@@ -118,15 +153,22 @@
 
     --fl-color-green: var(--fl-color-green-700);
     --fl-color-green-on: var(--fl-color-green-50);
-    --fl-color-green-on-soft: light-dark(var(--fl-color-green-800), var(--fl-color-green-400));
+    --fl-color-green-on-soft: light-dark(
+        var(--fl-color-green-800),
+        var(--fl-color-green-400)
+    );
     --fl-color-green-soft: light-dark(
         color-mix(in oklab, var(--fl-color-green) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-green) 18%, var(--fl-color-surface))
     );
-    --fl-color-green-soft-border: color-mix(in oklab, var(--fl-color-green) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-green-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-green) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-emerald-50: oklch(97.9% 0.0116 166.113);
-    --fl-color-emerald-100: oklch(95% 0.0286 163.051);
+    --fl-color-emerald-100: oklch(95.0% 0.0286 163.051);
     --fl-color-emerald-200: oklch(90.5% 0.0512 164.15);
     --fl-color-emerald-300: oklch(84.5% 0.0786 164.978);
     --fl-color-emerald-400: oklch(76.5% 0.0974 163.223);
@@ -139,20 +181,27 @@
 
     --fl-color-emerald: var(--fl-color-emerald-700);
     --fl-color-emerald-on: var(--fl-color-emerald-50);
-    --fl-color-emerald-on-soft: light-dark(var(--fl-color-emerald-700), var(--fl-color-emerald-400));
+    --fl-color-emerald-on-soft: light-dark(
+        var(--fl-color-emerald-700),
+        var(--fl-color-emerald-400)
+    );
     --fl-color-emerald-soft: light-dark(
         color-mix(in oklab, var(--fl-color-emerald) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-emerald) 18%, var(--fl-color-surface))
     );
-    --fl-color-emerald-soft-border: color-mix(in oklab, var(--fl-color-emerald) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-emerald-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-emerald) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-teal-50: oklch(98.4% 0.0077 180.72);
     --fl-color-teal-100: oklch(95.3% 0.0281 180.801);
-    --fl-color-teal-200: oklch(91% 0.0528 180.426);
+    --fl-color-teal-200: oklch(91.0% 0.0528 180.426);
     --fl-color-teal-300: oklch(85.5% 0.0759 181.071);
     --fl-color-teal-400: oklch(77.7% 0.0836 181.912);
     --fl-color-teal-500: oklch(70.4% 0.077 182.503);
-    --fl-color-teal-600: oklch(60% 0.0649 184.704);
+    --fl-color-teal-600: oklch(60.0% 0.0649 184.704);
     --fl-color-teal-700: oklch(51.1% 0.0528 186.391);
     --fl-color-teal-800: oklch(43.7% 0.0429 188.216);
     --fl-color-teal-900: oklch(38.6% 0.0347 188.416);
@@ -160,12 +209,19 @@
 
     --fl-color-teal: var(--fl-color-teal-700);
     --fl-color-teal-on: var(--fl-color-teal-50);
-    --fl-color-teal-on-soft: light-dark(var(--fl-color-teal-700), var(--fl-color-teal-400));
+    --fl-color-teal-on-soft: light-dark(
+        var(--fl-color-teal-700),
+        var(--fl-color-teal-400)
+    );
     --fl-color-teal-soft: light-dark(
         color-mix(in oklab, var(--fl-color-teal) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-teal) 18%, var(--fl-color-surface))
     );
-    --fl-color-teal-soft-border: color-mix(in oklab, var(--fl-color-teal) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-teal-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-teal) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-cyan-50: oklch(98.4% 0.0105 200.873);
     --fl-color-cyan-100: oklch(95.6% 0.0248 203.388);
@@ -174,19 +230,26 @@
     --fl-color-cyan-400: oklch(78.9% 0.0847 211.53);
     --fl-color-cyan-500: oklch(71.5% 0.0786 215.221);
     --fl-color-cyan-600: oklch(60.9% 0.0693 221.723);
-    --fl-color-cyan-700: oklch(52% 0.0578 223.128);
-    --fl-color-cyan-800: oklch(45% 0.0468 224.283);
+    --fl-color-cyan-700: oklch(52.0% 0.0578 223.128);
+    --fl-color-cyan-800: oklch(45.0% 0.0468 224.283);
     --fl-color-cyan-900: oklch(39.8% 0.0385 227.392);
     --fl-color-cyan-950: oklch(30.2% 0.0308 229.695);
 
     --fl-color-cyan: var(--fl-color-cyan-700);
     --fl-color-cyan-on: var(--fl-color-cyan-50);
-    --fl-color-cyan-on-soft: light-dark(var(--fl-color-cyan-700), var(--fl-color-cyan-400));
+    --fl-color-cyan-on-soft: light-dark(
+        var(--fl-color-cyan-700),
+        var(--fl-color-cyan-400)
+    );
     --fl-color-cyan-soft: light-dark(
         color-mix(in oklab, var(--fl-color-cyan) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-cyan) 18%, var(--fl-color-surface))
     );
-    --fl-color-cyan-soft-border: color-mix(in oklab, var(--fl-color-cyan) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-cyan-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-cyan) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-sky-50: oklch(97.7% 0.0072 236.62);
     --fl-color-sky-100: oklch(95.1% 0.0143 236.824);
@@ -195,21 +258,28 @@
     --fl-color-sky-400: oklch(74.6% 0.088 232.661);
     --fl-color-sky-500: oklch(68.5% 0.093 237.323);
     --fl-color-sky-600: oklch(58.8% 0.0869 241.966);
-    --fl-color-sky-700: oklch(50% 0.0737 242.749);
+    --fl-color-sky-700: oklch(50.0% 0.0737 242.749);
     --fl-color-sky-800: oklch(44.3% 0.0605 240.79);
     --fl-color-sky-900: oklch(39.1% 0.0495 240.876);
     --fl-color-sky-950: oklch(29.3% 0.0363 243.157);
 
     --fl-color-sky: var(--fl-color-sky-700);
     --fl-color-sky-on: var(--fl-color-sky-50);
-    --fl-color-sky-on-soft: light-dark(var(--fl-color-sky-700), var(--fl-color-sky-400));
+    --fl-color-sky-on-soft: light-dark(
+        var(--fl-color-sky-700),
+        var(--fl-color-sky-400)
+    );
     --fl-color-sky-soft: light-dark(
         color-mix(in oklab, var(--fl-color-sky) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-sky) 18%, var(--fl-color-surface))
     );
-    --fl-color-sky-soft-border: color-mix(in oklab, var(--fl-color-sky) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-sky-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-sky) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
-    --fl-color-blue-50: oklch(97% 0.0077 254.604);
+    --fl-color-blue-50: oklch(97.0% 0.0077 254.604);
     --fl-color-blue-100: oklch(93.2% 0.0176 255.585);
     --fl-color-blue-200: oklch(88.2% 0.0324 254.128);
     --fl-color-blue-300: oklch(80.9% 0.0578 251.813);
@@ -223,16 +293,23 @@
 
     --fl-color-blue: var(--fl-color-blue-600);
     --fl-color-blue-on: var(--fl-color-blue-50);
-    --fl-color-blue-on-soft: light-dark(var(--fl-color-blue-700), var(--fl-color-blue-400));
+    --fl-color-blue-on-soft: light-dark(
+        var(--fl-color-blue-700),
+        var(--fl-color-blue-400)
+    );
     --fl-color-blue-soft: light-dark(
         color-mix(in oklab, var(--fl-color-blue) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-blue) 18%, var(--fl-color-surface))
     );
-    --fl-color-blue-soft-border: color-mix(in oklab, var(--fl-color-blue) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-blue-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-blue) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-indigo-50: oklch(96.2% 0.0099 272.314);
-    --fl-color-indigo-100: oklch(93% 0.0187 272.788);
-    --fl-color-indigo-200: oklch(87% 0.0358 274.039);
+    --fl-color-indigo-100: oklch(93.0% 0.0187 272.788);
+    --fl-color-indigo-200: oklch(87.0% 0.0358 274.039);
     --fl-color-indigo-300: oklch(78.5% 0.0633 274.713);
     --fl-color-indigo-400: oklch(67.3% 0.1001 276.935);
     --fl-color-indigo-500: oklch(58.5% 0.1282 277.117);
@@ -244,12 +321,19 @@
 
     --fl-color-indigo: var(--fl-color-indigo-600);
     --fl-color-indigo-on: var(--fl-color-indigo-50);
-    --fl-color-indigo-on-soft: light-dark(var(--fl-color-indigo-700), var(--fl-color-indigo-400));
+    --fl-color-indigo-on-soft: light-dark(
+        var(--fl-color-indigo-700),
+        var(--fl-color-indigo-400)
+    );
     --fl-color-indigo-soft: light-dark(
         color-mix(in oklab, var(--fl-color-indigo) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-indigo) 18%, var(--fl-color-surface))
     );
-    --fl-color-indigo-soft-border: color-mix(in oklab, var(--fl-color-indigo) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-indigo-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-indigo) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-violet-50: oklch(96.9% 0.0088 293.756);
     --fl-color-violet-100: oklch(94.3% 0.016 294.588);
@@ -260,17 +344,24 @@
     --fl-color-violet-600: oklch(54.1% 0.1546 293.009);
     --fl-color-violet-700: oklch(49.1% 0.1485 292.581);
     --fl-color-violet-800: oklch(43.2% 0.1276 292.759);
-    --fl-color-violet-900: oklch(38% 0.104 293.745);
+    --fl-color-violet-900: oklch(38.0% 0.104 293.745);
     --fl-color-violet-950: oklch(28.3% 0.0775 291.089);
 
     --fl-color-violet: var(--fl-color-violet-600);
     --fl-color-violet-on: var(--fl-color-violet-50);
-    --fl-color-violet-on-soft: light-dark(var(--fl-color-violet-700), var(--fl-color-violet-400));
+    --fl-color-violet-on-soft: light-dark(
+        var(--fl-color-violet-700),
+        var(--fl-color-violet-400)
+    );
     --fl-color-violet-soft: light-dark(
         color-mix(in oklab, var(--fl-color-violet) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-violet) 18%, var(--fl-color-surface))
     );
-    --fl-color-violet-soft-border: color-mix(in oklab, var(--fl-color-violet) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-violet-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-violet) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-purple-50: oklch(97.7% 0.0077 308.299);
     --fl-color-purple-100: oklch(94.6% 0.0182 307.174);
@@ -286,18 +377,25 @@
 
     --fl-color-purple: var(--fl-color-purple-600);
     --fl-color-purple-on: var(--fl-color-purple-50);
-    --fl-color-purple-on-soft: light-dark(var(--fl-color-purple-700), var(--fl-color-purple-400));
+    --fl-color-purple-on-soft: light-dark(
+        var(--fl-color-purple-700),
+        var(--fl-color-purple-400)
+    );
     --fl-color-purple-soft: light-dark(
         color-mix(in oklab, var(--fl-color-purple) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-purple) 18%, var(--fl-color-surface))
     );
-    --fl-color-purple-soft-border: color-mix(in oklab, var(--fl-color-purple) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-purple-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-purple) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-fuchsia-50: oklch(97.7% 0.0094 320.058);
     --fl-color-fuchsia-100: oklch(95.2% 0.0204 318.852);
     --fl-color-fuchsia-200: oklch(90.3% 0.0418 319.62);
     --fl-color-fuchsia-300: oklch(83.3% 0.0798 321.434);
-    --fl-color-fuchsia-400: oklch(74% 0.1309 322.16);
+    --fl-color-fuchsia-400: oklch(74.0% 0.1309 322.16);
     --fl-color-fuchsia-500: oklch(66.7% 0.1623 322.15);
     --fl-color-fuchsia-600: oklch(59.1% 0.1612 322.896);
     --fl-color-fuchsia-700: oklch(51.8% 0.1392 323.949);
@@ -307,12 +405,19 @@
 
     --fl-color-fuchsia: var(--fl-color-fuchsia-600);
     --fl-color-fuchsia-on: oklch(0% 0 0);
-    --fl-color-fuchsia-on-soft: light-dark(var(--fl-color-fuchsia-700), var(--fl-color-fuchsia-400));
+    --fl-color-fuchsia-on-soft: light-dark(
+        var(--fl-color-fuchsia-700),
+        var(--fl-color-fuchsia-400)
+    );
     --fl-color-fuchsia-soft: light-dark(
         color-mix(in oklab, var(--fl-color-fuchsia) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-fuchsia) 18%, var(--fl-color-surface))
     );
-    --fl-color-fuchsia-soft-border: color-mix(in oklab, var(--fl-color-fuchsia) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-fuchsia-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-fuchsia) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-pink-50: oklch(97.1% 0.0077 343.198);
     --fl-color-pink-100: oklch(94.8% 0.0154 342.258);
@@ -328,52 +433,73 @@
 
     --fl-color-pink: var(--fl-color-pink-600);
     --fl-color-pink-on: oklch(0% 0 0);
-    --fl-color-pink-on-soft: light-dark(var(--fl-color-pink-700), var(--fl-color-pink-400));
+    --fl-color-pink-on-soft: light-dark(
+        var(--fl-color-pink-700),
+        var(--fl-color-pink-400)
+    );
     --fl-color-pink-soft: light-dark(
         color-mix(in oklab, var(--fl-color-pink) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-pink) 18%, var(--fl-color-surface))
     );
-    --fl-color-pink-soft-border: color-mix(in oklab, var(--fl-color-pink) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-pink-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-pink) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
     --fl-color-rose-50: oklch(96.9% 0.0083 12.422);
     --fl-color-rose-100: oklch(94.1% 0.0165 12.58);
     --fl-color-rose-200: oklch(89.2% 0.0319 10.001);
-    --fl-color-rose-300: oklch(81% 0.0644 11.638);
+    --fl-color-rose-300: oklch(81.0% 0.0644 11.638);
     --fl-color-rose-400: oklch(71.2% 0.1067 13.428);
     --fl-color-rose-500: oklch(64.5% 0.1353 16.439);
     --fl-color-rose-600: oklch(58.6% 0.1392 17.585);
     --fl-color-rose-700: oklch(51.4% 0.1221 16.935);
     --fl-color-rose-800: oklch(45.5% 0.1034 13.697);
-    --fl-color-rose-900: oklch(41% 0.0875 10.272);
+    --fl-color-rose-900: oklch(41.0% 0.0875 10.272);
     --fl-color-rose-950: oklch(27.1% 0.0578 12.094);
 
     --fl-color-rose: var(--fl-color-rose-600);
     --fl-color-rose-on: oklch(0% 0 0);
-    --fl-color-rose-on-soft: light-dark(var(--fl-color-rose-700), var(--fl-color-rose-400));
+    --fl-color-rose-on-soft: light-dark(
+        var(--fl-color-rose-700),
+        var(--fl-color-rose-400)
+    );
     --fl-color-rose-soft: light-dark(
         color-mix(in oklab, var(--fl-color-rose) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-rose) 18%, var(--fl-color-surface))
     );
-    --fl-color-rose-soft-border: color-mix(in oklab, var(--fl-color-rose) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-rose-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-rose) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 
-    --fl-color-gray-50: oklch(98.5% 0.008 60);
-    --fl-color-gray-100: oklch(97% 0.008 60);
-    --fl-color-gray-200: oklch(92.2% 0.008 60);
-    --fl-color-gray-300: oklch(87% 0.008 60);
-    --fl-color-gray-400: oklch(70.8% 0.008 60);
-    --fl-color-gray-500: oklch(55.6% 0.008 60);
-    --fl-color-gray-600: oklch(43.9% 0.008 60);
-    --fl-color-gray-700: oklch(37.1% 0.008 60);
-    --fl-color-gray-800: oklch(26.9% 0.008 60);
-    --fl-color-gray-900: oklch(20.5% 0.008 60);
-    --fl-color-gray-950: oklch(14.5% 0.008 60);
+    --fl-color-gray-50: oklch(98.5% 0.008 60.0);
+    --fl-color-gray-100: oklch(97.0% 0.008 60.0);
+    --fl-color-gray-200: oklch(92.2% 0.008 60.0);
+    --fl-color-gray-300: oklch(87.0% 0.008 60.0);
+    --fl-color-gray-400: oklch(70.8% 0.008 60.0);
+    --fl-color-gray-500: oklch(55.6% 0.008 60.0);
+    --fl-color-gray-600: oklch(43.9% 0.008 60.0);
+    --fl-color-gray-700: oklch(37.1% 0.008 60.0);
+    --fl-color-gray-800: oklch(26.9% 0.008 60.0);
+    --fl-color-gray-900: oklch(20.5% 0.008 60.0);
+    --fl-color-gray-950: oklch(14.5% 0.008 60.0);
 
     --fl-color-gray: var(--fl-color-gray-600);
     --fl-color-gray-on: var(--fl-color-gray-50);
-    --fl-color-gray-on-soft: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-400));
+    --fl-color-gray-on-soft: light-dark(
+        var(--fl-color-gray-700),
+        var(--fl-color-gray-400)
+    );
     --fl-color-gray-soft: light-dark(
         color-mix(in oklab, var(--fl-color-gray) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-gray) 18%, var(--fl-color-surface))
     );
-    --fl-color-gray-soft-border: color-mix(in oklab, var(--fl-color-gray) var(--fl-border-strength-soft), var(--fl-color-surface));
+    --fl-color-gray-soft-border: color-mix(
+        in oklab,
+        var(--fl-color-gray) var(--fl-border-strength-soft),
+        var(--fl-color-surface)
+    );
 }

@@ -2,7 +2,7 @@ defmodule FlintUI.PaletteTest do
   use ExUnit.Case, async: true
 
   alias FlintUI.Palette
-  alias FlintUI.Palette.Tailwind
+  alias FlintUI.Palette.{Pastel, Tailwind}
 
   test "tailwind is the default palette" do
     assert Palette.default().name == :tailwind
@@ -45,8 +45,33 @@ defmodule FlintUI.PaletteTest do
     end
   end
 
+  test "a palette can override its core shade" do
+    assert Palette.core(Pastel, :blue) == 400
+    assert Palette.core(Pastel, :amber) == 400
+    assert Palette.core(Pastel, :gray) == Palette.core_shade(:gray)
+
+    assert Palette.core(Tailwind, :blue) == Palette.core_shade(:blue)
+    assert Palette.core(FlintUI.Palette.Natural, :blue) == Palette.core_shade(:blue)
+  end
+
+  test "pastel lifts chromatic ramps but keeps the gray lightness" do
+    tailwind_blue = Tailwind.shades(:blue)
+    pastel_blue = Pastel.shades(:blue)
+    tailwind_gray = Tailwind.shades(:gray)
+    pastel_gray = Pastel.shades(:gray)
+
+    {:ok, tailwind_mid} = FlintUI.Palette.Color.parse(tailwind_blue[400])
+    {:ok, pastel_mid} = FlintUI.Palette.Color.parse(pastel_blue[400])
+    {:ok, tailwind_dark} = FlintUI.Palette.Color.parse(tailwind_gray[950])
+    {:ok, pastel_dark} = FlintUI.Palette.Color.parse(pastel_gray[950])
+
+    assert pastel_mid.l > tailwind_mid.l
+    assert pastel_mid.c < tailwind_mid.c
+    assert_in_delta pastel_dark.l, tailwind_dark.l, 0.0001
+  end
+
   test "presets put the implicit default first and omit its source name" do
-    assert Palette.presets() == [:default, :natural, :bright]
+    assert Palette.presets() == [:default, :natural, :bright, :pastel]
     refute :tailwind in Palette.presets()
   end
 

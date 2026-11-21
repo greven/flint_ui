@@ -78,7 +78,7 @@
     --fl-color-yellow-on: var(--fl-color-yellow-950);
     --fl-color-yellow-on-soft: light-dark(var(--fl-color-yellow-800), var(--fl-color-yellow-400));
     --fl-color-yellow-soft: light-dark(
-        color-mix(in oklab, var(--fl-color-yellow) 18%, var(--fl-color-surface)),
+        color-mix(in oklab, var(--fl-color-yellow) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-yellow) 18%, var(--fl-color-surface))
     );
     --fl-color-yellow-soft-border: color-mix(in oklab, var(--fl-color-yellow) var(--fl-border-strength-soft), var(--fl-color-surface));

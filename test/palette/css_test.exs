@@ -2,7 +2,7 @@ defmodule FlintUI.Palette.CSSTest do
   use ExUnit.Case, async: true
 
   alias FlintUI.Palette
-  alias FlintUI.Palette.{CSS, Color, Contrast, Natural, Seed, Tailwind}
+  alias FlintUI.Palette.{CSS, Color, Contrast, Natural, Pastel, Seed, Tailwind}
 
   test "renders the eighteen hues and derived tokens under :root" do
     css = CSS.render_palette(Tailwind, default: true)
@@ -71,6 +71,15 @@ defmodule FlintUI.Palette.CSSTest do
     refute Natural.shades(:red)[600] == Tailwind.shades(:red)[600]
     assert css =~ "--fl-color-red: var(--fl-color-red-600);"
     assert css =~ "--fl-color-red-soft: light-dark("
+  end
+
+  test "a palette can choose its own core shade" do
+    css = CSS.render_palette(Pastel)
+
+    assert css =~ "--fl-color-blue: var(--fl-color-blue-400);"
+    assert css =~ "--fl-color-amber: var(--fl-color-amber-400);"
+    assert css =~ "--fl-color-gray: var(--fl-color-gray-600);"
+    assert css =~ "--fl-color-blue-on: var(--fl-color-blue-950);"
   end
 
   test "a stricter contrast target raises the text steps" do

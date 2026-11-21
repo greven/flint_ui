@@ -11,7 +11,10 @@ defmodule FlintUI.Palette do
   The eighteen hues are portable across palettes. The default palette mirrors
   the Tailwind CSS v4 colors, with `gray` sourced from Tailwind's neutral ramp
   so the chrome starts achromatic; override the `--fl-color-gray-*`
-  variables to use a warmer or cooler neutral.
+  variables to use a warmer or cooler neutral. Other palettes retune those
+  ramps, and a palette may choose its own core shade per hue, so `color="blue"`
+  can resolve to a lighter fill without changing the shared hue vocabulary.
+  FlintUI ships `tailwind` (the default), `natural`, `bright`, and `pastel`.
 
   Applications can add a hue name with `config :flint_ui, extra_hues: [:brand]`.
   The app supplies that hue's palette block and tone hooks; `FlintUI.Styled.Color`
@@ -71,7 +74,8 @@ defmodule FlintUI.Palette do
   @palettes [
     %{name: :tailwind, css: "palettes/tailwind.css", module: __MODULE__.Tailwind, default: true},
     %{name: :natural, css: "palettes/natural.css", module: __MODULE__.Natural},
-    %{name: :bright, css: "palettes/bright.css", module: __MODULE__.Bright}
+    %{name: :bright, css: "palettes/bright.css", module: __MODULE__.Bright},
+    %{name: :pastel, css: "palettes/pastel.css", module: __MODULE__.Pastel}
   ]
 
   @doc "The ordered shade keys every palette provides."
@@ -151,8 +155,7 @@ defmodule FlintUI.Palette do
 
   Light chromatic hues use a darker core so a light label clears AA; amber-like
   hues stay bright and take a dark label. A palette can override these choices
-  by wrapping its source, but the defaults keep `color="<hue>"` visually
-  consistent across palettes.
+  by implementing the optional `c:core/1` callback; `core/2` resolves it.
   """
   def core_shade(:orange), do: 600
   def core_shade(:amber), do: 500
@@ -164,6 +167,20 @@ defmodule FlintUI.Palette do
   def core_shade(:sky), do: 700
   def core_shade(_hue), do: 600
 
+  @doc """
+  The core shade for `hue` in `source`.
+
+  A palette may implement `c:core/1` to pick a different core per hue, as the
+  pastel palette does; otherwise this falls back to `core_shade/1`.
+  """
+  def core(source, hue) when is_atom(source) do
+    if Code.ensure_loaded?(source) and function_exported?(source, :core, 1) do
+      source.core(hue)
+    else
+      core_shade(hue)
+    end
+  end
+
   defp normalize_hue(hue) when is_atom(hue), do: normalize_hue(Atom.to_string(hue))
 
   defp normalize_hue(hue) when is_binary(hue) do
@@ -172,7 +189,12 @@ defmodule FlintUI.Palette do
 
   defp normalize_hue(_hue), do: nil
 
+  @type shade :: 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
+
   @callback name() :: atom()
   @callback colors() :: [atom()]
-  @callback shades(color :: atom()) :: %{optional(atom()) => String.t()}
+  @callback shades(color :: atom()) :: %{optional(shade()) => String.t()}
+  @callback core(color :: atom()) :: shade()
+
+  @optional_callbacks core: 1
 end

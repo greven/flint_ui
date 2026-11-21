@@ -153,7 +153,9 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   `50..950` scale plus five derived tokens: `--fl-color-{hue}` (core fill),
   `-on`, `-on-soft`, `-soft`, and `-soft-border`. Derived tokens reference the
   ramp, so remapping a hue's eleven shade variables updates its label, on-soft
-  text, and tints together. The `gray` ramp drives the chrome. Hue tokens live
+  text, and tints together. The `gray` ramp drives the chrome. The core fill
+  defaults from `Palette.core_shade/1`; a palette can override it per hue with
+  the optional `core/1` callback, as `pastel` does. Hue tokens live
   in the same `--fl-color-*` namespace as semantic tokens, but they are palette
   data: components normally read the role aliases and `--fl-tone*`, and may use
   a hue token directly when a semantic token is wrong for the job.

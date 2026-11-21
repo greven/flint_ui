@@ -7,7 +7,7 @@ defmodule FlintUI.Theme.ContrastTest do
   test "every palette hue has an AA label on its core fill" do
     for palette <- Palette.palettes(), hue <- Palette.hues() do
       shades = palette.module.shades(hue)
-      core = Map.fetch!(shades, Palette.core_shade(hue))
+      core = Map.fetch!(shades, Palette.core(palette.module, hue))
 
       candidates = [
         Map.fetch!(shades, 50),
@@ -32,7 +32,7 @@ defmodule FlintUI.Theme.ContrastTest do
     for palette <- Palette.palettes(), hue <- Palette.hues() do
       shades = palette.module.shades(hue)
       gray = palette.module.shades(:gray)
-      core = Map.fetch!(shades, Palette.core_shade(hue))
+      core = Map.fetch!(shades, Palette.core(palette.module, hue))
       light_ink = Map.fetch!(gray, 950)
       dark_base = Map.fetch!(gray, 900)
       dark_ink = Map.fetch!(gray, 50)
@@ -52,7 +52,7 @@ defmodule FlintUI.Theme.ContrastTest do
         Contrast.mix(core, dark_base, 0.18)
       ]
 
-      css = FlintUI.Palette.CSS.hue_tokens(hue, shades)
+      css = FlintUI.Palette.CSS.hue_tokens(hue, shades, core: Palette.core(palette.module, hue))
 
       [_, light_step, dark_step] =
         Regex.run(
