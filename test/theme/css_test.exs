@@ -111,14 +111,17 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "var(--fl-border-strength-solid)"
   end
 
-  test "the surface anchors the page and the fill ladder stays below the edges", %{css: css} do
-    assert css =~
-             "--fl-surface-ink: light-dark(var(--fl-color-gray-950), var(--fl-color-gray-50));"
-
-    assert css =~ "--fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-gray-900));"
+  test "the surface base anchors the page and the fill ladder stays below the edges", %{css: css} do
+    assert css =~ "--fl-surface-base: var(--fl-color-gray-950);"
 
     assert css =~
-             "--fl-color-background: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));"
+             ~r/--fl-surface-ink: light-dark\(\s*var\(--fl-surface-base\),\s*color-mix\(in oklab, oklch\(1 0 0\) 98\.25%, var\(--fl-surface-base\)\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-surface: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) 99\.5%, var\(--fl-surface-base\)\),\s*color-mix\(in oklab, oklch\(1 0 0\) 7%, var\(--fl-surface-base\)\)\s*\)/
+
+    assert css =~
+             ~r/--fl-color-background: light-dark\(\s*color-mix\(in oklab, oklch\(1 0 0\) 98\.25%, var\(--fl-surface-base\)\),\s*var\(--fl-surface-base\)\s*\)/
 
     for {name, percent} <- [
           {"surface-subtle", "3%"},
@@ -131,7 +134,8 @@ defmodule FlintUI.Theme.CSSTest do
                ~r/--fl-color-#{name}: color-mix\(in oklab, var\(--fl-surface-ink\) #{percent}, var\(--fl-color-surface\)\)/
     end
 
-    assert css =~ "--fl-color-surface-raised: light-dark("
+    assert css =~
+             ~r/--fl-color-surface-raised: light-dark\(\s*oklch\(1 0 0\),\s*color-mix\(in oklab, oklch\(1 0 0\) 12%, var\(--fl-surface-base\)\)\s*\)/
 
     refute css =~ "--fl-surface-step"
     refute css =~ "--fl-color-control:"

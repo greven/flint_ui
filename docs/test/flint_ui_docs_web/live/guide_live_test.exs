@@ -222,11 +222,13 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
 
     assert has_element?(view, "#tokens")
     assert has_element?(view, "#color-instance")
+    assert has_element?(view, "#chrome")
     assert has_element?(view, "#remapping-a-hue")
     assert has_element?(view, "#role-remap")
     assert has_element?(view, "#custom-hues")
 
     html = render(view)
+    assert html =~ "--fl-surface-base"
     assert html =~ "mix flint.palette"
     assert html =~ "color-rose"
   end

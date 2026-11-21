@@ -252,19 +252,24 @@
     --fl-color-light-soft: var(--fl-color-neutral-soft);
     --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
 
-    /* Chrome surfaces. `surface` is the anchor: white in light and gray-900 in dark.
-     * The page sits one step away from it (gray-50 / gray-950); tonal fills are a tint of the
-     * opposite ink over the surface. The ladder is ordered so a fill never reaches the quietest edge:
-     * subtle 3% < strong 5.5% < border-subtle 7% < border 10% < strong 18%.
-     * `surface-raised` lifts an overlay above a card; it is the same as the
-     * surface in light, where white is already the top of the scale. */
-    --fl-surface-ink: light-dark(var(--fl-color-gray-950), var(--fl-color-gray-50));
+    /* Chrome surfaces. `--fl-surface-base` is the single chrome anchor: the
+     * darkest ink every surface and tint is built from. It defaults to the
+     * palette's gray-950, so remapping the gray ramp retints the page,
+     * surfaces, tints, and edges together. Background, surface, and raised are
+     * white mixes of that ink, so each step up the ramp is brighter in both
+     * schemes. Tonal fills and edges remain a tint of `--fl-surface-ink` over
+     * the surface. */
+    --fl-surface-base: var(--fl-color-gray-950);
+    --fl-surface-ink: light-dark(var(--fl-surface-base), color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)));
 
-    --fl-color-surface: light-dark(oklch(1 0 0), var(--fl-color-gray-900));
-    --fl-color-background: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));
+    --fl-color-background: light-dark(color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)), var(--fl-surface-base));
+    --fl-color-surface: light-dark(
+        color-mix(in oklab, oklch(1 0 0) 99.5%, var(--fl-surface-base)),
+        color-mix(in oklab, oklch(1 0 0) 7%, var(--fl-surface-base))
+    );
     --fl-color-surface-subtle: color-mix(in oklab, var(--fl-surface-ink) 3%, var(--fl-color-surface));
-    --fl-color-surface-strong: color-mix(in oklab, var(--fl-surface-ink) 5.5%, var(--fl-color-surface));
-    --fl-color-surface-raised: light-dark(oklch(1 0 0), color-mix(in oklab, var(--fl-surface-ink) 5%, var(--fl-color-surface)));
+    --fl-color-surface-strong: color-mix(in oklab, var(--fl-surface-ink) 6%, var(--fl-color-surface));
+    --fl-color-surface-raised: light-dark(oklch(1 0 0), color-mix(in oklab, oklch(1 0 0) 12%, var(--fl-surface-base)));
 
     --fl-color-inverted: light-dark(var(--fl-color-gray-900), oklch(1 0 0));
 

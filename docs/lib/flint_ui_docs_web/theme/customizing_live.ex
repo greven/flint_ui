@@ -48,6 +48,22 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
           </DocsComponents.content_paragraph>
         </DocsComponents.section>
 
+        <DocsComponents.section title="Retune the chrome" id="chrome">
+          <DocsComponents.content_paragraph class="mt-3">
+            <code class="docs-code font-mono">--fl-surface-base</code>
+            is the single chrome anchor. Background, surface, and raised are
+            white mixes of it, so changing this one token moves the whole ramp
+            while keeping each step brighter. It defaults to <code class="docs-code font-mono">gray-950</code>, so remapping the
+            gray hue still retints everything.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={Snippets.snippet(:chrome_base)} lang={:css} />
+          <DocsComponents.content_paragraph class="mt-3">
+            A darker base — even black — makes a near-black dark page and a
+            faintly tinted light page. A lighter base lifts the dark page.
+            Surfaces always stay a step brighter than the page.
+          </DocsComponents.content_paragraph>
+        </DocsComponents.section>
+
         <DocsComponents.section title="Remap a hue" id="remapping-a-hue">
           <DocsComponents.content_paragraph class="mt-3">
             Each palette hue is eleven shade variables plus five derived tokens.
@@ -61,8 +77,9 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
           <DocsComponents.code_block code={Snippets.snippet(:palette_css)} lang={:css} />
           <DocsComponents.content_paragraph class="mt-3">
             The palette's <code class="docs-code font-mono">gray</code>
-            hue drives the whole chrome: page, cards, text tiers, borders, and the
-            secondary role. Remap it to warm or cool every surface at once.
+            hue drives the whole chrome through <code class="docs-code font-mono">--fl-surface-base</code>:
+            page, cards, tints, text tiers, borders, and the secondary role.
+            Remap it to warm or cool every surface at once.
           </DocsComponents.content_paragraph>
           <DocsComponents.code_block code={Snippets.snippet(:neutral_palette)} lang={:css} />
         </DocsComponents.section>

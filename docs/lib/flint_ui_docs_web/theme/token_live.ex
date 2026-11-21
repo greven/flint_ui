@@ -517,19 +517,25 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     ~H"""
     <DocsComponents.section title="Chrome ladder" id="ladder">
       <DocsComponents.content_paragraph class="mt-3">
-        <code class="docs-code font-mono">surface</code>
-        is the anchor: white in light and <code class="docs-code font-mono">gray-900</code>
-        in dark. The page sits one step away from it, <code class="docs-code font-mono">gray-50</code>
-        in light and <code class="docs-code font-mono">gray-950</code>
-        in dark, so a card is lighter than the page in both schemes.
+        <code class="docs-code font-mono">--fl-surface-base</code>
+        is the single chrome anchor: the darkest ink every surface is built
+        from. It defaults to <code class="docs-code font-mono">gray-950</code>, so
+        remapping the gray ramp retints the page, surfaces, tints, and edges
+        together. Background, surface, and raised are white mixes of that ink,
+        so each step up the ramp is brighter in both schemes.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
         Tonal fills are a tint of <code class="docs-code font-mono">--fl-surface-ink</code>
         over the surface: <code class="docs-code font-mono">surface-subtle</code>
         at 3% and <code class="docs-code font-mono">surface-strong</code>
         at 5.5%. <code class="docs-code font-mono">surface-raised</code>
-        lifts overlays above a card. It equals the surface in light, where
-        white is already the top, and adds one step in dark.
+        lifts overlays above a card. It is white in light, where white is already
+        the top, and a 12% white mix of the base in dark.
+      </DocsComponents.content_paragraph>
+      <DocsComponents.content_paragraph class="mt-3">
+        Set <code class="docs-code font-mono">--fl-surface-base</code>
+        to move the whole ramp: a darker value darkens the dark page and tints
+        the light page, while the surfaces stay a step brighter.
       </DocsComponents.content_paragraph>
       <DocsComponents.content_paragraph class="mt-3">
         The chrome ladder is ordered: subtle (3%) &lt; strong (5.5%) &lt;

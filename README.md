@@ -89,19 +89,18 @@ for headings, `text` for body, `text-toned` for secondary copy, `text-muted` for
 meta, and `text-dimmed` for placeholders. `text-dimmed` is below AA by design;
 do not use it for readable content.
 
-Neutral chrome is anchored on the pure `surface`: white in light and
-`neutral-950` in dark. The page (`background`) is a one-step tint toward the
-opposite neutral extreme, `surface-subtle` is two steps, and `surface-strong`
-is four. Each scheme sets its own step: `--fl-surface-step` defaults to 1.75%
-(a 1.75/3.5/7% ladder) and `--fl-surface-step-dark` to 2.5% (2.5/5/10%), because
-the same oklab step buys less contrast separation against a near-black anchor.
-Raising either step strengthens every surface in that scheme together. The tint
-order is the same in both schemes, so the page is never pure and a card is
-never the page color. Chrome fills and edges name the amount of tint (`subtle` /
-default /
-`strong`), while ink names loudness (`text-muted` and friends): a surface only
-ever moves away from the pure anchor, so `bg-subtle` / `bg-strong` and
-`border-subtle` / `border-strong` read as amounts, not ranks against the page.
+Neutral chrome is built from one anchor, `--fl-surface-base` (the darkest
+ink, default `gray-950`). The page (`background`), `surface`, and
+`surface-raised` are white mixes of that ink, so each step up is brighter in
+both schemes. Tonal fills then tint toward `--fl-surface-ink` over the surface:
+`surface-subtle` at 3% and `surface-strong` at 5.5%, followed by
+`border-subtle` 7%, `border` 10%, and `border-strong` 18%. The order is
+intentional: a fill never reaches the quietest edge, so an edge never sinks into
+the panel it bounds. Remapping the gray ramp retints the whole chrome through
+`--fl-surface-base`; override the base alone to make the dark page darker or
+lighter while the surfaces stay a step brighter. Chrome fills and edges name the
+amount of tint (`subtle` / default / `strong`), while ink names loudness
+(`text-muted` and friends).
 
 To retint a hue, remap its ramp in `app.css`. Every role that aliases the hue
 follows, and the derived `-on` and `-on-soft` tokens update with the ramp. With

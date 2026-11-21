@@ -109,6 +109,29 @@ defmodule FlintUI.Theme.ContrastTest do
     assert Contrast.ratio(gray[500], gray[950]) < Contrast.aa()
   end
 
+  test "chrome surfaces brighten from the page to the raised layer" do
+    white = "oklch(100% 0 0)"
+    base = Tailwind.shades(:gray)[950]
+
+    # Mirrors the white mixes in `tokens.css`. One base, one ramp per scheme.
+    light = [
+      Contrast.mix(base, white, 0.0175),
+      Contrast.mix(base, white, 0.005),
+      white
+    ]
+
+    dark = [
+      base,
+      Contrast.mix(base, white, 0.93),
+      Contrast.mix(base, white, 0.88)
+    ]
+
+    for [page, surface, raised] <- [light, dark] do
+      assert Contrast.luminance(page) < Contrast.luminance(surface)
+      assert Contrast.luminance(surface) < Contrast.luminance(raised)
+    end
+  end
+
   test "solid neutral keeps a high-contrast label in both schemes" do
     gray = Tailwind.shades(:gray)
     white = "oklch(100% 0 none)"

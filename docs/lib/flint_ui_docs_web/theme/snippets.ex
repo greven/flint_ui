@@ -25,17 +25,28 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
   def snippet(:surfaces) do
     """
     :root {
+      /* One chrome anchor: the darkest ink every surface is built from. */
+      --fl-surface-base: var(--fl-color-gray-950);
+
       --fl-surface-ink: light-dark(
-        var(--fl-color-gray-950),
-        var(--fl-color-gray-50)
+        var(--fl-surface-base),
+        color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base))
       );
 
-      --fl-color-surface: light-dark(white, var(--fl-color-gray-900));
       --fl-color-background: light-dark(
-        var(--fl-color-gray-50),
-        var(--fl-color-gray-950)
+        color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)),
+        var(--fl-surface-base)
+      );
+      --fl-color-surface: light-dark(
+        color-mix(in oklab, oklch(1 0 0) 99.5%, var(--fl-surface-base)),
+        color-mix(in oklab, oklch(1 0 0) 7%, var(--fl-surface-base))
+      );
+      --fl-color-surface-raised: light-dark(
+        oklch(1 0 0),
+        color-mix(in oklab, oklch(1 0 0) 12%, var(--fl-surface-base))
       );
 
+      /* Tonal fills tint toward the surface ink. */
       --fl-color-surface-subtle: color-mix(
         in oklab,
         var(--fl-surface-ink) 3%,
@@ -46,13 +57,20 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
         var(--fl-surface-ink) 5.5%,
         var(--fl-color-surface)
       );
-      --fl-color-surface-raised: light-dark(
-        white,
-        color-mix(in oklab, var(--fl-surface-ink) 5%, var(--fl-color-surface))
-      );
 
       --fl-disabled-opacity: 0.5;
       --fl-tint-opacity: 0.9;
+    }
+    """
+  end
+
+  def snippet(:chrome_base) do
+    """
+    /* assets/css/app.css, after the flint.css import. */
+    :root {
+      /* The single chrome anchor. A darker value darkens the dark page and
+       * tints the light page; surfaces always stay a step brighter. */
+      --fl-surface-base: var(--fl-color-gray-950);
     }
     """
   end

@@ -179,19 +179,20 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   placeholders and decoration. `text-dimmed` is below AA on purpose; never use
   it for readable content or interactive labels. On the full toned fill, prefer
   `text-toned` over `text-muted`.
-- **Chrome ladders share one ordered scale.** `surface` is the anchor: white in
-  light and `gray-900` in dark. The page sits one step away from it, `gray-50`
-  in light and `gray-950` in dark, so a card is lighter than the page in both
-  schemes. Tonal fills and edges are a tint of `--fl-surface-ink` over
-  `surface`: `surface-subtle` 3%, `surface-strong` 5.5%, `border-subtle` 7%,
-  `border` 10%, and `border-strong` 18%. The order is intentional: a fill must
-  stay below the quietest edge, or an edge sinks into the panel it bounds.
-  `surface-raised` lifts overlays above a card; it equals the surface in light,
-  where white is already the top, and adds one step in dark. Chrome fills and
-  edges name the amount of tint, not loudness, because every rung sits above
-  the pure anchor. `muted` belongs to ink only (`text-muted`). Opaque bordered
-  controls paint `surface`, so attached-group seams stay single. Never use
-  `subtle` for a strong fill.
+- **Chrome ladders share one ordered scale.** `--fl-surface-base` is the single
+  chrome anchor: the darkest ink the page, surfaces, and tints are built from.
+  It defaults to `gray-950`, so remapping the gray ramp retints the whole
+  chrome. `background`, `surface`, and `surface-raised` are white mixes of that
+  ink, so each step up the ramp is brighter in both schemes. Tonal fills and
+  edges are a tint of `--fl-surface-ink` over `surface`: `surface-subtle` 3%,
+  `surface-strong` 5.5%, `border-subtle` 7%, `border` 10%, and
+  `border-strong` 18%. The order is intentional: a fill must stay below the
+  quietest edge, or an edge sinks into the panel it bounds. `surface-raised`
+  lifts overlays above a card; it is white in light, where white is already the
+  top, and a 12% white mix in dark. Chrome fills and edges name the amount of
+  tint, not loudness, because every rung sits above the pure anchor. `muted`
+  belongs to ink only (`text-muted`). Opaque bordered controls paint `surface`,
+  so attached-group seams stay single. Never use `subtle` for a strong fill.
 - **Neutral is inverted; surfaces are neutral.** `color="neutral"` is the plain
   black/white inverted surface, not the neutral hue ramp. Components that take
   no color (Card) use neutral surface tokens, never a hue.
