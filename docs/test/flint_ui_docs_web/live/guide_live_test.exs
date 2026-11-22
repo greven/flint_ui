@@ -245,6 +245,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#composing")
     assert has_element?(view, "#component-animations")
     assert render(view) =~ "@keyframes fl-pop-in"
+    assert render(view) =~ "@keyframes fl-shake"
     assert has_element?(view, "a[href='/components/indicator']")
   end
 

@@ -525,6 +525,16 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-motion-pop-scale: 0.97;
     }
 
+    /* One pair covers every side: move the offset, not the keyframe. */
+    .panel[data-side="top"] {
+      --fl-motion-slide-from: 0 -1rem;
+    }
+
+    /* One-shot attention. Let the state carry the message afterwards. */
+    .field[data-invalid] {
+      animation: fl-shake 500ms var(--fl-ease-in-out);
+    }
+
     /* Looping animations set their own duration. */
     .status-dot {
       animation: fl-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;

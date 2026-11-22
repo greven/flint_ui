@@ -108,6 +108,14 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
      "--fl-motion-pop-scale, --fl-motion-pop-translate"},
     {"fl-pop-out", "Fade and scale out to a small offset",
      "--fl-motion-pop-scale, --fl-motion-pop-translate"},
+    {"fl-slide-in", "Fade and slide in from an offset", "--fl-motion-slide-from"},
+    {"fl-slide-out", "Fade and slide out to an offset", "--fl-motion-slide-from"},
+    {"fl-rotate-in", "Fade, rotate, and scale in",
+     "--fl-motion-rotate-from, --fl-motion-rotate-scale"},
+    {"fl-rotate-out", "Fade, rotate, and scale out",
+     "--fl-motion-rotate-from, --fl-motion-rotate-scale"},
+    {"fl-shake", "Quick horizontal shake", "--fl-motion-shake-distance"},
+    {"fl-flash", "Two quick opacity flashes", "--fl-motion-flash-opacity"},
     {"fl-spin", "Rotate one full turn", "—"},
     {"fl-ping", "Scale up and fade out", "—"},
     {"fl-pulse", "Fade to half opacity and back", "—"},
@@ -116,15 +124,21 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
   ]
 
   @animation_demos [
-    {"Fade in", "fl-fade-in", "motion-demo-fade-in", true},
-    {"Fade out", "fl-fade-out", "motion-demo-fade-out", true},
-    {"Pop in", "fl-pop-in", "motion-demo-pop-in", true},
-    {"Pop out", "fl-pop-out", "motion-demo-pop-out", true},
-    {"Spin", "fl-spin", "motion-demo-spin", false},
-    {"Ping", "fl-ping", "motion-demo-ping", false},
-    {"Pulse", "fl-pulse", "motion-demo-pulse", false},
-    {"Bounce", "fl-bounce", "motion-demo-bounce", false},
-    {"Heartbeat", "fl-heartbeat", "motion-demo-heartbeat", false}
+    {"Fade in", "fl-fade-in", :enter},
+    {"Fade out", "fl-fade-out", :exit},
+    {"Pop in", "fl-pop-in", :enter},
+    {"Pop out", "fl-pop-out", :exit},
+    {"Slide in", "fl-slide-in", :enter},
+    {"Slide out", "fl-slide-out", :exit},
+    {"Rotate in", "fl-rotate-in", :enter},
+    {"Rotate out", "fl-rotate-out", :exit},
+    {"Shake", "fl-shake", :attention},
+    {"Flash", "fl-flash", :attention},
+    {"Spin", "fl-spin", :loop},
+    {"Ping", "fl-ping", :loop},
+    {"Pulse", "fl-pulse", :loop},
+    {"Bounce", "fl-bounce", :loop},
+    {"Heartbeat", "fl-heartbeat", :loop}
   ]
 
   @component_animations [
@@ -937,7 +951,9 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
       </div>
       <div class="mt-4 grid gap-3 sm:grid-cols-3">
         <div
-          :for={{label, keyframe, class, replay} <- @animation_demos}
+          :for={{label, keyframe, kind} <- @animation_demos}
+          id={"motion-demo-" <> keyframe}
+          phx-hook=".MotionDemo"
           class="motion-demo rounded-lg border border-default bg-surface p-4"
         >
           <div class="flex items-center justify-between gap-2">
@@ -945,14 +961,59 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
             <code class="docs-code font-mono text-[0.65rem]">{keyframe}</code>
           </div>
           <div class="mt-4 grid h-14 place-items-center overflow-hidden">
-            <div class={["size-5 rounded-md bg-inverted", class]} />
+            <div
+              class="size-5 rounded-md bg-inverted"
+              data-motion-target
+              data-motion-anim={keyframe}
+              data-motion-initial={if kind == :enter, do: "hidden"}
+              data-motion-loop={if kind == :loop, do: keyframe}
+            />
           </div>
-          <p class="mt-2 text-xs text-muted">
-            {if replay, do: "Hover to replay", else: "Loops continuously"}
-          </p>
+          <div class="mt-2 flex min-h-7 items-center justify-between gap-2">
+            <p class="text-xs text-muted">{motion_caption(kind)}</p>
+            <button
+              :if={kind != :loop}
+              type="button"
+              data-motion-play
+              class="rounded-md border border-default px-2 py-1 text-xs font-medium text-toned transition-colors hover:bg-subtle hover:text-highlighted"
+            >
+              Play
+            </button>
+          </div>
         </div>
       </div>
+      <DocsComponents.content_paragraph class="mt-3">
+        Press <strong>Play</strong> on a one-shot animation to see it. Entrance
+        demos start hidden and reset after playing, so every press is a fresh
+        entrance; exit demos start visible and reset to visible. The looping
+        keyframes run continuously.
+      </DocsComponents.content_paragraph>
     </DocsComponents.section>
+
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".MotionDemo">
+      export default {
+        mounted() {
+          const target = this.el.querySelector("[data-motion-target]");
+          const play = this.el.querySelector("[data-motion-play]");
+          let resetTimer;
+
+          play?.addEventListener("click", () => {
+            clearTimeout(resetTimer);
+            target.removeAttribute("data-motion-playing");
+            void target.offsetWidth;
+            target.setAttribute("data-motion-playing", "");
+          });
+
+          target?.addEventListener("animationend", () => {
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(
+              () => target.removeAttribute("data-motion-playing"),
+              700,
+            );
+          });
+        },
+      };
+    </script>
 
     <DocsComponents.section title="Composing" id="composing">
       <DocsComponents.content_paragraph class="mt-3">
@@ -969,6 +1030,10 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         with <code class="docs-code font-mono">cubic-bezier(0.4, 0, 0.6, 1)</code>, and
         <code class="docs-code font-mono">bounce</code>
         is <code class="docs-code font-mono">1s</code>.
+        <code class="docs-code font-mono">fl-shake</code>
+        and <code class="docs-code font-mono">fl-flash</code>
+        are one-shot attention cues: run them once for a failed submit or a
+        saved confirmation, and never loop them.
       </DocsComponents.content_paragraph>
       <DocsComponents.code_block code={Snippets.snippet(:animations)} lang={:css} />
     </DocsComponents.section>
@@ -1011,4 +1076,9 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     </DocsComponents.section>
     """
   end
+
+  defp motion_caption(:enter), do: "Plays once, then resets"
+  defp motion_caption(:exit), do: "Plays once, then resets"
+  defp motion_caption(:attention), do: "One-shot"
+  defp motion_caption(:loop), do: "Loops continuously"
 end

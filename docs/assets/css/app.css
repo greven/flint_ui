@@ -534,43 +534,71 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
     }
 }
 
-/* Motion demos on the Animations token page. Enter and exit demos replay on
-   hover so the keyframes restart; loop demos run continuously. The whole block
-   is omitted under reduced motion. */
+/* Motion demos on the Animations token page. One-shot animations wait for the
+   Play button, which sets `data-motion-playing`; the loop keyframes run
+   continuously. The whole block is omitted under reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-    .motion-demo:hover .motion-demo-fade-in {
-        animation: fl-fade-in 600ms var(--fl-ease-out) both;
+    [data-motion-initial="hidden"] {
+        opacity: 0;
     }
 
-    .motion-demo:hover .motion-demo-fade-out {
-        animation: fl-fade-out 600ms var(--fl-ease-in-out) both;
+    [data-motion-playing][data-motion-anim="fl-fade-in"] {
+        animation: fl-fade-in 900ms var(--fl-ease-out) both;
     }
 
-    .motion-demo:hover .motion-demo-pop-in {
-        animation: fl-pop-in 600ms var(--fl-ease-out) both;
+    [data-motion-playing][data-motion-anim="fl-fade-out"] {
+        animation: fl-fade-out 900ms var(--fl-ease-in-out) both;
     }
 
-    .motion-demo:hover .motion-demo-pop-out {
-        animation: fl-pop-out 600ms var(--fl-ease-in-out) both;
+    [data-motion-playing][data-motion-anim="fl-pop-in"] {
+        animation: fl-pop-in 900ms var(--fl-ease-out) both;
     }
 
-    .motion-demo-spin {
+    [data-motion-playing][data-motion-anim="fl-pop-out"] {
+        animation: fl-pop-out 900ms var(--fl-ease-in-out) both;
+    }
+
+    [data-motion-playing][data-motion-anim="fl-slide-in"] {
+        animation: fl-slide-in 900ms var(--fl-ease-out) both;
+    }
+
+    [data-motion-playing][data-motion-anim="fl-slide-out"] {
+        animation: fl-slide-out 900ms var(--fl-ease-in-out) both;
+    }
+
+    [data-motion-playing][data-motion-anim="fl-rotate-in"] {
+        animation: fl-rotate-in 900ms var(--fl-ease-out) both;
+    }
+
+    [data-motion-playing][data-motion-anim="fl-rotate-out"] {
+        animation: fl-rotate-out 900ms var(--fl-ease-in-out) both;
+    }
+
+    [data-motion-playing][data-motion-anim="fl-shake"] {
+        animation: fl-shake 600ms var(--fl-ease-in-out);
+    }
+
+    [data-motion-playing][data-motion-anim="fl-flash"] {
+        animation: fl-flash 900ms var(--fl-ease-in-out);
+    }
+
+    [data-motion-loop="fl-spin"] {
         animation: fl-spin 1s linear infinite;
     }
 
-    .motion-demo-ping {
+    [data-motion-loop="fl-ping"] {
         animation: fl-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
     }
 
-    .motion-demo-pulse {
+    [data-motion-loop="fl-pulse"] {
         animation: fl-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
-    .motion-demo-bounce {
+    [data-motion-loop="fl-bounce"] {
         animation: fl-bounce 1s infinite;
     }
 
-    .motion-demo-heartbeat {
+    [data-motion-loop="fl-heartbeat"] {
         animation: fl-heartbeat 1.3s ease-in-out infinite;
     }
 }

@@ -801,12 +801,17 @@ defmodule FlintUI.Theme.CSSTest do
 
   test "shared motion keyframes are public and components reuse them", %{css: css} do
     for keyframe <-
-          ~w(fl-fade-in fl-fade-out fl-pop-in fl-pop-out fl-spin fl-ping fl-pulse fl-bounce fl-heartbeat) do
+          ~w(fl-fade-in fl-fade-out fl-pop-in fl-pop-out fl-slide-in fl-slide-out fl-rotate-in fl-rotate-out fl-shake fl-flash fl-spin fl-ping fl-pulse fl-bounce fl-heartbeat) do
       assert css =~ "@keyframes #{keyframe}"
     end
 
     assert css =~ "--fl-motion-pop-scale"
     assert css =~ "--fl-motion-pop-translate"
+    assert css =~ "--fl-motion-slide-from"
+    assert css =~ "--fl-motion-rotate-from"
+    assert css =~ "--fl-motion-rotate-scale"
+    assert css =~ "--fl-motion-shake-distance"
+    assert css =~ "--fl-motion-flash-opacity"
     assert css =~ "--fl-heartbeat-scale"
 
     assert css =~ "animation: fl-pop-in"

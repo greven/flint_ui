@@ -56,6 +56,91 @@
         }
     }
 
+    /* One pair covers every side: move the offset, not the keyframe. */
+    @keyframes fl-slide-in {
+        from {
+            opacity: 0;
+            translate: var(--fl-motion-slide-from, 0 1rem);
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes fl-slide-out {
+        from {
+            opacity: 1;
+            translate: 0 0;
+        }
+
+        to {
+            opacity: 0;
+            translate: var(--fl-motion-slide-from, 0 1rem);
+        }
+    }
+
+    @keyframes fl-rotate-in {
+        from {
+            opacity: 0;
+            rotate: var(--fl-motion-rotate-from, -8deg);
+            scale: var(--fl-motion-rotate-scale, 0.96);
+        }
+
+        to {
+            opacity: 1;
+            rotate: 0deg;
+            scale: 1;
+        }
+    }
+
+    @keyframes fl-rotate-out {
+        from {
+            opacity: 1;
+            rotate: 0deg;
+            scale: 1;
+        }
+
+        to {
+            opacity: 0;
+            rotate: var(--fl-motion-rotate-from, -8deg);
+            scale: var(--fl-motion-rotate-scale, 0.96);
+        }
+    }
+
+    /* One-shot attention cues. Run these once; the state change should carry
+     * the message, not an endless animation. */
+    @keyframes fl-shake {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        20%,
+        60% {
+            translate: var(--fl-motion-shake-distance, -0.25rem) 0;
+        }
+
+        40%,
+        80% {
+            translate: calc(var(--fl-motion-shake-distance, -0.25rem) * -1) 0;
+        }
+    }
+
+    @keyframes fl-flash {
+        0%,
+        50%,
+        100% {
+            opacity: 1;
+        }
+
+        25%,
+        75% {
+            opacity: var(--fl-motion-flash-opacity, 0.4);
+        }
+    }
+
     /* Looping animations. `fl-spin`, `fl-ping`, `fl-pulse`, and `fl-bounce`
      * mirror Tailwind's `animate-spin`, `animate-ping`, `animate-pulse`, and
      * `animate-bounce`, including the timing functions inside the keyframes,
