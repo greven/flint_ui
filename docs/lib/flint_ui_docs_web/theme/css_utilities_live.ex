@@ -443,7 +443,7 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
             No utilities match “{@query}”.
           </p>
 
-          <div :if={@groups != []} class="mt-6 max-h-[42rem] space-y-8 overflow-y-auto pr-2">
+          <div :if={@groups != []} class="mt-6 max-h-168 space-y-8 overflow-y-auto pr-2">
             <section :for={group <- @groups} id={"reference-" <> to_string(group.id)}>
               <h3 class="text-lg font-semibold text-highlighted">{group.title}</h3>
               <Markdown.prose content={group.description} class="mt-1 text-sm" />

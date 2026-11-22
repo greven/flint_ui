@@ -85,7 +85,7 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
             or <code class="docs-code font-mono">var(--fl-color-rose-300)</code>.
           </DocsComponents.content_paragraph>
 
-          <DocsComponents.subsection title="Neutral ramps" id="neutral-ramps">
+          <DocsComponents.subsection title="Neutral Ramps" id="neutral-ramps">
             <DocsComponents.content_paragraph class="mt-3">
               The chrome is built from the palette's <code class="docs-code font-mono">gray</code>
               hue, which defaults to Tailwind's <code class="docs-code font-mono">neutral</code>
