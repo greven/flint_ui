@@ -128,7 +128,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
       combine `square` with an `aria-label` so it keeps an accessible name. " />
 
     <.preview {assigns} code={&code_icon/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.toggle active_variant="soft" icon="lucide-letter-b">Bold</Components.toggle>
         <Components.toggle active_variant="subtle" color="success" icon="lucide-leaf">
           Organic
@@ -182,7 +182,7 @@ defmodule FlintUIDocsWeb.Docs.Toggle do
     <.prose content="Set `disabled` to prevent activation. A toggle always renders a button, so it
       uses the native `disabled` attribute and leaves the tab order." />
     <.preview {assigns} code={&code_disabled/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.toggle
           :for={variant <- variants()}
           variant={variant}

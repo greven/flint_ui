@@ -66,7 +66,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
     ~H"""
     <.prose content="Pass `href`, `navigate`, or `patch` to render the card root as a link. A linked card is one anchor, so keep buttons and links out of it. Set `title_id` so the root can use the title as its accessible name. Hovering or keyboard-focusing a linked card strengthens its outline and raises its elevation; `outline={false}` and `shadow={false}` turn those cues off." />
     <.preview {assigns} code={link_code()}>
-      <Components.card href="/components" title_id="card-link-title" class="max-w-sm">
+      <Components.card href="/components" title_id="card-link-title" class="fl-max-w-sm">
         <:title>Browse components</:title>
         <:description>See every FlintUI component</:description>
         <p>Open the component index.</p>
@@ -82,7 +82,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <Components.card
         href="/components"
         title_id="card-link-accent-title"
-        class="max-w-sm"
+        class="fl-max-w-sm"
         style="--fl-card-border-hover: var(--fl-color-primary)"
       >
         <:title>Browse components</:title>
@@ -103,7 +103,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
         target="_blank"
         rel="noopener noreferrer"
         title_id="card-indicator-title"
-        class="max-w-sm"
+        class="fl-max-w-sm"
       >
         <:title>Phoenix documentation</:title>
         <:description>Guides and API reference on hexdocs</:description>
@@ -124,7 +124,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
         description_id="card-heading-description"
         aria-labelledby="card-heading-title"
         aria-describedby="card-heading-description"
-        class="w-full max-w-sm"
+        class="fl-w-full fl-max-w-sm"
       >
         <:title>Billing</:title>
         <:description>Manage the workspace plan.</:description>
@@ -137,7 +137,7 @@ defmodule FlintUIDocsWeb.Docs.Card do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <Components.card class="w-full max-w-sm">
+    <Components.card class="fl-w-full fl-max-w-sm">
       <:title>Starred repositories</:title>
       <:description>Updated just now</:description>
       <:header_actions>

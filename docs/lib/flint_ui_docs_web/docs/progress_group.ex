@@ -69,7 +69,7 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
       the bar stays full.|} />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.progress_group
           max="128"
           label="Storage"
@@ -96,7 +96,7 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
       information the root does not announce.|} />
 
     <.preview {assigns} code={code_status()}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.progress_group max="128" label="Storage">
           <:status>69 GB of 128 GB used</:status>
           <:segment label="Compute" value="42" />
@@ -115,7 +115,7 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
       class. The icon takes the segment color, and the label keeps the row readable.|} />
 
     <.preview {assigns} code={code_icons()}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.progress_group max="128" label="Storage" show_status>
           <:segment label="Compute" value="42" icon="lucide-cpu" />
           <:segment label="Storage" value="18" color="info" icon="lucide-database" />
@@ -156,7 +156,7 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
       or the color scheme, so prefer a role or a theme override for app-wide color.|} />
 
     <.preview {assigns} code={code_custom_colors()}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.progress_group max="128" label="Storage" show_status>
           <:segment label="Compute" value="42" color="purple" />
           <:segment label="Storage" value="18" color="cyan" icon="lucide-database" />
@@ -170,7 +170,7 @@ defmodule FlintUIDocsWeb.Docs.ProgressGroup do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.progress_group max="128" label="Storage" show_status>
         <:segment label="Compute" value="42" />
         <:segment label="Storage" value="18" color="info" icon="lucide-database" />

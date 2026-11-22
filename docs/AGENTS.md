@@ -30,6 +30,7 @@ This is a web application written using the Phoenix web framework.
 - **Always use and maintain this import syntax** in the app.css file for projects generated with `phx.new`
 - **Never** use `@apply` when writing raw css
 - **Always** manually write your own tailwind-based components instead of using daisyUI for a unique, world-class design
+- Component docs previews and their code snippets use FlintUI's `fl-*` utilities for example layout (`fl-cluster`, `fl-stack`, `fl-split`, then atomics) instead of Tailwind, so a copied snippet does not depend on the docs-only Tailwind bridge. Keep Tailwind only when the example is specifically about Tailwind or needs a feature the fixed utility set does not ship (transitions, `data-*` variants, arbitrary values); say so in the prose. The docs shell itself stays on Tailwind.
 - Out of the box **only the app.js and app.css bundles are supported**
   - You cannot reference an external vendor'd script `src` or link `href` in the layouts
   - You must import the vendor deps into app.js and app.css to use them

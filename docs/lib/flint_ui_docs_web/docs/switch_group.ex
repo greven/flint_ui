@@ -49,7 +49,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
       description." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.switch_group
           id="notification-settings"
           label="Notifications"
@@ -100,7 +100,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
       <:switch name="notifications[email]" label="Email" checked />
       <:switch name="notifications[sms]" label="SMS" />
     </.switch_group>|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.switch_group
           label="Notifications"
           description="Choose at least one channel."
@@ -129,7 +129,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
       <:switch name="security[two_factor]" label="Two-factor authentication" />
       <:switch name="security[alerts]" label="New device alerts" disabled />
     </.switch_group>|}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.switch_group label="Security" disabled>
           <:switch name="security[two_factor]" label="Two-factor authentication" checked />
           <:switch name="security[alerts]" label="New device alerts" />
@@ -158,7 +158,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
       </.switch_group>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="switch-group-field-form">
-        <div class="w-full max-w-sm">
+        <div class="fl-w-full fl-max-w-sm">
           <Components.switch_group label="Notifications" description="Choose how we reach you.">
             <:switch field={f[:email_alerts]} label="Email" checked />
             <:switch field={f[:sms_alerts]} label="SMS" />
@@ -176,7 +176,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
       one group per section of related settings, and keep the group label stable. For a field that
       collects a list of values, use a [checkbox group](/components/checkbox_group)." />
 
-    <.preview {assigns} code={~S|<div class="grid gap-6">
+    <.preview {assigns} code={~S|<div class="fl-grid-cols-1 fl-gap-xl">
       <.switch_group label="Account notifications" description="Choose how we reach you.">
         <:switch name="notifications[email]" label="Email" checked />
         <:switch name="notifications[sms]" label="SMS" />
@@ -188,7 +188,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
         <:switch name="privacy[activity]" label="Show recent activity" />
       </.switch_group>
     </div>|}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.switch_group
           label="Account notifications"
           description="Choose how we reach you."
@@ -210,7 +210,7 @@ defmodule FlintUIDocsWeb.Docs.SwitchGroup do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.switch_group
         id={"#{@parts_id}-notifications"}
         label="Notifications"

@@ -56,7 +56,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       the selected fill and dot. The indicator stays circular.|} />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.radio
           id="notifications-radio"
           name="notifications"
@@ -99,7 +99,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       description="Everything in Free, plus unlimited projects and priority support."
       checked
     />|}>
-      <div class="grid w-full max-w-md gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-md">
         <Components.radio
           name="plan-card"
           value="free"
@@ -137,7 +137,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       description="Choose the plan that fits your team."
       errors={["is not available in your region"]}
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.radio
           id="plan-radio-errors"
           name="plan-errors"
@@ -163,7 +163,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
     <.radio name="plan" value="pro" label="Pro plan" disabled />
     <.radio name="plan" value="team" label="Team plan" required />|}
     >
-      <div class="grid w-full max-w-sm gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
         <Components.radio name="plan-disabled" value="free" label="Free plan" checked disabled />
         <Components.radio name="plan-disabled" value="pro" label="Pro plan" disabled />
         <Components.radio name="plan-required" value="team" label="Team plan" required />
@@ -185,7 +185,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       <.radio field={f[:plan]} value="team" label="Team plan" />
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="radio-field-form">
-        <div class="grid w-full max-w-sm gap-3">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
           <Components.radio field={f[:plan]} value="free" label="Free plan" />
           <Components.radio field={f[:plan]} value="pro" label="Pro plan" />
           <Components.radio field={f[:plan]} value="team" label="Team plan" />
@@ -208,7 +208,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       <.button type="button" variant="solid">Create account</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="radio-form-example">
-        <div class="grid w-full max-w-md gap-4">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
           <Components.radio field={f[:plan]} value="free" label="Free" description="One project." />
           <Components.radio
             field={f[:plan]}
@@ -240,7 +240,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
       <:radio value="pro" label="Pro" />
       <:radio value="team" label="Team" />
     </.radio_group>|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.radio_group name="plan" label="Plan">
           <:radio value="free" label="Free" />
           <:radio value="pro" label="Pro" />
@@ -254,7 +254,7 @@ defmodule FlintUIDocsWeb.Docs.Radio do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="grid w-full max-w-sm gap-3">
+    <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
       <Components.radio
         id={"#{@parts_id}-pro"}
         name={"#{@parts_id}-plan"}

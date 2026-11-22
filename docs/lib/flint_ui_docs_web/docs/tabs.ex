@@ -40,7 +40,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.tabs
           id={"#{@preview_id}-tabs"}
           value="overview"
@@ -81,7 +81,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
     <.prose content="Set `custom` on a tab to render the trigger yourself. Spread the attributes the slot provides through `:let` onto a focusable control; the hook finds the trigger through those attributes, so a composed button stays a button." />
     <.prose content="A custom trigger keeps its own component styles. The active trigger also carries `data-state=active` and `aria-selected=true`, updated in the browser when the selection changes, so add the selected treatment with those state hooks. The example uses Tailwind's `aria-selected` variant; plain CSS can target `[data-part=tab][data-state=active]`." />
     <.preview {assigns} code={&custom_triggers_code/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.tabs
           id={"#{@preview_id}-custom-tabs"}
           variant="minimal"
@@ -129,7 +129,7 @@ defmodule FlintUIDocsWeb.Docs.Tabs do
       id={"#{@parts_id}-tabs"}
       value="overview"
       label="Workspace sections"
-      class="w-full max-w-md"
+      class="fl-w-full fl-max-w-md"
     >
       <:tab value="overview">Overview</:tab>
       <:tab value="activity">Activity</:tab>

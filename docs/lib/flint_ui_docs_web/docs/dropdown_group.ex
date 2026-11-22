@@ -23,7 +23,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownGroup do
         ~s(<.dropdown_group aria-label="Session">\n  <.dropdown_item>Switch user</.dropdown_item>\n  <.dropdown_item intent="danger">Log out</.dropdown_item>\n</.dropdown_group>)
       }
     >
-      <div class="flex min-h-40 w-full items-center justify-center">
+      <div class="flex min-h-40 fl-w-full items-center justify-center">
         <Components.dropdown label="Actions">
           <Components.dropdown_item>Settings</Components.dropdown_item>
           <Components.dropdown_group aria-label="Session">
@@ -43,8 +43,8 @@ defmodule FlintUIDocsWeb.Docs.DropdownGroup do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex min-h-64 w-full items-start justify-center py-6">
-      <div class="flex w-64 flex-col gap-1">
+    <div class="flex min-h-64 fl-w-full items-start justify-center py-6">
+      <div class="fl-stack fl-gap-xs w-64">
         <div
           data-element="dropdown_group"
           data-part="group"

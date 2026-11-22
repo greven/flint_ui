@@ -57,7 +57,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       the checked fill and border. The check mark is an inline SVG that stays a neutral ink.|} />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.checkbox
           name="notifications"
           label="Enable notifications"
@@ -88,7 +88,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       color="primary"
       checked
     />|}>
-      <div class="grid w-full max-w-md gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-md">
         <Components.checkbox
           name="plan-free"
           variant="card"
@@ -123,7 +123,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       description="You must accept the terms to create an account."
       errors={["must be accepted"]}
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.checkbox
           id="terms-checkbox"
           name="terms"
@@ -144,7 +144,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
     <.preview {assigns} code={~S|<.checkbox name="email" label="Email notifications" disabled />
     <.checkbox name="push" label="Push notifications" disabled checked />
     <.checkbox name="terms" label="I accept the terms" required />|}>
-      <div class="grid w-full max-w-sm gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
         <Components.checkbox name="email" label="Email notifications" disabled />
         <Components.checkbox name="push" label="Push notifications" disabled checked />
         <Components.checkbox name="terms" label="I accept the terms" required />
@@ -173,7 +173,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       indeterminate
       description="One or more items are selected."
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.checkbox
           id="select-all-checkbox"
           name="select_all"
@@ -196,7 +196,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       <.checkbox field={f[:newsletter]} label="Send me the newsletter" checked />
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="checkbox-field-form">
-        <div class="grid w-full max-w-sm gap-3">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
           <Components.checkbox field={f[:terms]} label="I accept the terms" />
           <Components.checkbox field={f[:newsletter]} label="Send me the newsletter" checked />
         </div>
@@ -218,7 +218,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       <.button type="button" variant="solid">Create account</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="checkbox-form-example">
-        <div class="grid w-full max-w-md gap-4">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
           <Components.checkbox field={f[:terms]} label="I accept the terms" />
           <Components.checkbox field={f[:newsletter]} label="Send me the newsletter" checked />
           <Components.checkbox
@@ -243,7 +243,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
       <:checkbox value="rust" label="Rust" />
       <:checkbox value="typescript" label="TypeScript" />
     </.checkbox_group>|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.checkbox_group name="languages" label="Programming languages">
           <:checkbox value="elixir" label="Elixir" />
           <:checkbox value="rust" label="Rust" />
@@ -257,7 +257,7 @@ defmodule FlintUIDocsWeb.Docs.Checkbox do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="grid w-full max-w-sm gap-3">
+    <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
       <Components.checkbox
         id={"#{@parts_id}-terms"}
         name={"#{@parts_id}-terms"}

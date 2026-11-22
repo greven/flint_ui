@@ -37,7 +37,7 @@ defmodule FlintUIDocsWeb.Docs.Popover do
       content, or to target it with `open_popover/2`. The content is a dialog named after the trigger unless you pass `aria_label` or
       `aria_labelledby`. `placement`, `align`, and `offset` position it; it flips and shifts on its own near the viewport edge." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
-      <div class="w-full max-w-74 flex justify-center">
+      <div class="fl-w-full max-w-74 flex justify-center">
         <Components.popover
           placement={props.placement}
           align={props.align}
@@ -58,7 +58,7 @@ defmodule FlintUIDocsWeb.Docs.Popover do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-col items-center gap-3 py-6">
+    <div class="fl-stack fl-items-center fl-py-xl">
       <span class="text-xs text-muted">Static preview of the parts</span>
       <div data-element="popover" data-part="root" data-popover data-state="open">
         <button

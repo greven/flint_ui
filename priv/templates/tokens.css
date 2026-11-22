@@ -98,7 +98,7 @@
      * default elevation. */
     --fl-elevation-level: 2;
     --fl-elevation-step: 0.4;
-    --fl-elevation-ring: light-dark(var(--fl-color-border), rgb(0 0 0 / 16%));
+    --fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));
     --fl-elevation-highlight: rgb(255 255 255 / 6%);
     --fl-elevation-hairline: rgb(255 255 255 / 5%);
     --fl-elevation-shadow-color: light-dark(rgb(0 0 0 / 5%), rgb(0 0 0 / 32%));

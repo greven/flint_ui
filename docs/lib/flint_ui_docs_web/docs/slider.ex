@@ -60,7 +60,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       surface." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.slider
           id="slider-basic-volume"
           name="volume"
@@ -99,7 +99,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       max_value="800"
       show_tooltip
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.slider
           id="slider-range-price"
           name="price"
@@ -139,7 +139,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       show_markers
       show_tooltip
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.slider
           id="slider-tooltip-quality"
           name="quality"
@@ -200,7 +200,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       errors={["is above the alarm threshold"]}
       show_tooltip
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.slider
           id="slider-validation-load"
           name="server_load"
@@ -233,7 +233,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       show_tooltip
     />
     <.slider id="quota" name="quota" label="Storage quota" value="75" disabled />|}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.slider
           id="slider-readonly-budget"
           name="budget"
@@ -264,7 +264,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       <.slider field={f[:volume]} label="Volume" show_tooltip />
     </.form>|}>
       <.form :let={f} for={%{}} as={:settings} id="slider-field-form">
-        <div class="w-full max-w-sm">
+        <div class="fl-w-full fl-max-w-sm">
           <Components.slider field={f[:volume]} label="Volume" show_tooltip />
         </div>
       </.form>
@@ -300,7 +300,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
       />
     </.form>|}>
       <.form :let={f} for={%{}} as={:audio} id="slider-example-form">
-        <div class="grid w-full max-w-sm gap-6">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
           <Components.slider field={f[:volume]} label="Volume" value="65" show_tooltip />
           <Components.slider
             field={f[:balance]}
@@ -330,7 +330,7 @@ defmodule FlintUIDocsWeb.Docs.Slider do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.slider
         id={"#{@parts_id}-price"}
         name={"#{@parts_id}-price"}

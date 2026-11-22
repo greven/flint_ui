@@ -31,10 +31,10 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
-      <div class="w-full max-w-74 self-start">
+      <div class="fl-w-full max-w-74 self-start">
         <Components.collapsible
           id={"#{@preview_id}-styled"}
-          class="flex flex-col gap-2"
+          class="fl-stack fl-gap-sm"
           open={props.open}
           disabled={props.disabled}
           hidden_until_found={props.hidden_until_found}
@@ -65,7 +65,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
     <Components.collapsible
       id={"#{@parts_id}-collapsible"}
       open
-      class="flex w-full max-w-md flex-col gap-2"
+      class="fl-stack fl-w-full fl-max-w-md fl-gap-sm"
     >
       <:trigger :let={attrs}>
         <Components.button {attrs} variant="surface" wide justify="between" class="group">
@@ -92,7 +92,7 @@ defmodule FlintUIDocsWeb.Docs.Collapsible do
   defp code_attrs(props) do
     [
       ~s(id="repos"),
-      ~s(class="flex flex-col gap-2"),
+      ~s(class="fl-stack fl-gap-sm"),
       Snippet.flag("open", props.open),
       Snippet.flag("disabled", props.disabled),
       Snippet.flag("hidden_until_found", props.hidden_until_found)

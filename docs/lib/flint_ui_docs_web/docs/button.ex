@@ -151,20 +151,20 @@ defmodule FlintUIDocsWeb.Docs.Button do
       Each row below is a color role, each column a variant." />
 
     <.preview id={"#{@id}-grid"}>
-      <div class="overflow-x-auto py-1">
-        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-4">
+      <div class="fl-overflow-x-auto fl-py-xs">
+        <div class="fl-grid-cols-8 fl-items-center fl-gap-x-md fl-gap-y-lg">
           <div></div>
           <span
             :for={variant <- ~w(solid soft subtle surface outline ghost link)}
-            class="text-center text-xs font-medium text-muted"
+            class="fl-text-center fl-text-xs fl-font-medium fl-text-muted"
           >
             {variant}
           </span>
           <div
             :for={color <- ~w(neutral info success warning danger)}
-            class="contents"
+            class="fl-contents"
           >
-            <span class="text-xs font-medium text-muted">{color}</span>
+            <span class="fl-text-xs fl-font-medium fl-text-muted">{color}</span>
             <Components.button
               :for={variant <- ~w(solid soft subtle surface outline ghost link)}
               variant={variant}
@@ -180,20 +180,20 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="You can also override `primary` and `secondary` colors in your stylesheet." />
 
     <.preview id={"#{@id}-brand"}>
-      <div class="overflow-x-auto py-1">
-        <div class="grid grid-cols-8 items-center gap-x-3 gap-y-4">
+      <div class="fl-overflow-x-auto fl-py-xs">
+        <div class="fl-grid-cols-8 fl-items-center fl-gap-x-md fl-gap-y-lg">
           <div></div>
           <span
             :for={variant <- ~w(solid soft subtle surface outline ghost link)}
-            class="text-center text-xs font-medium text-muted"
+            class="fl-text-center fl-text-xs fl-font-medium fl-text-muted"
           >
             {variant}
           </span>
           <div
             :for={color <- ~w(primary secondary)}
-            class="contents"
+            class="fl-contents"
           >
-            <span class="text-xs font-medium text-muted">{color}</span>
+            <span class="fl-text-xs fl-font-medium fl-text-muted">{color}</span>
             <Components.button
               :for={variant <- ~w(solid soft subtle surface outline ghost link)}
               variant={variant}
@@ -214,7 +214,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button variant="outline" color="gray" dashed>And</.button>
     <.button variant="outline" color="info" dashed>Dashing</.button>|}
     >
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button variant="subtle" color="success" dashed>Subtle</Components.button>
         <Components.button variant="outline" color="gray" dashed>And</Components.button>
         <Components.button variant="outline" color="info" dashed>Dashing</Components.button>
@@ -229,7 +229,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="You can also use the `:leading` and `:trailing` slots to place an icon before or after the content." />
     <.prose content="For an icon-only button, combine `square` with an `aria-label` so it keeps an accessible name." />
     <.preview id={@id} code={&code_icon/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button icon="lucide-save">Save</Components.button>
         <Components.button variant="solid" color="danger" icon="lucide-trash">Delete</Components.button>
         <Components.button variant="solid">
@@ -255,7 +255,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="Use the `size` attr to change the control size, from `xs` to `xl`. Default size is md." />
     <.preview id={@id} code={~S(<.button size="sm">Size</.button>)}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button :for={{label, size} <- sizes()} size={size}>{label}</Components.button>
       </div>
     </.preview>
@@ -269,7 +269,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       so pass `aria-label` or `aria-labelledby` (the icon is not a label)." />
 
     <.preview id={@id} code={&code_square/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button square variant="ghost" aria-label="More options">
           <Components.icon name="lucide-ellipsis" />
         </Components.button>
@@ -294,7 +294,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="Set `wide` to fill the width of the surrounding container." />
     <.preview id={@id} code={&code_wide/1}>
-      <div class="w-full max-w-lg">
+      <div class="fl-w-full fl-max-w-lg">
         <Components.button variant="solid" wide>Full Width</Components.button>
       </div>
     </.preview>
@@ -307,7 +307,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       It only has an effect when the button fills its container or has a fixed width.
       `between` pushes the leading and trailing content to the edges, which is useful for triggers and split actions." />
     <.preview :let={props} {assigns} code={&code_justify/1} collapsed>
-      <div class="w-full max-w-lg">
+      <div class="fl-w-full fl-max-w-lg">
         <Components.button variant="surface" wide justify={props.justify}>
           <:leading>
             <Components.icon name="lucide-folder" />
@@ -328,7 +328,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       `depth={false}` for a flatter control." />
     <.prose content="Elevation shadows stay on and are controlled separately with `--fl-control-shadow`." />
     <.preview id={@id} code={&code_depth/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button variant="solid" color="info">Raised</Components.button>
         <Components.button variant="solid" color="info" depth={false}>Flat</Components.button>
         <Components.button variant="surface">Raised</Components.button>
@@ -346,9 +346,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
       and `right`, `all` is the same as a bare `inset`. Left and right follow the writing direction.
       It is most useful on `ghost` and `link` buttons, whose box is otherwise invisible." />
     <.preview :let={props} id={@id} {assigns} code={&code_inset/1} collapsed>
-      <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
-        <span class="text-sm font-medium">Post successfully created.</span>
-        <div class="flex items-center gap-4">
+      <div class="fl-split fl-gap-lg fl-rounded-md fl-border fl-border-default fl-px-lg fl-py-md">
+        <span class="fl-text-sm fl-font-medium">Post successfully created.</span>
+        <div class="fl-cluster fl-gap-lg">
           <Components.button
             variant="ghost"
             size="sm"
@@ -376,9 +376,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content={"Announce progress in a persistent `role=\"status\"` region outside the control.
       `aria-busy` marks the control as updating, but it is not itself an announcement."} />
     <.preview id={@id} code={&code_loading/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button loading>
-          <.icon name="lucide-loader-circle" class="animate-spin" />Save
+          <.icon name="lucide-loader-circle" class="fl-animate-spin" />Save
         </Components.button>
 
         <Components.button variant="solid" loading>
@@ -401,10 +401,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="`flint.js` also blocks clicks on a disabled link. Without the bundle, keyboard
       activation still fires click handlers, so guard them server-side." />
     <.preview id={@id} code={&code_disabled/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button
           :for={variant <- ~w(solid soft subtle surface outline ghost link)}
-          class="capitalize"
+          class="fl-capitalize"
           variant={variant}
           disabled
         >{variant}</Components.button>
@@ -429,7 +429,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="Set `pill` for a full-radius pill. It only changes the radius: the button keeps its height and padding, and `pill` takes precedence over `radius`. Combine it with `square` for a circular icon-only button." />
     <.preview :let={props} id={@id} {assigns} code={&code_pill/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button pill={props.pill}>Button</Components.button>
         <Components.button pill={props.pill} square aria-label="Search">
           <Components.icon name="lucide-search" />
@@ -447,7 +447,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
         theming, and pass `style` to override the derived values." />
 
     <.preview {assigns} codes={&code_raw/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button color="#009966" icon="lucide-coins">Common</Components.button>
         <Components.button color="#165DFC" icon="lucide-pickaxe">Rare</Components.button>
         <Components.button color="#7007E7" icon="lucide-shield">Epic</Components.button>
@@ -459,35 +459,35 @@ defmodule FlintUIDocsWeb.Docs.Button do
       using inline styles." />
 
     <.preview {assigns} preview_id={"#{@preview_id}-css-vars"} code={&code_css_vars/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button
           variant="solid"
           pill
-          style="--fl-control-color: var(--color-lime-700); --fl-control-color-content: white;
-          background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
+          style="--fl-control-color: var(--fl-color-lime-700); --fl-control-color-content: white;
+          background: linear-gradient(0.25turn, var(--fl-color-lime-600), var(--fl-color-teal-600));"
         >
-          <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
+          <.icon name="lucide-rabbit" class="fl-animate-bounce" /> Bunny
         </Components.button>
 
         <Components.button
           variant="solid"
           pill
-          style="--fl-control-color: var(--color-red-800); --fl-control-color-content: white;
-            --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
-            background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));"
+          style="--fl-control-color: var(--fl-color-red-800); --fl-control-color-content: white;
+            --fl-focus-ring-color: var(--fl-color-rose-500); --fl-focus-border-color: var(--fl-color-rose-700);
+            background: linear-gradient(0.25turn, var(--fl-color-red-500), var(--fl-color-rose-500));"
           loading
         >
-          <.icon name="lucide-heart" class="text-rose-50" />
+          <.icon name="lucide-heart" style="color: var(--fl-color-rose-50)" />
           <Components.loading_text variant="shimmer" text="Likes" />
         </Components.button>
 
         <Components.button
           variant="solid"
           pill
-          style="--fl-control-color: var(--color-cyan-700); --fl-control-color-content: white;
-          background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));"
+          style="--fl-control-color: var(--fl-color-cyan-700); --fl-control-color-content: white;
+          background: linear-gradient(0.25turn, var(--fl-color-cyan-500), var(--fl-color-blue-500));"
         >
-          <.icon name="lucide-panda" class="text-cyan-100" /> Panda
+          <.icon name="lucide-panda" style="color: var(--fl-color-cyan-100)" /> Panda
         </Components.button>
       </div>
     </.preview>
@@ -498,7 +498,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
     ~H"""
     <.prose content="You can [group](/components/group) related buttons with `<.group>`, so a row of buttons reads as a single control." />
     <.preview {assigns} code={&code_group/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.group attached>
           <Components.button variant="surface">Button</Components.button>
           <Components.button icon="lucide-chevron-down" aria-label="Menu" square />
@@ -561,7 +561,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
       link semantics: `Enter` activates it and `Space` does not. If the control changes state, render
       a button instead." />
     <.preview id={@id} code={&code_as_link/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.button navigate="/components">Navigate</Components.button>
         <Components.button variant="subtle" patch="/components/button#usage-color">Patch</Components.button>
         <Components.button variant="solid" href="https://hex.pm/packages/flint_ui">
@@ -581,6 +581,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
       The demo simulates the ticks in the browser so you can replay it with Reset or by clicking the
       button again. Announce the start and the result, not every tick, and reserve the label width so the
       percentage does not resize the button.|} />
+
+    <.prose content="This demo uses Tailwind CSS for brevity because the docs site already ships it.
+      The same effect works in plain CSS, it is just more verbose." />
 
     <.preview {assigns} codes={&code_progress/1} collapsed>
       <div id="button-progress-demo" phx-hook=".ButtonProgress" phx-update="ignore">
@@ -708,7 +711,8 @@ defmodule FlintUIDocsWeb.Docs.Button do
       success cues from LiveView. Press and release sounds come from the `data-sound-*`
       attributes. For more details on adding sound, see the [Sounds guide](/guides/sound)." />
 
-    <.prose content="This example uses TailwindCSS but the same can be achieved using plain CSS." />
+    <.prose content="This demo uses Tailwind CSS for brevity because the docs site already ships it.
+      The same effect works in plain CSS, it is just more verbose." />
 
     <.preview {assigns} code={&code_interactions/1} collapsed>
       <div
@@ -793,7 +797,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
+    <div class="fl-cluster">
       <Components.button icon="lucide-save">Save changes</Components.button>
       <Components.button variant="subtle" color="info">Preview</Components.button>
     </div>
@@ -914,7 +918,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
 
   defp code_wide(_) do
     """
-    <div class="w-full max-w-lg">
+    <div class="fl-w-full fl-max-w-lg">
       <.button variant="solid" wide>Full Width</.button>
     </div>
     """
@@ -949,9 +953,9 @@ defmodule FlintUIDocsWeb.Docs.Button do
     inset = if props.inset, do: " inset", else: ""
 
     """
-    <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
-      <span class="text-sm font-medium">Post successfully created.</span>
-      <div class="flex items-center gap-4">
+    <div class="fl-split fl-gap-lg fl-rounded-md fl-border fl-border-default fl-px-lg fl-py-md">
+      <span class="fl-text-sm fl-font-medium">Post successfully created.</span>
+      <div class="fl-cluster fl-gap-lg">
         <.button variant="ghost" size="sm" square#{inset} aria-label="Dismiss">
           <.icon name="lucide-x" />
         </.button>
@@ -1005,7 +1009,7 @@ defmodule FlintUIDocsWeb.Docs.Button do
   defp code_loading(_) do
     """
     <.button loading>
-      <.icon name="lucide-loader-circle" class="animate-spin" />Save
+      <.icon name="lucide-loader-circle" class="fl-animate-spin" />Save
     </.button>
 
     <.button variant="solid" loading>
@@ -1103,28 +1107,28 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.button
       variant="solid"
       pill
-      style="--fl-control-color: var(--color-lime-700); --fl-control-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-lime-600), var(--color-teal-600));"
+      style="--fl-control-color: var(--fl-color-lime-700); --fl-control-color-content: white;
+      background: linear-gradient(0.25turn, var(--fl-color-lime-600), var(--fl-color-teal-600));"
     >
-      <.icon name="lucide-rabbit" class="animate-bounce" /> Bunny
+      <.icon name="lucide-rabbit" class="fl-animate-bounce" /> Bunny
     </.button>
 
     <.button
       variant="solid"
       pill
-      style="--fl-control-color: var(--color-red-800); --fl-control-color-content: white;
-        --fl-focus-ring-color: var(--color-rose-500); --fl-focus-border-color: var(--color-rose-700);
-        background: linear-gradient(0.25turn, var(--color-red-500), var(--color-rose-500));" loading>
-      <.icon name="lucide-heart" class="text-rose-50" />
+      style="--fl-control-color: var(--fl-color-red-800); --fl-control-color-content: white;
+        --fl-focus-ring-color: var(--fl-color-rose-500); --fl-focus-border-color: var(--fl-color-rose-700);
+        background: linear-gradient(0.25turn, var(--fl-color-red-500), var(--fl-color-rose-500));" loading>
+      <.icon name="lucide-heart" style="color: var(--fl-color-rose-50)" />
       <.loading_text variant="shimmer" text="Likes" />
     </.button>
 
     <.button
       variant="solid"
       pill
-      style="--fl-control-color: var(--color-cyan-700); --fl-control-color-content: white;
-      background: linear-gradient(0.25turn, var(--color-cyan-500), var(--color-blue-500));">
-      <.icon name="lucide-panda" class="text-cyan-100" /> Panda
+      style="--fl-control-color: var(--fl-color-cyan-700); --fl-control-color-content: white;
+      background: linear-gradient(0.25turn, var(--fl-color-cyan-500), var(--fl-color-blue-500));">
+      <.icon name="lucide-panda" style="color: var(--fl-color-cyan-100)" /> Panda
     </.button>
     """
   end

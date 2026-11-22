@@ -282,7 +282,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex w-full justify-center py-6">
+    <div class="flex fl-w-full justify-center py-6">
       <dialog
         id={"#{@parts_id}-dialog"}
         open
@@ -293,7 +293,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
         data-size="md"
         data-placement="center"
         data-backdrop="dim"
-        class="m-0 w-full max-w-md"
+        class="m-0 fl-w-full fl-max-w-md"
         style="position: relative; inset: auto; max-height: none;"
       >
         <div data-part="content" tabindex="-1">

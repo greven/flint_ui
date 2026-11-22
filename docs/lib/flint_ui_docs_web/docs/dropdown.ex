@@ -36,7 +36,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
       `open_on_hover`, so a menu can open on click while its submenu opens on hover. `placement`, `align`, and `offset` position it,
       and `max_height` caps its height so long menus scroll." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
-      <div class="flex min-h-40 w-full items-center justify-center">
+      <div class="flex min-h-40 fl-w-full items-center justify-center">
         <Components.dropdown
           label="Actions"
           placement={props.placement}
@@ -76,8 +76,8 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex min-h-64 w-full items-start justify-center py-6">
-      <div class={["relative flex flex-col items-start gap-2"]}>
+    <div class="flex min-h-64 fl-w-full items-start justify-center py-6">
+      <div class={["relative fl-stack fl-items-start fl-gap-sm"]}>
         <div data-element="dropdown" data-part="root" data-dropdown data-state="open">
           <button
             data-part="trigger"

@@ -81,7 +81,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
     ~H"""
     <.prose content="Pass `href`, `navigate`, or `patch` to render a native link with the text styling and an underline. A link in the default tier uses the primary ink; pass a role color to match a surrounding accent. The underline takes the link's ink at reduced opacity and becomes solid on hover and keyboard focus." />
     <.preview {assigns} code={links_code()}>
-      <div class="flex flex-col gap-3">
+      <div class="fl-stack">
         <Components.text href="/components/heading">Read the heading guide</Components.text>
         <Components.text navigate="/components/button" color="success">
           Go to the button component
@@ -101,7 +101,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
     ~H"""
     <.prose content="Set `external` on a link to append a trailing arrow. The arrow is decorative and comes from `external_icon`, which defaults to `lucide-arrow-up-right`; pass another icon class to match your set, or an empty string to keep the hook without an arrow. `external` does not change where the link opens, so set `target` and `rel` when it should open in a new tab." />
     <.preview {assigns} code={external_code()}>
-      <div class="flex flex-col gap-3">
+      <div class="fl-stack">
         <Components.text href="https://hexdocs.pm/phoenix" external>
           Phoenix documentation
         </Components.text>
@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
     ~H"""
     <.prose content="`truncate` keeps the text on one line. `line_clamp` limits a paragraph to a fixed number of lines. Both turn the root into a block or line-clamp box; `line_clamp` wins when both are set." />
     <.preview :let={props} {assigns} code={&truncation_code/1}>
-      <div class="w-full max-w-xs space-y-6">
+      <div class="fl-w-full max-w-xs fl-stack fl-gap-xl">
         <Components.text truncate>
           A long line of supporting copy that stays on one line
         </Components.text>
@@ -160,7 +160,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="max-w-prose space-y-3">
+    <div class="max-w-prose fl-stack">
       <Components.text>
         A paragraph with the default ink and the shared type scale.
       </Components.text>
@@ -225,7 +225,7 @@ defmodule FlintUIDocsWeb.Docs.Text do
 
   defp truncation_code(props) do
     """
-    <div class="max-w-xs space-y-6">
+    <div class="max-w-xs fl-stack fl-gap-xl">
       <.text truncate>A long line of supporting copy that stays on one line</.text>
       <.text line_clamp={#{props.line_clamp}}>
         A longer paragraph that wraps over a controlled number of lines and then stops,

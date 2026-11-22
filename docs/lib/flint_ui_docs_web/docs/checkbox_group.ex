@@ -50,7 +50,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       and `variant`, `size`, and `radius` are forwarded to every option." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.checkbox_group
           id="languages"
           name="languages"
@@ -92,7 +92,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       <:checkbox value="elixir" label="Elixir" />
       <:checkbox value="rust" label="Rust" />
     </.checkbox_group>|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.checkbox_group
           name="languages"
           label="Programming languages"
@@ -122,7 +122,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       <:checkbox value="elixir" label="Elixir" />
       <:checkbox value="rust" label="Rust" disabled />
     </.checkbox_group>|}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.checkbox_group name="languages" label="Disabled group" disabled>
           <:checkbox value="elixir" label="Elixir" checked />
           <:checkbox value="rust" label="Rust" />
@@ -150,7 +150,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       </.checkbox_group>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="checkbox-group-field-form">
-        <div class="w-full max-w-sm">
+        <div class="fl-w-full fl-max-w-sm">
           <Components.checkbox_group field={f[:languages]} label="Programming languages">
             <:checkbox value="elixir" label="Elixir" />
             <:checkbox value="rust" label="Rust" />
@@ -178,7 +178,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       <.button type="button" variant="solid">Save profile</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="checkbox-group-form-example">
-        <div class="grid w-full max-w-md gap-4">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
           <Components.checkbox field={f[:terms]} label="I accept the terms" />
           <Components.checkbox_group field={f[:languages]} label="Programming languages">
             <:checkbox value="elixir" label="Elixir" />
@@ -207,7 +207,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
       <:checkbox value="pro" label="Pro" sublabel="$19" description="Unlimited projects." />
       <:checkbox value="team" label="Team" sublabel="$49" description="Everything in Pro, plus roles." />
     </.checkbox_group>|}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.checkbox_group
           name="plan"
           variant="card"
@@ -236,7 +236,7 @@ defmodule FlintUIDocsWeb.Docs.CheckboxGroup do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.checkbox_group
         id={"#{@parts_id}-languages"}
         name={"#{@parts_id}-languages"}

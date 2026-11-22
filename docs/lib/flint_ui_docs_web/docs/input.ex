@@ -65,7 +65,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       {assigns}
       code={~S(<.input name="email" type="email" label="Email" placeholder="you@example.com" />)}
     >
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.input
           name="email"
           type="email"
@@ -86,7 +86,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       step with the changeset. Errors only render once the field has been used, matching Phoenix's behavior." />
 
     <.preview {assigns} code={&code_field/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.input field={@form[:email]} type="email" label="Email" />
       </div>
     </.preview>
@@ -106,7 +106,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
         ~S|<.input name="email" label="Email" hint="We only use this for receipts." value="ada@example.com" />|
       }
     >
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.input
           name="email"
           label="Email"
@@ -132,7 +132,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       input so both segments share one height." />
 
     <.preview {assigns} code={&code_affixes/1}>
-      <div class="grid w-full max-w-sm gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
         <Components.input
           name="search"
           type="search"
@@ -189,7 +189,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       dedicated `select`, `textarea`, `checkbox`, and `hidden` branches." />
 
     <.preview {assigns} code={&code_types/1} collapsed>
-      <div class="grid w-full gap-4 sm:grid-cols-2">
+      <div class="grid fl-w-full gap-4 sm:grid-cols-2">
         <Components.input
           :for={{type, value} <- type_demos()}
           name={"demo-#{type}"}
@@ -212,7 +212,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       custom option lists later." />
 
     <.preview {assigns} code={&code_select/1}>
-      <div class="grid w-full max-w-sm gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
         <Components.input
           name="role"
           type="select"
@@ -249,7 +249,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
         ~S|<.input name="bio" type="textarea" label="Bio" rows="4" hint="A short introduction." value="I write accessible interfaces." />|
       }
     >
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.input
           name="bio"
           type="textarea"
@@ -273,7 +273,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
         ~S|<.input name="remember_me" type="checkbox" label="Remember me on this device" value={true} />|
       }
     >
-      <div class="grid w-full max-w-sm gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
         <Components.input
           name="remember_me"
           type="checkbox"
@@ -309,7 +309,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       warning icon that assistive technology skips, so the error reads at a glance." />
 
     <.preview {assigns} code={&code_validation/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.input
           id="validation-email"
           name="email"
@@ -334,7 +334,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       when it is disabled; a read-only field keeps its value legible." />
 
     <.preview {assigns} code={&code_disabled/1}>
-      <div class="grid w-full max-w-sm gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
         <Components.input
           name="disabled-email"
           type="email"
@@ -364,7 +364,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       input or a row count on a listbox select." />
 
     <.preview :let={props} {assigns} code={&code_size/1}>
-      <div class="grid w-full max-w-sm gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
         <Components.input name="sized-email" label="Email" size={props.size} value="ada@example.com" />
       </div>
     </.preview>
@@ -377,7 +377,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       The default is `md`; the color swatch follows the same radius." />
 
     <.preview :let={props} {assigns} code={&code_radius/1}>
-      <div class="grid w-full max-w-sm gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
         <Components.input
           name="radius-email"
           label="Email"
@@ -395,7 +395,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
       The code panel shows the real form markup and the LiveView assign it needs." />
 
     <.preview {assigns} codes={&code_form/1}>
-      <div class="grid w-full max-w-md gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
         <Components.input name="profile-name" label="Name" value="Ada Lovelace" />
         <Components.input
           name="profile-email"
@@ -447,7 +447,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="grid w-full max-w-sm gap-4">
+    <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
       <Components.input
         id={"#{@parts_id}-email"}
         name={"#{@parts_id}-email"}

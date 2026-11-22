@@ -30,13 +30,13 @@ defmodule FlintUIDocsWeb.Docs.Accordion do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.preview :let={props} {assigns} code={&main_code/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.accordion
           id={"#{@preview_id}-accordion"}
           variant={props.variant}
           surface={props.surface}
           multiple={props.multiple}
-          class="w-full"
+          class="fl-w-full"
         >
           <Components.accordion_item
             id={"#{@preview_id}-shipping"}
@@ -60,7 +60,7 @@ defmodule FlintUIDocsWeb.Docs.Accordion do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <Components.accordion id={"#{@parts_id}-accordion"} class="w-full max-w-md">
+    <Components.accordion id={"#{@parts_id}-accordion"} class="fl-w-full fl-max-w-md">
       <Components.accordion_item id={"#{@parts_id}-shipping"} label="Shipping" expanded>
         <:panel>Orders leave the warehouse in one business day.</:panel>
       </Components.accordion_item>

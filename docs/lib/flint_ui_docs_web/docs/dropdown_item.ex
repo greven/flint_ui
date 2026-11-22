@@ -32,7 +32,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownItem do
     ~H"""
     <.prose content="An item is a native button by default. Pass `href`, `navigate`, or `patch` to render a link, `intent` to tint it with a semantic color, and `disabled` to skip it in the menu's arrow navigation. Use the `icon` shortcut before the label, or set `custom` for a non-interactive content block." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
-      <div class="flex min-h-40 w-full items-center justify-center">
+      <div class="flex min-h-40 fl-w-full items-center justify-center">
         <Components.dropdown label="Actions">
           <Components.dropdown_item
             icon="lucide-settings"
@@ -52,8 +52,8 @@ defmodule FlintUIDocsWeb.Docs.DropdownItem do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex min-h-64 w-full items-start justify-center py-6">
-      <div class="flex flex-col items-start gap-2">
+    <div class="flex min-h-64 fl-w-full items-start justify-center py-6">
+      <div class="fl-stack fl-items-start fl-gap-sm">
         <div data-element="dropdown" data-part="root" data-dropdown data-state="open">
           <button
             data-part="trigger"

@@ -43,7 +43,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       {assigns}
       code={~s|<.copy_button from="install-command" label="Copy install command" />|}
     >
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <code id="install-command" class="docs-code font-mono">mix flint.add copy_button</code>
         <Components.copy_button from="install-command" label="Copy install command" />
       </div>
@@ -62,13 +62,13 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       default slot, keep `label` equal to that text so the name matches what the user sees." />
 
     <.preview {assigns} code={code_sources()} collapsed>
-      <div class="flex flex-col items-start gap-5">
-        <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-stack fl-items-start fl-gap-lg">
+        <div class="fl-cluster">
           <code id="copy-button-version" class="docs-code font-mono">FlintUI 0.1.0</code>
           <Components.copy_button value="FlintUI 0.1.0" label="Copy version" />
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="fl-cluster">
           <a id="copy-button-profile-link" href="/components/copy_button" class="docs-link">
             Profile page
           </a>
@@ -106,7 +106,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       controls. See the [button docs](/components/button) for the full control contract." />
 
     <.preview {assigns} code={code_variants()} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.copy_button
           :for={variant <- variants()}
           from="copy-button-variant-target"
@@ -131,7 +131,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       scheme; `dark` and `light` stay absolute. A raw color is a per-instance escape hatch." />
 
     <.preview {assigns} code={code_colors()} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.copy_button
           :for={color <- colors()}
           from="copy-button-color-target"
@@ -161,7 +161,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       see and hear the error state." />
 
     <.preview {assigns} code={code_feedback()} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <code id="copy-button-feedback-target" class="docs-code font-mono">
           npm install flint_ui
         </code>
@@ -190,7 +190,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       ends. The `:success` slot swaps the visible content, so `Copy` becomes `Copied`." />
 
     <.preview {assigns} code={code_success()} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <code id="copy-button-success-target" class="docs-code font-mono">
           mix flint.add copy_button
         </code>
@@ -216,7 +216,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       empty string to omit it." />
 
     <.preview {assigns} code={code_icons()} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <code id="copy-button-token" class="docs-code font-mono">fl_live_4f8c2a</code>
         <Components.copy_button
           from="copy-button-token"
@@ -244,7 +244,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       pointer-device convenience and never replaces that name." />
 
     <.preview {assigns} code={code_tooltip()} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <code id="copy-button-tooltip-target" class="docs-code font-mono">fl_live_4f8c2a</code>
         <Components.copy_button from="copy-button-tooltip-target" tooltip />
         <Components.copy_button
@@ -264,8 +264,8 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
       toggle of the same size. An icon-only button is square; add visible text to give it inline padding." />
 
     <.preview {assigns} code={code_sizing()} collapsed>
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-stack fl-gap-lg">
+        <div class="fl-cluster">
           <Components.copy_button
             :for={size <- ~w(xs sm md lg xl)}
             from="copy-button-size-target"
@@ -273,7 +273,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
             label={"Copy at #{size}"}
           />
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="fl-cluster">
           <Components.copy_button
             :for={size <- ~w(xs sm md lg xl)}
             from="copy-button-size-target"
@@ -334,7 +334,7 @@ defmodule FlintUIDocsWeb.Docs.CopyButton do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
+    <div class="fl-cluster">
       <code id={"#{@parts_id}-target"} class="docs-code font-mono">
         mix flint.add copy_button
       </code>

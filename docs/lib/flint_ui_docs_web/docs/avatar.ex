@@ -36,7 +36,7 @@ defmodule FlintUIDocsWeb.Docs.Avatar do
     ~H"""
     <.prose content="Use `src` to load an image. When it is missing or fails to load, the avatar falls back to initials from `alt`, to fixed `text`, or to a user icon when neither is set." />
     <.preview :let={props} {assigns} code={&main_code/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.avatar
           src={@image}
           alt="Chris McCord"

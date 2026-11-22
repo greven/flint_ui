@@ -29,7 +29,7 @@ defmodule FlintUIDocsWeb.Docs.DropdownSub do
     ~H"""
     <.prose content="Declare the submenu content in a `:submenu` slot with an `id`, then point a `dropdown_sub` at it with `menu`. The submenu opens to the right, flips when it does not fit, and closes back to its trigger with `ArrowLeft` or `Escape`. Set `open_on_hover` to open the submenu when the pointer rests on it; it follows the dropdown's `open_delay` and never moves focus." />
     <.preview :let={props} {assigns} code={&sub_code/1}>
-      <div class="flex min-h-40 w-full items-center justify-center">
+      <div class="flex min-h-40 fl-w-full items-center justify-center">
         <Components.dropdown label="Actions">
           <Components.dropdown_item>Settings</Components.dropdown_item>
           <:submenu id="more">
@@ -48,8 +48,8 @@ defmodule FlintUIDocsWeb.Docs.DropdownSub do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex min-h-52 w-full items-start justify-center py-6">
-      <div class="flex w-64 flex-col gap-1">
+    <div class="flex min-h-52 fl-w-full items-start justify-center py-6">
+      <div class="fl-stack fl-gap-xs w-64">
         <div data-element="dropdown_item" data-part="item" data-dropdown_item data-intent="neutral">
           Settings
         </div>

@@ -50,7 +50,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       with it." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.switch
           id="notifications-switch"
           name="notifications"
@@ -84,7 +84,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       <:on>ON</:on>
       <:off>OFF</:off>
     </.switch>|}>
-      <div class="grid w-full max-w-sm gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
         <Components.switch name="wifi" label="Wi-Fi">
           <:on>ON</:on>
           <:off>OFF</:off>
@@ -111,7 +111,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       description="Required for administrator accounts."
       errors={["must be enabled for admin accounts"]}
     />|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.switch
           id="two-factor-switch"
           name="two_factor"
@@ -132,7 +132,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
     <.preview {assigns} code={~S|<.switch name="email" label="Email notifications" disabled />
     <.switch name="push" label="Push notifications" disabled checked />
     <.switch name="security" label="Security alerts" required />|}>
-      <div class="grid w-full max-w-sm gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
         <Components.switch name="email" label="Email notifications" disabled />
         <Components.switch name="push" label="Push notifications" disabled checked />
         <Components.switch name="security" label="Security alerts" required />
@@ -151,7 +151,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       <.switch field={f[:newsletter]} label="Send me the newsletter" checked />
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="switch-field-form">
-        <div class="grid w-full max-w-sm gap-3">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
           <Components.switch field={f[:notifications]} label="Enable notifications" />
           <Components.switch field={f[:newsletter]} label="Send me the newsletter" checked />
         </div>
@@ -169,7 +169,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
     <.prose content="Use a [switch group](/components/switch_group) when related settings belong
       under one legend; each switch keeps its own field." />
 
-    <.preview {assigns} code={~S|<div class="grid gap-4">
+    <.preview {assigns} code={~S|<div class="fl-grid-cols-1 fl-gap-lg">
       <.switch
         name="notifications"
         label="Notifications"
@@ -179,7 +179,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       <.switch name="marketing" label="Product news" description="No more than one email a month." />
       <.switch name="two_factor" label="Two-factor authentication" checked />
     </div>|}>
-      <div class="grid w-full max-w-md gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
         <Components.switch
           name="notifications"
           label="Notifications"
@@ -214,7 +214,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
       <.button type="button" variant="solid">Create account</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="switch-form-example">
-        <div class="grid w-full max-w-md gap-4">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
           <Components.switch field={f[:notifications]} label="Enable notifications" checked />
           <Components.switch field={f[:newsletter]} label="Send me the newsletter" />
           <Components.switch
@@ -232,7 +232,7 @@ defmodule FlintUIDocsWeb.Docs.Switch do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="grid w-full max-w-sm gap-3">
+    <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
       <Components.switch
         id={"#{@parts_id}-notifications"}
         name={"#{@parts_id}-notifications"}

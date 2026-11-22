@@ -72,7 +72,7 @@ defmodule FlintUIDocsWeb.Docs.Kbd do
     <.prose content="`raised` is the default keycap, `subtle` is a soft neutral tint with a faint edge, and `outline` is a flat key with a full border. All three share the same size scale and cap geometry, so they line up in a row." />
     <.preview {assigns} code={variants_code()}>
       <div class="flex flex-wrap items-center gap-6">
-        <div :for={variant <- ~w(raised subtle outline)} class="flex flex-col items-center gap-2">
+        <div :for={variant <- ~w(raised subtle outline)} class="fl-stack fl-items-center fl-gap-sm">
           <Components.kbd variant={variant}>K</Components.kbd>
           <span class="text-xs text-muted">{variant}</span>
         </div>
@@ -86,7 +86,7 @@ defmodule FlintUIDocsWeb.Docs.Kbd do
     <.prose content="Use `size` to scale the key, from `xs` to `xl`. The font and the cap grow together, so the padding stays proportional and mixed sizes still line up. The default size is `md`." />
     <.preview {assigns} code={&size_code/1}>
       <div class="flex flex-wrap items-end gap-4">
-        <div :for={{size, label} <- sizes()} class="flex flex-col items-center gap-2">
+        <div :for={{size, label} <- sizes()} class="fl-stack fl-items-center fl-gap-sm">
           <Components.kbd size={size}>K</Components.kbd>
           <span class="text-xs text-muted">{label}</span>
         </div>
@@ -99,7 +99,7 @@ defmodule FlintUIDocsWeb.Docs.Kbd do
     ~H"""
     <.prose content="Use the `subtle` variant when a key sits next to text and should stay quiet, such as a shortcut hint. Keep the key names literal: `⌘`, `⇧`, and `⌥` on macOS, `Ctrl`, `Shift`, and `Alt` elsewhere." />
     <.preview {assigns} code={shortcut_code()}>
-      <div class="w-full max-w-sm space-y-2">
+      <div class="fl-w-full fl-max-w-sm fl-stack fl-gap-sm">
         <div class="flex items-center justify-between gap-4 rounded-md border border-default bg-surface px-3 py-2">
           <span class="text-sm text-toned">Search</span>
           <span class="inline-flex items-center gap-1">
@@ -147,7 +147,7 @@ defmodule FlintUIDocsWeb.Docs.Kbd do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
+    <div class="fl-cluster">
       <Components.kbd>K</Components.kbd>
       <Components.kbd variant="subtle">Esc</Components.kbd>
       <Components.kbd variant="outline">Tab</Components.kbd>

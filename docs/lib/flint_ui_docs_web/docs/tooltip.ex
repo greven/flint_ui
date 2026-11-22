@@ -74,7 +74,7 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
       Both are preferences, not promises: the content flips to the opposite side when the preferred one would leave the viewport, and shifts along the trigger so it stays readable.
       Hover or focus a button to see it open on its preferred side." />
     <.preview {assigns} code={position_code()}>
-      <div class="flex flex-col items-center gap-6">
+      <div class="fl-stack fl-items-center fl-gap-xl">
         <Components.tooltip text="Top" placement="top">
           <Components.button variant="surface" size="sm">Top</Components.button>
         </Components.tooltip>
@@ -108,7 +108,7 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
         <Components.tooltip>
           <Components.button variant="ghost" size="xs" icon="lucide-info" square />
           <:content>
-            <div class="w-full flex items-center justify-between">
+            <div class="fl-w-full flex items-center justify-between">
               <p class="text-sm">Save Now!</p>
               <div>
                 <Components.kbd size="xs" variant="outline">Alt</Components.kbd>
@@ -146,9 +146,9 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-col items-center gap-3 py-6">
+    <div class="fl-stack fl-items-center fl-py-xl">
       <span class="text-xs text-muted">Static preview of the parts</span>
-      <div class="flex flex-col items-center gap-4">
+      <div class="fl-stack fl-items-center fl-gap-lg">
         <span
           data-element="tooltip"
           data-part="root"
@@ -199,7 +199,7 @@ defmodule FlintUIDocsWeb.Docs.Tooltip do
 
   defp position_code do
     """
-    <div class="flex flex-col items-center gap-6">
+    <div class="fl-stack fl-items-center fl-gap-xl">
       <.tooltip text="Top" placement="top">
         <.button variant="surface" size="sm">Top</.button>
       </.tooltip>

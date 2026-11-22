@@ -100,7 +100,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       keeps room for the remaining work.|} />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.progress
           id="progress-basic-demo"
           phx-hook=".ProgressDemo"
@@ -166,7 +166,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       bar is indeterminate.|} />
 
     <.preview :let={props} {assigns} code={&code_steps/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.progress
           value={props.value}
           max={steps()}
@@ -186,7 +186,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       color, so the pattern reads on every color role without a second color input.|} />
 
     <.preview :let={props} {assigns} code={&code_striped/1}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.progress
           value="60"
           aria-label="Uploading"
@@ -220,7 +220,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       is hidden while the bar is indeterminate, since there is no percentage to show.|} />
 
     <.preview :let={props} {assigns} code={&code_indeterminate/1}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.progress aria-label="Uploading" indeterminate={props.indeterminate} />
         <Components.progress
           aria-label="Processing"
@@ -270,7 +270,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       maximum shows `100%`.|} />
 
     <.preview {assigns} code={code_status()}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.progress value="0" label="Starting" show_status />
         <Components.progress value="35" label="Indexing" show_status />
         <Components.progress value="100" label="Finished" show_status color="success" />
@@ -287,7 +287,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
       percentage.|} />
 
     <.preview {assigns} code={code_uploads()}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.progress
           value="100"
           aria-label="Design files"
@@ -305,7 +305,7 @@ defmodule FlintUIDocsWeb.Docs.Progress do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.progress
         value="3"
         max={steps()}

@@ -16,7 +16,7 @@
      *
      * Card opts in and uses `--fl-elevation-surface` as its default shadow. */
     :where([data-elevation], .fl-surface) {
-        --_fl-elevation-scale: calc(1 + (var(--fl-elevation-level) - 1) * var(--fl-elevation-step));
+        --_fl-elevation-scale: calc(1 + (var(--fl-elevation-level, 2) - 1) * var(--fl-elevation-step));
         --fl-elevation-surface:
             inset 0 1px 0 0 var(--fl-elevation-highlight), inset 0 0 0 1px var(--fl-elevation-hairline), 0 0 0 1px var(--fl-elevation-ring),
             0 calc(var(--_fl-elevation-scale) * 1px) calc(var(--_fl-elevation-scale) * 2px) calc(var(--_fl-elevation-scale) * -1px)

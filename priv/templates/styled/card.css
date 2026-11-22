@@ -7,15 +7,15 @@
      * primitive's hairline and top highlight are cleared; only the
      * dark-scheme outer ring remains. */
     [data-element="card"][data-card] {
-        --fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));
-        --fl-elevation-hairline: transparent;
-        --fl-elevation-highlight: transparent;
+        /*--fl-elevation-hairline: transparent;*/
+        /*--fl-elevation-highlight: transparent;*/
+
         position: relative;
         display: flex;
         flex-direction: column;
         gap: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
-        border: 1px solid var(--fl-card-border, var(--fl-color-border));
+        /*border: 1px solid var(--fl-card-border, var(--fl-color-border));*/
         border-radius: var(--fl-radius-lg);
         background: var(--fl-card-surface, var(--fl-color-surface));
         color: var(--fl-card-text, var(--fl-color-text));
@@ -40,11 +40,7 @@
     [data-element="card"][data-card][data-link][data-outline]:is(:hover, :focus-visible) {
         border-color: var(
             --fl-card-border-hover,
-            color-mix(
-                in oklab,
-                var(--fl-card-border, var(--fl-color-border)),
-                var(--fl-card-text, var(--fl-color-text)) 20%
-            )
+            color-mix(in oklab, var(--fl-card-border, var(--fl-color-border)), var(--fl-card-text, var(--fl-color-text)) 20%)
         );
     }
 
@@ -66,7 +62,7 @@
 
     [data-element="card"][data-indicator] > [data-part="corner"] {
         color: var(--fl-card-text, var(--fl-color-text));
-        opacity: 0.55;
+        opacity: 0.25;
     }
 
     [data-element="card"][data-indicator] > [data-part="corner"] [data-element="icon"] {

@@ -173,7 +173,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       `success`, `warning`, `danger`, `primary`, and `secondary`." />
 
     <.preview id={"#{@id}-grid"}>
-      <div class="space-y-3">
+      <div class="fl-stack">
         <div
           :for={color <- ~w(neutral info success warning danger)}
           class="flex flex-wrap gap-3 justify-center"
@@ -197,7 +197,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     <.prose content="You can also use the `:leading` and `:trailing` slots to place an icon or other content before and after the label." />
     <.prose content="Icons are decorative. Keep the badge's text meaningful on its own instead of relying on the icon to carry the state." />
     <.preview id={@id} code={&code_icon/1} collapsed>
-      <div class="grid grid-rows-2 gap-3">
+      <div class="fl-grid-rows-2 fl-gap-md">
         <div class="flex flex-wrap justify-center gap-3">
           <Components.badge color="neutral" icon="ph-bookmark-duotone">Saved</Components.badge>
           <Components.badge color="success" icon="ph-seal-check-duotone">Success</Components.badge>
@@ -234,7 +234,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Use the `size` attr to change the badge size, from `xs` to `xl`. The default size is `md`." />
     <.preview id={@id} code={&code_size/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.badge :for={{label, size} <- sizes()} size={size}>{label}</Components.badge>
       </div>
     </.preview>
@@ -263,7 +263,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Set `wide` to fill the width of the surrounding container. The content stays centered." />
     <.preview id={@id} code={&code_wide/1}>
-      <div class="w-full max-w-xs">
+      <div class="fl-w-full max-w-xs">
         <Components.badge variant="solid" wide>
           Full width
         </Components.badge>
@@ -276,7 +276,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
     ~H"""
     <.prose content="Set `uppercase` to render the label in uppercase." />
     <.preview id={@id} code={&code_uppercase/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.badge variant="solid" color="neutral" size="xs" radius="sm" uppercase>
           Tiny
         </Components.badge>
@@ -300,7 +300,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       and assistive technology announces it as a link." />
     <.prose content="Use the link form for navigation. Keep a plain badge for labels and statuses that only describe something." />
     <.preview {assigns} code={&code_as_link/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.badge variant="solid" color="info" navigate="/components/badge">
           Badge Docs
         </Components.badge>
@@ -347,7 +347,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
         for anything app-wide, and treat raw colors as a deliberate exception." />
 
     <.preview {assigns} code={&code_raw/1}>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.badge variant="solid" size="lg" color="#00B9DB" style="color: white;">
           Cyan
         </Components.badge>
@@ -370,7 +370,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       image is dropped, so restore the text fill with a `@media (forced-colors: active)` rule." />
 
     <.preview {assigns} preview_id={"#{@preview_id}-gradient"} code={&code_gradient/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.badge
           variant="subtle"
           color="primary"
@@ -420,7 +420,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       known as a chip. Keep the badge as the label and give the remove action its own button." />
     <.prose content="Name the button after the value it removes so every chip has a distinct accessible name." />
     <.preview {assigns} code={&code_removable_badge/1} collapsed>
-      <div class="space-y-2">
+      <div class="fl-stack fl-gap-sm">
         <div class="flex flex-wrap items-center gap-2">
           <Components.badge
             :for={tag <- ~w(Elixir Phoenix LiveView)}
@@ -574,7 +574,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
       `3 unread notifications`. Use `role=\"status\"` instead of `role=\"img\"` when the count changes
       and should be announced."} />
     <.preview {assigns} code={&code_icon_only/1} collapsed>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="fl-cluster">
         <Components.badge variant="solid" color="success" role="img" aria-label="Verified">
           <Components.icon name="lucide-circle-check" />
         </Components.badge>
@@ -605,7 +605,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-wrap items-center gap-3">
+    <div class="fl-cluster">
       <Components.badge variant="soft" color="info" icon="lucide-sparkles">Badge</Components.badge>
       <Components.badge variant="solid" color="success">Active</Components.badge>
     </div>
@@ -681,7 +681,7 @@ defmodule FlintUIDocsWeb.Docs.Badge do
 
   defp code_wide(_) do
     """
-    <div class="w-full">
+    <div class="fl-w-full">
       <.badge variant="solid" wide>Full Width</.badge>
     </div>
     """

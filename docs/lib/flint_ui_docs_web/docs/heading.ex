@@ -64,7 +64,7 @@ defmodule FlintUIDocsWeb.Docs.Heading do
     ~H"""
     <.prose content="Use `as` for the document structure and leave `size` on `auto` when the default ramp fits. Do not choose a lower heading level to make the text smaller; keep the outline correct and let `size` carry the visual hierarchy." />
     <.preview {assigns} code={levels_code()}>
-      <div class="flex w-full flex-col gap-5">
+      <div class="fl-stack fl-w-full fl-gap-lg">
         <div :for={level <- ~w(h1 h2 h3 h4 h5 h6)} class="flex items-baseline gap-4">
           <span class="w-6 shrink-0 font-mono text-xs text-muted">{level}</span>
           <Components.heading as={level}>Section title</Components.heading>
@@ -95,7 +95,7 @@ defmodule FlintUIDocsWeb.Docs.Heading do
     ~H"""
     <.prose content="Use `truncate` for a single line and `line_clamp` for a fixed number of lines. Both target the heading title, so the kicker and subtitle stay visible. `line_clamp` wins when both are set." />
     <.preview :let={props} {assigns} code={&truncation_code/1}>
-      <div class="w-full max-w-xs space-y-6">
+      <div class="fl-w-full max-w-xs fl-stack fl-gap-xl">
         <Components.heading truncate>
           A long heading that stays on one line
         </Components.heading>
@@ -177,7 +177,7 @@ defmodule FlintUIDocsWeb.Docs.Heading do
 
   defp truncation_code(props) do
     """
-    <div class="max-w-xs space-y-6">
+    <div class="max-w-xs fl-stack fl-gap-xl">
       <.heading truncate>A long heading that stays on one line</.heading>
       <.heading line_clamp={#{props.line_clamp}}>
         A long heading that wraps over a controlled number of lines and then stops

@@ -118,7 +118,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
       also cascades onto the children, so grouped buttons match the group." />
 
     <.preview {assigns} code={&size_code/1} collapsed>
-      <div class="flex flex-col items-start gap-4">
+      <div class="fl-stack fl-items-start fl-gap-lg">
         <div :for={size <- sizes()} class="flex items-center gap-4">
           <span class="w-6 text-xs font-medium text-muted">{size}</span>
           <Components.group surface="solid" size={size}>

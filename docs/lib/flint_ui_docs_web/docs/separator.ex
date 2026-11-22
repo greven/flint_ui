@@ -62,7 +62,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
     <.prose content={"Use the separator to divide content or groups of controls. It renders a `div` with `role=\"separator\"` by default and is not focusable.
       Pass `decorative` when the line is purely visual, and `as=\"hr\"` when the separation is a thematic break in the document."} />
     <.preview :let={props} {assigns} code={&basic_code/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <p class="font-medium text-md text-highlighted">FlintUI</p>
         <p class="text-sm text-muted">Phoenix LiveView Components</p>
         <Components.separator
@@ -71,7 +71,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
           size={props.size}
           class="my-3"
         />
-        <div class="w-full flex h-5 items-center space-x-4 text-sm">
+        <div class="fl-w-full flex h-5 items-center space-x-4 text-sm">
           <div class="text-sm">Some</div>
           <Components.separator
             orientation="vertical"
@@ -98,7 +98,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
     <.prose content="Pass `label` to center a text label on the line, or `icon` for an icon. The default slot takes precedence over both and accepts any content.
       `position` places the content at the `start`, `center`, or `end` of the line; it has no effect on a separator without content." />
     <.preview :let={props} {assigns} code={&content_code/1}>
-      <div class="w-full max-w-md space-y-6">
+      <div class="fl-w-full fl-max-w-md fl-stack fl-gap-xl">
         <Components.separator label="or" position={props.position} />
         <Components.separator icon="lucide-star" position={props.position} />
         <Components.separator position={props.position}>
@@ -113,7 +113,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
     ~H"""
     <.prose content="Use `color` to tint the line with a semantic role, or with a raw color for a one-off accent. The label keeps the default text color, so the line carries the emphasis." />
     <.preview :let={props} {assigns} code={&color_code/1}>
-      <div class="w-full max-w-md space-y-6">
+      <div class="fl-w-full fl-max-w-md fl-stack fl-gap-xl">
         <Components.separator color={props.color} label={props.color} />
         <Components.separator color="success" label="success" />
         <Components.separator color="danger" label="danger" />
@@ -142,7 +142,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
     ~H"""
     <.prose content="`size` accepts the `xs` to `xl` scale for line weight, or a number of pixels that is converted to rem. A numeric size writes the `--fl-separator-size` input inline, so it can be any value rather than only the scale." />
     <.preview :let={props} {assigns} code={&custom_size_code/1}>
-      <div class="w-full max-w-md space-y-6">
+      <div class="fl-w-full fl-max-w-md fl-stack fl-gap-xl">
         <Components.separator size={props.size} />
         <p class="text-center text-xs text-muted">{props.size}px</p>
       </div>
@@ -154,7 +154,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
     ~H"""
     <.prose content={"Use `as=\"hr\"` when the line is a thematic break between document sections. Keep the surrounding headings: the separator marks the break, but the heading carries the structure."} />
     <.preview {assigns} code={sections_code()}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <h3 class="text-sm font-semibold text-highlighted">Release notes</h3>
         <p class="mt-1 text-sm text-toned">Everything new in this version.</p>
         <Components.separator as="hr" class="my-5" />
@@ -183,7 +183,7 @@ defmodule FlintUIDocsWeb.Docs.Separator do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <Components.separator label="or" class="w-full max-w-sm" />
+    <Components.separator label="or" class="fl-w-full fl-max-w-sm" />
     """
   end
 

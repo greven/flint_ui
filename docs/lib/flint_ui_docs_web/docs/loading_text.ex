@@ -46,7 +46,7 @@ defmodule FlintUIDocsWeb.Docs.LoadingText do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="flex flex-col items-center gap-4">
+    <div class="fl-stack fl-items-center fl-gap-lg">
       <Components.loading_text text="Saving" variant="dots" />
       <Components.loading_text text="Reticulating" variant="wave" />
     </div>

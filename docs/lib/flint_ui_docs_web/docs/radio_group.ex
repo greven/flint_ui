@@ -51,7 +51,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       and `variant`, `size`, and `radius` are forwarded to every option." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.radio_group
           id="plan"
           name="plan"
@@ -88,7 +88,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       <:radio value="free" label="Free" />
       <:radio value="pro" label="Pro" />
     </.radio_group>|}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.radio_group
           name="plan"
           label="Plan"
@@ -119,7 +119,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       <:radio value="free" label="Free" />
       <:radio value="pro" label="Pro" disabled />
     </.radio_group>|}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.radio_group name="plan" label="Disabled group" disabled>
           <:radio value="free" label="Free" checked />
           <:radio value="pro" label="Pro" />
@@ -147,7 +147,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       </.radio_group>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="radio-group-field-form">
-        <div class="w-full max-w-sm">
+        <div class="fl-w-full fl-max-w-sm">
           <Components.radio_group field={f[:plan]} label="Plan">
             <:radio value="free" label="Free" />
             <:radio value="pro" label="Pro" />
@@ -174,7 +174,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       <.button type="button" variant="solid">Save profile</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="radio-group-form-example">
-        <div class="grid w-full max-w-md gap-4">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
           <Components.radio_group
             field={f[:plan]}
             label="Plan"
@@ -206,7 +206,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
       <:radio value="pro" label="Pro" sublabel="$19" description="Unlimited projects." />
       <:radio value="team" label="Team" sublabel="$49" description="Everything in Pro, plus roles." />
     </.radio_group>|}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.radio_group
           name="plan-cards"
           variant="card"
@@ -235,7 +235,7 @@ defmodule FlintUIDocsWeb.Docs.RadioGroup do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.radio_group
         id={"#{@parts_id}-plan"}
         name={"#{@parts_id}-plan"}

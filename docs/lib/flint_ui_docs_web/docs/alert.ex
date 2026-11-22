@@ -147,7 +147,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.prose content="`variant` sets the visual emphasis. `outline` is the default tinted surface with the role's full-strength edge; `soft` keeps the tint with the faint matching edge;
       `solid` fills the alert with the role color." />
     <.preview :let={_props} {assigns} code={&variant_code/1}>
-      <div class="grid w-full max-w-xl gap-3">
+      <div class="fl-grid-cols-1 fl-w-full max-w-xl fl-gap-md">
         <Components.alert
           :for={variant <- ~w(solid outline soft)}
           variant={variant}
@@ -167,7 +167,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.prose content={"`warning` and `danger` default to `role=\"alert\"`, so they interrupt. The other intents default to the polite `role=\"status\"`.
       Set `role` yourself when the surrounding flow needs a different announcement."} />
     <.preview :let={props} {assigns} code={intent_code()}>
-      <div class="grid w-full max-w-xl gap-3">
+      <div class="fl-grid-cols-1 fl-w-full max-w-xl fl-gap-md">
         <Components.alert
           :for={intent <- ~w(neutral info success warning danger)}
           intent={intent}
@@ -190,7 +190,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         variant="solid"
         color={props.color}
         title={String.capitalize(props.color)}
-        class="w-full max-w-xl"
+        class="fl-w-full max-w-xl"
       >
         A solid {props.color} alert.
       </Components.alert>
@@ -202,7 +202,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     ~H"""
     <.prose content="`title` is a styled line above the default slot. Both render when both are set, so you can use a title with a body, a body alone, or a title alone." />
     <.preview {assigns} code={title_code()} collapsed>
-      <div class="grid w-full max-w-xl gap-3">
+      <div class="fl-grid-cols-1 fl-w-full max-w-xl fl-gap-md">
         <Components.alert intent="info" title="Title and body">
           The default slot holds the description.
         </Components.alert>
@@ -224,7 +224,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       <Components.alert
         intent="warning"
         title="Storage almost full"
-        class="w-full max-w-xl"
+        class="fl-w-full max-w-xl"
       >
         You have used 90% of your plan.
         <:actions>
@@ -244,7 +244,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         intent="info"
         orientation={props.orientation}
         title="New release"
-        class="w-full max-w-xl"
+        class="fl-w-full max-w-xl"
       >
         Version 1.4 is ready.
         <:actions>
@@ -266,7 +266,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         intent="info"
         spacing={props.spacing}
         title="Spacing"
-        class="w-full max-w-xl"
+        class="fl-w-full max-w-xl"
       >
         The inset and gaps follow the selected step.
       </Components.alert>
@@ -278,7 +278,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     ~H"""
     <.prose content="`border` sets the edge treatment. `solid` is the default; `dashed` keeps the variant's edge color with a dashed stroke; `none` removes the edge while keeping the surface." />
     <.preview :let={_props} {assigns} code={border_code()}>
-      <div class="grid w-full max-w-xl gap-3">
+      <div class="fl-grid-cols-1 fl-w-full max-w-xl fl-gap-md">
         <Components.alert
           :for={border <- ~w(solid dashed none)}
           intent="info"
@@ -302,7 +302,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
         variant="outline"
         background={props.background}
         title="No background"
-        class="w-full max-w-xl"
+        class="fl-w-full max-w-xl"
       >
         The surface is optional; the edge is not.
       </Components.alert>
@@ -315,7 +315,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.prose content="Set `show_close` to render a close button. It hides the alert in the browser and pushes `close_event` when set, so the server can remove it from state." />
     <.prose content="Give the alert an `id` and use `close_alert/2` to close it from a server-rendered control. The helper dispatches `fl:alert:close` and hides the alert." />
     <.preview :let={props} {assigns} code={&closing_code/1}>
-      <div class="grid w-full max-w-xl gap-3">
+      <div class="fl-grid-cols-1 fl-w-full max-w-xl fl-gap-md">
         <Components.alert
           id="docs-close-alert"
           intent="success"
@@ -346,7 +346,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     <.prose content="Pass a palette hue or a raw CSS color to `color` for a one-off accent. A hue uses the active palette's core shade and derives its label for contrast; a raw color is used exactly.
       Prefer a semantic role or a theme override for anything app-wide." />
     <.preview {assigns} code={custom_color_code()} collapsed>
-      <div class="grid w-full max-w-xl gap-3">
+      <div class="fl-grid-cols-1 fl-w-full max-w-xl fl-gap-md">
         <%!-- <Components.alert variant="solid" color="#B45309"> --%>
         <%!-- A raw color keeps its exact fill. --%>
         <%!-- </Components.alert> --%>
@@ -377,7 +377,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
     ~H"""
     <.prose content="The `:icon` slot replaces the intent default. Keep the icon decorative unless it has its own accessible name, and keep the title and body meaningful without it." />
     <.preview {assigns} code={icon_override_code()} collapsed>
-      <Components.alert intent="info" title="Custom icon" class="w-full max-w-xl">
+      <Components.alert intent="info" title="Custom icon" class="fl-w-full max-w-xl">
         <:icon><Components.icon name="lucide-sparkles" /></:icon>
         The icon comes from the slot instead of the intent.
       </Components.alert>
@@ -401,7 +401,7 @@ defmodule FlintUIDocsWeb.Docs.Alert do
       intent="info"
       title="Heads up"
       show_close
-      class="w-full max-w-md"
+      class="fl-w-full fl-max-w-md"
     >
       Your trial ends in three days.
       <:actions>

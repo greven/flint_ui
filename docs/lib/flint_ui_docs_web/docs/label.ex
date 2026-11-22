@@ -42,7 +42,7 @@ defmodule FlintUIDocsWeb.Docs.Label do
       control type scale, from `xs` to `xl`, and defaults to `md`." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="grid w-full max-w-sm gap-2">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-sm">
         <Components.label for="label-basic-email" size={props.size}>Email</Components.label>
         <Components.input
           id="label-basic-email"
@@ -71,7 +71,7 @@ defmodule FlintUIDocsWeb.Docs.Label do
       type="email"
       aria-describedby="email-description"
     />|}>
-      <div class="grid w-full max-w-sm gap-2">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-sm">
         <Components.label for="label-description-email" description="We only use this for receipts.">
           Email
         </Components.label>
@@ -97,7 +97,7 @@ defmodule FlintUIDocsWeb.Docs.Label do
       The sublabel stays inside the label, so it is announced with the label text." />
 
     <.preview {assigns} code={~S|<.label for="email" sublabel="Optional">Email</.label>|}>
-      <div class="grid w-full max-w-sm gap-3">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-md">
         <Components.label for="label-sublabel-email" sublabel="Optional">Email</Components.label>
         <Components.label for="label-sublabel-phone" sublabel="Recommended">
           Phone
@@ -115,7 +115,7 @@ defmodule FlintUIDocsWeb.Docs.Label do
 
     <.preview {assigns} code={~S|<.label for="email" required>Email</.label>
     <.input id="email" name="email" type="email" required />|}>
-      <div class="grid w-full max-w-sm gap-2">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-sm">
         <Components.label for="label-required-email" required>Email</Components.label>
         <Components.input
           id="label-required-email"
@@ -141,7 +141,7 @@ defmodule FlintUIDocsWeb.Docs.Label do
       <.input field={f[:email]} type="email" aria-describedby="user_email-description" />
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="label-form-example">
-        <div class="grid w-full max-w-sm gap-2">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-sm">
           <Components.label for="user_name" sublabel="Optional">Name</Components.label>
           <Components.input field={f[:name]} />
 
@@ -162,7 +162,7 @@ defmodule FlintUIDocsWeb.Docs.Label do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="grid w-full max-w-sm gap-4">
+    <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
       <Components.label
         for={"#{@parts_id}-email"}
         required

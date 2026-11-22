@@ -50,7 +50,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
       `hint` follow the same contract as the other form fields." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.known_date
           id="known-date-basic"
           name="date_of_birth"
@@ -83,7 +83,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
     <.known_date id="us-date" name="us_date" label="US order" locale="en-US" />
     <.known_date id="jp-date" name="jp_date" label="Japanese order" locale="ja-JP" />|}
     >
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.known_date
           id="known-date-locale-gb"
           name="known-date-locale-gb"
@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
         ~S|<.known_date id="passport-date" name="passport_issued" label="When was your passport issued?" value="2007-03-27" />|
       }
     >
-      <div class="w-full max-w-md">
+      <div class="fl-w-full fl-max-w-md">
         <Components.known_date
           id="known-date-value"
           name="passport_issued"
@@ -172,7 +172,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
       required
     />|}
     >
-      <div class="grid w-full max-w-md gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-xl">
         <Components.known_date
           id="known-date-validation"
           name="birthday"
@@ -208,7 +208,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
     <.known_date id="readonly-date" name="readonly_date" label="Member since" value="2007-03-27" readonly />|
       }
     >
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.known_date
           id="known-date-disabled"
           name="known-date-disabled"
@@ -239,7 +239,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
       <.known_date field={f[:date_of_birth]} label="Date of birth" />
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="known-date-field-form">
-        <div class="w-full max-w-md">
+        <div class="fl-w-full fl-max-w-md">
           <Components.known_date field={f[:date_of_birth]} label="Date of birth" />
         </div>
       </.form>
@@ -260,7 +260,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
       <.button type="submit">Save details</.button>
     </.form>|}
     >
-      <div class="grid w-full max-w-md gap-4">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-md fl-gap-lg">
         <Components.known_date
           id="known-date-form-birth"
           name="date_of_birth"
@@ -284,7 +284,7 @@ defmodule FlintUIDocsWeb.Docs.KnownDate do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-md">
+    <div class="fl-w-full fl-max-w-md">
       <Components.known_date
         id={"#{@parts_id}-dob"}
         name={"#{@parts_id}-dob"}

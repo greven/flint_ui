@@ -61,7 +61,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       scales, and `resize` picks which resize handle the browser shows." />
 
     <.preview :let={props} {assigns} code={&code_basic/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.textarea
           id="textarea-basic-bio"
           name="bio"
@@ -96,7 +96,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       value="ada"
       errors={["is too short", "is already taken"]}
     />|}>
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.textarea
           id="textarea-description-username"
           name="username"
@@ -132,7 +132,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       code={~S|<.textarea id="note" name="note" label="Note" rows="2" resize="none" />
     <.textarea id="message" name="message" label="Message" rows="6" resize="vertical" />|}
     >
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.textarea
           id="textarea-rows-note"
           name="note"
@@ -165,7 +165,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       the native `rows` height: `min_rows`, unless you pass `rows` yourself." />
 
     <.preview :let={props} {assigns} code={&code_autogrow/1}>
-      <div class="w-full max-w-sm">
+      <div class="fl-w-full fl-max-w-sm">
         <Components.textarea
           id="textarea-autogrow-message"
           name="autogrow_message"
@@ -191,7 +191,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       code={~S|<.textarea id="bio" name="bio" label="Bio" value="Unavailable" disabled />
     <.textarea id="terms" name="terms" label="Terms" value="Read-only copy" readonly />|}
     >
-      <div class="grid w-full max-w-sm gap-6">
+      <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-xl">
         <Components.textarea
           id="textarea-disabled-bio"
           name="bio"
@@ -222,7 +222,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       <.textarea field={f[:bio]} label="Bio" rows="4" />
     </.form>|}>
       <.form :let={f} for={%{}} as={:user} id="textarea-field-form">
-        <div class="w-full max-w-sm">
+        <div class="fl-w-full fl-max-w-sm">
           <Components.textarea field={f[:bio]} label="Bio" rows="4" />
         </div>
       </.form>
@@ -241,7 +241,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
       <.button type="submit">Save profile</.button>
     </.form>|}>
       <.form :let={f} for={%{}} as={:profile} id="textarea-example-form">
-        <div class="grid w-full max-w-sm gap-4">
+        <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
           <Components.input field={f[:name]} label="Name" placeholder="Ada Lovelace" />
 
           <Components.textarea
@@ -270,7 +270,7 @@ defmodule FlintUIDocsWeb.Docs.Textarea do
   @impl true
   def parts_demo(assigns) do
     ~H"""
-    <div class="w-full max-w-sm">
+    <div class="fl-w-full fl-max-w-sm">
       <Components.textarea
         id={"#{@parts_id}-bio"}
         name={"#{@parts_id}-bio"}
