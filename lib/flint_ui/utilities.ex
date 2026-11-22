@@ -112,6 +112,7 @@ defmodule FlintUI.Utilities do
       family(:colors, "Color", color_description(), color_utilities()),
       family(:borders, "Borders and radius", border_description(), border_utilities()),
       family(:effects, "Effects", effect_description(), effect_utilities()),
+      family(:surface, "Surface", surface_description(), surface_utilities(), css: surface_css()),
       family(:motion, "Motion", motion_description(), motion_utilities(), css: motion_css()),
       family(:responsive, "Responsive display", responsive_description(), responsive_utilities(),
         css: responsive_css()
@@ -1144,6 +1145,34 @@ defmodule FlintUI.Utilities do
     ]
 
     shadows ++ opacity ++ overflow ++ object ++ cursors ++ interaction
+  end
+
+  # Surface ------------------------------------------------------------------
+
+  defp surface_description do
+    desc("""
+    A raised surface with a theme border, top highlight, outer ring, and three
+    drop shadows. Level 2 is the default; tune the edge with the border ladder.
+    """)
+  end
+
+  defp surface_utilities do
+    [
+      util(
+        "fl-surface",
+        "layered border, top highlight, outer ring, and drop shadows; tune with --fl-elevation-*"
+      )
+    ]
+  end
+
+  defp surface_css do
+    """
+      .fl-surface {
+        background-color: var(--fl-elevation-fill, var(--fl-color-surface));
+        box-shadow: var(--fl-elevation-surface);
+      }
+    """
+    |> String.trim_trailing()
   end
 
   # Motion -------------------------------------------------------------------

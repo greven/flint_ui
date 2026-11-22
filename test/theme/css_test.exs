@@ -755,24 +755,50 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s|[data-element="card"][data-inverted]|
     assert css =~ ~s|[data-element="card"][data-card][data-link]|
     assert css =~ "background: var(--fl-card-surface, var(--fl-color-surface));"
-    assert css =~ "border: 1px solid var(--fl-card-border, var(--fl-color-border));"
-    assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-elevation-surface));"
+    assert css =~ "--fl-elevation-border: var(--fl-card-border, var(--fl-color-border));"
+    assert css =~ ~r/\[data-element="card"\]\[data-card\] \{[^}]*--fl-elevation-surface:/s
+    assert css =~ "var(--fl-elevation-highlight-layer), var(--fl-elevation-border-layer)"
+    assert css =~ "var(--fl-card-shadow, var(--fl-elevation-depth))"
+    refute css =~ ~r/\[data-element="card"\]\[data-card\] \{[^}]*box-shadow/s
+    assert css =~ "--fl-elevation-border-layer: 0 0 #0000;"
+    assert css =~ "--fl-elevation-highlight-layer: 0 0 #0000;"
+
+    outline_rule =
+      Regex.run(~r/\[data-element="card"\]:not\(\[data-outline\]\)\[data-card\] \{[^}]*\}/s, css)
+      |> hd()
+
+    assert outline_rule =~ "--fl-elevation-border-layer: 0 0 #0000;"
+    assert outline_rule =~ "--fl-elevation-highlight-layer: 0 0 #0000;"
+
+    shadow_rule =
+      Regex.run(~r/\[data-element="card"\]:not\(\[data-shadow\]\)\[data-card\] \{[^}]*\}/s, css)
+      |> hd()
+
+    refute shadow_rule =~ "--fl-elevation-highlight-layer"
+
+    ghost_rule =
+      Regex.run(~r/\[data-element="card"\]\[data-variant="ghost"\] \{[^}]*\}/s, css)
+      |> hd()
+
+    assert ghost_rule =~ "--fl-elevation-border-layer: 0 0 #0000;"
+    assert ghost_rule =~ "--fl-elevation-highlight-layer: 0 0 #0000;"
   end
 
   test "raised surfaces share one layered elevation recipe", %{css: css} do
     assert css =~ "--fl-elevation-level: 2;"
     assert css =~ "--fl-elevation-step: 0.4;"
+    assert css =~ "--fl-elevation-border: var(--fl-color-border);"
     assert css =~ ":where([data-elevation], .fl-surface) {"
+    assert css =~ ":where([data-elevation]) {"
     assert css =~ "--fl-elevation-surface:"
     assert css =~ "inset 0 1px 0 0 var(--fl-elevation-highlight)"
-    assert css =~ "inset 0 0 0 1px var(--fl-elevation-hairline)"
+    assert css =~ "inset 0 0 0 1px var(--fl-elevation-border)"
     assert css =~ "0 0 0 1px var(--fl-elevation-ring)"
     assert css =~ "box-shadow: var(--fl-elevation-surface);"
-    assert css =~ "--fl-elevation-ring: light-dark(var(--fl-color-border), rgb(0 0 0 / 40%));"
     assert css =~ "--fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));"
-    assert css =~ "--fl-elevation-hairline: transparent;"
-    assert css =~ "--fl-elevation-highlight: transparent;"
+    assert css =~ "--fl-elevation-ring-layer: 0 0 #0000;"
     assert css =~ "--fl-elevation-level: 3;"
+    refute css =~ ".fl-surface {"
   end
 
   test "a vertical separator stretches in flex and keeps a fallback length", %{css: css} do

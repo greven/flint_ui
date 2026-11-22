@@ -126,8 +126,19 @@ defmodule FlintUI.UtilitiesTest do
     assert css =~ ".fl-2xl-block { display: block; }"
   end
 
+  test "the surface utility applies the shared elevation recipe", %{css: css} do
+    assert css =~ ".fl-surface {"
+    assert css =~ "background-color: var(--fl-elevation-fill, var(--fl-color-surface));"
+    assert css =~ "box-shadow: var(--fl-elevation-surface);"
+
+    refute css =~ "--_fl-elevation-scale"
+    refute css =~ "--fl-elevation-depth:"
+    refute css =~ "--fl-elevation-surface:"
+  end
+
   test "the utility layer stays out of the component theme" do
     refute Generator.theme_source() =~ ".fl-stack"
+    refute Generator.theme_source() =~ ".fl-surface {"
     refute Enum.any?(Generator.part_paths(), &(&1 =~ "utilities.css"))
   end
 

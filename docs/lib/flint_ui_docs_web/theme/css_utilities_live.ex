@@ -320,6 +320,30 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
           </div>
         </DocsComponents.section>
 
+        <DocsComponents.section title="Surface" id="surface">
+          <DocsComponents.content_paragraph>
+            <code class="docs-code font-mono">fl-surface</code>
+            applies the elevation primitive's composed shadow: an inner border,
+            a top highlight, an outer ring, and three drop shadows. The recipe
+            lives on the primitive, so it is defined once and stays in sync
+            with <code class="docs-code font-mono">data-elevation</code>
+            surfaces; the utility only applies it. The border follows the
+            chrome ladder, so point <code class="docs-code font-mono">--fl-elevation-border</code>
+            at <code class="docs-code font-mono">--fl-color-border-strong</code>
+            for a heavier edge. Level 2 is the default; raise it with <code class="docs-code font-mono">--fl-elevation-level</code>.
+          </DocsComponents.content_paragraph>
+          <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            <div
+              :for={level <- 1..3}
+              class="fl-surface fl-rounded-lg fl-p-md"
+              style={"--fl-elevation-level: #{level}"}
+            >
+              <span class="fl-text-xs fl-text-muted">level {level}</span>
+            </div>
+          </div>
+          <DocsComponents.code_block code={snippet(:surface)} />
+        </DocsComponents.section>
+
         <DocsComponents.section title="Motion" id="motion">
           <DocsComponents.content_paragraph>
             The shared keyframes in <code class="docs-code font-mono">flint.css</code>
@@ -651,6 +675,17 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
       border: 1px solid var(--fl-tone-soft-border);
       color: var(--fl-tone-on-soft);
     }
+    """
+  end
+
+  defp snippet(:surface) do
+    """
+    <div class="fl-surface fl-rounded-lg fl-p-lg" style="--fl-elevation-level: 3;">
+      <p class="fl-font-semibold">Raised surface</p>
+      <p class="fl-text-sm fl-text-toned">
+        Border, top highlight, outer ring, and drop shadows.
+      </p>
+    </div>
     """
   end
 

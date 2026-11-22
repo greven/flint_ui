@@ -19,7 +19,7 @@ defmodule FlintUI.Styled.Card do
           values: ["solid", "soft", "strong", "ghost"],
           default: "solid",
           doc:
-            "The neutral surface treatment of the card. `ghost` drops the card's own surface and elevation, composing with `outline` for an outline-only card or a bare container."
+            "The neutral surface treatment of the card. `ghost` drops the card's own surface, border, highlight, and elevation, leaving a bare container."
         ),
         Prop.new(
           name: :body,
@@ -45,14 +45,15 @@ defmodule FlintUI.Styled.Card do
           name: :outline,
           values: [true, false],
           default: true,
-          doc: "Draws the card outline."
+          doc:
+            "Draws the card border and its top highlight. The outer ring and drop shadows follow `shadow`."
         ),
         Prop.new(
           name: :shadow,
           values: [true, false],
           default: true,
           doc:
-            "Draws the card's outer elevation. The shadow is the shared raised-surface recipe; tune it with `--fl-elevation-level` or replace it with `--fl-card-shadow`. A replacement also drops the linked-card hover lift."
+            "Draws the card's outer ring and drop shadows. Tune the drop shadows with `--fl-elevation-level` or replace them with `--fl-card-shadow`; the border and its top highlight stay independent and follow `outline`."
         ),
         Prop.new(
           name: :inverted,
@@ -96,7 +97,8 @@ defmodule FlintUI.Styled.Card do
         Var.new(
           name: "--fl-card-border",
           default: "var(--fl-color-border)",
-          doc: "The outline color and the source for dividers and panel borders."
+          doc:
+            "The integrated card border and the source for dividers and panel borders. It feeds `--fl-elevation-border`."
         ),
         Var.new(
           name: "--fl-card-border-hover",
@@ -106,9 +108,9 @@ defmodule FlintUI.Styled.Card do
         ),
         Var.new(
           name: "--fl-card-shadow",
-          default: "var(--fl-elevation-surface)",
+          default: "var(--fl-elevation-depth)",
           doc:
-            "The outer elevation; it defaults to the shared raised-surface recipe and follows `--fl-elevation-level`. Set it to `0 0 #0000` to remove the shadow. The ghost variant already clears it."
+            "The drop-shadow depth; the border and its top highlight stay independent so `outline` and `shadow` can be toggled separately. Set it to `0 0 #0000` to remove the drop shadows. The ghost variant already clears it."
         )
       ]
     }

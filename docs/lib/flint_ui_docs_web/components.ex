@@ -707,7 +707,7 @@ defmodule FlintUIDocsWeb.Components do
     values: ~w(solid soft strong ghost),
     default: "solid",
     doc:
-      "The neutral surface treatment of the card. `ghost` drops the card's own surface and elevation, composing with `outline` for an outline-only card or a bare container."
+      "The neutral surface treatment of the card. `ghost` drops the card's own surface, border, highlight, and elevation, leaving a bare container."
   )
 
   attr(:body, :string,
@@ -722,12 +722,16 @@ defmodule FlintUIDocsWeb.Components do
     doc: "The internal spacing of the card."
   )
 
-  attr(:outline, :boolean, default: true, doc: "Draws the card outline.")
+  attr(:outline, :boolean,
+    default: true,
+    doc:
+      "Draws the card border and its top highlight. The outer ring and drop shadows follow `shadow`."
+  )
 
   attr(:shadow, :boolean,
     default: true,
     doc:
-      "Draws the card's outer elevation. The shadow is the shared raised-surface recipe; tune it with `--fl-elevation-level` or replace it with `--fl-card-shadow`. A replacement also drops the linked-card hover lift."
+      "Draws the card's outer ring and drop shadows. Tune the drop shadows with `--fl-elevation-level` or replace them with `--fl-card-shadow`; the border and its top highlight stay independent and follow `outline`."
   )
 
   attr(:inverted, :boolean,

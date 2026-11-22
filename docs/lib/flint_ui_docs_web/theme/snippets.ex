@@ -394,15 +394,18 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
 
   def snippet(:surface) do
     """
-    /* Any element can be a raised surface. Level 2 is the default; raise it
-     * for a stronger lift, and retune the trim with the other elevation tokens. */
+    /* Add `fl-surface` to any element for the shared raised edge, then tune it
+     * per element. Level 2 is the default; raise it for a stronger lift. */
     .my-panel {
       --fl-elevation-level: 3;
+      --fl-elevation-border: var(--fl-color-border-strong);
       --fl-elevation-shadow-color: rgb(0 0 0 / 8%);
     }
 
-    /* Card reads the same recipe as its default --fl-card-shadow. */
+    /* Card feeds its own border into the edge and recomposes the surface with
+     * its own depth. */
     .my-card {
+      --fl-card-border: var(--fl-color-border-strong);
       --fl-elevation-level: 4;
     }
     """

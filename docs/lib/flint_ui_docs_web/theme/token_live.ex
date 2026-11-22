@@ -738,9 +738,13 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     <DocsComponents.section title="Raised surfaces" id="surface">
       <DocsComponents.content_paragraph class="mt-3">
         Add <code class="docs-code font-mono">class="fl-surface"</code>
-        to any element for the trimmed, layered elevation the card uses: a top inner
-        highlight, an inner hairline, an outer ring, and three drop shadows. Level 2 is
-        the default; raise it with <code class="docs-code font-mono">--fl-elevation-level</code>, and retune the strip with <code class="docs-code font-mono">--fl-elevation-ring</code>, <code class="docs-code font-mono">--fl-elevation-highlight</code>, <code class="docs-code font-mono">--fl-elevation-hairline</code>, and <code class="docs-code font-mono">--fl-elevation-shadow-color</code>.
+        to any element for a trimmed, layered surface: an inner border, a top
+        highlight, an outer ring, and three drop shadows. Level 2 is
+        the default; raise it with <code class="docs-code font-mono">--fl-elevation-level</code>, and retune the strip with <code class="docs-code font-mono">--fl-elevation-border</code>, <code class="docs-code font-mono">--fl-elevation-ring</code>, <code class="docs-code font-mono">--fl-elevation-highlight</code>, and <code class="docs-code font-mono">--fl-elevation-shadow-color</code>.
+        The border follows the chrome ladder, so point it at
+        <code class="docs-code font-mono">--fl-color-border-strong</code>
+        for a heavier edge or <code class="docs-code font-mono">--fl-color-border-subtle</code>
+        for a quieter one.
       </DocsComponents.content_paragraph>
       <div class="mt-4 grid gap-4 sm:grid-cols-3">
         <div
@@ -752,9 +756,14 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         </div>
       </div>
       <DocsComponents.content_paragraph class="mt-4">
-        The card uses the same recipe as its default <code class="docs-code font-mono">--fl-card-shadow</code>, so
-        <code class="docs-code font-mono">--fl-elevation-level</code>
-        raises or lowers a card too.
+        The card feeds its own border into
+        <code class="docs-code font-mono">--fl-elevation-border</code>
+        and recomposes <code class="docs-code font-mono">--fl-elevation-surface</code>
+        with <code class="docs-code font-mono">--fl-card-shadow</code>
+        as the depth, so <code class="docs-code font-mono">--fl-elevation-level</code>
+        and <code class="docs-code font-mono">--fl-card-border</code>
+        raise or lower it too. The primitive applies the composed shadow once,
+        so the card never declares its own <code class="docs-code font-mono">box-shadow</code>.
       </DocsComponents.content_paragraph>
       <DocsComponents.code_block code={Snippets.snippet(:surface)} lang={:css} />
     </DocsComponents.section>

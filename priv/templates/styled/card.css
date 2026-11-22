@@ -2,24 +2,27 @@
     /* Card. Public inputs: `--fl-card-spacing`, `-surface`, `-text`,
      * `-border`, `-border-hover`, `-shadow`; bands, panels and dividers
      * derive from them and the theme. The root opts into the elevation
-     * primitive, so `--fl-elevation-level` raises or lowers its layered
-     * elevation. The border is the card's single inner edge, so the
-     * primitive's hairline and top highlight are cleared; only the
-     * dark-scheme outer ring remains. */
+     * primitive and feeds its border color into `--fl-elevation-border`, so
+     * `--fl-elevation-level` raises or lowers the drop shadows.
+     *
+     * The elevation primitive applies `--fl-elevation-surface` for every
+     * `data-elevation` root, so the card only recomposes that token to swap in
+     * `--fl-card-shadow` for the depth. The highlight comes before the border
+     * layer: box-shadow paints the first layer on top, so the highlight
+     * brightens the top border pixel instead of stacking a second line. */
     [data-element="card"][data-card] {
-        /*--fl-elevation-hairline: transparent;*/
-        /*--fl-elevation-highlight: transparent;*/
-
+        --fl-elevation-border: var(--fl-card-border, var(--fl-color-border));
+        --fl-elevation-surface:
+            var(--fl-elevation-highlight-layer), var(--fl-elevation-border-layer), var(--fl-elevation-ring-layer),
+            var(--fl-card-shadow, var(--fl-elevation-depth));
         position: relative;
         display: flex;
         flex-direction: column;
         gap: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
         padding-block: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
-        /*border: 1px solid var(--fl-card-border, var(--fl-color-border));*/
         border-radius: var(--fl-radius-lg);
         background: var(--fl-card-surface, var(--fl-color-surface));
         color: var(--fl-card-text, var(--fl-color-text));
-        box-shadow: var(--fl-card-shadow, var(--fl-elevation-surface));
         font-family: var(--fl-font-sans);
         overflow: hidden;
     }
@@ -29,16 +32,14 @@
      * the target without changing its fill. */
     [data-element="card"][data-card][data-link] {
         text-decoration: none;
-        transition:
-            border-color var(--fl-duration-fast) var(--fl-ease-out),
-            box-shadow var(--fl-duration-fast) var(--fl-ease-out);
+        transition: box-shadow var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     /* The hover edge is the card's own border strengthened by a share of its
      * ink, so soft, strong, and inverted cards keep their edge. Set
      * `--fl-card-border-hover` on one card for a colored edge. */
     [data-element="card"][data-card][data-link][data-outline]:is(:hover, :focus-visible) {
-        border-color: var(
+        --fl-elevation-border: var(
             --fl-card-border-hover,
             color-mix(in oklab, var(--fl-card-border, var(--fl-color-border)), var(--fl-card-text, var(--fl-color-text)) 20%)
         );
@@ -102,23 +103,31 @@
 
     [data-element="card"][data-variant="strong"] {
         --fl-card-surface: var(--fl-color-surface-strong);
+        --fl-card-border: var(--fl-color-border-strong);
     }
 
-    /* Ghost keeps no surface or elevation of its own: with `outline` on it reads
-     * as a plain outlined card, with `outline={false}` as a bare container. */
+    /* Ghost keeps no surface, edge, or elevation of its own: it reads as a
+     * bare container. `--fl-card-border` still colors internal dividers. */
     [data-element="card"][data-variant="ghost"] {
         --fl-card-surface: transparent;
         --fl-card-shadow: 0 0 #0000;
+        --fl-elevation-border-layer: 0 0 #0000;
+        --fl-elevation-ring-layer: 0 0 #0000;
+        --fl-elevation-highlight-layer: 0 0 #0000;
     }
 
     /* Outline and shadow are independent boolean props; both default to on.
-     * The base rule paints them, so their absence turns them off. */
+     * Outline clears the edge layers, the border and its top highlight.
+     * Shadow clears the outer ring and depth, so an outline-only card keeps
+     * its edge without elevation. */
     [data-element="card"]:not([data-outline])[data-card] {
-        border-color: transparent;
+        --fl-elevation-border-layer: 0 0 #0000;
+        --fl-elevation-highlight-layer: 0 0 #0000;
     }
 
     [data-element="card"]:not([data-shadow])[data-card] {
-        box-shadow: 0 0 #0000;
+        --fl-card-shadow: 0 0 #0000;
+        --fl-elevation-ring-layer: 0 0 #0000;
     }
 
     [data-element="card"][data-inverted] {
@@ -126,8 +135,9 @@
         --fl-card-border: color-mix(in oklab, var(--fl-color-text-inverted) 20%, var(--fl-color-inverted));
     }
 
-    /* A ghost card has no surface to invert, so keep the page text and
-     * border, otherwise inverted would paint light text on a light page. */
+    /* A ghost card has no surface or outer edge to invert, so keep the page
+     * text and divider border; otherwise inverted would paint light text on a
+     * light page. */
     [data-element="card"][data-inverted][data-variant="ghost"] {
         --fl-card-text: var(--fl-color-text);
         --fl-card-border: var(--fl-color-border);
@@ -225,21 +235,10 @@
         margin-block: var(--fl-spacing);
     }
 
-    /* Flush panels overlap the card border by 1px so the hairlines merge. */
+    /* Flush panels sit on the card edge: their own border replaces the
+     * elevation border on the shared sides, and the radius matches the card. */
     [data-element="card"][data-card][data-body="flush"] > [data-part="body"] {
         border-radius: var(--fl-radius-lg);
-    }
-
-    [data-element="card"][data-body="flush"][data-orientation="vertical"] > [data-part="body"] {
-        margin-inline: -1px;
-    }
-
-    [data-element="card"][data-body="flush"][data-orientation="horizontal"] > [data-part="body"] {
-        margin-block: -1px;
-    }
-
-    [data-element="card"][data-body="flush"]:not(:has(> [data-part="footer"])) > [data-part="body"] {
-        margin-block-end: -1px;
     }
 
     /* Without a footer the panel owns the bottom edge: inset keeps its small

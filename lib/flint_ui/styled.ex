@@ -135,7 +135,7 @@ defmodule FlintUI.Styled do
       css: "primitives/elevation.css",
       marker: "data-elevation",
       doc:
-        "Shared trim and layered elevation for raised surfaces; `.fl-surface` applies the same recipe to plain markup.",
+        "Shared trim and layered elevation for raised surfaces. The same composition backs `.fl-surface`, which only applies it from the utility layer.",
       vars: [
         Var.new(
           name: "--fl-elevation-level",
@@ -149,20 +149,21 @@ defmodule FlintUI.Styled do
           doc: "How much each level adds to the drop-shadow scale."
         ),
         Var.new(
-          name: "--fl-elevation-ring",
-          default: "light-dark(var(--fl-color-border), rgb(0 0 0 / 40%))",
+          name: "--fl-elevation-border",
+          default: "var(--fl-color-border)",
           doc:
-            "The outer 1px ring. It follows the chrome border in light; in dark it darkens the edge so the surface separates from the deep page."
+            "The inner 1px border. It follows the chrome border ladder; point it at `--fl-color-border-strong`, `--fl-color-border-subtle`, or a hue for a different edge."
         ),
         Var.new(
           name: "--fl-elevation-highlight",
-          default: "rgb(255 255 255 / 6%)",
+          default: "rgb(255 255 255 / 7%)",
           doc: "The inner top highlight that catches the light on the surface edge."
         ),
         Var.new(
-          name: "--fl-elevation-hairline",
-          default: "rgb(255 255 255 / 5%)",
-          doc: "The inner hairline just inside the edge."
+          name: "--fl-elevation-ring",
+          default: "light-dark(transparent, rgb(0 0 0 / 40%))",
+          doc:
+            "The outer 1px ring. It is transparent in light and darkens the edge in dark so the surface separates from the deep page."
         ),
         Var.new(
           name: "--fl-elevation-shadow-color",
