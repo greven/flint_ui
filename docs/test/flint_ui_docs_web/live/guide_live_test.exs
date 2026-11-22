@@ -238,6 +238,16 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     end
   end
 
+  test "animations token page separates shared and component keyframes", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/tokens/animations")
+
+    assert has_element?(view, "#shared")
+    assert has_element?(view, "#composing")
+    assert has_element?(view, "#component-animations")
+    assert render(view) =~ "@keyframes fl-pop-in"
+    assert has_element?(view, "a[href='/components/indicator']")
+  end
+
   test "color token reference includes the neutral role", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming/tokens/colors")
 
@@ -266,16 +276,37 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert html =~ "color-rose"
   end
 
-  test "css utilities page is an opt-in placeholder", %{conn: conn} do
+  test "css utilities page documents the included utility layer", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming/css-utilities")
 
-    assert has_element?(view, "#utilities")
-    assert has_element?(view, "#planned")
     assert has_element?(view, "h1", "CSS Utilities")
+    assert has_element?(view, "#included")
+    assert has_element?(view, "#layers")
+    assert has_element?(view, "#layout")
+    assert has_element?(view, "#responsive")
+    assert has_element?(view, "#reference")
+    assert has_element?(view, "#tailwind")
 
     html = render(view)
-    assert html =~ "mix flint.setup --tailwind"
-    assert html =~ "Planned"
+    assert html =~ "mix flint.utilities"
+    assert html =~ "flint.setup"
+    assert html =~ "no-utilities"
+    assert html =~ "fl-stack"
+    assert html =~ "fl-grid"
+    assert html =~ "fl-flex"
+    refute html =~ "Planned"
+  end
+
+  test "css utilities reference filters by class or declaration", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/css-utilities")
+
+    html =
+      view
+      |> element("#utility-search-form")
+      |> render_change(%{"query" => "grid-cols"})
+
+    assert html =~ "fl-grid-cols-12"
+    refute html =~ "fl-cursor-wait"
   end
 
   test "installation page shows its section breadcrumb", %{conn: conn} do

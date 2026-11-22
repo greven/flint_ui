@@ -11,9 +11,9 @@ defmodule FlintUIDocsWeb.Theme.Tokens do
       title: "Colors",
       path: "/guides/theming/tokens/colors",
       icon: "lucide-palette",
-      summary: "Role, text, and tone variables.",
+      summary: "Hue, role, text, and tone variables.",
       subtitle:
-        "The color variables behind every component: semantic roles, text tiers, and the tone hooks a color prop resolves to.",
+        "The color variables behind every component: raw palette hues, semantic roles, text tiers, and the tone hooks a color prop resolves to.",
       namespace: "--fl-color-*"
     },
     %{
@@ -111,6 +111,18 @@ defmodule FlintUIDocsWeb.Theme.Tokens do
       subtitle:
         "Motion uses a small duration and easing scale, and every component respects the reader's reduced-motion setting.",
       namespace: "--fl-duration-*"
+    },
+    %{
+      id: :theming_token_animations,
+      action: :animations,
+      label: "Animations",
+      title: "Animations",
+      path: "/guides/theming/tokens/animations",
+      icon: "lucide-sparkles",
+      summary: "Shared keyframes for entering, exiting, and looping.",
+      subtitle:
+        "Reusable keyframes for entering, exiting, spinning, and drawing attention, plus the animations each component owns.",
+      namespace: "@keyframes fl-*"
     }
   ]
 

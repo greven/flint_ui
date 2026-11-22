@@ -40,6 +40,7 @@ defmodule FlintUIDocsWeb.Router do
     live("/guides/theming/tokens/shadows", Theme.TokenLive, :shadows)
     live("/guides/theming/tokens/focus", Theme.TokenLive, :focus)
     live("/guides/theming/tokens/transitions", Theme.TokenLive, :transitions)
+    live("/guides/theming/tokens/animations", Theme.TokenLive, :animations)
     live("/guides/theming/customizing", Theme.CustomizingLive, :index)
     live("/guides/theming/css-utilities", Theme.CssUtilitiesLive, :index)
 

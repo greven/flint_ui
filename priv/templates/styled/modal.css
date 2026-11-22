@@ -198,45 +198,44 @@
      * still open; the hook waits for the animation before calling `close()`.
      * The placement only changes the direction of the small translate. */
     [data-element="modal"][data-modal] {
-        --_fl-modal-enter-x: 0;
-        --_fl-modal-enter-y: 0;
-        --_fl-modal-enter-scale: 0.97;
+        --fl-motion-pop-scale: 0.97;
+        --fl-motion-pop-translate: 0 0;
     }
 
     [data-element="modal"][data-modal][data-placement="top"] {
-        --_fl-modal-enter-y: -0.5rem;
-        --_fl-modal-enter-scale: 1;
+        --fl-motion-pop-scale: 1;
+        --fl-motion-pop-translate: 0 -0.5rem;
     }
 
     [data-element="modal"][data-modal][data-placement="bottom"] {
-        --_fl-modal-enter-y: 0.5rem;
-        --_fl-modal-enter-scale: 1;
+        --fl-motion-pop-scale: 1;
+        --fl-motion-pop-translate: 0 0.5rem;
     }
 
     [data-element="modal"][data-modal][data-placement="left"] {
-        --_fl-modal-enter-x: -0.5rem;
-        --_fl-modal-enter-scale: 1;
+        --fl-motion-pop-scale: 1;
+        --fl-motion-pop-translate: -0.5rem 0;
     }
 
     [data-element="modal"][data-modal][data-placement="right"] {
-        --_fl-modal-enter-x: 0.5rem;
-        --_fl-modal-enter-scale: 1;
+        --fl-motion-pop-scale: 1;
+        --fl-motion-pop-translate: 0.5rem 0;
     }
 
     [data-element="modal"][data-modal][open][data-state="open"] {
-        animation: fl-modal-in var(--fl-duration-base) var(--fl-ease-out);
+        animation: fl-pop-in var(--fl-duration-base) var(--fl-ease-out);
     }
 
     [data-element="modal"][data-modal][open][data-state="closed"] {
-        animation: fl-modal-out var(--fl-duration-base) var(--fl-ease-in-out);
+        animation: fl-pop-out var(--fl-duration-base) var(--fl-ease-in-out);
     }
 
     [data-element="modal"][data-modal][open][data-state="open"]::backdrop {
-        animation: fl-modal-backdrop-in var(--fl-duration-base) var(--fl-ease-out);
+        animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
     }
 
     [data-element="modal"][data-modal][open][data-state="closed"]::backdrop {
-        animation: fl-modal-backdrop-out var(--fl-duration-base) var(--fl-ease-in-out);
+        animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -251,50 +250,5 @@
     }
 }
 
-@keyframes fl-modal-in {
-    from {
-        opacity: 0;
-        scale: var(--_fl-modal-enter-scale, 0.97);
-        translate: var(--_fl-modal-enter-x, 0) var(--_fl-modal-enter-y, 0);
-    }
-
-    to {
-        opacity: 1;
-        scale: 1;
-        translate: 0 0;
-    }
-}
-
-@keyframes fl-modal-out {
-    from {
-        opacity: 1;
-        scale: 1;
-        translate: 0 0;
-    }
-
-    to {
-        opacity: 0;
-        scale: var(--_fl-modal-enter-scale, 0.97);
-        translate: var(--_fl-modal-enter-x, 0) var(--_fl-modal-enter-y, 0);
-    }
-}
-
-@keyframes fl-modal-backdrop-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fl-modal-backdrop-out {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
+/* The panel and backdrop use the shared `fl-pop-*` and `fl-fade-*` keyframes;
+ * `--fl-motion-pop-*` carries the placement-aware geometry. */

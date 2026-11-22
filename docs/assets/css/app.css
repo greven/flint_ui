@@ -17,6 +17,8 @@
 
 @import "./flint.css";
 
+@import "./flint-utilities.css";
+
 @import "./highlight.css";
 
 /* Docs typefaces. `font-sans` is the default body face; `font-display` is the
@@ -127,7 +129,7 @@
    changes. A non-Tailwind app can paste the same role tokens with literal
    colors instead. */
 :root {
-    /* Match FlintUI controls to the docs' Tailwind sans stack. */
+    --fl-surface-page-lift: 3%;
     --fl-font-sans: var(--font-sans);
 }
 
@@ -529,6 +531,47 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
         --_fl-swatch-fill-preview: var(--_fl-swatch-950-fill);
         --_fl-swatch-on-preview: var(--_fl-swatch-950-on);
         --_fl-swatch-label-preview: "950";
+    }
+}
+
+/* Motion demos on the Animations token page. Enter and exit demos replay on
+   hover so the keyframes restart; loop demos run continuously. The whole block
+   is omitted under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+    .motion-demo:hover .motion-demo-fade-in {
+        animation: fl-fade-in 600ms var(--fl-ease-out) both;
+    }
+
+    .motion-demo:hover .motion-demo-fade-out {
+        animation: fl-fade-out 600ms var(--fl-ease-in-out) both;
+    }
+
+    .motion-demo:hover .motion-demo-pop-in {
+        animation: fl-pop-in 600ms var(--fl-ease-out) both;
+    }
+
+    .motion-demo:hover .motion-demo-pop-out {
+        animation: fl-pop-out 600ms var(--fl-ease-in-out) both;
+    }
+
+    .motion-demo-spin {
+        animation: fl-spin 1s linear infinite;
+    }
+
+    .motion-demo-ping {
+        animation: fl-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    .motion-demo-pulse {
+        animation: fl-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .motion-demo-bounce {
+        animation: fl-bounce 1s infinite;
+    }
+
+    .motion-demo-heartbeat {
+        animation: fl-heartbeat 1.3s ease-in-out infinite;
     }
 }
 

@@ -101,6 +101,48 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     {"in-out", "cubic-bezier(0.4, 0, 0.2, 1)", "Moving between two states"}
   ]
 
+  @shared_animations [
+    {"fl-fade-in", "Opacity 0 → 1", "—"},
+    {"fl-fade-out", "Opacity 1 → 0", "—"},
+    {"fl-pop-in", "Fade and scale in from a small offset",
+     "--fl-motion-pop-scale, --fl-motion-pop-translate"},
+    {"fl-pop-out", "Fade and scale out to a small offset",
+     "--fl-motion-pop-scale, --fl-motion-pop-translate"},
+    {"fl-spin", "Rotate one full turn", "—"},
+    {"fl-ping", "Scale up and fade out", "—"},
+    {"fl-pulse", "Fade to half opacity and back", "—"},
+    {"fl-bounce", "Drop and settle", "—"},
+    {"fl-heartbeat", "Double scale beat", "--fl-heartbeat-scale"}
+  ]
+
+  @animation_demos [
+    {"Fade in", "fl-fade-in", "motion-demo-fade-in", true},
+    {"Fade out", "fl-fade-out", "motion-demo-fade-out", true},
+    {"Pop in", "fl-pop-in", "motion-demo-pop-in", true},
+    {"Pop out", "fl-pop-out", "motion-demo-pop-out", true},
+    {"Spin", "fl-spin", "motion-demo-spin", false},
+    {"Ping", "fl-ping", "motion-demo-ping", false},
+    {"Pulse", "fl-pulse", "motion-demo-pulse", false},
+    {"Bounce", "fl-bounce", "motion-demo-bounce", false},
+    {"Heartbeat", "fl-heartbeat", "motion-demo-heartbeat", false}
+  ]
+
+  @component_animations [
+    {"Indicator", "/components/indicator",
+     ~w(fl-indicator-pulse fl-indicator-ping fl-indicator-heartbeat fl-indicator-bounce)},
+    {"Loading", "/components/loading",
+     ~w(fl-loading-spin fl-loading-dash fl-loading-fade fl-loading-bounce fl-loading-bar-scale fl-loading-infinity)},
+    {"Loading Text", "/components/loading_text",
+     ~w(fl-loading-text-dot fl-loading-text-blink fl-loading-text-shimmer fl-loading-text-wave)},
+    {"Progress", "/components/progress",
+     ~w(fl-progress-carousel fl-progress-swing fl-progress-elastic fl-progress-stripes)},
+    {"Progress Ring", "/components/progress_ring",
+     ~w(fl-progress-ring-spin fl-progress-ring-sweep)},
+    {"Collapsible", "/components/collapsible", ~w(fl-collapsible-expand fl-collapsible-collapse)},
+    {"Accordion Item", "/components/accordion_item",
+     ~w(fl-accordion-expand fl-accordion-collapse)}
+  ]
+
   @impl true
   def mount(_params, _session, socket) do
     page = Tokens.get!(socket.assigns.live_action)
@@ -109,6 +151,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
      assign(socket,
        page_title: page.title,
        token_page: page,
+       hues: FlintUI.Palette.hue_names(),
        type_scale: @type_scale,
        weights: @weights,
        tracking: @tracking,
@@ -118,7 +161,10 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
        radius_scale: @radius_scale,
        shadows: @shadows,
        durations: @durations,
-       easings: @easings
+       easings: @easings,
+       shared_animations: @shared_animations,
+       animation_demos: @animation_demos,
+       component_animations: @component_animations
      )}
   end
 
@@ -139,7 +185,57 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
 
   defp render_token(:colors, assigns) do
     ~H"""
-    <DocsComponents.section title="Semantic roles" id="roles">
+    <DocsComponents.section title="Raw Hues" id="hues">
+      <DocsComponents.content_paragraph class="mt-3">
+        The
+        <.link
+          navigate={~p"/guides/theming/color"}
+          class="docs-link"
+        >palette</.link>
+        exposes eighteen raw hues. Each hue is a <code class="docs-code font-mono">50..950</code>
+        ramp plus a five-token tone set: the core fill <code class="docs-code font-mono">--fl-color-&lt;hue&gt;</code>, its label <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on</code>, the hue
+        as text on a neutral or soft surface <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on-soft</code>,
+        and the tinted pair <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-soft</code>
+        and <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-soft-border</code>.
+        These tokens follow the active palette and the light/dark scheme, but
+        they do not follow role remaps. Use a raw hue for decoration and
+        data-driven accents; map a role for anything app-wide.
+      </DocsComponents.content_paragraph>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full min-w-lg text-left text-sm">
+          <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+            <tr>
+              <th class="py-3 pr-6 font-medium">Color</th>
+              <th class="py-3 pr-6 font-medium">Fill</th>
+              <th class="py-3 pr-6 font-medium">On fill</th>
+              <th class="py-3 font-medium">Preview</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-default">
+            <tr :for={hue <- @hues}>
+              <td class="py-3 pr-6 font-medium">{hue}</td>
+              <td class="py-3 pr-6">
+                <code class="docs-code font-mono">--fl-color-{hue}</code>
+              </td>
+              <td class="py-3 pr-6">
+                <code class="docs-code font-mono">--fl-color-{hue}-on</code>
+              </td>
+              <td class="py-3">
+                <div
+                  aria-hidden="true"
+                  class="grid size-10 place-items-center rounded-md text-sm font-semibold"
+                  style={"background: var(--fl-color-#{hue}); color: var(--fl-color-#{hue}-on);"}
+                >
+                  Aa
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </DocsComponents.section>
+
+    <DocsComponents.section title="Semantic Roles" id="roles">
       <DocsComponents.content_paragraph class="mt-3">
         A role points at one palette hue's five-token tone set. The fill is the
         role itself; <code class="docs-code font-mono">-on</code>
@@ -192,7 +288,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
       <DocsComponents.code_block code={Snippets.snippet(:colors)} lang={:css} />
     </DocsComponents.section>
 
-    <DocsComponents.section title="Text tiers" id="text">
+    <DocsComponents.section title="Text Tiers" id="text">
       <DocsComponents.content_paragraph class="mt-3">
         <code class="docs-code font-mono">--fl-text-base</code>
         is the single text anchor: a softened neutral —
@@ -244,7 +340,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
       <DocsComponents.code_block code={Snippets.snippet(:text)} lang={:css} />
     </DocsComponents.section>
 
-    <DocsComponents.section title="Tone hooks" id="tone-hooks">
+    <DocsComponents.section title="Tone Hooks" id="tone-hooks">
       <DocsComponents.content_paragraph class="mt-3">
         A <code class="docs-code font-mono">color</code>
         prop resolves to one five-token tone set. A semantic role and a palette
@@ -625,6 +721,30 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
       <DocsComponents.code_block code={Snippets.snippet(:shadows)} lang={:css} />
     </DocsComponents.section>
 
+    <DocsComponents.section title="Raised surfaces" id="surface">
+      <DocsComponents.content_paragraph class="mt-3">
+        Add <code class="docs-code font-mono">class="fl-surface"</code>
+        to any element for the trimmed, layered elevation the card uses: a top inner
+        highlight, an inner hairline, an outer ring, and three drop shadows. Level 2 is
+        the default; raise it with <code class="docs-code font-mono">--fl-elevation-level</code>, and retune the strip with <code class="docs-code font-mono">--fl-elevation-ring</code>, <code class="docs-code font-mono">--fl-elevation-highlight</code>, <code class="docs-code font-mono">--fl-elevation-hairline</code>, and <code class="docs-code font-mono">--fl-elevation-shadow-color</code>.
+      </DocsComponents.content_paragraph>
+      <div class="mt-4 grid gap-4 sm:grid-cols-3">
+        <div
+          :for={level <- 1..3}
+          class="fl-surface flex h-24 flex-col justify-end rounded-lg p-4"
+          style={"--fl-elevation-level: #{level}"}
+        >
+          <span class="font-mono text-xs text-muted">level {level}</span>
+        </div>
+      </div>
+      <DocsComponents.content_paragraph class="mt-4">
+        The card uses the same recipe as its default <code class="docs-code font-mono">--fl-card-shadow</code>, so
+        <code class="docs-code font-mono">--fl-elevation-level</code>
+        raises or lowers a card too.
+      </DocsComponents.content_paragraph>
+      <DocsComponents.code_block code={Snippets.snippet(:surface)} lang={:css} />
+    </DocsComponents.section>
+
     <DocsComponents.section title="Control depth" id="depth">
       <DocsComponents.content_paragraph class="mt-3">
         Solid and surface buttons are raised: <code class="docs-code font-mono">solid</code>
@@ -778,6 +898,116 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         same guard and let the reduced-motion rule remove the movement, not the
         state change.
       </DocsComponents.content_paragraph>
+    </DocsComponents.section>
+    """
+  end
+
+  defp render_token(:animations, assigns) do
+    ~H"""
+    <DocsComponents.section title="Shared animations" id="shared">
+      <DocsComponents.content_paragraph class="mt-3">
+        These keyframes ship with the theme and are safe to reuse in app CSS.
+        They describe the motion only; pair them with a duration and easing from
+        the
+        <.link
+          navigate={~p"/guides/theming/tokens/transitions"}
+          class="docs-link"
+        >transitions</.link>
+        scale.
+      </DocsComponents.content_paragraph>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full min-w-lg text-left text-sm">
+          <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+            <tr>
+              <th class="py-3 pr-6 font-medium">Keyframe</th>
+              <th class="py-3 pr-6 font-medium">Effect</th>
+              <th class="py-3 font-medium">Inputs</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-default">
+            <tr :for={{name, effect, inputs} <- @shared_animations}>
+              <td class="py-3 pr-6">
+                <code class="docs-code font-mono">@keyframes {name}</code>
+              </td>
+              <td class="py-3 pr-6 text-toned">{effect}</td>
+              <td class="py-3 font-mono text-xs text-muted">{inputs}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        <div
+          :for={{label, keyframe, class, replay} <- @animation_demos}
+          class="motion-demo rounded-lg border border-default bg-surface p-4"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-medium text-toned">{label}</span>
+            <code class="docs-code font-mono text-[0.65rem]">{keyframe}</code>
+          </div>
+          <div class="mt-4 grid h-14 place-items-center overflow-hidden">
+            <div class={["size-5 rounded-md bg-inverted", class]} />
+          </div>
+          <p class="mt-2 text-xs text-muted">
+            {if replay, do: "Hover to replay", else: "Loops continuously"}
+          </p>
+        </div>
+      </div>
+    </DocsComponents.section>
+
+    <DocsComponents.section title="Composing" id="composing">
+      <DocsComponents.content_paragraph class="mt-3">
+        Enter and exit animations use the short duration scale. Looping
+        animations set their own duration, because the transition scale is tuned
+        for hovers and short reveals, not for a spinner. The four Tailwind
+        mirrors use the same timing as their defaults: <code class="docs-code font-mono">spin</code>
+        is <code class="docs-code font-mono">1s linear</code>,
+        <code class="docs-code font-mono">ping</code>
+        is <code class="docs-code font-mono">1s</code>
+        with <code class="docs-code font-mono">cubic-bezier(0, 0, 0.2, 1)</code>,
+        <code class="docs-code font-mono">pulse</code>
+        is <code class="docs-code font-mono">2s</code>
+        with <code class="docs-code font-mono">cubic-bezier(0.4, 0, 0.6, 1)</code>, and
+        <code class="docs-code font-mono">bounce</code>
+        is <code class="docs-code font-mono">1s</code>.
+      </DocsComponents.content_paragraph>
+      <DocsComponents.code_block code={Snippets.snippet(:animations)} lang={:css} />
+    </DocsComponents.section>
+
+    <DocsComponents.section title="Component animations" id="component-animations">
+      <DocsComponents.content_paragraph class="mt-3">
+        Each component owns its remaining keyframes, so they can be tuned
+        without changing the shared set. The component page documents what each
+        prop selects and when the animation runs.
+      </DocsComponents.content_paragraph>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full min-w-lg text-left text-sm">
+          <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+            <tr>
+              <th class="py-3 pr-6 font-medium">Component</th>
+              <th class="py-3 font-medium">Keyframes</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-default">
+            <tr :for={{component, path, keyframes} <- @component_animations}>
+              <td class="py-3 pr-6">
+                <.link navigate={path} class="docs-link">{component}</.link>
+              </td>
+              <td class="py-3 font-mono text-xs text-muted">
+                {Enum.join(keyframes, ", ")}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </DocsComponents.section>
+
+    <DocsComponents.section title="Reduced motion" id="reduced-motion">
+      <DocsComponents.content_paragraph class="mt-3">
+        Shared keyframes do not disable themselves. If you apply one in app CSS,
+        keep the same reduced-motion guard the components use and remove the
+        movement, not the state change.
+      </DocsComponents.content_paragraph>
+      <DocsComponents.code_block code={Snippets.snippet(:animation_reduced_motion)} lang={:css} />
     </DocsComponents.section>
     """
   end

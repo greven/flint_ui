@@ -2,9 +2,10 @@ if Code.ensure_loaded?(Igniter) do
   defmodule FlintUI.Installer do
     @moduledoc false
 
-    alias FlintUI.{Generator, Icons}
+    alias FlintUI.{Generator, Icons, Utilities}
 
     @theme_css "assets/css/flint.css"
+    @utilities_css "assets/css/flint-utilities.css"
     @app_css "assets/css/app.css"
     @app_js "assets/js/app.js"
     @flint_js_import ~s(import {hooks as flintHooks} from "flint_ui")
@@ -37,6 +38,31 @@ if Code.ensure_loaded?(Igniter) do
     @doc "Adds `@import \"./flint.css\";` to the app stylesheet."
     def import_theme_css(igniter) do
       append_app_css(igniter, ~s(@import "./flint.css";))
+    end
+
+    @doc """
+    Writes the utility stylesheet and imports it from the app stylesheet.
+
+    Defaults to leaving an existing `flint-utilities.css` untouched (`:skip`);
+    pass `on_exists: :overwrite` to refresh it from the library. Pass
+    `reset: false` to omit the minimal base reset.
+    """
+    def install_utilities_css(igniter, opts \\ []) do
+      on_exists = Keyword.get(opts, :on_exists, :skip)
+      reset? = Keyword.get(opts, :reset, true)
+      import? = Keyword.get(opts, :import, true)
+
+      igniter =
+        Igniter.create_new_file(igniter, @utilities_css, Utilities.source(reset: reset?),
+          on_exists: on_exists
+        )
+
+      if import?, do: import_utilities_css(igniter), else: igniter
+    end
+
+    @doc "Adds `@import \"./flint-utilities.css\";` to the app stylesheet."
+    def import_utilities_css(igniter) do
+      append_app_css(igniter, ~s(@import "./flint-utilities.css";))
     end
 
     @doc """

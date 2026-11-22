@@ -91,6 +91,18 @@
     --fl-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
     --fl-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
+    /* Raised surfaces. `.fl-surface` composes these into one layered
+     * box-shadow: a top inner highlight, an inner hairline, an outer ring, and
+     * three drop shadows. `level` scales the drop shadows, so 1 sits closest to
+     * the page and each step lifts further. Card uses the same recipe as its
+     * default elevation. */
+    --fl-elevation-level: 2;
+    --fl-elevation-step: 0.4;
+    --fl-elevation-ring: light-dark(var(--fl-color-border), rgb(0 0 0 / 16%));
+    --fl-elevation-highlight: rgb(255 255 255 / 6%);
+    --fl-elevation-hairline: rgb(255 255 255 / 5%);
+    --fl-elevation-shadow-color: light-dark(rgb(0 0 0 / 5%), rgb(0 0 0 / 32%));
+
     /* Motion. */
     --fl-duration-fast: 150ms;
     --fl-duration-base: 200ms;

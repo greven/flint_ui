@@ -16,9 +16,13 @@ defmodule FlintUIDocs.Theme do
   """
 
   @relative "assets/css/flint.css"
+  @utilities_relative "assets/css/flint-utilities.css"
 
   @doc "Absolute path of the docs' copy of the assembled theme."
   def path, do: Path.expand(@relative, project_root())
+
+  @doc "Absolute path of the docs' copy of the utility stylesheet."
+  def utilities_path, do: Path.expand(@utilities_relative, project_root())
 
   @doc """
   Writes the assembled theme when it differs from the current copy.
@@ -27,6 +31,25 @@ defmodule FlintUIDocs.Theme do
   """
   def write! do
     write_if_changed!(path(), FlintUI.Generator.theme_source())
+  end
+
+  @doc """
+  Writes the utility stylesheet when it differs from the current copy.
+  """
+  def write_utilities! do
+    write_if_changed!(utilities_path(), FlintUI.Utilities.source())
+  end
+
+  @doc """
+  Writes both the theme and the utility stylesheet.
+
+  Returns `:ok` when either file changes and `:noop` when both are current.
+  """
+  def write_all! do
+    theme = write!()
+    utilities = write_utilities!()
+
+    if theme == :ok or utilities == :ok, do: :ok, else: :noop
   end
 
   defp write_if_changed!(output, css) do

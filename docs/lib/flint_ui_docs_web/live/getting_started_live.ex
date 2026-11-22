@@ -7,11 +7,13 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
 
   @commands [
     {"mix flint.setup",
-     "Create the components module, install the theme, and register the JS hooks."},
+     "Create the components module, install the theme and utilities, and register the JS hooks."},
+    {"mix flint.setup --no-utilities", "Install the theme without the utility layer."},
     {"mix flint.setup --tailwind", "Also map tokens onto Tailwind utilities."},
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
-    {"mix flint.theme", "Refresh the generated theme stylesheet from the library."},
+    {"mix flint.theme", "Refresh the generated theme and utility stylesheets."},
+    {"mix flint.utilities", "Refresh just the generated utility stylesheet."},
     {"mix flint.icons <set>", "Install icon assets with Tailwind or plain CSS."},
     {"mix flint.icons flags --assets", "Copy flag SVGs for the <.flag> component."}
   ]
@@ -42,15 +44,18 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           <DocsComponents.code_block code="mix flint.setup" lang={:shell} />
           <DocsComponents.content_paragraph class="mt-3">
             This creates <code class="docs-code font-mono">MyAppWeb.Components</code>, copies the
-            theme stylesheet to <code class="docs-code font-mono">assets/css/flint.css</code>, imports
-            it, wires the components module into your HTML helpers, and registers FlintUI's
-            LiveView hooks in <code class="docs-code font-mono">assets/js/app.js</code>.
+            theme stylesheet to <code class="docs-code font-mono">assets/css/flint.css</code>, writes
+            the utility stylesheet to <code class="docs-code font-mono">assets/css/flint-utilities.css</code>,
+            imports both, wires the components module into your HTML helpers, and registers
+            FlintUI's LiveView hooks in <code class="docs-code font-mono">assets/js/app.js</code>.
           </DocsComponents.content_paragraph>
           <DocsComponents.content_paragraph class="mt-3">
-            Using Tailwind? Pass <code class="docs-code font-mono">--tailwind</code>
-            to also map the
-            FlintUI tokens onto utilities (<code class="docs-code font-mono">bg-primary</code>, <code class="docs-code font-mono">border-default</code>, …).
-            Pass <code class="docs-code font-mono">--no-js</code>
+            The utility layer is included by default. Pass
+            <code class="docs-code font-mono">--no-utilities</code>
+            to leave it out, <code class="docs-code font-mono">--tailwind</code>
+            to also map the FlintUI tokens onto Tailwind utilities
+            (<code class="docs-code font-mono">bg-primary</code>, <code class="docs-code font-mono">border-default</code>, …), or
+            <code class="docs-code font-mono">--no-js</code>
             if you wire <code class="docs-code font-mono">app.js</code>
             yourself.
           </DocsComponents.content_paragraph>

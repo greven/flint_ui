@@ -213,6 +213,17 @@ defmodule FlintUIDocsWeb.StylingLive do
 
         <DocsComponents.section title="Utility CSS" id="utilities">
           <DocsComponents.content_paragraph>
+            FlintUI ships a small first-party utility layer, written to
+            <code class="docs-code font-mono">assets/css/flint-utilities.css</code>
+            by <code class="docs-code font-mono">mix flint.setup</code>
+            and included by default. It uses the <code class="docs-code font-mono">fl-</code>
+            prefix, so it composes with Tailwind or another utility layer. Start with the
+            layout primitives (<code class="docs-code font-mono">fl-stack</code>, <code class="docs-code font-mono">fl-cluster</code>, <code class="docs-code font-mono">fl-split</code>, <code class="docs-code font-mono">fl-flank</code>, <code class="docs-code font-mono">fl-frame</code>, <code class="docs-code font-mono">fl-grid</code>) and reach for the atomic classes for the rest. The
+            <.link navigate={~p"/guides/theming/css-utilities"} class="docs-link">CSS Utilities</.link>
+            guide has the full reference.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:flint_utilities)} />
+          <DocsComponents.content_paragraph class="mt-4">
             Tailwind is optional, and FlintUI is not coupled to it. Utilities are just
             classes on the root, and Tailwind emits them in
             <code class="docs-code font-mono">@layer utilities</code>
@@ -329,6 +340,15 @@ defmodule FlintUIDocsWeb.StylingLive do
     <.button variant="solid" class="bg-violet-600 text-white hover:bg-violet-500">
       Save
     </.button>
+    """
+  end
+
+  defp snippet(:flint_utilities) do
+    """
+    <div class="fl-stack fl-gap-sm">
+      <.button variant="solid">Deploy</.button>
+      <p class="fl-text-sm fl-text-toned">Last deploy 2 minutes ago.</p>
+    </div>
     """
   end
 

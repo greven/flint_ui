@@ -129,6 +129,52 @@ defmodule FlintUI.Styled do
             "The text ink. A color role resolves it from the theme, and a raw color writes it inline."
         )
       ]
+    },
+    %Primitive{
+      name: :elevation,
+      css: "primitives/elevation.css",
+      marker: "data-elevation",
+      doc:
+        "Shared trim and layered elevation for raised surfaces; `.fl-surface` applies the same recipe to plain markup.",
+      vars: [
+        Var.new(
+          name: "--fl-elevation-level",
+          default: "2",
+          doc:
+            "The elevation step. Level 1 is the flattest; each step scales the three drop shadows by `--fl-elevation-step`."
+        ),
+        Var.new(
+          name: "--fl-elevation-step",
+          default: "0.4",
+          doc: "How much each level adds to the drop-shadow scale."
+        ),
+        Var.new(
+          name: "--fl-elevation-ring",
+          default: "light-dark(var(--fl-color-border), rgb(0 0 0 / 40%))",
+          doc:
+            "The outer 1px ring. It follows the chrome border in light; in dark it darkens the edge so the surface separates from the deep page."
+        ),
+        Var.new(
+          name: "--fl-elevation-highlight",
+          default: "rgb(255 255 255 / 6%)",
+          doc: "The inner top highlight that catches the light on the surface edge."
+        ),
+        Var.new(
+          name: "--fl-elevation-hairline",
+          default: "rgb(255 255 255 / 5%)",
+          doc: "The inner hairline just inside the edge."
+        ),
+        Var.new(
+          name: "--fl-elevation-shadow-color",
+          default: "light-dark(rgb(0 0 0 / 5%), rgb(0 0 0 / 32%))",
+          doc: "The color the three drop shadows are built from."
+        ),
+        Var.new(
+          name: "--fl-elevation-fill",
+          default: "var(--fl-color-surface)",
+          doc: "The fill the surface paints; components with their own fill override it."
+        )
+      ]
     }
   ]
 

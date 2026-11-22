@@ -28,6 +28,8 @@ defmodule FlintUIDocsWeb.Docs.Card do
         ]
       },
       %{tab: :styled, section: :usage, id: :link, title: "Link"},
+      %{tab: :styled, section: :usage, id: :link_hover, title: "Hover border"},
+      %{tab: :styled, section: :usage, id: :indicator, title: "Indicator"},
       %{tab: :styled, section: :usage, id: :heading, title: "Heading"}
     ]
   end
@@ -62,12 +64,50 @@ defmodule FlintUIDocsWeb.Docs.Card do
 
   def render_section(%{section: :usage, id: :link} = assigns) do
     ~H"""
-    <.prose content="Pass `href`, `navigate`, or `patch` to render the card root as a link. A linked card is one anchor, so keep buttons and links out of it. Set `title_id` so the root can use the title as its accessible name." />
+    <.prose content="Pass `href`, `navigate`, or `patch` to render the card root as a link. A linked card is one anchor, so keep buttons and links out of it. Set `title_id` so the root can use the title as its accessible name. Hovering or keyboard-focusing a linked card strengthens its outline and raises its elevation; `outline={false}` and `shadow={false}` turn those cues off." />
     <.preview {assigns} code={link_code()}>
       <Components.card href="/components" title_id="card-link-title" class="max-w-sm">
         <:title>Browse components</:title>
         <:description>See every FlintUI component</:description>
         <p>Open the component index.</p>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :link_hover} = assigns) do
+    ~H"""
+    <.prose content="The hover outline is neutral by default and derives from the card's own border, so `soft`, `strong` and `inverted` cards keep their edge. Set `--fl-card-border-hover` on one card for a colored hover border." />
+    <.preview {assigns} code={link_accent_code()}>
+      <Components.card
+        href="/components"
+        title_id="card-link-accent-title"
+        class="max-w-sm"
+        style="--fl-card-border-hover: var(--fl-color-primary)"
+      >
+        <:title>Browse components</:title>
+        <:description>See every FlintUI component</:description>
+        <p>Open the component index.</p>
+      </Components.card>
+    </.preview>
+    """
+  end
+
+  def render_section(%{section: :usage, id: :indicator} = assigns) do
+    ~H"""
+    <.prose content="Set `indicator` on a linked card to mark the whole surface as clickable. It adds a dimmed up-right arrow in the top-right corner and the `data-indicator` hook; use it to show that the card is a link, that it leaves the site, or whatever the destination calls for. The arrow is decorative and comes from `indicator_icon`, which defaults to `lucide-arrow-up-right`; pass another icon class to match your set, or an empty string to keep the hook without an arrow. `indicator` does not change where the link opens, so set `target` and `rel` when it should open in a new tab, and say so in the card's text." />
+    <.preview {assigns} code={indicator_code()}>
+      <Components.card
+        href="https://hexdocs.pm/phoenix"
+        indicator
+        target="_blank"
+        rel="noopener noreferrer"
+        title_id="card-indicator-title"
+        class="max-w-sm"
+      >
+        <:title>Phoenix documentation</:title>
+        <:description>Guides and API reference on hexdocs</:description>
+        <p>Opens in a new tab.</p>
       </Components.card>
     </.preview>
     """
@@ -121,6 +161,38 @@ defmodule FlintUIDocsWeb.Docs.Card do
       <:title>Browse components</:title>
       <:description>See every FlintUI component</:description>
       <p>Open the component index.</p>
+    </.card>
+    """
+    |> String.trim()
+  end
+
+  defp link_accent_code do
+    """
+    <.card
+      href="/components"
+      title_id="card-link-accent-title"
+      style="--fl-card-border-hover: var(--fl-color-primary)"
+    >
+      <:title>Browse components</:title>
+      <:description>See every FlintUI component</:description>
+      <p>Open the component index.</p>
+    </.card>
+    """
+    |> String.trim()
+  end
+
+  defp indicator_code do
+    """
+    <.card
+      href="https://hexdocs.pm/phoenix"
+      indicator
+      target="_blank"
+      rel="noopener noreferrer"
+      title_id="card-indicator-title"
+    >
+      <:title>Phoenix documentation</:title>
+      <:description>Guides and API reference on hexdocs</:description>
+      <p>Opens in a new tab.</p>
     </.card>
     """
     |> String.trim()

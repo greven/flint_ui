@@ -128,6 +128,38 @@ app stylesheet.
 own token (`text-default`, `bg-surface`, `border-default`, `text-primary` vs
 `bg-primary`). That mapping needs Tailwind 4.1 or newer.
 
+## CSS utilities
+
+FlintUI also ships a small first-party utility layer, installed by default with
+`mix flint.setup` as `assets/css/flint-utilities.css`. It is plain CSS, reads
+the same `--fl-*` tokens, and uses an `fl-` prefix so it can sit next to
+Tailwind or another utility layer.
+
+Start with the layout primitives:
+
+```heex
+<div class="fl-stack fl-gap-sm">
+  <div class="fl-cluster">
+    <span class="fl-bg-success-soft fl-text-success">Shipped</span>
+    <.button variant="surface">Refresh</.button>
+  </div>
+  <div class="fl-grid" style="--fl-grid-min: 12rem;">
+    <div>One</div>
+    <div>Two</div>
+    <div>Three</div>
+  </div>
+</div>
+```
+
+`fl-stack`, `fl-cluster`, `fl-split`, `fl-flank`, `fl-frame`, and `fl-grid`
+adapt to the available width without breakpoint classes. The atomic utilities
+(`fl-p-md`, `fl-gap-sm`, `fl-text-lg`, `fl-bg-primary`, `fl-rounded-lg`, …) are
+the escape hatch. There is no JIT and no arbitrary-value syntax.
+
+The layer is included by default; pass `--no-utilities` to `flint.setup` or
+`flint.theme` to leave it out. Run `mix flint.utilities` to refresh the
+generated file, and see the CSS Utilities guide for the full reference.
+
 ## Icons and flags
 
 `<.icon>` applies `name` verbatim as a class; FlintUI does not ship icon assets.

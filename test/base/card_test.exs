@@ -135,6 +135,16 @@ defmodule FlintUI.Base.CardTest do
       </.card>
       """
     end
+
+    def with_corner(assigns) do
+      ~H"""
+      <.card href="/repositories" title_id="card-corner-title">
+        <:corner><span data-test="marker">!</span></:corner>
+        <:title>Repositories</:title>
+        <p>Body</p>
+      </.card>
+      """
+    end
   end
 
   defp html(assigns \\ []) do
@@ -298,6 +308,21 @@ defmodule FlintUI.Base.CardTest do
     document = html()
 
     assert attr(document, ~s([data-part="root"]), "data-link") == []
+  end
+
+  test "renders corner content as the first child of the root" do
+    document =
+      render_component(&TestComponent.with_corner/1, %{})
+      |> LazyHTML.from_fragment()
+
+    corner = LazyHTML.query(document, ~s([data-part="root"] > [data-part="corner"]))
+    assert LazyHTML.attribute(corner, "data-part") == ["corner"]
+    assert String.trim(LazyHTML.text(corner)) == "!"
+
+    first_child =
+      LazyHTML.query(document, ~s([data-part="root"] > *:first-child))
+
+    assert LazyHTML.attribute(first_child, "data-part") == ["corner"]
   end
 
   test "gives the title an id for aria-labelledby" do

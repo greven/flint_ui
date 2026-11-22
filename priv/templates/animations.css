@@ -1,0 +1,111 @@
+@layer components {
+    /* Shared motion. These keyframes are public: any app can opt in with the
+     * `animation` property. They are timing-agnostic, so enter and exit pair
+     * with the transition tokens and looping animations pick their own
+     * duration. Components that need different geometry keep their own
+     * keyframes and are free to change without touching this set. */
+
+    @keyframes fl-fade-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fl-fade-out {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* Enter and exit from a small offset. The positioner owns the element's
+     * inline `transform`, so these animate the individual `translate` and
+     * `scale` properties instead. */
+    @keyframes fl-pop-in {
+        from {
+            opacity: 0;
+            scale: var(--fl-motion-pop-scale, 1);
+            translate: var(--fl-motion-pop-translate, 0 2px);
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes fl-pop-out {
+        from {
+            opacity: 1;
+            scale: 1;
+            translate: 0 0;
+        }
+
+        to {
+            opacity: 0;
+            scale: var(--fl-motion-pop-scale, 1);
+            translate: var(--fl-motion-pop-translate, 0 2px);
+        }
+    }
+
+    /* Looping animations. `fl-spin`, `fl-ping`, `fl-pulse`, and `fl-bounce`
+     * mirror Tailwind's `animate-spin`, `animate-ping`, `animate-pulse`, and
+     * `animate-bounce`, including the timing functions inside the keyframes,
+     * so the two can be swapped without a visual change. */
+    @keyframes fl-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes fl-ping {
+        75%,
+        100% {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+
+    @keyframes fl-pulse {
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes fl-bounce {
+        0%,
+        100% {
+            transform: translateY(-25%);
+            animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+        }
+
+        50% {
+            transform: none;
+            animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        }
+    }
+
+    /* Flint's own double beat. `--fl-heartbeat-scale` lets a large element
+     * beat more gently without changing the keyframes. */
+    @keyframes fl-heartbeat {
+        0%,
+        28%,
+        70%,
+        100% {
+            transform: scale(1);
+        }
+
+        14%,
+        42% {
+            transform: scale(var(--fl-heartbeat-scale, 1.3));
+        }
+    }
+}

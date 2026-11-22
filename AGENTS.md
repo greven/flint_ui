@@ -85,10 +85,12 @@ Breaking changes are expected until the first release.
 | Styled props, slots, public CSS variables | `lib/flint_ui/styled/<name>.ex`             |
 | Shared control shell and variants         | `priv/templates/primitives/control.css`     |
 | Shared field chrome and typography        | `priv/templates/primitives/field.css`       |
+| Shared raised-surface trim and elevation  | `priv/templates/primitives/elevation.css`   |
 | Palette hue ramps and derived tone tokens | `lib/flint_ui/palette.ex` + `palette/*.ex`  |
 | Rendered palette CSS parts                | `priv/templates/palettes/*.css`             |
 | Semantic role aliases and chrome tokens   | `priv/templates/tokens.css`                 |
 | Generic `data-color` tone hooks           | `priv/templates/colors.css`                 |
+| Utility classes, scales, and breakpoints  | `lib/flint_ui/utilities.ex`                 |
 | Component anatomy CSS and its rationale   | `priv/templates/styled/<name>.css`          |
 | Page content and examples                 | `docs/lib/flint_ui_docs_web/docs/<name>.ex` |
 | Docs navigation and routes                | `docs/lib/flint_ui_docs_web/nav.ex`         |
@@ -212,12 +214,18 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   `--fl-control-*` (plus `--fl-control-active-*` for stateful controls); fields
   expose `--fl-field-*`. These are shared inputs, documented on the primitive,
   not per-component escapes. A component's own `--fl-<name>-*` inputs remain a
-  narrow escape hatch: at most five, and only for what a prop or theme token
-  cannot express. `--_fl-*` is reserved for JS-published runtime values and is
-  never documented as an input.
+  narrow escape hatch: at most five, plus one state hook such as `-hover` when a
+  prop or theme token cannot express that state. `--_fl-*` is reserved for
+  JS-published runtime values and is never documented as an input.
 - **CSS lives in `@layer components`**, keyed on the wrapper's `data-*` hooks,
   so the base stays unstyled. Focus and control effects are shared theme
   tokens; respect `prefers-reduced-motion`.
+- **Utilities are a separate generated layer.** `FlintUI.Utilities` is the
+  source of truth; `mix flint.utilities` writes `flint-utilities.css`. It is
+  included by default by `flint.setup`/`flint.theme`, uses the `fl-` prefix, and
+  lives in `@layer utilities` after `components` and before the internal
+  `focus` layer. Never add utility CSS to `Generator.part_paths/0` or the
+  component theme aggregate.
 - **Shared scales, no per-component shapes.** Controls opt into the control
   primitive with `data-control`; fields opt into the field primitive with
   `data-field` and mark their box with `data-field-control`. Component CSS keeps
@@ -295,6 +303,10 @@ A section without a `render_section/1` clause renders an empty section. The docs
 test fails when a public base attribute or styled prop has no doc, so document
 new API on the component or prop itself. Dogfood FlintUI components in the docs;
 only deliberate unstyled demonstrations may keep raw HTML.
+
+The CSS Utilities guide renders its class reference from
+`FlintUI.Utilities.classes/0`. Add or rename a utility in the library and update
+the guide's examples; do not hand-maintain the reference table.
 
 ### Shared docs chrome
 

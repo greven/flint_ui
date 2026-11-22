@@ -1,0 +1,7 @@
+/* Shared cascade order for the theme and the utility layer.
+ *
+ * Utilities intentionally win over the component theme, while the internal
+ * `focus` layer stays last so an author utility cannot remove a focus
+ * treatment. The utility stylesheet declares the same order when it is imported
+ * on its own. */
+@layer base, components, utilities, focus;

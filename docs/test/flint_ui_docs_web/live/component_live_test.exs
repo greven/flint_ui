@@ -214,8 +214,8 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
 
   test "both part tables follow the component's anatomy order", %{conn: conn} do
     anatomy =
-      ~w(root header title description header_actions header_content body section footer
-         footer_content footer_actions)
+      ~w(root corner header title description header_actions header_content body section
+         footer footer_content footer_actions)
 
     {:ok, css, _html} = live(conn, ~p"/components/card?tab=css")
     {:ok, base, _html} = live(conn, ~p"/components/card?tab=base")

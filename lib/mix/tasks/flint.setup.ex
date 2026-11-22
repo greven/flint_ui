@@ -7,6 +7,8 @@ if Code.ensure_loaded?(Igniter) do
 
       * creates `MyAppWeb.Components` (where `mix flint.add` generates wrappers),
       * copies the theme stylesheet to `assets/css/flint.css` and imports it,
+      * writes the utility stylesheet to `assets/css/flint-utilities.css` and
+        imports it,
       * imports `MyAppWeb.Components` into your HTML helpers, so generated
         components are available as `<.button>`, `<.toggle>`, and so on,
       * registers FlintUI's LiveView hooks in `assets/js/app.js`.
@@ -20,6 +22,8 @@ if Code.ensure_loaded?(Igniter) do
         hook; mount `<FlintUI.sound_provider enabled={false} theme="default" />`
         once in your layout to use it.
       * `--no-js` - skip the `assets/js/app.js` wiring.
+      * `--no-utilities` - do not write or import the utility layer. Utilities
+        are included by default; the `fl-` prefix keeps them out of the way.
     """
 
     use Igniter.Mix.Task
@@ -28,7 +32,9 @@ if Code.ensure_loaded?(Igniter) do
 
     @impl Igniter.Mix.Task
     def info(_argv, _composing) do
-      %Igniter.Mix.Task.Info{schema: [tailwind: :boolean, sound: :boolean, js: :boolean]}
+      %Igniter.Mix.Task.Info{
+        schema: [tailwind: :boolean, sound: :boolean, js: :boolean, utilities: :boolean]
+      }
     end
 
     @impl Igniter.Mix.Task
@@ -38,12 +44,14 @@ if Code.ensure_loaded?(Igniter) do
       tailwind? = igniter.args.options[:tailwind]
       sound? = igniter.args.options[:sound] == true
       js? = Keyword.get(igniter.args.options, :js) != false
+      utilities? = Keyword.get(igniter.args.options, :utilities) != false
 
       igniter
       |> Installer.ensure_components_module(components)
       |> Installer.install_theme_css()
       |> Installer.import_components(web, components)
       |> maybe_install_js(js?, sound?)
+      |> maybe_utilities(utilities?)
       |> maybe_tailwind(tailwind?)
     end
 
@@ -51,6 +59,9 @@ if Code.ensure_loaded?(Igniter) do
       do: Installer.install_js_hooks(igniter, sound: sound?)
 
     defp maybe_install_js(igniter, false, _sound?), do: igniter
+
+    defp maybe_utilities(igniter, true), do: Installer.install_utilities_css(igniter)
+    defp maybe_utilities(igniter, false), do: igniter
 
     defp maybe_tailwind(igniter, true), do: Installer.tailwind_bridge(igniter)
     defp maybe_tailwind(igniter, _), do: igniter

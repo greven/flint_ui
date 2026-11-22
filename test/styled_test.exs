@@ -78,10 +78,11 @@ defmodule FlintUI.StyledTest do
   end
 
   test "the primitive registry is well formed" do
-    assert Styled.primitive_names() == [:control, :field, :typography]
+    assert Styled.primitive_names() == [:control, :field, :typography, :elevation]
     assert Styled.get_primitive(:control).marker == "data-control"
     assert Styled.get_primitive(:field).marker == "data-field"
     assert Styled.get_primitive(:typography).marker == "data-typography"
+    assert Styled.get_primitive(:elevation).marker == "data-elevation"
     assert Styled.get_primitive(:nope) == nil
   end
 

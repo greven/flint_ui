@@ -1,0 +1,32 @@
+@layer components {
+    /* Elevation primitive. A raised surface gets a trim and layered elevation:
+     * an inner top highlight, an inner hairline, an outer ring, and three drop
+     * shadows scaled by the shared `--fl-elevation-*` tokens.
+     *
+     * A styled wrapper opts in with `data-elevation`; `.fl-surface` applies the
+     * same recipe to plain markup. Public inputs: `--fl-elevation-level` (1 is
+     * the flattest step), `-step`, `-ring`, `-highlight`, `-hairline`,
+     * `-shadow-color`, and `-fill`. The composed `--fl-elevation-surface` is
+     * defined on the element so a level set inline or by a class recomputes
+     * the shadow.
+     *
+     * An element that already paints its own border should clear `-hairline`
+     * and `-highlight` so the recipe does not draw a second inner edge (see
+     * `styled/card.css`).
+     *
+     * Card opts in and uses `--fl-elevation-surface` as its default shadow. */
+    :where([data-elevation], .fl-surface) {
+        --_fl-elevation-scale: calc(1 + (var(--fl-elevation-level) - 1) * var(--fl-elevation-step));
+        --fl-elevation-surface:
+            inset 0 1px 0 0 var(--fl-elevation-highlight), inset 0 0 0 1px var(--fl-elevation-hairline), 0 0 0 1px var(--fl-elevation-ring),
+            0 calc(var(--_fl-elevation-scale) * 1px) calc(var(--_fl-elevation-scale) * 2px) calc(var(--_fl-elevation-scale) * -1px)
+                var(--fl-elevation-shadow-color),
+            0 calc(var(--_fl-elevation-scale) * 2px) calc(var(--_fl-elevation-scale) * 4px) calc(var(--_fl-elevation-scale) * -1.5px)
+                color-mix(in oklab, var(--fl-elevation-shadow-color) 80%, transparent),
+            0 calc(var(--_fl-elevation-scale) * 4px) calc(var(--_fl-elevation-scale) * 8px) calc(var(--_fl-elevation-scale) * -3px)
+                color-mix(in oklab, var(--fl-elevation-shadow-color) 70%, transparent);
+
+        background-color: var(--fl-elevation-fill, var(--fl-color-surface));
+        box-shadow: var(--fl-elevation-surface);
+    }
+}

@@ -486,14 +486,23 @@ defmodule FlintUI.GeneratorTest do
   end
 
   test "assembles the theme from palettes and tokens, then each component part" do
-    [first | _] = Generator.part_paths()
-    assert first =~ "palettes/tailwind.css"
+    [first, second | _] = Generator.part_paths()
+    assert first =~ "layers.css"
+    assert second =~ "palettes/tailwind.css"
     assert Enum.any?(Generator.part_paths(), &(&1 =~ "tokens.css"))
     assert Enum.any?(Generator.part_paths(), &(&1 =~ "colors.css"))
     assert Enum.any?(Generator.part_paths(), &(&1 =~ "base.css"))
+    assert Enum.any?(Generator.part_paths(), &(&1 =~ "animations.css"))
+    assert Enum.any?(Generator.part_paths(), &(&1 =~ "primitives/elevation.css"))
     assert List.last(Generator.part_paths()) =~ "focus.css"
 
+    paths = Generator.part_paths()
+    base = Enum.find_index(paths, &(&1 =~ "base.css"))
+    animations = Enum.find_index(paths, &(&1 =~ "animations.css"))
+    assert animations == base + 1
+
     css = Generator.theme_source()
+    assert css =~ "@layer base, components, utilities, focus;"
     assert css =~ "--fl-color-primary:"
     assert css =~ "--fl-focus-ring-color:"
     assert css =~ "--fl-focus-ring-alpha:"

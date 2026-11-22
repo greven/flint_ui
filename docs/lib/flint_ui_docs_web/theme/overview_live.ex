@@ -31,7 +31,7 @@ defmodule FlintUIDocsWeb.Theme.OverviewLive do
     %{
       label: "CSS Utilities",
       path: "/guides/theming/css-utilities",
-      description: "How tokens map to opt-in Tailwind utilities."
+      description: "The included fl- layout and style utilities, plus the Tailwind bridge."
     }
   ]
 
@@ -41,11 +41,11 @@ defmodule FlintUIDocsWeb.Theme.OverviewLive do
       body: "The raw color layer. Eighteen hues, each with a 50..950 scale."
     },
     %{
-      label: "Semantic roles",
+      label: "Semantic Roles",
       body: "Primary, secondary, info, success, warning, and danger point at palette hues."
     },
     %{
-      label: "Theme tokens",
+      label: "Theme Tokens",
       body: "Surfaces, text, borders, focus, type, spacing, and motion. The styling API."
     },
     %{

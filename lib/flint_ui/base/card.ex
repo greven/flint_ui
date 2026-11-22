@@ -40,11 +40,22 @@ defmodule FlintUI.Base.Card do
   `padded` setting; set `padded={false}` on the card for full-bleed content.
 
   The card is structural: it renders a root element with `data-part` hooks for
-  each region (`root`, `header`, `title`, `description`, `header-actions`,
-  `header-content`, `body`, `section`, `footer`, `footer-content`,
-  `footer-actions`). The default slot and the repeatable `:section` slots live
-  inside the body region; the header and footer sit outside it. The generated
-  styled component adds the surface treatment and body treatments.
+  each region (`root`, `corner`, `header`, `title`, `description`,
+  `header-actions`, `header-content`, `body`, `section`, `footer`,
+  `footer-content`, `footer-actions`). The default slot and the repeatable
+  `:section` slots live inside the body region; the header and footer sit
+  outside it. The generated styled component adds the surface treatment and
+  body treatments.
+
+  The `:corner` slot renders decorative corner content as the first child of the
+  root, such as an external-link arrow. The styled theme positions it in the
+  top-right corner and dims it; the base leaves placement and styling to the
+  caller.
+
+      <.card href="https://example.com" title_id="docs-title">
+        <:corner><.icon name="lucide-arrow-up-right" /></:corner>
+        <:title>Documentation</:title>
+      </.card>
 
   Header and footer actions use separate slots because Phoenix slot entries must
   be direct children of the component; slots cannot be nested. Each actions slot
@@ -66,6 +77,10 @@ defmodule FlintUI.Base.Card do
   `aria-labelledby`, so set a title when the card is a link. A link card is one
   anchor: nested buttons and links are invalid. Keep the card non-linked when it
   contains actions, or move those actions outside the card.
+
+  The `:corner` slot is decorative. Do not rely on a corner arrow to announce
+  that a link leaves the site: say so in the title or supporting text, and set
+  `target` and `rel` yourself when it opens a new tab.
 
   `orientation` is a layout hook for the styled theme. It does not add
   `aria-orientation`; set that yourself only if you give the card a role that
@@ -107,6 +122,14 @@ defmodule FlintUI.Base.Card do
           name: "[data-link]",
           value: "boolean",
           description: "Present when `href`, `navigate`, or `patch` renders the root as a link."
+        }
+      ],
+      corner: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "corner",
+          description:
+            "Identifies the decorative corner content rendered from the `:corner` slot."
         }
       ],
       header: [
@@ -214,6 +237,7 @@ defmodule FlintUI.Base.Card do
         "data-link" => link?,
         "aria-labelledby" => link? && assigns.title_id && !aria_label?(rest) && assigns.title_id
       },
+      corner: %{"data-part" => "corner"},
       header: %{"data-part" => "header"},
       title: %{"data-part" => "title", "id" => assigns.title_id},
       description: %{"data-part" => "description", "id" => assigns.description_id},
@@ -268,6 +292,10 @@ defmodule FlintUI.Base.Card do
 
   slot :description, doc: "Supporting text rendered under the title."
 
+  slot :corner,
+    doc:
+      "Decorative corner content, such as an external-link arrow. Rendered as the first child of the root; the styled theme positions it in the top-right corner."
+
   slot :header_actions,
     doc: "Actions rendered at the end of the header, such as buttons. May be repeated."
 
@@ -306,6 +334,7 @@ defmodule FlintUI.Base.Card do
     ~H"""
     <% title = render_slot(@title) %>
     <% description = render_slot(@description) %>
+    <% corner = render_slot(@corner) %>
     <% header_actions = render_slot(@header_actions) %>
     <% header_content = render_slot(@header) %>
     <% body_content = render_slot(@inner_block) %>
@@ -313,12 +342,14 @@ defmodule FlintUI.Base.Card do
     <% footer_actions = render_slot(@footer_actions) %>
     <% title? = present?(title) %>
     <% description? = present?(description) %>
+    <% corner? = present?(corner) %>
     <% header_actions? = present?(header_actions) %>
     <% header_content? = present?(header_content) %>
     <% body? = present?(body_content) or @section != [] %>
     <% footer_content? = present?(footer_content) %>
     <% footer_actions? = present?(footer_actions) %>
     <% footer? = footer_content? || footer_actions? %>
+    <div :if={corner?} {@flint_parts[:corner]}>{corner}</div>
     <div
       :if={title? || description? || header_actions? || header_content?}
       {@flint_parts[:header]}

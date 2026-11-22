@@ -392,6 +392,22 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
     """
   end
 
+  def snippet(:surface) do
+    """
+    /* Any element can be a raised surface. Level 2 is the default; raise it
+     * for a stronger lift, and retune the trim with the other elevation tokens. */
+    .my-panel {
+      --fl-elevation-level: 3;
+      --fl-elevation-shadow-color: rgb(0 0 0 / 8%);
+    }
+
+    /* Card reads the same recipe as its default --fl-card-shadow. */
+    .my-card {
+      --fl-elevation-level: 4;
+    }
+    """
+  end
+
   def snippet(:neutral_palette) do
     """
     /* app.css, after the flint.css import. A cool neutral. */
@@ -488,6 +504,44 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
 
       --fl-ease-out: cubic-bezier(0, 0, 0.2, 1);
       --fl-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    """
+  end
+
+  def snippet(:animations) do
+    """
+    /* Enter and exit use the transition scale. */
+    .toast {
+      animation: fl-pop-in var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    .toast[data-leaving] {
+      animation: fl-pop-out var(--fl-duration-fast) var(--fl-ease-in-out);
+    }
+
+    /* Reuse the same keyframes with different geometry. */
+    [data-placement="top"] {
+      --fl-motion-pop-translate: 0 -0.5rem;
+      --fl-motion-pop-scale: 0.97;
+    }
+
+    /* Looping animations set their own duration. */
+    .status-dot {
+      animation: fl-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    """
+  end
+
+  def snippet(:animation_reduced_motion) do
+    """
+    .toast {
+      animation: fl-pop-in var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toast {
+        animation: none;
+      }
     }
     """
   end

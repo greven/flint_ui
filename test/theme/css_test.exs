@@ -756,7 +756,23 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s|[data-element="card"][data-card][data-link]|
     assert css =~ "background: var(--fl-card-surface, var(--fl-color-surface));"
     assert css =~ "border: 1px solid var(--fl-card-border, var(--fl-color-border));"
-    assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));"
+    assert css =~ "box-shadow: var(--fl-card-shadow, var(--fl-elevation-surface));"
+  end
+
+  test "raised surfaces share one layered elevation recipe", %{css: css} do
+    assert css =~ "--fl-elevation-level: 2;"
+    assert css =~ "--fl-elevation-step: 0.4;"
+    assert css =~ ":where([data-elevation], .fl-surface) {"
+    assert css =~ "--fl-elevation-surface:"
+    assert css =~ "inset 0 1px 0 0 var(--fl-elevation-highlight)"
+    assert css =~ "inset 0 0 0 1px var(--fl-elevation-hairline)"
+    assert css =~ "0 0 0 1px var(--fl-elevation-ring)"
+    assert css =~ "box-shadow: var(--fl-elevation-surface);"
+    assert css =~ "--fl-elevation-ring: light-dark(var(--fl-color-border), rgb(0 0 0 / 40%));"
+    assert css =~ "--fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));"
+    assert css =~ "--fl-elevation-hairline: transparent;"
+    assert css =~ "--fl-elevation-highlight: transparent;"
+    assert css =~ "--fl-elevation-level: 3;"
   end
 
   test "a vertical separator stretches in flex and keeps a fallback length", %{css: css} do
@@ -781,6 +797,29 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "--fl-collapsible-easing, var(--fl-ease-in-out)"
     assert css =~ "var(--_fl-collapsible-height, auto)"
     refute css =~ "var(--fl-collapsible-height"
+  end
+
+  test "shared motion keyframes are public and components reuse them", %{css: css} do
+    for keyframe <-
+          ~w(fl-fade-in fl-fade-out fl-pop-in fl-pop-out fl-spin fl-ping fl-pulse fl-bounce fl-heartbeat) do
+      assert css =~ "@keyframes #{keyframe}"
+    end
+
+    assert css =~ "--fl-motion-pop-scale"
+    assert css =~ "--fl-motion-pop-translate"
+    assert css =~ "--fl-heartbeat-scale"
+
+    assert css =~ "animation: fl-pop-in"
+    assert css =~ "animation: fl-pop-out"
+    assert css =~ "animation: fl-fade-in"
+    assert css =~ "animation: fl-fade-out"
+
+    # The four enter/exit components reference the shared keyframes instead of
+    # shipping local copies.
+    refute css =~ "@keyframes fl-dropdown-"
+    refute css =~ "@keyframes fl-popover-"
+    refute css =~ "@keyframes fl-tooltip-"
+    refute css =~ "@keyframes fl-modal-"
   end
 
   defp resolve_text(css, token, light_base, dark_base) do

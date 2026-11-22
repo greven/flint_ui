@@ -34,11 +34,11 @@
      * so the enter animation never starts from the top-layer default corner. */
     [data-part="content"][data-popover-content][data-state="open"] {
         opacity: 1;
-        animation: fl-popover-in var(--fl-duration-fast) var(--fl-ease-out);
+        animation: fl-pop-in var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     [data-part="content"][data-popover-content][data-state="closed"] {
-        animation: fl-popover-out var(--fl-duration-fast) var(--fl-ease-in-out);
+        animation: fl-pop-out var(--fl-duration-fast) var(--fl-ease-in-out);
     }
 
     [data-part="content"][data-popover-content] [data-part="arrow"] {
@@ -87,33 +87,9 @@
     }
 }
 
-/* Keep the enter/leave animation on `translate` and `opacity`, like the
- * tooltip. The positioner owns the content's inline `transform`, so the
- * keyframes must not take it over with a `scale` or a `transform` function. */
-@keyframes fl-popover-in {
-    from {
-        opacity: 0;
-        translate: 0 2px;
-    }
-
-    to {
-        opacity: 1;
-        translate: 0 0;
-    }
-}
-
-@keyframes fl-popover-out {
-    from {
-        opacity: 1;
-        translate: 0 0;
-    }
-
-    to {
-        opacity: 0;
-        translate: 0 2px;
-    }
-}
-
+/* The shared `fl-pop-*` keyframes animate `translate` and `opacity` (plus a
+ * neutral `scale`). The positioner owns the content's inline `transform`, so
+ * nothing here takes it over. */
 @media (prefers-reduced-motion: reduce) {
     [data-part="content"][data-popover-content] {
         animation: none;

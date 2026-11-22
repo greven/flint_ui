@@ -87,6 +87,8 @@
         overflow: visible;
         box-shadow: var(--fl-shadow-lg);
         opacity: 0;
+        /* The menu enters from above the trigger. */
+        --fl-motion-pop-translate: 0 -2px;
     }
 
     [data-part="content"][data-dropdown-content] > [data-part="list"],
@@ -105,12 +107,12 @@
     [data-part="content"][data-dropdown-content][data-state="open"],
     [data-part="submenu"][data-dropdown-submenu][data-state="open"] {
         opacity: 1;
-        animation: fl-dropdown-in var(--fl-duration-fast) var(--fl-ease-out);
+        animation: fl-pop-in var(--fl-duration-fast) var(--fl-ease-out);
     }
 
     [data-part="content"][data-dropdown-content][data-state="closed"],
     [data-part="submenu"][data-dropdown-submenu][data-state="closed"] {
-        animation: fl-dropdown-out var(--fl-duration-fast) var(--fl-ease-in-out);
+        animation: fl-pop-out var(--fl-duration-fast) var(--fl-ease-in-out);
     }
 
     [data-part="content"][data-dropdown-content] [data-part="arrow"] {
@@ -155,32 +157,9 @@
     }
 }
 
-/* Keep the enter/leave animation on `translate` and `opacity`; the positioner
- * owns the menu's inline `transform`, so the keyframes must not take it over. */
-@keyframes fl-dropdown-in {
-    from {
-        opacity: 0;
-        translate: 0 -2px;
-    }
-
-    to {
-        opacity: 1;
-        translate: 0 0;
-    }
-}
-
-@keyframes fl-dropdown-out {
-    from {
-        opacity: 1;
-        translate: 0 0;
-    }
-
-    to {
-        opacity: 0;
-        translate: 0 -2px;
-    }
-}
-
+/* The enter and leave animation comes from the shared `fl-pop-*` keyframes,
+ * which animate `translate` and `opacity` (plus a neutral `scale`); the
+ * positioner owns the menu's inline `transform`, so nothing takes that over. */
 @media (prefers-reduced-motion: reduce) {
     [data-part="content"][data-dropdown-content],
     [data-part="submenu"][data-dropdown-submenu] {

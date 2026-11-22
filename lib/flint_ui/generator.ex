@@ -50,9 +50,11 @@ defmodule FlintUI.Generator do
     end
   end
 
+  @layers_part "layers.css"
   @tokens_part "tokens.css"
   @colors_part "colors.css"
   @base_part "base.css"
+  @animations_part "animations.css"
   @focus_part "focus.css"
   @aggregate "priv/static/flint.css"
 
@@ -64,8 +66,10 @@ defmodule FlintUI.Generator do
   @doc """
   Absolute paths to every theme part, in assembly order.
 
-  Tokens come first (they are unlayered), then the shared base rules, then the
-  primitive stylesheets, then each registered theme preset, then each registered
+  The layer declaration comes first so the theme and the separate utility layer
+  share a cascade order. Palettes follow, then tokens (both unlayered), then the
+  shared base rules, then the shared motion keyframes, then the primitive
+  stylesheets, then each registered theme preset, then each registered
   component's anatomy stylesheet in registry order, and finally the shared focus
   layer. Entries composed entirely of primitives may omit a component part.
 
@@ -82,8 +86,9 @@ defmodule FlintUI.Generator do
       |> Enum.map(& &1.css)
       |> Enum.reject(&is_nil/1)
 
-    (palette_parts ++
-       [@tokens_part, @colors_part, @base_part] ++
+    ([@layers_part] ++
+       palette_parts ++
+       [@tokens_part, @colors_part, @base_part, @animations_part] ++
        primitive_parts ++ theme_parts ++ component_parts ++ [@focus_part])
     |> Enum.map(&part_path/1)
   end

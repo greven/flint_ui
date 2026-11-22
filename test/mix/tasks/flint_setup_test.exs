@@ -53,14 +53,16 @@ defmodule Mix.Tasks.Flint.SetupTest do
     |> Igniter.compose_task("flint.setup", args)
   end
 
-  test "creates the components module and the theme stylesheet" do
+  test "creates the components module, the theme, and the utilities" do
     igniter = run_setup()
 
     assert_creates(igniter, "lib/my_app_web/components.ex")
     assert_creates(igniter, "assets/css/flint.css")
+    assert_creates(igniter, "assets/css/flint-utilities.css")
 
     assert content(igniter, "lib/my_app_web/components.ex") =~ "use Phoenix.Component"
     assert content(igniter, "assets/css/flint.css") =~ "--fl-color-primary"
+    assert content(igniter, "assets/css/flint-utilities.css") =~ ".fl-stack"
   end
 
   test "imports the components module into the HTML helpers" do
@@ -68,10 +70,19 @@ defmodule Mix.Tasks.Flint.SetupTest do
     assert source =~ "import MyAppWeb.Components"
   end
 
-  test "imports the theme stylesheet" do
+  test "imports the theme and utility stylesheets" do
     source = content(run_setup(), "assets/css/app.css")
+
     assert source =~ ~s(@import "./flint.css";)
+    assert source =~ ~s(@import "./flint-utilities.css";)
     refute source =~ "--fl-color-primary"
+  end
+
+  test "--no-utilities skips the utility layer" do
+    igniter = run_setup([], ["--no-utilities"])
+
+    refute_creates(igniter, "assets/css/flint-utilities.css")
+    refute content(igniter, "assets/css/app.css") =~ "flint-utilities.css"
   end
 
   test "registers the core hooks in app.js" do

@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Compile.FlintDocsTheme do
 
   @impl true
   def run(_args) do
-    case FlintUIDocs.Theme.write!() do
+    case FlintUIDocs.Theme.write_all!() do
       :ok -> {:ok, []}
       :noop -> {:noop, []}
     end

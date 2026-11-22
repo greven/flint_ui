@@ -1,8 +1,16 @@
 @layer components {
-    /* Card. Public inputs: `--fl-card-spacing`, `-surface`,
-     * `-text`, `-border`, `-shadow`; bands, panels and dividers
-     * derive from them and the theme. */
+    /* Card. Public inputs: `--fl-card-spacing`, `-surface`, `-text`,
+     * `-border`, `-border-hover`, `-shadow`; bands, panels and dividers
+     * derive from them and the theme. The root opts into the elevation
+     * primitive, so `--fl-elevation-level` raises or lowers its layered
+     * elevation. The border is the card's single inner edge, so the
+     * primitive's hairline and top highlight are cleared; only the
+     * dark-scheme outer ring remains. */
     [data-element="card"][data-card] {
+        --fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));
+        --fl-elevation-hairline: transparent;
+        --fl-elevation-highlight: transparent;
+        position: relative;
         display: flex;
         flex-direction: column;
         gap: var(--fl-card-spacing, calc(var(--fl-spacing) * 5));
@@ -11,36 +19,58 @@
         border-radius: var(--fl-radius-lg);
         background: var(--fl-card-surface, var(--fl-color-surface));
         color: var(--fl-card-text, var(--fl-color-text));
-        box-shadow: var(--fl-card-shadow, var(--fl-shadow-base));
+        box-shadow: var(--fl-card-shadow, var(--fl-elevation-surface));
         font-family: var(--fl-font-sans);
         overflow: hidden;
     }
 
-    /* A linked card is one anchor. Hover and keyboard focus make the whole
-     * surface read as the target without replacing its elevation. */
+    /* A linked card is one anchor. Hover and keyboard focus strengthen the
+     * outline and raise the shared elevation, so the whole surface reads as
+     * the target without changing its fill. */
     [data-element="card"][data-card][data-link] {
-        cursor: pointer;
         text-decoration: none;
         transition:
-            background-color var(--fl-duration-fast) var(--fl-ease-out),
             border-color var(--fl-duration-fast) var(--fl-ease-out),
             box-shadow var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="card"][data-card][data-link]:is(:hover, :focus-visible) {
-        background-color: color-mix(
-            in oklab,
-            var(--fl-card-text, var(--fl-color-text)) calc(var(--fl-control-hover-opacity) * 100%),
-            var(--fl-card-surface, var(--fl-color-surface))
+    /* The hover edge is the card's own border strengthened by a share of its
+     * ink, so soft, strong, and inverted cards keep their edge. Set
+     * `--fl-card-border-hover` on one card for a colored edge. */
+    [data-element="card"][data-card][data-link][data-outline]:is(:hover, :focus-visible) {
+        border-color: var(
+            --fl-card-border-hover,
+            color-mix(
+                in oklab,
+                var(--fl-card-border, var(--fl-color-border)),
+                var(--fl-card-text, var(--fl-color-text)) 20%
+            )
         );
     }
 
-    [data-element="card"][data-card][data-link][data-outline]:hover {
-        border-color: var(--fl-color-border-strong);
+    [data-element="card"][data-card][data-link][data-shadow]:not([data-variant="ghost"]):is(:hover, :focus-visible) {
+        --fl-elevation-level: 3;
     }
 
-    [data-element="card"][data-card][data-link][data-shadow]:not([data-variant="ghost"]):is(:hover, :focus-visible) {
-        box-shadow: var(--fl-shadow-md);
+    /* The corner slot is decorative content placed at the top-right of the
+     * card, inside its padding. An `indicator` linked card dims it and sizes
+     * the icon; the arrow never intercepts the anchor. */
+    [data-element="card"][data-card] > [data-part="corner"] {
+        position: absolute;
+        inset-block-start: calc(var(--fl-spacing) * 2);
+        inset-inline-end: calc(var(--fl-spacing) * 2);
+        display: inline-flex;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    [data-element="card"][data-indicator] > [data-part="corner"] {
+        color: var(--fl-card-text, var(--fl-color-text));
+        opacity: 0.55;
+    }
+
+    [data-element="card"][data-indicator] > [data-part="corner"] [data-element="icon"] {
+        --fl-icon-size: var(--fl-control-icon-sm);
     }
 
     @media (prefers-reduced-motion: reduce) {
