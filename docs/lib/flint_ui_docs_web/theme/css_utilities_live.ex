@@ -43,7 +43,7 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
       <div class="max-w-3xl">
         <DocsComponents.page_header
           title="CSS Utilities"
-          subtitle="A small, fixed utility layer for layout, spacing, and theme-aware styling. It is included by default and reads the same --fl-* tokens as the components."
+          subtitle="A small, fixed utility layer for layout, spacing, motion, and theme-aware styling. It is included by default and reads the same --fl-* tokens as the components."
         />
 
         <DocsComponents.section title="Included by default" id="included">
@@ -320,6 +320,78 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
           </div>
         </DocsComponents.section>
 
+        <DocsComponents.section title="Motion" id="motion">
+          <DocsComponents.content_paragraph>
+            The shared keyframes in <code class="docs-code font-mono">flint.css</code>
+            have matching animation utilities. Entrance classes
+            (<code class="docs-code font-mono">fl-animate-fade-in</code>, <code class="docs-code font-mono">fl-animate-pop-in</code>, <code class="docs-code font-mono">fl-animate-slide-in</code>, <code class="docs-code font-mono">fl-animate-rotate-in</code>)
+            run once and hold their final state. Attention classes
+            (<code class="docs-code font-mono">fl-animate-shake</code>, <code class="docs-code font-mono">fl-animate-flash</code>)
+            run once; let the state change carry the message afterwards.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            The looping classes mirror Tailwind's <code class="docs-code font-mono">animate-*</code>
+            timings, so either can be swapped without a visual change. Every
+            motion utility turns off under <code class="docs-code font-mono">prefers-reduced-motion: reduce</code>:
+            the state change still lands, only the movement is removed. Exit
+            animations stay with the component or JS that keeps the element
+            mounted until the animation ends; the shared exit keyframes are
+            still available in app CSS.
+          </DocsComponents.content_paragraph>
+
+          <div class="fl-grid mt-4" style="--fl-grid-min: 8.5rem;">
+            <div class="fl-stack fl-gap-sm fl-rounded-lg fl-border fl-border-default fl-p-sm">
+              <div class="fl-flex fl-h-12 fl-items-center fl-justify-center fl-overflow-hidden">
+                <span class="fl-size-3xl fl-rounded-md fl-bg-primary fl-animate-pulse"></span>
+              </div>
+              <code class="docs-code font-mono text-xs">fl-animate-pulse</code>
+            </div>
+            <div class="fl-stack fl-gap-sm fl-rounded-lg fl-border fl-border-default fl-p-sm">
+              <div class="fl-flex fl-h-12 fl-items-center fl-justify-center fl-overflow-hidden">
+                <span class="fl-size-3xl fl-rounded-md fl-bg-primary fl-animate-bounce"></span>
+              </div>
+              <code class="docs-code font-mono text-xs">fl-animate-bounce</code>
+            </div>
+            <div class="fl-stack fl-gap-sm fl-rounded-lg fl-border fl-border-default fl-p-sm">
+              <div class="fl-flex fl-h-12 fl-items-center fl-justify-center fl-overflow-hidden">
+                <span class="fl-size-3xl fl-rounded-md fl-bg-primary fl-animate-heartbeat"></span>
+              </div>
+              <code class="docs-code font-mono text-xs">fl-animate-heartbeat</code>
+            </div>
+            <div class="fl-stack fl-gap-sm fl-rounded-lg fl-border fl-border-default fl-p-sm">
+              <div class="fl-flex fl-h-12 fl-items-center fl-justify-center fl-overflow-hidden">
+                <span class="fl-size-3xl fl-rounded-md fl-bg-primary fl-animate-ping"></span>
+              </div>
+              <code class="docs-code font-mono text-xs">fl-animate-ping</code>
+            </div>
+            <div class="fl-stack fl-gap-sm fl-rounded-lg fl-border fl-border-default fl-p-sm">
+              <div class="fl-flex fl-h-12 fl-items-center fl-justify-center fl-overflow-hidden">
+                <Components.icon
+                  name="lucide-loader-circle"
+                  class="fl-animate-spin fl-text-primary"
+                />
+              </div>
+              <code class="docs-code font-mono text-xs">fl-animate-spin</code>
+            </div>
+          </div>
+
+          <DocsComponents.content_paragraph class="mt-4">
+            Tune a one-shot with <code class="docs-code font-mono">fl-duration-fast</code>, <code class="docs-code font-mono">fl-duration-base</code>, <code class="docs-code font-mono">fl-duration-slow</code>, or <code class="docs-code font-mono">fl-ease-*</code>. The duration and
+            easing classes are emitted after the animation classes, so they win
+            regardless of class order. The looping classes set their own timing
+            to stay aligned with Tailwind; an explicit duration class overrides
+            that default. Use <code class="docs-code font-mono">fl-animate-none</code>
+            to remove an animation.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            The keyframes are part of the theme, so motion utilities need <code class="docs-code font-mono">flint.css</code>. Geometry inputs
+            such as <code class="docs-code font-mono">--fl-motion-slide-from</code>
+            and <code class="docs-code font-mono">--fl-heartbeat-scale</code>
+            still work on the class.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:motion)} />
+        </DocsComponents.section>
+
         <DocsComponents.section title="Class reference" id="reference">
           <DocsComponents.content_paragraph>
             Every class is fixed and emitted into the generated file. Search by
@@ -406,7 +478,11 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
               <code class="docs-code font-mono">--fl-color-*</code>
               variables.
             </li>
-            <li>No transforms, transitions, filters, or gradients. Use a custom class for those.</li>
+            <li>
+              No arbitrary transform, transition, filter, or gradient
+              utilities. Named animations cover the common motion; write a
+              custom class for anything else.
+            </li>
             <li>
               No Bootstrap-style row/column grid; use <code class="docs-code font-mono">fl-grid</code>
               or an explicit <code class="docs-code font-mono">fl-grid-cols-*</code>
@@ -575,6 +651,24 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
       border: 1px solid var(--fl-tone-soft-border);
       color: var(--fl-tone-on-soft);
     }
+    """
+  end
+
+  defp snippet(:motion) do
+    """
+    <!-- Looping. Timing matches Tailwind's animate-* classes. -->
+    <span class="fl-size-sm fl-rounded-full fl-bg-primary fl-animate-pulse"></span>
+    <.icon name="lucide-loader-circle" class="fl-animate-spin" />
+
+    <!-- Entrance: runs once and holds the final state. -->
+    <div class="fl-animate-pop-in">Saved.</div>
+
+    <!-- One-shot attention. Let the state carry the message after. -->
+    <p class="fl-animate-shake fl-text-danger">That name is taken.</p>
+
+    <!-- Tune a one-shot, or remove the animation. -->
+    <div class="fl-animate-fade-in fl-duration-slow fl-ease-linear">Filters applied.</div>
+    <div class="fl-animate-pulse fl-animate-none">Static status dot</div>
     """
   end
 

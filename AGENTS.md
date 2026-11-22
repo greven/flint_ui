@@ -225,7 +225,8 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   included by default by `flint.setup`/`flint.theme`, uses the `fl-` prefix, and
   lives in `@layer utilities` after `components` and before the internal
   `focus` layer. Never add utility CSS to `Generator.part_paths/0` or the
-  component theme aggregate.
+  component theme aggregate. Motion utilities wrap the shared keyframes from
+  `priv/templates/animations.css` and must keep their reduced-motion guard.
 - **Shared scales, no per-component shapes.** Controls opt into the control
   primitive with `data-control`; fields opt into the field primitive with
   `data-field` and mark their box with `data-field-control`. Component CSS keeps

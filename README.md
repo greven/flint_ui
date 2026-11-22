@@ -154,7 +154,9 @@ Start with the layout primitives:
 `fl-stack`, `fl-cluster`, `fl-split`, `fl-flank`, `fl-frame`, and `fl-grid`
 adapt to the available width without breakpoint classes. The atomic utilities
 (`fl-p-md`, `fl-gap-sm`, `fl-text-lg`, `fl-bg-primary`, `fl-rounded-lg`, …) are
-the escape hatch. There is no JIT and no arbitrary-value syntax.
+the escape hatch. Named motion utilities (`fl-animate-pulse`, `fl-animate-spin`,
+`fl-animate-pop-in`, …) wrap the shared keyframes and turn off under reduced
+motion. There is no JIT and no arbitrary-value syntax.
 
 The layer is included by default; pass `--no-utilities` to `flint.setup` or
 `flint.theme` to leave it out. Run `mix flint.utilities` to refresh the

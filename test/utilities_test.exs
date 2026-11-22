@@ -98,6 +98,23 @@ defmodule FlintUI.UtilitiesTest do
     assert css =~ ".fl-border-default { border-color: var(--fl-color-border) }"
   end
 
+  test "motion utilities wrap the shared keyframes", %{css: css} do
+    assert css =~ ".fl-animate-pulse {"
+    assert css =~ "animation: fl-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"
+    assert css =~ "animation: fl-spin 1s linear infinite;"
+    assert css =~ "animation: fl-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;"
+    assert css =~ "animation: fl-bounce 1s infinite;"
+    assert css =~ "animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out) both;"
+    assert css =~ "animation: fl-shake 500ms var(--fl-ease-in-out);"
+    assert css =~ ".fl-animate-none {"
+    assert css =~ "animation: none;"
+    assert css =~ "animation-duration: var(--fl-duration-slow);"
+    assert css =~ "animation-timing-function: linear;"
+
+    assert css =~ ~r/@media \(prefers-reduced-motion: reduce\) \{\s+\.fl-animate-fade-in,/
+    assert css =~ ~r/\.fl-animate-pulse,\s+\.fl-animate-bounce,/
+  end
+
   test "responsive display classes use the token breakpoints as literals", %{css: css} do
     assert css =~ "@media (min-width: 40rem)"
     assert css =~ "@media (min-width: 48rem)"

@@ -2,10 +2,10 @@ defmodule FlintUI.Utilities do
   @moduledoc """
   The CSS utility layer.
 
-  FlintUI ships a small, fixed set of utility classes for layout, spacing, and
-  theme-aware styling. The classes are prefixed with `fl-` and read the same
-  `--fl-*` tokens as the components, so they follow the active theme, palette,
-  and color scheme.
+  FlintUI ships a small, fixed set of utility classes for layout, spacing,
+  motion, and theme-aware styling. The classes are prefixed with `fl-` and read
+  the same `--fl-*` tokens as the components, so they follow the active theme,
+  palette, and color scheme.
 
   The layer is generated, not hand-written. `mix flint.utilities` writes
   `assets/css/flint-utilities.css`; `mix flint.setup` and `mix flint.theme`
@@ -112,6 +112,7 @@ defmodule FlintUI.Utilities do
       family(:colors, "Color", color_description(), color_utilities()),
       family(:borders, "Borders and radius", border_description(), border_utilities()),
       family(:effects, "Effects", effect_description(), effect_utilities()),
+      family(:motion, "Motion", motion_description(), motion_utilities(), css: motion_css()),
       family(:responsive, "Responsive display", responsive_description(), responsive_utilities(),
         css: responsive_css()
       )
@@ -1143,6 +1144,81 @@ defmodule FlintUI.Utilities do
     ]
 
     shadows ++ opacity ++ overflow ++ object ++ cursors ++ interaction
+  end
+
+  # Motion -------------------------------------------------------------------
+
+  @motion_animations [
+    {"fl-animate-fade-in", "fl-fade-in var(--fl-duration-base) var(--fl-ease-out) both"},
+    {"fl-animate-pop-in", "fl-pop-in var(--fl-duration-base) var(--fl-ease-out) both"},
+    {"fl-animate-slide-in", "fl-slide-in var(--fl-duration-base) var(--fl-ease-out) both"},
+    {"fl-animate-rotate-in", "fl-rotate-in var(--fl-duration-base) var(--fl-ease-out) both"},
+    {"fl-animate-shake", "fl-shake 500ms var(--fl-ease-in-out)"},
+    {"fl-animate-flash", "fl-flash 500ms var(--fl-ease-in-out)"},
+    {"fl-animate-spin", "fl-spin 1s linear infinite"},
+    {"fl-animate-ping", "fl-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite"},
+    {"fl-animate-pulse", "fl-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"},
+    {"fl-animate-bounce", "fl-bounce 1s infinite"},
+    {"fl-animate-heartbeat", "fl-heartbeat 1.3s var(--fl-ease-in-out) infinite"}
+  ]
+
+  defp motion_description do
+    desc("""
+    Named animations built on the shared `fl-*` keyframes in `flint.css`.
+    Entrance utilities run once and hold their final state; looping utilities
+    use the same timing as Tailwind's `animate-*`; attention utilities run
+    once. Every motion utility is disabled under `prefers-reduced-motion:
+    reduce`, so the state change still lands without the movement. The
+    keyframes ship with the theme, so motion utilities need `flint.css`.
+    """)
+  end
+
+  defp motion_utilities do
+    animations =
+      Enum.map(@motion_animations, fn {class, value} ->
+        util(class, "animation: #{value}")
+      end)
+
+    durations =
+      Enum.map(~w(fast base slow), fn step ->
+        util("fl-duration-#{step}", "animation-duration: var(--fl-duration-#{step})")
+      end)
+
+    easings = [
+      util("fl-ease-out", "animation-timing-function: var(--fl-ease-out)"),
+      util("fl-ease-in-out", "animation-timing-function: var(--fl-ease-in-out)"),
+      util("fl-ease-linear", "animation-timing-function: linear")
+    ]
+
+    [util("fl-animate-none", "animation: none")] ++ animations ++ durations ++ easings
+  end
+
+  defp motion_css do
+    rules =
+      Enum.map_join(motion_utilities(), "\n\n", fn %{class: class, declaration: declaration} ->
+        """
+          .#{class} {
+            #{declaration};
+          }
+        """
+        |> String.trim_trailing()
+      end)
+
+    guard =
+      @motion_animations
+      |> Enum.map(fn {class, _value} -> "    .#{class}" end)
+      |> Enum.join(",\n")
+
+    """
+    #{rules}
+
+      @media (prefers-reduced-motion: reduce) {
+    #{guard} {
+          animation: none;
+        }
+      }
+    """
+    |> String.trim_trailing()
   end
 
   # Responsive display -------------------------------------------------------

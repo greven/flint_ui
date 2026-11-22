@@ -284,6 +284,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#included")
     assert has_element?(view, "#layers")
     assert has_element?(view, "#layout")
+    assert has_element?(view, "#motion")
     assert has_element?(view, "#responsive")
     assert has_element?(view, "#reference")
     assert has_element?(view, "#tailwind")
@@ -295,6 +296,8 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert html =~ "fl-stack"
     assert html =~ "fl-grid"
     assert html =~ "fl-flex"
+    assert html =~ "fl-animate-pulse"
+    assert html =~ "prefers-reduced-motion"
     refute html =~ "Planned"
   end
 
@@ -308,6 +311,20 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
 
     assert html =~ "fl-grid-cols-12"
     refute html =~ "fl-cursor-wait"
+  end
+
+  test "css utilities reference includes the motion family", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/guides/theming/css-utilities")
+
+    html =
+      view
+      |> element("#utility-search-form")
+      |> render_change(%{"query" => "animate-"})
+
+    assert html =~ "fl-animate-pulse"
+    assert html =~ "fl-animate-fade-in"
+    assert html =~ "fl-duration-slow"
+    assert html =~ "fl-ease-linear"
   end
 
   test "installation page shows its section breadcrumb", %{conn: conn} do

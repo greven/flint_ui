@@ -927,7 +927,10 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
           navigate={~p"/guides/theming/tokens/transitions"}
           class="docs-link"
         >transitions</.link>
-        scale.
+        scale. The
+        <.link navigate={~p"/guides/theming/css-utilities"} class="docs-link">CSS utilities</.link>
+        layer wraps the common recipes as <code class="docs-code font-mono">fl-animate-*</code>
+        classes, including a reduced-motion guard.
       </DocsComponents.content_paragraph>
       <div class="mt-4 overflow-x-auto">
         <table class="w-full min-w-lg text-left text-sm">
