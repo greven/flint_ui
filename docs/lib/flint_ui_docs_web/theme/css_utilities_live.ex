@@ -10,34 +10,34 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
   @impl true
   def mount(_params, _session, socket) do
     families = FlintUI.Utilities.families()
-
-    classes =
-      for family <- families,
-          utility <- family.utilities do
-        Map.put(utility, :family, family.id)
-      end
+    classes = FlintUI.Utilities.classes()
 
     {:ok,
      assign(socket,
        page_title: "CSS Utilities",
        query: "",
        families: families,
-       classes: classes
+       classes: classes,
+       class_count: length(classes),
+       groups: grouped_classes(classes, families, "")
      )}
   end
 
   @impl true
   def handle_event("search", %{"query" => query}, socket) do
-    {:noreply, assign(socket, :query, query)}
+    %{classes: classes, families: families} = socket.assigns
+
+    {:noreply,
+     assign(socket,
+       query: query,
+       groups: grouped_classes(classes, families, query)
+     )}
   end
 
   def handle_event("search", _params, socket), do: {:noreply, socket}
 
   @impl true
   def render(assigns) do
-    assigns =
-      assign(assigns, :groups, grouped_classes(assigns.classes, assigns.families, assigns.query))
-
     ~H"""
     <Layouts.app flash={@flash} section={:guides} page={:theming_css_utilities}>
       <div class="max-w-3xl">
@@ -416,61 +416,6 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
           <DocsComponents.code_block code={snippet(:motion)} />
         </DocsComponents.section>
 
-        <DocsComponents.section title="Class reference" id="reference">
-          <DocsComponents.content_paragraph>
-            Every class is fixed and emitted into the generated file. Search by
-            class name or by the CSS it sets. There are <strong>{length(@classes)}</strong>
-            classes in this build.
-          </DocsComponents.content_paragraph>
-
-          <form id="utility-search-form" phx-change="search" phx-submit="search" class="mt-4">
-            <label for="utility-search" class="fl-sr-only">Search utilities</label>
-            <input
-              type="search"
-              id="utility-search"
-              name="query"
-              value={@query}
-              placeholder="Search classes or declarations"
-              phx-debounce="150"
-              class="w-full rounded-md border border-default bg-surface px-3 py-2 text-sm text-default placeholder:text-dimmed focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </form>
-
-          <p
-            :if={@groups == []}
-            class="mt-6 rounded-lg border border-default bg-subtle p-4 text-sm text-toned"
-          >
-            No utilities match “{@query}”.
-          </p>
-
-          <div :if={@groups != []} class="mt-6 max-h-168 space-y-8 overflow-y-auto pr-2">
-            <section :for={group <- @groups} id={"reference-" <> to_string(group.id)}>
-              <h3 class="text-lg font-semibold text-highlighted">{group.title}</h3>
-              <Markdown.prose content={group.description} class="mt-1 text-sm" />
-              <div class="mt-3 overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                  <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
-                    <tr>
-                      <th class="py-2 pr-6 font-medium">Class</th>
-                      <th class="py-2 font-medium">CSS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr :for={utility <- group.utilities} class="border-b border-subtle last:border-0">
-                      <td class="py-2 pr-6 align-top">
-                        <code class="font-mono text-xs text-highlighted">{utility.class}</code>
-                      </td>
-                      <td class="py-2 align-top">
-                        <code class="font-mono text-xs text-toned">{utility.declaration}</code>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          </div>
-        </DocsComponents.section>
-
         <DocsComponents.section title="Customizing" id="customizing">
           <DocsComponents.content_paragraph>
             Utilities read tokens, so the first lever is the theme. Override a
@@ -532,6 +477,60 @@ defmodule FlintUIDocsWeb.Theme.CssUtilitiesLive do
             and <code class="docs-code font-mono">fl-bg-primary</code>
             resolve the same token. You can use either; you do not need both.
           </DocsComponents.content_paragraph>
+        </DocsComponents.section>
+
+        <DocsComponents.section title="Class reference" id="reference">
+          <DocsComponents.content_paragraph>
+            Every class is fixed and emitted into the generated file. Search by
+            class name or by the CSS it sets. There are <strong>{@class_count}</strong>
+            classes in this build.
+          </DocsComponents.content_paragraph>
+
+          <form id="utility-search-form" phx-change="search" phx-submit="search" class="mt-4">
+            <Components.input
+              id="utility-search"
+              name="query"
+              type="search"
+              aria-label="Search utilities"
+              value={@query}
+              placeholder="Search classes or declarations"
+              phx-debounce="150"
+            />
+          </form>
+
+          <p
+            :if={@groups == []}
+            class="mt-6 rounded-lg border border-default bg-subtle p-4 text-sm text-toned"
+          >
+            No utilities match “{@query}”.
+          </p>
+
+          <div :if={@groups != []} class="mt-6 max-h-168 space-y-8 overflow-y-auto pr-2">
+            <section :for={group <- @groups} id={"reference-" <> to_string(group.id)}>
+              <h3 class="text-lg font-semibold text-highlighted">{group.title}</h3>
+              <Markdown.prose content={group.description} class="mt-1 text-sm" />
+              <div class="mt-3 overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                  <thead class="border-b border-default text-xs tracking-wider text-muted uppercase">
+                    <tr>
+                      <th class="py-2 pr-6 font-medium">Class</th>
+                      <th class="py-2 font-medium">CSS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr :for={utility <- group.utilities} class="border-b border-subtle last:border-0">
+                      <td class="py-2 pr-6 align-top">
+                        <code class="font-mono text-xs text-highlighted">{utility.class}</code>
+                      </td>
+                      <td class="py-2 align-top">
+                        <code class="font-mono text-xs text-toned">{utility.declaration}</code>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
         </DocsComponents.section>
       </div>
     </Layouts.app>

@@ -96,7 +96,7 @@
     --fl-elevation-level: 2;
     --fl-elevation-step: 0.4;
     --fl-elevation-border: var(--fl-color-border);
-    --fl-elevation-highlight: rgb(255 255 255 / 7%);
+    --fl-elevation-highlight: rgb(255 255 255 / 5%);
     --fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));
     --fl-elevation-shadow-color: light-dark(rgb(0 0 0 / 5%), rgb(0 0 0 / 32%));
 
@@ -340,7 +340,7 @@
     --fl-focus-ring-offset: 0px;
     --fl-focus-ring-style: solid;
     --fl-focus-ring-color: var(--fl-color-primary);
-    --fl-focus-ring-alpha: 25%;
+    --fl-focus-ring-alpha: 20%;
     /* Bordered controls pair the translucent ring with a full-color border. */
     --fl-focus-border-color: var(--fl-focus-ring-color);
     /* Invalid controls override both focus colors with this. */
