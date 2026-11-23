@@ -40,7 +40,7 @@
         padding-inline: var(--_input-addon-padding, var(--fl-field-padding-x-md));
         border: 1px solid var(--fl-field-border, var(--fl-color-border));
         background-color: var(--fl-field-fill, var(--fl-color-surface));
-        color: var(--fl-color-text-toned);
+        color: var(--fl-color-text-muted);
         font-size: var(--fl-control-font-size-md);
         line-height: var(--fl-control-line-height-md);
     }
@@ -63,10 +63,7 @@
 
     /* A control in an outer slot is the segment: the addon drops its own chrome
      * so the control's variant supplies the fill and border, and the joined
-     * corners are squared. Any control that opts into the shared primitive
-     * joins, so `<.button>`, `<.copy_button>`, and `<.toggle>` all work. Give
-     * the control the same `size` as the input so both segments share one
-     * height. */
+     * corners are squared. Any control that opts into the shared primitive. */
     [data-element="input"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(> [data-control]) {
         padding-inline: 0;
         border-width: 0;
@@ -112,8 +109,6 @@
         gap: var(--fl-spacing-xs);
         inline-size: 100%;
         min-inline-size: 0;
-        block-size: var(--fl-control-height-md);
-        padding-inline: var(--fl-field-padding-x-md);
         border: 1px solid var(--fl-field-border, var(--fl-color-border));
         border-radius: var(--fl-control-radius);
         background-color: var(--fl-field-fill, var(--fl-color-surface));
@@ -145,7 +140,7 @@
         grid-column: 2;
         grid-row: 2;
         align-items: center;
-        gap: var(--fl-spacing-xs);
+        gap: var(--fl-spacing-sm);
         inline-size: 100%;
         min-inline-size: 0;
     }
@@ -178,7 +173,7 @@
         display: inline-flex;
         flex: none;
         align-items: center;
-        color: var(--fl-color-text-toned);
+        color: var(--fl-color-text-muted);
     }
 
     /* Lift the focused segment above its neighbours so its ring is never

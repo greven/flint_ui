@@ -139,7 +139,7 @@
     --fl-color-primary-soft-border: var(--fl-color-blue-soft-border);
     --fl-color-primary-on-surface: var(--fl-color-blue-on-surface);
 
-    --fl-radius: 0.375rem;
+    /*--fl-radius: 0.375rem;*/
 }
 
 /* Headings use the strongest text tier and the display face; body copy stays on

@@ -49,10 +49,14 @@ defmodule FlintUIDocsWeb.Docs.Group do
 
     <.preview {assigns} code={&main_code/1}>
       <Components.group label="Text formatting" surface="solid">
-        <Components.toggle icon="lucide-letter-b" aria-label="Bold" toggled />
-        <Components.toggle icon="lucide-italic" aria-label="Italic" />
-        <Components.toggle icon="lucide-underline" aria-label="Underline" />
-        <Components.toggle icon="lucide-strikethrough" aria-label="Strikethrough" />
+        <Components.toggle active_color="info" icon="lucide-letter-b" aria-label="Bold" toggled />
+        <Components.toggle active_color="info" icon="lucide-italic" aria-label="Italic" />
+        <Components.toggle active_color="info" icon="lucide-underline" aria-label="Underline" />
+        <Components.toggle
+          active_color="info"
+          icon="lucide-strikethrough"
+          aria-label="Strikethrough"
+        />
       </Components.group>
     </.preview>
     """
@@ -175,10 +179,10 @@ defmodule FlintUIDocsWeb.Docs.Group do
       ".group",
       [~s(label="Text formatting"), ~s(surface="solid")],
       """
-      <.toggle icon="lucide-letter-b" aria-label="Bold" toggled />
-      <.toggle icon="lucide-italic" aria-label="Italic" />
-      <.toggle icon="lucide-underline" aria-label="Underline" />
-      <.toggle icon="lucide-strikethrough" aria-label="Strikethrough" />
+      <.toggle active_color="info" icon="lucide-letter-b" aria-label="Bold" toggled />
+      <.toggle active_color="info" icon="lucide-italic" aria-label="Italic" />
+      <.toggle active_color="info" icon="lucide-underline" aria-label="Underline" />
+      <.toggle active_color="info" icon="lucide-strikethrough" aria-label="Strikethrough" />
       """
       |> String.trim()
     )

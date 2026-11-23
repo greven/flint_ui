@@ -590,12 +590,11 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 10%);
       --fl-duration-fast: 150ms;
 
-      /* Shared across form controls */
+      /* Shared across form controls. Text fields add a small inset on
+       * top, so this also sets their inline padding. */
       --fl-control-height-md: 2rem;
       --fl-control-font-size-md: 0.875rem;
-
-      /* Text fields want a little more inline padding than a button. */
-      --fl-field-padding-x-md: 0.875rem;
+      --fl-control-padding-x-md: 0.75rem;
     }
     """
   end

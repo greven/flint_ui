@@ -541,11 +541,12 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     <DocsComponents.section title="Control sizing" id="controls">
       <DocsComponents.content_paragraph class="mt-3">
         Form controls share a <code class="docs-code font-mono">--fl-control-*</code>
-        scale so buttons, inputs, and toggles line up. Text fields add
-        <code class="docs-code font-mono">--fl-field-padding-x-*</code>
-        so their inline padding is roomier at the same height. Those inputs are
-        documented on the shared primitive and the components that adopt it,
-        not here.
+        scale so buttons, inputs, and toggles line up. Text fields derive their
+        inline padding from the same scale, adding a small inset on top of <code class="docs-code font-mono">--fl-control-padding-x-*</code>, so
+        their padding is roomier at the same height. Tune the control padding
+        and the field follows; the inset itself is owned by the field
+        primitive. Those inputs are documented on the shared primitive and the
+        components that adopt it, not here.
       </DocsComponents.content_paragraph>
       <DocsComponents.code_block code={Snippets.snippet(:scaling)} lang={:css} />
     </DocsComponents.section>

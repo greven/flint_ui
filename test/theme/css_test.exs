@@ -332,6 +332,22 @@ defmodule FlintUI.Theme.CSSTest do
     end
   end
 
+  test "fields own their height and inline padding at every size", %{css: css} do
+    assert css =~
+             ~r/\[data-field\] \[data-field-control\] \{[^}]*min-block-size: var\(--fl-control-height-md\);[^}]*padding-inline: var\(--fl-field-padding-x-md\);/
+
+    for size <- ~w(xs sm md lg xl) do
+      assert css =~
+               ~r/\[data-field\]\[data-size="#{size}"\] \[data-field-control\] \{[^}]*min-block-size: var\(--fl-control-height-#{size}\);[^}]*padding-inline: var\(--fl-field-padding-x-#{size}\);/
+    end
+
+    refute css =~
+             ~r/\[data-element="input"\]\[data-input\] > \[data-part="row"\] > \[data-part="label"\] > \[data-part="box"\] \{[^}]*block-size: var\(--fl-control-height-md\)/
+
+    refute css =~
+             ~r/\[data-element="input"\]\[data-input\] > \[data-part="row"\] > \[data-part="label"\] > \[data-part="box"\] \{[^}]*padding-inline: var\(--fl-field-padding-x-md\)/
+  end
+
   test "defines type, spacing, elevation, and motion scales", %{css: css} do
     assert css =~ "--fl-font-mono:"
     assert css =~ "--fl-font-size-md: 1rem;"

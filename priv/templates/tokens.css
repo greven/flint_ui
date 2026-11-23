@@ -125,15 +125,6 @@
     --fl-control-padding-x-lg: 0.75rem;
     --fl-control-padding-x-xl: 0.75rem;
 
-    /* Text fields carry more inline padding than a button at the same height,
-     * so the label and value do not crowd the border. Heights still come from
-     * the control scale. */
-    --fl-field-padding-x-xs: 0.625rem;
-    --fl-field-padding-x-sm: 0.75rem;
-    --fl-field-padding-x-md: 0.875rem;
-    --fl-field-padding-x-lg: 1rem;
-    --fl-field-padding-x-xl: 1.125rem;
-
     --fl-control-font-size-xs: 0.75rem;
     --fl-control-font-size-sm: 0.75rem;
     --fl-control-font-size-md: 0.875rem;
@@ -168,13 +159,16 @@
     --fl-badge-height-xl: 1.75rem;
 
     /* Unified radius scale. Change `--fl-radius` to retune every component. */
-    --fl-radius: 0.25rem;
-    --fl-radius-xs: calc(var(--fl-radius) * 0.5);
-    --fl-radius-sm: var(--fl-radius);
-    --fl-radius-md: calc(var(--fl-radius) * 1.5);
-    --fl-radius-lg: calc(var(--fl-radius) * 2);
-    --fl-radius-xl: calc(var(--fl-radius) * 3);
-    --fl-radius-2xl: calc(var(--fl-radius) * 4);
+
+    --fl-radius: 0.125rem;
+
+    --fl-radius-xs: calc(var(--fl-radius) * 1);
+    --fl-radius-sm: calc(var(--fl-radius) * 2);
+    --fl-radius-md: calc(var(--fl-radius) * 3);
+    --fl-radius-lg: calc(var(--fl-radius) * 4);
+    --fl-radius-xl: calc(var(--fl-radius) * 5);
+    --fl-radius-2xl: calc(var(--fl-radius) * 6);
+    --fl-radius-3xl: calc(var(--fl-radius) * 12);
     --fl-radius-full: 9999px;
 
     /* Shared by buttons, toggles, and form controls. */

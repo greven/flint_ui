@@ -219,9 +219,9 @@ nested control shares a seam.
 - **Copy names no unshipped controls.** The group docs and moduledoc say any
   control can sit inside instead of listing inputs and selects. Name a control in
   the copy when it ships.
-- **The field reuses the control heights and gets its own inline padding.** The
-  `--fl-field-padding-x-*` scale sits beside `--fl-control-*`, so text fields are
-  roomier without changing the height every control shares.
+- **The field reuses the control heights and derives its inline padding.** The
+  field adds a small inset to `--fl-control-padding-x-*` in its own CSS, so text
+  fields are roomier without changing the height every control shares.
 
 ### Open questions
 

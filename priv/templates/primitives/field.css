@@ -6,11 +6,18 @@
      *
      * Public inputs: `--fl-field-fill`, `--fl-field-border`, and
      * `--fl-field-placeholder`. Heights, type, and radius come from the shared
-     * control scale; inline padding uses the field scale. */
+     * control scale; inline padding derives from `--fl-control-padding-x-*`
+     * plus a small field inset. */
     [data-field] {
         --fl-field-fill: var(--fl-color-surface);
         --fl-field-border: var(--fl-color-border);
         --fl-field-placeholder: var(--fl-color-text-dimmed);
+
+        --fl-field-padding-x-xs: calc(var(--fl-control-padding-x-xs) + 0.125rem);
+        --fl-field-padding-x-sm: calc(var(--fl-control-padding-x-sm) + 0.125rem);
+        --fl-field-padding-x-md: calc(var(--fl-control-padding-x-md) + 0.125rem);
+        --fl-field-padding-x-lg: calc(var(--fl-control-padding-x-lg) + 0.125rem);
+        --fl-field-padding-x-xl: calc(var(--fl-control-padding-x-xl) + 0.25rem);
 
         display: grid;
         gap: var(--fl-spacing-xs);
@@ -25,6 +32,8 @@
         box-sizing: border-box;
         inline-size: 100%;
         min-inline-size: 0;
+        min-block-size: var(--fl-control-height-md);
+        padding-inline: var(--fl-field-padding-x-md);
         border: 1px solid var(--fl-field-border);
         border-radius: var(--fl-control-radius);
         background-color: var(--fl-field-fill);
@@ -136,8 +145,8 @@
         margin-block-start: calc((var(--fl-line-height-sm) - 1em) / 2);
     }
 
-    /* Sizes share the control scale. The field scale is roomier than the
-     * control's inline padding at the same height. */
+    /* Sizes share the control scale. The field inset keeps inline padding
+     * roomier than the control's at the same height. */
     [data-field][data-size="xs"] {
         font-size: var(--fl-control-font-size-xs);
         line-height: var(--fl-control-line-height-xs);
