@@ -12,7 +12,7 @@ defmodule FlintUIDocsWeb.Theme.ThemesLive do
     {:ok,
      assign(socket,
        page_title: "Themes",
-       themes: FlintUI.Theme.presets() ++ [:brand]
+       themes: FlintUI.Theme.presets()
      )}
   end
 

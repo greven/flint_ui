@@ -242,6 +242,22 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-control\]\[data-active-color="neutral"\] \{[^}]*--fl-control-active-text: var\(--fl-color-text-highlighted\);/
   end
 
+  test "ghost and link carry more of the core tone in dark mode" do
+    source = File.read!(FlintUI.Generator.part_path("primitives/control.css"))
+
+    assert source =~
+             ~r/\[data-control\]\[data-color\]:where\(:not\(\[data-color="neutral"\]\)\):where\(/
+
+    assert source =~ "--fl-control-text: light-dark("
+
+    assert source =~
+             "color-mix(in oklab, var(--fl-tone-on-soft, var(--fl-control-color)), var(--fl-tone, var(--fl-control-color)) 10%)"
+
+    assert source =~ "--fl-control-active-text: light-dark("
+    assert source =~ "var(--fl-active-tone-on-soft, var(--fl-control-text))"
+    assert source =~ "var(--fl-active-tone, var(--fl-control-color)) 10%"
+  end
+
   test "palette fills and text shades clear AA where used" do
     alias FlintUI.Palette
     alias FlintUI.Palette.CSS

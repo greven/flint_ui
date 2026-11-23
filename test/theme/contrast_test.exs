@@ -75,6 +75,38 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
+  test "ghost and link keep an AA label when they carry more of the core tone" do
+    # `primitives/control.css` mixes the dark `-on-soft` toward the core by 10%
+    # for ghost and link. Every palette must still clear AA on the chrome ladder.
+    for palette <- Palette.palettes(), hue <- Palette.hues() do
+      shades = palette.module.shades(hue)
+      gray = palette.module.shades(:gray)
+      core = Map.fetch!(shades, Palette.core(palette.module, hue))
+
+      css = FlintUI.Palette.CSS.hue_tokens(hue, shades, core: Palette.core(palette.module, hue))
+
+      [_, dark_step] =
+        Regex.run(
+          ~r/--fl-color-#{hue}-on-soft: light-dark\(\s*var\(--fl-color-#{hue}-\d+\),\s*var\(--fl-color-#{hue}-(\d+)\)\s*\);/s,
+          css
+        )
+
+      on_soft = Map.fetch!(shades, String.to_integer(dark_step))
+      mixed = Contrast.mix(core, on_soft, 0.10)
+
+      dark_backgrounds = [
+        Map.fetch!(gray, 950),
+        Map.fetch!(gray, 900),
+        Contrast.mix(Map.fetch!(gray, 50), Map.fetch!(gray, 900), 0.06)
+      ]
+
+      for background <- dark_backgrounds do
+        assert Contrast.ratio(mixed, background) >= Contrast.aa(),
+               "#{palette.name}/#{hue} ghost text should read on #{background}"
+      end
+    end
+  end
+
   test "role aliases point at palette hues" do
     css = File.read!(FlintUI.Generator.part_path("tokens.css"))
 

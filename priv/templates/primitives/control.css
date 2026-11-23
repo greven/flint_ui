@@ -325,6 +325,38 @@
         text-decoration-thickness: 2px;
     }
 
+    /* Ghost and link sit on the page or a card, not on their own tint, so in
+     * dark mode they can carry a little more of the core tone while staying at
+     * AA. The share is capped at 10%: that is the ceiling across the shipped
+     * palettes (`bright` is the tightest). Only tone-hooked colors qualify; a
+     * raw color already derives its own AA text inline and must not be pushed
+     * below the threshold. Neutral is excluded so component-specific labels
+     * (toggle, copy button) keep their own treatment. The variant and state
+     * parts sit in `:where()` so component overrides, such as the copy button
+     * success flash, still win. */
+    [data-control][data-color]:where(:not([data-color="neutral"])):where(
+            :is(
+                [data-variant="ghost"]:not([data-state="on"]),
+                [data-variant="link"]:not([data-state="on"]),
+                [data-state="on"][data-active-variant="ghost"],
+                [data-state="on"][data-active-variant="link"]
+            )
+        ) {
+        --fl-control-text: light-dark(
+            var(--fl-tone-on-soft, var(--fl-control-color)),
+            color-mix(in oklab, var(--fl-tone-on-soft, var(--fl-control-color)), var(--fl-tone, var(--fl-control-color)) 25%)
+        );
+    }
+
+    [data-control][data-active-color]:where(:not([data-active-color="neutral"])):where(
+            :is([data-state="on"][data-active-variant="ghost"], [data-state="on"][data-active-variant="link"])
+        ) {
+        --fl-control-active-text: light-dark(
+            var(--fl-active-tone-on-soft, var(--fl-control-text)),
+            color-mix(in oklab, var(--fl-active-tone-on-soft, var(--fl-control-text)), var(--fl-active-tone, var(--fl-control-color)) 25%)
+        );
+    }
+
     /* A neutral active surface keeps the same fill, so its border carries the
      * state change. */
     [data-control][data-state="on"][data-active-variant="surface"]:is([data-color="neutral"]:not([data-active-color]), [data-active-color="neutral"]) {
