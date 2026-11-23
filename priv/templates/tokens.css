@@ -348,7 +348,7 @@
     --fl-focus-ring-offset: 0px;
     --fl-focus-ring-style: solid;
     --fl-focus-ring-alpha: 20%;
-    --fl-focus-ring-color: var(--fl-color-primary);
+    --fl-focus-ring-color: var(--fl-color-blue-500);
     --fl-focus-border-color: var(--fl-focus-ring-color);
     --fl-focus-color-danger: var(--fl-color-danger);
 }
