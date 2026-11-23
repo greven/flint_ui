@@ -181,16 +181,7 @@
      *   <role>-on-surface   the role used as text on the chrome surfaces
      *   <role>-soft         the tinted background
      *   <role>-soft-border  the matching edge
-     *
-     * `primary` is the brand slot. Unbranded, it follows the neutral ink, so a
-     * fresh app stays monochrome until a theme maps primary to a palette hue.
-     * `secondary` follows the palette's gray; `info`, `success`, `warning`, and
-     * `danger` point at blue, green, yellow, and red. A theme or an app override
-     * can remap any role with the same five lines.
-     *
-     * Components composite the tint at `--fl-tint-opacity`, so the token
-     * carries a little extra strength to keep the rendered fill visible against
-     * the surface. The soft control variant paints it at half strength. */
+     */
     --fl-tint-opacity: 0.9;
 
     --fl-color-neutral: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
@@ -245,10 +236,7 @@
     --fl-color-danger-soft: var(--fl-color-red-soft);
     --fl-color-danger-soft-border: var(--fl-color-red-soft-border);
 
-    /* Absolute tones. Unlike `neutral`, these do not follow the color scheme:
-     * `dark` stays dark and `light` stays light. They alias the palette's gray
-     * extremes, so retinting the gray ramp retints them too. Text-carrying
-     * variants still resolve their `-on-soft` per scheme so they stay legible. */
+    /* Absolute tones. */
     --fl-color-dark: var(--fl-color-gray-900);
     --fl-color-dark-on: var(--fl-color-gray-50);
     --fl-color-dark-on-soft: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
@@ -263,22 +251,11 @@
     --fl-color-light-soft: var(--fl-color-neutral-soft);
     --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
 
-    /* Chrome surfaces. `--fl-surface-base` is the single chrome anchor: the
-     * darkest ink every surface and tint is built from. It defaults to the
-     * palette's gray-950, so remapping the gray ramp retints the page,
-     * surfaces, tints, and edges together. The page is an explicit color per
-     * scheme that defaults to a white mix of that ink; surface and raised are
-     * white mixes of that ink, so each step up the ramp is brighter in both
-     * schemes. Tonal fills and edges remain a tint of `--fl-surface-ink` over
-     * the surface. */
+    /* Chrome surfaces. */
     --fl-surface-base: var(--fl-color-gray-950);
     --fl-surface-ink: light-dark(var(--fl-surface-base), color-mix(in oklab, oklch(1 0 0) 98.25%, var(--fl-surface-base)));
 
-    /* The page is an explicit color per scheme. `--fl-surface-page-tint` and
-     * `--fl-surface-page-lift` shape the default page and carry the ladder
-     * with them; set the page colors directly for absolute values such as
-     * white or black. The tint and lift are separate because the light page
-     * loses text contrast sooner. */
+    /* The page is an explicit color per scheme. */
     --fl-surface-page-tint: 0%;
     --fl-surface-page-lift: 0%;
 
@@ -299,12 +276,7 @@
 
     --fl-color-inverted: light-dark(var(--fl-color-gray-900), oklch(1 0 0));
 
-    /* Chrome text. `--fl-text-base` is the single text anchor; every tier is a
-     * tonal mix of it. `highlighted` is for headings and strong labels; `text`
-     * is the default ink; `toned` is softened copy; `muted` is meta; `dimmed`
-     * is for placeholders and decoration. `dimmed` is intentionally below AA.
-     * Overriding the anchor retunes the whole ramp; the percentages reproduce
-     * the default gray tiers. */
+    /* Chrome text. */
     --fl-text-base: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-200));
     --fl-color-text: var(--fl-text-base);
     --fl-color-text-highlighted: light-dark(color-mix(in oklab, var(--fl-text-base) 55.4%, oklch(0% 0 0)), oklch(1 0 0));
@@ -322,10 +294,7 @@
     );
     --fl-color-text-inverted: light-dark(oklch(1 0 0), var(--fl-color-gray-800));
 
-    /* Chrome borders. All three are a tint of the same ink over the surface, so
-     * the edge ladder stays above the fill ladder in both schemes. `subtle` is
-     * for dividers, `border` is the default edge, and `strong` is the heavier
-     * edge for inputs and hover targets. */
+    /* Chrome borders. */
     --fl-color-border-subtle: color-mix(in oklab, var(--fl-surface-ink) 7%, var(--fl-color-surface));
     --fl-color-border: color-mix(in oklab, var(--fl-surface-ink) 10%, var(--fl-color-surface));
     --fl-color-border-strong: color-mix(in oklab, var(--fl-surface-ink) 18%, var(--fl-color-surface));
@@ -347,9 +316,7 @@
     --fl-focus-color-danger: var(--fl-color-danger);
 }
 
-/* Focus presets. `ring` is the default: a ring drawn at the component edge.
- * `outline` keeps a gap, and `inset` draws inside the edge for dense or clipped
- * layouts. Set `data-focus` on <html> or any container to switch the subtree. */
+/* Focus presets. `ring`, `outline`, and `inset`. */
 [data-focus="ring"] {
     --fl-focus-ring-width: 3px;
     --fl-focus-ring-offset: 0px;
