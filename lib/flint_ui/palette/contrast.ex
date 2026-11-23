@@ -97,6 +97,52 @@ defmodule FlintUI.Palette.Contrast do
   def luminance(_), do: nil
 
   @doc """
+  Mixes `fill` toward `endpoint` until it clears `target` on every backdrop.
+
+  Returns `{color, percent}`, where `percent` is the endpoint's share of the
+  mix: `0` when the fill already passes, `100` when even the endpoint cannot
+  clear the target. The search finds the smallest passing share, so the result
+  stays as close to the fill as AA allows instead of jumping to a whole shade.
+
+  `FlintUI.Palette.CSS` uses this to derive the `-on-surface` text token and
+  `FlintUI.Styled.Color` uses it for raw colors.
+  """
+  def mix_to_target(fill, backgrounds, target, endpoint) do
+    backgrounds = List.wrap(backgrounds)
+
+    cond do
+      worst_ratio(fill, backgrounds) >= target ->
+        {fill, 0}
+
+      worst_ratio(endpoint, backgrounds) >= target ->
+        percent = search(0, 100, fill, endpoint, backgrounds, target)
+        {mix(endpoint, fill, percent / 100), percent}
+
+      true ->
+        {endpoint, 100}
+    end
+  end
+
+  defp worst_ratio(value, backgrounds) do
+    backgrounds
+    |> Enum.map(&(ratio(value, &1) || 0.0))
+    |> Enum.min()
+  end
+
+  defp search(lo, hi, _fill, _endpoint, _backgrounds, _target) when hi - lo <= 1, do: hi
+
+  defp search(lo, hi, fill, endpoint, backgrounds, target) do
+    mid = div(lo + hi, 2)
+    mixed = mix(endpoint, fill, mid / 100)
+
+    if worst_ratio(mixed, backgrounds) >= target do
+      search(lo, mid, fill, endpoint, backgrounds, target)
+    else
+      search(mid, hi, fill, endpoint, backgrounds, target)
+    end
+  end
+
+  @doc """
   Mixes two `oklch()` colors in oklab (`weight` of the first), returning an
   `oklch()` string. Used to model `color-mix(... N%, transparent)` over a page.
   """

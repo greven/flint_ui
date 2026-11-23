@@ -4,14 +4,18 @@
      * wrapper opts in with `data-control`; components add only their own
      * anatomy in their styled part.
      *
-     * Public inputs: `--fl-control-color`, `-color-content`, `-text`, `-soft`,
-     * and `-soft-border`, plus the matching `--fl-control-active-*` set for
-     * stateful controls. Shared depth, elevation, press, and focus behavior
-     * come from `--fl-control-*`. */
+     * Public inputs: `--fl-control-color`, `-color-content`, `-text`,
+     * `-soft-text`, `-soft`, and `-soft-border`, plus the matching
+     * `--fl-control-active-*` set for stateful controls. Shared depth,
+     * elevation, press, and focus behavior come from `--fl-control-*`.
+     * The hover/active overlay opacities default at their use sites and each
+     * variant tier sets its own, so the primitive does not depend on the
+     * global token layer. */
     [data-control] {
         --fl-control-color: var(--fl-tone, var(--fl-color-inverted));
         --fl-control-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));
-        --fl-control-text: var(--fl-tone-on-soft, var(--fl-control-color));
+        --fl-control-text: var(--fl-tone-on-surface, var(--fl-tone-on-soft, var(--fl-control-color)));
+        --fl-control-soft-text: var(--fl-tone-on-soft, var(--fl-control-text));
         --fl-control-soft: var(--fl-tone-soft, color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface)));
         --fl-control-soft-border: var(
             --fl-tone-soft-border,
@@ -20,7 +24,8 @@
 
         --fl-control-active-color: var(--fl-active-tone, var(--fl-control-color));
         --fl-control-active-color-content: var(--fl-active-tone-on, var(--fl-control-color-content));
-        --fl-control-active-text: var(--fl-active-tone-on-soft, var(--fl-control-text));
+        --fl-control-active-text: var(--fl-active-tone-on-surface, var(--fl-active-tone-on-soft, var(--fl-control-text)));
+        --fl-control-active-soft-text: var(--fl-active-tone-on-soft, var(--fl-control-active-text));
         --fl-control-active-soft: var(--fl-active-tone-soft, var(--fl-control-soft));
         --fl-control-active-soft-border: var(--fl-active-tone-soft-border, var(--fl-control-soft-border));
 
@@ -118,11 +123,11 @@
     }
 
     [data-control]:not([data-disabled]):not([data-loading]):hover::after {
-        opacity: var(--fl-control-hover-opacity);
+        opacity: var(--fl-control-hover-opacity, 0.04);
     }
 
     [data-control]:not([data-disabled]):not([data-loading]):active::after {
-        opacity: var(--fl-control-active-opacity);
+        opacity: var(--fl-control-active-opacity, 0.07);
     }
 
     /* The solid fill needs a stronger overlay than a neutral surface. */
@@ -139,6 +144,42 @@
     ) {
         --fl-control-hover-opacity: 0.07;
         --fl-control-active-opacity: 0.11;
+    }
+
+    [data-control]:is(
+        [data-variant="ghost"]:not([data-state="on"]),
+        [data-variant="soft"]:not([data-state="on"]),
+        [data-variant="subtle"]:not([data-state="on"]),
+        [data-state="on"][data-active-variant="ghost"],
+        [data-state="on"][data-active-variant="soft"],
+        [data-state="on"][data-active-variant="subtle"]
+    ) {
+        --fl-control-hover-opacity: 0.5;
+        --fl-control-active-opacity: 0.6;
+    }
+
+    [data-control][data-variant="ghost"]:not([data-state="on"])::after {
+        background: var(--fl-control-soft);
+    }
+
+    [data-control][data-variant="soft"]:not([data-state="on"])::after,
+    [data-control][data-variant="subtle"]:not([data-state="on"])::after {
+        background: light-dark(
+            color-mix(in oklab, var(--fl-control-soft), var(--fl-control-color) 10%),
+            color-mix(in oklab, var(--fl-control-soft), var(--fl-control-color) 25%)
+        );
+    }
+
+    [data-control][data-state="on"][data-active-variant="ghost"]::after {
+        background: var(--fl-control-active-soft);
+    }
+
+    [data-control][data-state="on"][data-active-variant="soft"]::after,
+    [data-control][data-state="on"][data-active-variant="subtle"]::after {
+        background: light-dark(
+            color-mix(in oklab, var(--fl-control-active-soft), var(--fl-control-active-color) 10%),
+            color-mix(in oklab, var(--fl-control-active-soft), var(--fl-control-active-color) 25%)
+        );
     }
 
     /* A link has no fill to tint. */
@@ -227,15 +268,16 @@
         color: var(--fl-control-color-content);
     }
 
-    [data-control][data-variant="soft"]:not([data-state="on"]),
-    [data-control][data-variant="subtle"]:not([data-state="on"]) {
-        background: color-mix(in oklab, var(--fl-control-soft) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
+    [data-control][data-variant="soft"]:not([data-state="on"]) {
+        background: light-dark(color-mix(in oklab, var(--fl-control-soft) 70%, transparent), color-mix(in oklab, var(--fl-control-soft) 60%, transparent));
         border-color: transparent;
-        color: var(--fl-control-text);
+        color: var(--fl-control-soft-text);
     }
 
     [data-control][data-variant="subtle"]:not([data-state="on"]) {
+        background: color-mix(in oklab, var(--fl-control-soft) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
         border-color: var(--fl-control-soft-border);
+        color: var(--fl-control-soft-text);
     }
 
     [data-control][data-variant="surface"]:not([data-state="on"]) {
@@ -280,15 +322,19 @@
         color: var(--fl-control-active-color-content, var(--fl-control-color-content));
     }
 
-    [data-control][data-state="on"][data-active-variant="soft"],
-    [data-control][data-state="on"][data-active-variant="subtle"] {
-        background: color-mix(in oklab, var(--fl-control-active-soft, var(--fl-control-soft)) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
+    [data-control][data-state="on"][data-active-variant="soft"] {
+        background: light-dark(
+            color-mix(in oklab, var(--fl-control-active-soft, var(--fl-control-soft)) 70%, transparent),
+            color-mix(in oklab, var(--fl-control-active-soft, var(--fl-control-soft)) 60%, transparent)
+        );
         border-color: transparent;
-        color: var(--fl-control-active-text, var(--fl-control-text));
+        color: var(--fl-control-active-soft-text, var(--fl-control-soft-text));
     }
 
     [data-control][data-state="on"][data-active-variant="subtle"] {
+        background: color-mix(in oklab, var(--fl-control-active-soft, var(--fl-control-soft)) calc(var(--fl-tint-opacity, 0.9) * 100%), transparent);
         border-color: var(--fl-control-active-soft-border, var(--fl-control-soft-border));
+        color: var(--fl-control-active-soft-text, var(--fl-control-soft-text));
     }
 
     [data-control][data-state="on"][data-active-variant="surface"] {
@@ -325,38 +371,6 @@
         text-decoration-thickness: 2px;
     }
 
-    /* Ghost and link sit on the page or a card, not on their own tint, so in
-     * dark mode they can carry a little more of the core tone while staying at
-     * AA. The share is capped at 10%: that is the ceiling across the shipped
-     * palettes (`bright` is the tightest). Only tone-hooked colors qualify; a
-     * raw color already derives its own AA text inline and must not be pushed
-     * below the threshold. Neutral is excluded so component-specific labels
-     * (toggle, copy button) keep their own treatment. The variant and state
-     * parts sit in `:where()` so component overrides, such as the copy button
-     * success flash, still win. */
-    [data-control][data-color]:where(:not([data-color="neutral"])):where(
-            :is(
-                [data-variant="ghost"]:not([data-state="on"]),
-                [data-variant="link"]:not([data-state="on"]),
-                [data-state="on"][data-active-variant="ghost"],
-                [data-state="on"][data-active-variant="link"]
-            )
-        ) {
-        --fl-control-text: light-dark(
-            var(--fl-tone-on-soft, var(--fl-control-color)),
-            color-mix(in oklab, var(--fl-tone-on-soft, var(--fl-control-color)), var(--fl-tone, var(--fl-control-color)) 25%)
-        );
-    }
-
-    [data-control][data-active-color]:where(:not([data-active-color="neutral"])):where(
-            :is([data-state="on"][data-active-variant="ghost"], [data-state="on"][data-active-variant="link"])
-        ) {
-        --fl-control-active-text: light-dark(
-            var(--fl-active-tone-on-soft, var(--fl-control-text)),
-            color-mix(in oklab, var(--fl-active-tone-on-soft, var(--fl-control-text)), var(--fl-active-tone, var(--fl-control-color)) 25%)
-        );
-    }
-
     /* A neutral active surface keeps the same fill, so its border carries the
      * state change. */
     [data-control][data-state="on"][data-active-variant="surface"]:is([data-color="neutral"]:not([data-active-color]), [data-active-color="neutral"]) {
@@ -368,9 +382,13 @@
         border-style: dashed;
     }
 
-    /* Tone down outline dashed. */
+    /* Tone down outline dashed in both states. */
     [data-control][data-variant="outline"]:not([data-state="on"])[data-dashed] {
         border-color: color-mix(in oklab, var(--fl-control-color) 50%, transparent);
+    }
+
+    [data-control][data-state="on"][data-active-variant="outline"][data-dashed] {
+        border-color: color-mix(in oklab, var(--fl-control-active-color, var(--fl-control-color)) 50%, transparent);
     }
 
     /* Sizes share the control metrics. */

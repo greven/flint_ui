@@ -2,18 +2,20 @@ defmodule FlintUI.Palette.CSS do
   @moduledoc """
   Renders a palette source into a theme stylesheet part.
 
-  Each hue emits its `50..950` ramp plus five derived tokens:
+  Each hue emits its `50..950` ramp plus six derived tokens:
 
     * `--fl-color-{hue}` — the core fill (see `FlintUI.Palette.core/2`);
     * `--fl-color-{hue}-on` — the label on that fill;
     * `--fl-color-{hue}-on-soft` — the most saturated AA shade for text on the
       page or a soft fill;
+    * `--fl-color-{hue}-on-surface` — the most vivid AA color for text directly
+      on the chrome (page, surface, raised), lifted only as far as AA requires;
     * `--fl-color-{hue}-soft` — the tinted fill;
     * `--fl-color-{hue}-soft-border` — the matching tinted edge.
 
   Derived tokens reference the ramp rather than literal colors wherever
   possible, so remapping a hue's eleven shade variables in an app stylesheet
-  updates its label, on-soft text, and tinted treatments at the same time.
+  updates its label, text tokens, and tinted treatments at the same time.
 
   The default palette renders under `:root, [data-palette="<name>"]`; other
   palettes render under `[data-palette="<name>"]`. `render_hooks/1` emits the
@@ -28,6 +30,10 @@ defmodule FlintUI.Palette.CSS do
 
   @white "oklch(100% 0 0)"
   @black "oklch(0% 0 0)"
+
+  # Text tokens aim slightly above AA so browser color conversion and gamut
+  # clamping cannot push the rendered value under the threshold.
+  @text_margin 0.1
 
   @doc """
   Renders the `data-color` and `data-active-color` tone hooks.
@@ -48,7 +54,7 @@ defmodule FlintUI.Palette.CSS do
       Enum.map_join(roles ++ hues, "\n", &hue_hook("data-active-color", &1))
 
     """
-    /* Color hooks. One selected color, one five-token tone set.
+    /* Color hooks. One selected color, one six-token tone set.
      *
      * `data-color` is the base tone; `data-active-color` is the toggled tone.
      * Components read `--fl-tone*` / `--fl-active-tone*`, so a role and a palette
@@ -70,6 +76,7 @@ defmodule FlintUI.Palette.CSS do
         --fl-tone: var(--fl-color-#{role});
         --fl-tone-on: var(--fl-color-#{role}-on);
         --fl-tone-on-soft: var(--fl-color-#{role}-on-soft);
+        --fl-tone-on-surface: var(--fl-color-#{role}-on-surface);
         --fl-tone-soft: var(--fl-color-#{role}-soft);
         --fl-tone-soft-border: var(--fl-color-#{role}-soft-border);
     }
@@ -84,6 +91,7 @@ defmodule FlintUI.Palette.CSS do
         #{prefix}: var(--fl-color-#{hue});
         #{prefix}-on: var(--fl-color-#{hue}-on);
         #{prefix}-on-soft: var(--fl-color-#{hue}-on-soft);
+        #{prefix}-on-surface: var(--fl-color-#{hue}-on-surface);
         #{prefix}-soft: var(--fl-color-#{hue}-soft);
         #{prefix}-soft-border: var(--fl-color-#{hue}-soft-border);
     }
@@ -93,7 +101,7 @@ defmodule FlintUI.Palette.CSS do
   @doc """
   Renders a standalone stylesheet part for one app-defined hue.
 
-  The block contains the eleven shades, the five derived tokens, and the base
+  The block contains the eleven shades, the six derived tokens, and the base
   and active hooks. Import it after `flint.css` and add the hue to
   `config :flint_ui, extra_hues: [...]`.
   """
@@ -149,7 +157,7 @@ defmodule FlintUI.Palette.CSS do
   end
 
   @doc """
-  Renders the eleven shades and five derived tokens for one hue.
+  Renders the eleven shades and six derived tokens for one hue.
 
   `core` defaults to `FlintUI.Palette.core_shade/1`; pass `:core` to pin a
   different shade. This is the block the palette parts and `mix flint.palette`
@@ -173,6 +181,16 @@ defmodule FlintUI.Palette.CSS do
     light_step = text_step(shades, light_backgrounds, target, [700, 800, 900, 600])
     dark_step = text_step(shades, dark_backgrounds, target, [400, 300, 200, 500])
 
+    # `on-surface` is colored text directly on the chrome, so it is scored only
+    # against the chrome ladder; the soft fill does not constrain it. Start from
+    # the most chromatic step and mix toward the scheme's extreme only as far as
+    # the target requires, which keeps it as vivid as AA allows.
+    light_chrome = [Contrast.light_surface_strong()]
+    dark_chrome = [Contrast.dark_background()]
+
+    light_surface = surface_text(hue, shades, 600, light_chrome, target + @text_margin, @black)
+    dark_surface = surface_text(hue, shades, 500, dark_chrome, target + @text_margin, @white)
+
     scale =
       Enum.map_join(Palette.shade_keys(), "\n", fn shade ->
         "--fl-color-#{hue}-#{shade}: #{shade_value(shades, shade)};"
@@ -184,6 +202,10 @@ defmodule FlintUI.Palette.CSS do
     --fl-color-#{hue}-on-soft: light-dark(
         var(--fl-color-#{hue}-#{light_step}),
         var(--fl-color-#{hue}-#{dark_step})
+    );
+    --fl-color-#{hue}-on-surface: light-dark(
+        #{light_surface},
+        #{dark_surface}
     );
     --fl-color-#{hue}-soft: light-dark(
         color-mix(in oklab, var(--fl-color-#{hue}) 12%, var(--fl-color-surface)),
@@ -256,6 +278,21 @@ defmodule FlintUI.Palette.CSS do
     case Enum.find(preferred, &(worst_ratio.(&1) >= target)) do
       nil -> Enum.max_by(Palette.shade_keys(), worst_ratio)
       step -> step
+    end
+  end
+
+  # A text token for the chrome ladder. The start shade is the most chromatic
+  # step; when it misses the target, mix toward `endpoint` (black on light,
+  # white on dark) just enough to pass, keeping the result ramp-relative.
+  defp surface_text(hue, shades, start, backgrounds, target, endpoint) do
+    value = shade_value(shades, start)
+
+    case Contrast.mix_to_target(value, backgrounds, target, endpoint) do
+      {_color, 0} ->
+        "var(--fl-color-#{hue}-#{start})"
+
+      {_color, percent} ->
+        "color-mix(in oklab, var(--fl-color-#{hue}-#{start}), #{endpoint} #{percent}%)"
     end
   end
 

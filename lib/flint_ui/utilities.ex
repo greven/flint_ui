@@ -945,7 +945,7 @@ defmodule FlintUI.Utilities do
       Enum.map(@roles, fn role ->
         util(
           "fl-tone-#{role}",
-          "--fl-tone: var(--fl-color-#{role}); --fl-tone-on: var(--fl-color-#{role}-on); --fl-tone-on-soft: var(--fl-color-#{role}-on-soft); --fl-tone-soft: var(--fl-color-#{role}-soft); --fl-tone-soft-border: var(--fl-color-#{role}-soft-border)"
+          "--fl-tone: var(--fl-color-#{role}); --fl-tone-on: var(--fl-color-#{role}-on); --fl-tone-on-soft: var(--fl-color-#{role}-on-soft); --fl-tone-on-surface: var(--fl-color-#{role}-on-surface); --fl-tone-soft: var(--fl-color-#{role}-soft); --fl-tone-soft-border: var(--fl-color-#{role}-soft-border)"
         )
       end)
 

@@ -137,11 +137,13 @@ defmodule FlintUIDocsWeb.Theme.ColorLive do
         <DocsComponents.section title="Semantic Colors" id="semantic-colors">
           <DocsComponents.content_paragraph class="mt-3">
             Semantic roles alias palette hues. A role owns no scale; it points at
-            one hue's five-token tone set: the fill
+            one hue's six-token tone set: the fill
             (<code class="docs-code font-mono">-primary</code>), the label on that
             fill (<code class="docs-code font-mono">-primary-on</code>), the
-            role as text on a neutral or soft surface
-            (<code class="docs-code font-mono">-primary-on-soft</code>), and the tint
+            role as text on its own tint
+            (<code class="docs-code font-mono">-primary-on-soft</code>), the
+            role as text on chrome
+            (<code class="docs-code font-mono">-primary-on-surface</code>), and the tint
             pair (<code class="docs-code font-mono">-primary-soft</code>, <code class="docs-code font-mono">-primary-soft-border</code>).
           </DocsComponents.content_paragraph>
           <DocsComponents.content_paragraph class="mt-3">

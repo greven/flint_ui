@@ -81,9 +81,8 @@ defmodule FlintUI.Styled.Accordion do
         ),
         Var.new(
           name: "--fl-accordion-highlight-opacity",
-          default: "var(--fl-control-hover-opacity)",
-          doc:
-            "The hover and open-item highlight opacity, as a `0`–`1` number. Defaults to the shared control hover opacity."
+          default: "0.04",
+          doc: "The hover and open-item highlight opacity, as a `0`–`1` number."
         )
       ]
     }

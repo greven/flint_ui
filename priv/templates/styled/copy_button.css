@@ -58,13 +58,13 @@
         ):not([data-success-color])
         > [data-part="states"]
         > [data-part="success_state"] {
-        color: var(--fl-color-success-on-soft);
+        color: var(--fl-color-success-on-surface);
     }
 
     [data-element="copy_button"][data-copy_button][data-state="error"]:not([data-variant="solid"])
         > [data-part="states"]
         > [data-part="error_state"] {
-        color: var(--fl-color-danger-on-soft);
+        color: var(--fl-color-danger-on-surface);
     }
 
     /* Success color: while the success state is visible, the control reads the
@@ -73,13 +73,15 @@
     [data-element="copy_button"][data-state="success"][data-success-color][data-copy_button] {
         --fl-control-color: var(--fl-active-tone, var(--fl-color-success));
         --fl-control-color-content: var(--fl-active-tone-on, var(--fl-color-success-on));
-        --fl-control-text: var(--fl-active-tone-on-soft, var(--fl-color-success-on-soft));
+        --fl-control-text: var(--fl-active-tone-on-surface, var(--fl-active-tone-on-soft, var(--fl-color-success-on-soft)));
+        --fl-control-soft-text: var(--fl-active-tone-on-soft, var(--fl-color-success-on-soft));
         --fl-control-soft: var(--fl-active-tone-soft, var(--fl-color-success-soft));
         --fl-control-soft-border: var(--fl-active-tone-soft-border, var(--fl-color-success-soft-border));
     }
 
     [data-element="copy_button"][data-state="success"][data-success-color="neutral"][data-copy_button] {
         --fl-control-text: var(--fl-control-color);
+        --fl-control-soft-text: var(--fl-control-color);
     }
 
     /* The tooltip repeats the button's copy labels. Only the label for the

@@ -60,8 +60,7 @@
      * focus, while the input's box draws it for the nested control. */
     [data-field] [data-field-control]:focus-visible,
     [data-field] [data-field-control]:has(> [data-part="control"]:focus-visible) {
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style) color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
         outline-offset: var(--fl-focus-ring-offset);
     }
 
@@ -124,7 +123,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-danger-on-soft);
+        color: var(--fl-color-danger-on-surface);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }

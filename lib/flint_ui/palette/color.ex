@@ -175,5 +175,13 @@ defmodule FlintUI.Palette.Color do
     "oklch(#{fmt(l * 100)}% #{fmt(c)} #{fmt(h)})"
   end
 
-  defp fmt(value), do: value |> Float.round(4) |> Float.to_string()
+  # Drop the trailing `.0` so whole numbers match the hand-written ramps
+  # (`98%`, not `98.0%`) and regeneration only touches formatting when a
+  # value really changed.
+  defp fmt(value) do
+    value
+    |> Float.round(4)
+    |> Float.to_string()
+    |> String.replace_suffix(".0", "")
+  end
 end

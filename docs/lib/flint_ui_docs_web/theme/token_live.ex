@@ -207,8 +207,9 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
           class="docs-link"
         >palette</.link>
         exposes eighteen raw hues. Each hue is a <code class="docs-code font-mono">50..950</code>
-        ramp plus a five-token tone set: the core fill <code class="docs-code font-mono">--fl-color-&lt;hue&gt;</code>, its label <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on</code>, the hue
-        as text on a neutral or soft surface <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on-soft</code>,
+        ramp plus a six-token tone set: the core fill <code class="docs-code font-mono">--fl-color-&lt;hue&gt;</code>, its label <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on</code>, the hue
+        as text on its own tint <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on-soft</code>,
+        the hue as text on chrome <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-on-surface</code>,
         and the tinted pair <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-soft</code>
         and <code class="docs-code font-mono">--fl-color-&lt;hue&gt;-soft-border</code>.
         These tokens follow the active palette and the light/dark scheme, but
@@ -251,17 +252,20 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
 
     <DocsComponents.section title="Semantic Roles" id="roles">
       <DocsComponents.content_paragraph class="mt-3">
-        A role points at one palette hue's five-token tone set. The fill is the
+        A role points at one palette hue's six-token tone set. The fill is the
         role itself; <code class="docs-code font-mono">-on</code>
         labels
         that fill, <code class="docs-code font-mono">-on-soft</code>
         is the role as
-        text on a neutral or soft surface, and <code class="docs-code font-mono">-soft</code>
+        text on its own tint, <code class="docs-code font-mono">-on-surface</code>
+        is the role as text on the chrome, and <code class="docs-code font-mono">-soft</code>
         and <code class="docs-code font-mono">-soft-border</code>
         are the tinted
         pair. <code class="docs-code font-mono">-on-soft</code>
-        picks the most saturated shade that still clears AA on both the surface
-        ladder and the tinted soft fill, so it stays vivid instead of fading to
+        picks the most saturated shade that still clears AA on the tinted fill,
+        while <code class="docs-code font-mono">-on-surface</code>
+        starts from the most chromatic shade and lifts it only as far as the
+        chrome ladder requires, so colored text stays vivid instead of fading to
         a pastel.
       </DocsComponents.content_paragraph>
       <div class="mt-4 overflow-x-auto">
@@ -271,7 +275,8 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
               <th class="py-3 pr-6 font-medium">Role</th>
               <th class="py-3 pr-6 font-medium">Default hue</th>
               <th class="py-3 pr-6 font-medium">Fill</th>
-              <th class="py-3 font-medium">On soft</th>
+              <th class="py-3 pr-6 font-medium">On soft</th>
+              <th class="py-3 font-medium">On surface</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-default">
@@ -294,6 +299,9 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
               </td>
               <td class="py-3">
                 <code class="docs-code font-mono">--fl-color-{role}-on-soft</code>
+              </td>
+              <td class="py-3">
+                <code class="docs-code font-mono">--fl-color-{role}-on-surface</code>
               </td>
             </tr>
           </tbody>
@@ -357,7 +365,7 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     <DocsComponents.section title="Tone Hooks" id="tone-hooks">
       <DocsComponents.content_paragraph class="mt-3">
         A <code class="docs-code font-mono">color</code>
-        prop resolves to one five-token tone set. A semantic role and a palette
+        prop resolves to one six-token tone set. A semantic role and a palette
         hue use the same hook, so components only read
         <code class="docs-code font-mono">--fl-tone*</code>
         and never need to know which one you chose. Raw colors write the same
@@ -701,8 +709,9 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
     <DocsComponents.section title="Opacity" id="opacity">
       <DocsComponents.content_paragraph class="mt-3">
         Disabled controls dim with <code class="docs-code font-mono">--fl-disabled-opacity</code>
-        instead of switching to a dedicated fill. Soft tints composite at <code class="docs-code font-mono">--fl-tint-opacity</code>, which keeps
-        a tinted fill from swallowing the text on top of it.
+        instead of switching to a dedicated fill. Tinted fills composite at <code class="docs-code font-mono">--fl-tint-opacity</code>, which keeps
+        a tinted fill from swallowing the text on top of it; the soft button
+        uses half that strength, matching its ghost hover.
       </DocsComponents.content_paragraph>
       <div class="mt-4 flex flex-wrap items-center gap-3">
         <Components.button variant="subtle" disabled>Disabled subtle</Components.button>
@@ -778,10 +787,16 @@ defmodule FlintUIDocsWeb.Theme.TokenLive do
         to <code class="docs-code font-mono">0 0 #0000</code>
         to remove them. Pressing
         sinks the button with <code class="docs-code font-mono">--fl-control-press</code>.
-        Hover and active are a <code class="docs-code font-mono">currentColor</code>
-        overlay inside the border; retune them with
+        Hover and active are an overlay inside the border. Solid is strongest and
+        the bordered variants sit in the middle. <code class="docs-code font-mono">ghost</code>, <code class="docs-code font-mono">soft</code>, and
+        <code class="docs-code font-mono">subtle</code>
+        paint a tone tint instead of a text-color wash: ghost uses the plain soft
+        fill at half opacity, while soft and subtle mix that tint toward the role
+        color so the hover still reads against their own fill. Retune a tier with
         <code class="docs-code font-mono">--fl-control-hover-opacity</code>
-        and <code class="docs-code font-mono">--fl-control-active-opacity</code>.
+        and <code class="docs-code font-mono">--fl-control-active-opacity</code>;
+        each variant sets them on the control, so override them on a control
+        selector rather than the root.
       </DocsComponents.content_paragraph>
       <div class="mt-4 flex flex-wrap items-center gap-3">
         <Components.button variant="solid" color="primary">solid</Components.button>

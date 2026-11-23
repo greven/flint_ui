@@ -1,4 +1,4 @@
-/* Color hooks. One selected color, one five-token tone set.
+/* Color hooks. One selected color, one six-token tone set.
  *
  * `data-color` is the base tone; `data-active-color` is the toggled tone.
  * Components read `--fl-tone*` / `--fl-active-tone*`, so a role and a palette
@@ -11,6 +11,7 @@
         --fl-tone: var(--fl-color-primary);
         --fl-tone-on: var(--fl-color-primary-on);
         --fl-tone-on-soft: var(--fl-color-primary-on-soft);
+        --fl-tone-on-surface: var(--fl-color-primary-on-surface);
         --fl-tone-soft: var(--fl-color-primary-soft);
         --fl-tone-soft-border: var(--fl-color-primary-soft-border);
     }
@@ -19,6 +20,7 @@
         --fl-tone: var(--fl-color-secondary);
         --fl-tone-on: var(--fl-color-secondary-on);
         --fl-tone-on-soft: var(--fl-color-secondary-on-soft);
+        --fl-tone-on-surface: var(--fl-color-secondary-on-surface);
         --fl-tone-soft: var(--fl-color-secondary-soft);
         --fl-tone-soft-border: var(--fl-color-secondary-soft-border);
     }
@@ -27,6 +29,7 @@
         --fl-tone: var(--fl-color-neutral);
         --fl-tone-on: var(--fl-color-neutral-on);
         --fl-tone-on-soft: var(--fl-color-neutral-on-soft);
+        --fl-tone-on-surface: var(--fl-color-neutral-on-surface);
         --fl-tone-soft: var(--fl-color-neutral-soft);
         --fl-tone-soft-border: var(--fl-color-neutral-soft-border);
     }
@@ -35,6 +38,7 @@
         --fl-tone: var(--fl-color-info);
         --fl-tone-on: var(--fl-color-info-on);
         --fl-tone-on-soft: var(--fl-color-info-on-soft);
+        --fl-tone-on-surface: var(--fl-color-info-on-surface);
         --fl-tone-soft: var(--fl-color-info-soft);
         --fl-tone-soft-border: var(--fl-color-info-soft-border);
     }
@@ -43,6 +47,7 @@
         --fl-tone: var(--fl-color-success);
         --fl-tone-on: var(--fl-color-success-on);
         --fl-tone-on-soft: var(--fl-color-success-on-soft);
+        --fl-tone-on-surface: var(--fl-color-success-on-surface);
         --fl-tone-soft: var(--fl-color-success-soft);
         --fl-tone-soft-border: var(--fl-color-success-soft-border);
     }
@@ -51,6 +56,7 @@
         --fl-tone: var(--fl-color-warning);
         --fl-tone-on: var(--fl-color-warning-on);
         --fl-tone-on-soft: var(--fl-color-warning-on-soft);
+        --fl-tone-on-surface: var(--fl-color-warning-on-surface);
         --fl-tone-soft: var(--fl-color-warning-soft);
         --fl-tone-soft-border: var(--fl-color-warning-soft-border);
     }
@@ -59,6 +65,7 @@
         --fl-tone: var(--fl-color-danger);
         --fl-tone-on: var(--fl-color-danger-on);
         --fl-tone-on-soft: var(--fl-color-danger-on-soft);
+        --fl-tone-on-surface: var(--fl-color-danger-on-surface);
         --fl-tone-soft: var(--fl-color-danger-soft);
         --fl-tone-soft-border: var(--fl-color-danger-soft-border);
     }
@@ -67,6 +74,7 @@
         --fl-tone: var(--fl-color-dark);
         --fl-tone-on: var(--fl-color-dark-on);
         --fl-tone-on-soft: var(--fl-color-dark-on-soft);
+        --fl-tone-on-surface: var(--fl-color-dark-on-surface);
         --fl-tone-soft: var(--fl-color-dark-soft);
         --fl-tone-soft-border: var(--fl-color-dark-soft-border);
     }
@@ -75,6 +83,7 @@
         --fl-tone: var(--fl-color-light);
         --fl-tone-on: var(--fl-color-light-on);
         --fl-tone-on-soft: var(--fl-color-light-on-soft);
+        --fl-tone-on-surface: var(--fl-color-light-on-surface);
         --fl-tone-soft: var(--fl-color-light-soft);
         --fl-tone-soft-border: var(--fl-color-light-soft-border);
     }
@@ -82,6 +91,7 @@
         --fl-tone: var(--fl-color-red);
         --fl-tone-on: var(--fl-color-red-on);
         --fl-tone-on-soft: var(--fl-color-red-on-soft);
+        --fl-tone-on-surface: var(--fl-color-red-on-surface);
         --fl-tone-soft: var(--fl-color-red-soft);
         --fl-tone-soft-border: var(--fl-color-red-soft-border);
     }
@@ -90,6 +100,7 @@
         --fl-tone: var(--fl-color-orange);
         --fl-tone-on: var(--fl-color-orange-on);
         --fl-tone-on-soft: var(--fl-color-orange-on-soft);
+        --fl-tone-on-surface: var(--fl-color-orange-on-surface);
         --fl-tone-soft: var(--fl-color-orange-soft);
         --fl-tone-soft-border: var(--fl-color-orange-soft-border);
     }
@@ -98,6 +109,7 @@
         --fl-tone: var(--fl-color-amber);
         --fl-tone-on: var(--fl-color-amber-on);
         --fl-tone-on-soft: var(--fl-color-amber-on-soft);
+        --fl-tone-on-surface: var(--fl-color-amber-on-surface);
         --fl-tone-soft: var(--fl-color-amber-soft);
         --fl-tone-soft-border: var(--fl-color-amber-soft-border);
     }
@@ -106,6 +118,7 @@
         --fl-tone: var(--fl-color-yellow);
         --fl-tone-on: var(--fl-color-yellow-on);
         --fl-tone-on-soft: var(--fl-color-yellow-on-soft);
+        --fl-tone-on-surface: var(--fl-color-yellow-on-surface);
         --fl-tone-soft: var(--fl-color-yellow-soft);
         --fl-tone-soft-border: var(--fl-color-yellow-soft-border);
     }
@@ -114,6 +127,7 @@
         --fl-tone: var(--fl-color-lime);
         --fl-tone-on: var(--fl-color-lime-on);
         --fl-tone-on-soft: var(--fl-color-lime-on-soft);
+        --fl-tone-on-surface: var(--fl-color-lime-on-surface);
         --fl-tone-soft: var(--fl-color-lime-soft);
         --fl-tone-soft-border: var(--fl-color-lime-soft-border);
     }
@@ -122,6 +136,7 @@
         --fl-tone: var(--fl-color-green);
         --fl-tone-on: var(--fl-color-green-on);
         --fl-tone-on-soft: var(--fl-color-green-on-soft);
+        --fl-tone-on-surface: var(--fl-color-green-on-surface);
         --fl-tone-soft: var(--fl-color-green-soft);
         --fl-tone-soft-border: var(--fl-color-green-soft-border);
     }
@@ -130,6 +145,7 @@
         --fl-tone: var(--fl-color-emerald);
         --fl-tone-on: var(--fl-color-emerald-on);
         --fl-tone-on-soft: var(--fl-color-emerald-on-soft);
+        --fl-tone-on-surface: var(--fl-color-emerald-on-surface);
         --fl-tone-soft: var(--fl-color-emerald-soft);
         --fl-tone-soft-border: var(--fl-color-emerald-soft-border);
     }
@@ -138,6 +154,7 @@
         --fl-tone: var(--fl-color-teal);
         --fl-tone-on: var(--fl-color-teal-on);
         --fl-tone-on-soft: var(--fl-color-teal-on-soft);
+        --fl-tone-on-surface: var(--fl-color-teal-on-surface);
         --fl-tone-soft: var(--fl-color-teal-soft);
         --fl-tone-soft-border: var(--fl-color-teal-soft-border);
     }
@@ -146,6 +163,7 @@
         --fl-tone: var(--fl-color-cyan);
         --fl-tone-on: var(--fl-color-cyan-on);
         --fl-tone-on-soft: var(--fl-color-cyan-on-soft);
+        --fl-tone-on-surface: var(--fl-color-cyan-on-surface);
         --fl-tone-soft: var(--fl-color-cyan-soft);
         --fl-tone-soft-border: var(--fl-color-cyan-soft-border);
     }
@@ -154,6 +172,7 @@
         --fl-tone: var(--fl-color-sky);
         --fl-tone-on: var(--fl-color-sky-on);
         --fl-tone-on-soft: var(--fl-color-sky-on-soft);
+        --fl-tone-on-surface: var(--fl-color-sky-on-surface);
         --fl-tone-soft: var(--fl-color-sky-soft);
         --fl-tone-soft-border: var(--fl-color-sky-soft-border);
     }
@@ -162,6 +181,7 @@
         --fl-tone: var(--fl-color-blue);
         --fl-tone-on: var(--fl-color-blue-on);
         --fl-tone-on-soft: var(--fl-color-blue-on-soft);
+        --fl-tone-on-surface: var(--fl-color-blue-on-surface);
         --fl-tone-soft: var(--fl-color-blue-soft);
         --fl-tone-soft-border: var(--fl-color-blue-soft-border);
     }
@@ -170,6 +190,7 @@
         --fl-tone: var(--fl-color-indigo);
         --fl-tone-on: var(--fl-color-indigo-on);
         --fl-tone-on-soft: var(--fl-color-indigo-on-soft);
+        --fl-tone-on-surface: var(--fl-color-indigo-on-surface);
         --fl-tone-soft: var(--fl-color-indigo-soft);
         --fl-tone-soft-border: var(--fl-color-indigo-soft-border);
     }
@@ -178,6 +199,7 @@
         --fl-tone: var(--fl-color-violet);
         --fl-tone-on: var(--fl-color-violet-on);
         --fl-tone-on-soft: var(--fl-color-violet-on-soft);
+        --fl-tone-on-surface: var(--fl-color-violet-on-surface);
         --fl-tone-soft: var(--fl-color-violet-soft);
         --fl-tone-soft-border: var(--fl-color-violet-soft-border);
     }
@@ -186,6 +208,7 @@
         --fl-tone: var(--fl-color-purple);
         --fl-tone-on: var(--fl-color-purple-on);
         --fl-tone-on-soft: var(--fl-color-purple-on-soft);
+        --fl-tone-on-surface: var(--fl-color-purple-on-surface);
         --fl-tone-soft: var(--fl-color-purple-soft);
         --fl-tone-soft-border: var(--fl-color-purple-soft-border);
     }
@@ -194,6 +217,7 @@
         --fl-tone: var(--fl-color-fuchsia);
         --fl-tone-on: var(--fl-color-fuchsia-on);
         --fl-tone-on-soft: var(--fl-color-fuchsia-on-soft);
+        --fl-tone-on-surface: var(--fl-color-fuchsia-on-surface);
         --fl-tone-soft: var(--fl-color-fuchsia-soft);
         --fl-tone-soft-border: var(--fl-color-fuchsia-soft-border);
     }
@@ -202,6 +226,7 @@
         --fl-tone: var(--fl-color-pink);
         --fl-tone-on: var(--fl-color-pink-on);
         --fl-tone-on-soft: var(--fl-color-pink-on-soft);
+        --fl-tone-on-surface: var(--fl-color-pink-on-surface);
         --fl-tone-soft: var(--fl-color-pink-soft);
         --fl-tone-soft-border: var(--fl-color-pink-soft-border);
     }
@@ -210,6 +235,7 @@
         --fl-tone: var(--fl-color-rose);
         --fl-tone-on: var(--fl-color-rose-on);
         --fl-tone-on-soft: var(--fl-color-rose-on-soft);
+        --fl-tone-on-surface: var(--fl-color-rose-on-surface);
         --fl-tone-soft: var(--fl-color-rose-soft);
         --fl-tone-soft-border: var(--fl-color-rose-soft-border);
     }
@@ -218,6 +244,7 @@
         --fl-tone: var(--fl-color-gray);
         --fl-tone-on: var(--fl-color-gray-on);
         --fl-tone-on-soft: var(--fl-color-gray-on-soft);
+        --fl-tone-on-surface: var(--fl-color-gray-on-surface);
         --fl-tone-soft: var(--fl-color-gray-soft);
         --fl-tone-soft-border: var(--fl-color-gray-soft-border);
     }
@@ -226,6 +253,7 @@
         --fl-active-tone: var(--fl-color-primary);
         --fl-active-tone-on: var(--fl-color-primary-on);
         --fl-active-tone-on-soft: var(--fl-color-primary-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-primary-on-surface);
         --fl-active-tone-soft: var(--fl-color-primary-soft);
         --fl-active-tone-soft-border: var(--fl-color-primary-soft-border);
     }
@@ -234,6 +262,7 @@
         --fl-active-tone: var(--fl-color-secondary);
         --fl-active-tone-on: var(--fl-color-secondary-on);
         --fl-active-tone-on-soft: var(--fl-color-secondary-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-secondary-on-surface);
         --fl-active-tone-soft: var(--fl-color-secondary-soft);
         --fl-active-tone-soft-border: var(--fl-color-secondary-soft-border);
     }
@@ -242,6 +271,7 @@
         --fl-active-tone: var(--fl-color-neutral);
         --fl-active-tone-on: var(--fl-color-neutral-on);
         --fl-active-tone-on-soft: var(--fl-color-neutral-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-neutral-on-surface);
         --fl-active-tone-soft: var(--fl-color-neutral-soft);
         --fl-active-tone-soft-border: var(--fl-color-neutral-soft-border);
     }
@@ -250,6 +280,7 @@
         --fl-active-tone: var(--fl-color-info);
         --fl-active-tone-on: var(--fl-color-info-on);
         --fl-active-tone-on-soft: var(--fl-color-info-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-info-on-surface);
         --fl-active-tone-soft: var(--fl-color-info-soft);
         --fl-active-tone-soft-border: var(--fl-color-info-soft-border);
     }
@@ -258,6 +289,7 @@
         --fl-active-tone: var(--fl-color-success);
         --fl-active-tone-on: var(--fl-color-success-on);
         --fl-active-tone-on-soft: var(--fl-color-success-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-success-on-surface);
         --fl-active-tone-soft: var(--fl-color-success-soft);
         --fl-active-tone-soft-border: var(--fl-color-success-soft-border);
     }
@@ -266,6 +298,7 @@
         --fl-active-tone: var(--fl-color-warning);
         --fl-active-tone-on: var(--fl-color-warning-on);
         --fl-active-tone-on-soft: var(--fl-color-warning-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-warning-on-surface);
         --fl-active-tone-soft: var(--fl-color-warning-soft);
         --fl-active-tone-soft-border: var(--fl-color-warning-soft-border);
     }
@@ -274,6 +307,7 @@
         --fl-active-tone: var(--fl-color-danger);
         --fl-active-tone-on: var(--fl-color-danger-on);
         --fl-active-tone-on-soft: var(--fl-color-danger-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-danger-on-surface);
         --fl-active-tone-soft: var(--fl-color-danger-soft);
         --fl-active-tone-soft-border: var(--fl-color-danger-soft-border);
     }
@@ -282,6 +316,7 @@
         --fl-active-tone: var(--fl-color-dark);
         --fl-active-tone-on: var(--fl-color-dark-on);
         --fl-active-tone-on-soft: var(--fl-color-dark-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-dark-on-surface);
         --fl-active-tone-soft: var(--fl-color-dark-soft);
         --fl-active-tone-soft-border: var(--fl-color-dark-soft-border);
     }
@@ -290,6 +325,7 @@
         --fl-active-tone: var(--fl-color-light);
         --fl-active-tone-on: var(--fl-color-light-on);
         --fl-active-tone-on-soft: var(--fl-color-light-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-light-on-surface);
         --fl-active-tone-soft: var(--fl-color-light-soft);
         --fl-active-tone-soft-border: var(--fl-color-light-soft-border);
     }
@@ -298,6 +334,7 @@
         --fl-active-tone: var(--fl-color-red);
         --fl-active-tone-on: var(--fl-color-red-on);
         --fl-active-tone-on-soft: var(--fl-color-red-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-red-on-surface);
         --fl-active-tone-soft: var(--fl-color-red-soft);
         --fl-active-tone-soft-border: var(--fl-color-red-soft-border);
     }
@@ -306,6 +343,7 @@
         --fl-active-tone: var(--fl-color-orange);
         --fl-active-tone-on: var(--fl-color-orange-on);
         --fl-active-tone-on-soft: var(--fl-color-orange-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-orange-on-surface);
         --fl-active-tone-soft: var(--fl-color-orange-soft);
         --fl-active-tone-soft-border: var(--fl-color-orange-soft-border);
     }
@@ -314,6 +352,7 @@
         --fl-active-tone: var(--fl-color-amber);
         --fl-active-tone-on: var(--fl-color-amber-on);
         --fl-active-tone-on-soft: var(--fl-color-amber-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-amber-on-surface);
         --fl-active-tone-soft: var(--fl-color-amber-soft);
         --fl-active-tone-soft-border: var(--fl-color-amber-soft-border);
     }
@@ -322,6 +361,7 @@
         --fl-active-tone: var(--fl-color-yellow);
         --fl-active-tone-on: var(--fl-color-yellow-on);
         --fl-active-tone-on-soft: var(--fl-color-yellow-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-yellow-on-surface);
         --fl-active-tone-soft: var(--fl-color-yellow-soft);
         --fl-active-tone-soft-border: var(--fl-color-yellow-soft-border);
     }
@@ -330,6 +370,7 @@
         --fl-active-tone: var(--fl-color-lime);
         --fl-active-tone-on: var(--fl-color-lime-on);
         --fl-active-tone-on-soft: var(--fl-color-lime-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-lime-on-surface);
         --fl-active-tone-soft: var(--fl-color-lime-soft);
         --fl-active-tone-soft-border: var(--fl-color-lime-soft-border);
     }
@@ -338,6 +379,7 @@
         --fl-active-tone: var(--fl-color-green);
         --fl-active-tone-on: var(--fl-color-green-on);
         --fl-active-tone-on-soft: var(--fl-color-green-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-green-on-surface);
         --fl-active-tone-soft: var(--fl-color-green-soft);
         --fl-active-tone-soft-border: var(--fl-color-green-soft-border);
     }
@@ -346,6 +388,7 @@
         --fl-active-tone: var(--fl-color-emerald);
         --fl-active-tone-on: var(--fl-color-emerald-on);
         --fl-active-tone-on-soft: var(--fl-color-emerald-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-emerald-on-surface);
         --fl-active-tone-soft: var(--fl-color-emerald-soft);
         --fl-active-tone-soft-border: var(--fl-color-emerald-soft-border);
     }
@@ -354,6 +397,7 @@
         --fl-active-tone: var(--fl-color-teal);
         --fl-active-tone-on: var(--fl-color-teal-on);
         --fl-active-tone-on-soft: var(--fl-color-teal-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-teal-on-surface);
         --fl-active-tone-soft: var(--fl-color-teal-soft);
         --fl-active-tone-soft-border: var(--fl-color-teal-soft-border);
     }
@@ -362,6 +406,7 @@
         --fl-active-tone: var(--fl-color-cyan);
         --fl-active-tone-on: var(--fl-color-cyan-on);
         --fl-active-tone-on-soft: var(--fl-color-cyan-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-cyan-on-surface);
         --fl-active-tone-soft: var(--fl-color-cyan-soft);
         --fl-active-tone-soft-border: var(--fl-color-cyan-soft-border);
     }
@@ -370,6 +415,7 @@
         --fl-active-tone: var(--fl-color-sky);
         --fl-active-tone-on: var(--fl-color-sky-on);
         --fl-active-tone-on-soft: var(--fl-color-sky-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-sky-on-surface);
         --fl-active-tone-soft: var(--fl-color-sky-soft);
         --fl-active-tone-soft-border: var(--fl-color-sky-soft-border);
     }
@@ -378,6 +424,7 @@
         --fl-active-tone: var(--fl-color-blue);
         --fl-active-tone-on: var(--fl-color-blue-on);
         --fl-active-tone-on-soft: var(--fl-color-blue-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-blue-on-surface);
         --fl-active-tone-soft: var(--fl-color-blue-soft);
         --fl-active-tone-soft-border: var(--fl-color-blue-soft-border);
     }
@@ -386,6 +433,7 @@
         --fl-active-tone: var(--fl-color-indigo);
         --fl-active-tone-on: var(--fl-color-indigo-on);
         --fl-active-tone-on-soft: var(--fl-color-indigo-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-indigo-on-surface);
         --fl-active-tone-soft: var(--fl-color-indigo-soft);
         --fl-active-tone-soft-border: var(--fl-color-indigo-soft-border);
     }
@@ -394,6 +442,7 @@
         --fl-active-tone: var(--fl-color-violet);
         --fl-active-tone-on: var(--fl-color-violet-on);
         --fl-active-tone-on-soft: var(--fl-color-violet-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-violet-on-surface);
         --fl-active-tone-soft: var(--fl-color-violet-soft);
         --fl-active-tone-soft-border: var(--fl-color-violet-soft-border);
     }
@@ -402,6 +451,7 @@
         --fl-active-tone: var(--fl-color-purple);
         --fl-active-tone-on: var(--fl-color-purple-on);
         --fl-active-tone-on-soft: var(--fl-color-purple-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-purple-on-surface);
         --fl-active-tone-soft: var(--fl-color-purple-soft);
         --fl-active-tone-soft-border: var(--fl-color-purple-soft-border);
     }
@@ -410,6 +460,7 @@
         --fl-active-tone: var(--fl-color-fuchsia);
         --fl-active-tone-on: var(--fl-color-fuchsia-on);
         --fl-active-tone-on-soft: var(--fl-color-fuchsia-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-fuchsia-on-surface);
         --fl-active-tone-soft: var(--fl-color-fuchsia-soft);
         --fl-active-tone-soft-border: var(--fl-color-fuchsia-soft-border);
     }
@@ -418,6 +469,7 @@
         --fl-active-tone: var(--fl-color-pink);
         --fl-active-tone-on: var(--fl-color-pink-on);
         --fl-active-tone-on-soft: var(--fl-color-pink-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-pink-on-surface);
         --fl-active-tone-soft: var(--fl-color-pink-soft);
         --fl-active-tone-soft-border: var(--fl-color-pink-soft-border);
     }
@@ -426,6 +478,7 @@
         --fl-active-tone: var(--fl-color-rose);
         --fl-active-tone-on: var(--fl-color-rose-on);
         --fl-active-tone-on-soft: var(--fl-color-rose-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-rose-on-surface);
         --fl-active-tone-soft: var(--fl-color-rose-soft);
         --fl-active-tone-soft-border: var(--fl-color-rose-soft-border);
     }
@@ -434,6 +487,7 @@
         --fl-active-tone: var(--fl-color-gray);
         --fl-active-tone-on: var(--fl-color-gray-on);
         --fl-active-tone-on-soft: var(--fl-color-gray-on-soft);
+        --fl-active-tone-on-surface: var(--fl-color-gray-on-surface);
         --fl-active-tone-soft: var(--fl-color-gray-soft);
         --fl-active-tone-soft-border: var(--fl-color-gray-soft-border);
     }

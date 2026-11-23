@@ -56,7 +56,7 @@
         align-items: flex-start;
         gap: var(--fl-spacing-xs);
         margin: 0;
-        color: var(--fl-color-danger-on-soft);
+        color: var(--fl-color-danger-on-surface);
         font-size: var(--fl-font-size-sm);
         line-height: var(--fl-line-height-sm);
     }

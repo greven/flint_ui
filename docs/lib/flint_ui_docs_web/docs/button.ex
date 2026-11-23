@@ -150,6 +150,10 @@ defmodule FlintUIDocsWeb.Docs.Button do
     <.prose content="Each `color` and `variant` compose freely: every variant is available in every role.
       Each row below is a color role, each column a variant." />
 
+    <.prose content="Bordered, surface, outline, ghost, and link read the role's `-on-surface` text token,
+      which starts from the most chromatic step and lifts it only as far as AA requires. Soft and subtle
+      variants sit on their own tint, so they read `-on-soft` instead." />
+
     <.preview id={"#{@id}-grid"}>
       <div class="fl-overflow-x-auto fl-py-xs">
         <div class="fl-grid-cols-8 fl-items-center fl-gap-x-md fl-gap-y-lg">

@@ -1,14 +1,15 @@
 @layer components {
     /* Accordion. Public inputs: `--fl-accordion-surface`, `-border`,
-     * `-shadow`, `-gap`, and `-duration`. The stack and dividers live here;
-     * the item's header/panel anatomy lives in `accordion_item.css`. */
+     * `-shadow`, `-gap`, `-duration`, and `-highlight-opacity`. The stack and
+     * dividers live here; the item's header/panel anatomy lives in
+     * `accordion_item.css`. */
     [data-element="accordion"][data-accordion] {
         --fl-accordion-surface: var(--fl-color-surface);
         --fl-accordion-border: var(--fl-color-border);
         --fl-accordion-shadow: var(--fl-shadow-base);
         --fl-accordion-gap: var(--fl-spacing-sm);
         --fl-accordion-duration: var(--fl-duration-base);
-        --fl-accordion-highlight-opacity: var(--fl-control-hover-opacity);
+        --fl-accordion-highlight-opacity: 0.04;
 
         display: flex;
         flex-direction: column;
@@ -75,8 +76,8 @@
     [data-element="accordion"]:is([data-variant="contained"], [data-variant="separated"]):not([data-disabled])
         > [data-element="accordion_item"]:not([data-disabled]):is(:hover, [data-state="open"]) {
         background: light-dark(
-            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 50%), transparent),
-            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 40%), transparent)
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, 0.04) * 50%), transparent),
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, 0.04) * 40%), transparent)
         );
     }
 

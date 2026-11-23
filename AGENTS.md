@@ -152,8 +152,8 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
 - **Palettes own hue ramps.** Every palette defines the same eighteen hues — red,
   orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo,
   violet, purple, fuchsia, pink, rose, gray — each with a
-  `50..950` scale plus five derived tokens: `--fl-color-{hue}` (core fill),
-  `-on`, `-on-soft`, `-soft`, and `-soft-border`. Derived tokens reference the
+  `50..950` scale plus six derived tokens: `--fl-color-{hue}` (core fill),
+  `-on`, `-on-soft`, `-on-surface`, `-soft`, and `-soft-border`. Derived tokens reference the
   ramp, so remapping a hue's eleven shade variables updates its label, on-soft
   text, and tints together. The `gray` ramp drives the chrome. The core fill
   defaults from `Palette.core_shade/1`; a palette can override it per hue with
@@ -161,13 +161,14 @@ ships, move its contract into the moduledoc and docs page and delete the entry.
   in the same `--fl-color-*` namespace as semantic tokens, but they are palette
   data: components normally read the role aliases and `--fl-tone*`, and may use
   a hue token directly when a semantic token is wrong for the job.
-- **Semantic roles alias palette hues.** A role owns five tokens, not a scale:
-  the fill, `-on` (label on that fill), `-on-soft` (role as text on a neutral or
-  soft surface), `-soft`, and `-soft-border`. `primary` is the brand slot and defaults
+- **Semantic roles alias palette hues.** A role owns six tokens, not a scale:
+  the fill, `-on` (label on that fill), `-on-soft` (role as text on its own
+  tint), `-on-surface` (role as text on the chrome), `-soft`, and
+  `-soft-border`. `primary` is the brand slot and defaults
   to the neutral ink, so a fresh app is monochrome until a theme maps it.
   `secondary` follows the palette `gray`; `info`, `success`, `warning`, and
   `danger` point at blue, green, amber, and red. Remap a role by pointing its
-  five tokens at another hue.
+  six tokens at another hue.
 - **Color hooks.** `color` accepts a semantic role or one of the eighteen palette
   hues. Both resolve to one `--fl-tone*` set in `colors.css`; components read
   that set with their own public inputs as fallbacks. `color="inherit"` omits

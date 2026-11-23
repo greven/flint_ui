@@ -34,7 +34,7 @@
     }
 
     [data-element="label"][data-label] [data-part="required"] {
-        color: var(--fl-color-danger-on-soft);
+        color: var(--fl-color-danger-on-surface);
         font-weight: var(--fl-font-weight-medium);
     }
 

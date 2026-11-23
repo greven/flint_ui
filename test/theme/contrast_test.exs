@@ -75,24 +75,37 @@ defmodule FlintUI.Theme.ContrastTest do
     end
   end
 
-  test "ghost and link keep an AA label when they carry more of the core tone" do
-    # `primitives/control.css` mixes the dark `-on-soft` toward the core by 10%
-    # for ghost and link. Every palette must still clear AA on the chrome ladder.
+  test "every palette hue has an AA on-surface color for the chrome ladder" do
+    white = "oklch(100% 0 0)"
+
     for palette <- Palette.palettes(), hue <- Palette.hues() do
       shades = palette.module.shades(hue)
       gray = palette.module.shades(:gray)
-      core = Map.fetch!(shades, Palette.core(palette.module, hue))
 
       css = FlintUI.Palette.CSS.hue_tokens(hue, shades, core: Palette.core(palette.module, hue))
 
-      [_, dark_step] =
-        Regex.run(
-          ~r/--fl-color-#{hue}-on-soft: light-dark\(\s*var\(--fl-color-#{hue}-\d+\),\s*var\(--fl-color-#{hue}-(\d+)\)\s*\);/s,
-          css
-        )
+      half =
+        "(?:var\\(--fl-color-#{hue}-(\\d+)\\)|color-mix\\(in oklab, var\\(--fl-color-#{hue}-(\\d+)\\), oklch\\((?:0|100)% 0 0\\) (\\d+)%\\))"
 
-      on_soft = Map.fetch!(shades, String.to_integer(dark_step))
-      mixed = Contrast.mix(core, on_soft, 0.10)
+      captures =
+        case Regex.run(
+               ~r/--fl-color-#{hue}-on-surface: light-dark\(\s*#{half},\s*#{half}\s*\);/s,
+               css
+             ) do
+          [full | rest] -> [full | Enum.take(rest ++ List.duplicate("", 6), 6)]
+        end
+
+      [_, light_plain, light_mixed, light_percent, dark_plain, dark_mixed, dark_percent] =
+        captures
+
+      light_value = on_surface(shades, light_plain, light_mixed, light_percent, "oklch(0% 0 0)")
+      dark_value = on_surface(shades, dark_plain, dark_mixed, dark_percent, white)
+
+      light_backgrounds = [
+        white,
+        Contrast.mix(Map.fetch!(gray, 950), white, 0.03),
+        Contrast.mix(Map.fetch!(gray, 950), white, 0.06)
+      ]
 
       dark_backgrounds = [
         Map.fetch!(gray, 950),
@@ -100,10 +113,26 @@ defmodule FlintUI.Theme.ContrastTest do
         Contrast.mix(Map.fetch!(gray, 50), Map.fetch!(gray, 900), 0.06)
       ]
 
-      for background <- dark_backgrounds do
-        assert Contrast.ratio(mixed, background) >= Contrast.aa(),
-               "#{palette.name}/#{hue} ghost text should read on #{background}"
+      for background <- light_backgrounds do
+        assert Contrast.ratio(light_value, background) >= Contrast.aa(),
+               "#{palette.name}/#{hue} on-surface light should read on #{background}"
       end
+
+      for background <- dark_backgrounds do
+        assert Contrast.ratio(dark_value, background) >= Contrast.aa(),
+               "#{palette.name}/#{hue} on-surface dark should read on #{background}"
+      end
+    end
+  end
+
+  # The light token mixes toward black, the dark one toward white.
+  defp on_surface(shades, plain, mixed, percent, endpoint) do
+    shade = if plain == "", do: mixed, else: plain
+    value = Map.fetch!(shades, String.to_integer(shade))
+
+    case percent do
+      "" -> value
+      p -> Contrast.mix(endpoint, value, String.to_integer(p) / 100)
     end
   end
 

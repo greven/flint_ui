@@ -94,9 +94,9 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
 
         <DocsComponents.section title="Remap a hue" id="remapping-a-hue">
           <DocsComponents.content_paragraph class="mt-3">
-            Each palette hue is eleven shade variables plus five derived tokens.
+            Each palette hue is eleven shade variables plus six derived tokens.
             The derived tokens reference the ramp, so remapping the eleven shades
-            updates the fill, label, on-soft text, and tinted treatments together. This is
+            updates the fill, label, text tokens, and tinted treatments together. This is
             the quickest way to make a shipped hue match your brand — for example,
             remap <code class="docs-code font-mono">rose</code>
             to a <code class="docs-code font-mono">brand</code>
@@ -131,7 +131,7 @@ defmodule FlintUIDocsWeb.Theme.CustomizingLive do
           <DocsComponents.code_block code={Snippets.snippet(:custom_hues_config)} />
           <DocsComponents.code_block code={Snippets.snippet(:custom_hues)} lang={:sh} />
           <DocsComponents.content_paragraph class="mt-3">
-            The generated file contains the eleven shades, the five derived
+            The generated file contains the eleven shades, the six derived
             tokens, and the base and active hooks. Import it after <code class="docs-code font-mono">flint.css</code>, then
             <code class="docs-code font-mono">color="brand"</code>
             works like any shipped hue. Use

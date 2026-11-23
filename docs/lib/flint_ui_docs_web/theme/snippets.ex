@@ -18,6 +18,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
         var(--fl-color-pink-700),
         var(--fl-color-pink-400)
       );
+      --fl-color-primary-on-surface: var(--fl-color-pink-on-surface);
     }
     """
   end
@@ -180,11 +181,12 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
 
   def snippet(:colors) do
     """
-    /* A role aliases one palette hue's five-token tone set. Primary is the
+    /* A role aliases one palette hue's six-token tone set. Primary is the
      * brand slot; unbranded, it follows the neutral ink. */
     --fl-color-primary: var(--fl-color-neutral);
     --fl-color-primary-on: var(--fl-color-neutral-on);
     --fl-color-primary-on-soft: var(--fl-color-neutral-on-soft);
+    --fl-color-primary-on-surface: var(--fl-color-neutral-on-surface);
     --fl-color-primary-soft: var(--fl-color-neutral-soft);
     --fl-color-primary-soft-border: var(--fl-color-neutral-soft-border);
 
@@ -201,6 +203,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       var(--fl-color-gray-900),
       var(--fl-color-gray-200)
     );
+    --fl-color-neutral-on-surface: var(--fl-color-neutral-on-soft);
 
     /* The other roles point at palette hues. */
     --fl-color-secondary: var(--fl-color-gray);
@@ -209,12 +212,16 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
     --fl-color-warning: var(--fl-color-yellow);
     --fl-color-danger: var(--fl-color-red);
 
-    /* A hue owns the fill, label, on-soft text, and tint pair. */
+    /* A hue owns the fill, label, text tokens, and tint pair. */
     --fl-color-pink: var(--fl-color-pink-600);
     --fl-color-pink-on: oklch(100% 0 0);
     --fl-color-pink-on-soft: light-dark(
       var(--fl-color-pink-700),
       var(--fl-color-pink-400)
+    );
+    --fl-color-pink-on-surface: light-dark(
+      color-mix(in oklab, var(--fl-color-pink-600), oklch(0% 0 0) 7%),
+      color-mix(in oklab, var(--fl-color-pink-500), oklch(100% 0 0) 1%)
     );
     --fl-color-pink-soft: light-dark(
       color-mix(in oklab, var(--fl-color-pink) 12%, var(--fl-color-surface)),
@@ -231,6 +238,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-tone: var(--fl-color-primary);
       --fl-tone-on: var(--fl-color-primary-on);
       --fl-tone-on-soft: var(--fl-color-primary-on-soft);
+      --fl-tone-on-surface: var(--fl-color-primary-on-surface);
       --fl-tone-soft: var(--fl-color-primary-soft);
       --fl-tone-soft-border: var(--fl-color-primary-soft-border);
     }
@@ -239,6 +247,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-tone: var(--fl-color-rose);
       --fl-tone-on: var(--fl-color-rose-on);
       --fl-tone-on-soft: var(--fl-color-rose-on-soft);
+      --fl-tone-on-surface: var(--fl-color-rose-on-surface);
       --fl-tone-soft: var(--fl-color-rose-soft);
       --fl-tone-soft-border: var(--fl-color-rose-soft-border);
     }
@@ -266,6 +275,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       var(--fl-color-gray-900),
       var(--fl-color-gray-200)
     );
+    --fl-color-dark-on-surface: var(--fl-color-dark-on-soft);
     --fl-color-dark-soft: var(--fl-color-gray-soft);
     --fl-color-dark-soft-border: var(--fl-color-gray-soft-border);
 
@@ -275,6 +285,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       var(--fl-color-gray-700),
       var(--fl-color-gray-50)
     );
+    --fl-color-light-on-surface: var(--fl-color-light-on-soft);
     --fl-color-light-soft: var(--fl-color-gray-soft);
     --fl-color-light-soft-border: var(--fl-color-gray-soft-border);
     """
@@ -289,6 +300,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-color-primary: var(--fl-color-purple);
       --fl-color-primary-on: var(--fl-color-purple-on);
       --fl-color-primary-on-soft: var(--fl-color-purple-on-soft);
+      --fl-color-primary-on-surface: var(--fl-color-purple-on-surface);
       --fl-color-primary-soft: var(--fl-color-purple-soft);
       --fl-color-primary-soft-border: var(--fl-color-purple-soft-border);
     }
@@ -304,6 +316,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-color-primary: var(--fl-color-violet);
       --fl-color-primary-on: var(--fl-color-violet-on);
       --fl-color-primary-on-soft: var(--fl-color-violet-on-soft);
+      --fl-color-primary-on-surface: var(--fl-color-violet-on-surface);
       --fl-color-primary-soft: var(--fl-color-violet-soft);
       --fl-color-primary-soft-border: var(--fl-color-violet-soft-border);
     }
@@ -362,10 +375,17 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-control-press: none; /* no press movement */
     }
 
-    /* Hover/active are an in-border currentColor overlay. Retune per theme: */
-    [data-theme="quiet"] {
-      --fl-control-hover-opacity: 0.02;
-      --fl-control-active-opacity: 0.05;
+    /* Hover/active are an in-border overlay. Every shipped variant sets its
+     * own tier on the control, so retune one where the tier lives: */
+    [data-control][data-variant="ghost"]:not([data-state="on"]) {
+      --fl-control-hover-opacity: 0.35;
+      --fl-control-active-opacity: 0.45;
+    }
+
+    /* Toggled controls read the active variant, so retune that branch too. */
+    [data-control][data-state="on"][data-active-variant="ghost"] {
+      --fl-control-hover-opacity: 0.35;
+      --fl-control-active-opacity: 0.45;
     }
 
     /* Shadows are independent of depth. Remove them per theme or instance: */
@@ -622,6 +642,7 @@ defmodule FlintUIDocsWeb.Theme.Snippets do
       --fl-color-primary: var(--fl-color-purple);
       --fl-color-primary-on: var(--fl-color-purple-on);
       --fl-color-primary-on-soft: var(--fl-color-purple-on-soft);
+      --fl-color-primary-on-surface: var(--fl-color-purple-on-surface);
       --fl-color-primary-soft: var(--fl-color-purple-soft);
       --fl-color-primary-soft-border: var(--fl-color-purple-soft-border);
       --fl-radius: 0.375rem;

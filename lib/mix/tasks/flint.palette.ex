@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Flint.Palette do
       mix flint.palette brand --from "#8b5cf6" --write assets/css/flint-brand.css
 
   The generated block contains the eleven shades, the derived `-on`,
-  `-on-soft`, `-soft`, and `-soft-border` tokens, and the base and active
+  `-on-soft`, `-on-surface`, `-soft`, and `-soft-border` tokens, and the base and active
   `[data-color]` hooks. Add the hue to your config so `color="brand"` passes
   validation:
 

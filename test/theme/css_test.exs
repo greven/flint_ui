@@ -211,12 +211,13 @@ defmodule FlintUI.Theme.CSSTest do
     assert ratio(neutral.(800), white) >= 4.5
   end
 
-  test "role on and on-soft map to the shared tone contract", %{css: css} do
+  test "role on, on-soft, and on-surface map to the shared tone contract", %{css: css} do
     for role <- ~w(primary secondary success info warning danger) do
       assert css =~ ~s|:where([data-color="#{role}"])|
       assert css =~ "--fl-tone: var(--fl-color-#{role});"
       assert css =~ "--fl-tone-on: var(--fl-color-#{role}-on);"
       assert css =~ "--fl-tone-on-soft: var(--fl-color-#{role}-on-soft);"
+      assert css =~ "--fl-tone-on-surface: var(--fl-color-#{role}-on-surface);"
     end
 
     refute css =~ "-soft-foreground"
@@ -228,10 +229,13 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~
              "--fl-control-color-content: var(--fl-tone-on, var(--fl-color-text-inverted));"
 
-    assert css =~ "--fl-control-text: var(--fl-tone-on-soft, var(--fl-control-color));"
+    assert css =~
+             "--fl-control-text: var(--fl-tone-on-surface, var(--fl-tone-on-soft, var(--fl-control-color)));"
+
+    assert css =~ "--fl-control-soft-text: var(--fl-tone-on-soft, var(--fl-control-text));"
 
     assert css =~
-             ~r/\[data-element="toggle"\]\[data-toggle\]\[data-color="neutral"\] \{[^}]*--fl-control-text: var\(--fl-color-text-toned\);/
+             ~r/\[data-element="toggle"\]\[data-toggle\]\[data-color="neutral"\] \{[^}]*--fl-control-soft-text: var\(--fl-color-text-toned\);/
 
     assert css =~
              ~r/\[data-element="toggle"\]\[data-toggle\]\[data-color="neutral"\]:not\(\[data-active-color\]\) \{[^}]*--fl-control-active-text: var\(--fl-color-text-highlighted\);/
@@ -242,20 +246,16 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-control\]\[data-active-color="neutral"\] \{[^}]*--fl-control-active-text: var\(--fl-color-text-highlighted\);/
   end
 
-  test "ghost and link carry more of the core tone in dark mode" do
+  test "soft and subtle variants read their own text input" do
     source = File.read!(FlintUI.Generator.part_path("primitives/control.css"))
 
-    assert source =~
-             ~r/\[data-control\]\[data-color\]:where\(:not\(\[data-color="neutral"\]\)\):where\(/
-
-    assert source =~ "--fl-control-text: light-dark("
+    assert source =~ "color: var(--fl-control-soft-text);"
 
     assert source =~
-             "color-mix(in oklab, var(--fl-tone-on-soft, var(--fl-control-color)), var(--fl-tone, var(--fl-control-color)) 10%)"
+             "color: var(--fl-control-active-soft-text, var(--fl-control-soft-text));"
 
-    assert source =~ "--fl-control-active-text: light-dark("
-    assert source =~ "var(--fl-active-tone-on-soft, var(--fl-control-text))"
-    assert source =~ "var(--fl-active-tone, var(--fl-control-color)) 10%"
+    assert source =~
+             "--fl-control-active-soft-text: var(--fl-active-tone-on-soft, var(--fl-control-active-text));"
   end
 
   test "palette fills and text shades clear AA where used" do
@@ -480,7 +480,10 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-element="tabs"\]\[data-tabs\]\s*>\s*\[data-part="tablist"\]\s*>\s*\[data-part="tab"\]\[data-tabs-tab\]/
 
     assert css =~ "--fl-tabs-color: var(--fl-tone, var(--fl-color-inverted));"
-    assert css =~ "--fl-tabs-text: var(--fl-tone-on-soft, var(--fl-color-text));"
+
+    assert css =~
+             "--fl-tabs-text: var(--fl-tone-on-surface, var(--fl-tone-on-soft, var(--fl-color-text)));"
+
     assert css =~ "--fl-tabs-surface: var(--fl-color-surface);"
     assert css =~ "--fl-tabs-gap"
     assert css =~ "--fl-tabs-content-gap"
@@ -539,11 +542,41 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "background: currentColor;"
     assert css =~ "inset: -1px;"
     assert css =~ "overflow: clip;"
-    assert css =~ "--fl-control-hover-opacity: 0.04;"
-    assert css =~ "--fl-control-active-opacity: 0.07;"
+    assert css =~ "var(--fl-control-hover-opacity, 0.04)"
+    assert css =~ "var(--fl-control-active-opacity, 0.07)"
   end
 
-  test "soft and subtle fills composite at the shared tint opacity", %{css: css} do
+  test "ghost, soft, and subtle hover with a tone tint", %{css: css} do
+    assert css =~ "--fl-control-hover-opacity: 0.5;"
+    assert css =~ "--fl-control-active-opacity: 0.6;"
+
+    assert css =~
+             ~r/\[data-control\]\[data-variant="ghost"\]:not\(\[data-state="on"\]\)::after \{\s*background: var\(--fl-control-soft\);/
+
+    assert css =~
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="ghost"\]::after \{\s*background: var\(--fl-control-active-soft\);/
+
+    assert css =~
+             "color-mix(in oklab, var(--fl-control-soft), var(--fl-control-color) 10%)"
+
+    assert css =~
+             "color-mix(in oklab, var(--fl-control-soft), var(--fl-control-color) 25%)"
+
+    assert css =~
+             "color-mix(in oklab, var(--fl-control-active-soft), var(--fl-control-active-color) 10%)"
+
+    assert css =~
+             "color-mix(in oklab, var(--fl-control-active-soft), var(--fl-control-active-color) 25%)"
+  end
+
+  test "soft paints the ghost hover tint at rest", %{css: css} do
+    assert css =~ "background: color-mix(in oklab, var(--fl-control-soft) 50%, transparent);"
+
+    assert css =~
+             "background: color-mix(in oklab, var(--fl-control-active-soft, var(--fl-control-soft)) 50%, transparent);"
+  end
+
+  test "subtle fills composite at the shared tint opacity", %{css: css} do
     assert css =~ "--fl-tint-opacity: 0.9;"
 
     for part <- ~w(styled/badge.css primitives/control.css) do
@@ -569,8 +602,13 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~r/\[data-element="alert"\]\[data-border="none"\] \{\s*border-style: none;/
   end
 
-  test "every colored control variant uses the role text token", %{css: css} do
-    for variant <- ~w(soft subtle surface outline ghost link) do
+  test "colored control variants use the role text tokens", %{css: css} do
+    for variant <- ~w(soft subtle) do
+      assert css =~
+               ~r/\[data-control\]\[data-variant="#{variant}"\][^{,]*[^{]*\{[^}]*color: var\(--fl-control-soft-text/
+    end
+
+    for variant <- ~w(surface outline ghost link) do
       assert css =~
                ~r/\[data-control\]\[data-variant="#{variant}"\][^{,]*[^{]*\{[^}]*color: var\(--fl-control-text/
     end
@@ -646,10 +684,16 @@ defmodule FlintUI.Theme.CSSTest do
              ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="solid"\] \{[^}]*background: var\(--fl-control-active-color, var\(--fl-control-color\)\);/
 
     assert css =~
-             ~r/\[data-control\]\[data-variant="soft"\]:not\(\[data-state="on"\]\),[^}]*background: color-mix\(/
+             ~r/\[data-control\]\[data-variant="soft"\]:not\(\[data-state="on"\]\) \{\s*background: color-mix\(/
 
     assert css =~
-             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="soft"\],[^}]*background: color-mix\(/
+             ~r/\[data-control\]\[data-variant="subtle"\]:not\(\[data-state="on"\]\) \{\s*background: color-mix\(/
+
+    assert css =~
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="soft"\] \{\s*background: color-mix\(/
+
+    assert css =~
+             ~r/\[data-control\]\[data-state="on"\]\[data-active-variant="subtle"\] \{\s*background: color-mix\(/
 
     assert css =~
              ~r/\[data-control\]:is\([^)]*\[data-variant="solid"\]:not\(\[data-state="on"\]\)[^)]*\)::before/
@@ -810,7 +854,7 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ "inset 0 1px 0 0 var(--fl-elevation-highlight)"
     assert css =~ "inset 0 0 0 1px var(--fl-elevation-border)"
     assert css =~ "0 0 0 1px var(--fl-elevation-ring)"
-    assert css =~ "box-shadow: var(--fl-elevation-surface);"
+    assert css =~ "box-shadow: var(--fl-elevation-surface), var(--fl-elevation-inner-layer);"
     assert css =~ "--fl-elevation-ring: light-dark(transparent, rgb(0 0 0 / 40%));"
     assert css =~ "--fl-elevation-ring-layer: 0 0 #0000;"
     assert css =~ "--fl-elevation-level: 3;"

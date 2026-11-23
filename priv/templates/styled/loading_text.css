@@ -11,7 +11,7 @@
     /* A color hook resolves the copy ink. `inherit` (the default) has no hook
      * and follows `currentColor`. */
     [data-element="loading_text"][data-color] {
-        color: var(--fl-tone-on-soft);
+        color: var(--fl-tone-on-surface, var(--fl-tone-on-soft));
     }
 
     [data-element="loading_text"][data-variant="dots"] [data-part="dots"] {

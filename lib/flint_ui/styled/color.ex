@@ -232,48 +232,18 @@ defmodule FlintUI.Styled.Color do
   # Keep the requested color when it clears the target. Otherwise mix it toward
   # black (on a light surface) or white (on a dark one) just enough to pass.
   defp readable(source, color, background, target) do
-    if at_least?(color.css, background, target) do
-      source
-    else
-      endpoint =
-        if (Contrast.luminance(background) || 0.0) >= 0.5, do: Color.black(), else: Color.white()
+    endpoint =
+      if (Contrast.luminance(background) || 0.0) >= 0.5, do: Color.black(), else: Color.white()
 
-      percent = minimal_percent(color.css, endpoint, background, target)
-      "color-mix(in oklab, #{color.css}, #{endpoint} #{percent}%)"
+    case Contrast.mix_to_target(color.css, [background], target, endpoint) do
+      {_value, 0} -> source
+      {_value, percent} -> "color-mix(in oklab, #{color.css}, #{endpoint} #{percent}%)"
     end
   end
 
   # The text carries the color over both the page and tinted surfaces, so score
   # it against the tint the tinted variants paint, the stricter background.
   defp tint(color, background), do: Contrast.mix(color.css, background, 0.15)
-
-  defp minimal_percent(fill, endpoint, background, target) do
-    if at_least?(Contrast.mix(endpoint, fill, 1.0), background, target) do
-      search(0, 100, fill, endpoint, background, target)
-    else
-      100
-    end
-  end
-
-  defp search(lo, hi, _fill, _endpoint, _background, _target) when hi - lo <= 1, do: hi
-
-  defp search(lo, hi, fill, endpoint, background, target) do
-    mid = div(lo + hi, 2)
-    mixed = Contrast.mix(endpoint, fill, mid / 100)
-
-    if at_least?(mixed, background, target) do
-      search(lo, mid, fill, endpoint, background, target)
-    else
-      search(mid, hi, fill, endpoint, background, target)
-    end
-  end
-
-  defp at_least?(candidate, background, target) do
-    case Contrast.ratio(candidate, background) do
-      ratio when is_float(ratio) -> ratio >= target
-      _ -> false
-    end
-  end
 
   defp format({same, same}), do: same
   defp format({light, dark}), do: "light-dark(#{light}, #{dark})"

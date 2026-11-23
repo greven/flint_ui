@@ -15,6 +15,7 @@
      * neutral label is highlighted when no active color overrides it. */
     [data-element="toggle"][data-toggle][data-color="neutral"] {
         --fl-control-text: var(--fl-color-text-toned);
+        --fl-control-soft-text: var(--fl-color-text-toned);
     }
 
     [data-element="toggle"][data-toggle][data-color="neutral"]:not([data-active-color]) {

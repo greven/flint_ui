@@ -19,42 +19,31 @@
 
     /* A checkbox's native input is visually hidden, so the ring is drawn on the
      * indicator it sits over. */
-    [data-element="input"][data-input][data-type="checkbox"]
-        [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+    [data-element="input"][data-input][data-type="checkbox"] [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
         border-color: var(--fl-focus-border-color, revert-layer);
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style) color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
         outline-offset: var(--fl-focus-ring-offset);
     }
 
     /* The dedicated checkbox keeps the same indicator pattern. */
-    [data-element="checkbox"][data-variant]
-        > [data-part="label"]
-        > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+    [data-element="checkbox"][data-variant] > [data-part="label"] > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
         border-color: var(--fl-focus-border-color, revert-layer);
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style) color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
         outline-offset: var(--fl-focus-ring-offset);
     }
 
     /* The dedicated radio uses the same pattern on its circular indicator. */
-    [data-element="radio"][data-variant]
-        > [data-part="label"]
-        > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+    [data-element="radio"][data-variant] > [data-part="label"] > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
         border-color: var(--fl-focus-border-color, revert-layer);
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style) color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
         outline-offset: var(--fl-focus-ring-offset);
     }
 
     /* A switch hides its native input under the track, so the ring is drawn on
      * the track the input sits over. */
-    [data-element="switch"][data-switch]
-        > [data-part="label"]
-        > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+    [data-element="switch"][data-switch] > [data-part="label"] > [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
         border-color: var(--fl-focus-border-color, revert-layer);
-        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style)
-            color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
+        outline: var(--fl-focus-ring-width) var(--fl-focus-ring-style) color-mix(in oklab, var(--fl-focus-ring-color) var(--fl-focus-ring-alpha), transparent);
         outline-offset: var(--fl-focus-ring-offset);
     }
 }

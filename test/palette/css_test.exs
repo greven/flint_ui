@@ -37,6 +37,20 @@ defmodule FlintUI.Palette.CSSTest do
              ~r/--fl-color-green-on-soft: light-dark\(\s*var\(--fl-color-green-800\),\s*var\(--fl-color-green-400\)\s*\);/
   end
 
+  test "on-surface starts from the most chromatic shade and lifts to AA" do
+    css = CSS.render_palette(Tailwind, default: true)
+
+    assert css =~ "--fl-color-red-on-surface: light-dark("
+
+    # A cool hue needs a small lift in both schemes.
+    assert css =~ ~r/color-mix\(in oklab, var\(--fl-color-red-600\), oklch\(0% 0 0\) \d+%\)/
+    assert css =~ ~r/color-mix\(in oklab, var\(--fl-color-red-500\), oklch\(100% 0 0\) \d+%\)/
+
+    # Luminous hues already clear AA at 500 in dark mode, so they keep it.
+    assert css =~
+             ~r/--fl-color-yellow-on-surface: light-dark\(.*?var\(--fl-color-yellow-500\)\s*\);/s
+  end
+
   test "derived tokens stay relative so a ramp remap follows" do
     css = CSS.render_palette(Tailwind, default: true)
 
@@ -128,6 +142,7 @@ defmodule FlintUI.Palette.CSSTest do
     assert css =~ "--fl-color-brand: var(--fl-color-brand-600);"
     assert css =~ "--fl-color-brand-on:"
     assert css =~ "--fl-color-brand-on-soft: light-dark("
+    assert css =~ "--fl-color-brand-on-surface: light-dark("
     assert css =~ "--fl-color-brand-soft: light-dark("
     assert css =~ ~s|:where([data-color="brand"])|
     assert css =~ ~s|:where([data-active-color="brand"])|
@@ -154,8 +169,28 @@ defmodule FlintUI.Palette.CSSTest do
 
       path = FlintUI.Generator.part_path(palette.css)
 
-      assert File.read!(path) == expected,
+      # Compare declarations, not bytes: a CSS formatter may reflow generated
+      # output, which must not fail the test. A changed value still does.
+      assert declarations(File.read!(path)) == declarations(expected),
              "#{palette.css} is stale; regenerate it from FlintUI.Palette.CSS"
     end
+  end
+
+  # The shipped parts are generated but committed, and format-on-save reflows
+  # them. Parse the `--token: value;` pairs so whitespace and redundant `.0`
+  # do not matter while the rendered values and their order still do.
+  defp declarations(css) do
+    ~r/(--[\w-]+):\s*([^;]+);/
+    |> Regex.scan(css)
+    |> Enum.map(fn [_, name, value] -> {name, normalize_value(value)} end)
+  end
+
+  defp normalize_value(value) do
+    value
+    |> String.replace(~r/\s+/, " ")
+    |> String.replace(~r/\(\s+/, "(")
+    |> String.replace(~r/\s+\)/, ")")
+    |> String.trim()
+    |> String.replace(~r/(\d+)\.0+(?=[%\s)])/, "\\1")
   end
 end

@@ -50,13 +50,20 @@ defmodule FlintUI.Styled do
         ),
         Var.new(
           name: "--fl-control-text",
-          default: "var(--fl-control-color)",
-          doc: "The label color on tinted, bordered, ghost, and link variants."
+          default: "var(--fl-tone-on-surface, var(--fl-tone-on-soft, var(--fl-control-color)))",
+          doc:
+            "The label color on bordered, surface, outline, ghost, and link variants; it reads the role's `-on-surface` text token."
+        ),
+        Var.new(
+          name: "--fl-control-soft-text",
+          default: "var(--fl-tone-on-soft, var(--fl-control-text))",
+          doc: "The label color on soft and subtle variants, over their tinted surface."
         ),
         Var.new(
           name: "--fl-control-soft",
           default: "color-mix(in oklab, var(--fl-control-color) 10%, var(--fl-color-surface))",
-          doc: "The tinted surface behind soft and subtle variants."
+          doc:
+            "The tinted surface behind soft and subtle variants (soft paints it at half strength), and the base for the ghost, soft, and subtle interaction overlays."
         ),
         Var.new(
           name: "--fl-control-soft-border",
@@ -76,13 +83,20 @@ defmodule FlintUI.Styled do
         ),
         Var.new(
           name: "--fl-control-active-text",
-          default: "var(--fl-control-text)",
+          default:
+            "var(--fl-active-tone-on-surface, var(--fl-active-tone-on-soft, var(--fl-control-text)))",
           doc: "The label color on non-solid variants while a stateful control is on."
+        ),
+        Var.new(
+          name: "--fl-control-active-soft-text",
+          default: "var(--fl-active-tone-on-soft, var(--fl-control-active-text))",
+          doc: "The label color on soft and subtle variants while a stateful control is on."
         ),
         Var.new(
           name: "--fl-control-active-soft",
           default: "var(--fl-control-soft)",
-          doc: "The tinted surface while a stateful control is on."
+          doc:
+            "The tinted surface and the base for the ghost, soft, and subtle interaction overlays while a stateful control is on."
         ),
         Var.new(
           name: "--fl-control-active-soft-border",

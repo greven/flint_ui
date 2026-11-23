@@ -77,8 +77,9 @@ on that fill, and `-on-soft` is the role as text on a neutral or soft surface.
 It also owns `-soft` and `-soft-border` for tinted and bordered variants. Those
 blend the role with the surface rather than repeating the solid fill, so a light
 role and a dark one stay equally visible. Components composite the tint at
-`--fl-tint-opacity` (90%), so the surface below shows through while the
-`-soft` token keeps enough strength to stay visible. Primary and secondary
+`--fl-tint-opacity` (90%); the soft control paints it at half strength. Either
+way the surface below shows through while the `-soft` token keeps enough
+strength to stay visible. Primary and secondary
 ship the neutral ramp by default, so a fresh theme assumes no brand hue;
 override the role or its scale to opt in. Chromatic fills start at the `600`
 step; when a solid control cannot carry a light label there, the fill steps to

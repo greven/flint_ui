@@ -18,13 +18,10 @@
         display: contents;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="label_text"] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="label_text"] {
         grid-column: 1 / -1;
         grid-row: 1;
-        margin-block-end: var(--fl-spacing-xs);
+        margin-block-end: var(--fl-spacing-sm);
         min-inline-size: 0;
     }
 
@@ -33,9 +30,7 @@
      * stays rounded. The joined edge is square and paints no border, so the
      * box's own border is the single seam and its hover, focus, and error color
      * runs unbroken across the group. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
+    [data-element="input"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         box-sizing: border-box;
         position: relative;
         display: inline-flex;
@@ -50,9 +45,7 @@
         line-height: var(--fl-control-line-height-md);
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="outer_prefix"] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_prefix"] {
         grid-column: 1;
         grid-row: 2;
         border-start-start-radius: var(--fl-control-radius);
@@ -60,9 +53,7 @@
         border-inline-end-width: 0;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="outer_suffix"] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_suffix"] {
         grid-column: 3;
         grid-row: 2;
         border-start-end-radius: var(--fl-control-radius);
@@ -76,9 +67,7 @@
      * joins, so `<.button>`, `<.copy_button>`, and `<.toggle>` all work. Give
      * the control the same `size` as the input so both segments share one
      * height. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(> [data-control]) {
+    [data-element="input"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(> [data-control]) {
         padding-inline: 0;
         border-width: 0;
         background-color: transparent;
@@ -91,44 +80,29 @@
         border-radius: inherit;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="outer_prefix"]:has(> [data-control])
-        > [data-control] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_prefix"]:has(> [data-control]) > [data-control] {
         border-start-end-radius: 0;
         border-end-end-radius: 0;
         border-inline-end-width: 0;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="outer_prefix"]:has(> [data-control])
-        > [data-control]::before {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_prefix"]:has(> [data-control]) > [data-control]::before {
         border-inline-end-width: 0;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="outer_suffix"]:has(> [data-control])
-        > [data-control] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_suffix"]:has(> [data-control]) > [data-control] {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
         border-inline-start-width: 0;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="outer_suffix"]:has(> [data-control])
-        > [data-control]::before {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_suffix"]:has(> [data-control]) > [data-control]::before {
         border-inline-start-width: 0;
     }
 
     /* The shared box. The checkbox is nested in its indicator, so it never
      * matches these direct-child rules. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] {
         box-sizing: border-box;
         display: flex;
         position: relative;
@@ -152,18 +126,12 @@
 
     /* An addon paints no border where it meets the box, so square the corners
      * that meet it and keep the radius on the free ends. */
-    [data-element="input"][data-input]
-        > [data-part="row"]:has(> [data-part="outer_prefix"])
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input] > [data-part="row"]:has(> [data-part="outer_prefix"]) > [data-part="label"] > [data-part="box"] {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]:has(> [data-part="outer_suffix"])
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input] > [data-part="row"]:has(> [data-part="outer_suffix"]) > [data-part="label"] > [data-part="box"] {
         border-start-end-radius: 0;
         border-end-end-radius: 0;
     }
@@ -171,10 +139,7 @@
     /* The native control's box. The field primitive supplies the chrome,
      * width, type, and state treatment; this part keeps the grid placement and
      * the inline content flow. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] {
         position: relative;
         display: flex;
         grid-column: 2;
@@ -185,11 +150,7 @@
         min-inline-size: 0;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > :is(input, select, textarea) {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > :is(input, select, textarea) {
         box-sizing: border-box;
         flex: 1 1 auto;
         inline-size: 100%;
@@ -222,47 +183,25 @@
 
     /* Lift the focused segment above its neighbours so its ring is never
      * clipped where the segments meet. */
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"]:has(> [data-part="control"]:focus-visible),
     [data-element="input"][data-input]
         > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]:has(> [data-part="control"]:focus-visible),
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):is(
-            :focus-visible,
-            :has(:is(:focus-visible, [data-focus-ring]))
-        ) {
+        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):is(:focus-visible, :has(:is(:focus-visible, [data-focus-ring]))) {
         z-index: 1;
     }
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > [data-part="control"]:focus-visible {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > [data-part="control"]:focus-visible {
         outline: none;
     }
     /* The native select keeps its OS arrow, popup, and multiple listbox. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > select {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > select {
         cursor: pointer;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > select[multiple] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > select[multiple] {
         cursor: default;
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > :is(input, select)::-webkit-calendar-picker-indicator {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > :is(input, select)::-webkit-calendar-picker-indicator {
         opacity: 0.6;
         cursor: pointer;
     }
@@ -270,22 +209,15 @@
      * button-like control stay clear so the control's own chrome still shows. */
     [data-element="input"][data-input][data-readonly]
         > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):not(
-            :has(> [data-control])
-        ) {
+        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):not(:has(> [data-control])) {
         background-color: var(--fl-color-surface-subtle);
     }
     /* The addons carry the same error border so the group reads as one field. */
-    [data-element="input"][data-input][data-invalid]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
+    [data-element="input"][data-input][data-invalid] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         border-color: var(--fl-color-danger);
     }
 
-    [data-element="input"][data-input][data-invalid]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]:has(> [data-part="control"]:focus-visible) {
+    [data-element="input"][data-input][data-invalid] > [data-part="row"] > [data-part="label"] > [data-part="box"]:has(> [data-part="control"]:focus-visible) {
         --fl-focus-ring-color: var(--fl-focus-color-danger);
         --fl-focus-border-color: var(--fl-focus-color-danger);
     }
@@ -317,9 +249,7 @@
             border-color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="input"][data-input][data-type="checkbox"]
-        [data-part="indicator"]
-        > [data-part="control"] {
+    [data-element="input"][data-input][data-type="checkbox"] [data-part="indicator"] > [data-part="control"] {
         position: absolute;
         inset: 0;
         margin: 0;
@@ -329,15 +259,13 @@
         cursor: pointer;
     }
 
-    [data-element="input"][data-input][data-type="checkbox"]
-        [data-part="indicator"]:has(> [data-part="control"]:checked) {
+    [data-element="input"][data-input][data-type="checkbox"] [data-part="indicator"]:has(> [data-part="control"]:checked) {
         border-color: var(--fl-input-check, var(--fl-color-primary));
         background-color: var(--fl-input-check, var(--fl-color-primary));
     }
 
     /* Indeterminate is a dash, not a check. */
-    [data-element="input"][data-input][data-type="checkbox"]
-        [data-part="indicator"]:has(> [data-part="control"]:indeterminate) {
+    [data-element="input"][data-input][data-type="checkbox"] [data-part="indicator"]:has(> [data-part="control"]:indeterminate) {
         border-color: var(--fl-input-check, var(--fl-color-primary));
         background-color: var(--fl-input-check, var(--fl-color-primary));
     }
@@ -356,18 +284,12 @@
     }
 
     [data-element="input"][data-input][data-type="checkbox"]
-        [data-part="indicator"]:is(
-            :has(> [data-part="control"]:checked),
-            :has(> [data-part="control"]:indeterminate)
-        )
+        [data-part="indicator"]:is(:has(> [data-part="control"]:checked), :has(> [data-part="control"]:indeterminate))
         > [data-part="check"] {
         display: block;
     }
 
-    [data-element="input"][data-input][data-type="checkbox"]
-        [data-part="indicator"]
-        > [data-part="check"]
-        > [data-mark="dash"] {
+    [data-element="input"][data-input][data-type="checkbox"] [data-part="indicator"] > [data-part="check"] > [data-mark="dash"] {
         display: none;
     }
 
@@ -386,26 +308,21 @@
     }
 
     /* Invalid checkboxes use the error role for the box and the mark. */
-    [data-element="input"][data-input][data-type="checkbox"][data-invalid]
-        [data-part="indicator"] {
+    [data-element="input"][data-input][data-type="checkbox"][data-invalid] [data-part="indicator"] {
         border-color: var(--fl-color-danger);
     }
 
-    [data-element="input"][data-input][data-type="checkbox"][data-invalid]
-        [data-part="indicator"]:has(> [data-part="control"]:checked) {
+    [data-element="input"][data-input][data-type="checkbox"][data-invalid] [data-part="indicator"]:has(> [data-part="control"]:checked) {
         border-color: var(--fl-color-danger);
         background-color: var(--fl-color-danger);
         color: var(--fl-color-danger-on);
     }
 
-    [data-element="input"][data-input][data-type="checkbox"][data-invalid]
-        [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
+    [data-element="input"][data-input][data-type="checkbox"][data-invalid] [data-part="indicator"]:has(> [data-part="control"]:focus-visible) {
         --fl-focus-ring-color: var(--fl-focus-color-danger);
         --fl-focus-border-color: var(--fl-focus-color-danger);
     }
-    [data-element="input"][data-size="xs"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
+    [data-element="input"][data-size="xs"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         --_input-addon-padding: var(--fl-field-padding-x-xs);
         min-block-size: var(--fl-control-height-xs);
         font-size: var(--fl-control-font-size-xs);
@@ -416,9 +333,7 @@
         inline-size: var(--fl-control-icon-xs);
         block-size: var(--fl-control-icon-xs);
     }
-    [data-element="input"][data-size="sm"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
+    [data-element="input"][data-size="sm"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         --_input-addon-padding: var(--fl-field-padding-x-sm);
         min-block-size: var(--fl-control-height-sm);
         font-size: var(--fl-control-font-size-sm);
@@ -429,9 +344,7 @@
         inline-size: var(--fl-control-icon-sm);
         block-size: var(--fl-control-icon-sm);
     }
-    [data-element="input"][data-size="lg"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
+    [data-element="input"][data-size="lg"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         --_input-addon-padding: var(--fl-field-padding-x-lg);
         min-block-size: var(--fl-control-height-lg);
         font-size: var(--fl-control-font-size-lg);
@@ -442,9 +355,7 @@
         inline-size: var(--fl-control-icon-lg);
         block-size: var(--fl-control-icon-lg);
     }
-    [data-element="input"][data-size="xl"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
+    [data-element="input"][data-size="xl"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         --_input-addon-padding: var(--fl-field-padding-x-xl);
         min-block-size: var(--fl-control-height-xl);
         font-size: var(--fl-control-font-size-xl);
@@ -457,21 +368,14 @@
     }
 
     /* Textareas grow with their content; `rows` and `resize` stay native. */
-    [data-element="input"][data-input][data-type="textarea"]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input][data-type="textarea"] > [data-part="row"] > [data-part="label"] > [data-part="box"] {
         block-size: auto;
         min-block-size: calc(var(--fl-control-height-lg) * 2);
         align-items: stretch;
         padding-block: var(--fl-spacing-sm);
     }
 
-    [data-element="input"][data-input][data-type="textarea"]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > textarea {
+    [data-element="input"][data-input][data-type="textarea"] > [data-part="row"] > [data-part="label"] > [data-part="box"] > textarea {
         block-size: auto;
         min-block-size: 0;
         padding-block: 0;
@@ -487,19 +391,12 @@
     }
 
     /* File controls keep the browser picker; only its button is themed. */
-    [data-element="input"][data-input][data-type="file"]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input][data-type="file"] > [data-part="row"] > [data-part="label"] > [data-part="box"] {
         block-size: auto;
         padding: 0.25rem;
     }
 
-    [data-element="input"][data-input][data-type="file"]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > input[type="file"] {
+    [data-element="input"][data-input][data-type="file"] > [data-part="row"] > [data-part="label"] > [data-part="box"] > input[type="file"] {
         block-size: auto;
         cursor: pointer;
     }
@@ -521,18 +418,11 @@
         cursor: pointer;
     }
 
-    [data-element="input"][data-input][data-type="color"]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"] {
+    [data-element="input"][data-input][data-type="color"] > [data-part="row"] > [data-part="label"] > [data-part="box"] {
         padding: 0.25rem;
     }
 
-    [data-element="input"][data-input][data-type="color"]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > input[type="color"] {
+    [data-element="input"][data-input][data-type="color"] > [data-part="row"] > [data-part="label"] > [data-part="box"] > input[type="color"] {
         cursor: pointer;
     }
 
@@ -563,21 +453,14 @@
     }
 
     /* A multiple select is a boxed listbox, not a fixed-height control. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]:has(> select[multiple]) {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"]:has(> select[multiple]) {
         block-size: auto;
         min-block-size: calc(var(--fl-control-height-lg) * 2);
         align-items: stretch;
         padding-block: var(--fl-spacing-xs);
     }
 
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > [data-part="label"]
-        > [data-part="box"]
-        > select[multiple] {
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > select[multiple] {
         block-size: auto;
         min-block-size: 0;
     }

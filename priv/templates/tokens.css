@@ -111,8 +111,6 @@
     --fl-control-depth: 1;
     --fl-control-shadow: var(--fl-shadow-base);
     --fl-control-press: translateY(1px);
-    --fl-control-hover-opacity: 0.04;
-    --fl-control-active-opacity: 0.07;
 
     /* Control metrics (26/30/34/38/42px heights). */
     --fl-control-height-xs: 1.625rem;
@@ -182,10 +180,11 @@
     /* Shared by buttons, toggles, and form controls. */
     --fl-control-radius: var(--fl-radius-md);
 
-    /* Semantic roles alias a palette hue. Each role carries five jobs:
+    /* Semantic roles alias a palette hue. Each role carries six jobs:
      *   <role>              the fill (solid background)
      *   <role>-on           the label on that fill
-     *   <role>-on-soft      the role used as text on a neutral or soft surface
+     *   <role>-on-soft      the role used as text on its own tinted surface
+     *   <role>-on-surface   the role used as text on the chrome surfaces
      *   <role>-soft         the tinted background
      *   <role>-soft-border  the matching edge
      *
@@ -195,14 +194,15 @@
      * `danger` point at blue, green, yellow, and red. A theme or an app override
      * can remap any role with the same five lines.
      *
-     * Components composite the soft fill at `--fl-tint-opacity`, so the token
+     * Components composite the tint at `--fl-tint-opacity`, so the token
      * carries a little extra strength to keep the rendered fill visible against
-     * the surface. */
+     * the surface. The soft control variant paints it at half strength. */
     --fl-tint-opacity: 0.9;
 
     --fl-color-neutral: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
     --fl-color-neutral-on: light-dark(var(--fl-color-gray-50), var(--fl-color-gray-950));
     --fl-color-neutral-on-soft: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
+    --fl-color-neutral-on-surface: var(--fl-color-neutral-on-soft);
     --fl-color-neutral-soft: light-dark(
         color-mix(in oklab, var(--fl-color-neutral) 6%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-neutral) 9%, var(--fl-color-surface))
@@ -212,36 +212,42 @@
     --fl-color-primary: var(--fl-color-neutral);
     --fl-color-primary-on: var(--fl-color-neutral-on);
     --fl-color-primary-on-soft: var(--fl-color-neutral-on-soft);
+    --fl-color-primary-on-surface: var(--fl-color-neutral-on-surface);
     --fl-color-primary-soft: var(--fl-color-neutral-soft);
     --fl-color-primary-soft-border: var(--fl-color-neutral-soft-border);
 
     --fl-color-secondary: var(--fl-color-gray);
     --fl-color-secondary-on: var(--fl-color-gray-on);
     --fl-color-secondary-on-soft: var(--fl-color-gray-on-soft);
+    --fl-color-secondary-on-surface: var(--fl-color-gray-on-surface);
     --fl-color-secondary-soft: var(--fl-color-gray-soft);
     --fl-color-secondary-soft-border: var(--fl-color-gray-soft-border);
 
     --fl-color-info: var(--fl-color-blue);
     --fl-color-info-on: var(--fl-color-blue-on);
     --fl-color-info-on-soft: var(--fl-color-blue-on-soft);
+    --fl-color-info-on-surface: var(--fl-color-blue-on-surface);
     --fl-color-info-soft: var(--fl-color-blue-soft);
     --fl-color-info-soft-border: var(--fl-color-blue-soft-border);
 
     --fl-color-success: var(--fl-color-green);
     --fl-color-success-on: var(--fl-color-green-on);
     --fl-color-success-on-soft: var(--fl-color-green-on-soft);
+    --fl-color-success-on-surface: var(--fl-color-green-on-surface);
     --fl-color-success-soft: var(--fl-color-green-soft);
     --fl-color-success-soft-border: var(--fl-color-green-soft-border);
 
     --fl-color-warning: var(--fl-color-yellow);
     --fl-color-warning-on: var(--fl-color-yellow-on);
     --fl-color-warning-on-soft: var(--fl-color-yellow-on-soft);
+    --fl-color-warning-on-surface: var(--fl-color-yellow-on-surface);
     --fl-color-warning-soft: var(--fl-color-yellow-soft);
     --fl-color-warning-soft-border: var(--fl-color-yellow-soft-border);
 
     --fl-color-danger: var(--fl-color-red);
     --fl-color-danger-on: var(--fl-color-red-on);
     --fl-color-danger-on-soft: var(--fl-color-red-on-soft);
+    --fl-color-danger-on-surface: var(--fl-color-red-on-surface);
     --fl-color-danger-soft: var(--fl-color-red-soft);
     --fl-color-danger-soft-border: var(--fl-color-red-soft-border);
 
@@ -252,12 +258,14 @@
     --fl-color-dark: var(--fl-color-gray-900);
     --fl-color-dark-on: var(--fl-color-gray-50);
     --fl-color-dark-on-soft: light-dark(var(--fl-color-gray-900), var(--fl-color-gray-200));
+    --fl-color-dark-on-surface: var(--fl-color-dark-on-soft);
     --fl-color-dark-soft: var(--fl-color-neutral-soft);
     --fl-color-dark-soft-border: var(--fl-color-neutral-soft-border);
 
     --fl-color-light: var(--fl-color-gray-50);
     --fl-color-light-on: var(--fl-color-gray-900);
     --fl-color-light-on-soft: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-50));
+    --fl-color-light-on-surface: var(--fl-color-light-on-soft);
     --fl-color-light-soft: var(--fl-color-neutral-soft);
     --fl-color-light-soft-border: var(--fl-color-neutral-soft-border);
 
@@ -339,11 +347,9 @@
     --fl-focus-ring-width: 3px;
     --fl-focus-ring-offset: 0px;
     --fl-focus-ring-style: solid;
-    --fl-focus-ring-color: var(--fl-color-primary);
     --fl-focus-ring-alpha: 20%;
-    /* Bordered controls pair the translucent ring with a full-color border. */
+    --fl-focus-ring-color: var(--fl-color-primary);
     --fl-focus-border-color: var(--fl-focus-ring-color);
-    /* Invalid controls override both focus colors with this. */
     --fl-focus-color-danger: var(--fl-color-danger);
 }
 

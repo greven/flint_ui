@@ -14,6 +14,7 @@
     --fl-color-red: var(--fl-color-red-400);
     --fl-color-red-on: var(--fl-color-red-950);
     --fl-color-red-on-soft: light-dark(var(--fl-color-red-800), var(--fl-color-red-400));
+    --fl-color-red-on-surface: light-dark(color-mix(in oklab, var(--fl-color-red-600), oklch(0% 0 0) 18%), var(--fl-color-red-500));
     --fl-color-red-soft: light-dark(
         color-mix(in oklab, var(--fl-color-red) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-red) 18%, var(--fl-color-surface))
@@ -35,6 +36,7 @@
     --fl-color-orange: var(--fl-color-orange-400);
     --fl-color-orange-on: var(--fl-color-orange-950);
     --fl-color-orange-on-soft: light-dark(var(--fl-color-orange-800), var(--fl-color-orange-400));
+    --fl-color-orange-on-surface: light-dark(color-mix(in oklab, var(--fl-color-orange-600), oklch(0% 0 0) 19%), var(--fl-color-orange-500));
     --fl-color-orange-soft: light-dark(
         color-mix(in oklab, var(--fl-color-orange) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-orange) 18%, var(--fl-color-surface))
@@ -56,6 +58,7 @@
     --fl-color-amber: var(--fl-color-amber-400);
     --fl-color-amber-on: var(--fl-color-amber-950);
     --fl-color-amber-on-soft: light-dark(var(--fl-color-amber-800), var(--fl-color-amber-400));
+    --fl-color-amber-on-surface: light-dark(color-mix(in oklab, var(--fl-color-amber-600), oklch(0% 0 0) 20%), var(--fl-color-amber-500));
     --fl-color-amber-soft: light-dark(
         color-mix(in oklab, var(--fl-color-amber) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-amber) 18%, var(--fl-color-surface))
@@ -77,6 +80,7 @@
     --fl-color-yellow: var(--fl-color-yellow-400);
     --fl-color-yellow-on: var(--fl-color-yellow-950);
     --fl-color-yellow-on-soft: light-dark(var(--fl-color-yellow-800), var(--fl-color-yellow-400));
+    --fl-color-yellow-on-surface: light-dark(color-mix(in oklab, var(--fl-color-yellow-600), oklch(0% 0 0) 20%), var(--fl-color-yellow-500));
     --fl-color-yellow-soft: light-dark(
         color-mix(in oklab, var(--fl-color-yellow) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-yellow) 18%, var(--fl-color-surface))
@@ -98,6 +102,7 @@
     --fl-color-lime: var(--fl-color-lime-400);
     --fl-color-lime-on: var(--fl-color-lime-950);
     --fl-color-lime-on-soft: light-dark(var(--fl-color-lime-800), var(--fl-color-lime-400));
+    --fl-color-lime-on-surface: light-dark(color-mix(in oklab, var(--fl-color-lime-600), oklch(0% 0 0) 23%), var(--fl-color-lime-500));
     --fl-color-lime-soft: light-dark(
         color-mix(in oklab, var(--fl-color-lime) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-lime) 18%, var(--fl-color-surface))
@@ -119,6 +124,7 @@
     --fl-color-green: var(--fl-color-green-400);
     --fl-color-green-on: var(--fl-color-green-950);
     --fl-color-green-on-soft: light-dark(var(--fl-color-green-800), var(--fl-color-green-400));
+    --fl-color-green-on-surface: light-dark(color-mix(in oklab, var(--fl-color-green-600), oklch(0% 0 0) 23%), var(--fl-color-green-500));
     --fl-color-green-soft: light-dark(
         color-mix(in oklab, var(--fl-color-green) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-green) 18%, var(--fl-color-surface))
@@ -140,6 +146,7 @@
     --fl-color-emerald: var(--fl-color-emerald-400);
     --fl-color-emerald-on: var(--fl-color-emerald-950);
     --fl-color-emerald-on-soft: light-dark(var(--fl-color-emerald-800), var(--fl-color-emerald-400));
+    --fl-color-emerald-on-surface: light-dark(color-mix(in oklab, var(--fl-color-emerald-600), oklch(0% 0 0) 23%), var(--fl-color-emerald-500));
     --fl-color-emerald-soft: light-dark(
         color-mix(in oklab, var(--fl-color-emerald) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-emerald) 18%, var(--fl-color-surface))
@@ -161,6 +168,7 @@
     --fl-color-teal: var(--fl-color-teal-400);
     --fl-color-teal-on: var(--fl-color-teal-950);
     --fl-color-teal-on-soft: light-dark(var(--fl-color-teal-800), var(--fl-color-teal-400));
+    --fl-color-teal-on-surface: light-dark(color-mix(in oklab, var(--fl-color-teal-600), oklch(0% 0 0) 22%), var(--fl-color-teal-500));
     --fl-color-teal-soft: light-dark(
         color-mix(in oklab, var(--fl-color-teal) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-teal) 18%, var(--fl-color-surface))
@@ -182,6 +190,7 @@
     --fl-color-cyan: var(--fl-color-cyan-400);
     --fl-color-cyan-on: var(--fl-color-cyan-950);
     --fl-color-cyan-on-soft: light-dark(var(--fl-color-cyan-800), var(--fl-color-cyan-400));
+    --fl-color-cyan-on-surface: light-dark(color-mix(in oklab, var(--fl-color-cyan-600), oklch(0% 0 0) 22%), var(--fl-color-cyan-500));
     --fl-color-cyan-soft: light-dark(
         color-mix(in oklab, var(--fl-color-cyan) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-cyan) 18%, var(--fl-color-surface))
@@ -203,6 +212,7 @@
     --fl-color-sky: var(--fl-color-sky-400);
     --fl-color-sky-on: var(--fl-color-sky-950);
     --fl-color-sky-on-soft: light-dark(var(--fl-color-sky-800), var(--fl-color-sky-400));
+    --fl-color-sky-on-surface: light-dark(color-mix(in oklab, var(--fl-color-sky-600), oklch(0% 0 0) 21%), var(--fl-color-sky-500));
     --fl-color-sky-soft: light-dark(
         color-mix(in oklab, var(--fl-color-sky) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-sky) 18%, var(--fl-color-surface))
@@ -224,6 +234,7 @@
     --fl-color-blue: var(--fl-color-blue-400);
     --fl-color-blue-on: var(--fl-color-blue-950);
     --fl-color-blue-on-soft: light-dark(var(--fl-color-blue-800), var(--fl-color-blue-400));
+    --fl-color-blue-on-surface: light-dark(color-mix(in oklab, var(--fl-color-blue-600), oklch(0% 0 0) 20%), var(--fl-color-blue-500));
     --fl-color-blue-soft: light-dark(
         color-mix(in oklab, var(--fl-color-blue) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-blue) 18%, var(--fl-color-surface))
@@ -245,6 +256,7 @@
     --fl-color-indigo: var(--fl-color-indigo-400);
     --fl-color-indigo-on: var(--fl-color-indigo-950);
     --fl-color-indigo-on-soft: light-dark(var(--fl-color-indigo-800), var(--fl-color-indigo-400));
+    --fl-color-indigo-on-surface: light-dark(color-mix(in oklab, var(--fl-color-indigo-600), oklch(0% 0 0) 19%), var(--fl-color-indigo-500));
     --fl-color-indigo-soft: light-dark(
         color-mix(in oklab, var(--fl-color-indigo) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-indigo) 18%, var(--fl-color-surface))
@@ -266,6 +278,7 @@
     --fl-color-violet: var(--fl-color-violet-400);
     --fl-color-violet-on: var(--fl-color-violet-950);
     --fl-color-violet-on-soft: light-dark(var(--fl-color-violet-800), var(--fl-color-violet-400));
+    --fl-color-violet-on-surface: light-dark(color-mix(in oklab, var(--fl-color-violet-600), oklch(0% 0 0) 18%), var(--fl-color-violet-500));
     --fl-color-violet-soft: light-dark(
         color-mix(in oklab, var(--fl-color-violet) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-violet) 18%, var(--fl-color-surface))
@@ -287,6 +300,7 @@
     --fl-color-purple: var(--fl-color-purple-400);
     --fl-color-purple-on: var(--fl-color-purple-950);
     --fl-color-purple-on-soft: light-dark(var(--fl-color-purple-800), var(--fl-color-purple-400));
+    --fl-color-purple-on-surface: light-dark(color-mix(in oklab, var(--fl-color-purple-600), oklch(0% 0 0) 18%), var(--fl-color-purple-500));
     --fl-color-purple-soft: light-dark(
         color-mix(in oklab, var(--fl-color-purple) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-purple) 18%, var(--fl-color-surface))
@@ -308,6 +322,7 @@
     --fl-color-fuchsia: var(--fl-color-fuchsia-400);
     --fl-color-fuchsia-on: var(--fl-color-fuchsia-950);
     --fl-color-fuchsia-on-soft: light-dark(var(--fl-color-fuchsia-800), var(--fl-color-fuchsia-400));
+    --fl-color-fuchsia-on-surface: light-dark(color-mix(in oklab, var(--fl-color-fuchsia-600), oklch(0% 0 0) 17%), var(--fl-color-fuchsia-500));
     --fl-color-fuchsia-soft: light-dark(
         color-mix(in oklab, var(--fl-color-fuchsia) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-fuchsia) 18%, var(--fl-color-surface))
@@ -329,6 +344,7 @@
     --fl-color-pink: var(--fl-color-pink-400);
     --fl-color-pink-on: var(--fl-color-pink-950);
     --fl-color-pink-on-soft: light-dark(var(--fl-color-pink-800), var(--fl-color-pink-400));
+    --fl-color-pink-on-surface: light-dark(color-mix(in oklab, var(--fl-color-pink-600), oklch(0% 0 0) 18%), var(--fl-color-pink-500));
     --fl-color-pink-soft: light-dark(
         color-mix(in oklab, var(--fl-color-pink) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-pink) 18%, var(--fl-color-surface))
@@ -350,6 +366,7 @@
     --fl-color-rose: var(--fl-color-rose-400);
     --fl-color-rose-on: var(--fl-color-rose-950);
     --fl-color-rose-on-soft: light-dark(var(--fl-color-rose-800), var(--fl-color-rose-400));
+    --fl-color-rose-on-surface: light-dark(color-mix(in oklab, var(--fl-color-rose-600), oklch(0% 0 0) 18%), var(--fl-color-rose-500));
     --fl-color-rose-soft: light-dark(
         color-mix(in oklab, var(--fl-color-rose) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-rose) 18%, var(--fl-color-surface))
@@ -371,6 +388,7 @@
     --fl-color-gray: var(--fl-color-gray-600);
     --fl-color-gray-on: var(--fl-color-gray-50);
     --fl-color-gray-on-soft: light-dark(var(--fl-color-gray-700), var(--fl-color-gray-400));
+    --fl-color-gray-on-surface: light-dark(var(--fl-color-gray-600), color-mix(in oklab, var(--fl-color-gray-500), oklch(100% 0 0) 18%));
     --fl-color-gray-soft: light-dark(
         color-mix(in oklab, var(--fl-color-gray) 12%, var(--fl-color-surface)),
         color-mix(in oklab, var(--fl-color-gray) 18%, var(--fl-color-surface))

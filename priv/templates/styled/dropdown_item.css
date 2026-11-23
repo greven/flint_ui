@@ -52,33 +52,33 @@
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="info"] {
-        --fl-dropdown-item-text: var(--fl-color-info-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-info-on-soft);
+        --fl-dropdown-item-text: var(--fl-color-info-on-surface);
+        --fl-dropdown-item-accent: var(--fl-color-info-on-surface);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="success"] {
-        --fl-dropdown-item-text: var(--fl-color-success-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-success-on-soft);
+        --fl-dropdown-item-text: var(--fl-color-success-on-surface);
+        --fl-dropdown-item-accent: var(--fl-color-success-on-surface);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="warning"] {
-        --fl-dropdown-item-text: var(--fl-color-warning-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-warning-on-soft);
+        --fl-dropdown-item-text: var(--fl-color-warning-on-surface);
+        --fl-dropdown-item-accent: var(--fl-color-warning-on-surface);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="danger"] {
-        --fl-dropdown-item-text: var(--fl-color-danger-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-danger-on-soft);
+        --fl-dropdown-item-text: var(--fl-color-danger-on-surface);
+        --fl-dropdown-item-accent: var(--fl-color-danger-on-surface);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="primary"] {
-        --fl-dropdown-item-text: var(--fl-color-primary-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-primary-on-soft);
+        --fl-dropdown-item-text: var(--fl-color-primary-on-surface);
+        --fl-dropdown-item-accent: var(--fl-color-primary-on-surface);
     }
 
     [data-element="dropdown_item"][data-dropdown_item][data-intent="secondary"] {
-        --fl-dropdown-item-text: var(--fl-color-secondary-on-soft);
-        --fl-dropdown-item-accent: var(--fl-color-secondary-on-soft);
+        --fl-dropdown-item-text: var(--fl-color-secondary-on-surface);
+        --fl-dropdown-item-accent: var(--fl-color-secondary-on-surface);
     }
 
     /* A custom item is a content block, not a row. It keeps the caller's own

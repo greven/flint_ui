@@ -112,8 +112,9 @@ defmodule FlintUI.Theme.ContractTest do
     end
   end
 
-  test "every semantic role resolves the five tone tokens", %{css: css} do
-    for role <- @color_roles, suffix <- ["", "-on", "-on-soft", "-soft", "-soft-border"] do
+  test "every semantic role resolves the six tone tokens", %{css: css} do
+    for role <- @color_roles,
+        suffix <- ["", "-on", "-on-soft", "-on-surface", "-soft", "-soft-border"] do
       assert css =~ "--fl-color-#{role}#{suffix}:",
              "expected --fl-color-#{role}#{suffix} in the theme"
     end

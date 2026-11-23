@@ -6,7 +6,7 @@
      * Public input: `--fl-typography-color`. A raw color writes it inline,
      * while the role and tier hooks below resolve it from theme tokens. */
     [data-typography] {
-        --fl-typography-color: var(--fl-tone-on-soft, var(--fl-color-text));
+        --fl-typography-color: var(--fl-tone-on-surface, var(--fl-tone-on-soft, var(--fl-color-text)));
 
         color: var(--fl-typography-color);
         font-family: var(--fl-font-sans);

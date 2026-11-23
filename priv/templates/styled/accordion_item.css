@@ -39,8 +39,8 @@
         [data-element="accordion_item"][data-accordion_item]
         [data-part="trigger"]:not([data-disabled]):hover {
         background: light-dark(
-            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 50%), transparent),
-            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, var(--fl-control-hover-opacity)) * 40%), transparent)
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, 0.04) * 50%), transparent),
+            color-mix(in oklab, currentColor calc(var(--fl-accordion-highlight-opacity, 0.04) * 40%), transparent)
         );
     }
 
