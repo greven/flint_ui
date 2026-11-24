@@ -62,8 +62,9 @@
     }
 
     /* A control in an outer slot is the segment: the addon drops its own chrome
-     * so the control's variant supplies the fill and border, and the joined
-     * corners are squared. Any control that opts into the shared primitive. */
+     * so the control's variant supplies the fill, the field supplies the edge,
+     * and the joined corners are squared. Any control that opts into the shared
+     * primitive. */
     [data-element="input"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):has(> [data-control]) {
         padding-inline: 0;
         border-width: 0;
@@ -95,6 +96,18 @@
 
     [data-element="input"][data-input] > [data-part="row"] > [data-part="outer_suffix"]:has(> [data-control]) > [data-control]::before {
         border-inline-start-width: 0;
+    }
+
+    /* The field owns the group's outline. A segment that paints a tinted edge
+     * (surface, subtle) borrows the field border instead of the control's
+     * variant edge, so the box and the addon read as one control. Variants with
+     * their own border keep it. */
+    [data-element="input"][data-input]
+        > [data-part="row"]
+        > :is([data-part="outer_prefix"], [data-part="outer_suffix"])
+        > [data-control] {
+        --fl-control-soft-border: var(--fl-field-border, var(--fl-color-border));
+        --fl-control-active-soft-border: var(--fl-field-border, var(--fl-color-border));
     }
 
     /* The shared box. The checkbox is nested in its indicator, so it never
@@ -206,6 +219,12 @@
         > [data-part="row"]
         > :is([data-part="outer_prefix"], [data-part="outer_suffix"]):not(:has(> [data-control])) {
         background-color: var(--fl-color-surface-subtle);
+    }
+    /* The field border tracks the error role, so a segment that borrows it does
+     * too. The explicit border-color rules below keep the box and the addons in
+     * step. */
+    [data-element="input"][data-input][data-invalid] {
+        --fl-field-border: var(--fl-color-danger);
     }
     /* The addons carry the same error border so the group reads as one field. */
     [data-element="input"][data-input][data-invalid] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {

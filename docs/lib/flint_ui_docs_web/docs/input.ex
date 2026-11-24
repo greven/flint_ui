@@ -128,8 +128,9 @@ defmodule FlintUIDocsWeb.Docs.Input do
 
     <.prose content="An outer slot renders as an addon: it borrows the control's fill and height, joins its border so
       the group has a single seam, and keeps only its free end rounded. A control placed directly in an outer slot
-      (`<.button>`, `<.copy_button>`, or `<.toggle>`) takes the segment over instead; give it the same `size` as the
-      input so both segments share one height." />
+      (`<.button>`, `<.copy_button>`, or `<.toggle>`) takes the segment over instead; its variant supplies the fill,
+      while the field keeps ownership of the border, so tinted variants line up with the box. Give it the same `size`
+      as the input so both segments share one height." />
 
     <.preview {assigns} code={&code_affixes/1}>
       <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
