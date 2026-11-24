@@ -279,10 +279,11 @@ defmodule FlintUIDocsWeb.DocsComponents do
   def content_placeholder(assigns) do
     ~H"""
     <div class={[
-      "grid place-items-center text-sm text-muted",
+      "relative grid place-items-center text-sm text-muted",
       @rounded && "rounded-md",
       @border && "border border-dashed border-strong",
-      "bg-[repeating-linear-gradient(45deg,var(--fl-color-border)_0,var(--fl-color-border)_1px,transparent_1px,transparent_8px)]",
+      "after:content-[] after:absolute after:rounded-md after:inset-px after:opacity-75 dark:after:opacity-50",
+      "after:bg-[repeating-linear-gradient(45deg,var(--fl-color-border)_0,var(--fl-color-border)_1px,transparent_1px,transparent_8px)]",
       @class
     ]}>
       {render_slot(@inner_block)}
