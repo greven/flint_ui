@@ -23,7 +23,9 @@ defmodule FlintUI.Base.Stack do
   `direction`, narrowing by `shrink`. `gap` sets the base distance between
   layers, `limit` caps how many are visible, and `align` and `justify` no
   longer apply. Append the newest item last, because the last child is the one
-  in front.
+  in front. In the generated component the layers are also shaded and the front
+  layer casts a shadow onto them, so the pile reads as depth; `depth` sets how
+  strongly.
 
   The stack is a generic container and carries no implicit role. Pass a `role`
   and an accessible name through `rest` when the grouping itself is meaningful.
@@ -44,7 +46,9 @@ defmodule FlintUI.Base.Stack do
   sequence: render a count or a link to the full list for whatever the limit
   hides, and keep interactive content on the visible layers. The layers behind
   the front one are still read in full, so their text should stand on its own
-  even though only a strip of each is visible.
+  even though only a strip of each is visible. The pile shading is decorative:
+  it dims the back layers and casts the front layer's shadow, but it moves no
+  focus, changes no reading order, and sets no role.
 
   ## Keyboard
 

@@ -55,6 +55,15 @@ defmodule FlintUI.Styled.StackTest do
         </.stack>
         """
       end
+
+      def deep(assigns) do
+        ~H"""
+        <.stack pile limit="5" depth="strong">
+          <p>First</p>
+          <p>Second</p>
+        </.stack>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -70,6 +79,7 @@ defmodule FlintUI.Styled.StackTest do
     assert attr(document, :stack, "data-justify") == ["start"]
     assert attr(document, :stack, "data-pile") == []
     assert attr(document, :stack, "data-limit") == ["3"]
+    assert attr(document, :stack, "data-depth") == ["soft"]
     assert attr(document, :stack, "class") == []
   end
 
@@ -121,6 +131,13 @@ defmodule FlintUI.Styled.StackTest do
     assert attr(document, :stack, "data-limit") == ["4"]
     assert attr(document, :stack, "data-direction") == ["down"]
     assert attr(document, :stack, "data-shrink") == ["lg"]
+  end
+
+  test "maps depth onto its hook", %{wrapper: wrapper} do
+    document = render(wrapper, :deep)
+
+    assert attr(document, :stack, "data-depth") == ["strong"]
+    assert attr(document, :stack, "data-limit") == ["5"]
   end
 
   test "keeps every layer in the DOM so the theme can cap them", %{wrapper: wrapper} do

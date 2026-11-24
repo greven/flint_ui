@@ -83,17 +83,7 @@
         --fl-stack-justify: space-evenly;
     }
 
-    /* Pile mode. The root becomes a single-cell grid, so every layer shares one
-     * box sized to the tallest child and nothing needs to be measured or taken
-     * out of flow. `--fl-stack-pile-offset` moves each earlier layer along the
-     * block axis: negative peeks up, positive peeks down.
-     * `--fl-stack-pile-shrink` narrows each layer on the inline axis, and
-     * scaling only that axis keeps the peek exact for any layer height.
-     *
-     * The front layer is the last child. It needs a z-index because a
-     * transformed grid item paints above one that is not, and the nearest
-     * layers must sit on top of the further ones. `isolation` keeps those
-     * indexes inside the pile. */
+    /* Pile mode. */
     [data-element="stack"][data-pile][data-stack] {
         --fl-stack-pile-offset: calc(var(--fl-stack-gap) * -1);
         --fl-stack-pile-shrink: 0.03;
@@ -147,14 +137,46 @@
         scale: calc(1 - var(--fl-stack-pile-shrink) * 4) 1;
     }
 
-    /* Each limit reserves the peek space on the side the layers move toward and
-     * hides the earlier layers past the cap. `max()` picks that side from the
-     * offset's sign, so `direction` needs no extra padding rule. The count runs
-     * from the end, so hiding an older layer never renumbers the visible ones. */
+    /* Recession shading. */
+    [data-element="stack"][data-depth="soft"][data-pile] > :nth-last-child(2) {
+        filter: brightness(0.96);
+    }
+
+    [data-element="stack"][data-depth="soft"][data-pile] > :nth-last-child(3) {
+        filter: brightness(0.93);
+    }
+
+    [data-element="stack"][data-depth="soft"][data-pile] > :nth-last-child(4) {
+        filter: brightness(0.9);
+    }
+
+    [data-element="stack"][data-depth="soft"][data-pile] > :nth-last-child(5) {
+        filter: brightness(0.87);
+    }
+
+    [data-element="stack"][data-depth="strong"][data-pile] > :nth-last-child(2) {
+        filter: brightness(0.94);
+    }
+
+    [data-element="stack"][data-depth="strong"][data-pile] > :nth-last-child(3) {
+        filter: brightness(0.88);
+    }
+
+    [data-element="stack"][data-depth="strong"][data-pile] > :nth-last-child(4) {
+        filter: brightness(0.82);
+    }
+
+    [data-element="stack"][data-depth="strong"][data-pile] > :nth-last-child(5) {
+        filter: brightness(0.76);
+    }
+
+    /* `none` keeps the pile as pure geometry. */
+    [data-element="stack"][data-depth="none"][data-pile] > * {
+        filter: none;
+    }
+
     [data-element="stack"][data-limit="2"][data-pile] {
-        padding-block:
-            max(0px, calc(var(--fl-stack-pile-offset) * -1))
-            max(0px, var(--fl-stack-pile-offset));
+        padding-block: max(0px, calc(var(--fl-stack-pile-offset) * -1)) max(0px, var(--fl-stack-pile-offset));
     }
 
     [data-element="stack"][data-limit="2"][data-pile] > :nth-last-child(n + 3) {
@@ -162,9 +184,7 @@
     }
 
     [data-element="stack"][data-limit="3"][data-pile] {
-        padding-block:
-            max(0px, calc(var(--fl-stack-pile-offset) * -2))
-            max(0px, calc(var(--fl-stack-pile-offset) * 2));
+        padding-block: max(0px, calc(var(--fl-stack-pile-offset) * -2)) max(0px, calc(var(--fl-stack-pile-offset) * 2));
     }
 
     [data-element="stack"][data-limit="3"][data-pile] > :nth-last-child(n + 4) {
@@ -172,9 +192,7 @@
     }
 
     [data-element="stack"][data-limit="4"][data-pile] {
-        padding-block:
-            max(0px, calc(var(--fl-stack-pile-offset) * -3))
-            max(0px, calc(var(--fl-stack-pile-offset) * 3));
+        padding-block: max(0px, calc(var(--fl-stack-pile-offset) * -3)) max(0px, calc(var(--fl-stack-pile-offset) * 3));
     }
 
     [data-element="stack"][data-limit="4"][data-pile] > :nth-last-child(n + 5) {
@@ -182,9 +200,7 @@
     }
 
     [data-element="stack"][data-limit="5"][data-pile] {
-        padding-block:
-            max(0px, calc(var(--fl-stack-pile-offset) * -4))
-            max(0px, calc(var(--fl-stack-pile-offset) * 4));
+        padding-block: max(0px, calc(var(--fl-stack-pile-offset) * -4)) max(0px, calc(var(--fl-stack-pile-offset) * 4));
     }
 
     [data-element="stack"][data-limit="5"][data-pile] > :nth-last-child(n + 6) {

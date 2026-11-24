@@ -39,7 +39,9 @@ defmodule FlintUI.Styled.Stack do
           values: [true, false],
           default: false,
           doc:
-            "Whether the children overlap along the depth axis as a pile. The last child is the front layer and earlier children recede along `direction`, narrowing by `shrink`, so append the newest item last. `gap` sets the base distance between layers, `limit` caps the visible layers, and `align` and `justify` no longer apply. A pile is a preview: hidden layers leave the accessibility tree, so render a count or another way to reach them."
+            "Whether the children overlap along the depth axis as a pile. The last child is the front layer and earlier children recede along `direction`, narrowing by `shrink`,
+            so append the newest item last. `gap` sets the base distance between layers, `limit` caps the visible layers, and `align` and `justify` no longer apply.
+            A pile is a preview: hidden layers leave the accessibility tree, so render a count or another way to reach them."
         ),
         Prop.new(
           name: :limit,
@@ -53,14 +55,25 @@ defmodule FlintUI.Styled.Stack do
           values: ["up", "down"],
           default: "up",
           doc:
-            "The side earlier layers peek out on. `up` stacks them above the front layer, for a pile anchored to the bottom of a region; `down` stacks them below it. Only applies with `pile`."
+            "The side earlier layers peek out on. `up` stacks them above the front layer, for a pile anchored to the bottom of a region; `down`
+            stacks them below it. Only applies with `pile`."
         ),
         Prop.new(
           name: :shrink,
           values: ["none", "sm", "md", "lg"],
           default: "sm",
           doc:
-            "How much narrower each layer becomes. `none` keeps every layer the same width, so the pile reads as a flat stack; `sm` and above taper the layers behind the front one. Only applies with `pile`."
+            "How much narrower each layer becomes. `none` keeps every layer the same width, so the pile reads as a flat stack; `sm` and above taper the
+            layers behind the front one. Only applies with `pile`."
+        ),
+        Prop.new(
+          name: :depth,
+          values: ["none", "soft", "strong"],
+          default: "soft",
+          doc:
+            "How much each layer behind the front one recedes. `soft` darkens the layers in even steps and lets the front layer cast a shadow onto them; `strong`
+            exaggerates both for image-heavy piles; `none` leaves the pile as pure geometry. The shading is decorative and changes neither the children
+            nor the accessibility tree. Only applies with `pile`."
         )
       ],
       vars: [

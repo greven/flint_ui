@@ -47,6 +47,7 @@ defmodule FlintUIDocsWeb.Docs.Stack do
           %{key: :limit, type: :select, default: "3", label: "Limit"},
           %{key: :direction, type: :select, default: "up", label: "Direction"},
           %{key: :shrink, type: :select, default: "sm", label: "Shrink"},
+          %{key: :depth, type: :select, default: "soft", label: "Depth"},
           %{key: :gap, type: :select, default: "sm", label: "Gap"}
         ]
       },
@@ -137,15 +138,25 @@ defmodule FlintUIDocsWeb.Docs.Stack do
   def render_section(%{section: :examples, id: :pile} = assigns) do
     ~H"""
     <.prose content={
-      ~s|`pile` overlaps the children as a deck instead of flowing them. The last child is the front layer and earlier children recede along `direction`, narrowing by `shrink`, so append the newest item last. `gap` sets the base distance between layers, and `limit` caps how many stay visible: earlier layers past the limit are hidden. `align` and `justify` no longer apply while piled.|
+      ~s|`pile` overlaps the children as a deck instead of flowing them. The last child is the front layer and earlier children recede along `direction`, narrowing by `shrink`,
+      so append the newest item last. `gap` sets the base distance between layers,
+      and `limit` caps how many stay visible: earlier layers past the limit are hidden. `align` and `justify` no longer apply while piled.|
     } />
 
     <.prose content={
-      ~s|`direction="up"` stacks the layers above the front one, which suits a pile anchored to the bottom of a region; `down` stacks them below. `shrink` tapers the layers behind the front one, and `none` keeps every layer the same width. Both work from the front card outward, so the pile reads the same at every limit. Keep `gap` smaller than the card's edge padding so the peek shows the card edge rather than a slice of its content.|
+      ~s|`direction="up"` stacks the layers above the front one, which suits a pile anchored to the bottom of a region; `down` stacks them below.
+      `shrink` tapers the layers behind the front one, and `none` keeps every layer the same width. Both work from the front card outward, so the pile reads the same at every limit.
+      Keep `gap` smaller than the card's edge padding so the peek shows the card edge rather than a slice of its content.|
     } />
 
     <.prose content={
-      ~s|A pile is a preview, not a notification system. Hidden layers leave the accessibility tree, so give the reader a count or a link to the full list, and keep interactive controls on the visible layers. The layers behind the front one are still read in full, so their text should stand on its own even though only a strip of each shows.|
+      ~s|`depth` shades the pile. `soft` darkens each layer one step behind the one in front, so the front card reads as the brightest.
+      `strong` exaggerates the effect, and `none` leaves the pile as pure geometry. |
+    } />
+
+    <.prose content={
+      ~s|A pile is a preview, not a notification system. Hidden layers leave the accessibility tree, so give the reader a count or a link to the full list,
+      and keep interactive controls on the visible layers. The layers behind the front one are still read in full, so their text should stand on its own even though only a strip of each shows.|
     } />
 
     <.preview :let={props} {assigns} code={&pile_code/1}>
@@ -155,6 +166,7 @@ defmodule FlintUIDocsWeb.Docs.Stack do
           limit={props.limit}
           direction={props.direction}
           shrink={props.shrink}
+          depth={props.depth}
           gap={props.gap}
         >
           <div class="fl-rounded-lg fl-border fl-border-default fl-bg-surface fl-p-sm">
@@ -215,7 +227,7 @@ defmodule FlintUIDocsWeb.Docs.Stack do
 
   def render_section(%{section: :layout_inputs, id: :inputs} = assigns) do
     ~H"""
-    <.prose content="The styled layer sets `--fl-stack-gap`, `--fl-stack-align`, and `--fl-stack-justify` from the props, and a pile adds `--fl-stack-pile-offset` and `--fl-stack-pile-shrink`. Override one of them on a single stack with `style` when the scale is not enough, and keep the prop for the common case. `--fl-stack-gap` still drives the base offset, so changing it loosens or tightens the whole deck." />
+    <.prose content="The styled layer sets `--fl-stack-gap`, `--fl-stack-align`, and `--fl-stack-justify` from the props, and a pile adds `--fl-stack-pile-offset` and `--fl-stack-pile-shrink`. Override one of them on a single stack with `style` when the scale is not enough, and keep the prop for the common case. `--fl-stack-gap` still drives the base offset, so changing it loosens or tightens the whole deck. `depth` adds no input: it only changes the shading the theme draws on the layers." />
 
     <.preview {assigns} code={layout_inputs_code()} code_only />
     """
@@ -280,6 +292,7 @@ defmodule FlintUIDocsWeb.Docs.Stack do
         Snippet.attr("limit", props.limit, "3"),
         Snippet.attr("direction", props.direction, "up"),
         Snippet.attr("shrink", props.shrink, "sm"),
+        Snippet.attr("depth", props.depth, "soft"),
         Snippet.attr("gap", props.gap, "sm")
       ],
       """
