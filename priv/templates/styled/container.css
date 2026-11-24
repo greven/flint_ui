@@ -1,0 +1,96 @@
+@layer components {
+    /* Container. Public inputs: `--fl-container-size`, the per-breakpoint
+     * `--fl-container-size-*` overrides, and `--fl-container-padding`. The
+     * media ladder mirrors `FlintUI.Utilities.breakpoints/0`; media queries
+     * cannot read custom properties, so the widths are literal. */
+    [data-element="container"][data-container] {
+        --fl-container-size: var(--fl-container-6xl);
+        --fl-container-size-sm: var(--fl-container-size);
+        --fl-container-size-md: var(--fl-container-size-sm);
+        --fl-container-size-lg: var(--fl-container-size-md);
+        --fl-container-size-xl: var(--fl-container-size-lg);
+        --fl-container-size-2xl: var(--fl-container-size-xl);
+        --fl-container-padding: var(--fl-spacing-lg);
+
+        box-sizing: border-box;
+        display: block;
+        inline-size: 100%;
+        max-inline-size: var(--fl-container-size);
+        margin-inline: auto;
+        padding-inline: var(--fl-container-padding);
+    }
+
+    [data-element="container"][data-size="xs"] {
+        --fl-container-size: var(--fl-container-xs);
+    }
+
+    [data-element="container"][data-size="sm"] {
+        --fl-container-size: var(--fl-container-sm);
+    }
+
+    [data-element="container"][data-size="md"] {
+        --fl-container-size: var(--fl-container-md);
+    }
+
+    [data-element="container"][data-size="lg"] {
+        --fl-container-size: var(--fl-container-lg);
+    }
+
+    [data-element="container"][data-size="xl"] {
+        --fl-container-size: var(--fl-container-xl);
+    }
+
+    [data-element="container"][data-size="2xl"] {
+        --fl-container-size: var(--fl-container-2xl);
+    }
+
+    [data-element="container"][data-size="3xl"] {
+        --fl-container-size: var(--fl-container-3xl);
+    }
+
+    [data-element="container"][data-size="4xl"] {
+        --fl-container-size: var(--fl-container-4xl);
+    }
+
+    [data-element="container"][data-size="5xl"] {
+        --fl-container-size: var(--fl-container-5xl);
+    }
+
+    [data-element="container"][data-size="7xl"] {
+        --fl-container-size: var(--fl-container-7xl);
+    }
+
+    [data-element="container"][data-size="fluid"] {
+        --fl-container-size: none;
+    }
+
+    @media (min-width: 40rem) {
+        [data-element="container"][data-container] {
+            max-inline-size: var(--fl-container-size-sm);
+        }
+    }
+
+    @media (min-width: 48rem) {
+        [data-element="container"][data-container] {
+            max-inline-size: var(--fl-container-size-md);
+        }
+    }
+
+    @media (min-width: 64rem) {
+        [data-element="container"][data-container] {
+            max-inline-size: var(--fl-container-size-lg);
+        }
+    }
+
+    @media (min-width: 80rem) {
+        [data-element="container"][data-container] {
+            max-inline-size: var(--fl-container-size-xl);
+        }
+    }
+
+    @media (min-width: 96rem) {
+        [data-element="container"][data-container] {
+            max-inline-size: var(--fl-container-size-2xl);
+        }
+    }
+}

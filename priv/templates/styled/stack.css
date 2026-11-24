@@ -1,0 +1,193 @@
+@layer components {
+    /* Stack: a vertical flex container. `align` sets the cross axis and
+     * `justify` the main axis; both are inert until the stack has extra block
+     * size. Public inputs are `--fl-stack-gap`, `--fl-stack-align`, and
+     * `--fl-stack-justify`. The names mirror the `fl-stack` utility, so adding
+     * `fl-stack` through `class` composes with this component instead of
+     * fighting it.
+     *
+     * `pile` turns the same children into a deck: see the pile block below,
+     * where `--fl-stack-gap` doubles as the peek distance between layers. */
+    [data-element="stack"][data-stack] {
+        --fl-stack-gap: var(--fl-spacing-md);
+        --fl-stack-align: stretch;
+        --fl-stack-justify: flex-start;
+        display: flex;
+        flex-direction: column;
+        align-items: var(--fl-stack-align);
+        justify-content: var(--fl-stack-justify);
+        gap: var(--fl-stack-gap);
+    }
+
+    [data-element="stack"][data-align="start"] {
+        --fl-stack-align: flex-start;
+    }
+
+    [data-element="stack"][data-align="center"] {
+        --fl-stack-align: center;
+    }
+
+    [data-element="stack"][data-align="end"] {
+        --fl-stack-align: flex-end;
+    }
+
+    [data-element="stack"][data-align="baseline"] {
+        --fl-stack-align: baseline;
+    }
+
+    [data-element="stack"][data-gap="0"] {
+        --fl-stack-gap: 0;
+    }
+
+    [data-element="stack"][data-gap="xs"] {
+        --fl-stack-gap: var(--fl-spacing-xs);
+    }
+
+    [data-element="stack"][data-gap="sm"] {
+        --fl-stack-gap: var(--fl-spacing-sm);
+    }
+
+    [data-element="stack"][data-gap="lg"] {
+        --fl-stack-gap: var(--fl-spacing-lg);
+    }
+
+    [data-element="stack"][data-gap="xl"] {
+        --fl-stack-gap: var(--fl-spacing-xl);
+    }
+
+    [data-element="stack"][data-gap="2xl"] {
+        --fl-stack-gap: var(--fl-spacing-2xl);
+    }
+
+    [data-element="stack"][data-gap="3xl"] {
+        --fl-stack-gap: var(--fl-spacing-3xl);
+    }
+
+    [data-element="stack"][data-justify="center"] {
+        --fl-stack-justify: center;
+    }
+
+    [data-element="stack"][data-justify="end"] {
+        --fl-stack-justify: flex-end;
+    }
+
+    [data-element="stack"][data-justify="between"] {
+        --fl-stack-justify: space-between;
+    }
+
+    [data-element="stack"][data-justify="around"] {
+        --fl-stack-justify: space-around;
+    }
+
+    [data-element="stack"][data-justify="evenly"] {
+        --fl-stack-justify: space-evenly;
+    }
+
+    /* Pile mode. The root becomes a single-cell grid, so every layer shares one
+     * box sized to the tallest child and nothing needs to be measured or taken
+     * out of flow. `--fl-stack-pile-offset` moves each earlier layer along the
+     * block axis: negative peeks up, positive peeks down.
+     * `--fl-stack-pile-shrink` narrows each layer on the inline axis, and
+     * scaling only that axis keeps the peek exact for any layer height.
+     *
+     * The front layer is the last child. It needs a z-index because a
+     * transformed grid item paints above one that is not, and the nearest
+     * layers must sit on top of the further ones. `isolation` keeps those
+     * indexes inside the pile. */
+    [data-element="stack"][data-pile][data-stack] {
+        --fl-stack-pile-offset: calc(var(--fl-stack-gap) * -1);
+        --fl-stack-pile-shrink: 0.03;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        isolation: isolate;
+    }
+
+    [data-element="stack"][data-direction="down"][data-pile] {
+        --fl-stack-pile-offset: var(--fl-stack-gap);
+    }
+
+    [data-element="stack"][data-shrink="none"][data-pile] {
+        --fl-stack-pile-shrink: 0;
+    }
+
+    [data-element="stack"][data-shrink="md"][data-pile] {
+        --fl-stack-pile-shrink: 0.05;
+    }
+
+    [data-element="stack"][data-shrink="lg"][data-pile] {
+        --fl-stack-pile-shrink: 0.08;
+    }
+
+    [data-element="stack"][data-pile][data-stack] > * {
+        grid-area: 1 / 1;
+    }
+
+    [data-element="stack"][data-pile][data-stack] > :last-child {
+        z-index: 1;
+    }
+
+    [data-element="stack"][data-pile][data-stack] > :nth-last-child(2) {
+        translate: 0 var(--fl-stack-pile-offset);
+        scale: calc(1 - var(--fl-stack-pile-shrink)) 1;
+    }
+
+    [data-element="stack"][data-pile][data-stack] > :nth-last-child(3) {
+        translate: 0 calc(var(--fl-stack-pile-offset) * 2);
+        scale: calc(1 - var(--fl-stack-pile-shrink) * 2) 1;
+    }
+
+    [data-element="stack"][data-pile][data-stack] > :nth-last-child(4) {
+        translate: 0 calc(var(--fl-stack-pile-offset) * 3);
+        scale: calc(1 - var(--fl-stack-pile-shrink) * 3) 1;
+    }
+
+    [data-element="stack"][data-pile][data-stack] > :nth-last-child(5) {
+        translate: 0 calc(var(--fl-stack-pile-offset) * 4);
+        scale: calc(1 - var(--fl-stack-pile-shrink) * 4) 1;
+    }
+
+    /* Each limit reserves the peek space on the side the layers move toward and
+     * hides the earlier layers past the cap. `max()` picks that side from the
+     * offset's sign, so `direction` needs no extra padding rule. The count runs
+     * from the end, so hiding an older layer never renumbers the visible ones. */
+    [data-element="stack"][data-limit="2"][data-pile] {
+        padding-block:
+            max(0px, calc(var(--fl-stack-pile-offset) * -1))
+            max(0px, var(--fl-stack-pile-offset));
+    }
+
+    [data-element="stack"][data-limit="2"][data-pile] > :nth-last-child(n + 3) {
+        display: none;
+    }
+
+    [data-element="stack"][data-limit="3"][data-pile] {
+        padding-block:
+            max(0px, calc(var(--fl-stack-pile-offset) * -2))
+            max(0px, calc(var(--fl-stack-pile-offset) * 2));
+    }
+
+    [data-element="stack"][data-limit="3"][data-pile] > :nth-last-child(n + 4) {
+        display: none;
+    }
+
+    [data-element="stack"][data-limit="4"][data-pile] {
+        padding-block:
+            max(0px, calc(var(--fl-stack-pile-offset) * -3))
+            max(0px, calc(var(--fl-stack-pile-offset) * 3));
+    }
+
+    [data-element="stack"][data-limit="4"][data-pile] > :nth-last-child(n + 5) {
+        display: none;
+    }
+
+    [data-element="stack"][data-limit="5"][data-pile] {
+        padding-block:
+            max(0px, calc(var(--fl-stack-pile-offset) * -4))
+            max(0px, calc(var(--fl-stack-pile-offset) * 4));
+    }
+
+    [data-element="stack"][data-limit="5"][data-pile] > :nth-last-child(n + 6) {
+        display: none;
+    }
+}

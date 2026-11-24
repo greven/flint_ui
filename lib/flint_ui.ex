@@ -24,7 +24,9 @@ defmodule FlintUI do
   - `card`
   - `checkbox`
   - `checkbox_group`
+  - `cluster`
   - `collapsible`
+  - `container`
   - `copy_button`
   - `dropdown`
   - `dropdown_group`
@@ -52,6 +54,7 @@ defmodule FlintUI do
   - `radio_group`
   - `separator`
   - `slider`
+  - `stack`
   - `switch`
   - `switch_group`
   - `tabs`
@@ -84,7 +87,9 @@ defmodule FlintUI do
     {:card, []},
     {:checkbox, []},
     {:checkbox_group, []},
+    {:cluster, []},
     {:collapsible, [:open_collapsible, :close_collapsible, :toggle_collapsible]},
+    {:container, []},
     {:copy_button, []},
     {:dropdown, [:open_dropdown, :close_dropdown, :toggle_dropdown]},
     {:dropdown_group, []},
@@ -112,6 +117,7 @@ defmodule FlintUI do
     {:radio_group, []},
     {:separator, []},
     {:slider, []},
+    {:stack, []},
     {:switch, []},
     {:switch_group, []},
     {:tabs, [:select_tab]},

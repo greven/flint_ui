@@ -1,0 +1,102 @@
+@layer components {
+    /* Cluster: a wrapping horizontal flex container. `align` sets the cross
+     * axis, `justify` the main axis, and `gap` separates both rows and columns.
+     * Public inputs are `--fl-cluster-gap`, `--fl-cluster-align`, and
+     * `--fl-cluster-justify`. The names mirror the `fl-cluster` utility, so
+     * adding `fl-cluster` through `class` composes with this component instead
+     * of fighting it. */
+    [data-element="cluster"][data-cluster] {
+        --fl-cluster-gap: var(--fl-spacing-md);
+        --fl-cluster-align: center;
+        --fl-cluster-justify: flex-start;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: var(--fl-cluster-align);
+        justify-content: var(--fl-cluster-justify);
+        gap: var(--fl-cluster-gap);
+    }
+
+    /* An `as="ul"`/`as="ol"` cluster keeps the native list semantics but drops
+     * the browser markers, margin, and indent. The row owns the spacing. */
+    [data-element="cluster"][data-list] {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    [data-element="cluster"][data-align="start"] {
+        --fl-cluster-align: flex-start;
+    }
+
+    [data-element="cluster"][data-align="end"] {
+        --fl-cluster-align: flex-end;
+    }
+
+    [data-element="cluster"][data-align="baseline"] {
+        --fl-cluster-align: baseline;
+    }
+
+    [data-element="cluster"][data-align="stretch"] {
+        --fl-cluster-align: stretch;
+    }
+
+    [data-element="cluster"][data-gap="0"] {
+        --fl-cluster-gap: 0;
+    }
+
+    [data-element="cluster"][data-gap="xs"] {
+        --fl-cluster-gap: var(--fl-spacing-xs);
+    }
+
+    [data-element="cluster"][data-gap="sm"] {
+        --fl-cluster-gap: var(--fl-spacing-sm);
+    }
+
+    [data-element="cluster"][data-gap="lg"] {
+        --fl-cluster-gap: var(--fl-spacing-lg);
+    }
+
+    [data-element="cluster"][data-gap="xl"] {
+        --fl-cluster-gap: var(--fl-spacing-xl);
+    }
+
+    [data-element="cluster"][data-gap="2xl"] {
+        --fl-cluster-gap: var(--fl-spacing-2xl);
+    }
+
+    [data-element="cluster"][data-gap="3xl"] {
+        --fl-cluster-gap: var(--fl-spacing-3xl);
+    }
+
+    [data-element="cluster"][data-justify="center"] {
+        --fl-cluster-justify: center;
+    }
+
+    [data-element="cluster"][data-justify="end"] {
+        --fl-cluster-justify: flex-end;
+    }
+
+    [data-element="cluster"][data-justify="between"] {
+        --fl-cluster-justify: space-between;
+    }
+
+    [data-element="cluster"][data-justify="around"] {
+        --fl-cluster-justify: space-around;
+    }
+
+    [data-element="cluster"][data-justify="evenly"] {
+        --fl-cluster-justify: space-evenly;
+    }
+
+    /* `split` pins the last child to the inline end while the leading children
+     * stay at the start, including after the row wraps. `between` cannot do
+     * that: a single item on the last line sits at the line start. */
+    [data-element="cluster"][data-justify="split"] {
+        --fl-cluster-justify: flex-start;
+    }
+
+    [data-element="cluster"][data-justify="split"] > :last-child {
+        margin-inline-start: auto;
+    }
+}
