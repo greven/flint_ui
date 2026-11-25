@@ -66,9 +66,16 @@
         transform: rotate(180deg);
     }
 
-    /* The menu surface. */
+    /* The menu surface. It opts into the elevation primitive on the menu
+     * element itself, so `--fl-dropdown-surface` and `--fl-dropdown-border`
+     * feed the shared trim, ring, and depth instead of a flat border and
+     * `--fl-shadow-lg`. The level sits above a resting card. */
     [data-part="content"][data-dropdown-content],
     [data-part="submenu"][data-dropdown-submenu] {
+        --fl-elevation-level: 4;
+        --fl-elevation-fill: var(--fl-dropdown-surface, var(--fl-color-surface-raised));
+        --fl-elevation-border: var(--fl-dropdown-border, var(--fl-color-border));
+
         box-sizing: border-box;
         inset: auto;
         margin: 0;
@@ -76,16 +83,13 @@
         min-inline-size: var(--fl-dropdown-min-width, 12rem);
         max-inline-size: min(22rem, calc(100vw - 1rem));
         padding: 0;
-        border: 1px solid var(--fl-dropdown-border, var(--fl-color-border));
         border-radius: var(--fl-radius-lg);
-        background-color: var(--fl-dropdown-surface, var(--fl-color-surface-raised));
         color: var(--fl-dropdown-text, var(--fl-color-text));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-sm);
         line-height: 1.5;
         text-align: start;
         overflow: visible;
-        box-shadow: var(--fl-shadow-lg);
         opacity: 0;
         /* The menu enters from above the trigger. */
         --fl-motion-pop-translate: 0 -2px;

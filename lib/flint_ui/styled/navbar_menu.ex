@@ -10,7 +10,7 @@ defmodule FlintUI.Styled.NavbarMenu do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add navbar_menu navbar_menu_item",
       css: "styled/navbar_menu.css",
-      tokens: [:color, :font, :spacing, :radius, :shadow, :duration, :ease, :control],
+      tokens: [:color, :font, :spacing, :radius, :elevation, :duration, :ease, :control],
       related: [{:navbar_menu_item, nav: true}, :navbar],
       dependencies: [:icon],
       slots: [],
@@ -32,12 +32,14 @@ defmodule FlintUI.Styled.NavbarMenu do
         Var.new(
           name: "--fl-navbar-menu-surface",
           default: "var(--fl-color-surface-raised)",
-          doc: "The background color of the menu panel."
+          doc:
+            "The background color of the menu panel. It feeds `--fl-elevation-fill`, so the panel uses the shared raised-surface trim and elevation."
         ),
         Var.new(
           name: "--fl-navbar-menu-border",
           default: "var(--fl-color-border)",
-          doc: "The border color of the menu panel."
+          doc:
+            "The border color of the menu panel. It feeds `--fl-elevation-border`; tune the depth with `--fl-elevation-level`."
         ),
         Var.new(
           name: "--fl-navbar-menu-text",

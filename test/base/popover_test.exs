@@ -169,6 +169,7 @@ defmodule FlintUI.Base.PopoverTest do
       assert part_attr(doc, "content", "tabindex") == ["-1"]
       assert part_attr(doc, "content", "data-state") == ["closed"]
       assert part_attr(doc, "content", "data-popover-content") == [""]
+      assert part_attr(doc, "content", "data-elevation") == [""]
     end
 
     test "publishes the requested side and alignment before positioning" do

@@ -10,23 +10,27 @@
         display: contents;
     }
 
+    /* The content is a raised surface built from the elevation primitive;
+     * `--fl-popover-surface` and `--fl-popover-border` feed the fill and trim.
+     * The level sits above a resting card. */
     [data-part="content"][data-popover-content] {
+        --fl-elevation-level: 4;
+        --fl-elevation-fill: var(--fl-popover-surface, var(--fl-color-surface-raised));
+        --fl-elevation-border: var(--fl-popover-border, var(--fl-color-border));
+
         box-sizing: border-box;
         inset: auto;
         margin: 0;
         width: max-content;
         max-width: var(--fl-popover-max-width, 20rem);
         padding: var(--fl-popover-padding, var(--fl-spacing-md));
-        border: 1px solid var(--fl-popover-border, var(--fl-color-border));
         border-radius: var(--fl-radius-lg);
-        background-color: var(--fl-popover-surface, var(--fl-color-surface-raised));
         color: var(--fl-popover-text, var(--fl-color-text));
         font-family: var(--fl-font-sans);
         font-size: var(--fl-font-size-sm);
         line-height: 1.5;
         text-align: start;
         overflow: visible;
-        box-shadow: var(--fl-shadow-lg);
         opacity: 0;
     }
 

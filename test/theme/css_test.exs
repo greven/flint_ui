@@ -877,6 +877,47 @@ defmodule FlintUI.Theme.CSSTest do
     refute css =~ ".fl-surface {"
   end
 
+  test "floating panels reuse the elevation primitive instead of shadow-lg", %{css: css} do
+    panels = [
+      {~s([data-part="content"][data-dropdown-content]), "--fl-dropdown-surface",
+       "--fl-dropdown-border"},
+      {~s([data-element="navbar_menu"][data-navbar_menu] > [data-part="content"]),
+       "--fl-navbar-menu-surface", "--fl-navbar-menu-border"},
+      {~s([data-part="content"][data-popover-content]), "--fl-popover-surface",
+       "--fl-popover-border"}
+    ]
+
+    for {selector, surface, border} <- panels do
+      rule = Regex.run(~r/#{Regex.escape(selector)}[^{}]*\{[^}]*\}/s, css) |> hd()
+
+      assert rule =~ "--fl-elevation-fill: var(#{surface}, var(--fl-color-surface-raised));"
+      assert rule =~ "--fl-elevation-border: var(#{border}, var(--fl-color-border));"
+      assert rule =~ "--fl-elevation-level: 4;"
+      refute rule =~ "border: 1px solid"
+      refute rule =~ "box-shadow"
+    end
+
+    modal_card =
+      Regex.run(~r/\[data-element="modal"\] \[data-element="card"\] \{[^}]*\}/s, css) |> hd()
+
+    assert modal_card =~ "--fl-card-surface: var(--fl-color-surface-raised);"
+    assert modal_card =~ "--fl-elevation-level: 5;"
+    refute css =~ "box-shadow: var(--fl-shadow-lg);"
+  end
+
+  test "modal sizes the close icon through the shared icon input", %{css: css} do
+    rule =
+      Regex.run(
+        ~r/\[data-element="modal"\] \[data-part="close"\] > \[data-element="icon"\] \{[^}]*\}/s,
+        css
+      )
+      |> hd()
+
+    assert rule =~ "--fl-icon-size: var(--fl-control-icon-lg);"
+    assert rule =~ "width: var(--fl-icon-size);"
+    assert rule =~ "height: var(--fl-icon-size);"
+  end
+
   test "a vertical separator stretches in flex and keeps a fallback length", %{css: css} do
     vertical = ~r/\[data-element="separator"\]\[data-orientation="vertical"\]\[data-separator\]/
 

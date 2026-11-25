@@ -166,6 +166,11 @@ defmodule FlintUI.Base.NavbarMenu do
           description: "Identifies the menu panel."
         },
         %Meta.PartAttr{
+          name: "[data-elevation]",
+          value: "boolean",
+          description: "Presence hook that applies the shared raised-surface trim and elevation."
+        },
+        %Meta.PartAttr{
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description: "Current open/closed state."
@@ -247,6 +252,7 @@ defmodule FlintUI.Base.NavbarMenu do
       collapsible.content
       |> Map.put("data-part", "content")
       |> Map.put("popover", "manual")
+      |> Map.put("data-elevation", true)
 
     indicator =
       %{"data-part" => "indicator", "aria-hidden" => "true"}

@@ -300,6 +300,12 @@ defmodule FlintUI.Base.Popover do
             "Presence hook for the content element. It survives portalling, where a root-scoped selector would not."
         },
         %Meta.PartAttr{
+          name: "[data-elevation]",
+          value: "boolean",
+          description:
+            "Presence hook that applies the shared raised-surface trim and elevation. It travels with the content through a portal."
+        },
+        %Meta.PartAttr{
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description:
@@ -453,6 +459,7 @@ defmodule FlintUI.Base.Popover do
         "popover" => "manual",
         "data-part" => "content",
         "data-popover-content" => true,
+        "data-elevation" => true,
         "data-state" => "closed",
         "data-side" => assigns.placement,
         "data-align" => assigns.align

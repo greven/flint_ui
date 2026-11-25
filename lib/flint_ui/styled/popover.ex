@@ -10,7 +10,7 @@ defmodule FlintUI.Styled.Popover do
       target: "lib/my_app_web/components.ex",
       install: "mix flint.add popover",
       css: "styled/popover.css",
-      tokens: [:color, :radius, :spacing, :font, :shadow, :duration, :ease],
+      tokens: [:color, :radius, :spacing, :font, :elevation, :duration, :ease],
       slots: [],
       vars: [
         Var.new(
@@ -26,12 +26,14 @@ defmodule FlintUI.Styled.Popover do
         Var.new(
           name: "--fl-popover-surface",
           default: "var(--fl-color-surface-raised)",
-          doc: "Background color of the popover content."
+          doc:
+            "Background color of the popover content. It feeds `--fl-elevation-fill`, so the content uses the shared raised-surface trim and elevation."
         ),
         Var.new(
           name: "--fl-popover-border",
           default: "var(--fl-color-border)",
-          doc: "Border color of the popover content."
+          doc:
+            "Border color of the popover content. It feeds `--fl-elevation-border`; tune the depth with `--fl-elevation-level`."
         ),
         Var.new(
           name: "--fl-popover-text",

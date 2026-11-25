@@ -24,7 +24,7 @@
     :where([data-elevation], .fl-surface) {
         --_fl-elevation-scale: calc(1 + (var(--fl-elevation-level, 2) - 1) * var(--fl-elevation-step));
         --fl-elevation-border-layer: inset 0 0 0 1px var(--fl-elevation-border);
-        --fl-elevation-inner-layer: inset 0 0 0 2px light-dark(#ffffff20, #00000020);
+        --fl-elevation-inner-layer: inset 0 0 0 2px light-dark(#ffffff14, #00000014);
         --fl-elevation-highlight-layer: inset 0 1px 0 0 var(--fl-elevation-highlight);
         --fl-elevation-ring-layer: 0 0 0 1px var(--fl-elevation-ring);
         --fl-elevation-depth:

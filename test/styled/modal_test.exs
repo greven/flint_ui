@@ -70,6 +70,9 @@ defmodule FlintUI.Styled.ModalTest do
     assert LazyHTML.tag(card) == ["div"]
     assert LazyHTML.attribute(card, "data-part") == ["root"]
     assert LazyHTML.attribute(card, "data-card") == [""]
+    assert LazyHTML.attribute(card, "data-elevation") == [""]
+    assert LazyHTML.attribute(card, "data-outline") == [""]
+    assert LazyHTML.attribute(card, "data-shadow") == [""]
     assert LazyHTML.attribute(card, "data-body") == ["divided"]
     assert LazyHTML.attribute(card, "data-spacing") == ["md"]
 

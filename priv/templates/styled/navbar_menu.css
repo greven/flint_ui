@@ -84,7 +84,14 @@
         transform: rotate(180deg);
     }
 
+    /* The panel is a raised surface built from the elevation primitive;
+     * `--fl-navbar-menu-surface` and `--fl-navbar-menu-border` feed the fill and
+     * trim. The level sits above a resting card. */
     [data-element="navbar_menu"][data-navbar_menu] > [data-part="content"] {
+        --fl-elevation-level: 4;
+        --fl-elevation-fill: var(--fl-navbar-menu-surface, var(--fl-color-surface-raised));
+        --fl-elevation-border: var(--fl-navbar-menu-border, var(--fl-color-border));
+
         position: absolute;
         z-index: 30;
         inset-block-start: calc(100% + var(--fl-navbar-menu-offset, var(--fl-spacing-xs)));
@@ -94,11 +101,8 @@
         min-inline-size: var(--fl-navbar-menu-min-width, 13rem);
         max-inline-size: min(22rem, calc(100vw - 1rem));
         padding: var(--fl-spacing-xs);
-        border: 1px solid var(--fl-navbar-menu-border, var(--fl-color-border));
         border-radius: var(--fl-radius-lg);
-        background-color: var(--fl-navbar-menu-surface, var(--fl-color-surface-raised));
         color: var(--fl-navbar-menu-text, var(--fl-color-text));
-        box-shadow: var(--fl-shadow-lg);
         --fl-motion-pop-translate: 0 -2px;
     }
 

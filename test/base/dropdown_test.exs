@@ -165,6 +165,7 @@ defmodule FlintUI.Base.DropdownTest do
       assert part_attr(document, "content", "popover") == ["manual"]
       assert part_attr(document, "content", "data-state") == ["closed"]
       assert part_attr(document, "content", "data-dropdown-content") == [""]
+      assert part_attr(document, "content", "data-elevation") == [""]
       assert part_attr(document, "content", "data-side") == ["bottom"]
       assert part_attr(document, "content", "data-align") == ["start"]
     end
@@ -195,6 +196,7 @@ defmodule FlintUI.Base.DropdownTest do
       assert LazyHTML.attribute(submenu, "popover") == ["manual"]
       assert LazyHTML.attribute(submenu, "data-state") == ["closed"]
       assert LazyHTML.attribute(submenu, "data-dropdown-submenu") == [""]
+      assert LazyHTML.attribute(submenu, "data-elevation") == [""]
       assert LazyHTML.text(submenu) =~ "Documentation"
     end
 

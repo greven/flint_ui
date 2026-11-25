@@ -123,6 +123,7 @@ defmodule FlintUI.Base.NavbarTest do
     assert LazyHTML.text(trigger) =~ "Products"
 
     assert LazyHTML.attribute(content, "hidden") == [""]
+    assert LazyHTML.attribute(content, "data-elevation") == [""]
     assert LazyHTML.tag(LazyHTML.query(content, ~s([data-part="list"]))) == ["ul"]
 
     menu_items = LazyHTML.query(document, ~s([data-element="navbar_menu_item"]))

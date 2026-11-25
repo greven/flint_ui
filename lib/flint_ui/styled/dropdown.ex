@@ -11,7 +11,7 @@ defmodule FlintUI.Styled.Dropdown do
       install:
         "mix flint.add dropdown dropdown_group dropdown_header dropdown_item dropdown_separator dropdown_sub",
       css: "styled/dropdown.css",
-      tokens: [:color, :radius, :spacing, :font, :shadow, :duration, :ease, :control],
+      tokens: [:color, :radius, :spacing, :font, :elevation, :duration, :ease, :control],
       related: [
         {:dropdown_item, nav: true},
         {:dropdown_group, nav: true},
@@ -25,12 +25,14 @@ defmodule FlintUI.Styled.Dropdown do
         Var.new(
           name: "--fl-dropdown-surface",
           default: "var(--fl-color-surface-raised)",
-          doc: "Background color of the menu and its submenus."
+          doc:
+            "Background color of the menu and its submenus. It feeds `--fl-elevation-fill`, so the menu uses the shared raised-surface trim and elevation."
         ),
         Var.new(
           name: "--fl-dropdown-border",
           default: "var(--fl-color-border)",
-          doc: "Border color of the menu and its submenus."
+          doc:
+            "Border color of the menu and its submenus. It feeds `--fl-elevation-border`; tune the depth with `--fl-elevation-level`."
         ),
         Var.new(
           name: "--fl-dropdown-text",

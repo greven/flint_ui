@@ -13,10 +13,7 @@
         inset: 0;
         box-sizing: border-box;
         flex-direction: column;
-        width: min(
-            var(--fl-modal-max-width),
-            calc(100% - (2 * var(--fl-modal-gutter)))
-        );
+        width: min(var(--fl-modal-max-width), calc(100% - (2 * var(--fl-modal-gutter))));
         max-width: none;
         max-height: calc(100dvh - (2 * var(--fl-modal-gutter)));
         margin: auto;
@@ -47,10 +44,12 @@
         outline: none;
     }
 
-    /* The nested card is the surface. It fills the shell, keeps the header and
-     * footer fixed, and scrolls the body. */
+    /* The nested card is the surface. It fills the shell, opts into the shared
+     * elevation at the top of the ladder, keeps the header and footer fixed,
+     * and scrolls the body. */
     [data-element="modal"] [data-element="card"] {
         --fl-card-surface: var(--fl-color-surface-raised);
+        --fl-elevation-level: 5;
 
         flex: 1 1 auto;
         min-height: 0;
@@ -70,16 +69,11 @@
 
     /* The body scrolls, so the divider under the header has to live on the
      * header rather than on the first section inside the scroll container. */
-    [data-element="modal"]
-        [data-element="card"][data-card][data-body="divided"]
-        > [data-part="body"]:not(:first-child)
-        > [data-part="section"]:first-child {
+    [data-element="modal"] [data-element="card"][data-card][data-body="divided"] > [data-part="body"]:not(:first-child) > [data-part="section"]:first-child {
         border-block-start: 0;
     }
 
-    [data-element="modal"]
-        [data-element="card"][data-card][data-body="divided"]
-        > [data-part="header"] {
+    [data-element="modal"] [data-element="card"][data-card][data-body="divided"] > [data-part="header"] {
         border-block-end: 1px solid var(--fl-card-border, var(--fl-color-border));
     }
 
@@ -104,8 +98,8 @@
         inset-inline-end: var(--fl-spacing-sm);
         align-items: center;
         justify-content: center;
-        width: 2rem;
-        height: 2rem;
+        width: var(--fl-control-height-xs);
+        height: var(--fl-control-height-xs);
         padding: 0;
         border: 0;
         border-radius: var(--fl-radius-sm);
@@ -120,9 +114,7 @@
         color: var(--fl-color-text);
     }
 
-    [data-element="modal"] [data-part="content"]:has(> [data-part="close"])
-        [data-element="card"]
-        > [data-part="header"] {
+    [data-element="modal"] [data-part="content"]:has(> [data-part="close"]) [data-element="card"] > [data-part="header"] {
         padding-inline-end: calc(var(--fl-card-spacing, calc(var(--fl-spacing) * 5)) + 2rem);
     }
 
@@ -132,8 +124,10 @@
     }
 
     [data-element="modal"] [data-part="close"] > [data-element="icon"] {
-        width: 1.125rem;
-        height: 1.125rem;
+        --fl-icon-size: var(--fl-control-icon-lg);
+
+        width: var(--fl-icon-size);
+        height: var(--fl-icon-size);
     }
 
     /* Sizes. The default is `md`; the prop hook sets the maximum width. */

@@ -172,6 +172,7 @@ defmodule FlintUIDocsWeb.Docs.Modal do
   def render_section(%{section: :usage, id: :surface} = assigns) do
     ~H"""
     <.prose content="The dialog is the positional shell; its surface is a `FlintUI.card`, so the region treatments come from the card.
+      The card opts into the shared elevation at the top of the ladder, so its border, top highlight, ring, and depth follow `--fl-elevation-*`; retune the lift with `--fl-elevation-level`.
       `body` selects how the header, body, and footer are set apart: `divided` draws hairlines, and the `separated` values tint the bands.
       `separated-footer` gives the actions a tinted footer, and `spacing` sets the inset on every region." />
     <.preview :let={props} {assigns} code={&surface_code/1}>

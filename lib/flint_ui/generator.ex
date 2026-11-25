@@ -136,7 +136,7 @@ defmodule FlintUI.Generator do
     end
   end
 
-  @color_roles ~w(primary secondary neutral success info warning danger)
+  @color_roles ~w(primary secondary neutral success info warning danger dark light)
   @color_shades ~w(50 100 200 300 400 500 600 700 800 900 950)
 
   @doc """
@@ -203,7 +203,7 @@ defmodule FlintUI.Generator do
       --outline-color-strong: var(--fl-color-border-strong);
       --outline-color-inverted: var(--fl-color-inverted);
 
-      /* Semantic roles: fill, role text, and the label on the fill */
+      /* Semantic roles and absolute tones: fill, role text, and the label on the fill */
     #{roles}
 
       /* Palette scales. These follow the active palette. */

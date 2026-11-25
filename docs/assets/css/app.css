@@ -42,6 +42,7 @@
 
     --background-color-default: var(--fl-color-background);
     --background-color-surface: var(--fl-color-surface);
+    --background-color-raised: var(--fl-color-surface-raised);
     --background-color-subtle: var(--fl-color-surface-subtle);
     --background-color-strong: var(--fl-color-surface-strong);
     --background-color-inverted: var(--fl-color-inverted);
@@ -64,7 +65,7 @@
     --outline-color-strong: var(--fl-color-border-strong);
     --outline-color-inverted: var(--fl-color-inverted);
 
-    /* primary: Tailwind red */
+    /* primary: blue */
     --color-primary: var(--fl-color-primary);
     --text-color-primary: var(--fl-color-primary-on-soft);
     --text-color-primary-content: var(--fl-color-primary-on);
@@ -72,7 +73,7 @@
     --border-color-primary: var(--fl-color-primary);
     --ring-color-primary: var(--fl-color-primary);
 
-    /* secondary: Tailwind gray */
+    /* secondary: gray */
     --color-secondary: var(--fl-color-secondary);
     --text-color-secondary: var(--fl-color-secondary-on-soft);
     --text-color-secondary-content: var(--fl-color-secondary-on);
@@ -80,7 +81,7 @@
     --border-color-secondary: var(--fl-color-secondary);
     --ring-color-secondary: var(--fl-color-secondary);
 
-    /* neutral: Tailwind neutral */
+    /* neutral: neutral */
     --color-neutral: var(--fl-color-neutral);
     --text-color-neutral: var(--fl-color-neutral-on-soft);
     --text-color-neutral-content: var(--fl-color-neutral-on);
@@ -88,7 +89,7 @@
     --border-color-neutral: var(--fl-color-neutral);
     --ring-color-neutral: var(--fl-color-neutral);
 
-    /* success: Tailwind emerald */
+    /* success: green */
     --color-success: var(--fl-color-success);
     --text-color-success: var(--fl-color-success-on-soft);
     --text-color-success-content: var(--fl-color-success-on);
@@ -96,7 +97,7 @@
     --border-color-success: var(--fl-color-success);
     --ring-color-success: var(--fl-color-success);
 
-    /* info: Tailwind blue */
+    /* info: blue */
     --color-info: var(--fl-color-info);
     --text-color-info: var(--fl-color-info-on-soft);
     --text-color-info-content: var(--fl-color-info-on);
@@ -104,7 +105,7 @@
     --border-color-info: var(--fl-color-info);
     --ring-color-info: var(--fl-color-info);
 
-    /* warning: Tailwind yellow */
+    /* warning: yellow */
     --color-warning: var(--fl-color-warning);
     --text-color-warning: var(--fl-color-warning-on-soft);
     --text-color-warning-content: var(--fl-color-warning-on);
@@ -112,13 +113,29 @@
     --border-color-warning: var(--fl-color-warning);
     --ring-color-warning: var(--fl-color-warning);
 
-    /* danger: Tailwind red */
+    /* danger: red */
     --color-danger: var(--fl-color-danger);
     --text-color-danger: var(--fl-color-danger-on-soft);
     --text-color-danger-content: var(--fl-color-danger-on);
     --background-color-danger: var(--fl-color-danger);
     --border-color-danger: var(--fl-color-danger);
     --ring-color-danger: var(--fl-color-danger);
+
+    /* dark: absolute tone */
+    --color-dark: var(--fl-color-dark);
+    --text-color-dark: var(--fl-color-dark-on-soft);
+    --text-color-dark-content: var(--fl-color-dark-on);
+    --background-color-dark: var(--fl-color-dark);
+    --border-color-dark: var(--fl-color-dark);
+    --ring-color-dark: var(--fl-color-dark);
+
+    /* light: absolute tone */
+    --color-light: var(--fl-color-light);
+    --text-color-light: var(--fl-color-light-on-soft);
+    --text-color-light-content: var(--fl-color-light-on);
+    --background-color-light: var(--fl-color-light);
+    --border-color-light: var(--fl-color-light);
+    --ring-color-light: var(--fl-color-light);
 }
 
 /* FlintUI overrides live here, after the `flint.css` import. `flint.css` is

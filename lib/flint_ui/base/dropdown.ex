@@ -289,6 +289,11 @@ defmodule FlintUI.Base.Dropdown do
           description: "Presence hook for the menu element, used by the styled layer."
         },
         %Meta.PartAttr{
+          name: "[data-elevation]",
+          value: "boolean",
+          description: "Presence hook that applies the shared raised-surface trim and elevation."
+        },
+        %Meta.PartAttr{
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description:
@@ -361,6 +366,11 @@ defmodule FlintUI.Base.Dropdown do
           name: "[data-dropdown-submenu]",
           value: "boolean",
           description: "Presence hook for a nested menu, used by the styled layer."
+        },
+        %Meta.PartAttr{
+          name: "[data-elevation]",
+          value: "boolean",
+          description: "Presence hook that applies the shared raised-surface trim and elevation."
         },
         %Meta.PartAttr{
           name: "[data-state]",
@@ -502,6 +512,7 @@ defmodule FlintUI.Base.Dropdown do
         "popover" => "manual",
         "data-part" => "content",
         "data-dropdown-content" => true,
+        "data-elevation" => true,
         "data-state" => "closed",
         "data-side" => assigns.placement,
         "data-align" => assigns.align
@@ -516,6 +527,7 @@ defmodule FlintUI.Base.Dropdown do
         "popover" => "manual",
         "data-part" => "submenu",
         "data-dropdown-submenu" => true,
+        "data-elevation" => true,
         "data-state" => "closed"
       },
       arrow: %{
