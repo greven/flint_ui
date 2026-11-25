@@ -79,7 +79,19 @@ defmodule FlintUIDocsWeb.InputSmokeTest do
     {:ok, view, _html} = live(conn, ~p"/components/input")
 
     assert has_element?(view, "#usage-input-select select[name='role']")
+
+    assert has_element?(
+             view,
+             "#usage-input-select select[name='role'] + [data-part='select_indicator'][aria-hidden='true'] svg path"
+           )
+
     assert has_element?(view, "#usage-input-select select[name='roles[]'][multiple]")
+
+    refute has_element?(
+             view,
+             "#usage-input-select select[name='roles[]'] + [data-part='select_indicator']"
+           )
+
     assert has_element?(view, "#usage-input-textarea textarea[name='bio'][rows='4']")
   end
 

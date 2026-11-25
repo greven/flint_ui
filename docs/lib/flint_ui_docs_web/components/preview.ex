@@ -503,46 +503,67 @@ defmodule FlintUIDocsWeb.Preview do
         <%= for control <- @controls do %>
           <%= case control_kind(control) do %>
             <% :select -> %>
-              <label class={addon_shell("w-44")}>
-                <span class={addon_label()}>{control.label}</span>
-                <span class="relative min-w-0 flex-1">
-                  <select name={control.key} class={select_class()}>
-                    <option
-                      :for={value <- select_options(control, @name, @layer)}
-                      value={value}
-                      selected={to_string(Map.get(@props, control.key)) == value}
+              <div class="w-fit">
+                <Components.input
+                  id={"#{@id}-control-#{control.key}"}
+                  type="select"
+                  name={control.key}
+                  value={Map.get(@props, control.key)}
+                  options={select_options(control, @name, @layer)}
+                  size="sm"
+                >
+                  <:outer_prefix>
+                    <label
+                      for={"#{@id}-control-#{control.key}"}
+                      class="text-xs font-medium whitespace-nowrap"
                     >
-                      {value}
-                    </option>
-                  </select>
-                  <.icon
-                    name="lucide-chevron-down"
-                    class="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-muted"
-                  />
-                </span>
-              </label>
+                      {control.label}
+                    </label>
+                  </:outer_prefix>
+                </Components.input>
+              </div>
             <% :number -> %>
-              <label class={addon_shell("w-40")}>
-                <span class={addon_label()}>{control.label}</span>
-                <input
+              <div class="w-fit">
+                <Components.input
+                  id={"#{@id}-control-#{control.key}"}
                   type="number"
                   name={control.key}
                   value={Map.get(@props, control.key)}
+                  size="sm"
+                  class={FlintUI.Autofill.ignore_class()}
                   {FlintUI.Autofill.ignore_attributes()}
-                  class={input_class()}
-                />
-              </label>
+                >
+                  <:outer_prefix>
+                    <label
+                      for={"#{@id}-control-#{control.key}"}
+                      class="text-xs font-medium whitespace-nowrap"
+                    >
+                      {control.label}
+                    </label>
+                  </:outer_prefix>
+                </Components.input>
+              </div>
             <% _ -> %>
-              <label class={addon_shell("w-72")}>
-                <span class={addon_label()}>{control.label}</span>
-                <input
+              <div class="w-fit">
+                <Components.input
+                  id={"#{@id}-control-#{control.key}"}
                   type="text"
                   name={control.key}
                   value={Map.get(@props, control.key)}
+                  size="sm"
+                  class={FlintUI.Autofill.ignore_class()}
                   {FlintUI.Autofill.ignore_attributes()}
-                  class={input_class()}
-                />
-              </label>
+                >
+                  <:outer_prefix>
+                    <label
+                      for={"#{@id}-control-#{control.key}"}
+                      class="text-xs font-medium whitespace-nowrap"
+                    >
+                      {control.label}
+                    </label>
+                  </:outer_prefix>
+                </Components.input>
+              </div>
           <% end %>
         <% end %>
       </form>
@@ -670,25 +691,5 @@ defmodule FlintUIDocsWeb.Preview do
 
   defp code_tab(false) do
     "rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap text-muted transition-colors hover:text-default"
-  end
-
-  defp addon_shell(width) do
-    [
-      "flex min-w-0 items-stretch overflow-hidden rounded-md border border-default bg-surface text-left transition-colors",
-      "focus-within:border-strong focus-within:ring-2 focus-within:ring-strong focus-within:ring-inset focus-visible:outline-none",
-      width
-    ]
-  end
-
-  defp addon_label do
-    "flex shrink-0 items-center border-r border-default bg-subtle px-2 text-xs font-medium whitespace-nowrap text-muted"
-  end
-
-  defp input_class do
-    "keeper-ignore min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-sm text-default outline-none"
-  end
-
-  defp select_class do
-    "w-full appearance-none bg-transparent py-1.5 pr-7 pl-2.5 text-sm text-default outline-none"
   end
 end

@@ -126,6 +126,7 @@ defmodule FlintUI.Styled.InputTest do
 
     assert LazyHTML.tag(part(document, "control")) == ["select"]
     assert part_attr(document, "label", "data-part") == ["label"]
+    assert part_attr(document, "select_indicator", "aria-hidden") == ["true"]
     assert LazyHTML.text(LazyHTML.query(document, ~s(option[value="admin"]))) == "Admin"
     assert part_attr(document, "control", "name") == ["role"]
   end

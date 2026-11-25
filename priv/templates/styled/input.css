@@ -25,11 +25,7 @@
         min-inline-size: 0;
     }
 
-    /* Outer slots are addons: segments of the control rather than labels beside
-     * it. They borrow the control's fill and height, and only their free end
-     * stays rounded. The joined edge is square and paints no border, so the
-     * box's own border is the single seam and its hover, focus, and error color
-     * runs unbroken across the group. */
+    /* Outer slots are addons. */
     [data-element="input"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) {
         box-sizing: border-box;
         position: relative;
@@ -98,14 +94,8 @@
         border-inline-start-width: 0;
     }
 
-    /* The field owns the group's outline. A segment that paints a tinted edge
-     * (surface, subtle) borrows the field border instead of the control's
-     * variant edge, so the box and the addon read as one control. Variants with
-     * their own border keep it. */
-    [data-element="input"][data-input]
-        > [data-part="row"]
-        > :is([data-part="outer_prefix"], [data-part="outer_suffix"])
-        > [data-control] {
+    /* The field owns the group's outline. */
+    [data-element="input"][data-input] > [data-part="row"] > :is([data-part="outer_prefix"], [data-part="outer_suffix"]) > [data-control] {
         --fl-control-soft-border: var(--fl-field-border, var(--fl-color-border));
         --fl-control-active-soft-border: var(--fl-field-border, var(--fl-color-border));
     }
@@ -200,9 +190,56 @@
     [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > [data-part="control"]:focus-visible {
         outline: none;
     }
-    /* The native select keeps its OS arrow, popup, and multiple listbox. */
+    /* The native select keeps its popup, options, and multiple listbox. The
+     * single-value control drops the platform indicator and paints the themed
+     * chevron instead, so the two layers match. */
     [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > select {
         cursor: pointer;
+    }
+
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > select:not([multiple]) {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-inline-end: calc(var(--fl-control-icon-md) + var(--fl-spacing-sm));
+    }
+
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > [data-part="select_indicator"] {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: var(--fl-field-padding-x-md);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--fl-control-icon-md);
+        block-size: var(--fl-control-icon-md);
+        color: var(--fl-color-text-muted);
+        opacity: 0.8;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > [data-part="select_indicator"] svg {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    /* A suffix takes over the end of the box. Move the space reserved for the
+     * chevron to the suffix so the chevron stays after it instead of covering
+     * it. */
+    [data-element="input"][data-input]
+        > [data-part="row"]
+        > [data-part="label"]
+        > [data-part="box"]:has(> select:not([multiple])):has(> [data-part="inner_suffix"])
+        > select:not([multiple]) {
+        padding-inline-end: 0;
+    }
+
+    [data-element="input"][data-input]
+        > [data-part="row"]
+        > [data-part="label"]
+        > [data-part="box"]:has(> select:not([multiple])):has(> [data-part="inner_suffix"])
+        > [data-part="inner_suffix"] {
+        margin-inline-end: calc(var(--fl-control-icon-md) + var(--fl-spacing-sm));
     }
 
     [data-element="input"][data-input] > [data-part="row"] > [data-part="label"] > [data-part="box"] > select[multiple] {

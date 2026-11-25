@@ -26,7 +26,16 @@ defmodule FlintUIDocsWeb.ComponentLiveSectionsTest do
   test "section controls update the preview and its snippet", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#usage-button-color-controls select[name='color']")
+    assert has_element?(
+             view,
+             "#usage-button-color-controls select#usage-button-color-control-color[name='color']"
+           )
+
+    assert has_element?(
+             view,
+             "#usage-button-color-controls [data-part='outer_prefix'] > label[for='usage-button-color-control-color']",
+             "Color"
+           )
 
     view
     |> element("#usage-button-color-controls")

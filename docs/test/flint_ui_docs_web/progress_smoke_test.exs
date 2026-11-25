@@ -52,7 +52,7 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
              "#usage-progress-steps [role='progressbar'][aria-valuemax='4'][aria-valuenow='3'][aria-valuetext='Deploying'][aria-label='Deployment']"
            )
 
-    refute has_element?(view, "#usage-progress-steps [data-part='label']")
+    refute has_element?(view, "#usage-progress-steps [data-preview-canvas] [data-part='label']")
     assert has_element?(view, "#usage-progress-steps [data-part='steps']")
 
     assert has_element?(
@@ -102,7 +102,7 @@ defmodule FlintUIDocsWeb.ProgressSmokeTest do
              "#usage-progress-striped [role='progressbar'][aria-label='Uploading']"
            )
 
-    refute has_element?(view, "#usage-progress-striped [data-part='label']")
+    refute has_element?(view, "#usage-progress-striped [data-preview-canvas] [data-part='label']")
 
     refute has_element?(view, "#usage-progress-striped [data-element='progress'][data-animated]")
 

@@ -209,8 +209,9 @@ defmodule FlintUIDocsWeb.Docs.Input do
   def render_section(%{section: :usage, id: :select} = assigns) do
     ~H"""
     <.prose content="`select` takes `options` in the shape `options_for_select/2` accepts, an optional `prompt`,
-      and `multiple`. The native control keeps its OS arrow and popup; a richer Select component will cover
-      custom option lists later." />
+      and `multiple`. The native control keeps its popup and keyboard behavior; the styled theme replaces
+      the platform arrow with a decorative chevron. A richer Select component will cover custom option
+      lists later." />
 
     <.preview {assigns} code={&code_select/1}>
       <div class="fl-grid-cols-1 fl-w-full fl-max-w-sm fl-gap-lg">
@@ -469,6 +470,15 @@ defmodule FlintUIDocsWeb.Docs.Input do
         <:inner_suffix>.com</:inner_suffix>
         <:outer_suffix>Open</:outer_suffix>
       </Components.input>
+
+      <Components.input
+        id={"#{@parts_id}-role"}
+        name={"#{@parts_id}-role"}
+        type="select"
+        label="Role"
+        value="admin"
+        options={[Admin: "admin", Editor: "editor", Viewer: "viewer"]}
+      />
 
       <Components.input
         id={"#{@parts_id}-remember"}

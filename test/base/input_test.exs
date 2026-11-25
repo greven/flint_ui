@@ -396,6 +396,11 @@ defmodule FlintUI.Base.InputTest do
       assert LazyHTML.attribute(LazyHTML.query(html, ~s(option[value="user"])), "selected") == [
                ""
              ]
+
+      indicator = LazyHTML.query(html, ~s([data-part="select_indicator"]))
+      assert LazyHTML.tag(indicator) == ["span"]
+      assert LazyHTML.attribute(indicator, "aria-hidden") == ["true"]
+      assert Enum.count(LazyHTML.query(indicator, "svg path")) == 1
     end
 
     test "renders a multiple select" do
@@ -414,6 +419,8 @@ defmodule FlintUI.Base.InputTest do
       assert LazyHTML.attribute(LazyHTML.query(html, ~s(option[value="admin"])), "selected") == [
                ""
              ]
+
+      assert Enum.count(LazyHTML.query(html, ~s([data-part="select_indicator"]))) == 0
     end
 
     test "the prompt is optional" do

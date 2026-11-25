@@ -45,7 +45,9 @@ defmodule FlintUI.Base.Input do
   `FlintUI.textarea`. The `textarea` type stays for `CoreComponents` parity and
   for the prefix and suffix slots.
 
-  FlintUI keeps the native `<select>` appearance. A separate, richer Select
+  FlintUI keeps the native `<select>` control for its popup and keyboard
+  behavior. The styled theme replaces the platform indicator with a decorative
+  chevron so it matches the rest of the system. A separate, richer Select
   component will cover custom option lists; this one stays progressive and
   usable without JavaScript.
 
@@ -108,8 +110,10 @@ defmodule FlintUI.Base.Input do
   Each native control keeps its semantics and keyboard behavior: inputs expose a
   `textbox` role (or the type-specific role), `select` exposes `combobox` or
   `listbox` depending on `multiple`, `textarea` exposes `textbox` with multiline
-  behavior, and a checkbox exposes `checkbox`. Errors are text, not color alone,
-  and the control is marked invalid for assistive technology.
+  behavior, and a checkbox exposes `checkbox`. The select's styled chevron is
+  decorative and hidden from assistive technology; the native select remains the
+  interactive element. Errors are text, not color alone, and the control is
+  marked invalid for assistive technology.
 
   The checkbox keeps a real, focusable native input. The styled theme paints the
   visible box on a decorative indicator around it, so forced-colors mode and
@@ -300,6 +304,19 @@ defmodule FlintUI.Base.Input do
           description: "The hint and error message ids, appended to a caller-supplied value."
         }
       ],
+      select_indicator: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "select_indicator",
+          description:
+            "The decorative chevron over a native single-value select. The theme hides the platform indicator and paints this chevron instead; the native select keeps its popup and semantics."
+        },
+        %Meta.PartAttr{
+          name: "aria-hidden",
+          value: "true",
+          description: "The chevron is decorative; the native select carries the state."
+        }
+      ],
       inner_suffix: [
         %Meta.PartAttr{
           name: "[data-part]",
@@ -441,6 +458,10 @@ defmodule FlintUI.Base.Input do
       },
       control: %{
         "data-part" => "control"
+      },
+      select_indicator: %{
+        "data-part" => "select_indicator",
+        "aria-hidden" => "true"
       },
       inner_suffix: %{
         "data-part" => "inner_suffix"
@@ -655,6 +676,17 @@ defmodule FlintUI.Base.Input do
           <option :if={@prompt} value="">{@prompt}</option>
           {Phoenix.HTML.Form.options_for_select(@options || [], @value)}
         </select>
+        <span :if={!@multiple} {@flint_parts[:select_indicator]}>
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16" focusable="false">
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </span>
       </.frame>
       <.chrome
         hint={@hint}
