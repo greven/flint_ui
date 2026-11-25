@@ -1,0 +1,53 @@
+@layer components {
+    /* Navbar item. The list item is a flex node so the link keeps its natural
+     * width; the link content carries the control-like row. */
+    [data-element="navbar_item"][data-navbar_item] {
+        display: flex;
+        min-inline-size: 0;
+    }
+
+    [data-element="navbar_item"][data-navbar_item] > [data-part="content"] {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fl-control-gap-sm);
+        min-block-size: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-sm);
+        border: 1px solid transparent;
+        border-radius: var(--fl-radius-md);
+        color: var(--fl-navbar-text, var(--fl-color-text-muted));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        text-align: start;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar_item"][data-navbar_item] > [data-part="content"]:is(:hover, :focus-visible) {
+        background-color: var(--fl-navbar-highlight, var(--fl-color-surface-subtle));
+        color: var(--fl-navbar-text-active, var(--fl-color-text));
+    }
+
+    [data-element="navbar_item"][data-navbar_item][data-active] > [data-part="content"] {
+        background-color: var(--fl-navbar-active, var(--fl-color-surface-strong));
+        color: var(--fl-navbar-text-active, var(--fl-color-text));
+    }
+
+    [data-element="navbar_item"][data-navbar_item] [data-element="icon"] {
+        flex: none;
+        --fl-icon-size: var(--fl-control-icon-sm);
+        color: color-mix(in oklab, currentcolor 70%, transparent);
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar_item"][data-navbar_item] > [data-part="content"]:is(:hover, :focus-visible) [data-element="icon"],
+    [data-element="navbar_item"][data-navbar_item][data-active] [data-element="icon"] {
+        color: currentcolor;
+    }
+}

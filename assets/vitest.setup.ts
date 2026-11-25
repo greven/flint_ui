@@ -30,9 +30,7 @@ if (typeof HTMLElement !== "undefined" && !HTMLElement.prototype.showPopover) {
 // clears it and fires the native `close` event.
 if (typeof HTMLElement !== "undefined") {
   const dialog =
-    typeof HTMLDialogElement !== "undefined"
-      ? HTMLDialogElement.prototype
-      : HTMLElement.prototype;
+    typeof HTMLDialogElement !== "undefined" ? HTMLDialogElement.prototype : HTMLElement.prototype;
 
   if (!dialog.showModal) {
     dialog.showModal = function showModal(this: HTMLElement) {

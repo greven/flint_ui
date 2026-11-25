@@ -155,7 +155,12 @@ defmodule FlintUIDocsWeb.Nav do
     :dropdown_header,
     :dropdown_item,
     :dropdown_separator,
-    :dropdown_sub
+    :dropdown_sub,
+    :navbar_item,
+    :navbar_menu,
+    :navbar_menu_item,
+    :navlist_group,
+    :navlist_item
   ]
 
   @doc """

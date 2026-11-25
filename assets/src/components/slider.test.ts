@@ -125,7 +125,11 @@ describe("Slider", () => {
   });
 
   it("clamps the lower thumb to the upper thumb", () => {
-    const { control, inputs } = setup({ range: true, minValue: 20, maxValue: 80 });
+    const { control, inputs } = setup({
+      range: true,
+      minValue: 20,
+      maxValue: 80,
+    });
     const [minInput, maxInput] = inputs;
     if (!minInput || !maxInput) throw new Error("missing inputs");
 
@@ -165,7 +169,11 @@ describe("Slider", () => {
     const input = inputs[0];
     if (!input) throw new Error("missing input");
 
-    const event = new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true });
+    const event = new KeyboardEvent("keydown", {
+      key: "ArrowRight",
+      bubbles: true,
+      cancelable: true,
+    });
     input.dispatchEvent(event);
 
     expect(event.defaultPrevented).toBe(true);

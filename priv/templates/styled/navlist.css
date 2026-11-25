@@ -1,0 +1,32 @@
+@layer components {
+    /* Navlist. The root is the navigation landmark; the list stacks items. The
+     * rail is optional at the top level and always present on group children,
+     * where the item border forms the rail segment. Public inputs:
+     * `--fl-navlist-gap`, `--fl-navlist-rail-color`, `--fl-navlist-rail-active`,
+     * `--fl-navlist-active`, and `--fl-navlist-text-active`. */
+    [data-element="navlist"][data-navlist] {
+        font-family: var(--fl-font-sans);
+        color: var(--fl-color-text-muted);
+    }
+
+    [data-element="navlist"][data-navlist] > [data-part="list"] {
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-navlist-gap, 2px);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    [data-element="navlist"][data-rail][data-navlist] > [data-part="list"] > [data-element="navlist_item"] {
+        border-inline-start-color: var(--fl-navlist-rail-color, var(--fl-color-border));
+    }
+
+    [data-element="navlist"][data-rail][data-navlist] > [data-part="list"] > [data-element="navlist_item"][data-active] {
+        border-inline-start-color: var(--fl-navlist-rail-active, var(--fl-color-text));
+    }
+
+    [data-element="navlist"][data-navlist]:not([data-rail]) > [data-part="list"] > [data-element="navlist_item"][data-active] > [data-part="content"] {
+        background-color: var(--fl-navlist-active, var(--fl-color-surface-strong));
+    }
+}

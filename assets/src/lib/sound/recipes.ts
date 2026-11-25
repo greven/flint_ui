@@ -19,18 +19,20 @@ function bell(f: number, peak: number, decay: number, send: number): Spec {
     [8.93, 0.07],
   ];
 
-  return partials.map(([ratio, gain], i): ToneLayer => ({
-    kind: "tone",
-    at: 0,
-    wave: "sine",
-    f: f * ratio,
-    f2: null,
-    glide: 0.06,
-    a: 0.002,
-    d: decay * (1 - i * 0.16),
-    peak: peak * gain,
-    send,
-  }));
+  return partials.map(
+    ([ratio, gain], i): ToneLayer => ({
+      kind: "tone",
+      at: 0,
+      wave: "sine",
+      f: f * ratio,
+      f2: null,
+      glide: 0.06,
+      a: 0.002,
+      d: decay * (1 - i * 0.16),
+      peak: peak * gain,
+      send,
+    }),
+  );
 }
 
 export const CUES: Record<string, Spec> = {

@@ -32,6 +32,34 @@ export class Collapsible extends FlintHook {
   }
 
   /**
+   * Finds a part that belongs to this collapsible rather than to a component nested inside it. */
+  private ownPart(name: string): HTMLElement | null {
+    const parts = Array.from(
+      this.el.querySelectorAll<HTMLElement>(`[data-part="${name}"]`),
+    );
+
+    for (const part of parts) {
+      // The part may itself be another component's root.
+      const owner = part.parentElement?.closest("[data-element]") ?? null;
+      if (owner === null || owner === this.el || !this.el.contains(owner))
+        return part;
+    }
+
+    return null;
+  }
+
+  /* Resolves the content by its derived id first. */
+  private resolveContent(): HTMLElement | null {
+    if (this.el.id) {
+      const found = document.getElementById(`${this.el.id}-content`);
+
+      if (found instanceof HTMLElement && this.el.contains(found)) return found;
+    }
+
+    return this.ownPart("content");
+  }
+
+  /**
    * Re-reads the component parts and (re)binds listeners to the trigger and
    * content. Called on mount and on every server update, since LiveView may
    * have replaced those elements.
@@ -41,7 +69,21 @@ export class Collapsible extends FlintHook {
     const prevContent = this.boundContent;
 
     this.refreshParts();
-    const { trigger, content } = this.parts;
+
+    const trigger = this.ownPart("trigger");
+    const content = this.resolveContent();
+
+    if (trigger) {
+      this.parts.trigger = trigger;
+    } else {
+      delete this.parts.trigger;
+    }
+
+    if (content) {
+      this.parts.content = content;
+    } else {
+      delete this.parts.content;
+    }
 
     if (prevTrigger && prevTrigger !== trigger) {
       prevTrigger.removeEventListener("click", this.handleTriggerClick);
@@ -81,10 +123,8 @@ export class Collapsible extends FlintHook {
   }
 
   /**
-   * Keeps `--_fl-collapsible-height` fresh while open, so CSS consumers that read
-   * the variable (and the next animation) see the current natural size even when
-   * async content is patched in. Updates are skipped while an animation runs to
-   * avoid feeding the animating size back into the keyframes.
+   * Keeps `--_fl-collapsible-height` fresh while open, so CSS consumers
+   * that read the variable (and the next animation).
    */
   private observeContent(): void {
     if (typeof ResizeObserver === "undefined") return;

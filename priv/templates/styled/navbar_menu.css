@@ -1,0 +1,131 @@
+@layer components {
+    /* Navbar menu. The root is the list item; the trigger mirrors a navbar item.
+     * The panel is a top-layer popover positioned by the navbar hook, so it is
+     * never clipped by an overflow ancestor. The offsets below are the fallback
+     * when the hook has not positioned it yet. Public inputs:
+     * `--fl-navbar-menu-surface`, `-border`, `-text`, `-min-width`, and
+     * `-offset`. */
+    [data-element="navbar_menu"][data-navbar_menu] {
+        position: relative;
+        display: flex;
+        min-inline-size: 0;
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"] {
+        box-sizing: border-box;
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fl-control-gap-sm);
+        min-block-size: var(--fl-control-height-md);
+        padding-inline: var(--fl-control-padding-x-sm);
+        border: 1px solid transparent;
+        border-radius: var(--fl-radius-md);
+        background: transparent;
+        color: var(--fl-navbar-text, var(--fl-color-text-muted));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-sm);
+        font-weight: var(--fl-font-weight-medium);
+        line-height: var(--fl-control-line-height-md);
+        text-align: start;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out),
+            border-color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"]:is(:hover, :focus-visible) {
+        background-color: var(--fl-navbar-highlight, var(--fl-color-surface-subtle));
+        color: var(--fl-navbar-text-active, var(--fl-color-text));
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"][data-state="open"] {
+        background-color: var(--fl-navbar-active, var(--fl-color-surface-strong));
+        color: var(--fl-navbar-text-active, var(--fl-color-text));
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu][data-active] > [data-part="trigger"] {
+        background-color: var(--fl-navbar-active, var(--fl-color-surface-strong));
+        color: var(--fl-navbar-text-active, var(--fl-color-text));
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] [data-element="icon"] {
+        flex: none;
+        --fl-icon-size: var(--fl-control-icon-sm);
+        color: color-mix(in oklab, currentcolor 70%, transparent);
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"]:is(:hover, :focus-visible) [data-element="icon"],
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"][data-state="open"] [data-element="icon"],
+    [data-element="navbar_menu"][data-navbar_menu][data-active] [data-element="icon"] {
+        color: currentcolor;
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"] > [data-part="indicator"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--fl-control-icon-sm);
+        block-size: var(--fl-control-icon-sm);
+        color: color-mix(in oklab, currentcolor 70%, transparent);
+        transition: transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"] > [data-part="indicator"] svg {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"][data-state="open"] > [data-part="indicator"] {
+        transform: rotate(180deg);
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="content"] {
+        position: absolute;
+        z-index: 30;
+        inset-block-start: calc(100% + var(--fl-navbar-menu-offset, var(--fl-spacing-xs)));
+        inset-inline-start: 0;
+        box-sizing: border-box;
+        inline-size: max-content;
+        min-inline-size: var(--fl-navbar-menu-min-width, 13rem);
+        max-inline-size: min(22rem, calc(100vw - 1rem));
+        padding: var(--fl-spacing-xs);
+        border: 1px solid var(--fl-navbar-menu-border, var(--fl-color-border));
+        border-radius: var(--fl-radius-lg);
+        background-color: var(--fl-navbar-menu-surface, var(--fl-color-surface-raised));
+        color: var(--fl-navbar-menu-text, var(--fl-color-text));
+        box-shadow: var(--fl-shadow-lg);
+        --fl-motion-pop-translate: 0 -2px;
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="content"] > [data-part="list"] {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    [data-element="navbar_menu"][data-animate] > [data-part="content"][data-state="open"] {
+        animation: fl-pop-in var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar_menu"][data-animate] > [data-part="content"][data-state="closed"] {
+        animation: fl-pop-out var(--fl-duration-fast) var(--fl-ease-in-out);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="content"] {
+        animation: none;
+    }
+
+    [data-element="navbar_menu"][data-navbar_menu] > [data-part="trigger"] > [data-part="indicator"] {
+        transition: none;
+    }
+}

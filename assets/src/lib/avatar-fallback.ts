@@ -52,14 +52,12 @@ function handleState(event: Event, status: AvatarStatus): void {
 }
 
 function scanCompleteImages(): void {
-  document
-    .querySelectorAll<HTMLImageElement>('img[data-part="image"]')
-    .forEach((image) => {
-      if (!image.closest('[data-element="avatar"]')) return;
-      if (!image.complete) return;
+  document.querySelectorAll<HTMLImageElement>('img[data-part="image"]').forEach((image) => {
+    if (!image.closest('[data-element="avatar"]')) return;
+    if (!image.complete) return;
 
-      setState(image, image.naturalWidth === 0 ? "error" : "loaded");
-    });
+    setState(image, image.naturalWidth === 0 ? "error" : "loaded");
+  });
 }
 
 /**
@@ -71,16 +69,8 @@ export function installAvatarFallback(): void {
   if (installed) return;
   installed = true;
 
-  document.addEventListener(
-    "error",
-    (event) => handleState(event, "error"),
-    true,
-  );
-  document.addEventListener(
-    "load",
-    (event) => handleState(event, "loaded"),
-    true,
-  );
+  document.addEventListener("error", (event) => handleState(event, "error"), true);
+  document.addEventListener("load", (event) => handleState(event, "loaded"), true);
 
   scanCompleteImages();
 }

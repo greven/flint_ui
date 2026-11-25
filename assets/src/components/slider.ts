@@ -62,12 +62,8 @@ export class Slider extends FlintHook {
   private capture(): void {
     this.refreshParts();
 
-    this.inputs = Array.from(
-      this.el.querySelectorAll<HTMLInputElement>('[data-part="input"]'),
-    );
-    this.tooltips = Array.from(
-      this.el.querySelectorAll<HTMLElement>('[data-part="tooltip"]'),
-    );
+    this.inputs = Array.from(this.el.querySelectorAll<HTMLInputElement>('[data-part="input"]'));
+    this.tooltips = Array.from(this.el.querySelectorAll<HTMLElement>('[data-part="tooltip"]'));
 
     this.rememberValues();
     this.render();

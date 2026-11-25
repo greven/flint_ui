@@ -1,0 +1,20 @@
+@layer components {
+    /* Navbar. The root is the navigation landmark; the list lays the items out
+     * in one row. Public inputs: `--fl-navbar-gap`, `--fl-navbar-text`,
+     * `--fl-navbar-text-active`, `--fl-navbar-highlight`, and
+     * `--fl-navbar-active`. */
+    [data-element="navbar"][data-navbar] {
+        font-family: var(--fl-font-sans);
+        color: var(--fl-navbar-text, var(--fl-color-text-muted));
+    }
+
+    [data-element="navbar"][data-navbar] > [data-part="list"] {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--fl-navbar-gap, var(--fl-spacing-xs));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}

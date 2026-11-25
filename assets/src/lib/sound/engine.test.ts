@@ -1,12 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { sound } from "./engine";
 
 class FakeParam {
@@ -107,10 +99,9 @@ const context = new FakeAudioContext();
 
 describe("sound engine", () => {
   beforeAll(() => {
-    (window as unknown as { AudioContext: unknown }).AudioContext =
-      function () {
-        return context;
-      };
+    (window as unknown as { AudioContext: unknown }).AudioContext = function () {
+      return context;
+    };
   });
 
   beforeEach(() => {

@@ -2,14 +2,7 @@ import { CUES } from "./recipes";
 import { copySpec, normalizeSpec, specDuration } from "./spec";
 import { DEFAULT_THEME, resolveTheme, THEMES } from "./themes";
 import type { ThemeName, ThemeTransform } from "./themes";
-import type {
-  ClusterLayer,
-  NoiseLayer,
-  PlayHandle,
-  PlayOptions,
-  Spec,
-  ToneLayer,
-} from "./types";
+import type { ClusterLayer, NoiseLayer, PlayHandle, PlayOptions, Spec, ToneLayer } from "./types";
 
 export const STORAGE_KEY = "flint:sound";
 
@@ -91,11 +84,7 @@ class SoundEngine {
         enabled = true;
       } else if (stored === "off") {
         enabled = false;
-      } else if (
-        enabled &&
-        options.reducedMotion !== "allow" &&
-        prefersReducedMotion()
-      ) {
+      } else if (enabled && options.reducedMotion !== "allow" && prefersReducedMotion()) {
         enabled = false;
       }
     } catch {
@@ -130,14 +119,9 @@ class SoundEngine {
 
     document.documentElement.dataset.soundTheme = themeName;
 
-    document
-      .querySelectorAll<HTMLElement>("[data-sound-theme-option]")
-      .forEach((el) => {
-        el.setAttribute(
-          "aria-pressed",
-          String(el.dataset.soundThemeOption === themeName),
-        );
-      });
+    document.querySelectorAll<HTMLElement>("[data-sound-theme-option]").forEach((el) => {
+      el.setAttribute("aria-pressed", String(el.dataset.soundThemeOption === themeName));
+    });
 
     if (persist) {
       document.dispatchEvent(
@@ -235,17 +219,13 @@ class SoundEngine {
       }
     }
 
-    document
-      .querySelectorAll<HTMLElement>("[data-sound-enable]")
-      .forEach((el) => {
-        el.setAttribute("aria-pressed", String(enabled));
-      });
+    document.querySelectorAll<HTMLElement>("[data-sound-enable]").forEach((el) => {
+      el.setAttribute("aria-pressed", String(enabled));
+    });
 
     this.applyGain();
 
-    document.dispatchEvent(
-      new CustomEvent("fl:sound:changed", { detail: { enabled } }),
-    );
+    document.dispatchEvent(new CustomEvent("fl:sound:changed", { detail: { enabled } }));
   }
 
   private applyGain(): void {
@@ -329,23 +309,16 @@ class SoundEngine {
     }
   }
 
-  private tone(
-    layer: ToneLayer,
-    start: number,
-    performance: Performance,
-    plain = false,
-  ): void {
+  private tone(layer: ToneLayer, start: number, performance: Performance, plain = false): void {
     const ctx = this.ctx;
     if (!ctx) return;
 
     const { theme } = this;
-    const ratio =
-      theme.pitch * semitones(performance.pitch + performance.drift);
+    const ratio = theme.pitch * semitones(performance.pitch + performance.drift);
     const frequency = layer.f * ratio;
 
     const osc = ctx.createOscillator();
-    const wave =
-      (layer.wave && theme.wave?.[layer.wave]) || layer.wave || "sine";
+    const wave = (layer.wave && theme.wave?.[layer.wave]) || layer.wave || "sine";
     osc.type = wave;
     osc.frequency.setValueAtTime(frequency, start);
 
@@ -360,13 +333,7 @@ class SoundEngine {
     const decay = (layer.d ?? 0.15) * theme.decay * performance.length;
     const env = ctx.createGain();
 
-    envelope(
-      env.gain,
-      (layer.peak ?? 0.18) * performance.scale,
-      start,
-      attack,
-      decay,
-    );
+    envelope(env.gain, (layer.peak ?? 0.18) * performance.scale, start, attack, decay);
 
     osc.connect(env).connect(performance.bus);
     this.send(env, layer.send ?? 0, performance);
@@ -391,11 +358,7 @@ class SoundEngine {
     }
   }
 
-  private noise(
-    layer: NoiseLayer,
-    start: number,
-    performance: Performance,
-  ): void {
+  private noise(layer: NoiseLayer, start: number, performance: Performance): void {
     const ctx = this.ctx;
     if (!ctx) return;
 
@@ -418,16 +381,12 @@ class SoundEngine {
     filter.Q.value = (layer.q ?? 1) * theme.q;
 
     const attack = (layer.a ?? 0.002) * theme.attack * performance.length;
-    const decay =
-      (layer.d ?? 0.05) * (theme.decay * 0.7 + 0.3) * performance.length;
+    const decay = (layer.d ?? 0.05) * (theme.decay * 0.7 + 0.3) * performance.length;
 
     const env = ctx.createGain();
     envelope(
       env.gain,
-      (layer.peak ?? 0.15) *
-        performance.scale *
-        theme.noiseLvl *
-        performance.air,
+      (layer.peak ?? 0.15) * performance.scale * theme.noiseLvl * performance.air,
       start,
       attack,
       decay,
@@ -440,25 +399,19 @@ class SoundEngine {
     source.stop(start + attack + decay + 0.1);
   }
 
-  private cluster(
-    layer: ClusterLayer,
-    start: number,
-    performance: Performance,
-  ): void {
+  private cluster(layer: ClusterLayer, start: number, performance: Performance): void {
     const ctx = this.ctx;
     if (!ctx) return;
 
     const { theme } = this;
     const random = mulberry32(layer.seed ?? 1);
-    const ratio =
-      theme.pitch * semitones(performance.pitch + performance.drift);
+    const ratio = theme.pitch * semitones(performance.pitch + performance.drift);
     const count = Math.round(clamp(layer.n, 1, 12));
     const step = layer.step * performance.length;
 
     for (let i = 0; i < count; i++) {
       const grainStart = start + i * step;
-      const frequency =
-        (layer.fMin + random() * (layer.fMax - layer.fMin)) * ratio;
+      const frequency = (layer.fMin + random() * (layer.fMax - layer.fMin)) * ratio;
       const attack = 0.004 * theme.attack * performance.length;
       const decay = (layer.d ?? 0.1) * theme.decay * performance.length;
 
@@ -482,11 +435,7 @@ class SoundEngine {
     }
   }
 
-  private send(
-    node: AudioNode,
-    amount: number,
-    performance: Performance,
-  ): void {
+  private send(node: AudioNode, amount: number, performance: Performance): void {
     const ctx = this.ctx;
     if (!ctx) return;
 
@@ -504,8 +453,7 @@ class SoundEngine {
 
     const Ctor =
       window.AudioContext ??
-      (window as unknown as { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
 
     if (!Ctor) return null;
 
@@ -578,11 +526,7 @@ function envelope(
 }
 
 /** A short, synthesized room: decaying noise, no assets. */
-function makeImpulse(
-  ctx: AudioContext,
-  duration: number,
-  decay: number,
-): AudioBuffer {
+function makeImpulse(ctx: AudioContext, duration: number, decay: number): AudioBuffer {
   const length = Math.floor(ctx.sampleRate * duration);
   const buffer = ctx.createBuffer(2, length, ctx.sampleRate);
 
@@ -620,10 +564,7 @@ function prefersReducedMotion(): boolean {
 export const sound = new SoundEngine();
 
 /** Plays a cue by name, honoring the global `data-sound` switch. */
-export function playSound(
-  name: string,
-  options?: PlayOptions,
-): PlayHandle | undefined {
+export function playSound(name: string, options?: PlayOptions): PlayHandle | undefined {
   return sound.play(name, options);
 }
 

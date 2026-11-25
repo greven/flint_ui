@@ -101,10 +101,98 @@ describe("Collapsible hook", () => {
     expect(content.hasAttribute("hidden")).toBe(false);
   });
 
+  it("ignores matching parts from components nested inside the content", () => {
+    document.body.innerHTML = `
+      <div id="test" data-state="closed">
+        <button data-part="trigger"></button>
+        <div id="test-content" data-part="content" hidden>
+          <ul>
+            <li data-element="nav_item">
+              <a data-part="content">Nested</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    `;
+
+    const el = document.getElementById("test") as HTMLElement;
+    const view = {
+      isDead: false,
+      liveSocket: { transitions: { addAsyncTransition: vi.fn() } },
+      pushHookEvent: vi.fn(() => Promise.resolve({ reply: null, ref: 0 })),
+    };
+    const hook = new Collapsible(view as never, el);
+    const js = {
+      setAttribute: vi.fn((node: HTMLElement, name: string, value: string) =>
+        node.setAttribute(name, value),
+      ),
+      removeAttribute: vi.fn((node: HTMLElement, name: string) => node.removeAttribute(name)),
+    };
+    vi.spyOn(hook, "js").mockReturnValue(js as never);
+
+    hook.mounted();
+
+    const trigger = el.querySelector<HTMLElement>('[data-part="trigger"]')!;
+    const content = document.getElementById("test-content") as HTMLElement;
+    const nested = el.querySelector<HTMLElement>(
+      '[data-element="nav_item"] [data-part="content"]',
+    )!;
+
+    trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(content.hasAttribute("hidden")).toBe(false);
+    expect(content.getAttribute("data-state")).toBe("open");
+    expect(nested.getAttribute("data-state")).toBe(null);
+    expect(nested.style.getPropertyValue("--_fl-collapsible-height")).toBe("");
+    expect(el.getAttribute("data-state")).toBe("open");
+  });
+
+  it("accepts a disclosure trigger that is also another component's root", () => {
+    document.body.innerHTML = `
+      <div id="test" data-element="collapsible" data-state="closed">
+        <div id="test-header">
+          <button data-element="button" data-part="trigger" type="button"></button>
+        </div>
+        <div id="test-content" data-part="content" hidden></div>
+      </div>
+    `;
+
+    const el = document.getElementById("test") as HTMLElement;
+    const view = {
+      isDead: false,
+      liveSocket: { transitions: { addAsyncTransition: vi.fn() } },
+      pushHookEvent: vi.fn(() => Promise.resolve({ reply: null, ref: 0 })),
+    };
+    const hook = new Collapsible(view as never, el);
+    const js = {
+      setAttribute: vi.fn((node: HTMLElement, name: string, value: string) =>
+        node.setAttribute(name, value),
+      ),
+      removeAttribute: vi.fn((node: HTMLElement, name: string) => node.removeAttribute(name)),
+    };
+    vi.spyOn(hook, "js").mockReturnValue(js as never);
+
+    hook.mounted();
+
+    const trigger = el.querySelector<HTMLElement>('[data-part="trigger"]')!;
+    const content = document.getElementById("test-content") as HTMLElement;
+
+    trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(el.getAttribute("data-state")).toBe("open");
+    expect(content.hasAttribute("hidden")).toBe(false);
+  });
+
   it("publishes the measured size and releases the keyframes when opening", () => {
     const { trigger, content } = setup();
-    Object.defineProperty(content, "scrollHeight", { configurable: true, value: 120 });
-    Object.defineProperty(content, "scrollWidth", { configurable: true, value: 300 });
+    Object.defineProperty(content, "scrollHeight", {
+      configurable: true,
+      value: 120,
+    });
+    Object.defineProperty(content, "scrollWidth", {
+      configurable: true,
+      value: 300,
+    });
 
     trigger.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
@@ -189,7 +277,10 @@ describe("Collapsible hook", () => {
   it("re-measures the content while open when the server patches it", () => {
     const { content, hook } = setup({ state: "open" });
 
-    Object.defineProperty(content, "scrollHeight", { configurable: true, value: 240 });
+    Object.defineProperty(content, "scrollHeight", {
+      configurable: true,
+      value: 240,
+    });
     hook.updated();
 
     expect(content.style.getPropertyValue("--_fl-collapsible-height")).toBe("240px");
@@ -198,7 +289,10 @@ describe("Collapsible hook", () => {
   it("does not re-measure the content while closed", () => {
     const { content, hook } = setup({ state: "closed" });
 
-    Object.defineProperty(content, "scrollHeight", { configurable: true, value: 240 });
+    Object.defineProperty(content, "scrollHeight", {
+      configurable: true,
+      value: 240,
+    });
     hook.updated();
 
     expect(content.style.getPropertyValue("--_fl-collapsible-height")).not.toBe("240px");

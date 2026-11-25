@@ -83,7 +83,11 @@ describe("createPositioner", () => {
   it("builds the collision middleware in order", async () => {
     compute.mockResolvedValue(result() as never);
     const arrowElement = document.createElement("span");
-    const { positioner } = setup({ offset: 12, padding: 8, arrow: arrowElement });
+    const { positioner } = setup({
+      offset: 12,
+      padding: 8,
+      arrow: arrowElement,
+    });
 
     await positioner.update();
 
@@ -91,12 +95,7 @@ describe("createPositioner", () => {
       middleware: { name: string; options: unknown }[];
     };
 
-    expect(middleware.map((entry) => entry.name)).toEqual([
-      "offset",
-      "flip",
-      "shift",
-      "arrow",
-    ]);
+    expect(middleware.map((entry) => entry.name)).toEqual(["offset", "flip", "shift", "arrow"]);
     expect(middleware[0]!.options).toBe(12);
     expect(middleware[1]!.options).toEqual({ padding: 8 });
     expect(middleware[2]!.options).toEqual({ padding: 8 });
@@ -140,9 +139,7 @@ describe("createPositioner", () => {
   });
 
   it("publishes the arrow offset as CSS variables", async () => {
-    compute.mockResolvedValue(
-      result({ middlewareData: { arrow: { x: 4.6 } } }) as never,
-    );
+    compute.mockResolvedValue(result({ middlewareData: { arrow: { x: 4.6 } } }) as never);
     const arrowElement = document.createElement("span");
     const { floating, positioner } = setup({
       arrow: arrowElement,

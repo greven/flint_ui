@@ -1,0 +1,138 @@
+@layer components {
+    /* Navlist group. The header labels a section; the nested list adds a rail
+     * and indents its items. A collapsible group reuses the collapsible hook's
+     * measured height to animate open and closed. */
+    [data-element="navlist_group"][data-navlist_group] {
+        display: block;
+        min-inline-size: 0;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > :is([data-part="trigger"], [data-part="header"]) {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        gap: var(--fl-control-gap-sm);
+        inline-size: 100%;
+        min-block-size: var(--fl-control-height-sm);
+        margin: 0;
+        padding: var(--fl-spacing-xs) var(--fl-spacing-sm);
+        border: 0;
+        border-radius: var(--fl-radius-sm);
+        background: transparent;
+        color: var(--fl-navlist-group-text, var(--fl-color-text-muted));
+        font-family: var(--fl-font-sans);
+        font-size: var(--fl-font-size-xs);
+        font-weight: var(--fl-font-weight-semibold);
+        letter-spacing: var(--fl-font-tracking-wider);
+        line-height: var(--fl-line-height-sm);
+        text-align: start;
+        text-transform: uppercase;
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"] {
+        cursor: pointer;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"]:is(:hover, :focus-visible) {
+        background-color: var(--fl-color-surface-subtle);
+        color: var(--fl-color-text);
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="header"] {
+        cursor: default;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > :is([data-part="trigger"], [data-part="header"]) [data-element="icon"] {
+        flex: none;
+        --fl-icon-size: var(--fl-control-icon-sm);
+        color: color-mix(in oklab, currentcolor 70%, transparent);
+        transition: color var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"]:is(:hover, :focus-visible) [data-element="icon"] {
+        color: currentcolor;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"] > [data-part="indicator"] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--fl-control-icon-sm);
+        block-size: var(--fl-control-icon-sm);
+        margin-inline-start: auto;
+        color: color-mix(in oklab, currentcolor 70%, transparent);
+        transition: transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"] > [data-part="indicator"] svg {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"][data-state="open"] > [data-part="indicator"] {
+        transform: rotate(180deg);
+    }
+
+    [data-element="navlist_group"][data-navlist_group][data-collapsible] > [data-part="content"] {
+        overflow: hidden;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="content"] > [data-part="list"] {
+        display: flex;
+        flex-direction: column;
+        gap: var(--fl-navlist-gap, 2px);
+        margin: 0;
+        padding: 0 0 0 var(--fl-navlist-group-indent, var(--fl-spacing-md));
+        list-style: none;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] [data-part="list"] > [data-element="navlist_item"] {
+        border-inline-start-color: var(--fl-navlist-rail-color, var(--fl-color-border));
+    }
+
+    [data-element="navlist_group"][data-navlist_group] [data-part="list"] > [data-element="navlist_item"][data-active] {
+        border-inline-start-color: var(--fl-navlist-rail-active, var(--fl-color-text));
+    }
+
+    [data-element="navlist_group"][data-navlist_group][data-animate] > [data-part="content"][data-state="open"] {
+        animation: fl-navlist-group-expand var(--fl-duration-base) var(--fl-ease-in-out);
+    }
+
+    [data-element="navlist_group"][data-navlist_group][data-animate] > [data-part="content"][data-state="closed"] {
+        animation: fl-navlist-group-collapse var(--fl-duration-base) var(--fl-ease-in-out);
+    }
+}
+
+@keyframes fl-navlist-group-expand {
+    from {
+        height: 0;
+    }
+
+    to {
+        height: var(--_fl-collapsible-height, auto);
+    }
+}
+
+@keyframes fl-navlist-group-collapse {
+    from {
+        height: var(--_fl-collapsible-height, auto);
+    }
+
+    to {
+        height: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-element="navlist_group"][data-navlist_group] > [data-part="trigger"] > [data-part="indicator"] {
+        transition: none;
+    }
+
+    [data-element="navlist_group"][data-navlist_group] > [data-part="content"] {
+        animation: none;
+    }
+}

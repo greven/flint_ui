@@ -3,6 +3,7 @@ import { Collapsible } from "./components/collapsible";
 import { Dropdown } from "./components/dropdown";
 import { KnownDate } from "./components/known_date";
 import { Modal } from "./components/modal";
+import { Navbar } from "./components/navbar";
 import { Popover } from "./components/popover";
 import { Slider } from "./components/slider";
 import { Tabs } from "./components/tabs";
@@ -14,6 +15,7 @@ export const hooks = {
   "FlintUI.Dropdown": Dropdown,
   "FlintUI.KnownDate": KnownDate,
   "FlintUI.Modal": Modal,
+  "FlintUI.Navbar": Navbar,
   "FlintUI.Popover": Popover,
   "FlintUI.Slider": Slider,
   "FlintUI.Tabs": Tabs,

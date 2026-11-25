@@ -46,6 +46,13 @@ defmodule FlintUI do
   - `loading`
   - `loading_text`
   - `modal`
+  - `navbar`
+  - `navbar_item`
+  - `navbar_menu`
+  - `navbar_menu_item`
+  - `navlist`
+  - `navlist_group`
+  - `navlist_item`
   - `popover`
   - `progress`
   - `progress_group`
@@ -109,6 +116,13 @@ defmodule FlintUI do
     {:loading, []},
     {:loading_text, []},
     {:modal, [:open_modal, :close_modal, :toggle_modal]},
+    {:navbar, []},
+    {:navbar_item, []},
+    {:navbar_menu, []},
+    {:navbar_menu_item, []},
+    {:navlist, []},
+    {:navlist_group, []},
+    {:navlist_item, []},
     {:popover, [:open_popover, :close_popover, :toggle_popover]},
     {:progress, []},
     {:progress_group, []},

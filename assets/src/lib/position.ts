@@ -95,11 +95,7 @@ export function createPositioner(
   let stopTracking: (() => void) | null = null;
 
   function middleware(): Middleware[] {
-    const list: Middleware[] = [
-      offset(gap),
-      flip({ padding }),
-      shift({ padding }),
-    ];
+    const list: Middleware[] = [offset(gap), flip({ padding }), shift({ padding })];
 
     if (arrowElement) {
       list.push(arrow({ element: arrowElement, padding: ARROW_PADDING }));
@@ -112,17 +108,11 @@ export function createPositioner(
     if (!arrowElement) return;
 
     if (typeof data?.x === "number") {
-      floating.style.setProperty(
-        `--_fl-${arrowVarPrefix}-arrow-x`,
-        `${Math.round(data.x)}px`,
-      );
+      floating.style.setProperty(`--_fl-${arrowVarPrefix}-arrow-x`, `${Math.round(data.x)}px`);
     }
 
     if (typeof data?.y === "number") {
-      floating.style.setProperty(
-        `--_fl-${arrowVarPrefix}-arrow-y`,
-        `${Math.round(data.y)}px`,
-      );
+      floating.style.setProperty(`--_fl-${arrowVarPrefix}-arrow-y`, `${Math.round(data.y)}px`);
     }
   }
 

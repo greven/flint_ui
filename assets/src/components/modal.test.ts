@@ -49,11 +49,7 @@ function setup(options: SetupOptions = {}) {
           <h2 data-part="title" id="modal-title">Title</h2>
         </header>
         <div data-part="body">
-          ${
-            focusable
-              ? `<button id="inside" ${autofocus ? "autofocus" : ""}>Inside</button>`
-              : ""
-          }
+          ${focusable ? `<button id="inside" ${autofocus ? "autofocus" : ""}>Inside</button>` : ""}
         </div>
         <footer data-part="footer">
           <button id="cancel">Cancel</button>
@@ -226,7 +222,10 @@ describe("Modal hook", () => {
 
     expect(el.dataset.state).toBe("closed");
     expect(document.documentElement.style.overflow).toBe("");
-    expect(pushEvent).toHaveBeenCalledWith("modal_closed", { id: "modal", open: false });
+    expect(pushEvent).toHaveBeenCalledWith("modal_closed", {
+      id: "modal",
+      open: false,
+    });
   });
 
   it("pushes open, toggle, and close server events for user changes", async () => {
@@ -240,10 +239,22 @@ describe("Modal hook", () => {
     command(el, "fl:modal:close");
     await flush();
 
-    expect(pushEvent).toHaveBeenCalledWith("opened", { id: "modal", open: true });
-    expect(pushEvent).toHaveBeenCalledWith("toggled", { id: "modal", open: true });
-    expect(pushEvent).toHaveBeenCalledWith("closed", { id: "modal", open: false });
-    expect(pushEvent).toHaveBeenCalledWith("toggled", { id: "modal", open: false });
+    expect(pushEvent).toHaveBeenCalledWith("opened", {
+      id: "modal",
+      open: true,
+    });
+    expect(pushEvent).toHaveBeenCalledWith("toggled", {
+      id: "modal",
+      open: true,
+    });
+    expect(pushEvent).toHaveBeenCalledWith("closed", {
+      id: "modal",
+      open: false,
+    });
+    expect(pushEvent).toHaveBeenCalledWith("toggled", {
+      id: "modal",
+      open: false,
+    });
   });
 
   it("toggles between open and closed", async () => {
@@ -258,7 +269,10 @@ describe("Modal hook", () => {
   });
 
   it("applies a changed opened input on update without pushing events", async () => {
-    const { el, hook, pushEvent } = setup({ openEvent: "opened", closeEvent: "closed" });
+    const { el, hook, pushEvent } = setup({
+      openEvent: "opened",
+      closeEvent: "closed",
+    });
 
     el.dataset.opened = "true";
     hook.updated();

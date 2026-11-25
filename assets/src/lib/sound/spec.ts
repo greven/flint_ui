@@ -1,11 +1,4 @@
-import type {
-  ClusterLayer,
-  FilterType,
-  NoiseLayer,
-  Spec,
-  ToneLayer,
-  Wave,
-} from "./types";
+import type { ClusterLayer, FilterType, NoiseLayer, Spec, ToneLayer, Wave } from "./types";
 
 const LIMITS = {
   at: [0, 1.5],
@@ -59,9 +52,7 @@ export function normalizeSpec(input: unknown): Spec {
       const tone: ToneLayer = {
         kind: "tone",
         at,
-        wave: WAVES.includes(layer.wave as Wave)
-          ? (layer.wave as Wave)
-          : "sine",
+        wave: WAVES.includes(layer.wave as Wave) ? (layer.wave as Wave) : "sine",
         f: num(layer.f, "f", 440),
         f2: layer.f2 ? num(layer.f2, "f2") : null,
         glide: num(layer.glide, "glide", 0.06),
