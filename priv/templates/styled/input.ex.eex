@@ -38,10 +38,23 @@ def <%= @name %>(assigns) do
 
   ~H"""
   <FlintUI.input root_attrs={@root_attrs} class={@class} {@rest}>
-    <:inner_prefix>{render_slot(@inner_prefix)}</:inner_prefix>
-    <:inner_suffix>{render_slot(@inner_suffix)}</:inner_suffix>
-    <:outer_prefix>{render_slot(@outer_prefix)}</:outer_prefix>
-    <:outer_suffix>{render_slot(@outer_suffix)}</:outer_suffix>
+    <:inner_prefix class={input_affix_class(@inner_prefix)}>
+      {render_slot(@inner_prefix)}
+    </:inner_prefix>
+    <:inner_suffix class={input_affix_class(@inner_suffix)}>
+      {render_slot(@inner_suffix)}
+    </:inner_suffix>
+    <:outer_prefix class={input_affix_class(@outer_prefix)}>
+      {render_slot(@outer_prefix)}
+    </:outer_prefix>
+    <:outer_suffix class={input_affix_class(@outer_suffix)}>
+      {render_slot(@outer_suffix)}
+    </:outer_suffix>
   </FlintUI.input>
   """
 end
+
+# Forward the affix slot's `class` to the headless component, which applies it
+# to the wrapper it renders for that slot.
+defp input_affix_class([slot | _]), do: Map.get(slot, :class)
+defp input_affix_class(_), do: nil

@@ -71,6 +71,15 @@ defmodule FlintUI.Base.Input do
   textual. Put interactive content, such as a reveal or clear button, in an outer
   slot.
 
+  Each slot also takes a `class` attribute. The class lands on the wrapper the
+  slot renders, so you can tint, pad, or type an affix without wrapping its
+  content:
+
+      <.input name="price" label="Price">
+        <:inner_prefix class="fl-text-muted">$</:inner_prefix>
+        <:inner_suffix class="fl-text-muted">USD</:inner_suffix>
+      </.input>
+
   The styled theme renders the outer slots as addons: they share the control's
   fill and height, join its border so the group has a single seam, and keep only
   the free end rounded. A styled button placed directly in an outer slot becomes
@@ -431,9 +440,14 @@ defmodule FlintUI.Base.Input do
       row: %{
         "data-part" => "row"
       },
-      outer_prefix: %{
-        "data-part" => "outer_prefix"
-      },
+      outer_prefix:
+        slot_class(
+          %{
+            "data-part" => "outer_prefix"
+          },
+          assigns,
+          :outer_prefix
+        ),
       label: %{
         "data-part" => "label",
         "for" => derived.id
@@ -445,9 +459,14 @@ defmodule FlintUI.Base.Input do
         "data-part" => "box",
         "data-field-control" => true
       },
-      inner_prefix: %{
-        "data-part" => "inner_prefix"
-      },
+      inner_prefix:
+        slot_class(
+          %{
+            "data-part" => "inner_prefix"
+          },
+          assigns,
+          :inner_prefix
+        ),
       indicator: %{
         "data-part" => "indicator",
         "aria-hidden" => "true"
@@ -463,12 +482,22 @@ defmodule FlintUI.Base.Input do
         "data-part" => "select_indicator",
         "aria-hidden" => "true"
       },
-      inner_suffix: %{
-        "data-part" => "inner_suffix"
-      },
-      outer_suffix: %{
-        "data-part" => "outer_suffix"
-      },
+      inner_suffix:
+        slot_class(
+          %{
+            "data-part" => "inner_suffix"
+          },
+          assigns,
+          :inner_suffix
+        ),
+      outer_suffix:
+        slot_class(
+          %{
+            "data-part" => "outer_suffix"
+          },
+          assigns,
+          :outer_suffix
+        ),
       hint: %{
         "data-part" => "hint"
       },
@@ -480,6 +509,15 @@ defmodule FlintUI.Base.Input do
         "aria-hidden" => "true"
       }
     }
+  end
+
+  # A slot's `class` styles the wrapper the slot renders, so the caller can
+  # tint or pad an affix without reaching into its content.
+  defp slot_class(attrs, assigns, slot) do
+    case Map.get(assigns, slot) do
+      [entry | _] -> Field.put_present(attrs, "class", Map.get(entry, :class))
+      _ -> attrs
+    end
   end
 
   # The public attrs are also the docs API, so keep `doc: false` on internal
@@ -546,19 +584,27 @@ defmodule FlintUI.Base.Input do
 
   slot :inner_prefix,
     doc:
-      "Content inside the control border, before the native control. Keep it decorative or textual; use `:outer_prefix` for interactive content."
+      "Content inside the control border, before the native control. Keep it decorative or textual; use `:outer_prefix` for interactive content." do
+    attr :class, :any, doc: "Additional classes for the inner prefix wrapper."
+  end
 
   slot :inner_suffix,
     doc:
-      "Content inside the control border, after the native control. Keep it decorative or textual; use `:outer_suffix` for interactive content."
+      "Content inside the control border, after the native control. Keep it decorative or textual; use `:outer_suffix` for interactive content." do
+    attr :class, :any, doc: "Additional classes for the inner suffix wrapper."
+  end
 
   slot :outer_prefix,
     doc:
-      "Content outside the control border, before the label. It may contain interactive content."
+      "Content outside the control border, before the label. It may contain interactive content." do
+    attr :class, :any, doc: "Additional classes for the outer prefix wrapper."
+  end
 
   slot :outer_suffix,
     doc:
-      "Content outside the control border, after the label. It may contain interactive content."
+      "Content outside the control border, after the label. It may contain interactive content." do
+    attr :class, :any, doc: "Additional classes for the outer suffix wrapper."
+  end
 
   @impl true
   def render(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

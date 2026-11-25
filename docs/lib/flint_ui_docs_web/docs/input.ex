@@ -126,6 +126,9 @@ defmodule FlintUIDocsWeb.Docs.Input do
     <.prose content="The inner slots are inside the `<label>`, so keep them decorative or textual. Put interactive
       content, such as a clear or reveal button, in an outer slot." />
 
+    <.prose content="Each slot also accepts a `class`, applied to the wrapper the affix renders. Use it to tint,
+      pad, or otherwise style the affix without wrapping its content." />
+
     <.prose content="An outer slot renders as an addon: it borrows the control's fill and height, joins its border so
       the group has a single seam, and keeps only its free end rounded. A control placed directly in an outer slot
       (`<.button>`, `<.copy_button>`, or `<.toggle>`) takes the segment over instead; its variant supplies the fill,
@@ -155,7 +158,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
 
         <Components.input name="price" label="Price" value="42.00">
           <:inner_prefix>$</:inner_prefix>
-          <:inner_suffix>USD</:inner_suffix>
+          <:inner_suffix class="fl-text-muted">USD</:inner_suffix>
         </Components.input>
 
         <Components.input
@@ -532,7 +535,7 @@ defmodule FlintUIDocsWeb.Docs.Input do
 
     <.input name="price" label="Price" value="42.00">
       <:inner_prefix>$</:inner_prefix>
-      <:inner_suffix>USD</:inner_suffix>
+      <:inner_suffix class="fl-text-muted">USD</:inner_suffix>
     </.input>
 
     <.input id="invite-link" name="invite" label="Invite link" value="acme.test/join/42">

@@ -48,7 +48,9 @@ defmodule FlintUI.GeneratorTest do
 
     for slot <- ~w(inner_prefix inner_suffix outer_prefix outer_suffix) do
       assert source =~ "slot(:#{slot}"
-      assert source =~ "<:#{slot}>{render_slot(@#{slot})}</:#{slot}>"
+      assert source =~ "attr(:class, :any"
+      assert source =~ "<:#{slot} class={input_affix_class(@#{slot})}>"
+      assert source =~ "{render_slot(@#{slot})}"
     end
   end
 

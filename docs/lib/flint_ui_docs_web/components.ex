@@ -1924,22 +1924,30 @@ defmodule FlintUIDocsWeb.Components do
   slot(:inner_prefix,
     doc:
       "Content inside the control border, before the native control. Keep it decorative or textual; use `:outer_prefix` for interactive content."
-  )
+  ) do
+    attr(:class, :any, doc: "Additional classes for the inner prefix wrapper.")
+  end
 
   slot(:inner_suffix,
     doc:
       "Content inside the control border, after the native control. Keep it decorative or textual; use `:outer_suffix` for interactive content."
-  )
+  ) do
+    attr(:class, :any, doc: "Additional classes for the inner suffix wrapper.")
+  end
 
   slot(:outer_prefix,
     doc:
       "Content outside the control border, before the label. It may contain interactive content."
-  )
+  ) do
+    attr(:class, :any, doc: "Additional classes for the outer prefix wrapper.")
+  end
 
   slot(:outer_suffix,
     doc:
       "Content outside the control border, after the label. It may contain interactive content."
-  )
+  ) do
+    attr(:class, :any, doc: "Additional classes for the outer suffix wrapper.")
+  end
 
   def input(assigns) do
     assigns = assign(assigns, :data_size, FlintUI.Styled.Size.scale(assigns.size))
@@ -1969,13 +1977,26 @@ defmodule FlintUIDocsWeb.Components do
 
     ~H"""
     <FlintUI.input root_attrs={@root_attrs} class={@class} {@rest}>
-      <:inner_prefix>{render_slot(@inner_prefix)}</:inner_prefix>
-      <:inner_suffix>{render_slot(@inner_suffix)}</:inner_suffix>
-      <:outer_prefix>{render_slot(@outer_prefix)}</:outer_prefix>
-      <:outer_suffix>{render_slot(@outer_suffix)}</:outer_suffix>
+      <:inner_prefix class={input_affix_class(@inner_prefix)}>
+        {render_slot(@inner_prefix)}
+      </:inner_prefix>
+      <:inner_suffix class={input_affix_class(@inner_suffix)}>
+        {render_slot(@inner_suffix)}
+      </:inner_suffix>
+      <:outer_prefix class={input_affix_class(@outer_prefix)}>
+        {render_slot(@outer_prefix)}
+      </:outer_prefix>
+      <:outer_suffix class={input_affix_class(@outer_suffix)}>
+        {render_slot(@outer_suffix)}
+      </:outer_suffix>
     </FlintUI.input>
     """
   end
+
+  # Forward the affix slot's `class` to the headless component, which applies it
+  # to the wrapper it renders for that slot.
+  defp input_affix_class([slot | _]), do: Map.get(slot, :class)
+  defp input_affix_class(_), do: nil
 
   @doc """
   Renders a styled keyboard key.

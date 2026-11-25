@@ -43,10 +43,10 @@ defmodule FlintUI.Styled.InputTest do
       def affixes(assigns) do
         ~H"""
         <.input name="search" label="Search">
-          <:outer_prefix><span data-test="outer-prefix">https://</span></:outer_prefix>
-          <:inner_prefix><span data-test="inner-prefix">@</span></:inner_prefix>
-          <:inner_suffix><span data-test="inner-suffix">.com</span></:inner_suffix>
-          <:outer_suffix><span data-test="outer-suffix">Open</span></:outer_suffix>
+          <:outer_prefix class="outer-prefix"><span data-test="outer-prefix">https://</span></:outer_prefix>
+          <:inner_prefix class="inner-prefix"><span data-test="inner-prefix">@</span></:inner_prefix>
+          <:inner_suffix class="inner-suffix"><span data-test="inner-suffix">.com</span></:inner_suffix>
+          <:outer_suffix class="outer-suffix"><span data-test="outer-suffix">Open</span></:outer_suffix>
         </.input>
         """
       end
@@ -152,6 +152,10 @@ defmodule FlintUI.Styled.InputTest do
 
     for part <- ~w(row outer_prefix box inner_prefix inner_suffix outer_suffix) do
       assert part_attr(document, part, "data-part") == [part]
+    end
+
+    for part <- ~w(outer_prefix inner_prefix inner_suffix outer_suffix) do
+      assert part_attr(document, part, "class") == [String.replace(part, "_", "-")]
     end
 
     assert LazyHTML.text(part(document, "outer_prefix")) |> String.trim() == "https://"

@@ -512,7 +512,7 @@ defmodule FlintUIDocsWeb.Preview do
                   options={select_options(control, @name, @layer)}
                   size="sm"
                 >
-                  <:outer_prefix>
+                  <:outer_prefix class="bg-surface-subtle">
                     <label
                       for={"#{@id}-control-#{control.key}"}
                       class="text-xs font-medium whitespace-nowrap"

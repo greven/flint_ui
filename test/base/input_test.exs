@@ -101,6 +101,17 @@ defmodule FlintUI.Base.InputTest do
       """
     end
 
+    def classed_affixes(assigns) do
+      ~H"""
+      <.input name="search" label="Search">
+        <:outer_prefix class="affix-outer-prefix">https://</:outer_prefix>
+        <:inner_prefix class="affix-inner-prefix">@</:inner_prefix>
+        <:inner_suffix class="affix-inner-suffix">.com</:inner_suffix>
+        <:outer_suffix class="affix-outer-suffix">Open</:outer_suffix>
+      </.input>
+      """
+    end
+
     def checkbox_affixes(assigns) do
       ~H"""
       <.input name="remember_me" type="checkbox" label="Remember me">
@@ -585,6 +596,19 @@ defmodule FlintUI.Base.InputTest do
 
       assert Enum.count(LazyHTML.query(html, ~s([data-part="row"]))) == 1
       assert Enum.count(LazyHTML.query(html, ~s([data-part="box"]))) == 1
+    end
+
+    test "puts each slot's class on the wrapper it renders" do
+      html =
+        render_component(&TestComponent.classed_affixes/1, %{}) |> LazyHTML.from_fragment()
+
+      for part <- ~w(outer_prefix inner_prefix inner_suffix outer_suffix) do
+        class = "affix-" <> String.replace(part, "_", "-")
+
+        assert LazyHTML.attribute(LazyHTML.query(html, ~s([data-part="#{part}"])), "class") == [
+                 class
+               ]
+      end
     end
 
     test "checkbox and hidden inputs do not render the slots" do
