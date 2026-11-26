@@ -506,10 +506,10 @@ defmodule FlintUIDocsWeb.Preview do
               <Components.input
                 id={"#{@id}-control-#{control.key}"}
                 type="select"
+                size="sm"
                 name={control.key}
                 value={Map.get(@props, control.key)}
                 options={select_options(control, @name, @layer)}
-                size="sm"
               >
                 <:outer_prefix class="bg-default/75">
                   <label
@@ -524,10 +524,10 @@ defmodule FlintUIDocsWeb.Preview do
               <Components.input
                 id={"#{@id}-control-#{control.key}"}
                 type="number"
+                size="sm"
                 name={control.key}
                 value={Map.get(@props, control.key)}
-                size="sm"
-                class={FlintUI.Autofill.ignore_class()}
+                class={control_class(control)}
                 {FlintUI.Autofill.ignore_attributes()}
               >
                 <:outer_prefix class="bg-default/75">
@@ -543,10 +543,10 @@ defmodule FlintUIDocsWeb.Preview do
               <Components.input
                 id={"#{@id}-control-#{control.key}"}
                 type="text"
+                size="sm"
                 name={control.key}
                 value={Map.get(@props, control.key)}
-                size="sm"
-                class={FlintUI.Autofill.ignore_class()}
+                class={control_class(control)}
                 {FlintUI.Autofill.ignore_attributes()}
               >
                 <:outer_prefix class="bg-default/75">
@@ -676,6 +676,19 @@ defmodule FlintUIDocsWeb.Preview do
   # Booleans render as a `true`/`false` select, so a single branch covers both.
   defp control_kind(%{type: type}) when type in [:select, :boolean], do: :select
   defp control_kind(%{type: type}), do: type
+
+  # A bare text or number input takes the browser's default character width,
+  # which dwarfs the values the playground edits. The field fills its width, so
+  # the control sets the width here. Selects size to their longest option.
+  defp control_class(%{type: :number}) do
+    [FlintUI.Autofill.ignore_class(), "w-16"]
+  end
+
+  defp control_class(%{type: type}) when type in [:string, :text] do
+    [FlintUI.Autofill.ignore_class(), "w-24"]
+  end
+
+  defp control_class(_control), do: nil
 
   ## CSS classes
 

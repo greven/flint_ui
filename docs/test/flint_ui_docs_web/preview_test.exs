@@ -46,6 +46,40 @@ defmodule FlintUIDocsWeb.PreviewTest do
     assert count(document, "[data-preview-code]") == 1
   end
 
+  test "text and number controls are sized to the values they edit" do
+    document =
+      render_preview(%{
+        controls: [
+          %{key: :offset, type: :number, default: 4, label: "Offset"},
+          %{key: :label, type: :string, default: "68", label: "Label"},
+          %{
+            key: :variant,
+            type: :select,
+            default: "solid",
+            label: "Variant",
+            values: ["solid", "outline"]
+          }
+        ],
+        inner_block: [
+          %{
+            inner_block: fn _changed, _props ->
+              Phoenix.HTML.raw(~s(<span data-demo>Demo</span>))
+            end
+          }
+        ]
+      })
+
+    assert count(document, "[data-preview-controls] input[name='offset'].w-16") == 1
+
+    assert count(
+             document,
+             "[data-preview-controls] input[name='offset'].keeper-ignore"
+           ) == 1
+
+    assert count(document, "[data-preview-controls] input[name='label'].w-24") == 1
+    assert count(document, "[data-preview-controls] select[name='variant']") == 1
+  end
+
   test "code-only renders the code panel without a canvas or controls" do
     document =
       render_preview(%{
