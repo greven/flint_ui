@@ -13,6 +13,9 @@ if Code.ensure_loaded?(Igniter) do
     the `data-*` hooks the theme targets, and delegates behavior to the headless
     component. Styling lives in the theme stylesheet (see `mix flint.setup`).
 
+    A component that is already generated is left alone with a notice. Use
+    `mix flint.update` to refresh it from the library.
+
     ## Replacing the core input
 
     `mix flint.add input` also removes `input/1` from `MyAppWeb.CoreComponents`
@@ -24,7 +27,7 @@ if Code.ensure_loaded?(Igniter) do
 
     use Igniter.Mix.Task
 
-    alias FlintUI.{Generator, Styled}
+    alias FlintUI.{Generator, Installer, Styled}
     alias Sourceror.Zipper
 
     @impl Igniter.Mix.Task
@@ -55,7 +58,7 @@ if Code.ensure_loaded?(Igniter) do
           )
 
         true ->
-          Enum.reduce(names, igniter, &add_component(&2, &1))
+          add_components(igniter, names)
       end
     end
 
@@ -78,22 +81,93 @@ if Code.ensure_loaded?(Igniter) do
 
     defp available, do: Enum.map_join(Styled.names(), ", ", &to_string/1)
 
-    defp add_component(igniter, name) do
+    # Adds every requested wrapper in one module update. `find_and_update_module`
+    # formats the whole file, so adding components one at a time would reparse
+    # and re-emit the growing module once per component.
+    defp add_components(igniter, names) do
       module = Igniter.Libs.Phoenix.web_module_name(igniter, "Components")
-      source = Generator.component_source(name)
+
+      igniter =
+        Enum.reduce(names, igniter, fn name, igniter -> replace_core_component(igniter, name) end)
 
       igniter
-      |> replace_core_component(name)
-      |> Igniter.Project.Module.find_and_update_or_create_module(
-        module,
-        "use Phoenix.Component\n\n#{source}",
-        fn zipper ->
-          case Igniter.Code.Function.move_to_def(zipper, name, 1) do
-            {:ok, _} -> {:ok, zipper}
-            :error -> {:ok, Igniter.Code.Common.add_code(zipper, source, placement: :after)}
+      |> Installer.ensure_components_module(module)
+      |> add_missing(module, names)
+    end
+
+    defp add_missing(igniter, module, names) do
+      {igniter, existing, path} = existing_components(igniter, module)
+      {to_add, already} = Enum.split_with(names, &(not MapSet.member?(existing, &1)))
+
+      igniter =
+        Enum.reduce(already, igniter, fn name, igniter ->
+          Igniter.add_notice(igniter, """
+          #{name} is already generated in #{inspect(module)}. Run
+          `mix flint.update #{name}` to refresh it from the library.
+          """)
+        end)
+
+      case to_add do
+        [] ->
+          igniter
+
+        names ->
+          source = Enum.map_join(names, "\n\n", &Generator.component_source/1)
+
+          igniter
+          |> Igniter.Project.Module.find_and_update_module!(module, fn zipper ->
+            {:ok, Igniter.Code.Common.add_code(zipper, source, placement: :after)}
+          end)
+          |> sync_markers(path)
+      end
+    end
+
+    # The formatter runs while the module is updated, so the marker hash must be
+    # taken from the formatted rewrite source, not from the source we inserted.
+    defp sync_markers(igniter, nil), do: igniter
+
+    defp sync_markers(igniter, path) do
+      case Rewrite.source(igniter.rewrite, path) do
+        {:ok, source} ->
+          content = Rewrite.Source.get(source, :content)
+          synced = Generator.sync_hashes(content)
+
+          if synced == content do
+            igniter
+          else
+            Igniter.update_file(igniter, path, fn source ->
+              Rewrite.Source.update(source, :content, synced)
+            end)
           end
-        end
-      )
+
+        _ ->
+          igniter
+      end
+    end
+
+    # One scan of the module AST is enough; checking each name with
+    # `move_to_def/3` would walk the growing module once per component.
+    defp existing_components(igniter, module) do
+      case Igniter.Project.Module.find_module(igniter, module) do
+        {:ok, {igniter, source, zipper}} ->
+          names =
+            zipper
+            |> Zipper.node()
+            |> Macro.prewalk(MapSet.new(), fn
+              {:def, _, [{name, _, args}, _body]} = node, acc
+              when is_atom(name) and is_list(args) ->
+                {node, MapSet.put(acc, name)}
+
+              node, acc ->
+                {node, acc}
+            end)
+            |> elem(1)
+
+          {igniter, names, Rewrite.Source.get(source, :path)}
+
+        {:error, igniter} ->
+          {igniter, MapSet.new(), nil}
+      end
     end
 
     # Phoenix's generated `<.input>` and FlintUI's generated `<.input>` would be

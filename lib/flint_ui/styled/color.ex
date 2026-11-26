@@ -32,6 +32,14 @@ defmodule FlintUI.Styled.Color do
   keep white labels on a raw fill unless white falls below 3:1. That suits
   initials-style colors that read as an image rather than body text; the default
   `:best` always picks the stronger of white and black.
+
+  This module is **generated-code API**: the styled wrappers emitted by
+  `mix flint.add` call `apply/4`, `clear/2`, `apply_style/4`, `resolve_style/4`,
+  and `initials_color/1` at runtime. Their names, arities, option keys, written
+  assigns, and return shapes are frozen; the resolution and contrast
+  implementation is not. Changing a frozen part requires bumping
+  `FlintUI.Generator.wrapper_api/0` so `mix flint.update` can refresh existing
+  wrappers.
   """
 
   alias FlintUI.Palette
@@ -62,15 +70,17 @@ defmodule FlintUI.Styled.Color do
 
   def valid?(_value), do: false
 
-  @doc false
-  # Expands a raw color prop into the wrapper's assigns. Known values only set
-  # the presence hook; raw values also merge the derived style into `rest`. The
-  # absolute tones are known everywhere, even when an entry omits them from its
-  # public value list.
-  #
-  # `:prop` names the prop to read (default `:color`) and `:data` names the hook
-  # assign it produces (default `:data_color`), so a component can resolve a
-  # second, state-specific color such as the toggle's `active_color`.
+  @doc """
+  Expands a raw color prop into the wrapper's assigns.
+
+  Known values only set the presence hook; raw values also merge the derived
+  style into `rest`. The absolute tones are known everywhere, even when an entry
+  omits them from its public value list.
+
+  `:prop` names the prop to read (default `:color`) and `:data` names the hook
+  assign it produces (default `:data_color`), so a component can resolve a
+  second, state-specific color such as the toggle's `active_color`.
+  """
   def apply(assigns, roles, vars, opts \\ []) do
     prop = Keyword.get(opts, :prop, :color)
     data = Keyword.get(opts, :data, :data_color)
@@ -96,15 +106,20 @@ defmodule FlintUI.Styled.Color do
     |> put_assign(:rest, rest)
   end
 
-  @doc false
-  # Marks a color hook absent, for a sentinel value such as `inherit`. The theme
-  # then falls back to the base color inputs, so no style is written.
+  @doc """
+  Marks a color hook absent, for a sentinel value such as `inherit`.
+
+  The theme then falls back to the base color inputs, so no style is written.
+  """
   def clear(assigns, data), do: put_assign(assigns, data, nil)
 
-  @doc false
-  # Like `apply/4`, but leaves `rest` alone and returns the raw color's inputs
-  # as a `:color_style` assign. A wrapper whose root owns the color variables
-  # (while `rest` belongs to a nested image) can place that style on the root.
+  @doc """
+  Like `apply/4`, but leaves `rest` alone.
+
+  Returns the raw color's inputs as a `:color_style` assign. A wrapper whose
+  root owns the color variables (while `rest` belongs to a nested image) can
+  place that style on the root.
+  """
   def apply_style(assigns, roles, vars, opts \\ []) do
     {data_color, color_style} = resolve_style(assigns.color, roles, vars, opts)
 
@@ -113,10 +128,12 @@ defmodule FlintUI.Styled.Color do
     |> put_assign(:color_style, color_style)
   end
 
-  @doc false
-  # Resolves a free-form color into the `data-color` hook and the inline style
-  # without assigns. Wrappers that color repeated children from slot attributes
-  # cannot call `apply_style/4`, which writes assigns.
+  @doc """
+  Resolves a free-form color into the `data-color` hook and the inline style.
+
+  Wrappers that color repeated children from slot attributes cannot call
+  `apply_style/4`, which writes assigns.
+  """
   def resolve_style(color, roles, vars, opts \\ []) do
     case resolve(color, roles) do
       {:hook, hook} ->
@@ -130,10 +147,13 @@ defmodule FlintUI.Styled.Color do
     end
   end
 
-  @doc false
-  # A stable, per-name color for initials. SHA-256 keeps the mapping stable
-  # across nodes and OTP releases. A blank name stays on the theme's neutral
-  # role so it follows presets instead of picking an arbitrary hue.
+  @doc """
+  A stable, per-name color for initials.
+
+  SHA-256 keeps the mapping stable across nodes and OTP releases. A blank name
+  stays on the theme's neutral role so it follows presets instead of picking an
+  arbitrary hue.
+  """
   def initials_color(name) when is_binary(name) do
     case String.trim(name) do
       "" ->

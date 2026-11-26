@@ -76,6 +76,17 @@ Breaking changes are expected until the first release.
   (import the host's components module). The headless base stays explicit
   (`FlintUI.button`, or a `prefix:`). The docs dogfood both, so the base is
   imported there with a prefix.
+- **Generated code is userland source.** Every wrapper is emitted between
+  `# flint_ui:` markers carrying `wrapper_api`, the library version, and a
+  hash of the body. `mix flint.update` replaces whole marked blocks and skips
+  hand-edited ones unless `--force`. It is the migration path for wrapper prop
+  renames, base attr/slot renames, and new defaults; do not add compatibility
+  shims to the base instead. Generated code may call only a base component and
+  the frozen seam (`FlintUI.Styled.Color`, `.Size`, `.ContainerSize`).
+  Changing a template, an entry prop, or a base attr/slot the wrapper forwards
+  requires bumping `FlintUI.Generator.wrapper_api/0`, and
+  `test/generator/seam_test.exs` fails when the seam changes. Regenerate the
+  docs wrappers (`cd docs && mix flint.update --force`) in the same change.
 
 ### Sources of truth
 
@@ -329,6 +340,9 @@ inline code elsewhere carries `class="docs-code font-mono"`.
 - `mise exec -- mix format`
 - `mise exec -- mix compile --warnings-as-errors`
 - `mise exec -- mix test`
+- `cd docs && mise exec -- mix flint.update --force` when a wrapper template,
+  entry, or forwarded base attribute/slot changed, then
+  `cd docs && mise exec -- mix precommit`.
 - `cd docs && mise exec -- mix precommit` if anything under `docs/` changed.
 - `mise exec -- mix assets.build` if anything under `assets/` changed; required
   before a Hex build.

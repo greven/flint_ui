@@ -592,9 +592,19 @@ defmodule FlintUI.GeneratorTest do
   test "the alert wrapper keeps the runtime intent icon names literal for Tailwind" do
     source = Generator.component_source(:alert)
 
-    for intent <- ~w(neutral info success warning danger) do
-      assert source =~ FlintUI.Base.Alert.intent_icon(intent)
+    icons = %{
+      "neutral" => "lucide-info",
+      "info" => "lucide-info",
+      "success" => "lucide-circle-check",
+      "warning" => "lucide-circle-exclamation-point",
+      "danger" => "lucide-circle-x"
+    }
+
+    for {intent, icon} <- icons do
+      assert source =~ "defp intent_icon_for(\"#{intent}\"), do: \"#{icon}\""
     end
+
+    refute source =~ "FlintUI.Base.Alert"
   end
 
   test "accordion maps its layout props and duration" do
@@ -637,6 +647,98 @@ defmodule FlintUI.GeneratorTest do
     assert source =~ "{render_slot(@inner_block) || @label}"
     assert source =~ "<FlintUI.icon :if={@icon && is_nil(@label) && @inner_block == []}"
     assert source =~ "include: ~w(as decorative orientation)"
+  end
+
+  test "every wrapper carries a marker with a body hash" do
+    for name <- Styled.names() do
+      source = Generator.component_source(name)
+      body = Generator.component_body(name)
+
+      assert source =~
+               ~r/^# flint_ui: component=#{name} wrapper_api=#{Generator.wrapper_api()} lib=\S+ nodes=\d+ hash=[0-9a-f]+$/m
+
+      assert Generator.body_hash(body) =~ ~r/^[0-9a-f]{16}$/
+    end
+  end
+
+  test "the recorded hash covers the body and ignores formatting whitespace" do
+    source = Generator.component_source(:button)
+    body = Generator.component_body(:button)
+    marker = Generator.parse_marker(source |> String.split("\n") |> List.first())
+
+    assert marker.name == "button"
+    assert marker.wrapper_api == Generator.wrapper_api()
+    assert marker.lib == Generator.library_version()
+    assert marker.hash == Generator.body_hash(body)
+    assert marker.hash == Generator.body_hash(String.replace(body, "\n", "\n   "))
+  end
+
+  test "the marker hash normalization is frozen" do
+    # Changing this value makes every marker written by an earlier version look
+    # hand-edited, so `mix flint.update` would refuse to refresh those wrappers.
+    # See `FlintUI.Generator.body_hash/1`.
+    assert Generator.body_hash("def a(x) do\n  x\nend\n") == "f91c66c050971bb2"
+
+    assert Generator.body_hash("def a(x) do\n\n  x\n\nend\n") == "f91c66c050971bb2"
+  end
+
+  test "blocks splits a module into its marked components" do
+    source = """
+    defmodule Example do
+      use Phoenix.Component
+
+      def custom, do: :ok
+
+      #{Generator.component_source(:button)}
+
+      #{Generator.component_source(:badge)}
+    end
+    """
+
+    blocks = Generator.blocks(source)
+    lines = String.split(source, "\n")
+
+    assert Enum.map(blocks, & &1.name) == ["button", "badge"]
+    assert Generator.block_body(lines, Enum.at(blocks, 0)) =~ "def button(assigns)"
+    refute Generator.block_body(lines, Enum.at(blocks, 0)) =~ "def custom"
+    assert Generator.block_body(lines, Enum.at(blocks, 1)) =~ "def badge(assigns)"
+  end
+
+  test "blocks ends the last component before code added below it" do
+    source = """
+    defmodule Example do
+      use Phoenix.Component
+
+      #{Generator.component_source(:button)}
+
+      def custom, do: :ok
+    end
+    """
+
+    [block] = Generator.blocks(source)
+    lines = String.split(source, "\n")
+
+    refute Generator.block_body(lines, block) =~ "def custom"
+  end
+
+  test "sync_hashes rewrites each marker from its formatted body" do
+    source = """
+    defmodule Example do
+      use Phoenix.Component
+
+      # flint_ui: component=button wrapper_api=1 lib=0.0.0 nodes=1 hash=0000000000000000
+      def button(assigns) do
+        assigns
+      end
+    end
+    """
+
+    synced = Generator.sync_hashes(source)
+    block = synced |> Generator.blocks() |> hd()
+    lines = String.split(synced, "\n")
+
+    assert block.hash == Generator.body_hash(Generator.block_body(lines, block))
+    refute synced =~ "hash=0000000000000000"
   end
 
   test "the combined generated module compiles" do

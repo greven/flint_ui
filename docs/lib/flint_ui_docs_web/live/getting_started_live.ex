@@ -12,6 +12,8 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
     {"mix flint.setup --tailwind", "Also map tokens onto Tailwind utilities."},
     {"mix flint.add <name>", "Generate a styled component wrapper."},
     {"mix flint.add --all", "Generate every registered component."},
+    {"mix flint.update", "Refresh generated wrappers to the current library API."},
+    {"mix flint.update --check", "Exit non-zero when a generated wrapper is stale, for CI."},
     {"mix flint.theme", "Refresh the generated theme and utility stylesheets."},
     {"mix flint.utilities", "Refresh just the generated utility stylesheet."},
     {"mix flint.icons <set>", "Install icon assets with Tailwind or plain CSS."},
@@ -100,6 +102,30 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
           <DocsComponents.code_block code={snippet(:headless)} />
         </DocsComponents.section>
 
+        <DocsComponents.section title="6. Keep generated components current" id="updating">
+          <DocsComponents.content_paragraph>
+            Generated wrappers are source in your app, so they keep the API from the
+            version that created them. After upgrading <code class="docs-code font-mono">flint_ui</code>,
+            run <code class="docs-code font-mono">mix flint.update</code> to refresh them:
+          </DocsComponents.content_paragraph>
+          <DocsComponents.code_block code={snippet(:update)} />
+          <DocsComponents.content_paragraph class="mt-3">
+            Each wrapper carries a marker with the library version and a hash of its
+            body. The task replaces whole marked blocks, so renamed props and new
+            defaults arrive in one command. A wrapper you edited by hand is left alone
+            and reported; pass <code class="docs-code font-mono">--force</code>
+            to
+            overwrite it. <code class="docs-code font-mono">mix flint.update --check</code>
+            fails instead of writing, which suits CI. The theme and utility stylesheets
+            are refreshed too unless you pass <code class="docs-code font-mono">--no-theme</code>,
+            so generated code and generated CSS stay in step.
+          </DocsComponents.content_paragraph>
+          <DocsComponents.content_paragraph class="mt-3">
+            New components are not added automatically. The task lists the ones available
+            in the library; add one with <code class="docs-code font-mono">mix flint.add &lt;name&gt;</code>.
+          </DocsComponents.content_paragraph>
+        </DocsComponents.section>
+
         <DocsComponents.section title="Commands" id="commands">
           <table class="mt-2 w-full text-left text-sm">
             <thead class="text-xs tracking-wider text-muted uppercase">
@@ -135,6 +161,20 @@ defmodule FlintUIDocsWeb.GettingStartedLive do
 
     # or every component
     mix flint.add --all
+    """
+  end
+
+  defp snippet(:update) do
+    """
+    # after upgrading flint_ui
+    mix flint.update
+
+    # one component, or overwrite a hand-edited wrapper
+    mix flint.update button
+    mix flint.update button --force
+
+    # CI: fail when a wrapper is stale
+    mix flint.update --check
     """
   end
 

@@ -15,7 +15,7 @@ defmodule FlintUI.Styled.Tooltip do
       vars: [
         Var.new(
           name: "--fl-tooltip-max-width",
-          default: "18rem",
+          default: "20rem",
           doc: "Maximum width of the tooltip before its text wraps."
         ),
         Var.new(

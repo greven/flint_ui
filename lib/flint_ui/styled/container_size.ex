@@ -1,5 +1,16 @@
 defmodule FlintUI.Styled.ContainerSize do
-  @moduledoc false
+  @moduledoc """
+  Container size resolution for generated wrappers.
+
+  This is **generated-code API**: the styled wrappers emitted by `mix flint.add`
+  call `resolve/1` at runtime, so an already generated wrapper depends on its
+  name, arity, and return shape. Treat it as public and add rather than rename
+  or change arity; doing so requires bumping
+  `FlintUI.Generator.wrapper_api/0` so `mix flint.update` can refresh existing
+  wrappers.
+
+  The token list and the CSS produced for each value are not frozen.
+  """
 
   @tokens ~w(xs sm md lg xl 2xl 3xl 4xl 5xl 6xl 7xl)
   @values @tokens ++ ["fluid"]

@@ -21,7 +21,7 @@ def <%= @name %>(assigns) do
   # lucide-info lucide-circle-check lucide-circle-exclamation-point lucide-circle-x
   intent_icon =
     if assigns.icon == [] and assigns.show_icon do
-      FlintUI.Base.Alert.intent_icon(intent)
+      intent_icon_for(intent)
     end
 
   assigns = assign(assigns, :intent_icon, intent_icon)
@@ -51,3 +51,12 @@ def <%= @name %>(assigns) do
   </FlintUI.alert>
   """
 end
+
+# The default icon for an intent is styled-layer presentation, so the wrapper
+# owns it instead of the headless component.
+defp intent_icon_for("neutral"), do: "lucide-info"
+defp intent_icon_for("info"), do: "lucide-info"
+defp intent_icon_for("success"), do: "lucide-circle-check"
+defp intent_icon_for("warning"), do: "lucide-circle-exclamation-point"
+defp intent_icon_for("danger"), do: "lucide-circle-x"
+defp intent_icon_for(_intent), do: nil

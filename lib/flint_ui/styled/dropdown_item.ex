@@ -34,8 +34,9 @@ defmodule FlintUI.Styled.DropdownItem do
       vars: [
         Var.new(
           name: "--fl-dropdown-item-text",
-          default: "var(--fl-color-text)",
-          doc: "The item label color."
+          default: "var(--fl-color-text-toned)",
+          doc:
+            "The item label color at rest. Hover, focus, and the active row fall back to the default text ink unless this is set."
         ),
         Var.new(
           name: "--fl-dropdown-item-highlight",
@@ -45,8 +46,9 @@ defmodule FlintUI.Styled.DropdownItem do
         ),
         Var.new(
           name: "--fl-dropdown-item-accent",
-          default: "var(--fl-color-text-muted)",
-          doc: "The color of the item's icon and other secondary marks."
+          default: "color-mix(in oklab, currentcolor 70%, transparent)",
+          doc:
+            "The color of the item's icon and other secondary marks. It is a muted step of the row's label ink, so `intent` and hover retint it with the text."
         )
       ]
     }

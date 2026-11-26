@@ -180,15 +180,6 @@ defmodule FlintUI.Base.AlertTest do
     assert Enum.any?(parts[:close], &(&1.name == "phx-click"))
   end
 
-  test "maps each intent to its default icon" do
-    assert FlintUI.Base.Alert.intent_icon("neutral") == "lucide-info"
-    assert FlintUI.Base.Alert.intent_icon("info") == "lucide-info"
-    assert FlintUI.Base.Alert.intent_icon("success") == "lucide-circle-check"
-    assert FlintUI.Base.Alert.intent_icon("warning") == "lucide-circle-exclamation-point"
-    assert FlintUI.Base.Alert.intent_icon("danger") == "lucide-circle-x"
-    assert FlintUI.Base.Alert.intent_icon(nil) == nil
-  end
-
   test "rejects an unknown intent" do
     assert_raise ArgumentError, ~r/invalid alert intent/, fn ->
       render(&TestComponent.invalid_intent/1)

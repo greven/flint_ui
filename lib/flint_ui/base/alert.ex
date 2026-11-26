@@ -343,16 +343,6 @@ defmodule FlintUI.Base.Alert do
   ## Helpers
 
   @doc """
-  Returns the default Lucide icon class for an alert intent, or `nil`.
-  """
-  def intent_icon("neutral"), do: "lucide-info"
-  def intent_icon("info"), do: "lucide-info"
-  def intent_icon("success"), do: "lucide-circle-check"
-  def intent_icon("warning"), do: "lucide-circle-exclamation-point"
-  def intent_icon("danger"), do: "lucide-circle-x"
-  def intent_icon(_intent), do: nil
-
-  @doc """
   Closes the alert with the given DOM id from the client.
 
   Dispatches `fl:alert:close` and hides the alert. Use it in a `phx-click` on a

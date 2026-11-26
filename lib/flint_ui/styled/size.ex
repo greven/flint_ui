@@ -1,5 +1,16 @@
 defmodule FlintUI.Styled.Size do
-  @moduledoc false
+  @moduledoc """
+  Size helpers for generated wrappers.
+
+  This is **generated-code API**: the styled wrappers emitted by `mix flint.add`
+  call these functions at runtime, so an already generated wrapper depends on
+  their names and signatures. Treat them as public and add rather than rename
+  or change arity; doing so requires bumping `FlintUI.Generator.wrapper_api/0`
+  so `mix flint.update` can refresh existing wrappers.
+
+  The implementation, including how a numeric size becomes a `rem` value, is
+  not frozen.
+  """
 
   @scale ~w(xs sm md lg xl)
 
