@@ -64,7 +64,7 @@ defmodule FlintUI.Base.DropdownHeader do
         %Meta.PartAttr{
           name: "[data-color]",
           value: "string",
-          description: "The semantic color of the header."
+          description: "The semantic color of the header. Absent when no color is set."
         }
       ]
     ]
@@ -77,7 +77,7 @@ defmodule FlintUI.Base.DropdownHeader do
         "data-element" => "dropdown_header",
         "data-part" => "header",
         "role" => "presentation",
-        "data-color" => assigns.color
+        "data-color" => assigns[:color]
       }
     }
   end
@@ -87,9 +87,8 @@ defmodule FlintUI.Base.DropdownHeader do
   attr :flint_parts, :map, default: nil, doc: false
 
   attr :color, :string,
-    default: "neutral",
     values: @colors,
-    doc: "The semantic color of the header. The default is muted."
+    doc: "The semantic color of the header. When omitted, the label uses the muted ink tier."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 

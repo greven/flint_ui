@@ -49,7 +49,7 @@ defmodule FlintUI.Styled.LoadingTextTest do
     assert LazyHTML.tag(root(document, :loading_text)) == ["span"]
     assert attr(document, :loading_text, "data-loading_text") == [""]
     assert attr(document, :loading_text, "data-variant") == ["dots"]
-    assert attr(document, :loading_text, "data-color") == ["inherit"]
+    assert attr(document, :loading_text, "data-color") == []
     assert text_part(document) == "Saving"
     assert count_part(document, "dot") == 3
   end

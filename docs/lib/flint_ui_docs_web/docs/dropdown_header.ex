@@ -38,7 +38,6 @@ defmodule FlintUIDocsWeb.Docs.DropdownHeader do
           data-element="dropdown_header"
           data-part="header"
           data-dropdown_header
-          data-color="neutral"
           role="presentation"
         >
           Account

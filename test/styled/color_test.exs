@@ -55,6 +55,18 @@ defmodule FlintUI.Styled.ColorTest do
       refute assigns.rest.style =~ "data-color"
     end
 
+    test "inherit is a sentinel and leaves no hook" do
+      assigns =
+        StyledColor.apply(
+          %{color: "inherit", rest: %{class: "extra"}, __changed__: %{}},
+          ["inherit" | @roles],
+          @vars
+        )
+
+      assert assigns.data_color == nil
+      assert assigns.rest == %{class: "extra"}
+    end
+
     test "absolute tones keep the data hook even when the entry omits them" do
       for tone <- ~w(dark light) do
         assigns =

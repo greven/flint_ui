@@ -45,7 +45,7 @@ defmodule FlintUI.Styled.LoadingTest do
     assert LazyHTML.tag(root(document, :loading)) == ["svg"]
     assert attr(document, :loading, "data-loading") == [""]
     assert attr(document, :loading, "data-variant") == ["ring"]
-    assert attr(document, :loading, "data-color") == ["inherit"]
+    assert attr(document, :loading, "data-color") == []
     assert attr(document, :loading, "data-size") == ["md"]
   end
 

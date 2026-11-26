@@ -6,17 +6,31 @@ defmodule FlintUI.Base.DropdownHeaderTest do
   defmodule TestComponent do
     use FlintUI
 
-    def example(assigns) do
-      assigns = assign_new(assigns, :color, fn -> "neutral" end)
+    def default(assigns) do
+      ~H"""
+      <.dropdown_header class="extra" data-role="test">Account</.dropdown_header>
+      """
+    end
 
+    def colored(assigns) do
       ~H"""
       <.dropdown_header color={@color} class="extra" data-role="test">Account</.dropdown_header>
       """
     end
   end
 
-  defp render(assigns \\ []) do
-    render_component(&TestComponent.example/1, assigns)
+  defp render do
+    render_component(&TestComponent.default/1, [])
+    |> header()
+  end
+
+  defp render_colored(color) do
+    render_component(&TestComponent.colored/1, %{color: color})
+    |> header()
+  end
+
+  defp header(html) do
+    html
     |> LazyHTML.from_fragment()
     |> LazyHTML.query(~s([data-element="dropdown_header"]))
   end
@@ -27,13 +41,17 @@ defmodule FlintUI.Base.DropdownHeaderTest do
     assert LazyHTML.tag(header) == ["header"]
     assert LazyHTML.attribute(header, "role") == ["presentation"]
     assert LazyHTML.attribute(header, "data-part") == ["header"]
-    assert LazyHTML.attribute(header, "data-color") == ["neutral"]
+    assert LazyHTML.attribute(header, "data-color") == []
     assert LazyHTML.attribute(header, "class") == ["extra"]
     assert LazyHTML.attribute(header, "data-role") == ["test"]
     assert LazyHTML.text(header) =~ "Account"
   end
 
   test "forwards the semantic color" do
-    assert LazyHTML.attribute(render(color: "danger"), "data-color") == ["danger"]
+    assert LazyHTML.attribute(render_colored("danger"), "data-color") == ["danger"]
+  end
+
+  test "an explicit neutral is a tone, not the muted default" do
+    assert LazyHTML.attribute(render_colored("neutral"), "data-color") == ["neutral"]
   end
 end

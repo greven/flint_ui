@@ -503,67 +503,61 @@ defmodule FlintUIDocsWeb.Preview do
         <%= for control <- @controls do %>
           <%= case control_kind(control) do %>
             <% :select -> %>
-              <div class="w-fit">
-                <Components.input
-                  id={"#{@id}-control-#{control.key}"}
-                  type="select"
-                  name={control.key}
-                  value={Map.get(@props, control.key)}
-                  options={select_options(control, @name, @layer)}
-                  size="sm"
-                >
-                  <:outer_prefix class="bg-default/75">
-                    <label
-                      for={"#{@id}-control-#{control.key}"}
-                      class="text-xs font-medium whitespace-nowrap"
-                    >
-                      {control.label}
-                    </label>
-                  </:outer_prefix>
-                </Components.input>
-              </div>
+              <Components.input
+                id={"#{@id}-control-#{control.key}"}
+                type="select"
+                name={control.key}
+                value={Map.get(@props, control.key)}
+                options={select_options(control, @name, @layer)}
+                size="sm"
+              >
+                <:outer_prefix class="bg-default/75">
+                  <label
+                    for={"#{@id}-control-#{control.key}"}
+                    class="text-xs font-medium whitespace-nowrap"
+                  >
+                    {control.label}
+                  </label>
+                </:outer_prefix>
+              </Components.input>
             <% :number -> %>
-              <div class="w-fit">
-                <Components.input
-                  id={"#{@id}-control-#{control.key}"}
-                  type="number"
-                  name={control.key}
-                  value={Map.get(@props, control.key)}
-                  size="sm"
-                  class={FlintUI.Autofill.ignore_class()}
-                  {FlintUI.Autofill.ignore_attributes()}
-                >
-                  <:outer_prefix class="bg-default/75">
-                    <label
-                      for={"#{@id}-control-#{control.key}"}
-                      class="text-xs font-medium whitespace-nowrap"
-                    >
-                      {control.label}
-                    </label>
-                  </:outer_prefix>
-                </Components.input>
-              </div>
+              <Components.input
+                id={"#{@id}-control-#{control.key}"}
+                type="number"
+                name={control.key}
+                value={Map.get(@props, control.key)}
+                size="sm"
+                class={FlintUI.Autofill.ignore_class()}
+                {FlintUI.Autofill.ignore_attributes()}
+              >
+                <:outer_prefix class="bg-default/75">
+                  <label
+                    for={"#{@id}-control-#{control.key}"}
+                    class="text-xs font-medium whitespace-nowrap"
+                  >
+                    {control.label}
+                  </label>
+                </:outer_prefix>
+              </Components.input>
             <% _ -> %>
-              <div class="w-fit">
-                <Components.input
-                  id={"#{@id}-control-#{control.key}"}
-                  type="text"
-                  name={control.key}
-                  value={Map.get(@props, control.key)}
-                  size="sm"
-                  class={FlintUI.Autofill.ignore_class()}
-                  {FlintUI.Autofill.ignore_attributes()}
-                >
-                  <:outer_prefix class="bg-default/75">
-                    <label
-                      for={"#{@id}-control-#{control.key}"}
-                      class="text-xs font-medium whitespace-nowrap"
-                    >
-                      {control.label}
-                    </label>
-                  </:outer_prefix>
-                </Components.input>
-              </div>
+              <Components.input
+                id={"#{@id}-control-#{control.key}"}
+                type="text"
+                name={control.key}
+                value={Map.get(@props, control.key)}
+                size="sm"
+                class={FlintUI.Autofill.ignore_class()}
+                {FlintUI.Autofill.ignore_attributes()}
+              >
+                <:outer_prefix class="bg-default/75">
+                  <label
+                    for={"#{@id}-control-#{control.key}"}
+                    class="text-xs font-medium whitespace-nowrap"
+                  >
+                    {control.label}
+                  </label>
+                </:outer_prefix>
+              </Components.input>
           <% end %>
         <% end %>
       </form>

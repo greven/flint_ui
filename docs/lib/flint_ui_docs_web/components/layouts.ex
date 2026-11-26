@@ -188,7 +188,7 @@ defmodule FlintUIDocsWeb.Layouts do
     ]}>
       <div :for={group <- @section.groups} class="mb-6 last:mb-0">
         <div class="flex items-center gap-2.5 text-default">
-          <.icon name={group.icon} class="size-4" />
+          <.icon name={group.icon} class="size-4 text-muted" />
           <p class="text-xs font-semibold tracking-wider uppercase">
             {group.label}
           </p>

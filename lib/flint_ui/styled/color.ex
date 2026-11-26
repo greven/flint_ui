@@ -80,6 +80,11 @@ defmodule FlintUI.Styled.Color do
   `:prop` names the prop to read (default `:color`) and `:data` names the hook
   assign it produces (default `:data_color`), so a component can resolve a
   second, state-specific color such as the toggle's `active_color`.
+
+  `inherit` is a sentinel, not a tone: it resolves to no hook so the component
+  follows the surrounding `currentColor`. An emitted `data-color="inherit"`
+  would match the theme's `[data-color]` selectors and could pick up an
+  ancestor's `--fl-tone` variables, which inherit.
   """
   def apply(assigns, roles, vars, opts \\ []) do
     prop = Keyword.get(opts, :prop, :color)
@@ -88,6 +93,9 @@ defmodule FlintUI.Styled.Color do
 
     {data_color, rest} =
       case resolve(value, roles) do
+        {:hook, "inherit"} ->
+          {nil, Map.get(assigns, :rest)}
+
         {:hook, hook} ->
           {hook, Map.get(assigns, :rest)}
 
