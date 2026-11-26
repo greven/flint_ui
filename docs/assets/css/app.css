@@ -160,6 +160,10 @@
 /* Headings use the strongest text tier and the display face; body copy stays on
    `text-default` in the sans face. */
 @layer base {
+    html {
+        overflow-y: stable;
+    }
+
     h1,
     h2,
     h3,
@@ -233,6 +237,11 @@ html[data-flint-sound="on"] [data-sound-icon="off"] {
 
 [data-nav-group][data-nav-open="false"] > [data-nav-panel] {
     display: none;
+}
+
+/* The docs header owns its full-width bottom rule. */
+.docs-section-nav > [data-part="list"] {
+    border-block-end: 0;
 }
 
 [data-nav-group] [data-nav-toggle] .lucide-chevron-right {

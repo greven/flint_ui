@@ -34,7 +34,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#base")
     assert has_element?(view, "#styled")
     assert has_element?(view, "#theming")
-    assert has_element?(view, "#section-getting-started[aria-current='page']")
+    assert has_element?(view, "#section-getting-started a[aria-current='page']")
   end
 
   test "installation page walks through setup", %{conn: conn} do
@@ -77,7 +77,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#state")
     assert has_element?(view, "#utilities")
     assert has_element?(view, "#attributes")
-    assert has_element?(view, "#section-getting-started[aria-current='page']")
+    assert has_element?(view, "#section-getting-started a[aria-current='page']")
   end
 
   test "icons guide documents both install modes and every icon set", %{conn: conn} do
@@ -90,7 +90,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#usage")
     assert has_element?(view, "#accessibility")
     assert has_element?(view, "#licenses")
-    assert has_element?(view, "#section-guides[aria-current='page']")
+    assert has_element?(view, "#section-guides a[aria-current='page']")
     assert has_element?(view, "aside a[href='/guides/icons']")
 
     # Every class-based set links to its upstream source, straight from the
@@ -125,7 +125,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#classes")
     assert has_element?(view, "#accessibility")
     assert has_element?(view, "#licenses")
-    assert has_element?(view, "#section-guides[aria-current='page']")
+    assert has_element?(view, "#section-guides a[aria-current='page']")
     assert has_element?(view, "aside a[href='/guides/flags']")
 
     html = render(view)
@@ -350,7 +350,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
   test "the sidebar lists only the active section", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming")
 
-    assert has_element?(view, "#section-guides[aria-current='page']")
+    assert has_element?(view, "#section-guides a[aria-current='page']")
     assert has_element?(view, "aside a[href='/guides/theming']")
     refute has_element?(view, "aside a[href='/components/button']")
     refute has_element?(view, "aside a[href='/getting-started/introduction']")

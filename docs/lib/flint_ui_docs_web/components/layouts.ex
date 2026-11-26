@@ -103,35 +103,33 @@ defmodule FlintUIDocsWeb.Layouts do
             <span class="font-semibold tracking-tight">FlintUI</span>
           </.link>
 
-          <nav aria-label="Primary" class="justify-self-center">
-            <Components.button
-              navigate={~p"/themes"}
-              aria-current={if @page == :themes, do: "page", else: nil}
-              variant={if @page == :themes, do: "subtle", else: "ghost"}
-              size="sm"
-            >
+          <Components.navbar
+            id="docs-primary-nav"
+            label="Primary"
+          >
+            <Components.navbar_item navigate={~p"/themes"} active={@page == :themes}>
               Themes
-            </Components.button>
-          </nav>
+            </Components.navbar_item>
+          </Components.navbar>
 
-          <nav class="flex items-center gap-1 justify-self-end">
+          <div class="flex items-center gap-1 justify-self-end">
             <Components.button
-              href="https://github.com/greven/flint_ui"
-              target="_blank"
-              rel="noopener"
               variant="ghost"
               size="sm"
               aria-label="FlintUI on GitHub"
+              href="https://github.com/greven/flint_ui"
+              target="_blank"
+              rel="noopener"
             >
-              <Components.icon name="lucide-code-xml" class="size-4 sm:hidden" />
               <span class="hidden sm:inline">GitHub</span>
+              <Components.icon name="lucide-arrow-up-right" />
             </Components.button>
             <.theme_toggle />
-          </nav>
+          </div>
         </div>
-      </header>
 
-      <.section_nav sections={@sections} section={@section} />
+        <.section_nav sections={@sections} section={@section} />
+      </header>
     </div>
     """
   end
@@ -145,23 +143,24 @@ defmodule FlintUIDocsWeb.Layouts do
   def section_nav(assigns) do
     ~H"""
     <div class="border-t border-default">
-      <nav
-        aria-label="Documentation sections"
-        class="mx-auto flex max-w-360 items-center gap-6 px-4 sm:px-6 lg:px-8"
-      >
-        <.link
-          :for={section <- @sections}
-          navigate={FlintUIDocsWeb.Nav.first_page_path(section)}
-          id={section_dom_id(section.id)}
-          aria-current={if @section == section.id, do: "page", else: nil}
-          class={[
-            "-mb-px border-b-2 font-medium py-2.5 text-sm transition-colors",
-            section_class(@section == section.id)
-          ]}
+      <div class="mx-auto max-w-360 px-4 sm:px-6 lg:px-8">
+        <Components.navbar
+          id="docs-section-nav"
+          variant="outlined"
+          size="lg"
+          label="Documentation sections"
+          class="docs-section-nav"
         >
-          {section.label}
-        </.link>
-      </nav>
+          <Components.navbar_item
+            :for={section <- @sections}
+            id={section_dom_id(section.id)}
+            navigate={FlintUIDocsWeb.Nav.first_page_path(section)}
+            active={@section == section.id}
+          >
+            {section.label}
+          </Components.navbar_item>
+        </Components.navbar>
+      </div>
     </div>
     """
   end
@@ -172,14 +171,6 @@ defmodule FlintUIDocsWeb.Layouts do
 
   defp navigation_id(id) do
     "nav-" <> (id |> Atom.to_string() |> String.replace("_", "-"))
-  end
-
-  defp section_class(true) do
-    "border-inverted text-default"
-  end
-
-  defp section_class(false) do
-    "border-transparent text-muted hover:text-default"
   end
 
   @doc false
@@ -193,7 +184,7 @@ defmodule FlintUIDocsWeb.Layouts do
     ~H"""
     <aside class={[
       @class,
-      "hidden h-[calc(100vh-6rem)] w-52 shrink-0 overflow-y-auto py-8 lg:block"
+      "hidden max-h-[calc(100vh-6rem)] w-52 shrink-0 self-start overflow-y-auto py-8 lg:block"
     ]}>
       <div :for={group <- @section.groups} class="mb-6 last:mb-0">
         <div class="flex items-center gap-2.5 text-default">
@@ -358,7 +349,7 @@ defmodule FlintUIDocsWeb.Layouts do
     ~H"""
     <aside
       id="on-this-page"
-      class="sticky top-24 hidden h-[calc(100vh-6rem)] w-56 shrink-0 overflow-y-auto py-8 pl-6 xl:block"
+      class="sticky top-24 hidden max-h-[calc(100vh-6rem)] w-56 shrink-0 self-start overflow-y-auto py-8 pl-6 xl:block"
     >
       <div class="-ml-1 flex items-center gap-2.5 text-default">
         <.icon name="lucide-menu" class="size-4 text-current/50" />

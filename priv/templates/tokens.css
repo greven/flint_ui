@@ -265,7 +265,7 @@
     --fl-color-background: light-dark(var(--fl-surface-page-light), var(--fl-surface-page-dark));
     --fl-color-surface: light-dark(
         color-mix(in oklab, oklch(1 0 0) calc(99.5% - var(--fl-surface-page-tint)), var(--fl-surface-base)),
-        color-mix(in oklab, oklch(1 0 0) calc(7% + var(--fl-surface-page-lift)), var(--fl-surface-base))
+        color-mix(in oklab, oklch(1 0 0) calc(6% + var(--fl-surface-page-lift)), var(--fl-surface-base))
     );
     --fl-color-surface-subtle: color-mix(in oklab, var(--fl-surface-ink) 3%, var(--fl-color-surface));
     --fl-color-surface-strong: color-mix(in oklab, var(--fl-surface-ink) 6%, var(--fl-color-surface));

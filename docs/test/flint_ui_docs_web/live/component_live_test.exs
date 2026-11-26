@@ -42,7 +42,7 @@ defmodule FlintUIDocsWeb.ComponentLiveTest do
   test "the components section link points at the landing page", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/components/button")
 
-    assert has_element?(view, "#section-components[href='/components']")
+    assert has_element?(view, "#section-components a[href='/components']")
   end
 
   test "the header badges carry status, type, and since icons", %{conn: conn} do

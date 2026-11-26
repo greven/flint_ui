@@ -55,14 +55,8 @@
         flex: 1 1 0;
     }
 
-    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable])
-        > [data-part="list"]
-        > [data-element="navbar_item"]
-        > [data-part="content"],
-    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable])
-        > [data-part="list"]
-        > [data-element="navbar_menu"]
-        > [data-part="trigger"] {
+    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable]) > [data-part="list"] > [data-element="navbar_item"] > [data-part="content"],
+    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable]) > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"] {
         inline-size: 100%;
         justify-content: center;
     }
@@ -113,22 +107,9 @@
         mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
     }
 
-    [data-element="navbar"][data-navbar][data-fadable]
-        > [data-part="list"][data-fade-start][data-fade-end] {
-        -webkit-mask-image: linear-gradient(
-            to right,
-            transparent,
-            #000 var(--fl-spacing-xl),
-            #000 calc(100% - var(--fl-spacing-xl)),
-            transparent
-        );
-        mask-image: linear-gradient(
-            to right,
-            transparent,
-            #000 var(--fl-spacing-xl),
-            #000 calc(100% - var(--fl-spacing-xl)),
-            transparent
-        );
+    [data-element="navbar"][data-navbar][data-fadable] > [data-part="list"][data-fade-start][data-fade-end] {
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl), #000 calc(100% - var(--fl-spacing-xl)), transparent);
+        mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl), #000 calc(100% - var(--fl-spacing-xl)), transparent);
     }
 
     /* Sizes drive the item, menu trigger, and menu item metrics. `md` is the
@@ -146,10 +127,7 @@
     }
 
     [data-element="navbar"][data-size="xs"]
-        :is(
-            [data-element="navbar_item"] > [data-part="content"],
-            [data-element="navbar_menu_item"] > [data-part="content"]
-        ) {
+        :is([data-element="navbar_item"] > [data-part="content"], [data-element="navbar_menu_item"] > [data-part="content"]) {
         gap: var(--fl-control-gap-xs);
     }
 
@@ -166,10 +144,7 @@
     }
 
     [data-element="navbar"][data-size="sm"]
-        :is(
-            [data-element="navbar_item"] > [data-part="content"],
-            [data-element="navbar_menu_item"] > [data-part="content"]
-        ) {
+        :is([data-element="navbar_item"] > [data-part="content"], [data-element="navbar_menu_item"] > [data-part="content"]) {
         gap: var(--fl-control-gap-xs);
     }
 
@@ -186,10 +161,7 @@
     }
 
     [data-element="navbar"][data-size="lg"]
-        :is(
-            [data-element="navbar_item"] > [data-part="content"],
-            [data-element="navbar_menu_item"] > [data-part="content"]
-        ) {
+        :is([data-element="navbar_item"] > [data-part="content"], [data-element="navbar_menu_item"] > [data-part="content"]) {
         gap: var(--fl-control-gap-md);
     }
 
@@ -206,23 +178,16 @@
     }
 
     [data-element="navbar"][data-size="xl"]
-        :is(
-            [data-element="navbar_item"] > [data-part="content"],
-            [data-element="navbar_menu_item"] > [data-part="content"]
-        ) {
+        :is([data-element="navbar_item"] > [data-part="content"], [data-element="navbar_menu_item"] > [data-part="content"]) {
         gap: var(--fl-control-gap-lg);
     }
 
     /* The menu trigger keeps a wider gap for its disclosure indicator. */
-    [data-element="navbar"][data-size="xs"]
-        [data-element="navbar_menu"]
-        > [data-part="trigger"] {
+    [data-element="navbar"][data-size="xs"] [data-element="navbar_menu"] > [data-part="trigger"] {
         gap: var(--fl-control-gap-xs);
     }
 
-    [data-element="navbar"][data-size="sm"]
-        [data-element="navbar_menu"]
-        > [data-part="trigger"] {
+    [data-element="navbar"][data-size="sm"] [data-element="navbar_menu"] > [data-part="trigger"] {
         gap: var(--fl-control-gap-sm);
     }
 
@@ -250,34 +215,22 @@
         --fl-icon-size: var(--fl-control-icon-xl);
     }
 
-    [data-element="navbar"][data-size="xs"]
-        [data-element="navbar_menu"]
-        > [data-part="trigger"]
-        > [data-part="indicator"] {
+    [data-element="navbar"][data-size="xs"] [data-element="navbar_menu"] > [data-part="trigger"] > [data-part="indicator"] {
         inline-size: var(--fl-control-icon-xs);
         block-size: var(--fl-control-icon-xs);
     }
 
-    [data-element="navbar"][data-size="sm"]
-        [data-element="navbar_menu"]
-        > [data-part="trigger"]
-        > [data-part="indicator"] {
+    [data-element="navbar"][data-size="sm"] [data-element="navbar_menu"] > [data-part="trigger"] > [data-part="indicator"] {
         inline-size: var(--fl-control-icon-sm);
         block-size: var(--fl-control-icon-sm);
     }
 
-    [data-element="navbar"][data-size="lg"]
-        [data-element="navbar_menu"]
-        > [data-part="trigger"]
-        > [data-part="indicator"] {
+    [data-element="navbar"][data-size="lg"] [data-element="navbar_menu"] > [data-part="trigger"] > [data-part="indicator"] {
         inline-size: var(--fl-control-icon-lg);
         block-size: var(--fl-control-icon-lg);
     }
 
-    [data-element="navbar"][data-size="xl"]
-        [data-element="navbar_menu"]
-        > [data-part="trigger"]
-        > [data-part="indicator"] {
+    [data-element="navbar"][data-size="xl"] [data-element="navbar_menu"] > [data-part="trigger"] > [data-part="indicator"] {
         inline-size: var(--fl-control-icon-xl);
         block-size: var(--fl-control-icon-xl);
     }
@@ -289,14 +242,8 @@
         border-block-end: 1px solid var(--fl-color-border);
     }
 
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_item"]
-        > [data-part="content"],
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"]
-        > [data-part="trigger"] {
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"] > [data-part="content"],
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"] {
         position: relative;
         border-radius: 0;
         background-color: transparent;
@@ -306,38 +253,20 @@
         > [data-part="list"]
         > [data-element="navbar_item"]:not([data-disabled])
         > [data-part="content"]:is(:hover, :focus-visible),
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"]
-        > [data-part="trigger"]:is(:hover, :focus-visible) {
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"]:is(:hover, :focus-visible) {
         background-color: transparent;
         color: var(--fl-color-text);
     }
 
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_item"][data-active]
-        > [data-part="content"],
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"]
-        > [data-part="trigger"][data-state="open"],
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"][data-active]
-        > [data-part="trigger"] {
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"][data-active] > [data-part="content"],
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"][data-state="open"],
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"][data-active] > [data-part="trigger"] {
         background-color: transparent;
         color: var(--fl-color-text);
     }
 
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_item"]
-        > [data-part="content"]::after,
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"]
-        > [data-part="trigger"]::after {
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"] > [data-part="content"]::after,
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"]::after {
         content: "";
         position: absolute;
         inset-inline: 0;
@@ -351,18 +280,9 @@
             transform var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_item"][data-active]
-        > [data-part="content"]::after,
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"]
-        > [data-part="trigger"][data-state="open"]::after,
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_menu"][data-active]
-        > [data-part="trigger"]::after {
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"][data-active] > [data-part="content"]::after,
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"][data-state="open"]::after,
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"][data-active] > [data-part="trigger"]::after {
         background: var(--fl-navbar-color);
         transform: scaleX(1);
         transition:
@@ -370,8 +290,6 @@
             transform var(--fl-duration-base) var(--fl-ease-out);
     }
 
-    /* Keep the outlined indicator inside the scroll container, where it is not
-     * clipped by overflow. */
     [data-element="navbar"][data-variant="outlined"]:is([data-scrollable], [data-fadable])
         > [data-part="list"]
         > [data-element="navbar_item"]
@@ -380,23 +298,16 @@
         > [data-part="list"]
         > [data-element="navbar_menu"]
         > [data-part="trigger"]::after {
-        bottom: 0;
+        bottom: -1px;
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-element="navbar"][data-variant="outlined"]
-            > [data-part="list"]
-            > [data-element="navbar_item"]
-            > [data-part="content"]::after,
-        [data-element="navbar"][data-variant="outlined"]
-            > [data-part="list"]
-            > [data-element="navbar_menu"]
-            > [data-part="trigger"]::after {
+        [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"] > [data-part="content"]::after,
+        [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"]::after {
             transition: none;
         }
 
-        [data-element="navbar"][data-navbar]:is([data-scrollable], [data-fadable])
-            > [data-part="list"] {
+        [data-element="navbar"][data-navbar]:is([data-scrollable], [data-fadable]) > [data-part="list"] {
             scroll-behavior: auto;
         }
     }
