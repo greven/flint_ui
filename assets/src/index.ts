@@ -11,6 +11,7 @@ installCopy();
 export { Accordion } from "./components/accordion";
 export { Collapsible } from "./components/collapsible";
 export { Dropdown } from "./components/dropdown";
+export { Header } from "./components/header";
 export { KnownDate } from "./components/known_date";
 export { Modal } from "./components/modal";
 export { Navbar } from "./components/navbar";

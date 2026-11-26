@@ -4,7 +4,7 @@ defmodule FlintUIDocsWeb.Components do
   """
 
   use Phoenix.Component
-  # flint_ui: component=accordion wrapper_api=1 lib=0.1.0 nodes=10 hash=8c8ecc30338fb083
+  # flint_ui: component=accordion wrapper_api=2 lib=0.1.0 nodes=10 hash=8c8ecc30338fb083
   @doc """
   Renders a styled accordion.
 
@@ -85,7 +85,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=accordion_item wrapper_api=1 lib=0.1.0 nodes=7 hash=06059a1757609012
+  # flint_ui: component=accordion_item wrapper_api=2 lib=0.1.0 nodes=7 hash=06059a1757609012
   @doc """
   Renders a styled accordion item.
 
@@ -137,7 +137,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=alert wrapper_api=1 lib=0.1.0 nodes=21 hash=605e7b6c2c51645d
+  # flint_ui: component=alert wrapper_api=2 lib=0.1.0 nodes=21 hash=605e7b6c2c51645d
   @doc """
   Renders a styled alert.
 
@@ -263,25 +263,14 @@ defmodule FlintUIDocsWeb.Components do
 
   # The default icon for an intent is styled-layer presentation, so the wrapper
   # owns it instead of the headless component.
-  defp intent_icon_for("neutral"),
-    do: "lucide-info"
+  defp intent_icon_for("neutral"), do: "lucide-info"
+  defp intent_icon_for("info"), do: "lucide-info"
+  defp intent_icon_for("success"), do: "lucide-circle-check"
+  defp intent_icon_for("warning"), do: "lucide-circle-exclamation-point"
+  defp intent_icon_for("danger"), do: "lucide-circle-x"
+  defp intent_icon_for(_intent), do: nil
 
-  defp intent_icon_for("info"),
-    do: "lucide-info"
-
-  defp intent_icon_for("success"),
-    do: "lucide-circle-check"
-
-  defp intent_icon_for("warning"),
-    do: "lucide-circle-exclamation-point"
-
-  defp intent_icon_for("danger"),
-    do: "lucide-circle-x"
-
-  defp intent_icon_for(_intent),
-    do: nil
-
-  # flint_ui: component=avatar wrapper_api=1 lib=0.1.0 nodes=15 hash=70459e6a09b3fe9a
+  # flint_ui: component=avatar wrapper_api=2 lib=0.1.0 nodes=15 hash=70459e6a09b3fe9a
   @doc """
   Renders a styled avatar.
 
@@ -337,10 +326,7 @@ defmodule FlintUIDocsWeb.Components do
   )
 
   def avatar(assigns) do
-    color_opts =
-      if assigns.color == "initials",
-        do: [on_fill: :prefer_white],
-        else: []
+    color_opts = if assigns.color == "initials", do: [on_fill: :prefer_white], else: []
 
     assigns =
       assigns
@@ -395,8 +381,7 @@ defmodule FlintUIDocsWeb.Components do
     assign(assigns, :color, color)
   end
 
-  defp initials_color(assigns),
-    do: assigns
+  defp initials_color(assigns), do: assigns
 
   defp avatar_style(assigns) do
     [assigns.color_style, FlintUI.Styled.Size.style(assigns.size, "--fl-avatar-size")]
@@ -408,13 +393,10 @@ defmodule FlintUIDocsWeb.Components do
     end
   end
 
-  defp blank?(value) when is_binary(value),
-    do: String.trim(value) == ""
+  defp blank?(value) when is_binary(value), do: String.trim(value) == ""
+  defp blank?(value), do: is_nil(value)
 
-  defp blank?(value),
-    do: is_nil(value)
-
-  # flint_ui: component=avatar_group wrapper_api=1 lib=0.1.0 nodes=8 hash=ffae0a87a3312eeb
+  # flint_ui: component=avatar_group wrapper_api=2 lib=0.1.0 nodes=8 hash=ffae0a87a3312eeb
   @doc """
   Renders a styled avatar group.
 
@@ -465,7 +447,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=badge wrapper_api=1 lib=0.1.0 nodes=17 hash=42c9429fa314e144
+  # flint_ui: component=badge wrapper_api=2 lib=0.1.0 nodes=17 hash=42c9429fa314e144
   @doc """
   Renders a styled badge.
 
@@ -585,7 +567,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=breadcrumbs wrapper_api=1 lib=0.1.0 nodes=5 hash=16cdb710f9a99e7a
+  # flint_ui: component=breadcrumbs wrapper_api=2 lib=0.1.0 nodes=5 hash=16cdb710f9a99e7a
   @doc """
   Renders a styled breadcrumb trail.
 
@@ -612,7 +594,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=breadcrumbs_item wrapper_api=1 lib=0.1.0 nodes=8 hash=4185ca722aa92b95
+  # flint_ui: component=breadcrumbs_item wrapper_api=2 lib=0.1.0 nodes=8 hash=4185ca722aa92b95
   @doc """
   Renders a styled breadcrumb item.
 
@@ -665,7 +647,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=button wrapper_api=1 lib=0.1.0 nodes=20 hash=a6f698b1c752f01f
+  # flint_ui: component=button wrapper_api=2 lib=0.1.0 nodes=20 hash=a6f698b1c752f01f
   @doc """
   Renders a styled button.
 
@@ -799,7 +781,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=card wrapper_api=1 lib=0.1.0 nodes=22 hash=048d2309d29741b4
+  # flint_ui: component=card wrapper_api=2 lib=0.1.0 nodes=22 hash=048d2309d29741b4
   @doc """
   Renders a styled card.
 
@@ -937,10 +919,9 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  defp card_link?(rest),
-    do: not is_nil(rest[:href] || rest[:navigate] || rest[:patch])
+  defp card_link?(rest), do: not is_nil(rest[:href] || rest[:navigate] || rest[:patch])
 
-  # flint_ui: component=checkbox wrapper_api=1 lib=0.1.0 nodes=9 hash=a3b5419d507fb885
+  # flint_ui: component=checkbox wrapper_api=2 lib=0.1.0 nodes=9 hash=a3b5419d507fb885
   @doc """
   Renders a styled checkbox.
 
@@ -1019,7 +1000,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=checkbox_group wrapper_api=1 lib=0.1.0 nodes=9 hash=db2976d923028820
+  # flint_ui: component=checkbox_group wrapper_api=2 lib=0.1.0 nodes=9 hash=db2976d923028820
   @doc """
   Renders a styled checkbox group.
 
@@ -1144,7 +1125,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=cluster wrapper_api=1 lib=0.1.0 nodes=8 hash=beaa67d8ec30e993
+  # flint_ui: component=cluster wrapper_api=2 lib=0.1.0 nodes=8 hash=beaa67d8ec30e993
   @doc """
   Renders a styled cluster.
 
@@ -1201,7 +1182,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=collapsible wrapper_api=1 lib=0.1.0 nodes=6 hash=0dfaf34b0d219687
+  # flint_ui: component=collapsible wrapper_api=2 lib=0.1.0 nodes=6 hash=0dfaf34b0d219687
   @doc """
   Renders a styled collapsible.
 
@@ -1232,7 +1213,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=container wrapper_api=1 lib=0.1.0 nodes=6 hash=10636c6ead0f3c2f
+  # flint_ui: component=container wrapper_api=2 lib=0.1.0 nodes=6 hash=10636c6ead0f3c2f
   @doc """
   Renders a styled container.
 
@@ -1278,7 +1259,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=copy_button wrapper_api=1 lib=0.1.0 nodes=29 hash=9a55f40983f9734a
+  # flint_ui: component=copy_button wrapper_api=2 lib=0.1.0 nodes=29 hash=9a55f40983f9734a
   @doc """
   Renders a styled copy button.
 
@@ -1529,14 +1510,9 @@ defmodule FlintUIDocsWeb.Components do
   # content. A component body with only whitespace (as happens when a caller
   # passes just a named slot) renders as whitespace, so compare the rendered
   # content instead of the slot list.
-  defp copy_button_blank?(nil),
-    do: true
-
-  defp copy_button_blank?(""),
-    do: true
-
-  defp copy_button_blank?(value) when is_binary(value),
-    do: String.trim(value) == ""
+  defp copy_button_blank?(nil), do: true
+  defp copy_button_blank?(""), do: true
+  defp copy_button_blank?(value) when is_binary(value), do: String.trim(value) == ""
 
   defp copy_button_blank?(value) when is_list(value) do
     value |> IO.iodata_to_binary() |> String.trim() == ""
@@ -1551,7 +1527,7 @@ defmodule FlintUIDocsWeb.Components do
     _ -> false
   end
 
-  # flint_ui: component=dropdown wrapper_api=1 lib=0.1.0 nodes=7 hash=afbf67b5bff25329
+  # flint_ui: component=dropdown wrapper_api=2 lib=0.1.0 nodes=7 hash=afbf67b5bff25329
   @doc """
   Renders a styled dropdown menu.
 
@@ -1602,7 +1578,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=dropdown_group wrapper_api=1 lib=0.1.0 nodes=5 hash=15647b87e3ac5b93
+  # flint_ui: component=dropdown_group wrapper_api=2 lib=0.1.0 nodes=5 hash=15647b87e3ac5b93
   @doc """
   Renders a styled dropdown group.
 
@@ -1627,7 +1603,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=dropdown_header wrapper_api=1 lib=0.1.0 nodes=5 hash=d213ab63ba092cb8
+  # flint_ui: component=dropdown_header wrapper_api=2 lib=0.1.0 nodes=5 hash=d213ab63ba092cb8
   @doc """
   Renders a styled dropdown header.
 
@@ -1652,7 +1628,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=dropdown_item wrapper_api=1 lib=0.1.0 nodes=7 hash=8d9435fe606eb476
+  # flint_ui: component=dropdown_item wrapper_api=2 lib=0.1.0 nodes=7 hash=8d9435fe606eb476
   @doc """
   Renders a styled dropdown item.
 
@@ -1692,7 +1668,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=dropdown_separator wrapper_api=1 lib=0.1.0 nodes=4 hash=3082f30f150d3720
+  # flint_ui: component=dropdown_separator wrapper_api=2 lib=0.1.0 nodes=4 hash=3082f30f150d3720
   @doc """
   Renders a styled dropdown separator.
 
@@ -1709,7 +1685,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=dropdown_sub wrapper_api=1 lib=0.1.0 nodes=5 hash=dbebff1517cec4cc
+  # flint_ui: component=dropdown_sub wrapper_api=2 lib=0.1.0 nodes=5 hash=dbebff1517cec4cc
   @doc """
   Renders a styled dropdown submenu trigger.
 
@@ -1735,7 +1711,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=flag wrapper_api=1 lib=0.1.0 nodes=9 hash=443b8dac9a972a7a
+  # flint_ui: component=flag wrapper_api=2 lib=0.1.0 nodes=9 hash=443b8dac9a972a7a
   @doc """
   Renders a styled flag.
 
@@ -1803,7 +1779,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=group wrapper_api=1 lib=0.1.0 nodes=8 hash=23a4a035ffe86440
+  # flint_ui: component=group wrapper_api=2 lib=0.1.0 nodes=8 hash=23a4a035ffe86440
   @doc """
   Renders a styled group.
 
@@ -1856,7 +1832,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=heading wrapper_api=1 lib=0.1.0 nodes=22 hash=731590aa32156dcb
+  # flint_ui: component=heading wrapper_api=2 lib=0.1.0 nodes=22 hash=731590aa32156dcb
   @doc """
   Renders a styled heading.
 
@@ -1931,12 +1907,7 @@ defmodule FlintUIDocsWeb.Components do
       )
 
     as = Map.get(assigns.rest, :as) || "h2"
-
-    size =
-      if assigns.size == "auto",
-        do: heading_level_size(as),
-        else: assigns.size
-
+    size = if assigns.size == "auto", do: heading_level_size(as), else: assigns.size
     assigns = assign(assigns, :size, size)
 
     {rest_style, rest} = Map.pop(assigns.rest, :style)
@@ -1972,34 +1943,18 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  defp heading_level_size("h1"),
-    do: "5xl"
+  defp heading_level_size("h1"), do: "5xl"
+  defp heading_level_size("h2"), do: "4xl"
+  defp heading_level_size("h3"), do: "3xl"
+  defp heading_level_size("h4"), do: "2xl"
+  defp heading_level_size("h5"), do: "xl"
+  defp heading_level_size("h6"), do: "lg"
+  defp heading_level_size(_), do: "4xl"
 
-  defp heading_level_size("h2"),
-    do: "4xl"
+  defp heading_line_clamp_style(nil), do: nil
+  defp heading_line_clamp_style(lines), do: "--fl-heading-line-clamp: #{lines}"
 
-  defp heading_level_size("h3"),
-    do: "3xl"
-
-  defp heading_level_size("h4"),
-    do: "2xl"
-
-  defp heading_level_size("h5"),
-    do: "xl"
-
-  defp heading_level_size("h6"),
-    do: "lg"
-
-  defp heading_level_size(_),
-    do: "4xl"
-
-  defp heading_line_clamp_style(nil),
-    do: nil
-
-  defp heading_line_clamp_style(lines),
-    do: "--fl-heading-line-clamp: #{lines}"
-
-  # flint_ui: component=icon wrapper_api=1 lib=0.1.0 nodes=5 hash=33d22802763f3d54
+  # flint_ui: component=icon wrapper_api=2 lib=0.1.0 nodes=5 hash=33d22802763f3d54
   @doc """
   Renders a styled icon.
 
@@ -2043,7 +1998,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=indicator wrapper_api=1 lib=0.1.0 nodes=14 hash=196f2bb39228dc69
+  # flint_ui: component=indicator wrapper_api=2 lib=0.1.0 nodes=14 hash=196f2bb39228dc69
   @doc """
   Renders a styled indicator.
 
@@ -2172,7 +2127,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=input wrapper_api=1 lib=0.1.0 nodes=12 hash=e15ecfabd39122cb
+  # flint_ui: component=input wrapper_api=2 lib=0.1.0 nodes=12 hash=e15ecfabd39122cb
   @doc """
   Renders a styled input.
 
@@ -2277,13 +2232,10 @@ defmodule FlintUIDocsWeb.Components do
 
   # Forward the affix slot's `class` to the headless component, which applies it
   # to the wrapper it renders for that slot.
-  defp input_affix_class([slot | _]),
-    do: Map.get(slot, :class)
+  defp input_affix_class([slot | _]), do: Map.get(slot, :class)
+  defp input_affix_class(_), do: nil
 
-  defp input_affix_class(_),
-    do: nil
-
-  # flint_ui: component=kbd wrapper_api=1 lib=0.1.0 nodes=7 hash=d5cacc3cfc1d112c
+  # flint_ui: component=kbd wrapper_api=2 lib=0.1.0 nodes=7 hash=d5cacc3cfc1d112c
   @doc """
   Renders a styled keyboard key.
 
@@ -2326,7 +2278,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=known_date wrapper_api=1 lib=0.1.0 nodes=6 hash=13d8913c52e9537f
+  # flint_ui: component=known_date wrapper_api=2 lib=0.1.0 nodes=6 hash=13d8913c52e9537f
   @doc """
   Renders a styled known date.
 
@@ -2376,7 +2328,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=label wrapper_api=1 lib=0.1.0 nodes=6 hash=bbb603aa51cc227f
+  # flint_ui: component=label wrapper_api=2 lib=0.1.0 nodes=6 hash=bbb603aa51cc227f
   @doc """
   Renders a styled label.
 
@@ -2421,7 +2373,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=loading wrapper_api=1 lib=0.1.0 nodes=7 hash=ecab4ddc95dc7e54
+  # flint_ui: component=loading wrapper_api=2 lib=0.1.0 nodes=7 hash=ecab4ddc95dc7e54
   @doc """
   Renders a styled loading indicator.
 
@@ -2470,7 +2422,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=loading_text wrapper_api=1 lib=0.1.0 nodes=6 hash=437a4ae149dfe400
+  # flint_ui: component=loading_text wrapper_api=2 lib=0.1.0 nodes=6 hash=437a4ae149dfe400
   @doc """
   Renders text with a loading animation.
 
@@ -2517,7 +2469,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=modal wrapper_api=1 lib=0.1.0 nodes=14 hash=091cc68f01866e06
+  # flint_ui: component=modal wrapper_api=2 lib=0.1.0 nodes=14 hash=091cc68f01866e06
   @doc """
   Renders a styled modal.
 
@@ -2620,20 +2572,20 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navbar wrapper_api=1 lib=0.1.0 nodes=10 hash=9069b8bcaa125081
+  # flint_ui: component=navbar wrapper_api=2 lib=0.1.0 nodes=11 hash=8c7bc14871e4beac
   @doc """
   Renders a styled navbar.
 
   Generated by `mix flint.add navbar`. Theming lives in `flint.css`; this wrapper
   adds the `data-navbar` presence hook the styled layer targets and maps the
-  `variant`, `color`, `size`, `grow`, and `justify` attributes onto the matching
-  `data-*` hooks. Headless behavior comes from `FlintUI.navbar`.
+  `variant`, `color`, `size`, `gap`, `grow`, and `justify` attributes onto the
+  matching `data-*` hooks. Headless behavior comes from `FlintUI.navbar`.
   """
   attr(:variant, :string,
     values: ~w(minimal outlined),
     default: "minimal",
     doc:
-      "The visual treatment of the navbar. `minimal` uses a tinted active fill; `outlined` adds a bottom rule and an active indicator, following the tabs component."
+      "The visual treatment of the navbar. `minimal` uses a tinted active fill; `outlined` keeps that treatment and adds the tabs-style bottom rule and active indicator."
   )
 
   attr(:color, :string,
@@ -2646,6 +2598,13 @@ defmodule FlintUIDocsWeb.Components do
     values: ~w(xs sm md lg xl),
     default: "md",
     doc: "The control size of the items, menu triggers, and menu items."
+  )
+
+  attr(:gap, :string,
+    values: ~w(0 xs sm md lg xl 2xl 3xl),
+    default: "xs",
+    doc:
+      "The space between items on the shared `--fl-spacing-*` scale. The same gap separates wrapped lines. `0` joins the items with no gap."
   )
 
   attr(:grow, :boolean,
@@ -2686,6 +2645,7 @@ defmodule FlintUIDocsWeb.Components do
       data-variant={@variant}
       data-color={@data_color}
       data-size={@size}
+      data-gap={@gap}
       data-grow={@grow}
       data-justify={@justify}
       class={@class}
@@ -2696,7 +2656,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navbar_item wrapper_api=1 lib=0.1.0 nodes=10 hash=f1b534883bfc584e
+  # flint_ui: component=navbar_item wrapper_api=2 lib=0.1.0 nodes=10 hash=f1b534883bfc584e
   @doc """
   Renders a styled navbar item.
 
@@ -2748,7 +2708,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navbar_menu wrapper_api=1 lib=0.1.0 nodes=10 hash=b265a1e13ade5fb9
+  # flint_ui: component=navbar_menu wrapper_api=2 lib=0.1.0 nodes=10 hash=b265a1e13ade5fb9
   @doc """
   Renders a styled navbar menu.
 
@@ -2813,7 +2773,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navbar_menu_item wrapper_api=1 lib=0.1.0 nodes=10 hash=5944b57b957f7e74
+  # flint_ui: component=navbar_menu_item wrapper_api=2 lib=0.1.0 nodes=10 hash=5944b57b957f7e74
   @doc """
   Renders a styled navbar menu item.
 
@@ -2865,7 +2825,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navlist wrapper_api=1 lib=0.1.0 nodes=6 hash=f86064f8156cdfdf
+  # flint_ui: component=navlist wrapper_api=2 lib=0.1.0 nodes=6 hash=f86064f8156cdfdf
   @doc """
   Renders a styled navlist.
 
@@ -2896,7 +2856,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navlist_group wrapper_api=1 lib=0.1.0 nodes=10 hash=fa890e5320f20ff1
+  # flint_ui: component=navlist_group wrapper_api=2 lib=0.1.0 nodes=10 hash=fa890e5320f20ff1
   @doc """
   Renders a styled navlist group.
 
@@ -2954,7 +2914,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=navlist_item wrapper_api=1 lib=0.1.0 nodes=10 hash=4f98af869a013a30
+  # flint_ui: component=navlist_item wrapper_api=2 lib=0.1.0 nodes=10 hash=4f98af869a013a30
   @doc """
   Renders a styled navlist item.
 
@@ -3006,7 +2966,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=popover wrapper_api=1 lib=0.1.0 nodes=6 hash=4f40cc258d432c3d
+  # flint_ui: component=popover wrapper_api=2 lib=0.1.0 nodes=6 hash=4f40cc258d432c3d
   @doc """
   Renders a styled popover.
 
@@ -3039,7 +2999,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=progress wrapper_api=1 lib=0.1.0 nodes=10 hash=103adde0c32862f8
+  # flint_ui: component=progress wrapper_api=2 lib=0.1.0 nodes=10 hash=103adde0c32862f8
   @doc """
   Renders a styled progress bar.
 
@@ -3136,7 +3096,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=progress_group wrapper_api=1 lib=0.1.0 nodes=10 hash=e51573fde5044df3
+  # flint_ui: component=progress_group wrapper_api=2 lib=0.1.0 nodes=10 hash=e51573fde5044df3
   @doc """
   Renders a styled progress group.
 
@@ -3304,7 +3264,7 @@ defmodule FlintUIDocsWeb.Components do
     |> Map.put(:color_style, if(style == "", do: nil, else: style))
   end
 
-  # flint_ui: component=progress_ring wrapper_api=1 lib=0.1.0 nodes=8 hash=e410f480096d224d
+  # flint_ui: component=progress_ring wrapper_api=2 lib=0.1.0 nodes=8 hash=e410f480096d224d
   @doc """
   Renders a styled progress ring.
 
@@ -3386,7 +3346,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=radio wrapper_api=1 lib=0.1.0 nodes=9 hash=4856738dab860ac0
+  # flint_ui: component=radio wrapper_api=2 lib=0.1.0 nodes=9 hash=4856738dab860ac0
   @doc """
   Renders a styled radio.
 
@@ -3465,7 +3425,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=radio_group wrapper_api=1 lib=0.1.0 nodes=9 hash=99c7dcb8c0c78ca1
+  # flint_ui: component=radio_group wrapper_api=2 lib=0.1.0 nodes=9 hash=99c7dcb8c0c78ca1
   @doc """
   Renders a styled radio group.
 
@@ -3590,7 +3550,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=separator wrapper_api=1 lib=0.1.0 nodes=12 hash=a4b71cb0a6a4afa6
+  # flint_ui: component=separator wrapper_api=2 lib=0.1.0 nodes=12 hash=a4b71cb0a6a4afa6
   @doc """
   Renders a styled separator.
 
@@ -3693,7 +3653,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=slider wrapper_api=1 lib=0.1.0 nodes=6 hash=2060b2b32cecbd57
+  # flint_ui: component=slider wrapper_api=2 lib=0.1.0 nodes=6 hash=2060b2b32cecbd57
   @doc """
   Renders a styled slider.
 
@@ -3761,7 +3721,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=stack wrapper_api=1 lib=0.1.0 nodes=13 hash=34a606edb97af581
+  # flint_ui: component=stack wrapper_api=2 lib=0.1.0 nodes=13 hash=34a606edb97af581
   @doc """
   Renders a styled stack.
 
@@ -3857,7 +3817,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=switch wrapper_api=1 lib=0.1.0 nodes=9 hash=9c21763a40f05b9c
+  # flint_ui: component=switch wrapper_api=2 lib=0.1.0 nodes=9 hash=9c21763a40f05b9c
   @doc """
   Renders a styled switch.
 
@@ -3934,7 +3894,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=switch_group wrapper_api=1 lib=0.1.0 nodes=8 hash=5fab0e9fc83dccdb
+  # flint_ui: component=switch_group wrapper_api=2 lib=0.1.0 nodes=8 hash=5fab0e9fc83dccdb
   @doc """
   Renders a styled switch group.
 
@@ -4075,7 +4035,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=tabs wrapper_api=1 lib=0.1.0 nodes=11 hash=2db28c37c07a4019
+  # flint_ui: component=tabs wrapper_api=2 lib=0.1.0 nodes=11 hash=2db28c37c07a4019
   @doc """
   Renders a styled tabs component.
 
@@ -4204,7 +4164,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=text wrapper_api=1 lib=0.1.0 nodes=17 hash=def5d3adfc04e9f0
+  # flint_ui: component=text wrapper_api=2 lib=0.1.0 nodes=17 hash=def5d3adfc04e9f0
   @doc """
   Renders a styled text block or link.
 
@@ -4323,16 +4283,12 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  defp text_link?(rest),
-    do: not is_nil(rest[:href] || rest[:navigate] || rest[:patch])
+  defp text_link?(rest), do: not is_nil(rest[:href] || rest[:navigate] || rest[:patch])
 
-  defp text_line_clamp_style(nil),
-    do: nil
+  defp text_line_clamp_style(nil), do: nil
+  defp text_line_clamp_style(lines), do: "--fl-text-line-clamp: #{lines}"
 
-  defp text_line_clamp_style(lines),
-    do: "--fl-text-line-clamp: #{lines}"
-
-  # flint_ui: component=textarea wrapper_api=1 lib=0.1.0 nodes=10 hash=5d1ddf16a243a960
+  # flint_ui: component=textarea wrapper_api=2 lib=0.1.0 nodes=10 hash=5d1ddf16a243a960
   @doc """
   Renders a styled textarea.
 
@@ -4391,15 +4347,8 @@ defmodule FlintUIDocsWeb.Components do
   def textarea(assigns) do
     # Autogrow writes its row limits to the public CSS inputs, keeping every
     # numeric value in one inline style that composes with a caller's `style`.
-    min_rows =
-      if is_integer(assigns.min_rows),
-        do: max(assigns.min_rows, 1),
-        else: 2
-
-    max_rows =
-      if is_integer(assigns.max_rows),
-        do: max(assigns.max_rows, min_rows),
-        else: 8
+    min_rows = if is_integer(assigns.min_rows), do: max(assigns.min_rows, 1), else: 2
+    max_rows = if is_integer(assigns.max_rows), do: max(assigns.max_rows, min_rows), else: 8
 
     {rest_style, rest} = Map.pop(assigns.rest, :style)
 
@@ -4446,7 +4395,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=toggle wrapper_api=1 lib=0.1.0 nodes=24 hash=c1d01f783654be0d
+  # flint_ui: component=toggle wrapper_api=2 lib=0.1.0 nodes=24 hash=c1d01f783654be0d
   @doc """
   Renders a styled toggle.
 
@@ -4628,7 +4577,7 @@ defmodule FlintUIDocsWeb.Components do
     """
   end
 
-  # flint_ui: component=tooltip wrapper_api=1 lib=0.1.0 nodes=6 hash=d94b694d964a70fc
+  # flint_ui: component=tooltip wrapper_api=2 lib=0.1.0 nodes=6 hash=d94b694d964a70fc
   @doc """
   Renders a styled tooltip.
 
@@ -4657,6 +4606,102 @@ defmodule FlintUIDocsWeb.Components do
       {render_slot(@inner_block)}
       <:content>{render_slot(@content)}</:content>
     </FlintUI.tooltip>
+    """
+  end
+
+  # flint_ui: component=header wrapper_api=2 lib=0.1.0 nodes=15 hash=5da72fcac6d3e1f5
+  @doc """
+  Renders a styled header.
+
+  Generated by `mix flint.add header`. Theming lives in `flint.css`; this wrapper
+  maps `sticky`, `nav_position`, `collapse`, and `container` onto the matching
+  `data-*` hooks and fills the mobile toggle with `toggle_icon`. `:brand`,
+  `:nav`, `:actions`, `:mobile`, and `:secondary` map onto the headless zones.
+  Headless structure and the mobile disclosure come from `FlintUI.header`.
+  """
+  attr(:toggle_icon, :string,
+    default: "lucide-menu",
+    doc:
+      "The icon class rendered inside the mobile toggle. Set it to a class from your icon set; the default is `lucide-menu`."
+  )
+
+  attr(:sticky, :boolean,
+    default: true,
+    doc:
+      "Whether the header sticks to the top of the scroll container. Set the top offset with `--fl-header-offset` when a banner sits above it."
+  )
+
+  attr(:nav_position, :string,
+    values: ~w(start center end),
+    default: "center",
+    doc:
+      "Where the navigation sits in the bar. `center` is the three-section layout: brand at the start, navigation in the middle, actions at the end. `start` keeps the navigation next to the brand, and `end` keeps it next to the actions."
+  )
+
+  attr(:collapse, :string,
+    values: ~w(always sm md lg xl 2xl never),
+    default: "lg",
+    doc:
+      "The breakpoint below which the navigation collapses into the toggle panel. `always` keeps the collapsed layout at every width, and `never` keeps the navigation inline and hides the toggle."
+  )
+
+  attr(:container, :boolean,
+    default: false,
+    doc:
+      "Caps the bar and the secondary row at `--fl-header-container-size` and centers them. The header surface and border stay full width."
+  )
+
+  attr(:class, :any, default: nil, doc: "Additional classes appended to the generated component.")
+
+  attr(:rest, :global,
+    include: ~w(as id open toggle_label),
+    doc: "Additional HTML attributes, forwarded to the headless component."
+  )
+
+  slot(:actions, doc: "The end region for account controls, theme toggles, and primary actions.")
+  slot(:brand, doc: "The start region, usually a logo link with the product name.")
+
+  slot(:mobile,
+    doc:
+      "Content for the mobile panel. When set, `:nav` stays inline on larger screens and this slot fills the panel on smaller ones."
+  )
+
+  slot(:nav,
+    doc:
+      "The desktop navigation region, normally a `FlintUI.navbar`. It becomes the mobile panel when `:mobile` is not set."
+  )
+
+  slot(:secondary,
+    doc: "A full-width row below the bar, such as a section nav, filters, or an announcement."
+  )
+
+  slot(:toggle,
+    doc:
+      "Custom content for the mobile toggle. The default is a menu icon; the button's accessible name still comes from `toggle_label`.",
+    validate_attrs: false
+  )
+
+  def header(assigns) do
+    ~H"""
+    <FlintUI.header
+      data-header
+      data-sticky={@sticky}
+      data-nav-position={@nav_position}
+      data-collapse={@collapse}
+      data-container={@container}
+      class={@class}
+      {@rest}
+    >
+      <:brand :if={@brand != []}>{render_slot(@brand)}</:brand>
+      <:toggle :if={@toggle != [] or @toggle_icon != ""}>
+        {render_slot(@toggle)}
+        <FlintUI.icon :if={@toggle == [] and @toggle_icon != ""} name={@toggle_icon} />
+      </:toggle>
+      <:nav :if={@nav != []}>{render_slot(@nav)}</:nav>
+      <:actions :if={@actions != []}>{render_slot(@actions)}</:actions>
+      <:mobile :if={@mobile != []}>{render_slot(@mobile)}</:mobile>
+      <:secondary :if={@secondary != []}>{render_slot(@secondary)}</:secondary>
+    </FlintUI.header>
     """
   end
 end

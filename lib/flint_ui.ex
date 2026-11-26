@@ -36,6 +36,7 @@ defmodule FlintUI do
   - `dropdown_sub`
   - `flag`
   - `group`
+  - `header`
   - `heading`
   - `icon`
   - `indicator`
@@ -106,6 +107,7 @@ defmodule FlintUI do
     {:dropdown_sub, []},
     {:flag, []},
     {:group, []},
+    {:header, []},
     {:heading, []},
     {:icon, []},
     {:indicator, []},

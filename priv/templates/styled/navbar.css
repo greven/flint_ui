@@ -1,7 +1,8 @@
 @layer components {
     /* Navbar. The root is the navigation landmark; the list lays the items out
      * in one row. The minimal variant is the baseline; the outlined variant
-     * adds the tabs-style shared rule and active indicator. Public inputs:
+     * keeps the same fills and adds the tabs-style shared rule and active
+     * indicator on top. Public inputs:
      * `--fl-navbar-gap`, `--fl-navbar-text`, `--fl-navbar-text-active`,
      * `--fl-navbar-highlight`, `--fl-navbar-active`, and `--fl-navbar-color`.
      *
@@ -37,6 +38,34 @@
         margin: 0;
         padding: 0;
         list-style: none;
+    }
+
+    [data-element="navbar"][data-gap="0"] {
+        --fl-navbar-gap: 0;
+    }
+
+    [data-element="navbar"][data-gap="sm"] {
+        --fl-navbar-gap: var(--fl-spacing-sm);
+    }
+
+    [data-element="navbar"][data-gap="md"] {
+        --fl-navbar-gap: var(--fl-spacing-md);
+    }
+
+    [data-element="navbar"][data-gap="lg"] {
+        --fl-navbar-gap: var(--fl-spacing-lg);
+    }
+
+    [data-element="navbar"][data-gap="xl"] {
+        --fl-navbar-gap: var(--fl-spacing-xl);
+    }
+
+    [data-element="navbar"][data-gap="2xl"] {
+        --fl-navbar-gap: var(--fl-spacing-2xl);
+    }
+
+    [data-element="navbar"][data-gap="3xl"] {
+        --fl-navbar-gap: var(--fl-spacing-3xl);
     }
 
     /* Outlined needs one row for its shared rule, grow divides one row, and
@@ -235,9 +264,7 @@
         block-size: var(--fl-control-icon-xl);
     }
 
-    /* Outlined: the list carries the rule and the active item carries a bottom
-     * indicator. The label stays on the foreground text color, so a colored
-     * indicator does not tint it. */
+    /* Outlined */
     [data-element="navbar"][data-variant="outlined"] > [data-part="list"] {
         border-block-end: 1px solid var(--fl-color-border);
     }
@@ -245,24 +272,8 @@
     [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"] > [data-part="content"],
     [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"] {
         position: relative;
-        border-radius: 0;
-        background-color: transparent;
-    }
-
-    [data-element="navbar"][data-variant="outlined"]
-        > [data-part="list"]
-        > [data-element="navbar_item"]:not([data-disabled])
-        > [data-part="content"]:is(:hover, :focus-visible),
-    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"]:is(:hover, :focus-visible) {
-        background-color: transparent;
-        color: var(--fl-color-text);
-    }
-
-    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"][data-active] > [data-part="content"],
-    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"] > [data-part="trigger"][data-state="open"],
-    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_menu"][data-active] > [data-part="trigger"] {
-        background-color: transparent;
-        color: var(--fl-color-text);
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
     }
 
     [data-element="navbar"][data-variant="outlined"] > [data-part="list"] > [data-element="navbar_item"] > [data-part="content"]::after,
@@ -298,7 +309,7 @@
         > [data-part="list"]
         > [data-element="navbar_menu"]
         > [data-part="trigger"]::after {
-        bottom: -1px;
+        bottom: 0;
     }
 
     @media (prefers-reduced-motion: reduce) {

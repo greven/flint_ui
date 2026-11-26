@@ -31,6 +31,7 @@ defmodule FlintUI.StyledTest do
                :dropdown_sub,
                :flag,
                :group,
+               :header,
                :heading,
                :icon,
                :indicator,

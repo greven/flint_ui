@@ -365,7 +365,8 @@ core and Flint components, so a duplicate name is a compile-time conflict.
 | `icon/1`                                    | `FlintUI.Base.Icon` | Shipped. Class-based (`name` is a CSS class); the docs wire Lucide and Phosphor via Tailwind `matchComponents` plugins. Core `icon` deleted and usages migrated to `lucide-*`. |
 | `flash/1` + bespoke `Layouts.flash_group/1` | none                | Future. Cover with a FlintUI flash/toast, then delete core `flash`, replace `flash_group/1`, and drop `show/2`/`hide/2` if unused.                                 |
 | `input/1`                                   | `FlintUI.Base.Input` | Shipped. Same attrs and types as core; `mix flint.add input` generates `<.input>` and removes core `input/1` (and an unused private `error/1`).                      |
-| `header/1`, `table/1`, `list/1`             | none                | Future, only if FlintUI ships equivalents.                                                                                                                         |
+| `header/1`                                  | `FlintUI.Base.Header` | Shipped as a layout header, not a page-title header. Core `header/1` was unused and deleted; `mix flint.add header` generates `<.header>`.                         |
+| `table/1`, `list/1`                         | none                | Future, only if FlintUI ships equivalents.                                                                                                                         |
 | `translate_error/1`, `translate_errors/2`   | n/a                 | Stay in the app; not a parity target.                                                                                                                              |
 
 ## References

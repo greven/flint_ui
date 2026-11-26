@@ -218,6 +218,7 @@ defmodule FlintUI.Styled do
     FlintUI.Styled.DropdownSub,
     FlintUI.Styled.Flag,
     FlintUI.Styled.Group,
+    FlintUI.Styled.Header,
     FlintUI.Styled.Heading,
     FlintUI.Styled.Icon,
     FlintUI.Styled.Indicator,

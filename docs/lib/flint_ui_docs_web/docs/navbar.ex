@@ -18,9 +18,10 @@ defmodule FlintUIDocsWeb.Docs.Navbar do
         id: :basic,
         title: "Usage",
         controls: [
-          %{key: :variant, type: :select, default: "minimal", label: "Variant"},
+          %{key: :variant, type: :select, default: "segmented", label: "Variant"},
           %{key: :color, type: :select, default: "neutral", label: "Color"},
           %{key: :size, type: :select, default: "md", label: "Size"},
+          %{key: :gap, type: :select, default: "xs", label: "Gap"},
           %{key: :disabled, type: :boolean, default: false, label: "Disabled"},
           %{key: :grow, type: :boolean, default: false, label: "Grow"},
           %{key: :justify, type: :select, default: "start", label: "Justify"},
@@ -48,15 +49,13 @@ defmodule FlintUIDocsWeb.Docs.Navbar do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.prose content="A navbar is a horizontal navigation landmark. Use `navbar_item` for direct links and `navbar_menu` for an item that reveals a menu of links. Mark the current page with `active`." />
-    <.prose content="`grow` makes the items share the row equally. `justify` positions the items when `grow` is off; a grown row has no free space left to justify." />
-    <.prose content="Set `open_on_hover` on a menu to open it when the pointer rests on its trigger. Hover opening never moves focus; clicking the trigger pins the menu open." />
-    <.prose content="`position` aligns the menu panel to the `start`, `center`, or `end` of its trigger. The panel opens below the trigger and flips or shifts when it does not fit." />
     <.preview :let={props} {assigns} code={&main_code/1}>
       <div class="fl-w-full">
         <Components.navbar
           variant={props.variant}
           color={props.color}
           size={props.size}
+          gap={props.gap}
           grow={props.grow}
           justify={props.justify}
           disabled={props.disabled}
@@ -88,7 +87,7 @@ defmodule FlintUIDocsWeb.Docs.Navbar do
   def render_section(%{section: :examples, id: :outlined} = assigns) do
     ~H"""
     <.prose content={
-      ~S|Set `variant="outlined"` for the tabs-style treatment: a shared rule under the list and a bottom indicator on the active item or open menu trigger. `color` builds that indicator. The outlined variant stays on one row; pair it with `scrollable` or `fadable` when the items can overflow.|
+      ~S|Set `variant="outlined"` for the minimal treatment plus the tabs-style rail: a shared rule under the list and a bottom indicator on the active item or open menu trigger. `color` builds the indicator and tints the active fill. The variant adds no height, so it is the minimal navbar with the rail on top. The outlined variant stays on one row; pair it with `scrollable` or `fadable` when the items can overflow.|
     } />
     <.prose content="Set `disabled` on an item to render it as non-focusable text, even when it has a destination. Set `disabled` on the navbar to make the whole landmark inert." />
     <.preview {assigns} code={outlined_code()}>
@@ -150,6 +149,7 @@ defmodule FlintUIDocsWeb.Docs.Navbar do
         Snippet.attr("variant", props.variant, "minimal"),
         Snippet.attr("color", props.color, "neutral"),
         Snippet.attr("size", props.size, "md"),
+        Snippet.attr("gap", props.gap, "xs"),
         Snippet.flag("grow", props.grow),
         Snippet.attr("justify", props.justify, "start"),
         Snippet.flag("disabled", props.disabled)

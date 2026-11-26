@@ -76,6 +76,7 @@ defmodule FlintUI.Styled.NavbarTest do
           variant="outlined"
           color="primary"
           size="lg"
+          gap="lg"
           grow
           justify="between"
           disabled
@@ -106,6 +107,7 @@ defmodule FlintUI.Styled.NavbarTest do
 
     assert attr(document, :navbar, "data-navbar") == [""]
     assert attr(document, :navbar, "aria-label") == ["Primary"]
+    assert attr(document, :navbar, "data-gap") == ["xs"]
 
     assert attr(document, :navbar_item, "data-navbar_item") == ["", ""]
     assert List.last(attr(document, :navbar_item, "data-active")) == ""
@@ -162,13 +164,14 @@ defmodule FlintUI.Styled.NavbarTest do
     assert LazyHTML.text(indicator) |> String.trim() == "v"
   end
 
-  test "maps the variant, color, size, grow, and justify props", %{wrapper: wrapper} do
+  test "maps the variant, color, size, gap, grow, and justify props", %{wrapper: wrapper} do
     document = render(wrapper, :props)
     root = root(document, :navbar)
 
     assert LazyHTML.attribute(root, "data-variant") == ["outlined"]
     assert LazyHTML.attribute(root, "data-color") == ["primary"]
     assert LazyHTML.attribute(root, "data-size") == ["lg"]
+    assert LazyHTML.attribute(root, "data-gap") == ["lg"]
     assert LazyHTML.attribute(root, "data-grow") == [""]
     assert LazyHTML.attribute(root, "data-justify") == ["between"]
   end

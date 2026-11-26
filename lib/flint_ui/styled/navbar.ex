@@ -16,10 +16,10 @@ defmodule FlintUI.Styled.Navbar do
       props: [
         Prop.new(
           name: :variant,
-          values: ["minimal", "outlined"],
-          default: "minimal",
+          values: ["segmented", "outlined", "minimal"],
+          default: "segmented",
           doc:
-            "The visual treatment of the navbar. `minimal` uses a tinted active fill; `outlined` adds a bottom rule and an active indicator, following the tabs component."
+            "The visual treatment of the navbar. Choose from `segmented`, `outlined` or `minimal`."
         ),
         Prop.new(
           name: :color,
@@ -34,6 +34,13 @@ defmodule FlintUI.Styled.Navbar do
           values: ["xs", "sm", "md", "lg", "xl"],
           default: "md",
           doc: "The control size of the items, menu triggers, and menu items."
+        ),
+        Prop.new(
+          name: :gap,
+          values: ["0", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"],
+          default: "xs",
+          doc:
+            "The space between items on the shared `--fl-spacing-*` scale. The same gap separates wrapped lines. `0` joins the items with no gap."
         ),
         Prop.new(
           name: :grow,
@@ -59,7 +66,8 @@ defmodule FlintUI.Styled.Navbar do
         Var.new(
           name: "--fl-navbar-gap",
           default: "var(--fl-spacing-xs)",
-          doc: "The space between navbar items."
+          doc:
+            "The space between items; the `gap` prop sets it from the spacing scale. The same gap separates wrapped lines."
         ),
         Var.new(
           name: "--fl-navbar-text",

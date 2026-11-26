@@ -75,6 +75,7 @@ defmodule FlintUIDocsWeb.Preview do
   attr :collapsible, :boolean, default: true
   attr :collapsed, :boolean, default: false
   attr :resizable, :boolean, default: false
+  attr :flush, :boolean, default: false
   attr :canvas_class, :any, default: nil
   attr :class, :any, default: nil
   slot :inner_block, required: false
@@ -154,8 +155,9 @@ defmodule FlintUIDocsWeb.Preview do
           data-preview-id={@preview_id}
           phx-hook=".PreviewResize"
           class={[
-            "group relative grid min-h-24 place-items-center overflow-auto border border-solid border-default bg-transparent p-6",
+            "group relative grid overflow-auto border border-solid border-default bg-transparent",
             if(@below?, do: "rounded-t-lg", else: "rounded-lg"),
+            !@flush && "p-6 min-h-24 place-items-center",
             @canvas_class
           ]}
         >
