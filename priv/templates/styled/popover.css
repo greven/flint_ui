@@ -8,6 +8,10 @@
      * moves the content out of the root's subtree. */
     [data-element="popover"][data-popover] {
         display: contents;
+
+        /* The arrow protrudes into the gap. The hook adds this to `offset`
+         * when an arrow is rendered, so the tip clears the trigger. */
+        --fl-popover-arrow-gap: 4px;
     }
 
     /* The content is a raised surface built from the elevation primitive;

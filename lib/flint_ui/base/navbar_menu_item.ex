@@ -15,11 +15,16 @@ defmodule FlintUI.Base.NavbarMenuItem do
   Set `active` on the item for the page being viewed. It sets
   `aria-current="page"` on the item content.
 
+  Set `disabled` to render the item as non-focusable text, even when it has a
+  destination. The destination attributes are dropped, so the item cannot be
+  followed.
+
   ## Accessibility
 
   The item is a list item in the menu's `ul`. A destination renders a native
   link, while an item without a destination renders plain text and does not
-  pretend to be a link.
+  pretend to be a link. A disabled item is plain text with
+  `aria-disabled="true"`.
 
   Mark exactly one item per menu with `active` when the menu links to the current
   page. When an icon is the only visible content, pass `aria-label`.
@@ -27,8 +32,8 @@ defmodule FlintUI.Base.NavbarMenuItem do
   ## Keyboard
 
   Links use the native link behavior: `Tab` moves through the open menu and
-  `Enter` follows the focused link. `Escape` is handled by the parent
-  `navbar_menu`.
+  `Enter` follows the focused link. Plain-text and disabled items are not
+  focusable. `Escape` is handled by the parent `navbar_menu`.
   """
 
   use FlintUI.Component
@@ -66,6 +71,11 @@ defmodule FlintUI.Base.NavbarMenuItem do
           name: "[data-active]",
           value: "boolean",
           description: "Present on the item for the current page."
+        },
+        %Meta.PartAttr{
+          name: "[data-disabled]",
+          value: "boolean",
+          description: "Present when the item is disabled."
         }
       ],
       content: [
@@ -79,6 +89,11 @@ defmodule FlintUI.Base.NavbarMenuItem do
           name: "aria-current",
           value: "page",
           description: "Present on the item content when `active` is set."
+        },
+        %Meta.PartAttr{
+          name: "aria-disabled",
+          value: "true",
+          description: "Present on the item content when `disabled` is set."
         }
       ]
     ]
@@ -93,7 +108,7 @@ defmodule FlintUI.Base.NavbarMenuItem do
       },
       %Meta.Keyboard{
         keys: "Enter",
-        description: "Follows the focused link. Plain-text items are not focusable."
+        description: "Follows the focused link. Plain-text and disabled items are not focusable."
       }
     ]
   end
@@ -105,6 +120,11 @@ defmodule FlintUI.Base.NavbarMenuItem do
         name: "active",
         description: "The item links to the page currently being viewed.",
         selector: ~s([data-element="navbar_menu_item"][data-active])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The item is disabled and renders as non-focusable text.",
+        selector: ~s([data-element="navbar_menu_item"][data-disabled])
       }
     ]
   end
@@ -115,11 +135,13 @@ defmodule FlintUI.Base.NavbarMenuItem do
       root: %{
         "data-element" => "navbar_menu_item",
         "data-part" => "item",
-        "data-active" => assigns.active
+        "data-active" => assigns.active,
+        "data-disabled" => assigns.disabled
       },
       content: %{
         "data-part" => "content",
-        "aria-current" => assigns.active && "page"
+        "aria-current" => assigns.active && "page",
+        "aria-disabled" => assigns.disabled && "true"
       }
     }
   end
@@ -133,6 +155,11 @@ defmodule FlintUI.Base.NavbarMenuItem do
     doc:
       "Whether the item links to the page currently being viewed. Sets `aria-current=\"page\"` on the item content."
 
+  attr :disabled, :boolean,
+    default: false,
+    doc:
+      "Whether the item is disabled. It renders as non-focusable text with `aria-disabled=\"true\"`, and any destination is dropped."
+
   attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download
                 hreflang referrerpolicy title aria-label aria-labelledby aria-describedby),
@@ -145,6 +172,9 @@ defmodule FlintUI.Base.NavbarMenuItem do
   def render(assigns) do
     {content_rest, root_rest} = split_rest(Map.get(assigns, :rest, %{}))
     link? = link?(assigns)
+
+    content_rest =
+      if assigns.disabled, do: drop_navigation(content_rest), else: content_rest
 
     assigns =
       assigns
@@ -166,10 +196,26 @@ defmodule FlintUI.Base.NavbarMenuItem do
 
   defp link?(assigns) do
     rest = Map.get(assigns, :rest, %{})
-    Enum.any?([:href, :navigate, :patch], &present?(rest[&1]))
+    not assigns.disabled and Enum.any?([:href, :navigate, :patch], &present?(rest[&1]))
   end
 
   defp present?(value), do: value not in [nil, false, ""]
 
   defp split_rest(rest), do: Map.split(rest, @content_attrs)
+
+  defp drop_navigation(rest) do
+    Map.drop(rest, [
+      :href,
+      :navigate,
+      :patch,
+      :replace,
+      :method,
+      :csrf_token,
+      :target,
+      :rel,
+      :download,
+      :hreflang,
+      :referrerpolicy
+    ])
+  end
 end

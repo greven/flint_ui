@@ -27,7 +27,7 @@
             color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="navbar_menu_item"][data-navbar_menu_item] > [data-part="content"]:is(:hover, :focus-visible) {
+    [data-element="navbar_menu_item"][data-navbar_menu_item]:not([data-disabled]) > [data-part="content"]:is(:hover, :focus-visible) {
         background-color: var(--fl-navbar-highlight, var(--fl-color-surface-subtle));
         color: var(--fl-navbar-menu-text, var(--fl-color-text));
     }
@@ -37,6 +37,11 @@
         color: var(--fl-navbar-text-active, var(--fl-color-text));
     }
 
+    [data-element="navbar_menu_item"][data-navbar_menu_item][data-disabled] > [data-part="content"] {
+        cursor: not-allowed;
+        opacity: var(--fl-disabled-opacity, 0.5);
+    }
+
     [data-element="navbar_menu_item"][data-navbar_menu_item] [data-element="icon"] {
         flex: none;
         --fl-icon-size: var(--fl-control-icon-sm);
@@ -44,7 +49,7 @@
         transition: color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="navbar_menu_item"][data-navbar_menu_item] > [data-part="content"]:is(:hover, :focus-visible) [data-element="icon"],
+    [data-element="navbar_menu_item"][data-navbar_menu_item]:not([data-disabled]) > [data-part="content"]:is(:hover, :focus-visible) [data-element="icon"],
     [data-element="navbar_menu_item"][data-navbar_menu_item][data-active] [data-element="icon"] {
         color: currentcolor;
     }

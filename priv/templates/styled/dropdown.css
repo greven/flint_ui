@@ -6,6 +6,10 @@
      * viewport origin and translates it next to the trigger. */
     [data-element="dropdown"][data-dropdown] {
         display: contents;
+
+        /* The arrow protrudes into the gap. The hook adds this to `offset`
+         * when an arrow is rendered, so the tip clears the trigger. */
+        --fl-dropdown-arrow-gap: 4px;
     }
 
     /* The built-in trigger. A custom trigger keeps its own component styles;

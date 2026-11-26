@@ -39,8 +39,13 @@ defmodule FlintUI.Base.Dropdown do
   `placement` picks the preferred side (`bottom` by default) and `align` picks
   the alignment along that side (`start` by default). The menu flips to the
   opposite side when it does not fit and shifts to stay inside the viewport.
-  `offset` is the gap between the trigger and the menu in pixels, and `arrow`
-  adds a pointing arrow.
+  `offset` is the gap between the trigger and the menu in pixels. The arrow
+  protrudes into that gap, so when `arrow` is set the stylesheet's
+  `--fl-dropdown-arrow-gap` (4 px in the default theme) is added on top of the
+  offset. Override the variable to tune the clearance; with the default offset
+  and theme the arrow tip sits about 2 px from the trigger. The menu flips to
+  the opposite side when it does not fit and shifts to stay inside the
+  viewport.
 
   `max_height` caps the menu height in pixels and makes the content scroll when
   it is taller than the cap. Leave it unset to let the menu grow with its
@@ -62,19 +67,22 @@ defmodule FlintUI.Base.Dropdown do
 
   A submenu opens to the right of its trigger and flips left when it does not
   fit. The root menu closes its open submenu when focus or the pointer leaves,
-  and `Escape` closes one level at a time. Set `open_on_hover` on a
-  `dropdown_sub` to open that submenu when the pointer rests on it.
+  and `Escape` closes one level at a time. A submenu opens on hover by default;
+  set its `open_on_hover` to `false` to require a click.
 
   ## Hover
 
   Menus open on click, `Enter`, `Space`, and `ArrowDown`. Set `open_on_hover` to
   also open on hover; `open_delay` is how long the pointer must rest on the
   trigger, and `close_delay` is how long the menu stays open after the pointer
-  leaves. Hover opening never moves focus. A click pins the menu open and moves
-  focus into it.
+  leaves. Closing always waits a short grace, so moving from the trigger into
+  the menu does not close it. The hook also tracks a short corridor from the
+  trigger to an open menu or submenu, so a pointer travelling toward it — even
+  diagonally — stays inside the hover path. Hover opening never moves focus. A
+  click pins the menu open and moves focus into it.
 
-  Submenus take their own `open_on_hover`; a hovered submenu shares the
-  dropdown's `open_delay`.
+  Submenus open on hover by default; a hovered submenu shares the dropdown's
+  `open_delay`. Set a submenu's `open_on_hover` to `false` to require a click.
 
   ## Accessibility
 
@@ -568,11 +576,13 @@ defmodule FlintUI.Base.Dropdown do
 
   attr :offset, :integer,
     default: 4,
-    doc: "Gap between the trigger and the menu, in pixels."
+    doc:
+      "Gap between the trigger and the menu, in pixels. When `arrow` is set, `--fl-dropdown-arrow-gap` is added on top of this gap so the arrow keeps its clearance."
 
   attr :arrow, :boolean,
     default: false,
-    doc: "Whether to render the arrow pointing at the trigger."
+    doc:
+      "Whether to render the arrow pointing at the trigger. The arrow needs room, so the theme's `--fl-dropdown-arrow-gap` is added to `offset`."
 
   attr :max_height, :integer,
     default: nil,
@@ -585,12 +595,14 @@ defmodule FlintUI.Base.Dropdown do
       "Whether the menu may open on hover. When `false`, it opens only on click, `Enter`, `Space`, `ArrowDown`, `ArrowUp`, or a JS command."
 
   attr :open_delay, :integer,
-    default: 0,
-    doc: "Hover delay before the menu opens, in milliseconds. Requires `open_on_hover`."
+    default: 100,
+    doc:
+      "Hover delay before the menu opens, in milliseconds. Requires `open_on_hover`. Submenus share it, so it is the hover intent delay for both."
 
   attr :close_delay, :integer,
     default: 0,
-    doc: "Hover delay before the menu closes, in milliseconds. Requires `open_on_hover`."
+    doc:
+      "Hover delay before the menu closes, in milliseconds. Requires `open_on_hover`. The hook always waits at least 150 ms so the pointer can cross the gap between the trigger and the menu."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 

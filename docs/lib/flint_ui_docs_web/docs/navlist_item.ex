@@ -34,6 +34,7 @@ defmodule FlintUIDocsWeb.Docs.NavlistItem do
         <Components.navlist_item navigate="/docs" icon="lucide-book-open" active>
           Documentation
         </Components.navlist_item>
+        <Components.navlist_item navigate="/changelog" disabled>Changelog</Components.navlist_item>
         <Components.navlist_item text="Coming soon" />
       </Components.navlist>
     </div>

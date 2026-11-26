@@ -1,7 +1,7 @@
 import { FlintHook } from "../lib/core";
 import { focusFirst } from "../lib/focus";
 import { createPositioner, type Align, type Positioner, type Side } from "../lib/position";
-import { awaitAnimationsPromise } from "../lib/util";
+import { awaitAnimationsPromise, readCssLength } from "../lib/util";
 
 enum Events {
   Open = "fl:popover:open",
@@ -100,8 +100,18 @@ export class Popover extends FlintHook {
     return this.el.getAttribute("data-opened") === "true";
   }
 
-  private configKey(): string {
-    return `${this.placement}:${this.align}:${this.offset}:${this.arrowElement ? "arrow" : "plain"}`;
+  private configKey(offset: number): string {
+    return `${this.placement}:${this.align}:${offset}:${this.arrowElement ? "arrow" : "plain"}`;
+  }
+
+  /**
+   * The arrow protrudes into the gap, so the stylesheet's
+   * `--fl-popover-arrow-gap` is added to the configured offset.
+   */
+  private positioningOffset(): number {
+    if (!this.arrowElement) return this.offset;
+
+    return this.offset + readCssLength(this.el, "--fl-popover-arrow-gap");
   }
 
   /**
@@ -325,7 +335,8 @@ export class Popover extends FlintHook {
 
     if (!trigger || !content) return null;
 
-    const key = this.configKey();
+    const offset = this.positioningOffset();
+    const key = this.configKey(offset);
 
     if (
       this.positioner &&
@@ -341,7 +352,7 @@ export class Popover extends FlintHook {
     this.positioner = createPositioner(trigger, content, {
       placement: this.placement,
       align: this.align,
-      offset: this.offset,
+      offset,
       arrow: this.arrowElement,
       arrowVarPrefix: "popover",
     });

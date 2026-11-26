@@ -20,14 +20,17 @@ defmodule FlintUI.Base.DropdownSub do
 
   ## Hover
 
-  Menus open on click, `Enter`, `Space`, and `ArrowRight`. Set `open_on_hover` to
-  also open this submenu when the pointer rests on its trigger. The dropdown's
-  `open_delay` sets how long the pointer must rest before a hovered submenu
-  opens; hover opening never moves focus. A click focuses the submenu and pins
-  it open.
+  The submenu opens on hover by default, like a desktop menu; set
+  `open_on_hover={false}` to require a click, `Enter`, `Space`, or `ArrowRight`.
+  The dropdown's `open_delay` sets how long the pointer must rest before a
+  hovered submenu opens, so brushing past the trigger does not open it. Hover
+  opening never moves focus. A click focuses the submenu and pins it open.
 
   Hovering another item in the parent menu closes a submenu that was opened by
-  hover, and moving the pointer into the submenu keeps it open.
+  hover. The gap between the trigger and the submenu is part of the path: the
+  hook tracks a short corridor from the trigger to the submenu, so a pointer
+  travelling toward it — even diagonally across another row — keeps the submenu
+  open, and leaving that corridor closes it.
 
   ## Accessibility
 
@@ -179,9 +182,9 @@ defmodule FlintUI.Base.DropdownSub do
     doc: "Whether the trigger is disabled and skipped by menu navigation."
 
   attr :open_on_hover, :boolean,
-    default: false,
+    default: true,
     doc:
-      "Whether the submenu may open when the pointer rests on its trigger. Uses the dropdown's `open_delay`. When `false`, it opens only on click, `Enter`, `Space`, or `ArrowRight`."
+      "Whether the submenu opens when the pointer rests on its trigger. Uses the dropdown's `open_delay`. When `false`, it opens only on click, `Enter`, `Space`, or `ArrowRight`."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 

@@ -16,9 +16,9 @@ defmodule FlintUI.Styled.DropdownSubTest do
         """
       end
 
-      def hover(assigns) do
+      def no_hover(assigns) do
         ~H"""
-        <.dropdown_sub menu="more" open_on_hover>More</.dropdown_sub>
+        <.dropdown_sub menu="more" open_on_hover={false}>More</.dropdown_sub>
         """
       end
       ''')
@@ -47,9 +47,15 @@ defmodule FlintUI.Styled.DropdownSubTest do
     assert LazyHTML.attribute(trigger, "aria-disabled") == ["true"]
   end
 
-  test "forwards hover opening", %{wrapper: wrapper} do
-    trigger = render(wrapper, :hover) |> part("submenu-trigger")
+  test "opens on hover by default", %{wrapper: wrapper} do
+    trigger = render(wrapper, :example) |> part("submenu-trigger")
 
     assert LazyHTML.attribute(trigger, "data-open-on-hover") == [""]
+  end
+
+  test "forwards the hover opt-out", %{wrapper: wrapper} do
+    trigger = render(wrapper, :no_hover) |> part("submenu-trigger")
+
+    assert LazyHTML.attribute(trigger, "data-open-on-hover") == []
   end
 end

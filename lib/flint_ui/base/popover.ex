@@ -38,8 +38,10 @@ defmodule FlintUI.Base.Popover do
   `center`, `end`). The content flips to the opposite side when the preferred one
   does not fit, and shifts along the trigger to stay inside the viewport.
 
-  `offset` is the gap between the trigger and the content in pixels, and `arrow`
-  toggles the pointing arrow.
+  `offset` is the base gap between the trigger and the content in pixels. When
+  `arrow` is set, the stylesheet's `--fl-popover-arrow-gap` (4 px in the default
+  theme) is added so the arrow keeps its clearance. `arrow` toggles the pointing
+  arrow.
 
   The content is rendered in the browser's top layer with the
   [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API),
@@ -492,12 +494,14 @@ defmodule FlintUI.Base.Popover do
     doc: "Preferred alignment along the side. The content shifts to stay inside the viewport."
 
   attr :offset, :integer,
-    default: 8,
-    doc: "Gap between the trigger and the content, in pixels."
+    default: 4,
+    doc:
+      "Gap between the trigger and the content, in pixels. When `arrow` is set, `--fl-popover-arrow-gap` is added on top of this gap."
 
   attr :arrow, :boolean,
     default: false,
-    doc: "Whether to render the arrow pointing at the trigger."
+    doc:
+      "Whether to render the arrow pointing at the trigger. The arrow needs room, so `--fl-popover-arrow-gap` is added to `offset`."
 
   attr :portal, :boolean,
     default: false,

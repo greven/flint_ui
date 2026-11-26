@@ -20,6 +20,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
         controls: [
           %{key: :placement, type: :select, default: "bottom", label: "Placement"},
           %{key: :align, type: :select, default: "start", label: "Align"},
+          %{key: :offset, type: :number, default: 4, label: "Offset"},
           %{key: :open_on_hover, type: :boolean, default: false, label: "Open on hover"},
           %{key: :arrow, type: :boolean, default: false, label: "Arrow"}
         ]
@@ -32,14 +33,16 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
     ~H"""
     <.prose content="`label` renders the default trigger and the default slot is the menu content. Use `dropdown_header` for a
       muted section label, `dropdown_item` for actions and links, `dropdown_separator` for a visual break, and `dropdown_group` to name a related set
-      of items.The menu opens on click, `Enter`, `Space`, or `ArrowDown`; set `open_on_hover` to open it on hover. Submenus take their own
-      `open_on_hover`, so a menu can open on click while its submenu opens on hover. `placement`, `align`, and `offset` position it,
-      and `max_height` caps its height so long menus scroll." />
+      of items. The menu opens on click, `Enter`, `Space`, or `ArrowDown`; set `open_on_hover` to open it on hover. Submenus open on hover by default,
+      so a menu can open on click while its submenus open on hover; set their `open_on_hover` to `false` to require a click. `placement`, `align`, and `offset`
+      position it; with `arrow`, the theme adds `--fl-dropdown-arrow-gap` (4 px) to the offset so the tip clears the trigger. Hover opens track the path to the menu
+      and its submenus, so a diagonal move toward them stays open. `max_height` caps its height so long menus scroll." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
       <div class="flex min-h-40 fl-w-full items-center justify-center">
         <Components.dropdown
           label="Actions"
           placement={props.placement}
+          offset={props.offset}
           open_on_hover={props.open_on_hover}
           align={props.align}
           arrow={props.arrow}
@@ -157,6 +160,7 @@ defmodule FlintUIDocsWeb.Docs.Dropdown do
         ~s(label="Actions"),
         Snippet.attr("placement", props.placement, "bottom"),
         Snippet.attr("align", props.align, "start"),
+        Snippet.attr("offset", props.offset, 4),
         Snippet.flag("arrow", props.arrow),
         Snippet.flag("open_on_hover", props.open_on_hover)
       ],

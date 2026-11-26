@@ -34,15 +34,12 @@ export class Collapsible extends FlintHook {
   /**
    * Finds a part that belongs to this collapsible rather than to a component nested inside it. */
   private ownPart(name: string): HTMLElement | null {
-    const parts = Array.from(
-      this.el.querySelectorAll<HTMLElement>(`[data-part="${name}"]`),
-    );
+    const parts = Array.from(this.el.querySelectorAll<HTMLElement>(`[data-part="${name}"]`));
 
     for (const part of parts) {
       // The part may itself be another component's root.
       const owner = part.parentElement?.closest("[data-element]") ?? null;
-      if (owner === null || owner === this.el || !this.el.contains(owner))
-        return part;
+      if (owner === null || owner === this.el || !this.el.contains(owner)) return part;
     }
 
     return null;
@@ -112,14 +109,8 @@ export class Collapsible extends FlintHook {
     const content = this.parts.content;
     if (!content) return;
 
-    content.style.setProperty(
-      `--_fl-${CSS_VAR_PREFIX}-height`,
-      `${content.scrollHeight}px`,
-    );
-    content.style.setProperty(
-      `--_fl-${CSS_VAR_PREFIX}-width`,
-      `${content.scrollWidth}px`,
-    );
+    content.style.setProperty(`--_fl-${CSS_VAR_PREFIX}-height`, `${content.scrollHeight}px`);
+    content.style.setProperty(`--_fl-${CSS_VAR_PREFIX}-width`, `${content.scrollWidth}px`);
   }
 
   /**
@@ -225,11 +216,7 @@ export class Collapsible extends FlintHook {
       if (!isOpen) {
         const hide = () => {
           if (this.animationGeneration !== gen) return;
-          this.js().setAttribute(
-            content,
-            "hidden",
-            this.hiddenUntilFound ? "until-found" : "",
-          );
+          this.js().setAttribute(content, "hidden", this.hiddenUntilFound ? "until-found" : "");
         };
         done.then(hide).catch(hide);
       }
@@ -305,10 +292,7 @@ export class Collapsible extends FlintHook {
     this.el.removeEventListener(Events.Close, this.handleClose);
     this.el.removeEventListener(Events.Toggle, this.handleToggle);
     this.boundTrigger?.removeEventListener("click", this.handleTriggerClick);
-    this.boundContent?.removeEventListener(
-      "beforematch",
-      this.handleBeforeMatch,
-    );
+    this.boundContent?.removeEventListener("beforematch", this.handleBeforeMatch);
     this.resizeObserver?.disconnect();
   }
 }

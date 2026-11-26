@@ -24,10 +24,22 @@ defmodule FlintUI.Base.DropdownSubTest do
       </.dropdown_sub>
       """
     end
+
+    def defaults(assigns) do
+      ~H"""
+      <.dropdown_sub menu="more">More</.dropdown_sub>
+      """
+    end
+
+    def opt_out(assigns) do
+      ~H"""
+      <.dropdown_sub menu="more" open_on_hover={false}>More</.dropdown_sub>
+      """
+    end
   end
 
-  defp render(assigns \\ []) do
-    render_component(&TestComponent.example/1, assigns)
+  defp render(function \\ :example, assigns \\ []) do
+    render_component(&apply(TestComponent, function, [&1]), assigns)
     |> LazyHTML.from_fragment()
     |> LazyHTML.query(~s([data-element="dropdown_sub"]))
   end
@@ -50,12 +62,14 @@ defmodule FlintUI.Base.DropdownSubTest do
     assert LazyHTML.text(trigger) =~ "More"
   end
 
-  test "opts into hover opening with data-open-on-hover" do
-    assert LazyHTML.attribute(render(), "data-open-on-hover") == []
+  test "opens on hover by default" do
+    assert LazyHTML.attribute(render(:defaults), "data-open-on-hover") == [""]
+  end
 
-    trigger = render(open_on_hover: true)
+  test "can opt out of hover opening" do
+    trigger = render(:opt_out)
 
-    assert LazyHTML.attribute(trigger, "data-open-on-hover") == [""]
+    assert LazyHTML.attribute(trigger, "data-open-on-hover") == []
   end
 
   test "renders the decorative chevron" do
@@ -66,7 +80,7 @@ defmodule FlintUI.Base.DropdownSubTest do
   end
 
   test "a disabled trigger renders the native state" do
-    trigger = render(disabled: true)
+    trigger = render(:example, disabled: true)
 
     assert LazyHTML.attribute(trigger, "disabled") == [""]
     assert LazyHTML.attribute(trigger, "aria-disabled") == ["true"]

@@ -191,17 +191,42 @@ function key(element: EventTarget, key: string, options: KeyboardEventInit = {})
 function pointer(
   element: HTMLElement,
   type: "pointerover" | "pointerout",
-  options: { pointerType?: string; relatedTarget?: EventTarget | null } = {},
+  options: {
+    pointerType?: string;
+    relatedTarget?: EventTarget | null;
+    clientX?: number;
+    clientY?: number;
+  } = {},
 ) {
   const event = new MouseEvent(type, {
     bubbles: true,
     cancelable: true,
     relatedTarget: options.relatedTarget ?? null,
+    clientX: options.clientX ?? 0,
+    clientY: options.clientY ?? 0,
   });
   if (options.pointerType) {
     Object.defineProperty(event, "pointerType", { value: options.pointerType });
   }
   element.dispatchEvent(event);
+}
+
+function move(clientX: number, clientY: number, target: Element = document.body) {
+  target.dispatchEvent(new MouseEvent("pointermove", { bubbles: true, clientX, clientY }));
+}
+
+function rect(left: number, top: number, width: number, height: number): DOMRect {
+  return {
+    left,
+    top,
+    width,
+    height,
+    right: left + width,
+    bottom: top + height,
+    x: left,
+    y: top,
+    toJSON: () => ({}),
+  } as DOMRect;
 }
 
 function outsidePointerDown(element: HTMLElement = document.getElementById("outside")!) {
@@ -256,6 +281,48 @@ describe("Dropdown hook", () => {
         offset: 4,
         arrowVarPrefix: "dropdown",
       }),
+    );
+  });
+
+  it("adds the stylesheet's arrow gap to the offset when an arrow is rendered", async () => {
+    const { el, trigger, content } = setup();
+    el.style.setProperty("--fl-dropdown-arrow-gap", "4px");
+
+    click(trigger);
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 8 }),
+    );
+  });
+
+  it("resolves the arrow gap in rem", async () => {
+    const { el, trigger, content } = setup();
+    el.style.setProperty("--fl-dropdown-arrow-gap", "0.5rem");
+
+    click(trigger);
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 12 }),
+    );
+  });
+
+  it("ignores the arrow gap without an arrow", async () => {
+    const { el, trigger, content } = setup({ arrow: false });
+    el.style.setProperty("--fl-dropdown-arrow-gap", "4px");
+
+    click(trigger);
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 4 }),
     );
   });
 
@@ -448,7 +515,7 @@ describe("Dropdown hook", () => {
 
   it("opens and closes on hover after the configured delays", async () => {
     vi.useFakeTimers();
-    const { content } = setup({ openOnHover: true, openDelay: 200, closeDelay: 100 });
+    const { content } = setup({ openOnHover: true, openDelay: 200, closeDelay: 300 });
     const el = document.getElementById("menu") as HTMLElement;
 
     pointer(el, "pointerover");
@@ -459,10 +526,70 @@ describe("Dropdown hook", () => {
     expect(content.dataset.state).toBe("open");
 
     pointer(el, "pointerout");
-    await vi.advanceTimersByTimeAsync(99);
+    await vi.advanceTimersByTimeAsync(299);
     expect(content.dataset.state).toBe("open");
 
     await vi.advanceTimersByTimeAsync(1);
+    expect(content.dataset.state).toBe("closed");
+  });
+
+  it("keeps a hover-opened menu open while the pointer crosses the gap", async () => {
+    vi.useFakeTimers();
+    const { content } = setup({ openOnHover: true, openDelay: 0 });
+    const el = document.getElementById("menu") as HTMLElement;
+
+    pointer(el, "pointerover");
+    await vi.advanceTimersByTimeAsync(1);
+    expect(content.dataset.state).toBe("open");
+
+    // The menu is offset from its trigger, so the pointer briefly leaves the
+    // dropdown on its way into the menu.
+    pointer(el, "pointerout");
+    await vi.advanceTimersByTimeAsync(100);
+    pointer(content, "pointerover");
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(content.dataset.state).toBe("open");
+  });
+
+  it("gives a hover-opened menu the grace period before closing", async () => {
+    vi.useFakeTimers();
+    const { content } = setup({ openOnHover: true, openDelay: 0 });
+    const el = document.getElementById("menu") as HTMLElement;
+
+    pointer(el, "pointerover");
+    await vi.advanceTimersByTimeAsync(1);
+    expect(content.dataset.state).toBe("open");
+
+    pointer(el, "pointerout");
+    await vi.advanceTimersByTimeAsync(149);
+    expect(content.dataset.state).toBe("open");
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(content.dataset.state).toBe("closed");
+  });
+
+  it("keeps a hover-opened menu open while the pointer travels toward it", async () => {
+    vi.useFakeTimers();
+    const { trigger, content } = setup({ openOnHover: true, openDelay: 0 });
+    const el = document.getElementById("menu") as HTMLElement;
+
+    trigger.getBoundingClientRect = () => rect(100, 100, 100, 30);
+    content.getBoundingClientRect = () => rect(100, 160, 200, 200);
+
+    pointer(el, "pointerover");
+    await vi.advanceTimersByTimeAsync(1);
+    expect(content.dataset.state).toBe("open");
+
+    pointer(trigger, "pointerout", { clientX: 150, clientY: 131 });
+    await vi.advanceTimersByTimeAsync(300);
+
+    // The pointer is still in the corridor, so the close timer must not fire.
+    expect(content.dataset.state).toBe("open");
+
+    move(400, 400);
+    await vi.advanceTimersByTimeAsync(1);
+
     expect(content.dataset.state).toBe("closed");
   });
 
@@ -558,6 +685,84 @@ describe("Dropdown hook", () => {
     await vi.advanceTimersByTimeAsync(200);
 
     expect(submenu.dataset.state).toBe("open");
+  });
+
+  it("keeps a hover-opened submenu open while the pointer crosses the parent menu chrome", async () => {
+    vi.useFakeTimers();
+    const { trigger, content, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const docs = document.getElementById("docs") as HTMLElement;
+
+    click(trigger);
+    await vi.advanceTimersByTimeAsync(1);
+    pointer(more, "pointerover");
+    await vi.advanceTimersByTimeAsync(1);
+    expect(submenu.dataset.state).toBe("open");
+
+    // The submenu is offset from its trigger, so the pointer crosses the
+    // parent menu's chrome (padding around the rows) before reaching it.
+    pointer(more, "pointerout", { relatedTarget: content });
+    pointer(content, "pointerover");
+    await vi.advanceTimersByTimeAsync(100);
+
+    pointer(docs, "pointerover");
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(submenu.dataset.state).toBe("open");
+  });
+
+  it("closes a hover-opened submenu when the pointer rests on the parent menu chrome", async () => {
+    vi.useFakeTimers();
+    const { trigger, content, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+
+    click(trigger);
+    await vi.advanceTimersByTimeAsync(1);
+    pointer(more, "pointerover");
+    await vi.advanceTimersByTimeAsync(1);
+    expect(submenu.dataset.state).toBe("open");
+
+    pointer(more, "pointerout", { relatedTarget: content });
+    pointer(content, "pointerover");
+
+    await vi.advanceTimersByTimeAsync(149);
+    expect(submenu.dataset.state).toBe("open");
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(submenu.dataset.state).toBe("closed");
+  });
+
+  it("keeps a hover-opened submenu open while the pointer travels the corridor", async () => {
+    const { trigger, content, submenu } = setup({ submenuOpenOnHover: true });
+    const more = document.getElementById("more-trigger") as HTMLElement;
+    const settings = document.getElementById("settings") as HTMLElement;
+
+    more.getBoundingClientRect = () => rect(100, 100, 120, 30);
+    submenu.getBoundingClientRect = () => rect(260, 120, 160, 80);
+
+    click(trigger);
+    await flush();
+    pointer(more, "pointerover");
+    await flush();
+    expect(submenu.dataset.state).toBe("open");
+
+    // The pointer leaves the trigger toward the submenu and crosses a sibling
+    // row that happens to sit inside the buffered corridor.
+    pointer(more, "pointerout", {
+      relatedTarget: content,
+      clientX: 218,
+      clientY: 118,
+    });
+    pointer(settings, "pointerover", { clientX: 240, clientY: 150 });
+    await flush();
+
+    expect(submenu.dataset.state).toBe("open");
+
+    // Leaving the corridor closes it.
+    move(400, 320);
+    await flush();
+
+    expect(submenu.dataset.state).toBe("closed");
   });
 
   it("closes a hover-opened submenu when the pointer moves to a sibling item", async () => {

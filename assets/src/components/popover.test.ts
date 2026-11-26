@@ -218,6 +218,34 @@ describe("Popover hook", () => {
     );
   });
 
+  it("adds the stylesheet's arrow gap to the offset when an arrow is rendered", async () => {
+    const { el, trigger, content } = setup();
+    el.style.setProperty("--fl-popover-arrow-gap", "4px");
+
+    click(trigger);
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 12 }),
+    );
+  });
+
+  it("ignores the arrow gap without an arrow", async () => {
+    const { el, trigger, content } = setup({ arrow: false });
+    el.style.setProperty("--fl-popover-arrow-gap", "4px");
+
+    click(trigger);
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 8 }),
+    );
+  });
+
   it("closes on a second click and returns focus to the trigger", async () => {
     const { trigger, content } = setup();
 

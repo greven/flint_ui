@@ -16,7 +16,7 @@
         appearance: none;
         display: inline-flex;
         align-items: center;
-        gap: var(--fl-control-gap-sm);
+        gap: var(--fl-control-gap-xl);
         min-block-size: var(--fl-control-height-md);
         padding-inline: var(--fl-control-padding-x-sm);
         border: 1px solid transparent;

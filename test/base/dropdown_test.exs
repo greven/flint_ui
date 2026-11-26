@@ -114,6 +114,18 @@ defmodule FlintUI.Base.DropdownTest do
       assert attr(document, ~s([data-part="root"]), "data-role") == ["test"]
     end
 
+    test "defaults the offset to the base gap" do
+      document = render(:generated)
+
+      assert attr(document, ~s([data-part="root"]), "data-offset") == ["4"]
+    end
+
+    test "defaults the hover open delay to an intent delay" do
+      document = render(:generated)
+
+      assert attr(document, ~s([data-part="root"]), "data-open-delay") == ["100"]
+    end
+
     test "generates an id when none is given" do
       document = render(:generated)
       [id] = attr(document, ~s([data-part="root"]), "id")

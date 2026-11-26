@@ -1,6 +1,7 @@
 import { FlintHook } from "../lib/core";
+import { getGracePolygon, isPointInPolygon, type Point } from "../lib/geometry";
 import { createPositioner, type Align, type Positioner, type Side } from "../lib/position";
-import { awaitAnimationsPromise } from "../lib/util";
+import { awaitAnimationsPromise, readCssLength } from "../lib/util";
 
 enum Events {
   Open = "fl:dropdown:open",
@@ -23,11 +24,19 @@ interface HideOptions {
   source?: OpenSource;
 }
 
+interface GraceArea {
+  trigger: HTMLElement;
+  target: HTMLElement;
+  /** The submenu this path leads to; `null` when it leads to the root content. */
+  menu: HTMLElement | null;
+  polygon: Point[];
+}
+
 const DEFAULT_OFFSET = 4;
 const DEFAULT_PLACEMENT: Side = "bottom";
 const DEFAULT_ALIGN: Align = "start";
 const SUBMENU_OFFSET = 10;
-const SUBMENU_HOVER_CLOSE_GRACE = 150;
+const HOVER_CLOSE_GRACE = 150;
 const TYPEAHEAD_TIMEOUT = 500;
 
 function readNumber(value: string | undefined, fallback: number): number {
@@ -90,6 +99,7 @@ export class Dropdown extends FlintHook {
   private submenuCloseTimer: number | null = null;
   private hoveredSubmenuTrigger: HTMLElement | null = null;
   private hoverOpenedSubmenus = new Set<HTMLElement>();
+  private graceAreas = new Map<HTMLElement, GraceArea>();
 
   private typeahead = "";
   private typeaheadTimer: number | null = null;
@@ -105,8 +115,20 @@ export class Dropdown extends FlintHook {
     this.openOnHover = this.el.hasAttribute("data-open-on-hover");
   }
 
-  private configKey(): string {
-    return `${this.placement}:${this.align}:${this.offset}:${this.arrowElement ? "arrow" : "plain"}`;
+  private configKey(offset: number): string {
+    return `${this.placement}:${this.align}:${offset}:${this.arrowElement ? "arrow" : "plain"}`;
+  }
+
+  /**
+   * The arrow protrudes into the gap, so the stylesheet's
+   * `--fl-dropdown-arrow-gap` is added to the configured offset. The variable
+   * lets the arrow keep its clearance without every caller tuning `offset` to
+   * the arrow size.
+   */
+  private positioningOffset(): number {
+    if (!this.arrowElement) return this.offset;
+
+    return this.offset + readCssLength(this.el, "--fl-dropdown-arrow-gap");
   }
 
   /**
@@ -278,7 +300,8 @@ export class Dropdown extends FlintHook {
 
     if (!trigger || !content) return null;
 
-    const key = this.configKey();
+    const offset = this.positioningOffset();
+    const key = this.configKey(offset);
 
     if (
       this.positioner &&
@@ -294,7 +317,7 @@ export class Dropdown extends FlintHook {
     this.positioner = createPositioner(trigger, content, {
       placement: this.placement,
       align: this.align,
-      offset: this.offset,
+      offset,
       arrow: this.arrowElement,
       arrowVarPrefix: "dropdown",
     });
@@ -369,16 +392,21 @@ export class Dropdown extends FlintHook {
 
     if (this.state !== "open" || !this.openedByHover) return;
 
-    if (this.closeDelay <= 0) {
-      this.hide({ returnFocus: false, source: "pointer" });
-      return;
-    }
+    // The menu is offset from its trigger, so the pointer crosses a gap it
+    // does not own on the way in. Wait that gap out before closing; entering
+    // the menu clears the timer.
+    const delay = Math.max(this.closeDelay, HOVER_CLOSE_GRACE);
 
     this.clearCloseTimer();
     this.closeTimer = window.setTimeout(() => {
       this.closeTimer = null;
+
+      // The pointer is on its way from the trigger to the menu; the
+      // pointermove handler closes as soon as it leaves the corridor.
+      if (this.hasContentGrace()) return;
+
       this.hide({ returnFocus: false, source: "pointer" });
-    }, this.closeDelay);
+    }, delay);
   }
 
   private scheduleSubmenuHoverOpen(trigger: HTMLElement): void {
@@ -411,7 +439,7 @@ export class Dropdown extends FlintHook {
 
     // The trigger and its submenu are separated by an offset, so the pointer
     // briefly leaves both while crossing the gap. Give it time to arrive.
-    const delay = Math.max(this.closeDelay, SUBMENU_HOVER_CLOSE_GRACE);
+    const delay = Math.max(this.closeDelay, HOVER_CLOSE_GRACE);
 
     this.submenuCloseTimer = window.setTimeout(() => {
       this.submenuCloseTimer = null;
@@ -485,6 +513,7 @@ export class Dropdown extends FlintHook {
 
     this.clearTimers();
     this.clearSubmenuHoverTimers();
+    this.clearGraceAreas();
 
     if (this.state !== "open") {
       this.closeAllSubmenus();
@@ -701,7 +730,10 @@ export class Dropdown extends FlintHook {
     }
 
     if (this.submenuStack.includes(menu)) {
-      if (!openedByHover) this.hoverOpenedSubmenus.delete(menu);
+      if (!openedByHover) {
+        this.hoverOpenedSubmenus.delete(menu);
+        this.clearGrace(menu);
+      }
       if (focus !== "none") this.focusSubmenu(menu, focus);
       return;
     }
@@ -710,6 +742,7 @@ export class Dropdown extends FlintHook {
       this.hoverOpenedSubmenus.add(menu);
     } else {
       this.hoverOpenedSubmenus.delete(menu);
+      this.clearGrace(menu);
     }
 
     this.submenuStack.push(menu);
@@ -778,20 +811,32 @@ export class Dropdown extends FlintHook {
     return menus;
   }
 
-  private closeHoverSubmenusOutside(target: Element, keep: HTMLElement | null = null): void {
+  private closeHoverSubmenusOutside(
+    target: Element,
+    keep: HTMLElement | null = null,
+    point?: Point,
+  ): void {
     if (this.hoverOpenedSubmenus.size === 0) return;
 
-    const ancestors = this.submenuAncestors(target);
-    if (keep) ancestors.add(keep);
+    const keepMenus = this.submenuAncestors(target);
+    if (keep) keepMenus.add(keep);
+
+    // A pointer that is inside a grace corridor is on its way to that
+    // submenu, so crossing a sibling row there must not dismiss it.
+    if (point) {
+      for (const menu of this.gracedMenusAt(point)) keepMenus.add(menu);
+    }
 
     for (const menu of Array.from(this.hoverOpenedSubmenus)) {
-      if (!ancestors.has(menu)) this.closeSubmenu(menu, false);
+      if (!keepMenus.has(menu)) this.closeSubmenu(menu, false);
     }
   }
 
   private closeHoverSubmenus(): void {
+    const keep = this.gracedMenus();
+
     for (const menu of Array.from(this.hoverOpenedSubmenus)) {
-      this.closeSubmenu(menu, false);
+      if (!keep.has(menu)) this.closeSubmenu(menu, false);
     }
   }
 
@@ -810,6 +855,7 @@ export class Dropdown extends FlintHook {
     const positioner = this.submenuPositioners.get(menu);
 
     this.hoverOpenedSubmenus.delete(menu);
+    this.clearGrace(menu);
     positioner?.stop();
     this.submenuPositioners.delete(menu);
 
@@ -857,6 +903,111 @@ export class Dropdown extends FlintHook {
     this.hoverOpenedSubmenus.clear();
   }
 
+  // --- Hover path grace ---
+
+  /**
+   * Records the corridor the pointer is expected to travel from a trigger to
+   * its open panel. The pointermove handler closes the panel once the pointer
+   * leaves the corridor, so the pointer can cross the gap slowly and may pass
+   * over the parent menu's chrome or a sibling row on the way.
+   */
+  private startGrace(
+    trigger: HTMLElement,
+    target: HTMLElement,
+    menu: HTMLElement | null,
+    point: Point,
+  ): void {
+    const rect = target.getBoundingClientRect();
+    const polygon = getGracePolygon(point, trigger.getBoundingClientRect(), rect);
+
+    if (polygon.length === 0) return;
+
+    this.graceAreas.set(target, { trigger, target, menu, polygon });
+  }
+
+  private clearGrace(target: HTMLElement | null): void {
+    if (target) this.graceAreas.delete(target);
+  }
+
+  private clearGraceAreas(): void {
+    this.graceAreas.clear();
+  }
+
+  private gracedMenus(): Set<HTMLElement> {
+    const menus = new Set<HTMLElement>();
+
+    for (const area of this.graceAreas.values()) {
+      if (area.menu) menus.add(area.menu);
+    }
+
+    return menus;
+  }
+
+  private gracedMenusAt(point: Point): Set<HTMLElement> {
+    const menus = new Set<HTMLElement>();
+
+    for (const area of this.graceAreas.values()) {
+      if (area.menu && isPointInPolygon(point, area.polygon)) menus.add(area.menu);
+    }
+
+    return menus;
+  }
+
+  private hasContentGrace(): boolean {
+    for (const area of this.graceAreas.values()) {
+      if (!area.menu) return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Starts a corridor when the pointer leaves a submenu trigger or the root
+   * trigger on its way to the panel. Leaving a trigger towards anything else
+   * remains a normal dismissal.
+   */
+  private startPathGrace(target: Element, next: EventTarget | null, point: Point): void {
+    const nextNode = next instanceof Node ? next : null;
+
+    const submenuTrigger = target.closest<HTMLElement>('[data-part="submenu-trigger"]');
+
+    if (
+      submenuTrigger &&
+      this.el.contains(submenuTrigger) &&
+      !(nextNode && submenuTrigger.contains(nextNode))
+    ) {
+      const menu = this.submenuFor(submenuTrigger);
+
+      if (menu && this.hoverOpenedSubmenus.has(menu) && !(nextNode && menu.contains(nextNode))) {
+        this.startGrace(submenuTrigger, menu, menu, point);
+      }
+    }
+
+    if (
+      this.trigger?.contains(target) &&
+      !(nextNode && (this.trigger.contains(nextNode) || this.content?.contains(nextNode)))
+    ) {
+      if (this.state === "open" && this.openedByHover && this.content) {
+        this.startGrace(this.trigger, this.content, null, point);
+      }
+    }
+  }
+
+  /**
+   * Abandons the active corridors and lets the normal hover close take over,
+   * for example when the pointer leaves the window or the menu repositions.
+   */
+  private releaseGraceAreas(): void {
+    if (this.graceAreas.size === 0) return;
+
+    const gracedMenus = this.gracedMenus();
+    const hadContent = this.hasContentGrace();
+    this.clearGraceAreas();
+
+    if (gracedMenus.size > 0) this.scheduleSubmenuHoverClose();
+    if (hadContent) this.scheduleHoverClose();
+  }
+
   // --- Event handlers ---
 
   private handleTriggerClick = (event: MouseEvent): void => {
@@ -866,6 +1017,7 @@ export class Dropdown extends FlintHook {
       if (this.openedByHover) {
         this.openedByHover = false;
         this.clearTimers();
+        this.clearGraceAreas();
         this.focusMenuContainer(this.content ?? this.findContent() ?? this.el);
         return;
       }
@@ -936,28 +1088,51 @@ export class Dropdown extends FlintHook {
     const target = event.target;
     if (!(target instanceof Element)) return;
 
+    // Re-entering any part of the dropdown (the trigger, the menu, or a
+    // submenu) keeps a hover-opened menu open and ends the transit.
+    for (const area of Array.from(this.graceAreas.values())) {
+      if (area.trigger.contains(target) || area.target.contains(target)) {
+        this.graceAreas.delete(area.target);
+      }
+    }
+
+    this.clearCloseTimer();
     this.clearSubmenuCloseTimer();
 
     if (this.state === "closed") {
       if (!this.openOnHover) return;
 
-      this.clearCloseTimer();
       this.scheduleHoverOpen();
       return;
     }
 
     const trigger = target.closest<HTMLElement>('[data-part="submenu-trigger"]');
     const submenuTrigger = trigger && this.el.contains(trigger) ? trigger : null;
+    const point = { x: event.clientX, y: event.clientY };
 
     this.hoveredSubmenuTrigger = submenuTrigger;
 
     if (!submenuTrigger) {
       this.clearSubmenuOpenTimer();
-      this.closeHoverSubmenusOutside(target);
+
+      // The submenu is offset from its trigger, so the pointer crosses the
+      // parent menu's chrome (list padding, a header) on the way in. Only
+      // another item dismisses a hover-opened submenu at once; chrome gets the
+      // same grace as leaving the menu, so entering the submenu still cancels
+      // the close.
+      const insideSubmenu = this.submenuAncestors(target).size > 0;
+      const menuItem = target.closest('[role="menuitem"]');
+
+      if (insideSubmenu || menuItem) {
+        this.closeHoverSubmenusOutside(target, null, point);
+      } else {
+        this.scheduleSubmenuHoverClose();
+      }
+
       return;
     }
 
-    this.closeHoverSubmenusOutside(submenuTrigger, this.submenuFor(submenuTrigger));
+    this.closeHoverSubmenusOutside(submenuTrigger, this.submenuFor(submenuTrigger), point);
 
     if (submenuTrigger.hasAttribute("data-open-on-hover") && !isDisabled(submenuTrigger)) {
       this.scheduleSubmenuHoverOpen(submenuTrigger);
@@ -969,7 +1144,13 @@ export class Dropdown extends FlintHook {
   private handlePointerOut = (event: PointerEvent): void => {
     if (event.pointerType && event.pointerType !== "mouse") return;
 
+    const target = event.target;
     const next = event.relatedTarget;
+
+    if (target instanceof Element) {
+      this.startPathGrace(target, next, { x: event.clientX, y: event.clientY });
+    }
+
     if (next instanceof Node && this.el.contains(next)) return;
 
     this.hoveredSubmenuTrigger = null;
@@ -979,6 +1160,46 @@ export class Dropdown extends FlintHook {
     if (!this.openOnHover) return;
 
     this.scheduleHoverClose();
+  };
+
+  private handleGracePointerMove = (event: PointerEvent): void => {
+    if (this.graceAreas.size === 0) return;
+    if (event.pointerType && event.pointerType !== "mouse") return;
+
+    const point = { x: event.clientX, y: event.clientY };
+    const node = event.target instanceof Node ? event.target : null;
+
+    for (const area of Array.from(this.graceAreas.values())) {
+      const target = area.target;
+
+      if (!target.isConnected) {
+        this.graceAreas.delete(target);
+        continue;
+      }
+
+      if (node && (area.trigger.contains(node) || target.contains(node))) {
+        this.graceAreas.delete(target);
+        continue;
+      }
+
+      if (isPointInPolygon(point, area.polygon)) continue;
+
+      this.graceAreas.delete(target);
+
+      if (area.menu) {
+        this.closeSubmenu(area.menu, false);
+      } else if (this.state === "open" && this.openedByHover) {
+        this.hide({ returnFocus: false, source: "pointer" });
+      }
+    }
+  };
+
+  private handleGracePointerLeave = (): void => {
+    this.releaseGraceAreas();
+  };
+
+  private handleGraceViewportChange = (): void => {
+    this.releaseGraceAreas();
   };
 
   private handleOutsidePointerDown = (event: PointerEvent): void => {
@@ -1164,6 +1385,10 @@ export class Dropdown extends FlintHook {
     document.addEventListener("pointerdown", this.handleOutsidePointerDown, true);
     document.addEventListener("focusin", this.handleFocusIn);
     document.addEventListener("phx:update", this.handlePageUpdate);
+    document.addEventListener("pointermove", this.handleGracePointerMove, { passive: true });
+    document.documentElement.addEventListener("pointerleave", this.handleGracePointerLeave);
+    window.addEventListener("scroll", this.handleGraceViewportChange, true);
+    window.addEventListener("resize", this.handleGraceViewportChange);
   }
 
   updated() {
@@ -1173,6 +1398,7 @@ export class Dropdown extends FlintHook {
   destroyed() {
     this.clearTimers();
     this.clearSubmenuHoverTimers();
+    this.clearGraceAreas();
     this.generation++;
 
     this.positioner?.stop();
@@ -1191,6 +1417,10 @@ export class Dropdown extends FlintHook {
     document.removeEventListener("pointerdown", this.handleOutsidePointerDown, true);
     document.removeEventListener("focusin", this.handleFocusIn);
     document.removeEventListener("phx:update", this.handlePageUpdate);
+    document.removeEventListener("pointermove", this.handleGracePointerMove);
+    document.documentElement.removeEventListener("pointerleave", this.handleGracePointerLeave);
+    window.removeEventListener("scroll", this.handleGraceViewportChange, true);
+    window.removeEventListener("resize", this.handleGraceViewportChange);
 
     this.unbindTrigger(this.trigger);
 
@@ -1235,6 +1465,7 @@ export class Dropdown extends FlintHook {
   private reset(): void {
     this.clearTimers();
     this.clearSubmenuHoverTimers();
+    this.clearGraceAreas();
     this.generation++;
     this.state = "closed";
     this.openedByHover = false;

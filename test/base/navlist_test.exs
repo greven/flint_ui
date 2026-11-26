@@ -46,6 +46,14 @@ defmodule FlintUI.Base.NavlistTest do
       </.navlist>
       """
     end
+
+    def disabled_item(assigns) do
+      ~H"""
+      <.navlist>
+        <.navlist_item navigate="/docs" disabled>Overview</.navlist_item>
+      </.navlist>
+      """
+    end
   end
 
   defp render(fun, assigns \\ %{}) do
@@ -156,6 +164,17 @@ defmodule FlintUI.Base.NavlistTest do
     assert LazyHTML.query(content, "button") |> Enum.count() == 0
   end
 
+  test "a disabled item renders non-focusable text and drops its destination" do
+    document = render(&TestComponent.disabled_item/1)
+    item = LazyHTML.query(document, ~s([data-element="navlist_item"]))
+    content = LazyHTML.query(item, ~s([data-part="content"]))
+
+    assert LazyHTML.attribute(item, "data-disabled") == [""]
+    assert LazyHTML.tag(content) == ["span"]
+    assert LazyHTML.attribute(content, "href") == []
+    assert LazyHTML.attribute(content, "aria-disabled") == ["true"]
+  end
+
   test "declares its type and documented parts" do
     assert %FlintUI.Meta{name: :navlist, type: :navigation, status: :draft} =
              FlintUI.Base.Navlist.meta()
@@ -165,6 +184,12 @@ defmodule FlintUI.Base.NavlistTest do
 
     assert FlintUI.Base.NavlistItem.parts_attrs()[:root]
            |> Enum.any?(&(&1.name == "[data-active]"))
+
+    assert FlintUI.Base.NavlistItem.parts_attrs()[:content]
+           |> Enum.any?(&(&1.name == "aria-disabled"))
+
+    assert FlintUI.Base.NavlistItem.states()
+           |> Enum.any?(&(&1.selector =~ ~s([data-disabled])))
 
     assert FlintUI.Base.NavlistGroup.parts_attrs()[:root]
            |> Enum.any?(&(&1.name in ["[data-collapsible]", "[data-static]"]))

@@ -49,6 +49,12 @@ defmodule FlintUI.Styled.Dropdown do
           default: "none",
           doc:
             "Maximum height of the menu. The `max_height` attribute writes it in pixels; the menu scrolls when content exceeds it."
+        ),
+        Var.new(
+          name: "--fl-dropdown-arrow-gap",
+          default: "4px",
+          doc:
+            "Extra distance added to `offset` when `arrow` is set, so the arrow tip keeps a small gap instead of touching the trigger. Raise it for more air."
         )
       ]
     }

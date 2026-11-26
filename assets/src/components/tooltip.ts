@@ -1,6 +1,6 @@
 import { FlintHook } from "../lib/core";
 import { createPositioner, type Align, type Positioner, type Side } from "../lib/position";
-import { awaitAnimationsPromise } from "../lib/util";
+import { awaitAnimationsPromise, readCssLength } from "../lib/util";
 
 enum Events {
   Open = "fl:tooltip:open",
@@ -69,8 +69,18 @@ export class Tooltip extends FlintHook {
     this.disabled = this.el.hasAttribute("data-disabled");
   }
 
-  private configKey(): string {
-    return `${this.placement}:${this.align}:${this.offset}:${this.parts.arrow ? "arrow" : "plain"}`;
+  private configKey(offset: number): string {
+    return `${this.placement}:${this.align}:${offset}:${this.parts.arrow ? "arrow" : "plain"}`;
+  }
+
+  /**
+   * The arrow protrudes into the gap, so the stylesheet's
+   * `--fl-tooltip-arrow-gap` is added to the configured offset.
+   */
+  private positioningOffset(): number {
+    if (!this.parts.arrow) return this.offset;
+
+    return this.offset + readCssLength(this.el, "--fl-tooltip-arrow-gap");
   }
 
   /**
@@ -214,7 +224,8 @@ export class Tooltip extends FlintHook {
 
     if (!trigger || !content) return null;
 
-    const key = this.configKey();
+    const offset = this.positioningOffset();
+    const key = this.configKey(offset);
 
     if (
       this.positioner &&
@@ -229,7 +240,7 @@ export class Tooltip extends FlintHook {
     this.positioner = createPositioner(trigger, content, {
       placement: this.placement,
       align: this.align,
-      offset: this.offset,
+      offset,
       arrow: this.parts.arrow ?? null,
       arrowVarPrefix: "tooltip",
     });

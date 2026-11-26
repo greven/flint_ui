@@ -35,7 +35,7 @@ defmodule FlintUIDocsWeb.Docs.Popover do
       The hook marks it and wires `aria-haspopup`, `aria-expanded`, and `aria-controls`, so there are no attributes to spread. The component
       generates its own DOM id, so pass `id` only when you need a stable handle — for example to close the popover from a control inside its
       content, or to target it with `open_popover/2`. The content is a dialog named after the trigger unless you pass `aria_label` or
-      `aria_labelledby`. `placement`, `align`, and `offset` position it; it flips and shifts on its own near the viewport edge." />
+      `aria_labelledby`. `placement`, `align`, and `offset` position it; with `arrow`, the theme adds `--fl-popover-arrow-gap` (4 px) to the offset so the tip clears the trigger. It flips and shifts on its own near the viewport edge." />
     <.preview :let={props} {assigns} code={&usage_code/1}>
       <div class="fl-w-full max-w-74 flex justify-center">
         <Components.popover

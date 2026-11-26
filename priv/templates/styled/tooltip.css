@@ -6,6 +6,10 @@
      * the viewport origin and translates it next to the trigger. */
     [data-element="tooltip"][data-tooltip] {
         display: contents;
+
+        /* The arrow protrudes into the gap. The hook adds this to `offset`
+         * when an arrow is rendered, so the tip clears the trigger. */
+        --fl-tooltip-arrow-gap: 2px;
     }
 
     [data-element="tooltip"][data-tooltip] [data-part="content"] {

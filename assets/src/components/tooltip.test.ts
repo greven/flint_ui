@@ -412,6 +412,34 @@ describe("Tooltip hook", () => {
     );
   });
 
+  it("adds the stylesheet's arrow gap to the offset when an arrow is rendered", async () => {
+    const { el, trigger, content } = setup();
+    el.style.setProperty("--fl-tooltip-arrow-gap", "2px");
+
+    pointer(trigger, "pointerenter");
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 8 }),
+    );
+  });
+
+  it("ignores the arrow gap without an arrow", async () => {
+    const { el, trigger, content } = setup({ arrow: false });
+    el.style.setProperty("--fl-tooltip-arrow-gap", "2px");
+
+    pointer(trigger, "pointerenter");
+    await flush();
+
+    expect(create).toHaveBeenLastCalledWith(
+      trigger,
+      content,
+      expect.objectContaining({ offset: 6 }),
+    );
+  });
+
   it("reuses one positioner across opens and stops tracking when hidden", async () => {
     const { trigger } = setup();
 

@@ -52,7 +52,7 @@ defmodule FlintUI.Styled.TooltipTest do
     assert attr(document, :tooltip, "data-state") == ["closed"]
     assert attr(document, :tooltip, "data-placement") == ["top"]
     assert attr(document, :tooltip, "data-align") == ["center"]
-    assert attr(document, :tooltip, "data-offset") == ["6"]
+    assert attr(document, :tooltip, "data-offset") == ["4"]
   end
 
   test "forwards the configured base attributes", %{wrapper: wrapper} do

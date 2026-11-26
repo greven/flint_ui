@@ -29,13 +29,19 @@
             color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="navlist_item"][data-navlist_item] > [data-part="content"]:is(:hover, :focus-visible) {
+    [data-element="navlist_item"][data-navlist_item]:not([data-disabled])
+        > [data-part="content"]:is(:hover, :focus-visible) {
         background-color: var(--fl-color-surface-subtle);
         color: var(--fl-color-text);
     }
 
     [data-element="navlist_item"][data-navlist_item][data-active] > [data-part="content"] {
         color: var(--fl-navlist-text-active, var(--fl-color-text));
+    }
+
+    [data-element="navlist_item"][data-navlist_item][data-disabled] > [data-part="content"] {
+        cursor: not-allowed;
+        opacity: var(--fl-disabled-opacity, 0.5);
     }
 
     [data-element="navlist_item"][data-navlist_item] [data-element="icon"] {
@@ -45,7 +51,9 @@
         transition: color var(--fl-duration-fast) var(--fl-ease-out);
     }
 
-    [data-element="navlist_item"][data-navlist_item] > [data-part="content"]:is(:hover, :focus-visible) [data-element="icon"],
+    [data-element="navlist_item"][data-navlist_item]:not([data-disabled])
+        > [data-part="content"]:is(:hover, :focus-visible)
+        [data-element="icon"],
     [data-element="navlist_item"][data-navlist_item][data-active] [data-element="icon"] {
         color: currentcolor;
     }

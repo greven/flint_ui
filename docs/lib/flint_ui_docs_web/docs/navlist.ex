@@ -17,6 +17,7 @@ defmodule FlintUIDocsWeb.Docs.Navlist do
   def render_section(%{section: :usage, id: :basic} = assigns) do
     ~H"""
     <.prose content="A navlist stacks links vertically. Add `rail` for a vertical indicator line, use `navlist_group` to label a section, and mark the current page with `active` on the item." />
+    <.prose content="Set `disabled` on an item to render it as non-focusable text, even when it has a destination." />
     <.preview {assigns} code={usage_code()}>
       <Components.navlist label="Documentation" rail>
         <Components.navlist_group label="Overview" icon="lucide-book-open" collapsible={false}>
@@ -25,6 +26,9 @@ defmodule FlintUIDocsWeb.Docs.Navlist do
           </Components.navlist_item>
           <Components.navlist_item navigate="/getting-started/installation">
             Installation
+          </Components.navlist_item>
+          <Components.navlist_item navigate="/getting-started/migration" disabled>
+            Migration
           </Components.navlist_item>
         </Components.navlist_group>
 
@@ -49,6 +53,9 @@ defmodule FlintUIDocsWeb.Docs.Navlist do
           <Components.navlist_item navigate="/getting-started/installation">
             Installation
           </Components.navlist_item>
+          <Components.navlist_item navigate="/getting-started/migration" disabled>
+            Migration
+          </Components.navlist_item>
         </Components.navlist_group>
 
         <Components.navlist_group id={"#{@parts_id}-group"} label="Guides" icon="lucide-palette" open>
@@ -68,6 +75,7 @@ defmodule FlintUIDocsWeb.Docs.Navlist do
           Introduction
         </.navlist_item>
         <.navlist_item navigate="/getting-started/installation">Installation</.navlist_item>
+        <.navlist_item navigate="/getting-started/migration" disabled>Migration</.navlist_item>
       </.navlist_group>
 
       <.navlist_group label="Guides" icon="lucide-palette" open>

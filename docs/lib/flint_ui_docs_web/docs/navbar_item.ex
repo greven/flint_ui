@@ -33,6 +33,7 @@ defmodule FlintUIDocsWeb.Docs.NavbarItem do
       <Components.navbar_item navigate="/components" active icon="lucide-box">
         Components
       </Components.navbar_item>
+      <Components.navbar_item navigate="/changelog" disabled>Changelog</Components.navbar_item>
       <Components.navbar_item text="Coming soon" />
     </Components.navbar>
     """

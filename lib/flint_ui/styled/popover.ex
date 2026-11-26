@@ -39,6 +39,12 @@ defmodule FlintUI.Styled.Popover do
           name: "--fl-popover-text",
           default: "var(--fl-color-text)",
           doc: "Text color of the popover content."
+        ),
+        Var.new(
+          name: "--fl-popover-arrow-gap",
+          default: "4px",
+          doc:
+            "Extra distance added to `offset` when `arrow` is set, so the arrow tip keeps a small gap instead of touching the trigger. Raise it for more air."
         )
       ],
       props: []

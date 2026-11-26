@@ -28,6 +28,21 @@ defmodule FlintUI.Base.NavbarMenu do
   top layer beneath the trigger. It is not clipped by an `overflow` ancestor and
   does not compete with the page's stacking contexts.
 
+  ## Positioning
+
+  `position` aligns the panel to the `start`, `center`, or `end` of its trigger.
+  The default is `center`. The panel opens below the trigger and flips above or
+  shifts sideways when it does not fit in the viewport.
+
+  ## Hover
+
+  Set `open_on_hover` to open the menu when the pointer rests on its trigger or
+  panel. Hover opening never moves focus. A short grace keeps the menu open while
+  the pointer crosses the gap into the panel, then the menu closes shortly after
+  the pointer leaves. Clicking the trigger pins the menu open, so it no longer
+  follows the pointer. Hover is an enhancement: click, `Enter`, `Space`, and
+  keyboard navigation work without it.
+
   ## Accessibility
 
   The trigger is a button with `aria-expanded` and `aria-controls`. The menu is
@@ -92,6 +107,16 @@ defmodule FlintUI.Base.NavbarMenu do
           name: "[data-active]",
           value: "boolean",
           description: "Present when the menu's own page or section is current."
+        },
+        %Meta.PartAttr{
+          name: "[data-open-on-hover]",
+          value: "boolean",
+          description: "Present when the menu may open when the pointer rests on it."
+        },
+        %Meta.PartAttr{
+          name: "[data-position]",
+          value: ~s("start" | "center" | "end"),
+          description: "The horizontal alignment of the panel relative to its trigger."
         }
       ],
       trigger: [
@@ -243,7 +268,9 @@ defmodule FlintUI.Base.NavbarMenu do
       |> Map.merge(%{
         "data-element" => "navbar_menu",
         "data-part" => "root",
-        "data-active" => assigns.active
+        "data-active" => assigns.active,
+        "data-open-on-hover" => assigns.open_on_hover,
+        "data-position" => assigns.position
       })
 
     trigger = Map.put(collapsible.trigger, "data-part", "trigger")
@@ -304,6 +331,17 @@ defmodule FlintUI.Base.NavbarMenu do
     default: false,
     doc:
       "Whether the menu's own page or section is current. Marks the trigger without setting `aria-current`."
+
+  attr :open_on_hover, :boolean,
+    default: false,
+    doc:
+      "Whether the menu may open when the pointer rests on its trigger or panel. Hover opening never moves focus; clicking the trigger pins the menu open. When `false`, it opens only on click, `Enter`, or `Space`."
+
+  attr :position, :string,
+    default: "center",
+    values: ~w(start center end),
+    doc:
+      "The horizontal alignment of the panel relative to its trigger. The panel opens below the trigger and flips or shifts when it does not fit in the viewport."
 
   attr :rest, :global, doc: "Additional HTML attributes."
 

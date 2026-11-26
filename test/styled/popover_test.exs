@@ -68,7 +68,7 @@ defmodule FlintUI.Styled.PopoverTest do
     assert attr(document, :popover, "data-opened") == ["false"]
     assert attr(document, :popover, "data-placement") == ["bottom"]
     assert attr(document, :popover, "data-align") == ["center"]
-    assert attr(document, :popover, "data-offset") == ["8"]
+    assert attr(document, :popover, "data-offset") == ["4"]
   end
 
   test "forwards the configured base attributes", %{wrapper: wrapper} do

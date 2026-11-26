@@ -16,11 +16,16 @@ defmodule FlintUI.Base.NavbarItem do
   Use `navbar_item` for a direct link. Use `navbar_menu` when the item reveals a
   menu of links.
 
+  Set `disabled` to render the item as non-focusable text, even when it has a
+  destination. The destination attributes are dropped, so the item cannot be
+  followed.
+
   ## Accessibility
 
   A destination renders a native link, so it keeps link semantics and its
   content is its accessible name. An item without a destination renders plain
-  text in a non-focusable element and does not pretend to be a link.
+  text in a non-focusable element and does not pretend to be a link. A disabled
+  item renders the same plain text with `aria-disabled="true"`.
 
   Mark exactly one item per navigation with `active`. The item is a list item
   inside the navbar's `ul`, so the position and count come from the native list.
@@ -31,7 +36,8 @@ defmodule FlintUI.Base.NavbarItem do
   ## Keyboard
 
   A linked item behaves like any link: `Tab` moves focus to it and `Enter`
-  follows it. A plain-text item adds no tab stop and no keyboard behavior.
+  follows it. A plain-text or disabled item adds no tab stop and no keyboard
+  behavior.
   """
 
   use FlintUI.Component
@@ -69,6 +75,11 @@ defmodule FlintUI.Base.NavbarItem do
           name: "[data-active]",
           value: "boolean",
           description: "Present on the item for the current page."
+        },
+        %Meta.PartAttr{
+          name: "[data-disabled]",
+          value: "boolean",
+          description: "Present when the item is disabled."
         }
       ],
       content: [
@@ -82,6 +93,11 @@ defmodule FlintUI.Base.NavbarItem do
           name: "aria-current",
           value: "page",
           description: "Present on the item content when `active` is set."
+        },
+        %Meta.PartAttr{
+          name: "aria-disabled",
+          value: "true",
+          description: "Present on the item content when `disabled` is set."
         }
       ]
     ]
@@ -92,11 +108,12 @@ defmodule FlintUI.Base.NavbarItem do
     [
       %Meta.Keyboard{
         keys: "Tab",
-        description: "Moves focus to the next link in the navbar."
+        description:
+          "Moves focus to the next link in the navbar. Plain-text and disabled items are not focusable."
       },
       %Meta.Keyboard{
         keys: "Enter",
-        description: "Follows the focused link. Plain-text items are not focusable."
+        description: "Follows the focused link. Plain-text and disabled items are not focusable."
       }
     ]
   end
@@ -108,6 +125,11 @@ defmodule FlintUI.Base.NavbarItem do
         name: "active",
         description: "The item links to the page currently being viewed.",
         selector: ~s([data-element="navbar_item"][data-active])
+      },
+      %Meta.State{
+        name: "disabled",
+        description: "The item is disabled and renders as non-focusable text.",
+        selector: ~s([data-element="navbar_item"][data-disabled])
       }
     ]
   end
@@ -118,11 +140,13 @@ defmodule FlintUI.Base.NavbarItem do
       root: %{
         "data-element" => "navbar_item",
         "data-part" => "item",
-        "data-active" => assigns.active
+        "data-active" => assigns.active,
+        "data-disabled" => assigns.disabled
       },
       content: %{
         "data-part" => "content",
-        "aria-current" => assigns.active && "page"
+        "aria-current" => assigns.active && "page",
+        "aria-disabled" => assigns.disabled && "true"
       }
     }
   end
@@ -136,6 +160,11 @@ defmodule FlintUI.Base.NavbarItem do
     doc:
       "Whether the item links to the page currently being viewed. Sets `aria-current=\"page\"` on the item content."
 
+  attr :disabled, :boolean,
+    default: false,
+    doc:
+      "Whether the item is disabled. It renders as non-focusable text with `aria-disabled=\"true\"`, and any destination is dropped."
+
   attr :rest, :global,
     include: ~w(href navigate patch replace method csrf_token target rel download
                 hreflang referrerpolicy title aria-label aria-labelledby aria-describedby),
@@ -148,6 +177,9 @@ defmodule FlintUI.Base.NavbarItem do
   def render(assigns) do
     {content_rest, root_rest} = split_rest(Map.get(assigns, :rest, %{}))
     link? = link?(assigns)
+
+    content_rest =
+      if assigns.disabled, do: drop_navigation(content_rest), else: content_rest
 
     assigns =
       assigns
@@ -169,7 +201,7 @@ defmodule FlintUI.Base.NavbarItem do
 
   defp link?(assigns) do
     rest = Map.get(assigns, :rest, %{})
-    Enum.any?([:href, :navigate, :patch], &present?(rest[&1]))
+    not assigns.disabled and Enum.any?([:href, :navigate, :patch], &present?(rest[&1]))
   end
 
   defp present?(value), do: value not in [nil, false, ""]
@@ -178,4 +210,20 @@ defmodule FlintUI.Base.NavbarItem do
   # Navigation and naming attributes belong on the link, where they describe the
   # destination and the accessible name.
   defp split_rest(rest), do: Map.split(rest, @content_attrs)
+
+  defp drop_navigation(rest) do
+    Map.drop(rest, [
+      :href,
+      :navigate,
+      :patch,
+      :replace,
+      :method,
+      :csrf_token,
+      :target,
+      :rel,
+      :download,
+      :hreflang,
+      :referrerpolicy
+    ])
+  end
 end

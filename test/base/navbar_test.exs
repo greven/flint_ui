@@ -38,8 +38,28 @@ defmodule FlintUI.Base.NavbarTest do
     def open_menu(assigns) do
       ~H"""
       <.navbar>
-        <.navbar_menu id="products-menu" label="Products" open active>
+        <.navbar_menu id="products-menu" label="Products" open active open_on_hover position="end">
           <.navbar_menu_item navigate="/products">Overview</.navbar_menu_item>
+        </.navbar_menu>
+      </.navbar>
+      """
+    end
+
+    def overflow(assigns) do
+      ~H"""
+      <.navbar disabled loop={false} scrollable fadable>
+        <.navbar_item navigate="/">Home</.navbar_item>
+      </.navbar>
+      """
+    end
+
+    def disabled_items(assigns) do
+      ~H"""
+      <.navbar>
+        <.navbar_item navigate="/" disabled>Home</.navbar_item>
+        <.navbar_item href="https://example.com" disabled>Example</.navbar_item>
+        <.navbar_menu label="Products">
+          <.navbar_menu_item navigate="/products" disabled>Overview</.navbar_menu_item>
         </.navbar_menu>
       </.navbar>
       """
@@ -111,6 +131,8 @@ defmodule FlintUI.Base.NavbarTest do
 
     assert LazyHTML.tag(menu) == ["li"]
     assert LazyHTML.attribute(menu, "data-state") == ["closed"]
+    assert LazyHTML.attribute(menu, "data-open-on-hover") == []
+    assert LazyHTML.attribute(menu, "data-position") == ["center"]
 
     assert LazyHTML.tag(trigger) == ["button"]
     assert LazyHTML.attribute(trigger, "type") == ["button"]
@@ -141,10 +163,58 @@ defmodule FlintUI.Base.NavbarTest do
 
     assert LazyHTML.attribute(menu, "data-state") == ["open"]
     assert LazyHTML.attribute(menu, "data-active") == [""]
+    assert LazyHTML.attribute(menu, "data-open-on-hover") == [""]
+    assert LazyHTML.attribute(menu, "data-position") == ["end"]
     assert LazyHTML.attribute(menu, "id") == ["products-menu"]
     assert LazyHTML.attribute(trigger, "aria-expanded") == ["true"]
     assert LazyHTML.attribute(content, "hidden") == []
     assert LazyHTML.attribute(content, "data-state") == ["open"]
+  end
+
+  test "maps loop and overflow flags and makes a disabled navbar inert" do
+    root = render(&TestComponent.overflow/1) |> root()
+    list = LazyHTML.query(root, ~s([data-part="list"]))
+
+    assert LazyHTML.attribute(root, "data-loop") == ["false"]
+    assert LazyHTML.attribute(root, "data-disabled") == [""]
+    assert LazyHTML.attribute(root, "data-scrollable") == [""]
+    assert LazyHTML.attribute(root, "data-fadable") == [""]
+    assert LazyHTML.attribute(root, "inert") == [""]
+    assert LazyHTML.attribute(list, "data-fade-start") == []
+    assert LazyHTML.attribute(list, "data-fade-end") == []
+  end
+
+  test "defaults loop to true and leaves a live navbar enabled" do
+    root = render(&TestComponent.items/1) |> root()
+
+    assert LazyHTML.attribute(root, "data-loop") == ["true"]
+    assert LazyHTML.attribute(root, "data-disabled") == []
+    assert LazyHTML.attribute(root, "inert") == []
+  end
+
+  test "a disabled item renders non-focusable text and drops its destination" do
+    document = render(&TestComponent.disabled_items/1)
+    item = item_at(document, 0)
+
+    assert LazyHTML.attribute(item, "data-disabled") == [""]
+
+    content = item_content(document, 0)
+    assert LazyHTML.tag(content) == ["span"]
+    assert LazyHTML.attribute(content, "href") == []
+    assert LazyHTML.attribute(content, "aria-disabled") == ["true"]
+
+    external = item_content(document, 1)
+    assert LazyHTML.tag(external) == ["span"]
+    assert LazyHTML.attribute(external, "href") == []
+    assert LazyHTML.attribute(external, "aria-disabled") == ["true"]
+
+    menu_item = LazyHTML.query(document, ~s([data-element="navbar_menu_item"]))
+    menu_content = LazyHTML.query(menu_item, ~s([data-part="content"]))
+
+    assert LazyHTML.attribute(menu_item, "data-disabled") == [""]
+    assert LazyHTML.tag(menu_content) == ["span"]
+    assert LazyHTML.attribute(menu_content, "href") == []
+    assert LazyHTML.attribute(menu_content, "aria-disabled") == ["true"]
   end
 
   test "declares its type and documented parts" do
@@ -154,8 +224,28 @@ defmodule FlintUI.Base.NavbarTest do
     assert %FlintUI.Meta{name: :navbar_menu, type: :navigation, status: :draft} =
              FlintUI.Base.NavbarMenu.meta()
 
+    assert FlintUI.Base.Navbar.parts_attrs()[:root]
+           |> Enum.any?(&(&1.name == "inert"))
+
+    assert FlintUI.Base.Navbar.keyboard() |> Enum.any?(&(&1.keys == "ArrowRight / ArrowLeft"))
+
+    assert FlintUI.Base.Navbar.states()
+           |> Enum.any?(&(&1.selector =~ ~s([data-disabled])))
+
     assert FlintUI.Base.NavbarItem.parts_attrs()[:root]
            |> Enum.any?(&(&1.name == "[data-active]"))
+
+    assert FlintUI.Base.NavbarItem.parts_attrs()[:content]
+           |> Enum.any?(&(&1.name == "aria-disabled"))
+
+    assert FlintUI.Base.NavbarItem.states()
+           |> Enum.any?(&(&1.selector =~ ~s([data-disabled])))
+
+    assert FlintUI.Base.NavbarMenu.parts_attrs()[:root]
+           |> Enum.any?(&(&1.name == "[data-open-on-hover]"))
+
+    assert FlintUI.Base.NavbarMenu.parts_attrs()[:root]
+           |> Enum.any?(&(&1.name == "[data-position]"))
 
     assert FlintUI.Base.NavbarMenu.parts_attrs()[:trigger]
            |> Enum.any?(&(&1.name == "aria-expanded"))

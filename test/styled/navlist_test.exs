@@ -48,6 +48,14 @@ defmodule FlintUI.Styled.NavlistTest do
         </.navlist>
         """
       end
+
+      def disabled_item(assigns) do
+        ~H"""
+        <.navlist>
+          <.navlist_item navigate="/docs" disabled>Overview</.navlist_item>
+        </.navlist>
+        """
+      end
     end
     ''')
 
@@ -97,5 +105,15 @@ defmodule FlintUI.Styled.NavlistTest do
     assert LazyHTML.query(item, "[data-element='icon'].lucide-house")
     assert LazyHTML.query(item, "[data-element='icon'].lucide-arrow-up-right")
     assert LazyHTML.text(item) |> String.trim() == "Home"
+  end
+
+  test "forwards a disabled item", %{wrapper: wrapper} do
+    document = render(wrapper, :disabled_item)
+    item = root(document, :navlist_item)
+    content = LazyHTML.query(item, ~s([data-part="content"]))
+
+    assert LazyHTML.attribute(item, "data-disabled") == [""]
+    assert LazyHTML.tag(content) == ["span"]
+    assert LazyHTML.attribute(content, "aria-disabled") == ["true"]
   end
 end

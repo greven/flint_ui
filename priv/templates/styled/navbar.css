@@ -1,11 +1,32 @@
 @layer components {
     /* Navbar. The root is the navigation landmark; the list lays the items out
-     * in one row. Public inputs: `--fl-navbar-gap`, `--fl-navbar-text`,
-     * `--fl-navbar-text-active`, `--fl-navbar-highlight`, and
-     * `--fl-navbar-active`. */
+     * in one row. The minimal variant is the baseline; the outlined variant
+     * adds the tabs-style shared rule and active indicator. Public inputs:
+     * `--fl-navbar-gap`, `--fl-navbar-text`, `--fl-navbar-text-active`,
+     * `--fl-navbar-highlight`, `--fl-navbar-active`, and `--fl-navbar-color`.
+     *
+     * Item metrics live here because `size` is a navbar prop: the item, menu
+     * trigger, and menu item parts all read the same scale. */
     [data-element="navbar"][data-navbar] {
+        --fl-navbar-color: var(--fl-tone, var(--fl-color-text));
+        --fl-navbar-active: var(--fl-tone-soft, var(--fl-color-surface-strong));
+        --fl-navbar-text-active: var(--fl-tone-on-soft, var(--fl-color-text));
+
         font-family: var(--fl-font-sans);
         color: var(--fl-navbar-text, var(--fl-color-text-muted));
+    }
+
+    /* Neutral is the default and keeps the original monochrome treatment
+     * instead of the neutral role's soft tint. */
+    [data-element="navbar"][data-navbar][data-color="neutral"] {
+        --fl-navbar-color: var(--fl-color-text);
+        --fl-navbar-active: var(--fl-color-surface-strong);
+        --fl-navbar-text-active: var(--fl-color-text);
+    }
+
+    [data-element="navbar"][data-navbar][data-disabled] {
+        opacity: var(--fl-disabled-opacity, 0.5);
+        pointer-events: none;
     }
 
     [data-element="navbar"][data-navbar] > [data-part="list"] {
@@ -16,5 +37,367 @@
         margin: 0;
         padding: 0;
         list-style: none;
+    }
+
+    /* Outlined needs one row for its shared rule, grow divides one row, and
+     * overflow controls one row. Minimal otherwise keeps wrapping. */
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"],
+    [data-element="navbar"][data-grow] > [data-part="list"],
+    [data-element="navbar"][data-navbar]:is([data-scrollable], [data-fadable]) > [data-part="list"] {
+        flex-wrap: nowrap;
+    }
+
+    /* Layout: grow shares the available width; justify position the items.
+     * Overflow owns the item width, so grow is ignored there. */
+    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable])
+        > [data-part="list"]
+        > :is([data-element="navbar_item"], [data-element="navbar_menu"]) {
+        flex: 1 1 0;
+    }
+
+    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable])
+        > [data-part="list"]
+        > [data-element="navbar_item"]
+        > [data-part="content"],
+    [data-element="navbar"][data-grow]:not([data-scrollable]):not([data-fadable])
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"] {
+        inline-size: 100%;
+        justify-content: center;
+    }
+
+    [data-element="navbar"][data-justify="center"] > [data-part="list"] {
+        justify-content: center;
+    }
+
+    [data-element="navbar"][data-justify="end"] > [data-part="list"] {
+        justify-content: flex-end;
+    }
+
+    [data-element="navbar"][data-justify="between"] > [data-part="list"] {
+        justify-content: space-between;
+    }
+
+    /* Overflow: the list becomes the horizontal scroll container and the items
+     * keep their intrinsic width. `fadable` also scrolls, so the fade cue has a
+     * container. */
+    [data-element="navbar"][data-navbar]:is([data-scrollable], [data-fadable]) > [data-part="list"] {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+    }
+
+    [data-element="navbar"][data-navbar][data-fadable] > [data-part="list"] {
+        scrollbar-width: none;
+    }
+
+    [data-element="navbar"][data-navbar][data-fadable] > [data-part="list"]::-webkit-scrollbar {
+        display: none;
+    }
+
+    [data-element="navbar"][data-navbar]:is([data-scrollable], [data-fadable])
+        > [data-part="list"]
+        > :is([data-element="navbar_item"], [data-element="navbar_menu"]) {
+        flex: 0 0 auto;
+    }
+
+    [data-element="navbar"][data-navbar][data-fadable] > [data-part="list"][data-fade-start] {
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl));
+        mask-image: linear-gradient(to right, transparent, #000 var(--fl-spacing-xl));
+    }
+
+    [data-element="navbar"][data-navbar][data-fadable] > [data-part="list"][data-fade-end] {
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
+        mask-image: linear-gradient(to right, #000 calc(100% - var(--fl-spacing-xl)), transparent);
+    }
+
+    [data-element="navbar"][data-navbar][data-fadable]
+        > [data-part="list"][data-fade-start][data-fade-end] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            #000 var(--fl-spacing-xl),
+            #000 calc(100% - var(--fl-spacing-xl)),
+            transparent
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            #000 var(--fl-spacing-xl),
+            #000 calc(100% - var(--fl-spacing-xl)),
+            transparent
+        );
+    }
+
+    /* Sizes drive the item, menu trigger, and menu item metrics. `md` is the
+     * baseline in each component's own part. */
+    [data-element="navbar"][data-size="xs"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu"] > [data-part="trigger"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        min-block-size: var(--fl-control-height-xs);
+        padding-inline: var(--fl-control-padding-x-xs);
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-xs);
+    }
+
+    [data-element="navbar"][data-size="xs"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        gap: var(--fl-control-gap-xs);
+    }
+
+    [data-element="navbar"][data-size="sm"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu"] > [data-part="trigger"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        min-block-size: var(--fl-control-height-sm);
+        padding-inline: var(--fl-control-padding-x-sm);
+        font-size: var(--fl-control-font-size-xs);
+        line-height: var(--fl-control-line-height-sm);
+    }
+
+    [data-element="navbar"][data-size="sm"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        gap: var(--fl-control-gap-xs);
+    }
+
+    [data-element="navbar"][data-size="lg"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu"] > [data-part="trigger"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        min-block-size: var(--fl-control-height-lg);
+        padding-inline: var(--fl-control-padding-x-md);
+        font-size: var(--fl-control-font-size-md);
+        line-height: var(--fl-control-line-height-lg);
+    }
+
+    [data-element="navbar"][data-size="lg"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        gap: var(--fl-control-gap-md);
+    }
+
+    [data-element="navbar"][data-size="xl"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu"] > [data-part="trigger"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        min-block-size: var(--fl-control-height-xl);
+        padding-inline: var(--fl-control-padding-x-lg);
+        font-size: var(--fl-control-font-size-lg);
+        line-height: var(--fl-control-line-height-xl);
+    }
+
+    [data-element="navbar"][data-size="xl"]
+        :is(
+            [data-element="navbar_item"] > [data-part="content"],
+            [data-element="navbar_menu_item"] > [data-part="content"]
+        ) {
+        gap: var(--fl-control-gap-lg);
+    }
+
+    /* The menu trigger keeps a wider gap for its disclosure indicator. */
+    [data-element="navbar"][data-size="xs"]
+        [data-element="navbar_menu"]
+        > [data-part="trigger"] {
+        gap: var(--fl-control-gap-xs);
+    }
+
+    [data-element="navbar"][data-size="sm"]
+        [data-element="navbar_menu"]
+        > [data-part="trigger"] {
+        gap: var(--fl-control-gap-sm);
+    }
+
+    [data-element="navbar"][data-size="xs"]
+        :is([data-element="navbar_item"], [data-element="navbar_menu"], [data-element="navbar_menu_item"])
+        [data-element="icon"] {
+        --fl-icon-size: var(--fl-control-icon-xs);
+    }
+
+    [data-element="navbar"][data-size="sm"]
+        :is([data-element="navbar_item"], [data-element="navbar_menu"], [data-element="navbar_menu_item"])
+        [data-element="icon"] {
+        --fl-icon-size: var(--fl-control-icon-sm);
+    }
+
+    [data-element="navbar"][data-size="lg"]
+        :is([data-element="navbar_item"], [data-element="navbar_menu"], [data-element="navbar_menu_item"])
+        [data-element="icon"] {
+        --fl-icon-size: var(--fl-control-icon-lg);
+    }
+
+    [data-element="navbar"][data-size="xl"]
+        :is([data-element="navbar_item"], [data-element="navbar_menu"], [data-element="navbar_menu_item"])
+        [data-element="icon"] {
+        --fl-icon-size: var(--fl-control-icon-xl);
+    }
+
+    [data-element="navbar"][data-size="xs"]
+        [data-element="navbar_menu"]
+        > [data-part="trigger"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-xs);
+        block-size: var(--fl-control-icon-xs);
+    }
+
+    [data-element="navbar"][data-size="sm"]
+        [data-element="navbar_menu"]
+        > [data-part="trigger"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-sm);
+        block-size: var(--fl-control-icon-sm);
+    }
+
+    [data-element="navbar"][data-size="lg"]
+        [data-element="navbar_menu"]
+        > [data-part="trigger"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-lg);
+        block-size: var(--fl-control-icon-lg);
+    }
+
+    [data-element="navbar"][data-size="xl"]
+        [data-element="navbar_menu"]
+        > [data-part="trigger"]
+        > [data-part="indicator"] {
+        inline-size: var(--fl-control-icon-xl);
+        block-size: var(--fl-control-icon-xl);
+    }
+
+    /* Outlined: the list carries the rule and the active item carries a bottom
+     * indicator. The label stays on the foreground text color, so a colored
+     * indicator does not tint it. */
+    [data-element="navbar"][data-variant="outlined"] > [data-part="list"] {
+        border-block-end: 1px solid var(--fl-color-border);
+    }
+
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_item"]
+        > [data-part="content"],
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"] {
+        position: relative;
+        border-radius: 0;
+        background-color: transparent;
+    }
+
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_item"]:not([data-disabled])
+        > [data-part="content"]:is(:hover, :focus-visible),
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"]:is(:hover, :focus-visible) {
+        background-color: transparent;
+        color: var(--fl-color-text);
+    }
+
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_item"][data-active]
+        > [data-part="content"],
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"][data-state="open"],
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"][data-active]
+        > [data-part="trigger"] {
+        background-color: transparent;
+        color: var(--fl-color-text);
+    }
+
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_item"]
+        > [data-part="content"]::after,
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"]::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        bottom: -1px;
+        height: 2px;
+        border-radius: var(--fl-radius-full);
+        background: transparent;
+        transform: scaleX(0.6);
+        transition:
+            background-color var(--fl-duration-fast) var(--fl-ease-out),
+            transform var(--fl-duration-fast) var(--fl-ease-out);
+    }
+
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_item"][data-active]
+        > [data-part="content"]::after,
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"][data-state="open"]::after,
+    [data-element="navbar"][data-variant="outlined"]
+        > [data-part="list"]
+        > [data-element="navbar_menu"][data-active]
+        > [data-part="trigger"]::after {
+        background: var(--fl-navbar-color);
+        transform: scaleX(1);
+        transition:
+            background-color var(--fl-duration-base) var(--fl-ease-out),
+            transform var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    /* Keep the outlined indicator inside the scroll container, where it is not
+     * clipped by overflow. */
+    [data-element="navbar"][data-variant="outlined"]:is([data-scrollable], [data-fadable])
+        > [data-part="list"]
+        > [data-element="navbar_item"]
+        > [data-part="content"]::after,
+    [data-element="navbar"][data-variant="outlined"]:is([data-scrollable], [data-fadable])
+        > [data-part="list"]
+        > [data-element="navbar_menu"]
+        > [data-part="trigger"]::after {
+        bottom: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-element="navbar"][data-variant="outlined"]
+            > [data-part="list"]
+            > [data-element="navbar_item"]
+            > [data-part="content"]::after,
+        [data-element="navbar"][data-variant="outlined"]
+            > [data-part="list"]
+            > [data-element="navbar_menu"]
+            > [data-part="trigger"]::after {
+            transition: none;
+        }
+
+        [data-element="navbar"][data-navbar]:is([data-scrollable], [data-fadable])
+            > [data-part="list"] {
+            scroll-behavior: auto;
+        }
     }
 }

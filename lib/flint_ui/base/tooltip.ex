@@ -46,10 +46,11 @@ defmodule FlintUI.Base.Tooltip do
   shifts along the trigger to stay inside the viewport, so a tooltip at the edge
   of the page is still readable without extra configuration.
 
-  `offset` is the gap between the trigger and the content in pixels, `delay` is
-  how long the pointer must rest on the trigger before the tooltip appears
-  (`0` opens immediately), and `arrow` adds the pointing arrow (off by
-  default).
+  `offset` is the base gap between the trigger and the content in pixels. When
+  `arrow` is set, the stylesheet's `--fl-tooltip-arrow-gap` (2 px in the default
+  theme) is added so the arrow tip stays close. `delay` is how long the pointer
+  must rest on the trigger before the tooltip appears (`0` opens immediately),
+  and `arrow` adds the pointing arrow (off by default).
 
   The content is rendered in the browser's top layer with the
   [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API),
@@ -377,8 +378,9 @@ defmodule FlintUI.Base.Tooltip do
     doc: "Preferred alignment along the side. The content shifts to stay inside the viewport."
 
   attr :offset, :integer,
-    default: 6,
-    doc: "Gap between the trigger and the content, in pixels."
+    default: 4,
+    doc:
+      "Gap between the trigger and the content, in pixels. When `arrow` is set, `--fl-tooltip-arrow-gap` is added on top of this gap."
 
   attr :delay, :integer,
     default: 200,
@@ -386,7 +388,8 @@ defmodule FlintUI.Base.Tooltip do
 
   attr :arrow, :boolean,
     default: false,
-    doc: "Whether to render the arrow pointing at the trigger. Off by default."
+    doc:
+      "Whether to render the arrow pointing at the trigger. Off by default. The arrow needs room, so `--fl-tooltip-arrow-gap` is added to `offset`."
 
   attr :disabled, :boolean,
     default: false,

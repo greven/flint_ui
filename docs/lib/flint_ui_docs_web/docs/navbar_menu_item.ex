@@ -36,6 +36,7 @@ defmodule FlintUIDocsWeb.Docs.NavbarMenuItem do
         <Components.navbar_menu_item navigate="/guides/icons" icon="lucide-shapes">
           Icons
         </Components.navbar_menu_item>
+        <Components.navbar_menu_item disabled>API reference</Components.navbar_menu_item>
       </Components.navbar_menu>
     </Components.navbar>
     """
