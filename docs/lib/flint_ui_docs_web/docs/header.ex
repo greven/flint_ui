@@ -88,7 +88,7 @@ defmodule FlintUIDocsWeb.Docs.Header do
       ~s|Below the breakpoint the navigation expands into a full-width sheet under the bar. The sheet stays in the header flow, so it pushes the page down instead of floating over it and cannot be clipped by a scrolling ancestor. Put the mobile content in `:mobile` and keep `:nav` for the desktop navigation; the panel then follows the toggle in reading order.|
     } />
     <.prose content={
-      ~s|`toggle_position` chooses the toggle edge. The preview uses `collapse="always"` so the mobile layout stays visible at any width; open the toggle to see the sheet. The toggle swaps its icon on open through `data-toggle-icon`; set `toggle_icon` and `toggle_icon_open` to use your own icon set.|
+      ~s|`toggle_position` chooses the toggle edge. The preview uses `collapse="always"` so the mobile layout stays visible at any width; open the toggle to see the sheet. The default hamburger morphs into a close mark. Set `toggle_icon` and `toggle_icon_open` to use your own icon set instead.|
     } />
 
     <.preview :let={props} {assigns} code={&mobile_code/1} canvas_class="min-h-48" flush>

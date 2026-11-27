@@ -62,6 +62,19 @@ defmodule FlintUI.Base.HeaderTest do
       </.header>
       """
     end
+
+    def custom_toggle(assigns) do
+      ~H"""
+      <.header id="site-header">
+        <:brand>Acme</:brand>
+        <:nav><a href="/docs">Docs</a></:nav>
+        <:toggle>
+          <span data-toggle-icon="closed">Menu</span>
+          <span data-toggle-icon="open" hidden>Close</span>
+        </:toggle>
+      </.header>
+      """
+    end
   end
 
   defp render(fun, assigns \\ %{}) do
@@ -114,22 +127,25 @@ defmodule FlintUI.Base.HeaderTest do
     assert bar_parts(document) == ["toggle", "brand", "nav", "actions"]
   end
 
-  test "renders both state icons and hides the one that does not match" do
+  test "renders the built-in animated toggle mark" do
     document = render(&TestComponent.plain/1)
+    toggle = part(document, "toggle")
+    mark = LazyHTML.query(toggle, ~s([data-part="toggle-icon"]))
+
+    assert LazyHTML.attribute(mark, "data-default") == [""]
+    assert LazyHTML.attribute(mark, "aria-hidden") == ["true"]
+    assert LazyHTML.query(toggle, "[data-toggle-icon]") |> LazyHTML.to_html() == ""
+  end
+
+  test "keeps custom state icons swappable" do
+    document = render(&TestComponent.custom_toggle/1)
     toggle = part(document, "toggle")
     closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
     open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
 
     assert LazyHTML.attribute(closed, "hidden") == []
     assert LazyHTML.attribute(open, "hidden") == [""]
-
-    open_document = render(&TestComponent.with_mobile/1)
-    open_toggle = part(open_document, "toggle")
-    open_closed = LazyHTML.query(open_toggle, ~s([data-toggle-icon="closed"]))
-    open_open = LazyHTML.query(open_toggle, ~s([data-toggle-icon="open"]))
-
-    assert LazyHTML.attribute(open_closed, "hidden") == [""]
-    assert LazyHTML.attribute(open_open, "hidden") == []
+    assert LazyHTML.query(toggle, ~s([data-part="toggle-icon"])) |> LazyHTML.to_html() == ""
   end
 
   test "makes the panel programmatically focusable" do

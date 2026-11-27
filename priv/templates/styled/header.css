@@ -77,9 +77,6 @@
         position: static;
     }
 
-    /* The bar is one grid row. A hidden region leaves its named area empty, so
-     * the remaining regions keep their places. The first row keeps the same
-     * height while the mobile panel is open, so the bar content never shifts. */
     [data-element="header"] > [data-part="bar"] {
         box-sizing: border-box;
         display: grid;
@@ -89,7 +86,7 @@
         align-content: start;
         align-items: center;
         column-gap: var(--fl-spacing-md);
-        row-gap: 0;
+        row-gap: var(--fl-spacing-sm);
         min-block-size: 3.5rem;
         padding-block: var(--fl-spacing-sm);
         padding-inline: var(--fl-header-padding-inline);
@@ -123,8 +120,6 @@
     }
 
     [data-element="header"] > [data-part="bar"] > [data-part="toggle"] {
-        /* Size a class-based icon (Lucide, Phosphor, ...) with the control
-         * scale; the headless fallback SVG is sized below. */
         --fl-icon-size: var(--fl-control-icon-md);
 
         grid-area: toggle;
@@ -147,7 +142,48 @@
         block-size: var(--fl-control-icon-md);
     }
 
-    /* The hook toggles `hidden`; keep it authoritative over icon classes. */
+    [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"] {
+        position: relative;
+        display: block;
+        inline-size: var(--fl-control-icon-md);
+        block-size: calc(var(--fl-control-icon-md) / 12);
+        border-radius: 999px;
+        background: currentColor;
+        transition: background-color var(--fl-duration-base) var(--fl-ease-out);
+    }
+
+    [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::before,
+    [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        block-size: inherit;
+        border-radius: inherit;
+        background: currentColor;
+        transition: transform var(--fl-duration-base) var(--fl-ease-in-out);
+    }
+
+    [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::before {
+        inset-block-start: calc(var(--fl-control-icon-md) / -3);
+    }
+
+    [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::after {
+        inset-block-start: calc(var(--fl-control-icon-md) / 3);
+    }
+
+    [data-element="header"][data-state="open"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"] {
+        background-color: transparent;
+    }
+
+    [data-element="header"][data-state="open"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::before {
+        transform: translateY(calc(var(--fl-control-icon-md) / 3)) rotate(45deg);
+    }
+
+    [data-element="header"][data-state="open"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::after {
+        transform: translateY(calc(var(--fl-control-icon-md) / -3)) rotate(-45deg);
+    }
+
+    /* The hook toggles `hidden`; keep it authoritative over custom icon classes. */
     [data-element="header"] > [data-part="bar"] > [data-part="toggle"] [data-toggle-icon][hidden] {
         display: none;
     }
@@ -191,35 +227,31 @@
         display: none;
     }
 
-    /* The collapsed layout. `always` applies it at every width; the media
-     * ladder below applies it below each named breakpoint. The toggle sits at
-     * the named edge and the panel spills into a new implicit row. */
+    /* The collapsed layout. */
     [data-element="header"][data-collapse="always"] > [data-part="bar"] {
         grid-template-columns: 1fr auto auto;
         grid-template-areas: "brand actions toggle";
     }
 
-    [data-element="header"][data-collapse="always"][data-toggle-position="start"]
-        > [data-part="bar"] {
+    [data-element="header"][data-collapse="always"][data-toggle-position="start"] > [data-part="bar"] {
         grid-template-columns: auto 1fr auto;
         grid-template-areas: "toggle brand actions";
     }
 
-    [data-element="header"][data-collapse="always"]
-        > [data-part="bar"]
-        > [data-part="toggle"] {
+    [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="toggle"] {
         display: inline-flex;
     }
 
-    /* The panel is in the header flow: it keeps the header surface (nothing
-     * scrolls behind it), spans every column, and adds its own hairline. The
-     * negative inline margin lets the hairline and padding run to the bar
-     * edges. */
+    /* The panel is in the header flow. It fades in and out; the delayed
+     * `display` flip keeps it rendered long enough for the fade-out before the
+     * row collapses. */
     [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="nav"],
     [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="mobile"] {
-        grid-row: auto;
+        grid-row: 2;
         grid-column: 1 / -1;
         display: none;
+        animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out) forwards;
+        transition: display var(--fl-duration-base) allow-discrete;
         align-self: stretch;
         justify-self: stretch;
         flex-direction: column;
@@ -233,16 +265,14 @@
         border-block-start: 1px solid var(--fl-header-border);
     }
 
-    [data-element="header"][data-collapse="always"][data-state="open"]:not([data-mobile])
-        > [data-part="bar"]
-        > [data-part="nav"] {
+    [data-element="header"][data-collapse="always"][data-state="open"]:not([data-mobile]) > [data-part="bar"] > [data-part="nav"] {
         display: flex;
+        animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
     }
 
-    [data-element="header"][data-collapse="always"][data-state="open"]
-        > [data-part="bar"]
-        > [data-part="mobile"] {
+    [data-element="header"][data-collapse="always"][data-state="open"] > [data-part="bar"] > [data-part="mobile"] {
         display: flex;
+        animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
     }
 
     [data-element="header"][data-collapse="always"]
@@ -268,24 +298,21 @@
             grid-template-areas: "brand actions toggle";
         }
 
-        [data-element="header"][data-toggle-position="start"]:is([data-collapse="2xl"])
-            > [data-part="bar"] {
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="2xl"]) > [data-part="bar"] {
             grid-template-columns: auto 1fr auto;
             grid-template-areas: "toggle brand actions";
         }
 
-        [data-element="header"]:is([data-collapse="2xl"])
-            > [data-part="bar"]
-            > [data-part="toggle"] {
+        [data-element="header"]:is([data-collapse="2xl"]) > [data-part="bar"] > [data-part="toggle"] {
             display: inline-flex;
         }
 
-        [data-element="header"]:is([data-collapse="2xl"])
-            > [data-part="bar"]
-            > :is([data-part="nav"], [data-part="mobile"]) {
-            grid-row: auto;
+        [data-element="header"]:is([data-collapse="2xl"]) > [data-part="bar"] > :is([data-part="nav"], [data-part="mobile"]) {
+            grid-row: 2;
             grid-column: 1 / -1;
             display: none;
+            animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out) forwards;
+            transition: display var(--fl-duration-base) allow-discrete;
             align-self: stretch;
             justify-self: stretch;
             flex-direction: column;
@@ -299,15 +326,11 @@
             border-block-start: 1px solid var(--fl-header-border);
         }
 
-        [data-element="header"]:is([data-collapse="2xl"])[data-state="open"]:not([data-mobile])
-            > [data-part="bar"]
-            > [data-part="nav"] {
+        [data-element="header"]:is([data-collapse="2xl"])[data-state="open"]:not([data-mobile]) > [data-part="bar"] > [data-part="nav"] {
             display: flex;
         }
 
-        [data-element="header"]:is([data-collapse="2xl"])[data-state="open"]
-            > [data-part="bar"]
-            > [data-part="mobile"] {
+        [data-element="header"]:is([data-collapse="2xl"])[data-state="open"] > [data-part="bar"] > [data-part="mobile"] {
             display: flex;
         }
 
@@ -336,24 +359,21 @@
             grid-template-areas: "brand actions toggle";
         }
 
-        [data-element="header"][data-toggle-position="start"]:is([data-collapse="xl"], [data-collapse="2xl"])
-            > [data-part="bar"] {
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="xl"], [data-collapse="2xl"]) > [data-part="bar"] {
             grid-template-columns: auto 1fr auto;
             grid-template-areas: "toggle brand actions";
         }
 
-        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])
-            > [data-part="bar"]
-            > [data-part="toggle"] {
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"]) > [data-part="bar"] > [data-part="toggle"] {
             display: inline-flex;
         }
 
-        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])
-            > [data-part="bar"]
-            > :is([data-part="nav"], [data-part="mobile"]) {
-            grid-row: auto;
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"]) > [data-part="bar"] > :is([data-part="nav"], [data-part="mobile"]) {
+            grid-row: 2;
             grid-column: 1 / -1;
             display: none;
+            animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out) forwards;
+            transition: display var(--fl-duration-base) allow-discrete;
             align-self: stretch;
             justify-self: stretch;
             flex-direction: column;
@@ -367,15 +387,11 @@
             border-block-start: 1px solid var(--fl-header-border);
         }
 
-        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
-            > [data-part="bar"]
-            > [data-part="nav"] {
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile]) > [data-part="bar"] > [data-part="nav"] {
             display: flex;
         }
 
-        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]
-            > [data-part="bar"]
-            > [data-part="mobile"] {
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])[data-state="open"] > [data-part="bar"] > [data-part="mobile"] {
             display: flex;
         }
 
@@ -405,24 +421,23 @@
             grid-template-areas: "brand actions toggle";
         }
 
-        [data-element="header"][data-toggle-position="start"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
-            > [data-part="bar"] {
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"]) > [data-part="bar"] {
             grid-template-columns: auto 1fr auto;
             grid-template-areas: "toggle brand actions";
         }
 
-        [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
-            > [data-part="bar"]
-            > [data-part="toggle"] {
+        [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"]) > [data-part="bar"] > [data-part="toggle"] {
             display: inline-flex;
         }
 
         [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"]) {
-            grid-row: auto;
+            grid-row: 2;
             grid-column: 1 / -1;
             display: none;
+            animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out) forwards;
+            transition: display var(--fl-duration-base) allow-discrete;
             align-self: stretch;
             justify-self: stretch;
             flex-direction: column;
@@ -440,12 +455,14 @@
             > [data-part="bar"]
             > [data-part="nav"] {
             display: flex;
+            animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
         }
 
         [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]
             > [data-part="bar"]
             > [data-part="mobile"] {
             display: flex;
+            animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
         }
 
         [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
@@ -490,9 +507,11 @@
         [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"]) {
-            grid-row: auto;
+            grid-row: 2;
             grid-column: 1 / -1;
             display: none;
+            animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out) forwards;
+            transition: display var(--fl-duration-base) allow-discrete;
             align-self: stretch;
             justify-self: stretch;
             flex-direction: column;
@@ -506,16 +525,20 @@
             border-block-start: 1px solid var(--fl-header-border);
         }
 
-        [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
+        [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not(
+                [data-mobile]
+            )
             > [data-part="bar"]
             > [data-part="nav"] {
             display: flex;
+            animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
         }
 
         [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]
             > [data-part="bar"]
             > [data-part="mobile"] {
             display: flex;
+            animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
         }
 
         [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
@@ -546,7 +569,13 @@
             grid-template-areas: "brand actions toggle";
         }
 
-        [data-element="header"][data-toggle-position="start"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
+        [data-element="header"][data-toggle-position="start"]:is(
+                [data-collapse="sm"],
+                [data-collapse="md"],
+                [data-collapse="lg"],
+                [data-collapse="xl"],
+                [data-collapse="2xl"]
+            )
             > [data-part="bar"] {
             grid-template-columns: auto 1fr auto;
             grid-template-areas: "toggle brand actions";
@@ -561,9 +590,11 @@
         [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"]) {
-            grid-row: auto;
+            grid-row: 2;
             grid-column: 1 / -1;
             display: none;
+            animation: fl-fade-out var(--fl-duration-base) var(--fl-ease-in-out) forwards;
+            transition: display var(--fl-duration-base) allow-discrete;
             align-self: stretch;
             justify-self: stretch;
             flex-direction: column;
@@ -577,16 +608,30 @@
             border-block-start: 1px solid var(--fl-header-border);
         }
 
-        [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
+        [data-element="header"]:is(
+                [data-collapse="sm"],
+                [data-collapse="md"],
+                [data-collapse="lg"],
+                [data-collapse="xl"],
+                [data-collapse="2xl"]
+            )[data-state="open"]:not([data-mobile])
             > [data-part="bar"]
             > [data-part="nav"] {
             display: flex;
+            animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
         }
 
-        [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]
+        [data-element="header"]:is(
+                [data-collapse="sm"],
+                [data-collapse="md"],
+                [data-collapse="lg"],
+                [data-collapse="xl"],
+                [data-collapse="2xl"]
+            )[data-state="open"]
             > [data-part="bar"]
             > [data-part="mobile"] {
             display: flex;
+            animation: fl-fade-in var(--fl-duration-base) var(--fl-ease-out);
         }
 
         [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
@@ -608,7 +653,10 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-element="header"] > [data-part="bar"] > [data-part="toggle"] {
+        [data-element="header"] > [data-part="bar"] > [data-part="toggle"],
+        [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"],
+        [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::before,
+        [data-element="header"] > [data-part="bar"] > [data-part="toggle"] > [data-part="toggle-icon"]::after {
             transition: none;
         }
     }

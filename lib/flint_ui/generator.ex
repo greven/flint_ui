@@ -42,7 +42,7 @@ defmodule FlintUI.Generator do
   alias FlintUI.Styled
   alias FlintUI.Theme
 
-  @wrapper_api 5
+  @wrapper_api 6
   @library_version Mix.Project.config()[:version] || "0.0.0"
 
   @start_marker ~r/^\s*# flint_ui: component=(?<name>[a-z0-9_]+) wrapper_api=(?<wrapper_api>\d+) lib=(?<lib>\S+) nodes=(?<nodes>\d+) hash=(?<hash>[0-9a-f]+)$/

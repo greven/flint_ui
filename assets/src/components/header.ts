@@ -20,9 +20,10 @@ const FOCUSABLE_SELECTOR = [
  *
  * The server renders the state on the root, the nav region, and the optional
  * custom mobile panel. This hook toggles that state, keeps `aria-expanded` in
- * step, swaps the state-specific toggle icons, and closes the panel when the
- * user dismisses it or leaves the mobile layout. CSS owns the breakpoint; the
- * hook only checks whether the toggle is still visible after a resize.
+ * step, and swaps any custom `data-toggle-icon` content. The built-in toggle
+ * mark is CSS-driven from the root state. The hook also closes the panel when
+ * the user dismisses it or leaves the mobile layout. CSS owns the breakpoint;
+ * the hook only checks whether the toggle is still visible after a resize.
  *
  * The panel flows under the bar. When the toggle sits after the panel in the
  * DOM (the default end position with the inline nav), opening the panel moves

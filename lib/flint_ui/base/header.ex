@@ -49,9 +49,9 @@ defmodule FlintUI.Base.Header do
   outside clicks, following a link, live navigation, and crossing back above
   the breakpoint all close it.
 
-  The default toggle icon swaps to a close icon while the panel is open. Add
-  `data-toggle-icon="closed"` and `data-toggle-icon="open"` to custom `:toggle`
-  content to opt into the same swap.
+  The default toggle is a hamburger mark that morphs into a close mark while the
+  panel is open. Add `data-toggle-icon="closed"` and `data-toggle-icon="open"`
+  to custom `:toggle` content to opt into the same state swap.
 
   ## Accessibility
 
@@ -196,7 +196,7 @@ defmodule FlintUI.Base.Header do
           name: "[data-toggle-icon]",
           value: ~s("closed" | "open"),
           description:
-            "Marks the state-specific icons inside the toggle; the hook toggles their `hidden` attribute."
+            "Marks custom state-specific icons inside the toggle; the hook toggles their `hidden` attribute. The built-in mark uses `data-part=\"toggle-icon\"` instead."
         },
         %Meta.PartAttr{
           name: "aria-controls",
@@ -212,6 +212,24 @@ defmodule FlintUI.Base.Header do
           name: "aria-label",
           value: "string",
           description: "The accessible name of the toggle; the icon is decorative."
+        }
+      ],
+      toggle_icon: [
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "toggle-icon",
+          description:
+            "The built-in hamburger mark. The styled layer morphs it into a close mark from the root `data-state`."
+        },
+        %Meta.PartAttr{
+          name: "[data-default]",
+          value: "boolean",
+          description: "Present on the built-in mark."
+        },
+        %Meta.PartAttr{
+          name: "aria-hidden",
+          value: "true",
+          description: "The mark is decorative."
         }
       ],
       mobile: [
@@ -308,6 +326,11 @@ defmodule FlintUI.Base.Header do
         "aria-expanded" => to_string(assigns.open),
         "aria-label" => assigns.toggle_label
       },
+      toggle_icon: %{
+        "data-part" => "toggle-icon",
+        "data-default" => "",
+        "aria-hidden" => "true"
+      },
       nav: %{
         "id" => "#{id}-nav",
         "data-part" => "nav",
@@ -376,7 +399,7 @@ defmodule FlintUI.Base.Header do
   slot :toggle,
     validate_attrs: false,
     doc:
-      "Custom content for the mobile toggle. The default is a menu icon that swaps to a close icon; the button's accessible name still comes from `toggle_label`. Add `data-toggle-icon=\"closed\"` and `data-toggle-icon=\"open\"` to opt into the swap."
+      "Custom content for the mobile toggle. The default is a hamburger mark that morphs into a close mark; the button's accessible name still comes from `toggle_label`. Add `data-toggle-icon=\"closed\"` and `data-toggle-icon=\"open\"` to opt into the state swap with your own icons."
 
   @impl true
   def render(assigns) do
@@ -387,7 +410,7 @@ defmodule FlintUI.Base.Header do
           :if={@toggle_position == "start"}
           show={@nav != [] or @mobile != []}
           attrs={@flint_parts[:toggle]}
-          open={@open}
+          icon_attrs={@flint_parts[:toggle_icon]}
           content={@toggle}
         />
         <div {@flint_parts[:brand]}>{render_slot(@brand)}</div>
@@ -397,7 +420,7 @@ defmodule FlintUI.Base.Header do
           :if={@toggle_position == "end"}
           show={@nav != [] or @mobile != []}
           attrs={@flint_parts[:toggle]}
-          open={@open}
+          icon_attrs={@flint_parts[:toggle_icon]}
           content={@toggle}
         />
         <div :if={@mobile != []} {@flint_parts[:mobile]}>{render_slot(@mobile)}</div>
@@ -411,40 +434,7 @@ defmodule FlintUI.Base.Header do
     ~H"""
     <button :if={@show} {@attrs}>
       {render_slot(@content)}
-      <svg
-        :if={@content == []}
-        data-default
-        data-toggle-icon="closed"
-        hidden={@open}
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          d="M4 7h16M4 12h16M4 17h16"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-width="2"
-        />
-      </svg>
-      <svg
-        :if={@content == []}
-        data-default
-        data-toggle-icon="open"
-        hidden={!@open}
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          d="M6 18 18 6M6 6l12 12"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-width="2"
-        />
-      </svg>
+      <span :if={@content == []} {@icon_attrs} />
     </button>
     """
   end

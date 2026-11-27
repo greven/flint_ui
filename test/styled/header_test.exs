@@ -40,17 +40,9 @@ defmodule FlintUI.Styled.HeaderTest do
         """
       end
 
-      def icon_empty(assigns) do
-        ~H"""
-        <.header toggle_icon="">
-          <:nav><a href="/">Home</a></:nav>
-        </.header>
-        """
-      end
-
       def icon_open_empty(assigns) do
         ~H"""
-        <.header toggle_icon_open="">
+        <.header toggle_icon="lucide-menu" toggle_icon_open="">
           <:nav><a href="/">Home</a></:nav>
         </.header>
         """
@@ -75,19 +67,14 @@ defmodule FlintUI.Styled.HeaderTest do
     assert attr(document, :header, "data-mobile") == []
   end
 
-  test "renders the toggle icon and swaps it while open", %{wrapper: wrapper} do
+  test "renders the built-in toggle mark by default", %{wrapper: wrapper} do
     document = render(wrapper, :defaults)
     toggle = part(document, "toggle")
+    mark = LazyHTML.query(toggle, ~s([data-part="toggle-icon"]))
 
-    closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
-    open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
-
-    assert LazyHTML.attribute(closed, "class") == ["lucide-menu"]
-    assert LazyHTML.attribute(closed, "hidden") == []
-    assert LazyHTML.attribute(closed, "aria-hidden") == ["true"]
-
-    assert LazyHTML.attribute(open, "class") == ["lucide-x"]
-    assert LazyHTML.attribute(open, "hidden") == [""]
+    assert LazyHTML.attribute(mark, "data-default") == [""]
+    assert LazyHTML.attribute(mark, "aria-hidden") == ["true"]
+    assert LazyHTML.query(toggle, "[data-toggle-icon]") |> LazyHTML.to_html() == ""
   end
 
   test "maps every styled prop and forwards the base attributes", %{wrapper: wrapper} do
@@ -126,19 +113,6 @@ defmodule FlintUI.Styled.HeaderTest do
 
     assert part(document, "secondary") |> LazyHTML.text() |> String.trim() ==
              "Secondary row"
-  end
-
-  test "uses the headless fallback icons when toggle_icon is empty", %{wrapper: wrapper} do
-    document = render(wrapper, :icon_empty)
-    toggle = part(document, "toggle")
-
-    closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
-    open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
-
-    assert LazyHTML.attribute(closed, "data-default") == [""]
-    assert LazyHTML.to_html(closed) =~ "M4 7h16"
-    assert LazyHTML.attribute(open, "data-default") == [""]
-    assert LazyHTML.attribute(open, "hidden") == [""]
   end
 
   test "keeps only the closed icon when toggle_icon_open is empty", %{wrapper: wrapper} do

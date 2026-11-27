@@ -67,9 +67,9 @@ defmodule FlintUI.Styled.Header do
         Attr.new(
           name: :toggle_icon,
           type: :string,
-          default: "lucide-menu",
+          default: "",
           doc:
-            "The icon class rendered inside the mobile toggle while the panel is closed. Set it to a class from your icon set; the default is `lucide-menu`. An empty value falls back to the headless icon."
+            "The icon class rendered inside the mobile toggle while the panel is closed. Set it to a class from your icon set. Empty, the default, uses the built-in hamburger mark that morphs into a close mark."
         ),
         Attr.new(
           name: :toggle_icon_open,
