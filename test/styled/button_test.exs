@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.ButtonTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:button, ~S'''
@@ -86,11 +88,11 @@ defmodule FlintUI.Styled.ButtonTest do
     document = colored(wrapper, "#1D72FE")
 
     assert attr(document, :button, "data-color") == []
-    style = document |> attr(:button, "style") |> List.first()
+    styles = TestDOM.style_vars(document, ~s([data-element="button"]))
 
-    assert style =~ "--fl-control-color: #1D72FE"
-    assert style =~ "--fl-control-color-content: oklch(0% 0 0)"
-    assert style =~ "--fl-control-text: light-dark("
+    assert styles["--fl-control-color"] == "#1D72FE"
+    assert styles["--fl-control-color-content"] == "oklch(0% 0 0)"
+    assert styles["--fl-control-text"] =~ "light-dark("
   end
 
   test "a palette hue keeps the data hook and leaves the style alone", %{wrapper: wrapper} do
@@ -102,9 +104,12 @@ defmodule FlintUI.Styled.ButtonTest do
 
   test "an explicit style wins over the derived inputs", %{wrapper: wrapper} do
     document = colored(wrapper, "#1D72FE", "--fl-control-color-content: white")
-    style = document |> attr(:button, "style") |> List.first()
 
-    assert String.ends_with?(style, "; --fl-control-color-content: white")
+    assert TestDOM.style_var(
+             document,
+             ~s([data-element="button"]),
+             "--fl-control-color-content"
+           ) == "white"
   end
 
   test "text and icon are content shortcuts", %{wrapper: wrapper} do

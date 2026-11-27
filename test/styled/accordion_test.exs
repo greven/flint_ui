@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.AccordionTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:accordion, ~S'''
@@ -48,7 +50,9 @@ defmodule FlintUI.Styled.AccordionTest do
     assert attr(document, :accordion, "data-shadow") == [""]
     assert attr(document, :accordion, "data-indicator-position") == ["right"]
     assert attr(document, :accordion, "data-transition") == [""]
-    assert attr(document, :accordion, "style") == ["--fl-accordion-duration: 200ms"]
+
+    assert TestDOM.style_var(document, ~s([data-element="accordion"]), "--fl-accordion-duration") ==
+             "200ms"
   end
 
   test "maps the configured props and merges the duration into style", %{wrapper: wrapper} do
@@ -62,8 +66,9 @@ defmodule FlintUI.Styled.AccordionTest do
     assert attr(document, :accordion, "class") == ["extra"]
     assert attr(document, :accordion, "data-role") == ["test"]
 
-    assert attr(document, :accordion, "style") == [
-             "--fl-accordion-duration: 350ms; color: red"
-           ]
+    styles = TestDOM.style_vars(document, ~s([data-element="accordion"]))
+
+    assert styles["--fl-accordion-duration"] == "350ms"
+    assert styles["color"] == "red"
   end
 end

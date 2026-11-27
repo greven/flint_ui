@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.ProgressRingTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:progress_ring, ~S'''
@@ -123,7 +125,7 @@ defmodule FlintUI.Styled.ProgressRingTest do
     assert attr(document, :progress_ring, "aria-valuetext") == ["80%"]
     assert attr(document, :progress_ring, "aria-label") == ["Upload progress"]
     assert LazyHTML.text(part(document, "status")) |> String.trim() == "80%"
-    assert part_attr(document, "segment", "style") == ["stroke-dashoffset: 20"]
+    assert TestDOM.style_var(document, ~s([data-part="segment"]), "stroke-dashoffset") == "20"
   end
 
   test "forwards a step list and marks the active label", %{wrapper: wrapper} do

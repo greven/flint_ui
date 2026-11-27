@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.AvatarTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:avatar, ~S'''
@@ -189,6 +191,6 @@ defmodule FlintUI.Styled.AvatarTest do
     assert attr(document, :avatar, "class") == ["extra"]
     assert attr(image(document), "loading") == ["lazy"]
     assert attr(image(document), "data-role") == ["test"]
-    assert attr(image(document), "style") == ["object-position: top"]
+    assert TestDOM.style_var(document, ~s([data-part="image"]), "object-position") == "top"
   end
 end

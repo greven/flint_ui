@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.LoadingTextTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:loading_text, ~S'''
@@ -68,7 +70,7 @@ defmodule FlintUI.Styled.LoadingTextTest do
     assert attr(document, :loading_text, "data-color") == ["success"]
     assert attr(document, :loading_text, "class") == ["extra"]
     assert attr(document, :loading_text, "data-role") == ["test"]
-    assert part_attr(document, "text", "style") == ["animation-duration: 300ms"]
+    assert TestDOM.style_var(document, ~s([data-part="text"]), "animation-duration") == "300ms"
   end
 
   test "a raw color sets the color property directly", %{wrapper: wrapper} do

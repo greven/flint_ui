@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.ProgressTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:progress, ~S'''
@@ -157,7 +159,7 @@ defmodule FlintUI.Styled.ProgressTest do
            |> Enum.count() == 1
 
     assert LazyHTML.text(part(document, "status")) |> String.trim() == "80%"
-    assert part_attr(document, "segment", "style") == ["block-size: 80%"]
+    assert TestDOM.style_var(document, ~s([data-part="segment"]), "block-size") == "80%"
   end
 
   test "forwards a step list and marks the active label", %{wrapper: wrapper} do

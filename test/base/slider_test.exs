@@ -3,6 +3,8 @@ defmodule FlintUI.Base.SliderTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -131,6 +133,13 @@ defmodule FlintUI.Base.SliderTest do
   defp label(html), do: LazyHTML.query(html, ~s([data-part="label"]))
   defp part(html, name), do: LazyHTML.query(html, ~s([data-part="#{name}"]))
 
+  defp assert_control_vars(html, start, finish) do
+    styles = TestDOM.style_vars(control(html))
+
+    assert styles["--_fl-slider-start"] == start
+    assert styles["--_fl-slider-end"] == finish
+  end
+
   describe "single slider" do
     test "renders the field, label, track, and one native range input" do
       html = render()
@@ -167,14 +176,14 @@ defmodule FlintUI.Base.SliderTest do
     test "publishes the server-rendered thumb fraction" do
       html = render(value: 40)
 
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.0; --_fl-slider-end: 0.4"]
+      assert_control_vars(html, "0.0", "0.4")
     end
 
     test "renders a midpoint default value" do
       html = render(min: 0, max: 10, step: 1)
 
       assert LazyHTML.attribute(inputs(html), "value") == ["5"]
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.0; --_fl-slider-end: 0.5"]
+      assert_control_vars(html, "0.0", "0.5")
     end
 
     test "renders the tooltip for the current value" do
@@ -184,7 +193,7 @@ defmodule FlintUI.Base.SliderTest do
       assert Enum.count(tooltip) == 1
       assert LazyHTML.text(tooltip) |> String.trim() == "40"
       assert LazyHTML.attribute(tooltip, "aria-hidden") == ["true"]
-      assert LazyHTML.attribute(tooltip, "style") == ["--_fl-slider-offset: 0.4"]
+      assert TestDOM.style_vars(tooltip)["--_fl-slider-offset"] == "0.4"
     end
 
     test "renders a fractional step and value" do
@@ -192,7 +201,7 @@ defmodule FlintUI.Base.SliderTest do
 
       assert LazyHTML.attribute(inputs(html), "step") == ["0.1"]
       assert LazyHTML.attribute(inputs(html), "value") == ["0.5"]
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.0; --_fl-slider-end: 0.5"]
+      assert_control_vars(html, "0.0", "0.5")
       assert LazyHTML.text(part(html, "tooltip")) |> String.trim() == "0.5"
     end
 
@@ -200,7 +209,7 @@ defmodule FlintUI.Base.SliderTest do
       html = render(value: 140)
 
       assert LazyHTML.attribute(inputs(html), "value") == ["100"]
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.0; --_fl-slider-end: 1.0"]
+      assert_control_vars(html, "0.0", "1.0")
     end
 
     test "renders the description, hint, and errors" do
@@ -265,7 +274,7 @@ defmodule FlintUI.Base.SliderTest do
       assert LazyHTML.attribute(max_input, "aria-label") == ["Price range maximum"]
 
       assert control_attr(html, "data-range") == [""]
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.2; --_fl-slider-end: 0.8"]
+      assert_control_vars(html, "0.2", "0.8")
     end
 
     test "keeps an existing list suffix" do
@@ -292,16 +301,19 @@ defmodule FlintUI.Base.SliderTest do
       markers = part(html, "marker")
       assert Enum.count(markers) == 9
 
-      assert LazyHTML.attribute(markers, "style") == [
-               "--_fl-slider-offset: 0.0",
-               "--_fl-slider-offset: 0.125",
-               "--_fl-slider-offset: 0.25",
-               "--_fl-slider-offset: 0.375",
-               "--_fl-slider-offset: 0.5",
-               "--_fl-slider-offset: 0.625",
-               "--_fl-slider-offset: 0.75",
-               "--_fl-slider-offset: 0.875",
-               "--_fl-slider-offset: 1.0"
+      assert markers
+             |> LazyHTML.attribute("style")
+             |> Enum.map(&TestDOM.style_vars/1)
+             |> Enum.map(& &1["--_fl-slider-offset"]) == [
+               "0.0",
+               "0.125",
+               "0.25",
+               "0.375",
+               "0.5",
+               "0.625",
+               "0.75",
+               "0.875",
+               "1.0"
              ]
     end
 
@@ -315,14 +327,14 @@ defmodule FlintUI.Base.SliderTest do
       html = render_range(min_value: nil, max_value: nil)
 
       assert LazyHTML.attribute(inputs(html), "value") == ["0", "100"]
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.0; --_fl-slider-end: 1.0"]
+      assert_control_vars(html, "0.0", "1.0")
     end
 
     test "clamps crossed or out-of-range thumbs" do
       html = render_range(min_value: 90, max_value: 110)
 
       assert LazyHTML.attribute(inputs(html), "value") == ["90", "100"]
-      assert control_attr(html, "style") == ["--_fl-slider-start: 0.9; --_fl-slider-end: 1.0"]
+      assert_control_vars(html, "0.9", "1.0")
     end
   end
 

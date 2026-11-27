@@ -52,9 +52,9 @@ defmodule FlintUI.IconsTest do
     for set <- Icons.sets() do
       meta = Icons.get!(set)
 
-      assert is_binary(meta.cli) and meta.cli != ""
-      assert is_binary(meta.classes) and meta.classes != ""
-      assert is_binary(meta.label) and meta.label != ""
+      assert meta.cli != ""
+      assert meta.classes != ""
+      assert meta.label != ""
       assert meta.source =~ ~r{\Ahttps://}
     end
 
@@ -138,10 +138,9 @@ defmodule FlintUI.IconsTest do
     assert MapSet.member?(classes, "lucide-house")
   end
 
-  test "detects the plain CSS sets from app.css imports" do
-    dir = Path.join(System.tmp_dir!(), "flint-icons-#{System.unique_integer([:positive])}")
+  @tag :tmp_dir
+  test "detects the plain CSS sets from app.css imports", %{tmp_dir: dir} do
     path = Path.join(dir, "app.css")
-    File.mkdir_p!(dir)
 
     File.write!(path, """
     @import "./flint-lucide.css";
@@ -149,8 +148,6 @@ defmodule FlintUI.IconsTest do
     """)
 
     assert Icons.css_sets(path) == [:lucide_icons, :flag_icons]
-
-    File.rm_rf!(dir)
   end
 
   test "generates every Heroicons variant with its intended size" do
@@ -214,9 +211,8 @@ defmodule FlintUI.IconsTest do
     assert css =~ "width: var(--fl-flag-size, 1.5rem)"
   end
 
-  test "copies flag SVGs to a public directory" do
-    dir = Path.join(System.tmp_dir!(), "flint-flags-#{System.unique_integer([:positive])}")
-
+  @tag :tmp_dir
+  test "copies flag SVGs to a public directory", %{tmp_dir: dir} do
     paths =
       Icons.copy_flag_assets!(
         source: Path.join(@fixtures, "flags"),
@@ -228,13 +224,10 @@ defmodule FlintUI.IconsTest do
     assert File.exists?(Path.join(dir, "pt-square.svg"))
     assert File.exists?(Path.join(dir, "us.svg"))
     assert File.exists?(Path.join(dir, "us-square.svg"))
-
-    File.rm_rf!(dir)
   end
 
-  test "copies only the requested flag codes" do
-    dir = Path.join(System.tmp_dir!(), "flint-flags-#{System.unique_integer([:positive])}")
-
+  @tag :tmp_dir
+  test "copies only the requested flag codes", %{tmp_dir: dir} do
     paths =
       Icons.copy_flag_assets!(
         source: Path.join(@fixtures, "flags"),
@@ -246,8 +239,6 @@ defmodule FlintUI.IconsTest do
     assert File.exists?(Path.join(dir, "pt.svg"))
     assert File.exists?(Path.join(dir, "pt-square.svg"))
     refute File.exists?(Path.join(dir, "us.svg"))
-
-    File.rm_rf!(dir)
   end
 
   test "ships a plugin for every set" do

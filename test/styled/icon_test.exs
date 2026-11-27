@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.IconTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:icon, ~S'''
@@ -60,9 +62,10 @@ defmodule FlintUI.Styled.IconTest do
 
     assert attr(document, :icon, "data-size") == []
 
-    assert attr(document, :icon, "style") == [
-             "--fl-icon-size: 2.5rem; opacity: 0.5"
-           ]
+    styles = TestDOM.style_vars(document, ~s([data-element="icon"]))
+
+    assert styles["--fl-icon-size"] == "2.5rem"
+    assert styles["opacity"] == "0.5"
 
     assert "lucide-star" in classes(document)
   end

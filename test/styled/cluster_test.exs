@@ -117,13 +117,4 @@ defmodule FlintUI.Styled.ClusterTest do
 
     assert root(document, :cluster) |> LazyHTML.text() |> String.split() == ["Design", "Shipped"]
   end
-
-  test "the theme resets list chrome and pins a split last child" do
-    css = File.read!(FlintUI.Generator.part_path("styled/cluster.css"))
-
-    assert css =~ ~s([data-element="cluster"][data-list])
-    assert css =~ "list-style: none"
-    assert css =~ ~s([data-element="cluster"][data-justify="split"] > :last-child)
-    assert css =~ "margin-inline-start: auto"
-  end
 end

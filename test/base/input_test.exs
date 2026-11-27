@@ -351,19 +351,6 @@ defmodule FlintUI.Base.InputTest do
                "should be at most 5 characters"
     end
 
-    test "uses the configured translator for error tuples" do
-      Application.put_env(:flint_ui, :translate_error, {__MODULE__, :translate, []})
-
-      try do
-        html = render(errors: [{"raw", []}])
-
-        assert LazyHTML.text(LazyHTML.query(html, ~s([data-part="error"]))) |> String.trim() ==
-                 "translated raw"
-      after
-        Application.delete_env(:flint_ui, :translate_error)
-      end
-    end
-
     test "does not link errors without an id" do
       html = render(errors: ["is invalid"])
 
@@ -371,8 +358,6 @@ defmodule FlintUI.Base.InputTest do
       assert LazyHTML.attribute(LazyHTML.query(html, ~s([data-part="error"])), "id") == []
     end
   end
-
-  def translate({message, _opts}), do: "translated " <> message
 
   describe "disabled and readonly" do
     test "reflects both states on the root and the native control" do

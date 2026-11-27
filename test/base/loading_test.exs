@@ -3,6 +3,8 @@ defmodule FlintUI.Base.LoadingTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -33,7 +35,24 @@ defmodule FlintUI.Base.LoadingTest do
   defp root(html), do: LazyHTML.query(html, ~s([data-part="root"]))
   defp tag(html), do: LazyHTML.tag(root(html))
   defp attr(html, name), do: LazyHTML.attribute(root(html), name)
-  defp count(html, needle), do: length(Regex.scan(~r/#{Regex.escape(needle)}/, html))
+
+  defp animation_duration(document, selector) do
+    TestDOM.style_var(document, selector, "animation-duration")
+  end
+
+  defp style_values(document, selector, name) do
+    document
+    |> LazyHTML.query(selector)
+    |> LazyHTML.attribute("style")
+    |> Enum.map(&TestDOM.style_vars/1)
+    |> Enum.map(& &1[name])
+  end
+
+  defp count_style(document, selector, name, value) do
+    document
+    |> style_values(selector, name)
+    |> Enum.count(&(&1 == value))
+  end
 
   test "renders an svg spinner, decorative by default" do
     html = render()
@@ -70,62 +89,91 @@ defmodule FlintUI.Base.LoadingTest do
 
   describe "variants" do
     test "ring draws a single rotating arc" do
-      html = raw(variant: "ring")
+      document = render(variant: "ring")
 
-      assert html =~ ~s(data-variant="ring")
-      assert count(html, "<circle") == 1
-      assert html =~ ~s(data-part="arc")
-      assert html =~ "animation-duration: 600ms"
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["ring"]
+      assert TestDOM.count(document, "circle") == 1
+      assert TestDOM.count(document, ~s([data-part="arc"])) == 1
+      assert animation_duration(document, ~s([data-part="arc"])) == "600ms"
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "ring-bg adds a background track" do
-      html = raw(variant: "ring-bg")
+      document = render(variant: "ring-bg")
 
-      assert html =~ ~s(data-variant="ring-bg")
-      assert count(html, "<circle") == 2
-      assert html =~ ~s(data-part="track")
-      assert html =~ ~s(data-part="arc")
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["ring-bg"]
+      assert TestDOM.count(document, "circle") == 2
+      assert TestDOM.count(document, ~s([data-part="track"])) == 1
+      assert TestDOM.count(document, ~s([data-part="arc"])) == 1
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "ring-dash morphs the arc with two staggered animations" do
-      html = raw(variant: "ring-dash", duration: nil)
+      document = render(variant: "ring-dash", duration: nil)
 
-      assert html =~ ~s(data-variant="ring-dash")
-      assert count(html, "<circle") == 2
-      assert html =~ ~s(data-part="track")
-      assert html =~ ~s(data-part="arc")
-      assert html =~ "animation-duration: 1333ms, 1000ms"
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["ring-dash"]
+      assert TestDOM.count(document, "circle") == 2
+      assert TestDOM.count(document, ~s([data-part="track"])) == 1
+      assert TestDOM.count(document, ~s([data-part="arc"])) == 1
+      assert animation_duration(document, ~s([data-part="arc"])) == "1333ms, 1000ms"
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "variants fall back to their own default duration" do
-      assert raw(variant: "ring", duration: nil) =~ "animation-duration: 600ms"
-      assert raw(variant: "dots-bounce", duration: nil) =~ "animation-duration: 600ms"
-      assert raw(variant: "bars-scale", duration: nil) =~ "animation-duration: 600ms"
-      assert raw(variant: "infinity", duration: nil) =~ "animation-duration: 2000ms"
+      assert animation_duration(render(variant: "ring", duration: nil), ~s([data-part="arc"])) ==
+               "600ms"
+
+      assert animation_duration(
+               render(variant: "dots-bounce", duration: nil),
+               ~s([data-part="dot"])
+             ) == "600ms"
+
+      assert animation_duration(
+               render(variant: "bars-scale", duration: nil),
+               ~s([data-part="bar"])
+             ) == "600ms"
+
+      assert animation_duration(
+               render(variant: "infinity", duration: nil),
+               ~s([data-part="loop"])
+             ) ==
+               "2000ms"
     end
 
     test "every ring variant shares the same weight and radius" do
       for variant <- ~w(ring ring-bg ring-dash) do
-        html = raw(variant: variant, weight: nil)
-        assert html =~ ~s(r="9.5")
-        assert html =~ ~s(stroke-width="2.0")
+        document = render(variant: variant, weight: nil)
+
+        assert TestDOM.attr(document, ~s([data-part="arc"]), "r") == "9.5"
+        assert TestDOM.attr(document, ~s([data-part="arc"]), "stroke-width") == "2.0"
       end
     end
 
     test "variants fall back to their own default weight" do
-      assert raw(variant: "dots-fade", weight: nil) =~ ~s(r="2.0")
-      assert raw(variant: "bars-scale", weight: nil) =~ ~s(width="2.8")
+      assert TestDOM.attr(render(variant: "dots-fade", weight: nil), ~s([data-part="dot"]), "r") ==
+               "2.0"
+
+      assert TestDOM.attr(
+               render(variant: "bars-scale", weight: nil),
+               ~s([data-part="bar"]),
+               "width"
+             ) ==
+               "2.8"
     end
 
     test "weight sets the ring stroke, dot radius, and bar width" do
-      assert raw(variant: "ring", weight: 3) =~ ~s(stroke-width="3")
-      assert raw(variant: "dots-fade", weight: 3) =~ ~s(r="3")
+      assert TestDOM.attr(
+               render(variant: "ring", weight: 3),
+               ~s([data-part="arc"]),
+               "stroke-width"
+             ) ==
+               "3"
 
-      html = raw(variant: "bars-scale", weight: 4)
-      assert count(html, ~s(width="4")) == 5
+      assert TestDOM.attr(render(variant: "dots-fade", weight: 3), ~s([data-part="dot"]), "r") ==
+               "3"
+
+      document = render(variant: "bars-scale", weight: 4)
+      assert TestDOM.count(document, ~s([width="4"])) == 5
     end
 
     test "raises on a non-positive weight" do
@@ -133,68 +181,81 @@ defmodule FlintUI.Base.LoadingTest do
     end
 
     test "dots-fade staggers three dots' opacity" do
-      html = raw(variant: "dots-fade")
+      document = render(variant: "dots-fade")
 
-      assert count(html, "<circle") == 3
-      assert count(html, ~s(data-part="dot")) == 3
-      assert html =~ "animation-delay: -200ms"
-      assert html =~ "animation-delay: -400ms"
-      refute html =~ "<animate"
+      assert TestDOM.count(document, "circle") == 3
+      assert TestDOM.count(document, ~s([data-part="dot"])) == 3
+
+      delays = style_values(document, ~s([data-part="dot"]), "animation-delay")
+      assert "-200ms" in delays
+      assert "-400ms" in delays
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "dots-bounce staggers three dots' transform" do
-      html = raw(variant: "dots-bounce")
+      document = render(variant: "dots-bounce")
 
-      assert count(html, "<circle") == 3
-      assert count(html, ~s(data-part="dot")) == 3
-      assert html =~ "animation-delay: -200ms"
-      assert html =~ "animation-delay: -400ms"
-      refute html =~ "<animate"
+      assert TestDOM.count(document, "circle") == 3
+      assert TestDOM.count(document, ~s([data-part="dot"])) == 3
+
+      delays = style_values(document, ~s([data-part="dot"]), "animation-delay")
+      assert "-200ms" in delays
+      assert "-400ms" in delays
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "bars-scale draws five staggered bars" do
-      html = raw(variant: "bars-scale")
+      document = render(variant: "bars-scale")
 
-      assert count(html, "<rect") == 5
-      assert count(html, ~s(data-part="bar")) == 5
-      assert count(html, ~s(data-index)) == 5
-      assert html =~ "animation-delay: -66ms"
-      assert html =~ "animation-delay: -133ms"
-      assert html =~ "animation-delay: -200ms"
-      assert html =~ "animation-delay: -266ms"
-      refute html =~ "<animate"
+      assert TestDOM.count(document, "rect") == 5
+      assert TestDOM.count(document, ~s([data-part="bar"])) == 5
+      assert TestDOM.count(document, ~s([data-index])) == 5
+
+      delays = style_values(document, ~s([data-part="bar"]), "animation-delay")
+
+      for delay <- ~w(-66ms -133ms -200ms -266ms) do
+        assert delay in delays
+      end
+
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "infinity draws one continuously dashed loop" do
-      html = raw(variant: "infinity", duration: nil)
+      document = render(variant: "infinity", duration: nil)
+      loop = ~s([data-part="loop"])
 
-      assert html =~ ~s(data-variant="infinity")
-      assert count(html, "<path") == 1
-      assert html =~ ~s(data-part="loop")
-      assert html =~ ~s(stroke-width="2.0")
-      assert html =~ ~s(stroke-dasharray="41.054228515625 10.26355712890625")
-      assert html =~ "animation-duration: 2000ms"
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["infinity"]
+      assert TestDOM.count(document, "path") == 1
+      assert TestDOM.count(document, loop) == 1
+      assert TestDOM.attr(document, loop, "stroke-width") == "2.0"
+
+      assert TestDOM.attr(document, loop, "stroke-dasharray") ==
+               "41.054228515625 10.26355712890625"
+
+      assert animation_duration(document, loop) == "2000ms"
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "infinity scales the stroke with weight" do
-      html = raw(variant: "infinity", weight: 3)
+      document = render(variant: "infinity", weight: 3)
 
-      assert html =~ ~s(stroke-width="3")
+      assert TestDOM.attr(document, ~s([data-part="loop"]), "stroke-width") == "3"
     end
 
     test "duration publishes the cycle length on every animated part" do
-      html = raw(variant: "dots-fade", duration: 300)
+      document = render(variant: "dots-fade", duration: 300)
 
-      assert count(html, "animation-duration: 300ms") == 3
-      assert html =~ "animation-delay: -100ms"
-      assert html =~ "animation-delay: -200ms"
+      assert count_style(document, ~s([data-part="dot"]), "animation-duration", "300ms") == 3
+
+      delays = style_values(document, ~s([data-part="dot"]), "animation-delay")
+      assert "-100ms" in delays
+      assert "-200ms" in delays
     end
 
     test "ring-dash scales both cycles from duration" do
-      html = raw(variant: "ring-dash", duration: 1500)
+      document = render(variant: "ring-dash", duration: 1500)
 
-      assert html =~ "animation-duration: 2000ms, 1500ms"
+      assert animation_duration(document, ~s([data-part="arc"])) == "2000ms, 1500ms"
     end
 
     test "raises on an unknown variant" do

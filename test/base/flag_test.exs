@@ -3,6 +3,8 @@ defmodule FlintUI.Base.FlagTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -57,7 +59,10 @@ defmodule FlintUI.Base.FlagTest do
       assert attr(html, "data-element") == ["flag"]
       assert attr(html, "data-name") == ["flag-pt"]
       assert attr(html, "data-shape") == ["regular"]
-      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt.svg")|]
+
+      assert TestDOM.style_vars(html, ~s([data-element="flag"]))["background-image"] ==
+               ~s|url("/images/flags/pt.svg")|
+
       assert class_list(html) == []
     end
 
@@ -65,18 +70,24 @@ defmodule FlintUI.Base.FlagTest do
       html = render(shape: "square")
       assert attr(html, "data-name") == ["flag-pt-square"]
       assert attr(html, "data-shape") == ["square"]
-      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt-square.svg")|]
+
+      assert TestDOM.style_vars(html, ~s([data-element="flag"]))["background-image"] ==
+               ~s|url("/images/flags/pt-square.svg")|
 
       html = render(shape: "round")
       assert attr(html, "data-name") == ["flag-pt-square"]
       assert attr(html, "data-shape") == ["round"]
-      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt-square.svg")|]
+
+      assert TestDOM.style_vars(html, ~s([data-element="flag"]))["background-image"] ==
+               ~s|url("/images/flags/pt-square.svg")|
     end
 
     test "normalizes the code" do
       html = render(code: "  PT ")
       assert attr(html, "data-name") == ["flag-pt"]
-      assert attr(html, "style") == [~s|background-image: url("/images/flags/pt.svg")|]
+
+      assert TestDOM.style_vars(html, ~s([data-element="flag"]))["background-image"] ==
+               ~s|url("/images/flags/pt.svg")|
     end
 
     test "rejects a code that would break the URL" do
@@ -87,15 +98,18 @@ defmodule FlintUI.Base.FlagTest do
 
     test "path overrides the default asset base" do
       html = render(path: "/assets/flags/")
-      assert attr(html, "style") == [~s|background-image: url("/assets/flags/pt.svg")|]
+
+      assert TestDOM.style_vars(html, ~s([data-element="flag"]))["background-image"] ==
+               ~s|url("/assets/flags/pt.svg")|
     end
 
     test "merges a caller style after the background image" do
       html = render(style: "opacity: 0.5")
 
-      assert attr(html, "style") == [
-               ~s|background-image: url("/images/flags/pt.svg"); opacity: 0.5|
-             ]
+      styles = TestDOM.style_vars(html, ~s([data-element="flag"]))
+
+      assert styles["background-image"] == ~s|url("/images/flags/pt.svg")|
+      assert styles["opacity"] == "0.5"
     end
 
     test "is decorative by default" do

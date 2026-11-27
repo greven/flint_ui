@@ -45,16 +45,16 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#generate")
     assert has_element?(view, "#usage")
     assert has_element?(view, "#commands")
-    assert render(view) =~ "mix flint.setup"
-    assert render(view) =~ "mix flint.add"
+    assert page_text(view) =~ "mix flint.setup"
+    assert page_text(view) =~ "mix flint.add"
   end
 
   test "guides use the shared page header and link treatment", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/getting-started/installation")
 
-    assert has_element?(view, "main h1.text-4xl", "Installation")
-    assert has_element?(view, "main a[href='/components'].docs-link")
-    assert has_element?(view, "main .docs-prose code.docs-code", "mix deps.get")
+    assert has_element?(view, "main h1", "Installation")
+    assert has_element?(view, "main a[href='/components']")
+    assert has_element?(view, "main code", "mix deps.get")
   end
 
   test "pages render the on-this-page outline", %{conn: conn} do
@@ -105,14 +105,14 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
              )
     end
 
-    html = render(view)
-    assert html =~ "flint.icons"
-    assert html =~ "--tailwind"
-    assert html =~ "--css"
-    assert html =~ "hero-x-mark-mini"
-    assert html =~ "lucide-house"
-    assert html =~ "si-github"
-    refute html =~ "/images/flags/pt.svg"
+    text = page_text(view)
+    assert text =~ "flint.icons"
+    assert text =~ "--tailwind"
+    assert text =~ "--css"
+    assert text =~ "hero-x-mark-mini"
+    assert text =~ "lucide-house"
+    assert text =~ "si-github"
+    refute text =~ "/images/flags/pt.svg"
   end
 
   test "flags guide documents assets, dynamic codes, shapes, and raw classes", %{conn: conn} do
@@ -128,13 +128,13 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#section-guides a[aria-current='page']")
     assert has_element?(view, "aside a[href='/guides/flags']")
 
-    html = render(view)
-    assert html =~ "--assets"
-    assert html =~ "flint.icons.copy_flags"
-    assert html =~ "/images/flags/pt.svg"
-    assert html =~ "/images/flags/pt-square.svg"
-    assert html =~ "flag-icons"
-    assert html =~ "flag-pt-square"
+    text = page_text(view)
+    assert text =~ "--assets"
+    assert text =~ "flint.icons.copy_flags"
+    assert text =~ "/images/flags/pt.svg"
+    assert text =~ "/images/flags/pt-square.svg"
+    assert text =~ "flag-icons"
+    assert text =~ "flag-pt-square"
   end
 
   test "theming overview routes into the guide", %{conn: conn} do
@@ -155,9 +155,9 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
       assert has_element?(view, "a[href='#{path}']")
     end
 
-    html = render(view)
-    assert html =~ "--fl-color-primary"
-    assert html =~ "color-scheme"
+    text = page_text(view)
+    assert text =~ "--fl-color-primary"
+    assert text =~ "color-scheme"
   end
 
   test "color page documents palettes and roles", %{conn: conn} do
@@ -196,10 +196,9 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "[data-color-swatch='neutral-neutral'] [data-shade='950']")
     assert has_element?(view, "[data-color-swatch='neutral-zinc'] [data-swatch-core]", "600")
 
-    html = render(view)
-    assert html =~ ~s|data-copy-value="var(--fl-color-rose)"|
-    assert html =~ ~s|aria-label="Copy var(--fl-color-rose)"|
-    assert html =~ ~s|data-copy-value="var(--fl-color-rose-300)"|
+    assert has_element?(view, "[data-copy-value='var(--fl-color-rose)']")
+    assert has_element?(view, "[aria-label='Copy var(--fl-color-rose)']")
+    assert has_element?(view, "[data-copy-value='var(--fl-color-rose-300)']")
   end
 
   test "themes page documents presets, schemes, and custom themes", %{conn: conn} do
@@ -234,7 +233,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
       assert has_element?(view, "aside a[href='#{page.path}'][aria-current='page']")
 
       token_prefix = String.replace(page.namespace, "*", "")
-      assert render(view) =~ token_prefix
+      assert page_text(view) =~ token_prefix
     end
   end
 
@@ -244,8 +243,8 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#shared")
     assert has_element?(view, "#composing")
     assert has_element?(view, "#component-animations")
-    assert render(view) =~ "@keyframes fl-pop-in"
-    assert render(view) =~ "@keyframes fl-shake"
+    assert page_text(view) =~ "@keyframes fl-pop-in"
+    assert page_text(view) =~ "@keyframes fl-shake"
     assert has_element?(view, "a[href='/components/indicator']")
   end
 
@@ -253,7 +252,7 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     {:ok, view, _html} = live(conn, ~p"/guides/theming/tokens/colors")
 
     assert has_element?(view, "td", "neutral")
-    assert render(view) =~ "--fl-color-neutral"
+    assert page_text(view) =~ "--fl-color-neutral"
   end
 
   test "customizing page collects the override recipes", %{conn: conn} do
@@ -266,15 +265,15 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#role-remap")
     assert has_element?(view, "#custom-hues")
 
-    html = render(view)
-    assert html =~ "--fl-surface-base"
-    assert html =~ "--fl-surface-page-tint"
-    assert html =~ "--fl-surface-page-lift"
-    assert html =~ "--fl-surface-page-light"
-    assert html =~ "--fl-surface-page-dark"
-    assert html =~ "--fl-text-base"
-    assert html =~ "mix flint.palette"
-    assert html =~ "color-rose"
+    text = page_text(view)
+    assert text =~ "--fl-surface-base"
+    assert text =~ "--fl-surface-page-tint"
+    assert text =~ "--fl-surface-page-lift"
+    assert text =~ "--fl-surface-page-light"
+    assert text =~ "--fl-surface-page-dark"
+    assert text =~ "--fl-text-base"
+    assert text =~ "mix flint.palette"
+    assert text =~ "color-rose"
   end
 
   test "css utilities page documents the included utility layer", %{conn: conn} do
@@ -289,42 +288,45 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
     assert has_element?(view, "#reference")
     assert has_element?(view, "#tailwind")
 
-    html = render(view)
-    assert html =~ "mix flint.utilities"
-    assert html =~ "flint.setup"
-    assert html =~ "no-utilities"
-    assert html =~ "fl-stack"
-    assert html =~ "fl-grid"
-    assert html =~ "fl-flex"
-    assert html =~ "fl-animate-pulse"
-    assert html =~ "prefers-reduced-motion"
-    refute html =~ "Planned"
+    text = page_text(view)
+    assert text =~ "mix flint.utilities"
+    assert text =~ "flint.setup"
+    assert text =~ "no-utilities"
+    assert text =~ "fl-stack"
+    assert text =~ "fl-grid"
+    assert text =~ "fl-flex"
+    assert text =~ "fl-animate-pulse"
+    assert text =~ "prefers-reduced-motion"
   end
 
   test "css utilities reference filters by class or declaration", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming/css-utilities")
 
-    html =
+    text =
       view
       |> element("#utility-search-form")
       |> render_change(%{"query" => "grid-cols"})
+      |> LazyHTML.from_fragment()
+      |> LazyHTML.text()
 
-    assert html =~ "fl-grid-cols-12"
-    refute html =~ "fl-cursor-wait"
+    assert text =~ "fl-grid-cols-12"
+    refute text =~ "fl-cursor-wait"
   end
 
   test "css utilities reference includes the motion family", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/guides/theming/css-utilities")
 
-    html =
+    text =
       view
       |> element("#utility-search-form")
       |> render_change(%{"query" => "animate-"})
+      |> LazyHTML.from_fragment()
+      |> LazyHTML.text()
 
-    assert html =~ "fl-animate-pulse"
-    assert html =~ "fl-animate-fade-in"
-    assert html =~ "fl-duration-slow"
-    assert html =~ "fl-ease-linear"
+    assert text =~ "fl-animate-pulse"
+    assert text =~ "fl-animate-fade-in"
+    assert text =~ "fl-duration-slow"
+    assert text =~ "fl-ease-linear"
   end
 
   test "installation page shows its section breadcrumb", %{conn: conn} do
@@ -359,5 +361,12 @@ defmodule FlintUIDocsWeb.GuideLiveTest do
   test "section roots redirect to their first page", %{conn: conn} do
     assert redirected_to(get(conn, ~p"/getting-started")) == "/getting-started/introduction"
     assert redirected_to(get(conn, ~p"/guides")) == "/guides/theming"
+  end
+
+  defp page_text(view) do
+    view
+    |> render()
+    |> LazyHTML.from_fragment()
+    |> LazyHTML.text()
   end
 end

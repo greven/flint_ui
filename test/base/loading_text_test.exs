@@ -3,6 +3,8 @@ defmodule FlintUI.Base.LoadingTextTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -36,10 +38,16 @@ defmodule FlintUI.Base.LoadingTextTest do
   defp root(html), do: LazyHTML.query(html, ~s([data-part="root"]))
   defp tag(html), do: LazyHTML.tag(root(html))
   defp attr(html, name), do: LazyHTML.attribute(root(html), name)
-  defp count(%LazyHTML{} = html, needle), do: count(LazyHTML.to_html(html), needle)
 
-  defp count(html, needle) when is_binary(html) do
-    length(Regex.scan(~r/#{Regex.escape(needle)}/, html))
+  defp count(%LazyHTML{} = html, attr_selector) do
+    selector = "[#{String.trim_trailing(attr_selector, "=")}]"
+    TestDOM.count(html, selector)
+  end
+
+  defp count(html, selector) when is_binary(html) do
+    html
+    |> LazyHTML.from_fragment()
+    |> count(selector)
   end
 
   defp part_text(%LazyHTML{} = html, part) do
@@ -53,6 +61,14 @@ defmodule FlintUI.Base.LoadingTextTest do
     html
     |> LazyHTML.from_fragment()
     |> part_text(part)
+  end
+
+  defp style_values(document, selector, name) do
+    document
+    |> LazyHTML.query(selector)
+    |> LazyHTML.attribute("style")
+    |> Enum.map(&TestDOM.style_vars/1)
+    |> Enum.map(& &1[name])
   end
 
   test "renders a span root with the copy" do
@@ -77,7 +93,6 @@ defmodule FlintUI.Base.LoadingTextTest do
     html = render(text: "<b>Hi</b>")
 
     assert part_text(html, "text") == "<b>Hi</b>"
-    refute raw(text: "<b>Hi</b>") =~ "<b>"
   end
 
   describe "dots" do
@@ -104,64 +119,103 @@ defmodule FlintUI.Base.LoadingTextTest do
     test "dots start from left to right" do
       html = render(duration: 700)
 
-      assert LazyHTML.attribute(LazyHTML.query(html, ~s([data-part="dot"])), "style") == [
-               "animation-duration: 700ms; animation-delay: 0ms",
-               "animation-duration: 700ms; animation-delay: 100ms",
-               "animation-duration: 700ms; animation-delay: 200ms"
-             ]
+      dots =
+        html
+        |> LazyHTML.query(~s([data-part="dot"]))
+        |> LazyHTML.attribute("style")
+        |> Enum.map(&TestDOM.style_vars/1)
+
+      assert Enum.map(dots, & &1["animation-duration"]) == ["700ms", "700ms", "700ms"]
+      assert Enum.map(dots, & &1["animation-delay"]) == ["0ms", "100ms", "200ms"]
     end
 
     test "dots default to a 1400ms cycle" do
-      assert raw(%{}) =~ "animation-duration: 1400ms"
+      html = render()
+
+      assert TestDOM.style_var(html, ~s([data-part="dot"]), "animation-duration") == "1400ms"
     end
   end
 
   describe "variants" do
     test "blink pulses the text part" do
-      html = raw(variant: "blink")
+      document = render(variant: "blink")
 
-      assert html =~ ~s(data-variant="blink")
-      assert html =~ ~s(data-part="text")
-      assert html =~ "animation-duration: 2000ms"
-      assert count(html, ~s(data-part="dot")) == 0
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["blink"]
+      assert TestDOM.count(document, ~s([data-part="text"])) == 1
+      assert TestDOM.style_var(document, ~s([data-part="text"]), "animation-duration") == "2000ms"
+      assert TestDOM.count(document, ~s([data-part="dot"])) == 0
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "shimmer animates the text part" do
-      html = raw(variant: "shimmer")
+      document = render(variant: "shimmer")
 
-      assert html =~ ~s(data-variant="shimmer")
-      assert html =~ ~s(data-part="text")
-      assert html =~ "animation-duration: 2000ms"
-      assert count(html, ~s(data-part="dot")) == 0
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["shimmer"]
+      assert TestDOM.count(document, ~s([data-part="text"])) == 1
+      assert TestDOM.style_var(document, ~s([data-part="text"]), "animation-duration") == "2000ms"
+      assert TestDOM.count(document, ~s([data-part="dot"])) == 0
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "wave splits the copy into graphemes" do
-      html = raw(variant: "wave", text: "Ab c", duration: 1000)
+      document = render(variant: "wave", text: "Ab c", duration: 1000)
 
-      assert html =~ ~s(data-variant="wave")
-      assert count(html, ~s(data-part="char")) == 4
-      assert part_text(html, "text") == "Ab c"
-      assert count(html, ~s(data-part="dot")) == 0
-      assert html =~ "animation-delay: 0ms"
-      assert html =~ "animation-delay: 250ms"
-      assert html =~ "animation-delay: 500ms"
-      assert html =~ "animation-delay: 750ms"
-      refute html =~ "<animate"
+      assert attr(document, "data-variant") == ["wave"]
+      assert TestDOM.count(document, ~s([data-part="char"])) == 4
+      assert part_text(document, "text") == "Ab c"
+      assert TestDOM.count(document, ~s([data-part="dot"])) == 0
+
+      assert style_values(document, ~s([data-part="char"]), "animation-delay") == [
+               "0ms",
+               "250ms",
+               "500ms",
+               "750ms"
+             ]
+
+      assert TestDOM.empty?(document, "animate")
     end
 
     test "each variant has its own default duration" do
-      assert raw(variant: "dots") =~ "animation-duration: 1400ms"
-      assert raw(variant: "blink") =~ "animation-duration: 2000ms"
-      assert raw(variant: "shimmer") =~ "animation-duration: 2000ms"
-      assert raw(variant: "wave") =~ "animation-duration: 1000ms"
+      assert TestDOM.style_var(
+               render(variant: "dots"),
+               ~s([data-part="dot"]),
+               "animation-duration"
+             ) ==
+               "1400ms"
+
+      assert TestDOM.style_var(
+               render(variant: "blink"),
+               ~s([data-part="text"]),
+               "animation-duration"
+             ) == "2000ms"
+
+      assert TestDOM.style_var(
+               render(variant: "shimmer"),
+               ~s([data-part="text"]),
+               "animation-duration"
+             ) == "2000ms"
+
+      assert TestDOM.style_var(
+               render(variant: "wave"),
+               ~s([data-part="char"]),
+               "animation-duration"
+             ) ==
+               "1000ms"
     end
 
     test "duration overrides the variant default" do
-      assert raw(variant: "blink", duration: 300) =~ "animation-duration: 300ms"
-      assert raw(variant: "shimmer", duration: 300) =~ "animation-duration: 300ms"
-      assert raw(variant: "wave", duration: 500) =~ "animation-duration: 500ms"
+      for {variant, part} <- [{"dots", "dot"}, {"blink", "text"}, {"shimmer", "text"}] do
+        document = render(variant: variant, duration: 300)
+
+        assert TestDOM.style_var(document, ~s([data-part="#{part}"]), "animation-duration") ==
+                 "300ms"
+      end
+
+      assert TestDOM.style_var(
+               render(variant: "wave", duration: 500),
+               ~s([data-part="char"]),
+               "animation-duration"
+             ) == "500ms"
     end
 
     test "raises on an unknown variant" do

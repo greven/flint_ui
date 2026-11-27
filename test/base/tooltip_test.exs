@@ -227,11 +227,15 @@ defmodule FlintUI.Base.TooltipTest do
 
   describe "markup" do
     test "keeps the root phrasing when it sits inside a paragraph" do
-      html = render_component(&TestComponent.paragraph_example/1, %{})
+      doc =
+        render_component(&TestComponent.paragraph_example/1, %{})
+        |> LazyHTML.from_fragment()
 
-      assert html =~ "<p>"
-      assert html =~ "<span"
-      assert html =~ ~s(role="tooltip")
+      root = part(doc, "root")
+
+      assert LazyHTML.query(doc, "p > [data-part='root']") |> Enum.count() == 1
+      assert LazyHTML.tag(root) == ["span"]
+      assert LazyHTML.query(doc, ~s([role="tooltip"])) |> Enum.count() == 1
     end
   end
 

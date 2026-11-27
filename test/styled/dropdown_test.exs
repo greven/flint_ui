@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.DropdownTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:dropdown, ~S'''
@@ -85,10 +87,8 @@ defmodule FlintUI.Styled.DropdownTest do
     assert attr(document, :dropdown, "data-role") == ["test"]
     assert count_part(document, "arrow") == 1
 
-    assert part_attr(document, "list", "style") == [
-             "--fl-dropdown-max-height: 280px",
-             "--fl-dropdown-max-height: 280px"
-           ]
+    assert TestDOM.style_vars(document, ~s([data-part="list"]))["--fl-dropdown-max-height"] ==
+             "280px"
   end
 
   test "forwards the conditional trigger slot", %{wrapper: wrapper} do

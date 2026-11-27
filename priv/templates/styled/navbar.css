@@ -25,6 +25,14 @@
         --fl-navbar-text-active: var(--fl-color-text);
     }
 
+    /* Minimal is the baseline treatment: the root, list, and item rules above
+     * already describe it. The explicit hook keeps the variant contract
+     * visible without adding chrome. */
+    [data-element="navbar"][data-variant="minimal"] > [data-part="list"] {
+        background: none;
+        border: 0;
+    }
+
     [data-element="navbar"][data-navbar][data-disabled] {
         opacity: var(--fl-disabled-opacity, 0.5);
         pointer-events: none;

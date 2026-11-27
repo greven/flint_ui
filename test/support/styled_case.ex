@@ -52,20 +52,23 @@ defmodule FlintUI.StyledCase do
 
   @doc false
   def part(document, name) do
-    LazyHTML.query(document, ~s([data-part="#{name}"]))
+    FlintUI.TestDOM.part(document, name)
   end
 
   @doc false
   def part_attr(document, name, attribute) do
-    document |> part(name) |> LazyHTML.attribute(attribute)
+    FlintUI.TestDOM.part_attr(document, name, attribute)
   end
 
   @doc false
   def count_part(document, name) do
-    pattern = ~r/data-part="#{Regex.escape(name)}"/
-
-    document
-    |> LazyHTML.to_html()
-    |> then(&length(Regex.scan(pattern, &1)))
+    FlintUI.TestDOM.count(document, ~s([data-part="#{name}"]))
   end
+
+  @doc false
+  def style_vars(document, component), do: FlintUI.TestDOM.style_vars(document, component)
+
+  @doc false
+  def style_var(document, component, name),
+    do: FlintUI.TestDOM.style_var(document, component, name)
 end

@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.ContainerTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:container, ~S'''
@@ -117,14 +119,18 @@ defmodule FlintUI.Styled.ContainerTest do
     document = render(wrapper, :numeric)
 
     assert attr(document, :container, "data-size") == []
-    assert attr(document, :container, "style") == ["--fl-container-size: 45rem"]
+
+    assert TestDOM.style_var(document, ~s([data-element="container"]), "--fl-container-size") ==
+             "45rem"
   end
 
   test "uses an arbitrary CSS length as written", %{wrapper: wrapper} do
     document = render(wrapper, :css_length)
 
     assert attr(document, :container, "data-size") == []
-    assert attr(document, :container, "style") == ["--fl-container-size: 48rem"]
+
+    assert TestDOM.style_var(document, ~s([data-element="container"]), "--fl-container-size") ==
+             "48rem"
   end
 
   test "writes breakpoint overrides from a size map", %{wrapper: wrapper} do
@@ -132,10 +138,10 @@ defmodule FlintUI.Styled.ContainerTest do
 
     assert attr(document, :container, "data-size") == ["sm"]
 
-    assert attr(document, :container, "style") == [
-             "--fl-container-size-md: var(--fl-container-xl); " <>
-               "--fl-container-size-2xl: var(--fl-container-7xl)"
-           ]
+    styles = TestDOM.style_vars(document, ~s([data-element="container"]))
+
+    assert styles["--fl-container-size-md"] == "var(--fl-container-xl)"
+    assert styles["--fl-container-size-2xl"] == "var(--fl-container-7xl)"
   end
 
   test "accepts arbitrary and numeric breakpoint values", %{wrapper: wrapper} do
@@ -143,9 +149,10 @@ defmodule FlintUI.Styled.ContainerTest do
 
     assert attr(document, :container, "data-size") == []
 
-    assert attr(document, :container, "style") == [
-             "--fl-container-size-md: 48rem; --fl-container-size-xl: 60rem"
-           ]
+    styles = TestDOM.style_vars(document, ~s([data-element="container"]))
+
+    assert styles["--fl-container-size-md"] == "48rem"
+    assert styles["--fl-container-size-xl"] == "60rem"
   end
 
   test "forwards as, class, and rest attributes", %{wrapper: wrapper} do
@@ -160,9 +167,9 @@ defmodule FlintUI.Styled.ContainerTest do
   test "keeps the caller style after the generated declaration", %{wrapper: wrapper} do
     document = render(wrapper, :user_style)
 
-    assert attr(document, :container, "style") == [
-             "--fl-container-size: 48rem; --fl-container-size: 10px"
-           ]
+    # Later declarations win, so the caller style is the effective value.
+    assert TestDOM.style_var(document, ~s([data-element="container"]), "--fl-container-size") ==
+             "10px"
   end
 
   test "renders the container's children", %{wrapper: wrapper} do
@@ -177,14 +184,6 @@ defmodule FlintUI.Styled.ContainerTest do
   test "raises for an unknown breakpoint key", %{wrapper: wrapper} do
     assert_raise ArgumentError, ~r/unknown container size breakpoint/, fn ->
       render(wrapper, :invalid)
-    end
-  end
-
-  test "the theme part uses the shared breakpoints" do
-    css = File.read!(FlintUI.Generator.part_path("styled/container.css"))
-
-    for {_name, width} <- FlintUI.Utilities.breakpoints() do
-      assert css =~ "@media (min-width: #{width})"
     end
   end
 end

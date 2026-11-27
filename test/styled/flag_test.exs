@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.FlagTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:flag, ~S'''
@@ -56,7 +58,10 @@ defmodule FlintUI.Styled.FlagTest do
     assert attr(document, :flag, "data-border") == []
     assert attr(document, :flag, "data-shadow") == []
     assert attr(document, :flag, "class") == [""]
-    assert attr(document, :flag, "style") == [~s|background-image: url("/images/flags/pt.svg")|]
+
+    assert TestDOM.style_var(document, ~s([data-element="flag"]), "background-image") ==
+             ~s|url("/images/flags/pt.svg")|
+
     assert attr(document, :flag, "aria-hidden") == ["true"]
   end
 
@@ -72,9 +77,8 @@ defmodule FlintUI.Styled.FlagTest do
     assert attr(document, :flag, "data-shadow") == [""]
     assert attr(document, :flag, "class") == ["extra"]
 
-    assert attr(document, :flag, "style") == [
-             ~s|background-image: url("/images/flags/us-square.svg")|
-           ]
+    assert TestDOM.style_var(document, ~s([data-element="flag"]), "background-image") ==
+             ~s|url("/images/flags/us-square.svg")|
 
     assert attr(document, :flag, "role") == ["img"]
     assert attr(document, :flag, "aria-label") == ["United States"]
@@ -87,9 +91,8 @@ defmodule FlintUI.Styled.FlagTest do
     assert attr(document, :flag, "data-name") == ["flag-br-square"]
     assert attr(document, :flag, "data-shape") == ["round"]
 
-    assert attr(document, :flag, "style") == [
-             ~s|background-image: url("/images/flags/br-square.svg")|
-           ]
+    assert TestDOM.style_var(document, ~s([data-element="flag"]), "background-image") ==
+             ~s|url("/images/flags/br-square.svg")|
 
     assert attr(document, :flag, "class") == [""]
   end
@@ -99,8 +102,10 @@ defmodule FlintUI.Styled.FlagTest do
 
     assert attr(document, :flag, "data-size") == []
 
-    assert attr(document, :flag, "style") == [
-             ~s|background-image: url("/images/flags/pt.svg"); --fl-flag-size: 2.5rem; opacity: 0.5|
-           ]
+    styles = TestDOM.style_vars(document, ~s([data-element="flag"]))
+
+    assert styles["background-image"] == ~s|url("/images/flags/pt.svg")|
+    assert styles["--fl-flag-size"] == "2.5rem"
+    assert styles["opacity"] == "0.5"
   end
 end

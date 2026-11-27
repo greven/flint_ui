@@ -3,6 +3,8 @@ defmodule FlintUI.Base.ProgressRingTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -54,7 +56,7 @@ defmodule FlintUI.Base.ProgressRingTest do
   defp root(html), do: LazyHTML.query(html, ~s([data-part="root"]))
   defp root_attr(html, name), do: LazyHTML.attribute(root(html), name)
   defp part(html, name), do: LazyHTML.query(html, ~s([data-part="#{name}"]))
-  defp segment_style(html), do: LazyHTML.attribute(part(html, "segment"), "style")
+  defp segment_style(html), do: TestDOM.style_vars(part(html, "segment"))["stroke-dashoffset"]
 
   defp count_part(html, name) do
     html
@@ -77,7 +79,7 @@ defmodule FlintUI.Base.ProgressRingTest do
       assert root_attr(html, "aria-orientation") == []
       assert root_attr(html, "data-orientation") == []
 
-      assert segment_style(html) == ["stroke-dashoffset: 60"]
+      assert segment_style(html) == "60"
       assert part(html, "svg") |> Enum.count() == 1
       assert LazyHTML.attribute(part(html, "svg"), "aria-hidden") == ["true"]
       assert LazyHTML.attribute(part(html, "track"), "aria-hidden") == ["true"]
@@ -91,7 +93,7 @@ defmodule FlintUI.Base.ProgressRingTest do
       assert root_attr(html, "aria-valuemax") == ["4"]
       assert root_attr(html, "aria-valuenow") == ["3"]
       assert root_attr(html, "aria-valuetext") == ["75%"]
-      assert segment_style(html) == ["stroke-dashoffset: 25"]
+      assert segment_style(html) == "25"
     end
 
     test "accepts numbers and numeric strings" do
@@ -106,19 +108,19 @@ defmodule FlintUI.Base.ProgressRingTest do
       assert root_attr(html, "aria-valuenow") == ["0.5"]
       assert root_attr(html, "aria-valuemax") == ["1"]
       assert root_attr(html, "aria-valuetext") == ["50%"]
-      assert segment_style(html) == ["stroke-dashoffset: 50"]
+      assert segment_style(html) == "50"
     end
 
     test "clamps values outside the scale" do
       high = render(value: 150)
       assert root_attr(high, "aria-valuenow") == ["100"]
       assert root_attr(high, "aria-valuetext") == ["100%"]
-      assert segment_style(high) == ["stroke-dashoffset: 0"]
+      assert segment_style(high) == "0"
 
       low = render(value: -10)
       assert root_attr(low, "aria-valuenow") == ["0"]
       assert root_attr(low, "aria-valuetext") == ["0%"]
-      assert segment_style(low) == ["stroke-dashoffset: 100"]
+      assert segment_style(low) == "100"
     end
 
     test "falls back to 100 for a non-positive maximum" do
@@ -173,7 +175,7 @@ defmodule FlintUI.Base.ProgressRingTest do
       assert root_attr(html, "aria-valuenow") == []
       assert root_attr(html, "aria-valuetext") == []
       assert part(html, "status") |> Enum.empty?()
-      assert segment_style(html) == []
+      assert segment_style(html) == nil
     end
 
     test "treats a blank value as indeterminate" do
@@ -193,7 +195,7 @@ defmodule FlintUI.Base.ProgressRingTest do
       assert root_attr(html, "aria-valuemax") == ["4"]
       assert root_attr(html, "aria-valuenow") == ["3"]
       assert root_attr(html, "aria-valuetext") == ["Deploying"]
-      assert segment_style(html) == ["stroke-dashoffset: 25"]
+      assert segment_style(html) == "25"
     end
 
     test "renders the labels under the ring and marks the active step" do
@@ -240,7 +242,7 @@ defmodule FlintUI.Base.ProgressRingTest do
 
       assert root_attr(html, "aria-valuemax") == ["1"]
       assert root_attr(html, "aria-valuetext") == ["Done"]
-      assert segment_style(html) == ["stroke-dashoffset: 0"]
+      assert segment_style(html) == "0"
     end
 
     test "keeps the percentage when a step label is blank" do

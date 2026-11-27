@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.HeadingTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:heading, ~S'''
@@ -99,7 +101,7 @@ defmodule FlintUI.Styled.HeadingTest do
     assert attr(document, :heading, "data-weight") == ["bold"]
     assert attr(document, :heading, "data-align") == ["center"]
     assert attr(document, :heading, "class") == ["max-w-xl"]
-    assert attr(document, :heading, "style") == ["margin-top: 2rem"]
+    assert TestDOM.style_var(document, ~s([data-element="heading"]), "margin-top") == "2rem"
 
     assert part_attr(document, "heading", "id") == ["release-title"]
     assert part_attr(document, "heading", "data-test") == ["heading"]

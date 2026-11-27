@@ -3,6 +3,8 @@ defmodule FlintUI.Base.ProgressGroupTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -71,7 +73,16 @@ defmodule FlintUI.Base.ProgressGroupTest do
   defp root(html), do: LazyHTML.query(html, ~s([data-part="root"]))
   defp root_attr(html, name), do: LazyHTML.attribute(root(html), name)
   defp part(html, name), do: LazyHTML.query(html, ~s([data-part="#{name}"]))
-  defp segment_styles(html), do: LazyHTML.attribute(part(html, "segment"), "style")
+
+  defp segment_sizes(html) do
+    html
+    |> part("segment")
+    |> LazyHTML.attribute("style")
+    |> Enum.map(fn style ->
+      vars = TestDOM.style_vars(style)
+      vars["inline-size"] || vars["block-size"]
+    end)
+  end
 
   defp legend_text(html) do
     html
@@ -104,10 +115,10 @@ defmodule FlintUI.Base.ProgressGroupTest do
     end
 
     test "sizes each segment by its share of max" do
-      assert segment_styles(render()) == [
-               "inline-size: 32.8125%",
-               "inline-size: 14.0625%",
-               "inline-size: 7.03125%"
+      assert segment_sizes(render()) == [
+               "32.8125%",
+               "14.0625%",
+               "7.03125%"
              ]
     end
 
@@ -123,7 +134,7 @@ defmodule FlintUI.Base.ProgressGroupTest do
 
       assert root_attr(html, "aria-valuenow") == ["100"]
       assert root_attr(html, "aria-valuetext") == ["100%"]
-      assert segment_styles(html) == ["inline-size: 50%", "inline-size: 50%"]
+      assert segment_sizes(html) == ["50%", "50%"]
       assert length(String.split(legend_text(html), "50%")) == 3
     end
 
@@ -136,7 +147,7 @@ defmodule FlintUI.Base.ProgressGroupTest do
 
       assert root_attr(html, "aria-valuenow") == ["5"]
       assert root_attr(html, "aria-valuetext") == ["100%"]
-      assert segment_styles(html) == ["inline-size: 0%", "inline-size: 0%", "inline-size: 100%"]
+      assert segment_sizes(html) == ["0%", "0%", "100%"]
     end
 
     test "falls back to 100 for a non-positive maximum" do
@@ -144,7 +155,7 @@ defmodule FlintUI.Base.ProgressGroupTest do
 
       assert root_attr(html, "aria-valuemax") == ["100"]
       assert root_attr(html, "aria-valuenow") == ["40"]
-      assert segment_styles(html) == ["inline-size: 40%"]
+      assert segment_sizes(html) == ["40%"]
     end
 
     test "shows the summed status above the bar" do
@@ -152,7 +163,7 @@ defmodule FlintUI.Base.ProgressGroupTest do
 
       assert LazyHTML.text(part(html, "status")) |> String.trim() == "54%"
       assert LazyHTML.attribute(part(html, "status"), "aria-hidden") == ["true"]
-      assert LazyHTML.attribute(part(html, "status"), "style") == ["inline-size: 53.90625%"]
+      assert TestDOM.style_var(html, ~s([data-part="status"]), "inline-size") == "53.90625%"
     end
 
     test "omits the status width on a vertical group" do
@@ -171,7 +182,7 @@ defmodule FlintUI.Base.ProgressGroupTest do
 
       assert LazyHTML.text(status) |> String.trim() == "69 GB of 100 GB used"
       assert LazyHTML.attribute(status, "aria-hidden") == []
-      assert LazyHTML.attribute(status, "style") == ["inline-size: 60%"]
+      assert TestDOM.style_var(html, ~s([data-part="status"]), "inline-size") == "60%"
     end
 
     test "the custom status wins over show_status" do
@@ -273,10 +284,10 @@ defmodule FlintUI.Base.ProgressGroupTest do
       assert root_attr(html, "data-orientation") == ["vertical"]
       assert root_attr(html, "aria-orientation") == ["vertical"]
 
-      assert segment_styles(html) == [
-               "block-size: 32.8125%",
-               "block-size: 14.0625%",
-               "block-size: 7.03125%"
+      assert segment_sizes(html) == [
+               "32.8125%",
+               "14.0625%",
+               "7.03125%"
              ]
     end
   end

@@ -3,6 +3,8 @@ defmodule FlintUI.Base.DropdownTest do
 
   import Phoenix.LiveViewTest, only: [render_component: 2]
 
+  alias FlintUI.TestDOM
+
   defmodule TestComponent do
     use FlintUI
 
@@ -185,10 +187,10 @@ defmodule FlintUI.Base.DropdownTest do
     test "caps the height only when max_height is set" do
       assert part_attr(render(), "list", "style") == []
 
-      assert part_attr(render(:example, max_height: 280), "list", "style") == [
-               "--fl-dropdown-max-height: 280px",
-               "--fl-dropdown-max-height: 280px"
-             ]
+      document = render(:example, max_height: 280)
+
+      assert TestDOM.style_var(document, ~s([data-part="list"]), "--fl-dropdown-max-height") ==
+               "280px"
     end
 
     test "renders the arrow only when asked" do
@@ -218,7 +220,8 @@ defmodule FlintUI.Base.DropdownTest do
         |> part("submenu")
         |> LazyHTML.query(~s([data-part="list"]))
 
-      assert LazyHTML.attribute(list, "style") == ["--fl-dropdown-max-height: 240px"]
+      assert TestDOM.style_vars(list, ~s([data-part="list"]))["--fl-dropdown-max-height"] ==
+               "240px"
     end
   end
 

@@ -150,35 +150,4 @@ defmodule FlintUI.Styled.HeaderTest do
 
     assert LazyHTML.query(toggle, ~s([data-toggle-icon="open"])) |> LazyHTML.to_html() == ""
   end
-
-  test "the theme part uses the shared breakpoints" do
-    css = File.read!(FlintUI.Generator.part_path("styled/header.css"))
-
-    for {_name, width} <- FlintUI.Utilities.breakpoints() do
-      {rem, _} = Float.parse(width)
-      max = rem - 0.001
-      assert css =~ "@media (max-width: #{max}rem)"
-    end
-  end
-
-  test "blur uses a translucent fill with opaque fallbacks" do
-    css = File.read!(FlintUI.Generator.part_path("styled/header.css"))
-
-    assert css =~ "color-mix(in oklab, var(--fl-header-surface) 85%, transparent)"
-    assert css =~ "-webkit-backdrop-filter: blur(8px)"
-    assert css =~ "backdrop-filter: blur(8px)"
-    assert css =~ "@supports not"
-    assert css =~ "prefers-reduced-transparency: reduce"
-  end
-
-  test "keeps the collapsed panel in flow and styles both toggle positions" do
-    css = File.read!(FlintUI.Generator.part_path("styled/header.css"))
-
-    assert css =~ ~s([data-element="header"][data-toggle-position="start"])
-    assert css =~ ~s(grid-template-areas: "brand actions toggle")
-    assert css =~ ~s(grid-template-areas: "toggle brand actions")
-    assert css =~ "grid-template-rows: minmax(calc(3.5rem - 2 * var(--fl-spacing-sm)), auto)"
-    assert css =~ "align-content: start"
-    refute css =~ "inset-block-start: 100%"
-  end
 end

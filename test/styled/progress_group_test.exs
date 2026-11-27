@@ -1,6 +1,8 @@
 defmodule FlintUI.Styled.ProgressGroupTest do
   use FlintUI.StyledCase, async: true
 
+  alias FlintUI.TestDOM
+
   setup_all do
     wrapper =
       compile_wrapper!(:progress_group, ~S'''
@@ -123,7 +125,7 @@ defmodule FlintUI.Styled.ProgressGroupTest do
     assert attr(document, :progress_group, "aria-orientation") == ["vertical"]
     assert LazyHTML.text(part(document, "status")) |> String.trim() == "50%"
     assert part_attr(document, "status", "style") == []
-    assert part_attr(document, "segment", "style") |> hd() == "block-size: 30.434783%"
+    assert TestDOM.style_var(document, ~s([data-part="segment"]), "block-size") == "30.434783%"
   end
 
   test "keeps the group hooks off the track", %{wrapper: wrapper} do
@@ -191,7 +193,7 @@ defmodule FlintUI.Styled.ProgressGroupTest do
     document = render(wrapper, :basic, defaults(show_status: true))
 
     assert LazyHTML.text(part(document, "status")) |> String.trim() == "54%"
-    assert part_attr(document, "status", "style") == ["inline-size: 53.90625%"]
+    assert TestDOM.style_var(document, ~s([data-part="status"]), "inline-size") == "53.90625%"
   end
 
   test "forwards a custom status slot", %{wrapper: wrapper} do
@@ -199,7 +201,7 @@ defmodule FlintUI.Styled.ProgressGroupTest do
 
     assert LazyHTML.text(part(document, "status")) |> String.trim() == "69 GB of 100 GB used"
     assert part_attr(document, "status", "aria-hidden") == []
-    assert part_attr(document, "status", "style") == ["inline-size: 60%"]
+    assert TestDOM.style_var(document, ~s([data-part="status"]), "inline-size") == "60%"
   end
 
   test "renders an inner block as the legend label", %{wrapper: wrapper} do
