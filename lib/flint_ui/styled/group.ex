@@ -42,11 +42,11 @@ defmodule FlintUI.Styled.Group do
         ),
         Prop.new(
           name: :surface,
-          values: ["none", "solid", "soft", "strong", "ghost"],
+          values: ["none", "solid", "soft", "strong", "transparent"],
           default: "none",
           resolved: ["none"],
           doc:
-            "Set a surface to wrap the group in a padded, bordered shell; `none` (the default) leaves it bare. `solid` is the base surface, `soft` and `strong` step up the neutral ladder, and `ghost` keeps the frame without a fill. The shell composes with `attached`."
+            "Set a surface to wrap the group in a padded, bordered shell; `none` (the default) leaves it bare. `solid` is the base surface, `soft` and `strong` step up the neutral ladder, and `transparent` keeps the frame without a fill. The shell composes with `attached`."
         ),
         Prop.new(
           name: :size,

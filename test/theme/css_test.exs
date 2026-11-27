@@ -443,7 +443,9 @@ defmodule FlintUI.Theme.CSSTest do
     assert css =~ ~s([data-element="group"][data-surface="solid"])
     assert css =~ ~s([data-element="group"][data-surface="soft"])
     assert css =~ ~s([data-element="group"][data-surface="strong"])
-    assert css =~ ~s([data-element="group"][data-surface="ghost"])
+    assert css =~ ~s([data-element="group"][data-surface="transparent"])
+    assert css =~ ~s([data-element="accordion"][data-surface="transparent"])
+    assert css =~ ~s|[data-element="accordion"]:not([data-shadow])|
     assert css =~ "--fl-color-primary:"
     assert css =~ ~s|[data-control][data-variant="solid"]:not([data-state="on"])|
 

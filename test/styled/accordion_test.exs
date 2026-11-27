@@ -20,6 +20,7 @@ defmodule FlintUI.Styled.AccordionTest do
           id="faq"
           variant="contained"
           surface="soft"
+          shadow={false}
           indicator_position="left"
           transition={false}
           duration={350}
@@ -44,6 +45,7 @@ defmodule FlintUI.Styled.AccordionTest do
     assert attr(document, :accordion, "data-accordion") == [""]
     assert attr(document, :accordion, "data-variant") == ["simple"]
     assert attr(document, :accordion, "data-surface") == ["solid"]
+    assert attr(document, :accordion, "data-shadow") == [""]
     assert attr(document, :accordion, "data-indicator-position") == ["right"]
     assert attr(document, :accordion, "data-transition") == [""]
     assert attr(document, :accordion, "style") == ["--fl-accordion-duration: 200ms"]
@@ -54,6 +56,7 @@ defmodule FlintUI.Styled.AccordionTest do
 
     assert attr(document, :accordion, "data-variant") == ["contained"]
     assert attr(document, :accordion, "data-surface") == ["soft"]
+    assert attr(document, :accordion, "data-shadow") == []
     assert attr(document, :accordion, "data-indicator-position") == ["left"]
     assert attr(document, :accordion, "data-transition") == []
     assert attr(document, :accordion, "class") == ["extra"]

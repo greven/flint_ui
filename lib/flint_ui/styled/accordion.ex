@@ -24,10 +24,17 @@ defmodule FlintUI.Styled.Accordion do
         ),
         Prop.new(
           name: :surface,
-          values: ["solid", "soft", "strong", "ghost"],
+          values: ["solid", "soft", "strong", "transparent"],
           default: "solid",
           doc:
-            "The neutral surface and edge treatment. `contained` and `separated` paint the surface and outline; `simple` uses the same steps for the divider strength. `ghost` removes the simple divider and the card surface."
+            "The neutral surface and edge treatment. `contained` and `separated` paint the surface and outline; `simple` uses the same steps for the divider strength. `transparent` clears the fill only; the shadow and the simple variant's dividers stay. Pair it with `shadow={false}` for a bare contained accordion, or set `--fl-accordion-border: transparent` to drop the simple dividers."
+        ),
+        Prop.new(
+          name: :shadow,
+          values: [true, false],
+          default: true,
+          doc:
+            "Whether `contained` and `separated` paint the drop shadow. `transparent` only clears the fill, so set this to false for a fully bare accordion."
         ),
         Prop.new(
           name: :indicator_position,
@@ -67,7 +74,7 @@ defmodule FlintUI.Styled.Accordion do
           name: "--fl-accordion-shadow",
           default: "var(--fl-shadow-base)",
           doc:
-            "The elevation for `contained` and `separated`; set it to `0 0 #0000` to remove the shadow."
+            "The elevation for `contained` and `separated`; `shadow` toggles it. Set it to `0 0 #0000` to remove the shadow directly."
         ),
         Var.new(
           name: "--fl-accordion-gap",

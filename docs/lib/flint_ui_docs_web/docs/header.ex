@@ -4,6 +4,7 @@ defmodule FlintUIDocsWeb.Docs.Header do
   use FlintUIDocsWeb.Docs.Page, component: :header
 
   alias FlintUIDocsWeb.Components
+  alias FlintUIDocsWeb.Docs.Snippet
 
   @impl true
   def base_docs, do: :all
@@ -16,6 +17,16 @@ defmodule FlintUIDocsWeb.Docs.Header do
         section: :usage,
         id: :basic,
         title: "Usage"
+      },
+      %{
+        tab: :styled,
+        section: :usage,
+        id: :surface,
+        title: "Surface",
+        controls: [
+          %{key: :surface, type: :select, default: "solid", label: "Surface"},
+          %{key: :blur, type: :boolean, default: false, label: "Blur"}
+        ]
       }
     ]
   end
@@ -55,6 +66,60 @@ defmodule FlintUIDocsWeb.Docs.Header do
     """
   end
 
+  def render_section(%{section: :usage, id: :surface} = assigns) do
+    ~H"""
+    <.prose content={
+      ~s|A header paints a neutral surface. `solid` is the page surface, `soft` and `strong` step up the tint, and `transparent` drops the fill while keeping the bottom border. Set `--fl-header-border: transparent` to remove the border as well.|
+    } />
+    <.prose content={
+      ~s|Add `blur` to frost the selected surface: the fill becomes translucent and content scrolling behind the sticky bar softens. `surface="solid" blur` is the common glass header, while `surface="transparent" blur` is a clear overlay. When backdrop blur is unavailable or the user prefers reduced transparency, the header falls back to the opaque surface. The opened mobile panel stays on the raised surface so its navigation remains readable. Scroll the preview to see the effect.|
+    } />
+
+    <.preview :let={props} {assigns} code={&surface_code/1} canvas_class="h-80" flush>
+      <div class="fl-h-full fl-overflow-y-auto">
+        <Components.header
+          id={"#{@preview_id}-surface-header"}
+          surface={props.surface}
+          blur={props.blur}
+          collapse="never"
+        >
+          <:brand>
+            <.link navigate="/" class="fl-cluster fl-items-center fl-gap-sm">
+              <Components.icon name="lucide-box" class="text-toned" /> Box Inc.
+            </.link>
+          </:brand>
+
+          <:nav>
+            <Components.navbar label="Primary" size="sm">
+              <Components.navbar_item navigate="/">Home</Components.navbar_item>
+              <Components.navbar_item navigate="/pricing">Pricing</Components.navbar_item>
+              <Components.navbar_item navigate="/docs">Docs</Components.navbar_item>
+            </Components.navbar>
+          </:nav>
+
+          <:actions>
+            <Components.button variant="ghost" size="sm">Sign in</Components.button>
+            <Components.button size="sm">Get started</Components.button>
+          </:actions>
+        </Components.header>
+
+        <div
+          class="h-96 fl-stack fl-gap-md fl-p-lg"
+          style="background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--fl-color-primary) 16%, transparent) 0 18px, transparent 18px 36px), repeating-linear-gradient(45deg, color-mix(in oklab, var(--fl-color-info) 12%, transparent) 0 18px, transparent 18px 36px)"
+        >
+          <p class="fl-m-0 fl-text-lg fl-font-semibold">Scroll behind the header</p>
+          <p class="fl-m-0 fl-text-sm fl-text-toned">
+            The selected surface frosts the content as it passes under the sticky bar.
+          </p>
+          <p class="fl-m-0 fl-text-sm fl-text-muted">
+            Use the controls to compare the neutral steps, transparency, and blur.
+          </p>
+        </div>
+      </div>
+    </.preview>
+    """
+  end
+
   @impl true
   def parts_demo(assigns) do
     ~H"""
@@ -89,28 +154,40 @@ defmodule FlintUIDocsWeb.Docs.Header do
   end
 
   defp usage_code do
+    Snippet.tag(".header", [], header_body_code())
+  end
+
+  defp surface_code(props) do
+    Snippet.tag(
+      ".header",
+      [
+        Snippet.attr("surface", props.surface, "solid"),
+        Snippet.flag("blur", props.blur)
+      ],
+      header_body_code()
+    )
+  end
+
+  defp header_body_code do
     """
-    <.header>
-      <:brand>
-        <.link navigate="/" class="fl-cluster fl-items-center fl-gap-sm">
-          <.icon name="lucide-box" class="text-toned" /> Box Inc.
-          Box Inc.
-        </.link>
-      </:brand>
+    <:brand>
+      <.link navigate="/" class="fl-cluster fl-items-center fl-gap-sm">
+        <.icon name="lucide-box" class="text-toned" /> Box Inc.
+      </.link>
+    </:brand>
 
-      <:nav>
-        <.navbar label="Primary">
-          <.navbar_item navigate="/">Home</.navbar_item>
-          <.navbar_item navigate="/pricing">Pricing</.navbar_item>
-          <.navbar_item navigate="/docs">Docs</.navbar_item>
-        </.navbar>
-      </:nav>
+    <:nav>
+      <.navbar label="Primary">
+        <.navbar_item navigate="/">Home</.navbar_item>
+        <.navbar_item navigate="/pricing">Pricing</.navbar_item>
+        <.navbar_item navigate="/docs">Docs</.navbar_item>
+      </.navbar>
+    </:nav>
 
-      <:actions>
-        <.button variant="ghost">Sign in</.button>
-        <.button>Get started</.button>
-      </:actions>
-    </.header>
+    <:actions>
+      <.button variant="ghost">Sign in</.button>
+      <.button>Get started</.button>
+    </:actions>
     """
     |> String.trim()
   end

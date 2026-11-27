@@ -83,7 +83,7 @@ defmodule FlintUIDocsWeb.Docs.Group do
   def render_section(%{section: :usage, id: :surface} = assigns) do
     ~H"""
     <.prose content="Set `surface` to wrap the group in a padded, bordered shell. The default
-      `none` leaves the group bare, `soft` and `strong` step up the neutral ladder, and `ghost`
+      `none` leaves the group bare, `soft` and `strong` step up the neutral ladder, and `transparent`
       keeps the frame without a fill." />
     <.prose content="The shell composes with `attached`, so a joined group can also sit inside a
       frame." />

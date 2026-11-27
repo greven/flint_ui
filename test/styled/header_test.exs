@@ -20,6 +20,8 @@ defmodule FlintUI.Styled.HeaderTest do
           id="site-header"
           open
           sticky={false}
+          surface="strong"
+          blur
           nav_position="start"
           collapse="always"
           container
@@ -53,6 +55,8 @@ defmodule FlintUI.Styled.HeaderTest do
 
     assert attr(document, :header, "data-header") == [""]
     assert attr(document, :header, "data-sticky") == [""]
+    assert attr(document, :header, "data-surface") == ["solid"]
+    assert attr(document, :header, "data-blur") == []
     assert attr(document, :header, "data-nav-position") == ["center"]
     assert attr(document, :header, "data-collapse") == ["lg"]
     assert attr(document, :header, "data-container") == []
@@ -74,6 +78,8 @@ defmodule FlintUI.Styled.HeaderTest do
     document = render(wrapper, :props)
 
     assert attr(document, :header, "data-sticky") == []
+    assert attr(document, :header, "data-surface") == ["strong"]
+    assert attr(document, :header, "data-blur") == [""]
     assert attr(document, :header, "data-nav-position") == ["start"]
     assert attr(document, :header, "data-collapse") == ["always"]
     assert attr(document, :header, "data-container") == [""]
@@ -116,5 +122,15 @@ defmodule FlintUI.Styled.HeaderTest do
       max = rem - 0.001
       assert css =~ "@media (max-width: #{max}rem)"
     end
+  end
+
+  test "blur uses a translucent fill with opaque fallbacks" do
+    css = File.read!(FlintUI.Generator.part_path("styled/header.css"))
+
+    assert css =~ "color-mix(in oklab, var(--fl-header-surface) 85%, transparent)"
+    assert css =~ "-webkit-backdrop-filter: blur(8px)"
+    assert css =~ "backdrop-filter: blur(8px)"
+    assert css =~ "@supports not"
+    assert css =~ "prefers-reduced-transparency: reduce"
   end
 end

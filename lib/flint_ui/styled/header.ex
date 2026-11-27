@@ -21,6 +21,20 @@ defmodule FlintUI.Styled.Header do
             "Whether the header sticks to the top of the scroll container. Set the top offset with `--fl-header-offset` when a banner sits above it."
         ),
         Prop.new(
+          name: :surface,
+          values: ~w(solid soft strong transparent),
+          default: "solid",
+          doc:
+            "The header's background surface. `solid` is the page surface, `soft` and `strong` step up the neutral tint, and `transparent` drops the fill while keeping the bottom border. Set `--fl-header-border: transparent` to remove the border too."
+        ),
+        Prop.new(
+          name: :blur,
+          values: [true, false],
+          default: false,
+          doc:
+            "Frosts the selected surface: the fill turns translucent and a backdrop blur softens the content scrolling behind it. It is most useful on the default sticky header. When backdrop blur is unavailable or the user prefers reduced transparency, the header falls back to the opaque surface."
+        ),
+        Prop.new(
           name: :nav_position,
           values: ~w(start center end),
           default: "center",
@@ -55,7 +69,8 @@ defmodule FlintUI.Styled.Header do
         Var.new(
           name: "--fl-header-surface",
           default: "var(--fl-color-surface)",
-          doc: "The header's background surface. It also fills the mobile panel."
+          doc:
+            "The header's base background surface; `surface` selects it. `blur` paints it as a translucent mix so the page shows through."
         ),
         Var.new(
           name: "--fl-header-border",

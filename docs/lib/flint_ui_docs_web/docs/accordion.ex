@@ -20,6 +20,7 @@ defmodule FlintUIDocsWeb.Docs.Accordion do
         controls: [
           %{key: :variant, type: :select, default: "simple", label: "Variant"},
           %{key: :surface, type: :select, default: "solid", label: "Surface"},
+          %{key: :shadow, type: :boolean, default: true, label: "Shadow"},
           %{key: :multiple, type: :boolean, default: false, label: "Multiple"}
         ]
       }
@@ -35,6 +36,7 @@ defmodule FlintUIDocsWeb.Docs.Accordion do
           id={"#{@preview_id}-accordion"}
           variant={props.variant}
           surface={props.surface}
+          shadow={props.shadow}
           multiple={props.multiple}
           class="fl-w-full"
         >
@@ -77,7 +79,8 @@ defmodule FlintUIDocsWeb.Docs.Accordion do
       [
         Snippet.attr("id", "faq"),
         Snippet.attr("variant", props.variant, "simple"),
-        Snippet.attr("surface", props.surface, "solid")
+        Snippet.attr("surface", props.surface, "solid"),
+        Snippet.attr("shadow", props.shadow, true)
       ],
       body_code()
     )

@@ -173,7 +173,7 @@
 
     /* Surface strength. Only the shell paints a surface; a bare group leaves
      * the input unused. `soft` and `strong` step up the neutral ladder, and
-     * `ghost` keeps the frame while removing its fill. */
+     * `transparent` keeps the frame while removing its fill. */
     [data-element="group"][data-surface="solid"] {
         --fl-group-surface: var(--fl-color-surface);
     }
@@ -186,7 +186,7 @@
         --fl-group-surface: var(--fl-color-surface-strong);
     }
 
-    [data-element="group"][data-surface="ghost"] {
+    [data-element="group"][data-surface="transparent"] {
         --fl-group-surface: transparent;
     }
 }

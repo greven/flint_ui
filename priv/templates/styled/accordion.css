@@ -60,17 +60,18 @@
         --fl-accordion-surface: var(--fl-color-surface-strong);
     }
 
-    [data-element="accordion"][data-surface="ghost"] {
+    [data-element="accordion"][data-surface="transparent"] {
         --fl-accordion-surface: transparent;
+    }
+
+    /* The shadow is independent of the fill, so a transparent surface keeps
+     * it until `shadow` is false. */
+    [data-element="accordion"]:not([data-shadow])[data-accordion] {
         --fl-accordion-shadow: 0 0 #0000;
     }
 
     [data-element="accordion"][data-variant="simple"][data-surface="strong"] {
         --fl-accordion-border: var(--fl-color-border-strong);
-    }
-
-    [data-element="accordion"][data-variant="simple"][data-surface="ghost"] {
-        --fl-accordion-border: transparent;
     }
 
     [data-element="accordion"]:is([data-variant="contained"], [data-variant="separated"]):not([data-disabled])

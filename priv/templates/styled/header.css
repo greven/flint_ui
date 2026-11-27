@@ -3,7 +3,8 @@
      * and actions out in one row, and the secondary row sits below it. Public
      * inputs: `--fl-header-surface`, `--fl-header-border`,
      * `--fl-header-padding-inline`, `--fl-header-container-size`, and
-     * `--fl-header-offset`. The collapse ladder mirrors
+     * `--fl-header-offset`. `surface` selects the fill ladder and `blur`
+     * frosts it. The collapse ladder mirrors
      * `FlintUI.Utilities.breakpoints/0`; media queries cannot read custom
      * properties, so the widths are literal. */
     [data-element="header"] {
@@ -21,6 +22,54 @@
         border-block-end: 1px solid var(--fl-header-border);
         color: var(--fl-color-text);
         font-family: var(--fl-font-sans);
+    }
+
+    /* Surface is the neutral fill ladder. `transparent` clears the fill only;
+     * the hairline stays, so a hero overlay can keep its edge or set
+     * `--fl-header-border: transparent` to remove it. */
+    [data-element="header"][data-surface="soft"] {
+        --fl-header-surface: var(--fl-color-surface-subtle);
+        --fl-header-border: var(--fl-color-border-subtle);
+    }
+
+    [data-element="header"][data-surface="strong"] {
+        --fl-header-surface: var(--fl-color-surface-strong);
+        --fl-header-border: var(--fl-color-border-strong);
+    }
+
+    [data-element="header"][data-surface="transparent"] {
+        --fl-header-surface: transparent;
+    }
+
+    /* `blur` frosts the selected surface. The 85% fill keeps the text contrast
+     * near the opaque surface while the page shows through, and the backdrop
+     * filter softens the content scrolling behind the sticky bar. */
+    [data-element="header"][data-blur] {
+        background-color: color-mix(in oklab, var(--fl-header-surface) 85%, transparent);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+
+    /* Without the filter, paint the selected surface opaquely so the header
+     * stays readable. */
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        [data-element="header"][data-blur] {
+            background-color: var(--fl-header-surface);
+        }
+    }
+
+    /* A reduced-transparency preference wins over the glass effect; a
+     * transparent surface becomes the opaque page surface. */
+    @media (prefers-reduced-transparency: reduce) {
+        [data-element="header"][data-blur] {
+            background-color: var(--fl-header-surface);
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+
+        [data-element="header"][data-blur][data-surface="transparent"] {
+            background-color: var(--fl-color-surface);
+        }
     }
 
     [data-element="header"]:not([data-sticky]) {
@@ -136,6 +185,9 @@
         display: inline-flex;
     }
 
+    /* The opened panel is an overlay, so it keeps an opaque raised surface
+     * even when the bar is transparent or frosted; navigation stays readable
+     * over the page content. */
     [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="nav"],
     [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="mobile"] {
         position: absolute;
@@ -149,7 +201,7 @@
         max-block-size: calc(100dvh - 4rem);
         overflow-y: auto;
         padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-        background: var(--fl-header-surface);
+        background: var(--fl-color-surface-raised);
         border-block-end: 1px solid var(--fl-header-border);
     }
 
@@ -204,7 +256,7 @@
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-header-surface);
+            background: var(--fl-color-surface-raised);
             border-block-end: 1px solid var(--fl-header-border);
         }
 
@@ -264,7 +316,7 @@
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-header-surface);
+            background: var(--fl-color-surface-raised);
             border-block-end: 1px solid var(--fl-header-border);
         }
 
@@ -331,7 +383,7 @@
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-header-surface);
+            background: var(--fl-color-surface-raised);
             border-block-end: 1px solid var(--fl-header-border);
         }
 
@@ -393,7 +445,7 @@
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-header-surface);
+            background: var(--fl-color-surface-raised);
             border-block-end: 1px solid var(--fl-header-border);
         }
 
@@ -456,7 +508,7 @@
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-header-surface);
+            background: var(--fl-color-surface-raised);
             border-block-end: 1px solid var(--fl-header-border);
         }
 
