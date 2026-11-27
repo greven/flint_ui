@@ -42,6 +42,13 @@ defmodule FlintUI.Styled.Header do
             "Where the navigation sits in the bar. `center` is the three-section layout: brand at the start, navigation in the middle, actions at the end. `start` keeps the navigation next to the brand, and `end` keeps it next to the actions."
         ),
         Prop.new(
+          name: :toggle_position,
+          values: ~w(start end),
+          default: "end",
+          doc:
+            "Which side of the bar the mobile toggle sits on. `end` places it after the actions and `start` before the brand. The panel always flows under the bar."
+        ),
+        Prop.new(
           name: :collapse,
           values: ~w(always sm md lg xl 2xl never),
           default: "lg",
@@ -62,7 +69,14 @@ defmodule FlintUI.Styled.Header do
           type: :string,
           default: "lucide-menu",
           doc:
-            "The icon class rendered inside the mobile toggle. Set it to a class from your icon set; the default is `lucide-menu`."
+            "The icon class rendered inside the mobile toggle while the panel is closed. Set it to a class from your icon set; the default is `lucide-menu`. An empty value falls back to the headless icon."
+        ),
+        Attr.new(
+          name: :toggle_icon_open,
+          type: :string,
+          default: "lucide-x",
+          doc:
+            "The icon class rendered inside the mobile toggle while the panel is open. The default is `lucide-x`. Set it to an empty string to keep the closed icon in both states; it has no effect when `toggle_icon` is empty."
         )
       ],
       vars: [

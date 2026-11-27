@@ -28,18 +28,30 @@ defmodule FlintUI.Base.Header do
 
   ## Mobile navigation
 
-  Below the styled layer's breakpoint, the header shows a toggle and moves the
-  navigation into a panel under the bar. The toggle is a native button with
-  `aria-expanded` and `aria-controls`, and the panel is the `:nav` region.
+  Below the styled layer's breakpoint, the header shows a toggle and expands the
+  navigation into a full-width panel under the bar. The panel is part of the
+  header flow rather than a detached overlay, so it pushes the page content down
+  instead of being clipped by a scrolling ancestor. The toggle is a native
+  button with `aria-expanded` and `aria-controls`, and the panel is the `:nav`
+  region.
+
+  `toggle_position` places the toggle before the brand (`start`) or after the
+  actions (`end`, the default). The panel always renders under the bar. When the
+  toggle sits after the inline navigation, opening the panel moves focus into it
+  so the keyboard path follows the reading order.
 
   Pass a `:mobile` slot to replace the panel content on small screens. The
   `:nav` region then stays inline on larger screens while the `:mobile` slot
   fills the panel. This is the place for a vertical `FlintUI.navlist`, repeated
-  actions, or a custom menu.
+  actions, or a custom menu, and it keeps the panel after the toggle in the DOM.
 
   Set `open` to render the panel open server-side. The toggle, `Escape`,
   outside clicks, following a link, live navigation, and crossing back above
   the breakpoint all close it.
+
+  The default toggle icon swaps to a close icon while the panel is open. Add
+  `data-toggle-icon="closed"` and `data-toggle-icon="open"` to custom `:toggle`
+  content to opt into the same swap.
 
   ## Accessibility
 
@@ -52,15 +64,18 @@ defmodule FlintUI.Base.Header do
   is decorative. The navigation landmark itself comes from the `Navbar` (or
   another labelled `nav`) inside `:nav`.
 
-  Keep the visual order the same as the reading order: brand, toggle,
-  navigation, actions, then the secondary row.
+  Keep the visual order the same as the reading order: brand, navigation,
+  actions, and the toggle at the chosen edge, then the panel and the secondary
+  row.
 
   ## Keyboard
 
-  - `Tab` / `Shift+Tab` - moves through the brand, toggle, navigation, and
-    actions.
+  - `Tab` / `Shift+Tab` - moves through the brand, navigation, actions, and the
+    toggle in DOM order.
   - `Enter` / `Space` - toggles the mobile navigation panel when the toggle is
-    visible.
+    visible. Opening moves focus to the first focusable item in the panel when
+    the panel precedes the toggle (the default `end` position with the inline
+    `:nav`).
   - `Escape` - closes the mobile panel and returns focus to the toggle.
 
   The navigation links keep their own keyboard behavior from the navigation
@@ -92,7 +107,7 @@ defmodule FlintUI.Base.Header do
           name: "phx-hook",
           value: "FlintUI.Header",
           description:
-            "The header hook that toggles the mobile panel, closes it on dismiss, and syncs ARIA."
+            "The header hook that toggles the mobile panel, swaps the toggle icon, closes it on dismiss, and syncs ARIA."
         },
         %Meta.PartAttr{
           name: "[data-element]",
@@ -113,13 +128,19 @@ defmodule FlintUI.Base.Header do
           name: "[data-mobile]",
           value: "boolean",
           description: "Present when a custom `:mobile` panel is supplied."
+        },
+        %Meta.PartAttr{
+          name: "[data-toggle-position]",
+          value: ~s("start" | "end"),
+          description: "Which side of the bar the mobile toggle sits on."
         }
       ],
       bar: [
         %Meta.PartAttr{
           name: "[data-part]",
           value: "bar",
-          description: "The row that holds the brand, toggle, navigation, and actions."
+          description:
+            "The grid row that holds the brand, toggle, navigation, and actions. The mobile panel flows as an extra row under it."
         }
       ],
       brand: [
@@ -127,33 +148,6 @@ defmodule FlintUI.Base.Header do
           name: "[data-part]",
           value: "brand",
           description: "The start region, usually a logo link with the product name."
-        }
-      ],
-      toggle: [
-        %Meta.PartAttr{
-          name: "type",
-          value: "button",
-          description: "Prevents the toggle from submitting an enclosing form."
-        },
-        %Meta.PartAttr{
-          name: "[data-part]",
-          value: "toggle",
-          description: "Identifies the mobile navigation toggle."
-        },
-        %Meta.PartAttr{
-          name: "aria-controls",
-          value: "string",
-          description: "The id of the navigation or custom mobile panel."
-        },
-        %Meta.PartAttr{
-          name: "aria-expanded",
-          value: "true | false",
-          description: "Whether the mobile panel is open."
-        },
-        %Meta.PartAttr{
-          name: "aria-label",
-          value: "string",
-          description: "The accessible name of the toggle; the icon is decorative."
         }
       ],
       nav: [
@@ -173,6 +167,11 @@ defmodule FlintUI.Base.Header do
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description: "The mobile panel state."
+        },
+        %Meta.PartAttr{
+          name: "tabindex",
+          value: "-1",
+          description: "Lets the panel receive focus when it has no focusable content."
         }
       ],
       actions: [
@@ -180,6 +179,39 @@ defmodule FlintUI.Base.Header do
           name: "[data-part]",
           value: "actions",
           description: "The end region for account controls, theme toggles, and primary actions."
+        }
+      ],
+      toggle: [
+        %Meta.PartAttr{
+          name: "type",
+          value: "button",
+          description: "Prevents the toggle from submitting an enclosing form."
+        },
+        %Meta.PartAttr{
+          name: "[data-part]",
+          value: "toggle",
+          description: "Identifies the mobile navigation toggle."
+        },
+        %Meta.PartAttr{
+          name: "[data-toggle-icon]",
+          value: ~s("closed" | "open"),
+          description:
+            "Marks the state-specific icons inside the toggle; the hook toggles their `hidden` attribute."
+        },
+        %Meta.PartAttr{
+          name: "aria-controls",
+          value: "string",
+          description: "The id of the navigation or custom mobile panel."
+        },
+        %Meta.PartAttr{
+          name: "aria-expanded",
+          value: "true | false",
+          description: "Whether the mobile panel is open."
+        },
+        %Meta.PartAttr{
+          name: "aria-label",
+          value: "string",
+          description: "The accessible name of the toggle; the icon is decorative."
         }
       ],
       mobile: [
@@ -197,6 +229,11 @@ defmodule FlintUI.Base.Header do
           name: "[data-state]",
           value: ~s("open" | "closed"),
           description: "The mobile panel state."
+        },
+        %Meta.PartAttr{
+          name: "tabindex",
+          value: "-1",
+          description: "Lets the panel receive focus when it has no focusable content."
         }
       ],
       secondary: [
@@ -214,11 +251,12 @@ defmodule FlintUI.Base.Header do
     [
       %Meta.Keyboard{
         keys: "Tab / Shift+Tab",
-        description: "Moves through the brand, toggle, navigation, and actions."
+        description: "Moves through the brand, navigation, actions, and the toggle in DOM order."
       },
       %Meta.Keyboard{
         keys: "Enter / Space",
-        description: "Toggles the mobile navigation panel when the toggle is visible."
+        description:
+          "Toggles the mobile panel when the toggle is visible. Opening moves focus into the panel when it precedes the toggle."
       },
       %Meta.Keyboard{
         keys: "Escape",
@@ -258,7 +296,8 @@ defmodule FlintUI.Base.Header do
         "data-element" => "header",
         "data-part" => "root",
         "data-state" => state,
-        "data-mobile" => mobile?
+        "data-mobile" => mobile?,
+        "data-toggle-position" => assigns.toggle_position
       },
       bar: %{"data-part" => "bar"},
       brand: %{"data-part" => "brand"},
@@ -272,13 +311,15 @@ defmodule FlintUI.Base.Header do
       nav: %{
         "id" => "#{id}-nav",
         "data-part" => "nav",
-        "data-state" => state
+        "data-state" => state,
+        "tabindex" => "-1"
       },
       actions: %{"data-part" => "actions"},
       mobile: %{
         "id" => "#{id}-mobile",
         "data-part" => "mobile",
-        "data-state" => state
+        "data-state" => state,
+        "tabindex" => "-1"
       },
       secondary: %{"data-part" => "secondary"}
     }
@@ -307,6 +348,12 @@ defmodule FlintUI.Base.Header do
     doc:
       "The accessible name of the mobile toggle. The toggle icon is decorative, so keep this meaningful."
 
+  attr :toggle_position, :string,
+    values: ~w(start end),
+    default: "end",
+    doc:
+      "Which side of the bar the mobile toggle sits on. `end` places it after the actions, `start` before the brand. The panel always flows under the bar."
+
   attr :rest, :global, doc: "Additional HTML attributes."
 
   slot :brand,
@@ -329,38 +376,76 @@ defmodule FlintUI.Base.Header do
   slot :toggle,
     validate_attrs: false,
     doc:
-      "Custom content for the mobile toggle. The default is a menu icon; the button's accessible name still comes from `toggle_label`."
+      "Custom content for the mobile toggle. The default is a menu icon that swaps to a close icon; the button's accessible name still comes from `toggle_label`. Add `data-toggle-icon=\"closed\"` and `data-toggle-icon=\"open\"` to opt into the swap."
 
   @impl true
   def render(assigns) do
     ~H"""
     <.dynamic_tag tag_name={@as} {@rest} {@flint_parts[:root]}>
       <div {@flint_parts[:bar]}>
+        <.toggle_button
+          :if={@toggle_position == "start"}
+          show={@nav != [] or @mobile != []}
+          attrs={@flint_parts[:toggle]}
+          open={@open}
+          content={@toggle}
+        />
         <div {@flint_parts[:brand]}>{render_slot(@brand)}</div>
-        <button :if={@nav != [] or @mobile != []} {@flint_parts[:toggle]}>
-          {render_slot(@toggle)}
-          <svg
-            :if={@toggle == []}
-            data-default
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M4 7h16M4 12h16M4 17h16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
         <div {@flint_parts[:nav]}>{render_slot(@nav)}</div>
         <div {@flint_parts[:actions]}>{render_slot(@actions)}</div>
+        <.toggle_button
+          :if={@toggle_position == "end"}
+          show={@nav != [] or @mobile != []}
+          attrs={@flint_parts[:toggle]}
+          open={@open}
+          content={@toggle}
+        />
         <div :if={@mobile != []} {@flint_parts[:mobile]}>{render_slot(@mobile)}</div>
       </div>
       <div :if={@secondary != []} {@flint_parts[:secondary]}>{render_slot(@secondary)}</div>
     </.dynamic_tag>
+    """
+  end
+
+  defp toggle_button(assigns) do
+    ~H"""
+    <button :if={@show} {@attrs}>
+      {render_slot(@content)}
+      <svg
+        :if={@content == []}
+        data-default
+        data-toggle-icon="closed"
+        hidden={@open}
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M4 7h16M4 12h16M4 17h16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-width="2"
+        />
+      </svg>
+      <svg
+        :if={@content == []}
+        data-default
+        data-toggle-icon="open"
+        hidden={!@open}
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M6 18 18 6M6 6l12 12"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-width="2"
+        />
+      </svg>
+    </button>
     """
   end
 end

@@ -23,10 +23,12 @@ defmodule FlintUI.Styled.HeaderTest do
           surface="strong"
           blur
           nav_position="start"
+          toggle_position="start"
           collapse="always"
           container
           toggle_label="Open menu"
           toggle_icon="lucide-x"
+          toggle_icon_open="lucide-check"
           class="custom"
           data-testid="header"
         >
@@ -45,6 +47,14 @@ defmodule FlintUI.Styled.HeaderTest do
         </.header>
         """
       end
+
+      def icon_open_empty(assigns) do
+        ~H"""
+        <.header toggle_icon_open="">
+          <:nav><a href="/">Home</a></:nav>
+        </.header>
+        """
+      end
       ''')
 
     %{wrapper: wrapper}
@@ -58,20 +68,26 @@ defmodule FlintUI.Styled.HeaderTest do
     assert attr(document, :header, "data-surface") == ["solid"]
     assert attr(document, :header, "data-blur") == []
     assert attr(document, :header, "data-nav-position") == ["center"]
+    assert attr(document, :header, "data-toggle-position") == ["end"]
     assert attr(document, :header, "data-collapse") == ["lg"]
     assert attr(document, :header, "data-container") == []
     assert attr(document, :header, "data-state") == ["closed"]
     assert attr(document, :header, "data-mobile") == []
   end
 
-  test "renders the icon in the mobile toggle", %{wrapper: wrapper} do
+  test "renders the toggle icon and swaps it while open", %{wrapper: wrapper} do
     document = render(wrapper, :defaults)
     toggle = part(document, "toggle")
 
-    icon = LazyHTML.query(toggle, ~s([data-element="icon"]))
+    closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
+    open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
 
-    assert LazyHTML.attribute(icon, "class") == ["lucide-menu"]
-    assert LazyHTML.attribute(icon, "aria-hidden") == ["true"]
+    assert LazyHTML.attribute(closed, "class") == ["lucide-menu"]
+    assert LazyHTML.attribute(closed, "hidden") == []
+    assert LazyHTML.attribute(closed, "aria-hidden") == ["true"]
+
+    assert LazyHTML.attribute(open, "class") == ["lucide-x"]
+    assert LazyHTML.attribute(open, "hidden") == [""]
   end
 
   test "maps every styled prop and forwards the base attributes", %{wrapper: wrapper} do
@@ -81,6 +97,7 @@ defmodule FlintUI.Styled.HeaderTest do
     assert attr(document, :header, "data-surface") == ["strong"]
     assert attr(document, :header, "data-blur") == [""]
     assert attr(document, :header, "data-nav-position") == ["start"]
+    assert attr(document, :header, "data-toggle-position") == ["start"]
     assert attr(document, :header, "data-collapse") == ["always"]
     assert attr(document, :header, "data-container") == [""]
     assert attr(document, :header, "data-state") == ["open"]
@@ -94,8 +111,12 @@ defmodule FlintUI.Styled.HeaderTest do
     assert LazyHTML.attribute(toggle, "aria-expanded") == ["true"]
     assert LazyHTML.attribute(toggle, "aria-label") == ["Open menu"]
 
-    icon = LazyHTML.query(toggle, ~s([data-element="icon"]))
-    assert LazyHTML.attribute(icon, "class") == ["lucide-x"]
+    closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
+    open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
+    assert LazyHTML.attribute(closed, "class") == ["lucide-x"]
+    assert LazyHTML.attribute(closed, "hidden") == [""]
+    assert LazyHTML.attribute(open, "class") == ["lucide-check"]
+    assert LazyHTML.attribute(open, "hidden") == []
   end
 
   test "renders the mobile and secondary slots", %{wrapper: wrapper} do
@@ -107,11 +128,27 @@ defmodule FlintUI.Styled.HeaderTest do
              "Secondary row"
   end
 
-  test "uses the headless fallback icon when toggle_icon is empty", %{wrapper: wrapper} do
+  test "uses the headless fallback icons when toggle_icon is empty", %{wrapper: wrapper} do
     document = render(wrapper, :icon_empty)
     toggle = part(document, "toggle")
 
-    assert LazyHTML.query(toggle, "svg[data-default]") |> LazyHTML.to_html() =~ "M4 7h16"
+    closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
+    open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
+
+    assert LazyHTML.attribute(closed, "data-default") == [""]
+    assert LazyHTML.to_html(closed) =~ "M4 7h16"
+    assert LazyHTML.attribute(open, "data-default") == [""]
+    assert LazyHTML.attribute(open, "hidden") == [""]
+  end
+
+  test "keeps only the closed icon when toggle_icon_open is empty", %{wrapper: wrapper} do
+    document = render(wrapper, :icon_open_empty)
+    toggle = part(document, "toggle")
+
+    assert LazyHTML.query(toggle, ~s([data-toggle-icon="closed"])) |> LazyHTML.to_html() =~
+             "lucide-menu"
+
+    assert LazyHTML.query(toggle, ~s([data-toggle-icon="open"])) |> LazyHTML.to_html() == ""
   end
 
   test "the theme part uses the shared breakpoints" do
@@ -132,5 +169,16 @@ defmodule FlintUI.Styled.HeaderTest do
     assert css =~ "backdrop-filter: blur(8px)"
     assert css =~ "@supports not"
     assert css =~ "prefers-reduced-transparency: reduce"
+  end
+
+  test "keeps the collapsed panel in flow and styles both toggle positions" do
+    css = File.read!(FlintUI.Generator.part_path("styled/header.css"))
+
+    assert css =~ ~s([data-element="header"][data-toggle-position="start"])
+    assert css =~ ~s(grid-template-areas: "brand actions toggle")
+    assert css =~ ~s(grid-template-areas: "toggle brand actions")
+    assert css =~ "grid-template-rows: minmax(calc(3.5rem - 2 * var(--fl-spacing-sm)), auto)"
+    assert css =~ "align-content: start"
+    refute css =~ "inset-block-start: 100%"
   end
 end

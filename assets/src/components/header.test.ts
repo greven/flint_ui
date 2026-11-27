@@ -4,10 +4,39 @@ import { Header } from "./header";
 interface SetupOptions {
   state?: "open" | "closed";
   mobile?: boolean;
+  toggleLast?: boolean;
 }
 
 function setup(options: SetupOptions = {}) {
-  const { state = "closed", mobile = false } = options;
+  const { state = "closed", mobile = false, toggleLast = false } = options;
+
+  const brand = `<div data-part="brand">Acme</div>`;
+  const toggleButton = `
+        <button
+          id="toggle"
+          data-part="toggle"
+          aria-expanded="${state === "open"}"
+          aria-controls="${mobile ? "site-header-mobile" : "site-header-nav"}"
+          aria-label="Menu"
+        >
+          <span data-toggle-icon="closed" ${state === "open" ? "hidden" : ""}></span>
+          <span data-toggle-icon="open" ${state === "open" ? "" : "hidden"}></span>
+        </button>`;
+  const navMarkup = `
+        <div id="site-header-nav" data-part="nav" data-state="${state}" tabindex="-1">
+          <a id="nav-link" href="/docs">Docs</a>
+        </div>`;
+  const actions = `<div data-part="actions"></div>`;
+  const mobileMarkup = mobile
+    ? `
+        <div id="site-header-mobile" data-part="mobile" data-state="${state}" tabindex="-1">
+          <a id="mobile-link" href="/mobile">Mobile</a>
+        </div>`
+    : "";
+
+  const children = toggleLast
+    ? [brand, navMarkup, actions, mobileMarkup, toggleButton].join("")
+    : [brand, toggleButton, navMarkup, actions, mobileMarkup].join("");
 
   document.body.innerHTML = `
     <header
@@ -18,25 +47,7 @@ function setup(options: SetupOptions = {}) {
       ${mobile ? "data-mobile" : ""}
     >
       <div data-part="bar">
-        <div data-part="brand">Acme</div>
-        <button
-          id="toggle"
-          data-part="toggle"
-          aria-expanded="${state === "open"}"
-          aria-controls="${mobile ? "site-header-mobile" : "site-header-nav"}"
-          aria-label="Menu"
-        ></button>
-        <div id="site-header-nav" data-part="nav" data-state="${state}">
-          <a id="nav-link" href="/docs">Docs</a>
-        </div>
-        <div data-part="actions"></div>
-        ${
-          mobile
-            ? `<div id="site-header-mobile" data-part="mobile" data-state="${state}">
-                 <a id="mobile-link" href="/mobile">Mobile</a>
-               </div>`
-            : ""
-        }
+        ${children}
       </div>
     </header>
   `;
@@ -95,6 +106,38 @@ describe("Header hook", () => {
     expect(mobilePanel?.getAttribute("data-state")).toBe("open");
     expect(nav.getAttribute("data-state")).toBe("closed");
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("swaps the toggle icons with the panel state", () => {
+    const { toggle } = setup();
+    const closed = toggle.querySelector<HTMLElement>('[data-toggle-icon="closed"]');
+    const open = toggle.querySelector<HTMLElement>('[data-toggle-icon="open"]');
+
+    expect(closed?.hasAttribute("hidden")).toBe(false);
+    expect(open?.hasAttribute("hidden")).toBe(true);
+
+    toggle.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(closed?.hasAttribute("hidden")).toBe(true);
+    expect(open?.hasAttribute("hidden")).toBe(false);
+  });
+
+  it("moves focus into the panel when it precedes the toggle", () => {
+    const { toggle, nav } = setup({ toggleLast: true });
+    const link = nav.querySelector("a");
+
+    toggle.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(document.activeElement).toBe(link);
+  });
+
+  it("keeps focus on the toggle when the panel follows it", () => {
+    const { toggle } = setup();
+
+    toggle.focus();
+    toggle.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(document.activeElement).toBe(toggle);
   });
 
   it("closes on Escape and returns focus to the toggle", () => {

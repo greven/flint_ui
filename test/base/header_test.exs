@@ -31,6 +31,16 @@ defmodule FlintUI.Base.HeaderTest do
       """
     end
 
+    def toggle_start(assigns) do
+      ~H"""
+      <.header id="site-header" toggle_position="start">
+        <:brand>Acme</:brand>
+        <:nav><a href="/docs">Docs</a></:nav>
+        <:actions><button type="button">Sign in</button></:actions>
+      </.header>
+      """
+    end
+
     def as_div(assigns) do
       ~H"""
       <.header
@@ -64,6 +74,12 @@ defmodule FlintUI.Base.HeaderTest do
 
   defp part(document, name), do: LazyHTML.query(document, ~s([data-part="#{name}"]))
 
+  defp bar_parts(document) do
+    document
+    |> LazyHTML.query(~s([data-part="bar"] > [data-part]))
+    |> LazyHTML.attribute("data-part")
+  end
+
   test "renders a header root with the header hooks" do
     document = render(&TestComponent.plain/1)
     root = root(document)
@@ -84,6 +100,44 @@ defmodule FlintUI.Base.HeaderTest do
     assert part(document, "nav") |> LazyHTML.text() |> String.trim() == "Docs"
     assert part(document, "actions") |> LazyHTML.text() |> String.trim() == "Sign in"
     assert part(document, "secondary") |> LazyHTML.to_html() == ""
+  end
+
+  test "places the toggle after the actions by default" do
+    document = render(&TestComponent.plain/1)
+
+    assert bar_parts(document) == ["brand", "nav", "actions", "toggle"]
+  end
+
+  test "places the toggle before the brand when toggle_position is start" do
+    document = render(&TestComponent.toggle_start/1)
+
+    assert bar_parts(document) == ["toggle", "brand", "nav", "actions"]
+  end
+
+  test "renders both state icons and hides the one that does not match" do
+    document = render(&TestComponent.plain/1)
+    toggle = part(document, "toggle")
+    closed = LazyHTML.query(toggle, ~s([data-toggle-icon="closed"]))
+    open = LazyHTML.query(toggle, ~s([data-toggle-icon="open"]))
+
+    assert LazyHTML.attribute(closed, "hidden") == []
+    assert LazyHTML.attribute(open, "hidden") == [""]
+
+    open_document = render(&TestComponent.with_mobile/1)
+    open_toggle = part(open_document, "toggle")
+    open_closed = LazyHTML.query(open_toggle, ~s([data-toggle-icon="closed"]))
+    open_open = LazyHTML.query(open_toggle, ~s([data-toggle-icon="open"]))
+
+    assert LazyHTML.attribute(open_closed, "hidden") == [""]
+    assert LazyHTML.attribute(open_open, "hidden") == []
+  end
+
+  test "makes the panel programmatically focusable" do
+    document = render(&TestComponent.plain/1)
+    assert LazyHTML.attribute(part(document, "nav"), "tabindex") == ["-1"]
+
+    mobile_document = render(&TestComponent.with_mobile/1)
+    assert LazyHTML.attribute(part(mobile_document, "mobile"), "tabindex") == ["-1"]
   end
 
   test "renders a mobile toggle with ARIA wiring" do

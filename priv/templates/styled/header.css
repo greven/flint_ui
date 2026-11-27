@@ -1,12 +1,13 @@
 @layer components {
     /* Header. The root is the page bar; the bar lays the brand, toggle, nav,
-     * and actions out in one row, and the secondary row sits below it. Public
-     * inputs: `--fl-header-surface`, `--fl-header-border`,
-     * `--fl-header-padding-inline`, `--fl-header-container-size`, and
-     * `--fl-header-offset`. `surface` selects the fill ladder and `blur`
-     * frosts it. The collapse ladder mirrors
-     * `FlintUI.Utilities.breakpoints/0`; media queries cannot read custom
-     * properties, so the widths are literal. */
+     * and actions out in one grid row, and the mobile panel flows as an extra
+     * row under it. The grid uses named areas so hiding a region with CSS
+     * leaves the others in place. Public inputs: `--fl-header-surface`,
+     * `--fl-header-border`, `--fl-header-padding-inline`,
+     * `--fl-header-container-size`, and `--fl-header-offset`. `surface`
+     * selects the fill ladder and `blur` frosts it. The collapse ladder
+     * mirrors `FlintUI.Utilities.breakpoints/0`; media queries cannot read
+     * custom properties, so the widths are literal. */
     [data-element="header"] {
         --fl-header-surface: var(--fl-color-surface);
         --fl-header-border: var(--fl-color-border);
@@ -76,19 +77,26 @@
         position: static;
     }
 
+    /* The bar is one grid row. A hidden region leaves its named area empty, so
+     * the remaining regions keep their places. The first row keeps the same
+     * height while the mobile panel is open, so the bar content never shifts. */
     [data-element="header"] > [data-part="bar"] {
-        position: relative;
         box-sizing: border-box;
         display: grid;
         grid-template-columns: 1fr auto 1fr;
+        grid-template-areas: "brand nav actions";
+        grid-template-rows: minmax(calc(3.5rem - 2 * var(--fl-spacing-sm)), auto);
+        align-content: start;
         align-items: center;
-        gap: var(--fl-spacing-md);
+        column-gap: var(--fl-spacing-md);
+        row-gap: 0;
         min-block-size: 3.5rem;
         padding-block: var(--fl-spacing-sm);
         padding-inline: var(--fl-header-padding-inline);
     }
 
     [data-element="header"] > [data-part="bar"] > [data-part="brand"] {
+        grid-area: brand;
         display: flex;
         align-items: center;
         gap: var(--fl-spacing-sm);
@@ -97,6 +105,7 @@
     }
 
     [data-element="header"] > [data-part="bar"] > [data-part="nav"] {
+        grid-area: nav;
         display: flex;
         align-items: center;
         min-inline-size: 0;
@@ -104,6 +113,7 @@
     }
 
     [data-element="header"] > [data-part="bar"] > [data-part="actions"] {
+        grid-area: actions;
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -113,6 +123,11 @@
     }
 
     [data-element="header"] > [data-part="bar"] > [data-part="toggle"] {
+        /* Size a class-based icon (Lucide, Phosphor, ...) with the control
+         * scale; the headless fallback SVG is sized below. */
+        --fl-icon-size: var(--fl-control-icon-md);
+
+        grid-area: toggle;
         display: none;
         align-items: center;
         justify-content: center;
@@ -132,6 +147,11 @@
         block-size: var(--fl-control-icon-md);
     }
 
+    /* The hook toggles `hidden`; keep it authoritative over icon classes. */
+    [data-element="header"] > [data-part="bar"] > [data-part="toggle"] [data-toggle-icon][hidden] {
+        display: none;
+    }
+
     [data-element="header"] > [data-part="bar"] > [data-part="toggle"]:hover {
         background: var(--fl-color-surface-strong);
     }
@@ -147,10 +167,6 @@
 
     [data-element="header"][data-nav-position="start"] > [data-part="bar"] > [data-part="nav"] {
         justify-self: start;
-    }
-
-    [data-element="header"][data-nav-position="start"] > [data-part="bar"] > [data-part="actions"] {
-        grid-column: 3;
     }
 
     [data-element="header"][data-nav-position="end"] > [data-part="bar"] {
@@ -176,33 +192,45 @@
     }
 
     /* The collapsed layout. `always` applies it at every width; the media
-     * ladder below applies it below each named breakpoint. */
+     * ladder below applies it below each named breakpoint. The toggle sits at
+     * the named edge and the panel spills into a new implicit row. */
     [data-element="header"][data-collapse="always"] > [data-part="bar"] {
         grid-template-columns: 1fr auto auto;
+        grid-template-areas: "brand actions toggle";
     }
 
-    [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="toggle"] {
+    [data-element="header"][data-collapse="always"][data-toggle-position="start"]
+        > [data-part="bar"] {
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "toggle brand actions";
+    }
+
+    [data-element="header"][data-collapse="always"]
+        > [data-part="bar"]
+        > [data-part="toggle"] {
         display: inline-flex;
     }
 
-    /* The opened panel is an overlay, so it keeps an opaque raised surface
-     * even when the bar is transparent or frosted; navigation stays readable
-     * over the page content. */
+    /* The panel is in the header flow: it keeps the header surface (nothing
+     * scrolls behind it), spans every column, and adds its own hairline. The
+     * negative inline margin lets the hairline and padding run to the bar
+     * edges. */
     [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="nav"],
     [data-element="header"][data-collapse="always"] > [data-part="bar"] > [data-part="mobile"] {
-        position: absolute;
-        inset-block-start: 100%;
-        inset-inline: 0;
+        grid-row: auto;
+        grid-column: 1 / -1;
         display: none;
-        z-index: 20;
+        align-self: stretch;
+        justify-self: stretch;
         flex-direction: column;
         align-items: stretch;
-        gap: var(--fl-spacing-md);
+        gap: var(--fl-spacing-sm);
         max-block-size: calc(100dvh - 4rem);
         overflow-y: auto;
+        overscroll-behavior: contain;
+        margin-inline: calc(-1 * var(--fl-header-padding-inline));
         padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-        background: var(--fl-color-surface-raised);
-        border-block-end: 1px solid var(--fl-header-border);
+        border-block-start: 1px solid var(--fl-header-border);
     }
 
     [data-element="header"][data-collapse="always"][data-state="open"]:not([data-mobile])
@@ -237,42 +265,53 @@
     @media (max-width: 95.999rem) {
         [data-element="header"][data-collapse="2xl"] > [data-part="bar"] {
             grid-template-columns: 1fr auto auto;
+            grid-template-areas: "brand actions toggle";
         }
 
-        [data-element="header"][data-collapse="2xl"] > [data-part="bar"] > [data-part="toggle"] {
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="2xl"])
+            > [data-part="bar"] {
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "toggle brand actions";
+        }
+
+        [data-element="header"]:is([data-collapse="2xl"])
+            > [data-part="bar"]
+            > [data-part="toggle"] {
             display: inline-flex;
         }
 
-        [data-element="header"][data-collapse="2xl"] > [data-part="bar"] > [data-part="nav"],
-        [data-element="header"][data-collapse="2xl"] > [data-part="bar"] > [data-part="mobile"] {
-            position: absolute;
-            inset-block-start: 100%;
-            inset-inline: 0;
+        [data-element="header"]:is([data-collapse="2xl"])
+            > [data-part="bar"]
+            > :is([data-part="nav"], [data-part="mobile"]) {
+            grid-row: auto;
+            grid-column: 1 / -1;
             display: none;
-            z-index: 20;
+            align-self: stretch;
+            justify-self: stretch;
             flex-direction: column;
             align-items: stretch;
-            gap: var(--fl-spacing-md);
+            gap: var(--fl-spacing-sm);
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
+            overscroll-behavior: contain;
+            margin-inline: calc(-1 * var(--fl-header-padding-inline));
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-color-surface-raised);
-            border-block-end: 1px solid var(--fl-header-border);
+            border-block-start: 1px solid var(--fl-header-border);
         }
 
-        [data-element="header"][data-collapse="2xl"][data-state="open"]:not([data-mobile])
+        [data-element="header"]:is([data-collapse="2xl"])[data-state="open"]:not([data-mobile])
             > [data-part="bar"]
             > [data-part="nav"] {
             display: flex;
         }
 
-        [data-element="header"][data-collapse="2xl"][data-state="open"]
+        [data-element="header"]:is([data-collapse="2xl"])[data-state="open"]
             > [data-part="bar"]
             > [data-part="mobile"] {
             display: flex;
         }
 
-        [data-element="header"][data-collapse="2xl"]
+        [data-element="header"]:is([data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"])
             [data-element="navbar"]
@@ -281,7 +320,7 @@
             align-items: stretch;
         }
 
-        [data-element="header"][data-collapse="2xl"]
+        [data-element="header"]:is([data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"])
             :is([data-element="navbar_item"] > [data-part="content"], [data-element="navbar_menu"] > [data-part="trigger"]) {
@@ -294,45 +333,47 @@
         [data-element="header"][data-collapse="xl"] > [data-part="bar"],
         [data-element="header"][data-collapse="2xl"] > [data-part="bar"] {
             grid-template-columns: 1fr auto auto;
+            grid-template-areas: "brand actions toggle";
         }
 
-        [data-element="header"][data-collapse="xl"] > [data-part="bar"] > [data-part="toggle"],
-        [data-element="header"][data-collapse="2xl"] > [data-part="bar"] > [data-part="toggle"] {
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="xl"], [data-collapse="2xl"])
+            > [data-part="bar"] {
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "toggle brand actions";
+        }
+
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])
+            > [data-part="bar"]
+            > [data-part="toggle"] {
             display: inline-flex;
         }
 
-        [data-element="header"][data-collapse="xl"] > [data-part="bar"] > [data-part="nav"],
-        [data-element="header"][data-collapse="xl"] > [data-part="bar"] > [data-part="mobile"],
-        [data-element="header"][data-collapse="2xl"] > [data-part="bar"] > [data-part="nav"],
-        [data-element="header"][data-collapse="2xl"] > [data-part="bar"] > [data-part="mobile"] {
-            position: absolute;
-            inset-block-start: 100%;
-            inset-inline: 0;
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])
+            > [data-part="bar"]
+            > :is([data-part="nav"], [data-part="mobile"]) {
+            grid-row: auto;
+            grid-column: 1 / -1;
             display: none;
-            z-index: 20;
+            align-self: stretch;
+            justify-self: stretch;
             flex-direction: column;
             align-items: stretch;
-            gap: var(--fl-spacing-md);
+            gap: var(--fl-spacing-sm);
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
+            overscroll-behavior: contain;
+            margin-inline: calc(-1 * var(--fl-header-padding-inline));
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-color-surface-raised);
-            border-block-end: 1px solid var(--fl-header-border);
+            border-block-start: 1px solid var(--fl-header-border);
         }
 
-        [data-element="header"][data-collapse="xl"][data-state="open"]:not([data-mobile])
-            > [data-part="bar"]
-            > [data-part="nav"],
-        [data-element="header"][data-collapse="2xl"][data-state="open"]:not([data-mobile])
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
             > [data-part="bar"]
             > [data-part="nav"] {
             display: flex;
         }
 
-        [data-element="header"][data-collapse="xl"][data-state="open"]
-            > [data-part="bar"]
-            > [data-part="mobile"],
-        [data-element="header"][data-collapse="2xl"][data-state="open"]
+        [data-element="header"]:is([data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]
             > [data-part="bar"]
             > [data-part="mobile"] {
             display: flex;
@@ -361,6 +402,13 @@
         [data-element="header"][data-collapse="xl"] > [data-part="bar"],
         [data-element="header"][data-collapse="2xl"] > [data-part="bar"] {
             grid-template-columns: 1fr auto auto;
+            grid-template-areas: "brand actions toggle";
+        }
+
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
+            > [data-part="bar"] {
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "toggle brand actions";
         }
 
         [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
@@ -372,19 +420,20 @@
         [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"]) {
-            position: absolute;
-            inset-block-start: 100%;
-            inset-inline: 0;
+            grid-row: auto;
+            grid-column: 1 / -1;
             display: none;
-            z-index: 20;
+            align-self: stretch;
+            justify-self: stretch;
             flex-direction: column;
             align-items: stretch;
-            gap: var(--fl-spacing-md);
+            gap: var(--fl-spacing-sm);
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
+            overscroll-behavior: contain;
+            margin-inline: calc(-1 * var(--fl-header-padding-inline));
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-color-surface-raised);
-            border-block-end: 1px solid var(--fl-header-border);
+            border-block-start: 1px solid var(--fl-header-border);
         }
 
         [data-element="header"]:is([data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
@@ -423,6 +472,13 @@
         [data-element="header"][data-collapse="xl"] > [data-part="bar"],
         [data-element="header"][data-collapse="2xl"] > [data-part="bar"] {
             grid-template-columns: 1fr auto auto;
+            grid-template-areas: "brand actions toggle";
+        }
+
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
+            > [data-part="bar"] {
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "toggle brand actions";
         }
 
         [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
@@ -434,19 +490,20 @@
         [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"]) {
-            position: absolute;
-            inset-block-start: 100%;
-            inset-inline: 0;
+            grid-row: auto;
+            grid-column: 1 / -1;
             display: none;
-            z-index: 20;
+            align-self: stretch;
+            justify-self: stretch;
             flex-direction: column;
             align-items: stretch;
-            gap: var(--fl-spacing-md);
+            gap: var(--fl-spacing-sm);
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
+            overscroll-behavior: contain;
+            margin-inline: calc(-1 * var(--fl-header-padding-inline));
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-color-surface-raised);
-            border-block-end: 1px solid var(--fl-header-border);
+            border-block-start: 1px solid var(--fl-header-border);
         }
 
         [data-element="header"]:is([data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
@@ -486,6 +543,13 @@
         [data-element="header"][data-collapse="xl"] > [data-part="bar"],
         [data-element="header"][data-collapse="2xl"] > [data-part="bar"] {
             grid-template-columns: 1fr auto auto;
+            grid-template-areas: "brand actions toggle";
+        }
+
+        [data-element="header"][data-toggle-position="start"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
+            > [data-part="bar"] {
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "toggle brand actions";
         }
 
         [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
@@ -497,19 +561,20 @@
         [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])
             > [data-part="bar"]
             > :is([data-part="nav"], [data-part="mobile"]) {
-            position: absolute;
-            inset-block-start: 100%;
-            inset-inline: 0;
+            grid-row: auto;
+            grid-column: 1 / -1;
             display: none;
-            z-index: 20;
+            align-self: stretch;
+            justify-self: stretch;
             flex-direction: column;
             align-items: stretch;
-            gap: var(--fl-spacing-md);
+            gap: var(--fl-spacing-sm);
             max-block-size: calc(100dvh - 4rem);
             overflow-y: auto;
+            overscroll-behavior: contain;
+            margin-inline: calc(-1 * var(--fl-header-padding-inline));
             padding: var(--fl-spacing-md) var(--fl-header-padding-inline);
-            background: var(--fl-color-surface-raised);
-            border-block-end: 1px solid var(--fl-header-border);
+            border-block-start: 1px solid var(--fl-header-border);
         }
 
         [data-element="header"]:is([data-collapse="sm"], [data-collapse="md"], [data-collapse="lg"], [data-collapse="xl"], [data-collapse="2xl"])[data-state="open"]:not([data-mobile])
